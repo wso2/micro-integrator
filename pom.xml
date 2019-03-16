@@ -44,13 +44,19 @@
         <!--<module>components</module>-->
         <!--<module>samples</module>-->
         <!--<module>features</module>-->
-        <!--<module>p2-profile</module>-->
+        <module>p2-profile</module>
         <!--<module>distribution</module>-->
         <!--<module>integration</module>-->
     </modules>
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.ei.analytics.elk.feature</artifactId>
+                <version>${product.ei.version}</version>
+                <type>zip</type>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -91,12 +97,30 @@
     </profiles>
 
     <properties>
+        <!--Product Version-->
+        <product.ei.version>6.5.0-m3-SNAPSHOT</product.ei.version>
+
         <!-- Maven Plugin Version -->
         <maven.build.helper.plugin.version>1.8</maven.build.helper.plugin.version>
         <maven.xmlbeans-maven-plugin.plugin.version>2.3.3</maven.xmlbeans-maven-plugin.plugin.version>
         <carbon.p2.plugin.version>1.5.8</carbon.p2.plugin.version>
         <maven.docker.plugin.version>0.22.1</maven.docker.plugin.version>
         <maven.failsafe.plugin.version>2.20.1</maven.failsafe.plugin.version>
+
+        <!-- Carbon kernel version-->
+        <carbon.kernel.version>4.4.36</carbon.kernel.version>
+
+
+        <!-- Data service hosting feature version -->
+        <carbon-dataservice-hosting.feature.imp.version>4.4.82</carbon-dataservice-hosting.feature.imp.version>
+
+        <cipher.tool.version>1.0.0-wso2v8</cipher.tool.version>
+        <axis2.transport.version>2.0.0-wso2v30</axis2.transport.version>
+        <carbon.analytics.common.version>5.1.42</carbon.analytics.common.version>
+        <carbon.commons.version>4.6.49</carbon.commons.version>
+        <carbon.mediation.version>4.6.110</carbon.mediation.version>
+        <carbon.rule.version>4.4.9</carbon.rule.version>
+        <carbon.deployment.version>4.7.19</carbon.deployment.version>
 
     </properties>
 
