@@ -157,7 +157,33 @@
                 <exclude>**/endorsed/xalan*.jar</exclude>
             </excludes>
         </fileSet>
+
+
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/components/dropins
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/dropins</outputDirectory>
+            <excludes>
+            </excludes>
+        </fileSet>
     </fileSets>
+
+    <files>
+        <file>
+            <source>src/conf/log4j.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>log4j.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/carbon.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+    </files>
 
     <dependencySets>
         <dependencySet>
