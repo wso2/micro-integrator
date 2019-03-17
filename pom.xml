@@ -57,6 +57,11 @@
                 <version>${product.ei.version}</version>
                 <type>zip</type>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.carbon.micro.integrator.server</artifactId>
+                <version>${product.ei.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
