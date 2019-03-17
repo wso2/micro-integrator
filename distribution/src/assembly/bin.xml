@@ -48,7 +48,7 @@
     <fileSets>
         <fileSet>
             <directory>../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/components</directory>
-            <outputDirectory>wso2mi-${pom.version}</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/components</outputDirectory>
             <excludes>
                 <exclude>**/eclipse.ini</exclude>
                 <exclude>**/*.lock</exclude>
@@ -75,7 +75,7 @@
                 <exclude>**/LICENSE.txt</exclude>
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
-                <exclude>**/wso2/components/plugins/saxon_*.jar</exclude>
+                <exclude>**/plugins/saxon_*.jar</exclude>
                 <exclude>**/lib/endorsed/xalan*.jar</exclude>
                 <exclude>**/conf/tomcat/catalina-server.xml</exclude>
                 <exclude>**/conf/tomcat/webapp-classloading-environments.xml</exclude>
@@ -88,7 +88,7 @@
                 <exclude>**/wso2/components/plugins/axis2-transport-sms_1.1.1.wso2v2.jar</exclude>
                 <exclude>**/wso2/components/plugins/axis2-transport-mail_1.1.1.wso2v2.jar</exclude>
                 <exclude>**/wso2/components/plugins/jsch_0.1.49.wso2v1.jar</exclude>
-		<exclude>**/wso2/components/features/**</exclude>
+		        <exclude>**/features/**</exclude>
             </excludes>
         </fileSet>
     </fileSets>
