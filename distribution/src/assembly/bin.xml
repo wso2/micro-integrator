@@ -409,6 +409,13 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+
+        <file>
+            <source>
+                src/resources/capps/org.wso2.carbon.micro.integrator.admin.api_1.0.0.car
+            </source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/carbonapps</outputDirectory>
+        </file>
     </files>
 
     <dependencySets>
