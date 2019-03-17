@@ -47,9 +47,14 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
+            <directory>../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/components</directory>
             <outputDirectory>wso2mi-${pom.version}</outputDirectory>
             <excludes>
+                <exclude>**/eclipse.ini</exclude>
+                <exclude>**/*.lock</exclude>
+                <exclude>**/.data</exclude>
+                <exclude>**/.settings</exclude>
+                <exclude>**/org.wso2.carbon.feature.mgt.ui*</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/repository/conf/**</exclude>
                 <exclude>**/repository/components/**</exclude>
