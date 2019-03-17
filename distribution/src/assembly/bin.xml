@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<!--<!DOCTYPE assembly [
+        <!ELEMENT assembly (formats|includeBaseDirectory|fileSets|dependencySets|files)*>
+        <!ELEMENT formats (format)*>
+        <!ELEMENT format (#PCDATA)>
+        <!ELEMENT includeBaseDirectory (#PCDATA)>
+        <!ELEMENT fileSets (fileSet)*>
+        <!ELEMENT fileSet (directory|outputDirectory|excludes|includes|fileMode)*>
+        <!ELEMENT directory (#PCDATA)>
+        <!ELEMENT outputDirectory (#PCDATA)>
+        <!ELEMENT excludes (exclude)*>
+        <!ELEMENT exclude (#PCDATA)>
+        <!ELEMENT includes (include)*>
+        <!ELEMENT include (#PCDATA)>
+        <!ELEMENT fileMode (#PCDATA)>
+        <!ELEMENT dependencySets (dependencySet)*>
+        <!ELEMENT dependencySet (outputDirectory|includes|outputFileNameMapping)*>
+        <!ELEMENT outputFileNameMapping (#PCDATA)>
+        <!ELEMENT files (file)*>
+        <!ELEMENT file (source|outputDirectory|fileMode|destName|filtered)*>
+        <!ELEMENT source (#PCDATA)>
+        <!ELEMENT destName (#PCDATA)>
+        <!ELEMENT filtered (#PCDATA)>
+        ]>-->
+<assembly>
+    <id>wso2ei-bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
+            <outputDirectory>wso2mi-${pom.version}</outputDirectory>
+            <excludes>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/repository/conf/**</exclude>
+                <exclude>**/repository/components/**</exclude>
+                <exclude>**/lib/**</exclude>
+                <exclude>tmp/**</exclude>
+                <exclude>**/bin/**</exclude>
+                <exclude>**/Owasp.CsrfGuard.Carbon.properties</exclude>
+                <exclude>**/conf/axis2/axis2.xml</exclude>
+                <exclude>**/conf/axis2/tenant-axis2.xml</exclude>
+                <exclude>**/conf/synapse.xml</exclude>
+                <exclude>**/log4j.properties</exclude>
+                <exclude>**/services/sample01.aar</exclude>
+                <exclude>**/repository/services/version/**</exclude>
+                <exclude>**/version.txt</exclude>
+                <exclude>**/wso2carbon-version.txt</exclude>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/README.txt</exclude>
+                <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/release-notes.html</exclude>
+                <exclude>**/carbon.xml</exclude>
+                <exclude>**/wso2/components/plugins/saxon_*.jar</exclude>
+                <exclude>**/lib/endorsed/xalan*.jar</exclude>
+                <exclude>**/conf/tomcat/catalina-server.xml</exclude>
+                <exclude>**/conf/tomcat/webapp-classloading-environments.xml</exclude>
+                <exclude>**/conf/registry.xml</exclude>
+                <exclude>**/conf/tomcat/web.xml</exclude>
+                <exclude>**/webapp-mode/WEB-INF/web.xml</exclude>
+                <exclude>**/conf/tomcat/carbon/WEB-INF/web.xml</exclude>
+                <exclude>**/wso2/components/plugins/httpclient_4.3.1.wso2v3.jar</exclude>
+                <exclude>**/wso2/components/plugins/axis2-transport-jms_1.1.1.wso2v2.jar</exclude>
+                <exclude>**/wso2/components/plugins/axis2-transport-sms_1.1.1.wso2v2.jar</exclude>
+                <exclude>**/wso2/components/plugins/axis2-transport-mail_1.1.1.wso2v2.jar</exclude>
+                <exclude>**/wso2/components/plugins/jsch_0.1.49.wso2v1.jar</exclude>
+		<exclude>**/wso2/components/features/**</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>
