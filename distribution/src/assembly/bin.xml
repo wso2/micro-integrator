@@ -386,7 +386,29 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/conf/synapse.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>synapse.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
+        <!--File based Synapse registry for Micro EI-->
+        <file>
+            <source>src/conf/registry.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/repository/deployment/server/synapse-configs/default
+            </outputDirectory>
+            <filtered>true</filtered>
+        </file>
+
+        <file>
+            <source>src/conf/synapse-handlers.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>synapse-handlers.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 
     <dependencySets>
