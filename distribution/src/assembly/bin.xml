@@ -93,6 +93,50 @@
         </fileSet>
 
         <fileSet>
+            <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator</outputDirectory>
+            <excludes>
+                <exclude>**/*.sh</exclude>
+                <exclude>**/wso2</exclude>
+                <exclude>**/repository/conf/**</exclude>
+                <exclude>**/repository/components/**</exclude>
+                <exclude>**/wso2/components/**</exclude>
+                <exclude>**/lib/**</exclude>
+                <exclude>**/bin/**</exclude>
+                <exclude>**/conf/axis2/axis2.xml</exclude>
+                <exclude>**/conf/axis2/tenant-axis2.xml</exclude>
+                <exclude>**/conf/synapse.xml</exclude>
+                <exclude>**/log4j.properties</exclude>
+                <exclude>**/services/sample01.aar</exclude>
+                <exclude>**/repository/services/version/**</exclude>
+                <exclude>**/version.txt</exclude>
+                <exclude>**/wso2carbon-version.txt</exclude>
+                <exclude>**/wso2server.bat</exclude>
+                <exclude>**/README.txt</exclude>
+                <exclude>**/LICENSE.txt</exclude>
+                <exclude>**/registry.xml</exclude>
+                <exclude>**/user-mgt.xml</exclude>
+                <exclude>**/release-notes.html</exclude>
+                <exclude>**/carbon.xml</exclude>
+                <exclude>**/wso2/components/plugins/saxon*.jar</exclude>
+                <exclude>**/lib/endorsed/xalan*.jar</exclude>
+                <exclude>**/repository/conf/tomcat/catalina-server.xml</exclude>
+                <exclude>**/repository/conf/registry.xml</exclude>
+                <exclude>**/repository/conf/tomcat/web.xml</exclude>
+                <exclude>**/webapp-mode/WEB-INF/web.xml</exclude>
+                <exclude>**/repository/components/plugins/httpclient_4.3.1.wso2v3.jar</exclude>
+                <exclude>**/repository/components/plugins/axis2-transport-jms_1.1.1.wso2v2.jar
+                </exclude>
+                <exclude>**/repository/components/plugins/axis2-transport-sms_1.1.1.wso2v2.jar
+                </exclude>
+                <exclude>**/tomcat/carbon/META-INF/context.xml</exclude>
+                <exclude>**/repository/components/plugins/axis2-transport-mail_1.1.1.wso2v2.jar
+                </exclude>
+                <exclude>**/repository/components/plugins/jsch_0.1.49.wso2v1.jar</exclude>
+            </excludes>
+        </fileSet>
+
+        <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/conf</directory>
             <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
             <excludes>
@@ -142,6 +186,79 @@
         </fileSet>
 
         <fileSet>
+            <directory>src/scripts/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/bin
+            </outputDirectory>
+            <includes>
+                <include>**/build.xml</include>
+                <include>**/carbondump.bat</include>
+                <include>**/carbondump.sh</include>
+                <include>**/chpasswd.bat</include>
+                <include>**/chpasswd.sh</include>
+                <include>**/tcpmon.bat</include>
+                <include>**/tcpmon.sh</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventpublishers
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/eventpublishers
+            </outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventstreams
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/eventstreams
+            </outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/resources/dockerfiles</directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/dockerfiles</outputDirectory>
+            <excludes>
+                <exclude>Dockerfile</exclude>
+            </excludes>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/resources/tomcat</directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/tomcat</outputDirectory>
+            <includes>
+                <include>**/catalina-server.xml</include>
+                <include>**/webapp-classloading-environments.xml</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/conf</directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <includes>
+                <include>**/cipher-standalone-config.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                .../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/identity
+            </directory>
+            <outputDirectory>
+                wso2mi-${pom.version}/wso2/micro-integrator/conf/identity/
+            </outputDirectory>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/conf/synapse-configs</directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/synapse-configs
+            </outputDirectory>
+            <excludes>
+                <exclude>**/empty.txt</exclude>
+            </excludes>
+        </fileSet>
+
+        <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/lib</directory>
             <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
             <excludes>
@@ -166,6 +283,21 @@
             <excludes>
             </excludes>
         </fileSet>
+
+        <fileSet>
+            <directory>src/resources</directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
+            <includes>
+                <include>**/saxon9he.jar</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>src/resources</directory>
+            <outputDirectory>wso2mi-${pom.version}/wso2/lib/</outputDirectory>
+            <includes>
+                <include>esapi-2.0.1.jar</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <files>
@@ -183,6 +315,78 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+
+        <file>
+            <source>src/conf/tasks-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/conf/etc/
+            </outputDirectory>
+        </file>
+        <file>
+            <source>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-broker.xml
+            </source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/data-bridge/data-agent-config.xml
+            </source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/data-bridge</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-processor.xml
+            </source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/output-event-adapters.xml
+            </source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/conf/axis2.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/axis2</outputDirectory>
+            <destName>axis2.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/conf/user-mgt.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>user-mgt.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/context.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/tomcat/carbon/MATA-INF</outputDirectory>
+            <destName>context.xml</destName>
+        </file>
+
+        <file>
+            <source>src/conf/web.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/tomcat/carbon/WEB-INF</outputDirectory>
+            <destName>web.xml</destName>
+        </file>
+
+        <file>
+            <source>src/conf/passthru-http.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>passthru-http.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
     </files>
 
     <dependencySets>
