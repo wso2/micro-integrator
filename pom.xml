@@ -41,7 +41,7 @@
     </licenses>
 
     <modules>
-        <!--<module>components</module>-->
+        <module>components</module>
         <!--<module>samples</module>-->
         <!--<module>features</module>-->
         <module>p2-profile</module>
@@ -61,6 +61,11 @@
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.carbon.micro.integrator.server</artifactId>
                 <version>${product.ei.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.server</artifactId>
+                <version>${carbon.kernel.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

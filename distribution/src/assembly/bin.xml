@@ -201,6 +201,27 @@
         </fileSet>
 
         <fileSet>
+            <directory>src/scripts/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin
+            </outputDirectory>
+            <includes>
+                <include>**/build.xml</include>
+                <include>**/micro-integrator.bat</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>src/scripts/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin
+            </outputDirectory>
+            <includes>
+                <include>**/tcpmon.sh</include>
+                <include>**/micro-integrator.sh</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+
+        <fileSet>
             <directory>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventpublishers
             </directory>
