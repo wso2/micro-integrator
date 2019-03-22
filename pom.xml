@@ -78,6 +78,11 @@
                 <type>zip</type>
             </dependency>
             <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>${axis2.wso2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.carbon.micro.integrator.server</artifactId>
                 <version>${product.ei.version}</version>
@@ -268,6 +273,7 @@
 
         <cipher.tool.version>1.0.0-wso2v8</cipher.tool.version>
         <axis2.transport.version>2.0.0-wso2v30</axis2.transport.version>
+        <axis2.wso2.version>1.6.1-wso2v28</axis2.wso2.version>
         <carbon.analytics.common.version>5.1.42</carbon.analytics.common.version>
         <carbon.commons.version>4.6.49</carbon.commons.version>
         <carbon.mediation.version>4.6.110</carbon.mediation.version>
