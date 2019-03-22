@@ -177,6 +177,27 @@
                 <artifactId>org.wso2.carbon.event.publisher.core</artifactId>
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.framework</groupId>
+                <artifactId>org.wso2.carbon.security.mgt.stub</artifactId>
+                <version>${carbon.identity.framework.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.identity.framework</groupId>
+                        <artifactId>org.wso2.carbon.security.mgt</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.security.wso2</groupId>
+                <artifactId>wss4j</artifactId>
+                <version>${wss4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart.wso2</groupId>
+                <artifactId>rampart-core</artifactId>
+                <version>${rampart.wso2.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -301,7 +322,7 @@
         <jdbc-pool.version>7.0.81.wso2v2</jdbc-pool.version>
         <version.eclipse.ecj>4.4.2</version.eclipse.ecj>
         <version.com.google.code.gson>2.3.1</version.com.google.code.gson>
-
+        <carbon.identity.framework.version>5.12.153</carbon.identity.framework.version>
     </properties>
 
     <repositories>
