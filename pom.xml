@@ -72,12 +72,6 @@
                 <version>${version.equinox.p2.metadata}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.ei.analytics.elk.feature</artifactId>
-                <version>${product.ei.version}</version>
-                <type>zip</type>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2</artifactId>
                 <version>${axis2.wso2.version}</version>

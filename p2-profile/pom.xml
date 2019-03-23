@@ -31,14 +31,6 @@
     <name>WSO2 Enterprise Integrator - micro-integrator P2 Profile Generation</name>
     <url>http://www.wso2.org</url>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.ei.analytics.elk.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-    </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -271,9 +263,6 @@
 
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.carbon.micro.integrator.server.feature:${product.ei.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.ei.analytics.elk.feature:${product.ei.version}
                                 </featureArtifactDef>
 
                                 <!--Identity-->
@@ -566,12 +555,6 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.micro.integrator.server.feature.group</id>
-                                    <version>${product.ei.version}</version>
-                                </feature>
-
-                                <!--ELK Analytics feature group-->
-                                <feature>
-                                    <id>org.wso2.ei.analytics.elk.feature.group</id>
                                     <version>${product.ei.version}</version>
                                 </feature>
                             </features>
