@@ -323,6 +323,14 @@
 
     <files>
         <file>
+            <source>src/conf/wrapper.conf</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/bin/yajsw</outputDirectory>
+            <destName>wrapper.conf</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/log4j.properties</source>
             <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
             <destName>log4j.properties</destName>
@@ -401,6 +409,75 @@
         </file>
 
         <file>
+            <source>src/conf/axis2_nhttp.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/axis2</outputDirectory>
+            <destName>axis2_nhttp.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/axis2_pt.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/axis2</outputDirectory>
+            <destName>axis2_pt.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/axis2_blocking_client.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/axis2</outputDirectory>
+            <destName>axis2_blocking_client.xml</destName>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/datasources.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>datasources.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/nhttp.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>nhttp.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/hl7.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>hl7.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/access-log.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>access-log.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/jndi.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <destName>jndi.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/etc/logging-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/passthru-http.properties</source>
             <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
             <destName>passthru-http.properties</destName>
@@ -437,6 +514,57 @@
             </source>
             <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/carbonapps</outputDirectory>
         </file>
+
+        <file>
+            <source>src/conf/security/cipher-text.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/security</outputDirectory>
+            <destName>cipher-text.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/security/cipher-tool.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/security</outputDirectory>
+            <destName>cipher-tool.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/security/secret-conf.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/security</outputDirectory>
+            <destName>secret-conf.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/resources/dockerfiles/Dockerfile</source>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/dockerfiles/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/docs/release-notes.xml</source>
+            <outputDirectory>wso2mi-${pom.version}</outputDirectory>
+            <destName>release-notes.html</destName>
+            <fileMode>644</fileMode>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>src/LICENSE.txt</source>
+            <outputDirectory>wso2mi-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/README.txt</source>
+            <outputDirectory>wso2mi-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 
     <dependencySets>
@@ -445,6 +573,13 @@
             <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
             <includes>
                 <include>org.wso2.ei:org.wso2.carbon.micro.integrator.server:jar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/axis2modules
+            </outputDirectory>
+            <includes>
+                <include>org.apache.rampart:rampart:mar</include>
             </includes>
         </dependencySet>
     </dependencySets>
