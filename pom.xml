@@ -28,7 +28,7 @@
     <groupId>org.wso2.ei</groupId>
     <artifactId>wso2-micro-integrator-parent</artifactId>
     <packaging>pom</packaging>
-    <version>6.5.0-m3-SNAPSHOT</version>
+    <version>6.5.0-m3</version>
     <name>WSO2 Micro Integrator</name>
     <url>http://wso2.com/products/enterprise-integrator/</url>
     <description>WSO2 Micro Integrator</description>
@@ -210,7 +210,7 @@
         <url>https://github.com/wso2/micro-integrator.git</url>
         <developerConnection>scm:git:https://github.com/wso2/micro-integrator.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/micro-integrator.git</connection>
-        <tag>HEAD</tag>
+        <tag>v6.5.0-m3</tag>
     </scm>
 
     <profiles>
@@ -244,7 +244,7 @@
 
     <properties>
         <!--Product Version-->
-        <product.ei.version>6.5.0-m3-SNAPSHOT</product.ei.version>
+        <product.ei.version>6.5.0-m3</product.ei.version>
 
         <version.equinox.osgi>3.9.1.v20130814-1242</version.equinox.osgi>
         <version.equinox.osgi.services>3.3.100.v20130513-1956</version.equinox.osgi.services>
