@@ -329,6 +329,8 @@
         <version.eclipse.ecj>4.4.2</version.eclipse.ecj>
         <version.com.google.code.gson>2.7</version.com.google.code.gson>
         <carbon.identity.framework.version>5.12.153</carbon.identity.framework.version>
+        <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
+        <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
     </properties>
 
     <repositories>
@@ -509,6 +511,16 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven.failsafe.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${docker.maven.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -84,6 +84,7 @@
                         </goals>
                         <configuration>
                             <appendAssemblyId>false</appendAssemblyId>
+                            <tarLongFileMode>posix</tarLongFileMode>
                             <filters>
                                 <filter>${basedir}/src/assembly/filter.properties</filter>
                             </filters>
@@ -100,7 +101,76 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>filter-dockerfiles</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <!-- # Filtered Resources -->
+                                <resource>
+                                    <directory>${basedir}/src/docker-distribution/filtered</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>Dockerfile</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${project.build.directory}/docker</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.spotify</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>build-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <configuration>
+                            <skipDocker>${docker.skip}</skipDocker>
+                            <imageName>wso2/micro-integrator</imageName>
+                            <imageTags>
+                                <imageTag>${project.version}</imageTag>
+                            </imageTags>
+                            <dockerDirectory>${basedir}/src/docker-distribution/static</dockerDirectory>
+                            <resources>
+                                <resource>
+                                    <targetPath>/</targetPath>
+                                    <directory>${project.build.directory}</directory>
+                                    <include>wso2mi-${project.version}.tar.gz</include>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <!-- TODO Enable after configuring Jenkins to push docker -->
+                    <!--<execution>-->
+                        <!--<id>push-image</id>-->
+                        <!--<phase>deploy</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>push</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<imageName>wso2/micro-integrator:${project.version}</imageName>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
+                </executions>
+            </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <docker.skip>true</docker.skip>
+    </properties>
 
 </project>
