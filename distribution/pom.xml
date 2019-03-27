@@ -134,11 +134,12 @@
                 <executions>
                     <execution>
                         <id>build-image</id>
-                        <phase>deploy</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>build</goal>
                         </goals>
                         <configuration>
+                            <skipDocker>${docker.skip}</skipDocker>
                             <imageName>wso2/micro-integrator</imageName>
                             <imageTags>
                                 <imageTag>${project.version}</imageTag>
@@ -168,5 +169,9 @@
             </plugin>
         </plugins>
     </build>
+
+    <properties>
+        <docker.skip>true</docker.skip>
+    </properties>
 
 </project>
