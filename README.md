@@ -13,7 +13,7 @@ WSO2 Enterprise Integration (EI) is an open source integration platform and the 
 
 The Micro Integrator is a lightweight integration framework built for developers who would like to create and run their integrations and integrate microservices. Micro Integrator provides developers the freedom to quickly develop and run their integrations in a Microservices Architecture (MSA) environment and to deploy them using CI/CD. So with the Micro Integrator, developers are able to develop and manage composite microservices. 
 
-Furthermore, since the startup time is a critical aspect when working with microservices, the Micro Integrator profile is designed with an improved startup time than the conventional WSO2 ESB or the ESB profile of WSO2 EI. Thus, with this improved startup time, the Micro Integrator profile becomes container-friendly for you to work with your microservices in a container-based architecture. The Micro Integrator works natively on the Kubernetes ecosystem and it makes deployment with Docker a simple process.
+The Micro Integrator profile is designed with an improved startup time than the conventional WSO2 EI or the ESB profile of WSO2 EI. The Micro Integrator is designed to be more container-friendly for you to work with your microservices in a container-based architecture. The Micro Integrator works natively on the Kubernetes ecosystem and it makes deployment with Docker a simple process.
 
 ## Why Micro Integrator?
 
