@@ -103,6 +103,29 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>prepare</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <skip>${docker.skip}</skip>
+                            <target>
+                                <echo message="prepare phase"/>
+                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}.zip"
+                                       dest="${project.build.directory}/docker"/>
+                                <chmod
+                                        file="${project.build.directory}/docker/${project.artifactId}-${project.version}/bin/*.sh" perm="+x"/>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
@@ -144,13 +167,6 @@
                                 <imageTag>${project.version}</imageTag>
                             </imageTags>
                             <dockerDirectory>${basedir}/src/docker-distribution/static</dockerDirectory>
-                            <resources>
-                                <resource>
-                                    <targetPath>/</targetPath>
-                                    <directory>${project.build.directory}</directory>
-                                    <include>wso2mi-${project.version}.tar.gz</include>
-                                </resource>
-                            </resources>
                         </configuration>
                     </execution>
                     <!-- TODO Enable after configuring Jenkins to push docker -->

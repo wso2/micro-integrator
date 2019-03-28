@@ -31,14 +31,14 @@ ARG FILES=./files
 # Broker details
 ARG MICROESB_NAME=wso2mi
 ARG MICROESB_VERSION=${pom.version}
-ARG MICROESB_DISTRIBUTION=${MICROESB_NAME}-${MICROESB_VERSION}.tar.gz
+ARG MICROESB_DISTRIBUTION=${MICROESB_NAME}-${MICROESB_VERSION}
 ARG MICROESB_HOME=${USER_HOME}/${MICROESB_NAME}-${MICROESB_VERSION}
 
 # Add a user group and a user
 RUN addgroup -S ${USER_GROUP} && adduser -S -G ${USER_GROUP} ${USER}
 
 # Copy mico esb distribution to user's home directory
-ADD --chown=wso2ei:wso2ei ${MICROESB_DISTRIBUTION} ${USER_HOME}
+COPY --chown=wso2ei:wso2ei ${MICROESB_DISTRIBUTION} ${MICROESB_HOME}
 
 # set the user and work directory
 USER ${USER}

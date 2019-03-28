@@ -43,7 +43,6 @@
     <id>wso2ei-bin</id>
     <formats>
         <format>zip</format>
-        <format>tar.gz</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>

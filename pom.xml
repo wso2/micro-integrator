@@ -243,6 +243,9 @@
     </profiles>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
         <!--Product Version-->
         <product.ei.version>6.5.0-m4-SNAPSHOT</product.ei.version>
 
@@ -331,6 +334,7 @@
         <carbon.identity.framework.version>5.12.153</carbon.identity.framework.version>
         <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
         <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
+        <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
     </properties>
 
     <repositories>
@@ -521,6 +525,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven.resources.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-antrun-plugin</artifactId>
+                    <version>${maven.antrun.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
