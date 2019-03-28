@@ -7,7 +7,7 @@
 
 ## Introduction
 
-In recent times we have witnessed the growth of approaches like Continuous Integration and Continuous Deployment (CI/CD), which has subsequently led to the rise of microservices. Microservices are designed to start up very quickly, perform a specific task, and then shut down.
+In recent times we have witnessed the growth of approaches like Continuous Integration and Continuous Deployment (CI/CD), which has subsequently led to the rise of microservices. Microservices Architecture (MSA) became more popular due to the rise of cloud native technologies and the assistance it provides for agile development. Microservices are designed to start up very quickly, perform a specific task, and then shut down.
 
 WSO2 Enterprise Integration (EI) is an open source integration platform and the Micro Integrator is a cloud native variant of WSO2 EI.
 
