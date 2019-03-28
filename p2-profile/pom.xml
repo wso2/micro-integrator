@@ -567,15 +567,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.1</version>
                 <executions>
                     <execution>
                         <id>creating-required-resources</id>
                         <phase>generate-resources</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <mkdir dir="target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server" />
-                            </tasks>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
@@ -587,11 +586,11 @@
                             <goal>run</goal>
                         </goals>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <replace token="false" value="true" dir="target/wso2carbon-core-${carbon.kernel.version}/wso2/components">
                                     <include name="**/bundles.info" />
                                 </replace>
-                            </tasks>
+                            </target>
                         </configuration>
                     </execution>
                 </executions>
