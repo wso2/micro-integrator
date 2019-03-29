@@ -152,6 +152,7 @@
                             ! org.wso2.carbon.micro.integrator.core.internal,
                             org.wso2.carbon.micro.integrator.core.*;version="${project.version}",
                             org.wso2.carbon.core.*;version="${carbon.kernel.version}",
+                            org.wso2.carbon.application.deployer.synapse.*;version="${carbon.mediation.version}",
                             org.wso2.carbon.application.deployer.*;version="${carbon.kernel.version}",
                             org.wso2.carbon.service.mgt.*;version="${carbon.deployment.version}"
                         </Export-Package>

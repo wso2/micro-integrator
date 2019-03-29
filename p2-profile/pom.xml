@@ -251,10 +251,10 @@
 
                                 <!-- Data Services Features -->
                                 <featureArtifactDef>
-                                    org.wso2.carbon.data:org.wso2.carbon.dataservices.server.feature:${carbon-dataservice-hosting.feature.imp.version}
+                                    org.wso2.carbon.data:org.wso2.carbon.dataservices.server.feature:${carbon.data.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.data:org.wso2.carbon.dataservices.task.server.feature:${carbon-dataservice-hosting.feature.imp.version}
+                                    org.wso2.carbon.data:org.wso2.carbon.dataservices.task.server.feature:${carbon.data.version}
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
@@ -540,12 +540,12 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.dataservices.server.feature.group</id>
-                                    <version>${carbon-dataservice-hosting.feature.imp.version}</version>
+                                    <version>${carbon.data.version}</version>
                                 </feature>
 
                                 <feature>
                                     <id>org.wso2.carbon.dataservices.task.server.feature.group</id>
-                                    <version>${carbon-dataservice-hosting.feature.imp.version}</version>
+                                    <version>${carbon.data.version}</version>
                                 </feature>
 
                                 <feature>
