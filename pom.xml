@@ -333,7 +333,7 @@
         <version.com.google.code.gson>2.7</version.com.google.code.gson>
         <carbon.identity.framework.version>5.12.153</carbon.identity.framework.version>
         <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
-        <maven.resources.plugin.version>2.7</maven.resources.plugin.version>
+        <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
     </properties>
 
