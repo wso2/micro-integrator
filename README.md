@@ -7,11 +7,11 @@
 
 ## Introduction
 
-In recent times we have witnessed the growth of approaches like Continuous Integration and Continuous Deployment (CI/CD), which has subsequently led to the rise of microservices. Microservices Architecture (MSA) became more popular due to the rise of cloud native technologies and the assistance it provides for agile development. Microservices are designed to start up very quickly, perform a specific task, and then shut down.
+In recent times we have witnessed the growth of approaches like Continuous Integration and Continuous Deployment (CI/CD), which has subsequently led to the rise of microservices. 
 
-WSO2 Enterprise Integration (EI) is an open source integration platform and the Micro Integrator is a cloud native variant of WSO2 EI.
+Microservices Architecture (MSA) became more popular due to the rise of cloud native technologies and the assistance it provides for agile development. MSA fosters the building of software applications as a suite of independent, fine-grained, and autonomous services. Therefore, when we build a real-world business use case, the microservices that comprise the application have to communicate with each other. With the proliferation of fine-grained services, integrating microservices and building inter-service communication has become one of the most challenging tasks in the realization of microservices architectures.
 
-The Micro Integrator is a lightweight integration framework built for developers who would like to create and run their integrations and integrate microservices. Micro Integrator provides developers the freedom to quickly develop and run their integrations in a Microservices Architecture (MSA) environment and to deploy them using CI/CD. So with the Micro Integrator, developers are able to develop and manage composite microservices. 
+WSO2 Enterprise Integration (EI) is an open source integration platform and the Micro Integrator is a cloud native variant of WSO2 EI. The Micro Integrator is a lightweight integration framework built for developers who would like to create and run their integrations and integrate microservices. Micro Integrator provides developers the freedom to quickly develop and run their integrations in a Microservices Architecture (MSA) environment and to deploy them using CI/CD. So with the Micro Integrator, developers are able to develop and manage composite microservices. 
 
 The Micro Integrator profile is designed with an improved startup time than the conventional WSO2 EI or the ESB profile of WSO2 EI. The Micro Integrator is designed to be more container-friendly for you to work with your microservices in a container-based architecture. The Micro Integrator works natively on the Kubernetes ecosystem and it makes deployment with Docker a simple process.
 
