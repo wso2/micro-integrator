@@ -258,7 +258,7 @@
         <maven.build.helper.plugin.version>1.8</maven.build.helper.plugin.version>
         <maven.xmlbeans-maven-plugin.plugin.version>2.3.3</maven.xmlbeans-maven-plugin.plugin.version>
         <carbon.p2.plugin.version>1.5.8</carbon.p2.plugin.version>
-        <maven.docker.plugin.version>0.22.1</maven.docker.plugin.version>
+        <maven.docker.plugin.version>0.28.0</maven.docker.plugin.version>
         <maven.failsafe.plugin.version>2.20.1</maven.failsafe.plugin.version>
 
         <!-- Carbon kernel version-->
