@@ -328,7 +328,7 @@
         <jdbc-pool.version>7.0.81.wso2v2</jdbc-pool.version>
         <version.eclipse.ecj>4.4.2</version.eclipse.ecj>
         <version.com.google.code.gson>2.8.5</version.com.google.code.gson>
-        <carbon.identity.framework.version>5.12.320</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.12.329</carbon.identity.framework.version>
         <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
         <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
