@@ -27,5 +27,8 @@ hs_err_pid*
 .idea/
 .DS_Store
 
+# Eclipse files
+.project
+
 # Temporary directories
 target/
