@@ -17,6 +17,6 @@
 # ---------------------------------------------------------------------------
 
 # Base image
-FROM wso2/micro-integrator:1.0.0-m2-SNAPSHOT
+FROM wso2/micro-integrator:latest
 
-COPY hello-world-capp/target/hello-world-capp_1.0.0.car /home/wso2ei/wso2mi-1.0.0-m2-SNAPSHOT/wso2/micro-integrator/repository/deployment/server/carbonapps
+COPY hello-world-capp/target/hello-world-capp_1.0.0.car /home/wso2ei/wso2mi/wso2/micro-integrator/repository/deployment/server/carbonapps
