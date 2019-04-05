@@ -9,14 +9,6 @@ The Micro Integrator is built for developers who would like to integrate microse
 
 The Micro Integrator also provides an enhanced experience for those using a container-based architecture. The Micro Integrator works natively on the Kubernetes ecosystem and it makes deployment with Docker a simple process. 
 
-Micro Integrator encompasses the following key attributes that are essential for a microservice ready integration solution. 
-	
-- Faster startup time (<5s)
-- Low memory footprint
-- Stateless services
-- Immutable services
-
-
 ## Building from the source
 
 Please follow the steps below to build WSO2 Micro Integrator from source code.
