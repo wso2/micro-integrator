@@ -64,7 +64,7 @@
                     <systemPropertyVariables>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <framework.resource.location>${project.basedir}/src/test/resources</framework.resource.location>
-                        <carbon.zip>${project.basedir}/../distribution/target/wso2mi-${project.version}.zip</carbon.zip>
+                        <distribution.zip>${project.basedir}/../distribution/target/wso2mi-${project.version}.zip</distribution.zip>
                         <testng.logs.directory>${project.basedir}/target/logs/testng-test.log</testng.logs.directory>
                     </systemPropertyVariables>
                 </configuration>

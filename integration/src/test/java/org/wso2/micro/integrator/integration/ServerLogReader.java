@@ -32,10 +32,7 @@ public class ServerLogReader implements Runnable {
     private String streamType;
     private InputStream inputStream;
     private StringBuilder stringBuilder;
-    private static final String STREAM_TYPE_IN = "inputStream";
-    private static final String STREAM_TYPE_ERROR = "errorStream";
     private final Object lock = new Object();
-    private Thread thread;
     private volatile boolean running = true;
     private static final Logger log = LoggerFactory.getLogger(ServerLogReader.class);
 
@@ -46,8 +43,8 @@ public class ServerLogReader implements Runnable {
     }
 
     public void start() {
-        this.thread = new Thread(this);
-        this.thread.start();
+        Thread thread = new Thread(this);
+        thread.start();
     }
 
     public void stop() {
@@ -65,7 +62,6 @@ public class ServerLogReader implements Runnable {
             while(this.running) {
                 if (bufferedReader.ready()) {
                     String s = bufferedReader.readLine();
-//                    this.stringBuilder.setLength(0);
                     if (s == null) {
                         break;
                     }
@@ -101,9 +97,7 @@ public class ServerLogReader implements Runnable {
                     log.error("Error occurred while closing the server log stream: " + var14.getMessage(), var14);
                 }
             }
-
         }
-
     }
 
     public String getOutput() {
