@@ -46,7 +46,7 @@
         <module>features</module>
         <module>p2-profile</module>
         <module>distribution</module>
-        <!--<module>integration</module>-->
+        <module>integration</module>
     </modules>
 
     <dependencyManagement>
@@ -192,6 +192,22 @@
                 <type>mar</type>
                 <version>${rampart.mar.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -320,6 +336,9 @@
         <docker.maven.plugin.version>1.0.0</docker.maven.plugin.version>
         <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
+        <maven.surefire.plugin.version>2.20.1</maven.surefire.plugin.version>
+        <jacoco.maven.plugin.version>0.8.3</jacoco.maven.plugin.version>
+        <testng.version>6.11</testng.version>
     </properties>
 
     <repositories>
@@ -515,6 +534,16 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>${maven.antrun.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${jacoco.maven.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
