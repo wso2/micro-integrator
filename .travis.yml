@@ -19,7 +19,7 @@ services:
   
 install: true
 
-script: docker run -v "$HOME/.m2":/var/maven/.m2 --rm -u `id -u`:`id -g` -e MAVEN_CONFIG=/var/maven/.m2 -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven a5anka/wso2-ei-maven mvn -Duser.home=/var/maven clean install -Dsurefire.useSystemClassLoader=false -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+script: docker run -v "$HOME/.m2":/root/.m2 --rm -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven a5anka/wso2-ei-maven mvn clean install -Dsurefire.useSystemClassLoader=false -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
 cache:
   directories:
