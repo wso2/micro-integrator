@@ -46,6 +46,11 @@ are the main design objectives for developing the Micro Integrator.
 - Building a runtime suitable for hybrid integration requirements
   (integration cloud).
 
+## Installation and working with Micro Integrator
+
+Please refer to the instructions by visiting the documentation for
+[Working with the Micro Integrator](doc/working-with-the-micro-integrator.md).
+
 ## Development
 
 If you are planning on contributing to the development efforts of WSO2 Micro Integrator, you can do that by checking out
