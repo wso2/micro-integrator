@@ -15,7 +15,7 @@ For information on what the Micro Integrator profile brings with this release, s
 You can download the product distribution from the [releases](https://github.com/wso2/micro-integrator/releases) page or
  using the (product installers)[https://docs.wso2.com/display/EI6xx/Installing+the+Product]. If you chose to download
  the product distribution you will have to unzip it and put it in a preferred location (e.g.
- /usr/lib/wso2/wso2mi-1.0.0). Let's call this location MI_HOME in the rest of the section. You can use the following
+ /usr/lib/wso2/wso2mi-1.0.0). Let's call this location MI_HOME in the rest of the document. You can use the following
  command depend on the platform to start Micro Integrator.
 
  - MacOS/Linux/CentOS - `sh <MI_HOME>/bin/micro-integrator.sh`
@@ -40,7 +40,53 @@ Restart the Micro Integrator profile after deploying the artifacts.
 All configuration files related to the Micro Integrator profile are located in the `<MI-HOME>/wso2/micro-integrator/conf`
 directory.
 
-#### Configuring the file-based registry
+## Micro Integrator with Docker
+
+Micro Integrator is also distributed as a base docker image which you can use to create a deployable docker image with
+the required integration artifacts and configuration. You can follow the instructions in [Building the Docker Image](.
+./#building-the-docker-image) to build the Micro Integrator docker image and publish it in the local docker registry.
+
+### Deploying artifacts in the Micro Integrator profile
+
+Micro Integrator docker image reads and deploys carbon application in the
+`/home/wso2ei/wso2mi/wso2/micro-integrator/repository/deployment/server/carbonapps` directory. Therefore you can use a
+simple Docker file like the following to create a docker image with the integration artifacts.
+
+```docker
+FROM wso2/micro-integrator:latest
+
+COPY hello-world-capp_1.0.0.car /home/wso2ei/wso2mi/wso2/micro-integrator/repository/deployment/server/carbonapps
+```
+
+Then you can simply use the docker CLI to create the docker image.
+
+```
+$ docker build -t wso2-mi-hello-world .
+```
+
+### Running Micro Integrator
+
+To start the docker image with the artifacts we can use the docker CLI as following.
+
+```
+docker run -d -p 8290:8290 -p 8253:8253 --name=wso2-mi-container wso2-mi-hello-world
+```
+
+### Stopping Micro Integrator
+
+To stop the container you can use the docker cli command `docker container stop` command.
+
+```
+$ docker container stop wso2-mi-container
+```
+
+### Configuring the Micro Integrator profile
+
+All configuration files related to the Micro Integrator profile are located in the
+`/home/wso2ei/wso2mi/wso2/micro-integrator/conf` directory. You can either mount a volume to that location or copy
+required configurations to modify the defaults in the Micro Integrator base image.
+
+## Configuring the file-based registry
 
 The H2 database-based registry is not available in the Micro Integrator profile. Instead, it has a file system based
 registry, which provides the same functionality. Thus, by default, the `<MI_HOME>/wso2/micro-integrator/registry`
@@ -71,4 +117,3 @@ If you want to change the default locations of the registry directories, uncomme
     -->
 </registry>
 ```
-
