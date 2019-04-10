@@ -18,8 +18,8 @@ You can download the product distribution from the [releases](https://github.com
  /usr/lib/wso2/wso2mi-1.0.0). Let's call this location MI_HOME in the rest of the section. You can use the following
  command depend on the platform to start Micro Integrator.
 
- - MacOS/Linux/CentOS - `sh MI_HOME/bin/micro-integrator.sh`
- - Windows - `MI_HOME/bin/micro-integrator.bat`
+ - MacOS/Linux/CentOS - `sh <MI_HOME>/bin/micro-integrator.sh`
+ - Windows - `<MI_HOME>/bin/micro-integrator.bat`
 
 By default the HTTP listener port is 8290 and the default HTTPS listener port is 8253
 
@@ -30,20 +30,20 @@ To stop the Micro Integrator runtime, press Ctrl+C in the command window.
 ### Deploying artifacts in the Micro Integrator profile
 
 After creating your artifacts in an ESB Solutions Project via WSO2 EI Tooling, import the project as a Composite
-Application, and add the CAR file to the <MI_HOME>/wso2/micro-integrator/repository/deployment/server/carbonapps
+Application, and add the CAR file to the `<MI_HOME>/wso2/micro-integrator/repository/deployment/server/carbonapps`
 directory to deploy.
 
 Restart the Micro Integrator profile after deploying the artifacts.
 
 ### Configuring the Micro Integrator profile
 
-All configuration files related to the Micro Integrator profile are located in the <MI-HOME>/wso2/micro-integrator/conf
+All configuration files related to the Micro Integrator profile are located in the `<MI-HOME>/wso2/micro-integrator/conf`
 directory.
 
 #### Configuring the file-based registry
 
 The H2 database-based registry is not available in the Micro Integrator profile. Instead, it has a file system based
-registry, which provides the same functionality. Thus, by default, the <MI_HOME>/wso2/micro-integrator/registry
+registry, which provides the same functionality. Thus, by default, the `<MI_HOME>/wso2/micro-integrator/registry`
 directory will act as the registry to store registry artifacts etc. This main registry directory will consist of the
 following sub-registry directories.
 
@@ -55,14 +55,14 @@ any registry artifacts, you can create them manually.
 - Governance: To store all artifacts that are relevant to the governance of the product.
 
 If you want to change the default locations of the registry directories, uncomment and change the following configuration
- in the <MI_HOME>/wso2/microIntegrator/repository/deployment/server/synapse-config/default/directoryregistry.xml file.
+ in the `<MI_HOME>/wso2/microIntegrator/repository/deployment/server/synapse-config/default/directoryregistry.xml` file.
 
 ```xml
 <registry xmlns="http://ws.apache.org/ns/synapse" provider="org.wso2.carbon.mediation.registry.MicroIntegratorRegistry">
     <parameter name="cachableDuration">15000</parameter>
     <!--
         Uncomment below parameters (ConfigRegRoot, GovRegRoot, LocalRegRoot) to configure registry root paths
-        Default : <EI_HOME>/wso2/micro-integrator/registry/{governance | config | local}
+        Default : <MI_HOME>/wso2/micro-integrator/registry/{governance | config | local}
     -->
     <!--
     <parameter name="ConfigRegRoot">{Root directory path for configuration Registry}</parameter>
