@@ -20,13 +20,18 @@ package org.wso2.micro.integrator.integration;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -47,11 +52,16 @@ public class DefaultSuiteInitializer {
      */
     private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
 
+    /**
+     * Store the location of Micro Integrator home directory.
+     */
+    private String miHome;
+
     @BeforeSuite
     public void startMicroIntegrator() throws IOException, InterruptedException {
         String miDistributionZipLocation = readDistributionZipLocation();
 
-        String miHome = prepareMicroIntegrator(miDistributionZipLocation);
+        miHome = prepareMicroIntegrator(miDistributionZipLocation);
 
         LOGGER.info("Initializing micro integrator runtime .........");
 
@@ -60,19 +70,44 @@ public class DefaultSuiteInitializer {
             throw new IllegalArgumentException(miDistributionZipLocation + " is not a zip file");
         }
 
-        ServerLogReader inputStreamHandler = StartServerInAOsProcess(miHome, getStartupCommand(miHome));
+        ServerLogReader inputStreamHandler = startOsProcess(miHome, getStartScriptCommand());
 
         // wait until server startup is completed
-        long time = System.currentTimeMillis() + 60 * 1000;
-        while (!inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE) &&
-                System.currentTimeMillis() < time) {
-            TimeUnit.MILLISECONDS.sleep(1);
-        }
+        waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 60, TimeUnit.SECONDS);
 
         if (!inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE)) {
             throw new RuntimeException("Server initialization failed");
         }
         LOGGER.info("Server started successfully.");
+    }
+
+    @AfterSuite
+    public void stopMicroIntegrator() throws IOException, InterruptedException {
+        LOGGER.info("Shutting down server..");
+
+        startProcess(miHome, getStartScriptCommand("stop"));
+
+        waitTill(() -> isRemotePortInUse("localhost", 8290), 60, TimeUnit.SECONDS);
+    }
+
+    private void waitTill(BooleanSupplier predicate, int maxWaitTime, TimeUnit timeUnit) throws InterruptedException {
+        long time = System.currentTimeMillis() + timeUnit.toMillis(maxWaitTime);
+        while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
+            TimeUnit.MILLISECONDS.sleep(1);
+        }
+    }
+
+    private boolean isRemotePortInUse(String hostName, int portNumber) {
+        try {
+            // Socket try to open a REMOTE port
+            new Socket(hostName, portNumber).close();
+            // remote port can be opened, this is a listening port on remote machine
+            // this port is in use on the remote machine !
+            return true;
+        } catch(IOException e) {
+            // remote port is closed, nothing is running on
+            return false;
+        }
     }
 
     private String readDistributionZipLocation() {
@@ -86,11 +121,8 @@ public class DefaultSuiteInitializer {
         return miDistributionZipLocation;
     }
 
-    private ServerLogReader StartServerInAOsProcess(String miHome, String[] cmdArray) throws IOException {
-        File commandDir = new File(miHome);
-        ProcessBuilder processBuilder = new ProcessBuilder(cmdArray);
-        processBuilder.directory(commandDir);
-        Process tempProcess = processBuilder.start();
+    private ServerLogReader startOsProcess(String miHome, String[] cmdArray) throws IOException {
+        Process tempProcess = startProcess(miHome, cmdArray);
 
         ServerLogReader errorStreamHandler = new ServerLogReader("errorStream", tempProcess.getErrorStream());
         ServerLogReader inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
@@ -100,22 +132,29 @@ public class DefaultSuiteInitializer {
         return inputStreamHandler;
     }
 
-    private String[] getStartupCommand(String miHome) {
+    private Process startProcess(String workingDirectory, String[] cmdArray) throws IOException {
+        File commandDir = new File(workingDirectory);
+        ProcessBuilder processBuilder = new ProcessBuilder(cmdArray);
+        processBuilder.directory(commandDir);
+        return processBuilder.start();
+    }
+
+    private String[] getStartScriptCommand(String ...commands) {
         String operatingSystem = System.getProperty("os.name").toLowerCase();
-        String[] cmdArray;
 
         String startScriptBasename = "micro-integrator";
 
+        ArrayList<String> commandArray;
         if (operatingSystem.contains("windows")) {
-            cmdArray = new String[] {
-                    "cmd.exe", "/c", miHome + File.separator + "bin" + File.separator + startScriptBasename + ".bat"
-            };
+            commandArray = new ArrayList<>(Arrays.asList(
+                    "cmd.exe", "/c", miHome + File.separator + "bin" + File.separator + startScriptBasename + ".bat"));
         } else {
-            cmdArray = new String[] {
-                    "sh", miHome + File.separator + "bin" + File.separator + startScriptBasename + ".sh"
-            };
+            commandArray = new ArrayList<>(Arrays.asList("sh", miHome + File.separator + "bin" + File.separator +
+                    startScriptBasename + ".sh"));
         }
-        return cmdArray;
+
+        commandArray.addAll(Arrays.asList(commands));
+        return commandArray.toArray(new String[0]);
     }
 
     private String prepareMicroIntegrator(String miDistributionZipLocation) throws IOException {
