@@ -241,7 +241,8 @@
             <directory>src/resources/dockerfiles</directory>
             <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/dockerfiles</outputDirectory>
             <excludes>
-                <exclude>Dockerfile</exclude>
+                <exclude>**/Dockerfile</exclude>
+                <exclude>**/.gitkeep</exclude>
             </excludes>
         </fileSet>
 

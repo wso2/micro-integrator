@@ -13,7 +13,7 @@ For information on what the Micro Integrator profile brings with this release, s
 ### Running Micro Integrator
 
 You can download the product distribution from the [releases](https://github.com/wso2/micro-integrator/releases) page or
- using the (product installers)[https://docs.wso2.com/display/EI6xx/Installing+the+Product]. If you chose to download
+ using the [product installers](https://docs.wso2.com/display/EI6xx/Installing+the+Product). If you chose to download
  the product distribution you will have to unzip it and put it in a preferred location (e.g.
  /usr/lib/wso2/wso2mi-1.0.0). Let's call this location MI_HOME in the rest of the document. You can use the following
  command depend on the platform to start Micro Integrator.
@@ -85,6 +85,11 @@ $ docker container stop wso2-mi-container
 All configuration files related to the Micro Integrator profile are located in the
 `/home/wso2ei/wso2mi/wso2/micro-integrator/conf` directory. You can either mount a volume to that location or copy
 required configurations to modify the defaults in the Micro Integrator base image.
+
+### Trying out a sample scenario
+
+For instructions on trying out a simple use case using the micro Integrator profile, see
+[Hello world sample][examples/hello-world].
 
 ## Configuring the file-based registry
 
