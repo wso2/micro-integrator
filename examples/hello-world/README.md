@@ -22,7 +22,7 @@ is generated and sent back to the client as the response.
    ```
 3. Run the docker image created in step 2.
    ```
-   docker run wso2-mi-hello-world
+   docker run -d -p 8290:8290 wso2-mi-hello-world
    ```
 4. Invoke the service using an HTTP client like cURL.
    ```
