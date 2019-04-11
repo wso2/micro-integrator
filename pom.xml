@@ -260,7 +260,7 @@
         <version.equinox.p2.metadata>2.2.0.v20130523-1557</version.equinox.p2.metadata>
 
         <!-- Maven Plugin Version -->
-        <maven.build.helper.plugin.version>1.8</maven.build.helper.plugin.version>
+        <maven.build.helper.plugin.version>3.0.0</maven.build.helper.plugin.version>
         <maven.xmlbeans-maven-plugin.plugin.version>2.3.3</maven.xmlbeans-maven-plugin.plugin.version>
         <carbon.p2.plugin.version>1.5.8</carbon.p2.plugin.version>
         <maven.docker.plugin.version>0.28.0</maven.docker.plugin.version>
