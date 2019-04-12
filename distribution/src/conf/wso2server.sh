@@ -218,14 +218,14 @@ if [ "$jdk_17" = "" ]; then
 fi
 
 CARBON_XBOOTCLASSPATH=""
-for f in "$CARBON_HOME"/../lib/xboot/*.jar
+for f in "$CARBON_HOME"/wso2/lib/xboot/*.jar
 do
     if [ "$f" != "$CARBON_HOME/wso2/lib/xboot/*.jar" ];then
         CARBON_XBOOTCLASSPATH="$CARBON_XBOOTCLASSPATH":$f
     fi
 done
 
-JAVA_ENDORSED_DIRS="$CARBON_HOME/../lib/endorsed":"$JAVA_HOME/jre/lib/endorsed":"$JAVA_HOME/lib/endorsed"
+JAVA_ENDORSED_DIRS="$CARBON_HOME/wso2/lib/endorsed":"$JAVA_HOME/jre/lib/endorsed":"$JAVA_HOME/lib/endorsed"
 
 CARBON_CLASSPATH=""
 if [ -e "$JAVA_HOME/lib/tools.jar" ]; then
@@ -237,10 +237,13 @@ do
         CARBON_CLASSPATH="$CARBON_CLASSPATH":$f
     fi
 done
-for t in "$CARBON_HOME"/../lib/commons-lang*.jar
+for t in "$CARBON_HOME"/wso2/lib/commons-lang*.jar
 do
     CARBON_CLASSPATH="$CARBON_CLASSPATH":$t
 done
+
+
+
 # For Cygwin, switch paths to Windows format before running java
 if $cygwin; then
   JAVA_HOME=`cygpath --absolute --windows "$JAVA_HOME"`
@@ -303,7 +306,7 @@ do
     -classpath "$CARBON_CLASSPATH" \
     -Djava.endorsed.dirs="$JAVA_ENDORSED_DIRS" \
     -Djava.io.tmpdir="$CARBON_HOME/tmp" \
-    -Dcatalina.base="$CARBON_HOME/../lib/tomcat" \
+    -Dcatalina.base="$CARBON_HOME/wso2/lib/tomcat" \
     -Dwso2.server.standalone=true \
     -Dcarbon.registry.root=/ \
     -Djava.command="$JAVACMD" \
@@ -313,18 +316,18 @@ do
     -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager \
     -Dcarbon.config.dir.path="$CARBON_HOME/conf" \
     -Dcarbon.repository.dir.path="$CARBON_HOME/repository" \
-    -Dcarbon.components.dir.path="$CARBON_HOME/../components" \
-    -Dcarbon.extensions.dir.path="$CARBON_HOME/../../extensions" \
-    -Dcarbon.dropins.dir.path="$CARBON_HOME/../../dropins" \
-    -Dcarbon.external.lib.dir.path="$CARBON_HOME/../../lib" \
-    -Dcarbon.patches.dir.path="$CARBON_HOME/../../patches" \
-    -Dcarbon.servicepacks.dir.path="$CARBON_HOME/../../servicepacks" \
-    -Dcarbon.internal.lib.dir.path="$CARBON_HOME/../lib" \
+    -Dcarbon.components.dir.path="$CARBON_HOME/wso2/components" \
+    -Dcarbon.extensions.dir.path="$CARBON_HOME/extensions" \
+    -Dcarbon.dropins.dir.path="$CARBON_HOME/dropins" \
+    -Dcarbon.external.lib.dir.path="$CARBON_HOME/lib" \
+    -Dcarbon.patches.dir.path="$CARBON_HOME/patches" \
+    -Dcarbon.servicepacks.dir.path="$CARBON_HOME/servicepacks" \
+    -Dcarbon.internal.lib.dir.path="$CARBON_HOME/wso2/lib" \
     -Dei.extendedURIBasedDispatcher=org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler \
     -Djava.util.logging.config.file="$CARBON_HOME/conf/etc/logging-bridge.properties" \
-    -Dcomponents.repo="$CARBON_HOME/../components/plugins" \
-    -Dconf.location="$CARBON_HOME/../micro-integrator/conf" \
-    -Dcom.atomikos.icatch.file="$CARBON_HOME/../lib/transactions.properties" \
+    -Dcomponents.repo="$CARBON_HOME/wso2/components/plugins" \
+    -Dconf.location="$CARBON_HOME/conf" \
+    -Dcom.atomikos.icatch.file="$CARBON_HOME/wso2/lib/transactions.properties" \
     -Dcom.atomikos.icatch.hide_init_file_path=true \
     -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false \
     -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true \
