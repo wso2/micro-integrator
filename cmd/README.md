@@ -6,8 +6,15 @@ Command Line tool for managing the WSO2 Micro Integrator
 
 ### Building from source 
 
+- ### Setting up the development environment
+    1. Install [Go 1.12.x](https://golang.org/dl)
+    2. Fork the [repository](https://github.com/wso2/micro-integrator)
+    3. Clone your fork into any directory
+    5. `cd` into cloned directory and then cd into `micro-integrator/cmd`
+    6. Execute `go mod vendor` or `go mod download` to download all the dependencies
+
 - ### Building
-   `cd` into `cmd`
+   `cd` into `micro-integrator/cmd`
    
     Execute `./build.sh -t micli.go -v 1.0.0 -f` to build for all platforms. (Can only be built in Mac or Linux)
       
@@ -21,7 +28,10 @@ Command Line tool for managing the WSO2 Micro Integrator
     Execute `./micli --help` for further instructions.
     
     NOTE: To execute the tool from anywhere, append the location of the executable (micli) to your $PATH variable.
-    
+
+### Configuration 
+- ### Inbound Listening Port
+    The default listening port of the Management API is `9091`
 
 ## Usage 
 ```bash
