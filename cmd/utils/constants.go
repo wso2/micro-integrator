@@ -82,7 +82,7 @@ const DefaultHttpRequestTimeout = 100000
 // Server Address
 const Host = "http://localhost"
 const Port = "9091"
-const Context = "admin"
+const Context = "management"
 
 const RESTAPIBase = Host + ":" + Port + "/" + Context + "/"
 const PrefixCarbonApps = "applications"
