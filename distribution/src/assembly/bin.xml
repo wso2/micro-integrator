@@ -94,7 +94,7 @@
 
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}</outputDirectory>
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2</exclude>
@@ -138,7 +138,7 @@
 
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/conf</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <excludes>
                 <exclude>**/wso2</exclude>
                 <exclude>**/*.sh</exclude>
@@ -166,7 +166,7 @@
 
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/bin</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/bin</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/*.bat</exclude>
@@ -177,7 +177,7 @@
 
         <fileSet>
             <directory>src/conf</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/bin</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <includes>
                 <include>**.sh</include>
                 <include>**.bat</include>
@@ -187,7 +187,7 @@
 
         <fileSet>
             <directory>src/scripts/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/bin
+            <outputDirectory>${pom.artifactId}-${pom.version}/bin
             </outputDirectory>
             <includes>
                 <include>**/build.xml</include>
@@ -225,7 +225,7 @@
             <directory>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventpublishers
             </directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/eventpublishers
+            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/eventpublishers
             </outputDirectory>
         </fileSet>
 
@@ -233,13 +233,13 @@
             <directory>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventstreams
             </directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/eventstreams
+            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/eventstreams
             </outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>src/resources/dockerfiles</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/dockerfiles</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/dockerfiles</outputDirectory>
             <excludes>
                 <exclude>**/Dockerfile</exclude>
                 <exclude>**/.gitkeep</exclude>
@@ -248,7 +248,7 @@
 
         <fileSet>
             <directory>src/resources/tomcat</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/tomcat</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/tomcat</outputDirectory>
             <includes>
                 <include>**/catalina-server.xml</include>
                 <include>**/webapp-classloading-environments.xml</include>
@@ -257,7 +257,7 @@
 
         <fileSet>
             <directory>src/conf</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <includes>
                 <include>**/cipher-standalone-config.properties</include>
             </includes>
@@ -267,13 +267,13 @@
                 .../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/identity
             </directory>
             <outputDirectory>
-                wso2mi-${pom.version}/wso2/micro-integrator/conf/identity/
+                wso2mi-${pom.version}/conf/identity/
             </outputDirectory>
         </fileSet>
 
         <fileSet>
             <directory>src/conf/synapse-configs</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/synapse-configs
+            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/synapse-configs
             </outputDirectory>
             <excludes>
                 <exclude>**/empty.txt</exclude>
@@ -325,7 +325,7 @@
     <files>
         <file>
             <source>src/conf/wrapper.conf</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/bin/yajsw</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/bin/yajsw</outputDirectory>
             <destName>wrapper.conf</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -333,7 +333,7 @@
 
         <file>
             <source>src/conf/log4j.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>log4j.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -341,21 +341,21 @@
 
         <file>
             <source>src/conf/carbon.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
 
         <file>
             <source>src/conf/tasks-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/conf/etc/
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/
             </outputDirectory>
         </file>
         <file>
             <source>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-broker.xml
             </source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
@@ -363,7 +363,7 @@
             <source>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/data-bridge/data-agent-config.xml
             </source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/data-bridge</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/data-bridge</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
@@ -371,7 +371,7 @@
             <source>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-processor.xml
             </source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
@@ -379,19 +379,19 @@
             <source>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/output-event-adapters.xml
             </source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/conf/axis2.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/axis2</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
             <destName>axis2.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/conf/user-mgt.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>user-mgt.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -399,26 +399,26 @@
 
         <file>
             <source>src/conf/context.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/tomcat/carbon/MATA-INF</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/MATA-INF</outputDirectory>
             <destName>context.xml</destName>
         </file>
 
         <file>
             <source>src/conf/web.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/tomcat/carbon/WEB-INF</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/WEB-INF</outputDirectory>
             <destName>web.xml</destName>
         </file>
 
         <file>
             <source>src/conf/axis2_blocking_client.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/axis2</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
             <destName>axis2_blocking_client.xml</destName>
             <fileMode>644</fileMode>
         </file>
 
         <file>
             <source>src/conf/datasources.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>datasources.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -426,7 +426,7 @@
 
         <file>
             <source>src/conf/nhttp.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>nhttp.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -434,7 +434,7 @@
 
         <file>
             <source>src/conf/hl7.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>hl7.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -442,7 +442,7 @@
 
         <file>
             <source>src/conf/access-log.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>access-log.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -450,7 +450,7 @@
 
         <file>
             <source>src/conf/jndi.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>jndi.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -458,20 +458,20 @@
 
         <file>
             <source>src/conf/etc/logging-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/conf/etc</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
         <file>
             <source>src/conf/passthru-http.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>passthru-http.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
             <source>src/conf/synapse.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>synapse.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -480,14 +480,14 @@
         <!--File based Synapse registry for Micro EI-->
         <file>
             <source>src/conf/registry.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/micro-integrator/repository/deployment/server/synapse-configs/default
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/synapse-configs/default
             </outputDirectory>
             <filtered>true</filtered>
         </file>
 
         <file>
             <source>src/conf/synapse-handlers.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>synapse-handlers.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -497,12 +497,12 @@
             <source>
                 src/resources/capps/org.wso2.carbon.micro.integrator.admin.api_1.0.0.car
             </source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/carbonapps</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
         </file>
 
         <file>
             <source>src/conf/security/cipher-text.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/security</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/security</outputDirectory>
             <destName>cipher-text.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -510,7 +510,7 @@
 
         <file>
             <source>src/conf/security/cipher-tool.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/security</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/security</outputDirectory>
             <destName>cipher-tool.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -518,7 +518,7 @@
 
         <file>
             <source>src/conf/security/secret-conf.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/conf/security</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/conf/security</outputDirectory>
             <destName>secret-conf.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
@@ -526,7 +526,7 @@
 
         <file>
             <source>src/resources/dockerfiles/Dockerfile</source>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/dockerfiles/</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/dockerfiles/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -567,7 +567,7 @@
             </includes>
         </dependencySet>
         <dependencySet>
-            <outputDirectory>wso2mi-${pom.version}/wso2/micro-integrator/repository/deployment/server/axis2modules
+            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/axis2modules
             </outputDirectory>
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
