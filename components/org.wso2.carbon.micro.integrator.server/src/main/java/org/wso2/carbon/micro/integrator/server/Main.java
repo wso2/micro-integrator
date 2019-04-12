@@ -31,10 +31,9 @@ import org.wso2.carbon.server.extensions.PatchInstaller;
 import org.wso2.carbon.server.extensions.SystemBundleExtensionCreator;
 import org.wso2.carbon.server.util.Utils;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.management.ManagementFactory;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
@@ -42,6 +41,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
@@ -143,45 +145,25 @@ public class Main {
     }
 
     /**
-     * Write the process ID of this process to the file
+     * Write the process ID of this process to the file.
      *
-     * @param carbonHome carbon.home sys property value.
+     * @param runtimePath wso2.runtime.path sys property value.
      */
-    private static void writePID(String carbonHome) {
-        byte[] bo = new byte[100];
-        String[] cmd = {"sh", "-c", "echo $PPID"};
-        Process p;
-        try {
-            p = Runtime.getRuntime().exec(cmd);
-        } catch (IOException e) {
-            //ignored. We might be invoking this on a Window platform. Therefore if an error occurs
-            //we simply ignore the error.
+    private static void writePID(String runtimePath) {
+        // Adopted from: https://stackoverflow.com/a/7690178
+        String jvmName = ManagementFactory.getRuntimeMXBean().getName();
+        int indexOfAt = jvmName.indexOf('@');
+        if (indexOfAt < 1) {
+            log.warn("Cannot extract current process ID from JVM name '" + jvmName + "'.");
             return;
         }
+        String pid = jvmName.substring(0, indexOfAt);
 
+        Path runtimePidFile = Paths.get(runtimePath, "wso2carbon.pid");
         try {
-            int bytes = p.getInputStream().read(bo);
+            Files.write(runtimePidFile, pid.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-
-        String pid = new String(bo);
-        if (pid.length() != 0) {
-            BufferedWriter out = null;
-            try {
-                FileWriter writer = new FileWriter(carbonHome + File.separator + "wso2carbon.pid");
-                out = new BufferedWriter(writer);
-                out.write(pid);
-            } catch (IOException e) {
-                log.warn("Cannot write wso2carbon.pid file");
-            } finally {
-                if (out != null) {
-                    try {
-                        out.close();
-                    } catch (IOException ignored) {
-                    }
-                }
-            }
+            log.warn("Cannot write process ID '" + pid + "' to '" + runtimePidFile.toString() + "' file.", e);
         }
     }
 
