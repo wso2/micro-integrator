@@ -394,8 +394,9 @@ public class ServiceComponent {
 
             registerCarbonServlet(httpService, defaultHttpContext);
 
-
-            log.debug("Repository       : " + axis2RepoLocation);
+            if (log.isDebugEnabled()) {
+                log.debug("Repository       : " + axis2RepoLocation);
+            }
 
             // schedule the services cleanup task
             if (GhostDeployerUtils.isGhostOn()) {
@@ -463,7 +464,9 @@ public class ServiceComponent {
         if (secMan != null) {
             secMan.checkPermission(new ManagementPermission("control"));
         }
-        log.debug("Shutting down " + serverName + "...");
+        if (log.isDebugEnabled()) {
+            log.debug("Shutting down " + serverName + "...");
+        }
         if (!isShutdownTriggeredByShutdownHook) {
             Runtime.getRuntime().removeShutdownHook(shutdownHook);
         }
@@ -503,7 +506,9 @@ public class ServiceComponent {
             log.error(msg, e);
         }
         try {
-            log.debug("Gracefully shutting down " + serverName + "...");
+            if (log.isDebugEnabled()) {
+                log.debug("Gracefully shutting down " + serverName + "...");
+            }
             Map<String, TransportInDescription> inTransports =
                     serverConfigContext.getAxisConfiguration().getTransportsIn();
             new ServerManagement(inTransports, serverConfigContext).startMaintenanceForShutDown();

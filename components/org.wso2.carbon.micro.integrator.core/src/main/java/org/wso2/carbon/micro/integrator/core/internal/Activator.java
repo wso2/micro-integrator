@@ -58,23 +58,21 @@ public class Activator implements BundleActivator {
                                   System.getProperty("os.version") + ", " + System.getProperty("os.arch"));
                 log.debug("Java Home        : " + System.getProperty("java.home"));
                 log.debug("Java Version     : " + System.getProperty("java.version"));
-                log.debug("Java VM          : " + System.getProperty("java.vm.name") + " " +
-                                  System.getProperty("java.vm.version") +
-                                  "," +
-                                  System.getProperty("java.vendor"));
+                log.debug("Java VM          : " + System.getProperty("java.vm.name") + " "
+                                  + System.getProperty("java.vm.version") + "," + System.getProperty("java.vendor"));
             }
 
             String carbonHome;
             if ((carbonHome = System.getProperty("carbon.home")).equals(".")) {
                 carbonHome = new File(".").getAbsolutePath();
             }
-            log.debug("Micro Integrator Home      : " + carbonHome);
 
             if (log.isDebugEnabled()) {
-                log.info("Java Temp Dir    : " + System.getProperty("java.io.tmpdir"));
-                log.info("User             : " + System.getProperty("user.name") + ", " +
-                         System.getProperty("user.language") + "-" + System.getProperty("user.country") +
-                         ", " + System.getProperty("user.timezone"));
+                log.debug("Micro Integrator Home      : " + carbonHome);
+                log.debug("Java Temp Dir    : " + System.getProperty("java.io.tmpdir"));
+                log.debug("User             : " + System.getProperty("user.name") + ", "
+                                 + System.getProperty("user.language") + "-" + System.getProperty("user.country")
+                                 + ", " + System.getProperty("user.timezone"));
             }
             Security.addProvider(new BouncyCastleProvider());
             if (log.isDebugEnabled()){
