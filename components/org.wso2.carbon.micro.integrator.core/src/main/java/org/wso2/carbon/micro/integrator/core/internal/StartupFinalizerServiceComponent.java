@@ -219,8 +219,10 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         long startTime = Long.parseLong(System.getProperty(CarbonConstants.START_TIME));
         long startupTime = (System.currentTimeMillis() - startTime) / 1000;
         try {
-            log.info("Server           :  " + dataHolder.getServerConfigurationService().getFirstProperty("Name") + "-" +
-                    dataHolder.getServerConfigurationService().getFirstProperty("Version"));
+            if (log.isDebugEnabled()) {
+                log.debug("Server           :  " + dataHolder.getServerConfigurationService().getFirstProperty("Name") + "-" +
+                        dataHolder.getServerConfigurationService().getFirstProperty("Version"));
+            }
         } catch (Exception e) {
             log.debug("Error while retrieving server configuration",e);
         }

@@ -254,8 +254,8 @@ fi
 
 # ----- Execute The Requested Command -----------------------------------------
 
-echo JAVA_HOME environment variable is set to $JAVA_HOME
-echo CARBON_HOME environment variable is set to "$CARBON_HOME"
+# echo JAVA_HOME environment variable is set to $JAVA_HOME
+# echo CARBON_HOME environment variable is set to "$CARBON_HOME"
 
 cd "$CARBON_HOME"
 
@@ -274,7 +274,7 @@ if [ -z "$JVM_MEM_OPTS" ]; then
       JVM_MEM_OPTS="$JVM_MEM_OPTS"
    fi
 fi
-echo "Using Java memory options: $JVM_MEM_OPTS"
+# echo "Using Java memory options: $JVM_MEM_OPTS"
 
 #setting up profile parameter for runtime in MB
 PROFILE_SELECTED="false"

@@ -83,8 +83,6 @@ import org.wso2.carbon.utils.deployment.Axis2ServiceRegistry;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
-import javax.servlet.Filter;
-import javax.servlet.ServletException;
 import java.io.File;
 import java.io.InputStream;
 import java.lang.management.ManagementPermission;
@@ -98,6 +96,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.servlet.Filter;
+import javax.servlet.ServletException;
 
 import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
 
@@ -395,7 +395,7 @@ public class ServiceComponent {
             registerCarbonServlet(httpService, defaultHttpContext);
 
 
-            log.info("Repository       : " + axis2RepoLocation);
+            log.debug("Repository       : " + axis2RepoLocation);
 
             // schedule the services cleanup task
             if (GhostDeployerUtils.isGhostOn()) {
@@ -440,7 +440,7 @@ public class ServiceComponent {
                         .setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
                 privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
 
-                log.info("Shutdown hook triggered....");
+                log.debug("Shutdown hook triggered....");
                 isShutdownTriggeredByShutdownHook = true;
                 shutdownGracefully();
             }
@@ -463,7 +463,7 @@ public class ServiceComponent {
         if (secMan != null) {
             secMan.checkPermission(new ManagementPermission("control"));
         }
-        log.info("Shutting down " + serverName + "...");
+        log.debug("Shutting down " + serverName + "...");
         if (!isShutdownTriggeredByShutdownHook) {
             Runtime.getRuntime().removeShutdownHook(shutdownHook);
         }
@@ -476,10 +476,10 @@ public class ServiceComponent {
             }
 //            CarbonCoreServiceComponent.shutdown();
 //            stopListenerManager();
-            log.info("Shutting down OSGi framework...");
+            log.debug("Shutting down OSGi framework...");
             EclipseStarter.shutdown();
-            log.info("Shutdown complete");
-            log.info("Halting JVM");
+            log.info("Micro Integrator Shutdown complete");
+            log.debug("Halting JVM");
             if (!isShutdownTriggeredByShutdownHook) {
                 System.exit(0);
             }
@@ -503,7 +503,7 @@ public class ServiceComponent {
             log.error(msg, e);
         }
         try {
-            log.info("Gracefully shutting down " + serverName + "...");
+            log.debug("Gracefully shutting down " + serverName + "...");
             Map<String, TransportInDescription> inTransports =
                     serverConfigContext.getAxisConfiguration().getTransportsIn();
             new ServerManagement(inTransports, serverConfigContext).startMaintenanceForShutDown();
