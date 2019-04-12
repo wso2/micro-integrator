@@ -29,11 +29,13 @@ To stop the Micro Integrator runtime, press Ctrl+C in the command window.
 
 ### Deploying artifacts in the Micro Integrator profile
 
-After creating your artifacts in an ESB Solutions Project via WSO2 EI Tooling, import the project as a Composite
-Application, and add the CAR file to the `<MI_HOME>/wso2/micro-integrator/repository/deployment/server/carbonapps`
+WSO2 Micro Integrator allows you to perform all your integration needs with the use of ESB artifacts, which could be within a wide range of APIs, services, endpoints, tasks and so on. An artifact comprises of a set of configurations which defines the request/response flow where, the configuration is based on [Apache Synapse](http://synapse.apache.org/userguide/config.html).
+
+WSO2 EI tool is specifically designed with the capability of designing, developing, testing and deploying artifacts required to perform your integration. You can develop your integration solution in an [ESB Solutions Project](https://docs.wso2.com/display/EI6xx/Working+with+EI+Tooling#WorkingwithEITooling-CreatinganESBSolutionProjectCreatinganESBSolutionProject) via WSO2 EI Tooling, import the project as a [Composite
+Application](https://docs.wso2.com/display/ADMIN44x/Working+with+Composite+Applications), and add the CAR file to the `<MI_HOME>/wso2/micro-integrator/repository/deployment/server/carbonapps`
 directory to deploy.
 
-Restart the Micro Integrator profile after deploying the artifacts.
+Note: WSO2 Micro Integrator does not support hot deployment. Therefore, you need to restart the Micro Integrator after copying the artifacts, in order to get them deployed.
 
 ### Configuring the Micro Integrator profile
 
