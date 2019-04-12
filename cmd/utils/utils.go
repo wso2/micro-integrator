@@ -21,7 +21,7 @@ package utils
 import (
 	"bufio"
 	"fmt"
-	"github.com/go-resty/resty"
+	"gopkg.in/resty.v1"
 	"golang.org/x/crypto/ssh/terminal"
 	"os"
 	"runtime"

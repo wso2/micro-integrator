@@ -21,8 +21,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"github.com/renstrom/dedent"
-	"mi-management-cli/utils"
+	"github.com/lithammer/dedent"
+	"cmd/utils"
 )
 
 var deleteCmdLiteral = "delete"

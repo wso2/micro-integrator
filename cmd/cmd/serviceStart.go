@@ -19,8 +19,8 @@
 package cmd
 
 import (
-	"mi-management-cli/utils"
-	"github.com/renstrom/dedent"
+	"cmd/utils"
+	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 	"fmt"
 	"net/http"

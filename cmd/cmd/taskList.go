@@ -22,9 +22,9 @@ package cmd
 import (
 	"errors"
 	"fmt"
-	"mi-management-cli/utils"
+	"cmd/utils"
 	"github.com/spf13/cobra"
-	"github.com/renstrom/dedent"
+	"github.com/lithammer/dedent"
 	"net/http"
 	"encoding/xml"
 )

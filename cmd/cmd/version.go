@@ -20,7 +20,7 @@ package cmd
 
 import (
 	"fmt"
-	"mi-management-cli/utils"
+	"cmd/utils"
 	"github.com/spf13/cobra"
 )
 

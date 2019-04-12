@@ -18,7 +18,7 @@
 
 package main
 
-import "mi-management-cli/cmd"
+import "cmd/cmd"
 
 func main() {
 	cmd.Execute()

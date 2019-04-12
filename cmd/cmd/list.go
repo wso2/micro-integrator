@@ -20,8 +20,8 @@ package cmd
 
 import (
 	"fmt"
-	"mi-management-cli/utils"
-	"github.com/renstrom/dedent"
+	"cmd/utils"
+	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 )
 
