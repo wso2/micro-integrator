@@ -31,6 +31,7 @@ import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.mediation.initializer.ServiceBusInitializer;
+import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -109,8 +110,12 @@ public class CarbonAppResource extends APIResource {
         // TODO Fix this to use the getTenantIdString
         String tenantId = String.valueOf(MultitenantConstants.SUPER_TENANT_ID);
 
+//        This Only Works in EI
+//        ArrayList<CarbonApplication> appList
+//                = ServiceBusInitializer.getAppManager().getCarbonApps(tenantId);
+
         ArrayList<CarbonApplication> appList
-                = ServiceBusInitializer.getAppManager().getCarbonApps(tenantId);
+                = CarbonCoreDataHolder.getInstance().getApplicationManager().getCarbonApps(tenantId);
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_CARBON_APPS);
         OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
