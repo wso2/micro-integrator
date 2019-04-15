@@ -327,7 +327,7 @@
         <version.geronimo.saaj.spec>1.0.1.wso2v2</version.geronimo.saaj.spec>
         <orbit.version.poi>3.17.0.wso2v1</orbit.version.poi>
         <orbit.version.poi.scratchpad>3.17.0.wso2v1</orbit.version.poi.scratchpad>
-        <slf4j.version>1.7.21</slf4j.version>
+        <slf4j.version>1.7.26</slf4j.version>
         <version.jaxb>2.2.5.wso2v1</version.jaxb>
         <javasysmon.version>0.3.3.wso2v1</javasysmon.version>
         <jdbc-pool.version>7.0.81.wso2v2</jdbc-pool.version>
