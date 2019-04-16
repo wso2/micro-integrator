@@ -190,7 +190,7 @@
                 <groupId>org.apache.rampart</groupId>
                 <artifactId>rampart</artifactId>
                 <type>mar</type>
-                <version>${rampart.mar.version}</version>
+                <version>${rampart.wso2.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -285,7 +285,6 @@
         <carbon.deployment.version>4.7.22</carbon.deployment.version>
         <wss4j.version>1.5.11.wso2v17</wss4j.version>
         <rampart.wso2.version>1.6.1-wso2v28</rampart.wso2.version>
-        <rampart.mar.version>1.6.1-wso2v26</rampart.mar.version>
         <siddhi.version>3.2.3</siddhi.version>
         <opensaml.orbit.version>2.6.4.wso2v3</opensaml.orbit.version>
         <bouncycastle.orbit.version>1.52.0.wso2v1</bouncycastle.orbit.version>
