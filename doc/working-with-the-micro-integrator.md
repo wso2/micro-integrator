@@ -91,7 +91,76 @@ required configurations to modify the defaults in the Micro Integrator base imag
 ### Trying out a sample scenario
 
 For instructions on trying out a simple use case using the micro Integrator profile, see
-[Hello world sample][examples/hello-world].
+[Hello world sample](examples/hello-world).
+
+## Micro Integrator with Kubernetes
+
+Kubernetes is an open-source container orchestration system for automating application deployment, scaling, and
+management. This section has some guidelines you can follow, if you are planning to use a Kubernetes cluster to deploy
+the Micro Integrator solutions.
+
+First of all, you will have to create a custom docker image with the required synapse artifacts, configurations and
+third-party dependencies. You can follow the section on [Micro Integrator with Docker](#micro-integrator-with-docker)
+for instructions about creating a custom docker image using the available base Micro Integrator docker image. We can
+then use this custom image to deploy the Micro Integrator solution to a Kubernetes cluster. One advantage of having an
+immutable custom docker image is that you can easily implement a CI/CD pipeline where you can systematically test the
+solution before deploying in the production environment.
+
+After we have created the docker image with the artifacts we can use it to create pods and configure the k8s deployments
+and services to match our requirements. A sample Kubernetes YAML configureation that you can use to deploy a micro
+integrator custom image is mentioned below. Please not that the docker image `wso2-mi-hello-world` is the one we
+created in [Micro Integrator with Docker](#micro-integrator-with-docker).
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mi-helloworld-deployment
+  labels:
+    event: mi-helloworld
+spec:
+  strategy:
+    type: Recreate
+  replicas: 2
+  selector:
+    matchLabels:
+      event: mi-helloworld
+  template:
+    metadata:
+      labels:
+        event: mi-helloworld
+    spec:
+      containers:
+      -
+        image: wso2-mi-hello-world
+        name: helloworld
+        imagePullPolicy: IfNotPresent
+        ports:
+        -
+          name: web
+          containerPort: 8290
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mi-helloworld-service
+  labels:
+    event: mi-helloworld
+spec:
+  ports:
+    -
+      name: web
+      port: 8290
+      targetPort: 8290
+  selector:
+    event: mi-helloworld
+```
+
+### Trying out a sample scenario
+
+For instructions on trying out a simple use case using the micro Integrator profile, see the section on
+[Deploying to a Kubernetes Cluster](examples/hello-world#deploying-to-a-kubernetes-cluster-optional)
+in the [Hello world sample](examples/hello-world).
 
 ## Configuring the file-based registry
 
