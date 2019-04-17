@@ -14,16 +14,16 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
 	"fmt"
-	"os"
-	"github.com/wso2/micro-integrator/cmd/utils"	
-	"github.com/spf13/cobra"
 	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"os"
 	"time"
 )
 
@@ -40,7 +40,7 @@ var rootCmdLongDesc = dedent.Dedent(`
 var rootCmd = &cobra.Command{
 	Use:   utils.ProjectName,
 	Short: rootCmdShortDesc,
-	Long: rootCmdLongDesc,
+	Long:  rootCmdLongDesc,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
 	//	Run: func(cmd *cobra.Command, args []string) { },
@@ -69,10 +69,10 @@ func init() {
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	// Init ServerConfigVars
-	err := utils.SetConfigVars(utils.ServerConfigFilePath)
-	if err != nil {
-		utils.HandleErrorAndExit("Error reading "+utils.ServerConfigFileName+".", err)
-	}
+	// err := utils.SetConfigVars(utils.ServerConfigFilePath)
+	// if err != nil {
+	// 	utils.HandleErrorAndExit("Error reading "+utils.ServerConfigFileName+".", err)
+	// }
 
 }
 

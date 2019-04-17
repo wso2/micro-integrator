@@ -14,17 +14,17 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
 	"errors"
-    "fmt"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
+	"fmt"
+	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
 )
 
 var appToDelete string
@@ -44,9 +44,9 @@ Example:
 var carbonAppDeleteCmd = &cobra.Command{
 	Use:   deleteApplicationCmdLiteral,
 	Short: deleteApplicationCmdShortDesc,
-	Long: deleteApplicationCmdLongDesc + deleteApplicationCmdExamples,
+	Long:  deleteApplicationCmdLongDesc + deleteApplicationCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Delete carbon app called")
+		utils.Logln(utils.LogPrefixInfo + "Delete carbon app called")
 		executeDeleteCarbonAppCmd(appToDelete)
 	},
 }
@@ -54,93 +54,93 @@ var carbonAppDeleteCmd = &cobra.Command{
 func init() {
 	deleteCmd.AddCommand(carbonAppDeleteCmd)
 
-    // Here you will define your flags and configuration settings.
+	// Here you will define your flags and configuration settings.
 
 	carbonAppDeleteCmd.Flags().StringVarP(&appToDelete, "name", "n", "", "Name of the Carbon Application to be deleted")
-    carbonAppDeleteCmd.MarkFlagRequired("name")
+	carbonAppDeleteCmd.MarkFlagRequired("name")
 }
 
 func executeDeleteCarbonAppCmd(appname string) {
 
-    err := DeleteCarbonApp(appname)
+	err := DeleteCarbonApp(appname)
 
-    // Result after deleting the carbon application
-    if err == nil {
-        
-        fmt.Println("Successfully removed Carbon App")
-        
-    } else {
-        utils.Logln(utils.LogPrefixError+"Deleting Carbon Application", err)
-    }
+	// Result after deleting the carbon application
+	if err == nil {
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+		fmt.Println("Successfully removed Carbon App")
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Deleting Carbon Application", err)
+	}
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // DeleteCarbonApp
 // @param name of the carbon app
 // @return error
-func DeleteCarbonApp(name string) (error) {
+func DeleteCarbonApp(name string) error {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "/" + name
+	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "/" + name
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers := make(map[string]string)
+	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeDELETERequest(finalUrl, headers)
+	resp, err := utils.InvokeDELETERequest(finalUrl, headers)
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        // apiCarbonAppResponse := &utils.CarbonApp{}
-        // unmarshalError := json.Unmarshal([]byte(resp.Body()), &apiCarbonAppResponse)
+	if resp.StatusCode() == http.StatusOK {
+		// apiCarbonAppResponse := &utils.CarbonApp{}
+		// unmarshalError := json.Unmarshal([]byte(resp.Body()), &apiCarbonAppResponse)
 
-        // if unmarshalError != nil {
-        //     utils.HandleErrorAndExit(utils.LogPrefixError+"invalid JSON response", unmarshalError)
-        // }
+		// if unmarshalError != nil {
+		//     utils.HandleErrorAndExit(utils.LogPrefixError+"invalid JSON response", unmarshalError)
+		// }
 
-        return nil
-    } else {
-        return errors.New(resp.Status())
-    }
+		return nil
+	} else {
+		return errors.New(resp.Status())
+	}
 
 }

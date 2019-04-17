@@ -14,17 +14,17 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-	"errors"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
 	"encoding/xml"
+	"errors"
+	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
 )
 
 // Server Summary command related usage info
@@ -42,9 +42,9 @@ Example:
 var summaryCmd = &cobra.Command{
 	Use:   serverSummaryCmdLiteral,
 	Short: serverSummaryCmdShortDesc,
-	Long: serverSummaryCmdLongDesc + serverSummaryCmdExamples,
+	Long:  serverSummaryCmdLongDesc + serverSummaryCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show server summary called")
+		utils.Logln(utils.LogPrefixInfo + "Show server summary called")
 		executeGetServerSummaryCmd()
 	},
 }
@@ -58,51 +58,51 @@ func init() {
 
 func executeGetServerSummaryCmd() {
 
-    serverData, err := GetServerInfo()
+	serverData, err := GetServerInfo()
 
-    if err == nil {
-        // Printing the details of the Server
-        // printTask(*sequence)
-        utils.Logln(utils.LogPrefixInfo+"Server Data", *serverData)
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
-    }
+	if err == nil {
+		// Printing the details of the Server
+		// printTask(*sequence)
+		utils.Logln(utils.LogPrefixInfo+"Server Data", *serverData)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
+	}
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // GetServerInfo
@@ -110,31 +110,31 @@ func executeGetServerSummaryCmd() {
 // @return error
 func GetServerInfo() (*utils.ServerSummary, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixServer + "/summary"
+	finalUrl := utils.RESTAPIBase + utils.PrefixServer + "/summary"
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers := make(map[string]string)
+	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+	resp, err := utils.InvokeGETRequest(finalUrl, headers)
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        serverDataResponse := &utils.ServerSummary{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &serverDataResponse)
+	if resp.StatusCode() == http.StatusOK {
+		serverDataResponse := &utils.ServerSummary{}
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &serverDataResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+		if unmarshalError != nil {
+			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
+		}
 
-        return serverDataResponse, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		return serverDataResponse, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 }

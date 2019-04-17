@@ -14,19 +14,19 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-	"errors"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
 	"encoding/xml"
-	"os"
+	"errors"
+	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
+	"os"
 )
 
 var proxyServiceName string
@@ -46,9 +46,9 @@ Example:
 var proxyServiceShowCmd = &cobra.Command{
 	Use:   showProxyServiceCmdLiteral,
 	Short: showProxyServiceCmdShortDesc,
-	Long: showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
+	Long:  showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show ProxyService called")
+		utils.Logln(utils.LogPrefixInfo + "Show ProxyService called")
 		executeGetProxyServiceCmd(proxyServiceName)
 	},
 }
@@ -58,59 +58,59 @@ func init() {
 
 	// Here you will define your flags and configuration settings.
 	proxyServiceShowCmd.Flags().StringVarP(&proxyServiceName, "name", "n", "", "Name of the Proxy Service")
-    proxyServiceShowCmd.MarkFlagRequired("name")
+	proxyServiceShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetProxyServiceCmd(proxyServiceName string) {
 
-    proxyService, err := GetProxyServiceInfo(proxyServiceName)
+	proxyService, err := GetProxyServiceInfo(proxyServiceName)
 
-    if err == nil {
+	if err == nil {
 
 		utils.Logln(utils.LogPrefixInfo+"InboundEndpoint", proxyService)
 
-        // Printing the details of the Proxy Service
-		printProxyServiceInfo(*proxyService)	
-        
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
-    }
+		// Printing the details of the Proxy Service
+		printProxyServiceInfo(*proxyService)
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
+	}
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // GetProxyServiceInfo
@@ -119,33 +119,33 @@ func executeGetProxyServiceCmd(proxyServiceName string) {
 // @return error
 func GetProxyServiceInfo(name string) (*utils.ProxyService, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + name
+	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + name
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers := make(map[string]string)
+	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+	resp, err := utils.InvokeGETRequest(finalUrl, headers)
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        proxyServiceResponse := &utils.ProxyService{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &proxyServiceResponse)
+	if resp.StatusCode() == http.StatusOK {
+		proxyServiceResponse := &utils.ProxyService{}
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &proxyServiceResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+		if unmarshalError != nil {
+			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
+		}
 
-        return proxyServiceResponse, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		return proxyServiceResponse, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 
 }
 
@@ -159,26 +159,26 @@ func printProxyServiceInfo(proxyService utils.ProxyService) {
 
 	row = []string{"DESCRIPTION", proxyService.Description}
 	table.Append(row)
-	
+
 	row = []string{"IN SEQUENCE", proxyService.InSequence}
 	table.Append(row)
-	
+
 	row = []string{"OUT SEQUENCE", proxyService.OutSequence}
 	table.Append(row)
-	
+
 	row = []string{"FAULT SEQUENCE", proxyService.FaultSequence}
 	table.Append(row)
-	
+
 	row = []string{"ENDPOINT", proxyService.Endpoint}
-    table.Append(row)
-    
-    for _, transport := range proxyService.Transports {
-        row = []string{"TRANSPORTS", transport}
+	table.Append(row)
+
+	for _, transport := range proxyService.Transports {
+		row = []string{"TRANSPORTS", transport}
 		table.Append(row)
 	}
 
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
 	table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
+	table.SetAutoMergeCells(true)
 	table.Render() // Send output
 }

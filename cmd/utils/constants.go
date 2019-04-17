@@ -14,7 +14,7 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package utils
 
@@ -89,8 +89,8 @@ const DefaultRESTAPIBase = Host + ":" + Port + "/" + Context + "/"
 const PrefixCarbonApps = "applications"
 const PrefixAPIs = "apis"
 const PrefixServices = "services"
-const PrefixProxyServices ="proxy-services"
-const PrefixInboundEndpoints ="inbound-endpoints"
+const PrefixProxyServices = "proxy-services"
+const PrefixInboundEndpoints = "inbound-endpoints"
 const PrefixEndpoints = "endpoints"
 const PrefixSequences = "sequences"
 const PrefixTasks = "tasks"

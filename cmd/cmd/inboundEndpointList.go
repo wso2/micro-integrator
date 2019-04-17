@@ -14,18 +14,18 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
+	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"github.com/spf13/cobra"
 	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 	"net/http"
-	"encoding/xml"
 )
 
 // List Inbound Endpoints command related usage info
@@ -42,9 +42,9 @@ Example:
 var inboundEndpointsListCmd = &cobra.Command{
 	Use:   listInboundEndpointsCmdLiteral,
 	Short: listInboundEndpointsCmdShortDesc,
-	Long: listInboundEndpointsCmdLongDesc + listInboundEndpointsCmdExamples,
+	Long:  listInboundEndpointsCmdLongDesc + listInboundEndpointsCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"List inbound endpoints called")
+		utils.Logln(utils.LogPrefixInfo + "List inbound endpoints called")
 		executeListInboundEndpointsCmd()
 	},
 }

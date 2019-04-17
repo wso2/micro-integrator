@@ -14,19 +14,19 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-	"errors"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
 	"encoding/xml"
-	"os"
+	"errors"
+	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
+	"os"
 )
 
 var sequenceName string
@@ -46,9 +46,9 @@ Example:
 var sequenceShowCmd = &cobra.Command{
 	Use:   showSequenceCmdLiteral,
 	Short: showSequenceCmdShortDesc,
-	Long: showSequenceCmdLongDesc + showSequenceCmdExamples,
+	Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show sequence called")
+		utils.Logln(utils.LogPrefixInfo + "Show sequence called")
 		executeGetSequenceCmd(sequenceName)
 	},
 }
@@ -59,56 +59,56 @@ func init() {
 	// Here you will define your flags and configuration settings.
 
 	sequenceShowCmd.Flags().StringVarP(&sequenceName, "name", "n", "", "Name of the Sequence")
-    sequenceShowCmd.MarkFlagRequired("name")
+	sequenceShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetSequenceCmd(sequencename string) {
 
-    sequence, err := GetSequenceInfo(sequencename)
+	sequence, err := GetSequenceInfo(sequencename)
 
-    if err == nil {
-        // Printing the details of the Sequence
-        printSequenceInfo(*sequence)
-        
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
-    }
+	if err == nil {
+		// Printing the details of the Sequence
+		printSequenceInfo(*sequence)
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
+	}
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // GetSequenceInfo
@@ -117,33 +117,33 @@ func executeGetSequenceCmd(sequencename string) {
 // @return error
 func GetSequenceInfo(name string) (*utils.Sequence, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixSequences + "?inboundEndpointName=" + name
+	finalUrl := utils.RESTAPIBase + utils.PrefixSequences + "?inboundEndpointName=" + name
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers := make(map[string]string)
+	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+	resp, err := utils.InvokeGETRequest(finalUrl, headers)
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        sequenceResponse := &utils.Sequence{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &sequenceResponse)
+	if resp.StatusCode() == http.StatusOK {
+		sequenceResponse := &utils.Sequence{}
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &sequenceResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+		if unmarshalError != nil {
+			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
+		}
 
-        return sequenceResponse, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		return sequenceResponse, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 }
 
 // printSequenceInfo
@@ -156,15 +156,15 @@ func printSequenceInfo(sequence utils.Sequence) {
 	table.Append(data)
 
 	data = []string{"CONTAINER", sequence.Container}
-    table.Append(data)
-    
-    for _, mediator := range sequence.Mediators {
-        data = []string{"MEDIATORS", mediator}
+	table.Append(data)
+
+	for _, mediator := range sequence.Mediators {
+		data = []string{"MEDIATORS", mediator}
 		table.Append(data)
 	}
 
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true) 
-    table.SetAutoMergeCells(true)
+	table.SetRowLine(true)
+	table.SetAutoMergeCells(true)
 	table.Render() // Send output
 }

@@ -14,18 +14,18 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"fmt"
-	"net/http"
 	"encoding/json"
 	"errors"
+	"fmt"
+	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
 )
 
 var endpointToStop string
@@ -45,9 +45,9 @@ Example:
 var stopEndpointCmd = &cobra.Command{
 	Use:   stopEndpointCmdLiteral,
 	Short: stopEndpointCmdShortDesc,
-	Long: stopEndpointCmdLongDesc + stopEndpointCmdExamples,
+	Long:  stopEndpointCmdLongDesc + stopEndpointCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Switch OFF endpoint called")
+		utils.Logln(utils.LogPrefixInfo + "Switch OFF endpoint called")
 		executeSwitchOffEndpointCmd(endpointToStop)
 	},
 }
@@ -58,92 +58,92 @@ func init() {
 	// Here you will define your flags and configuration settings.
 
 	stopEndpointCmd.Flags().StringVarP(&endpointToStop, "name", "n", "", "Name of the Endpoint to Switch off")
-    stopEndpointCmd.MarkFlagRequired("name")
+	stopEndpointCmd.MarkFlagRequired("name")
 }
 
 func executeSwitchOffEndpointCmd(endpoint string) {
 
-    err := SwitchOffEndpoint(endpoint)
+	err := SwitchOffEndpoint(endpoint)
 
-    // Result after switching off the endpoint
-    if err == nil {
-        
-        fmt.Println("Successfully switched off the endpoint:", endpoint)
-        
-    } else {
-        utils.Logln(utils.LogPrefixError+"Switching Off Endpoint", err)
-    }
+	// Result after switching off the endpoint
+	if err == nil {
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+		fmt.Println("Successfully switched off the endpoint:", endpoint)
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Switching Off Endpoint", err)
+	}
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // SwitchOffEndpoint
 // @param name of the endpoint
 // @return error
-func SwitchOffEndpoint(name string) (error) {
+func SwitchOffEndpoint(name string) error {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints + "/off"
+	finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints + "/off"
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
+	headers := make(map[string]string)
 	headers[utils.HeaderContentType] = utils.HeaderValueApplicationJSON
 
 	key := "name"
-    _map := make(map[string]string)
+	_map := make(map[string]string)
 
-    _map[key] = name
+	_map[key] = name
 
-    body, _ := json.Marshal(_map)
+	body, _ := json.Marshal(_map)
 
-    resp, err := utils.InvokePOSTRequest(finalUrl, headers, string(body))
+	resp, err := utils.InvokePOSTRequest(finalUrl, headers, string(body))
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        // return no error
+	if resp.StatusCode() == http.StatusOK {
+		// return no error
 
-        return nil
-    } else {
-        return errors.New(resp.Status())
-    }
+		return nil
+	} else {
+		return errors.New(resp.Status())
+	}
 
 }

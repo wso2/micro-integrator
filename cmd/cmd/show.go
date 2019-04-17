@@ -14,15 +14,15 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
 	"fmt"
-	"github.com/wso2/micro-integrator/cmd/utils"
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 var showCmdLiteral = "show"
@@ -37,14 +37,14 @@ Flags:
     --name, -n
 
 Available Commands:
-  ` + showApplicationCmdLiteral + `		` + showApplicationCmdShortDesc +`
-  ` + showAPICmdLiteral + `			` + showAPICmdShortDesc +`
-  ` + showEndpointCmdLiteral + `		` + showEndpointCmdShortDesc +`
-  ` + showInboundEndpointCmdLiteral + `	` + showInboundEndpointCmdShortDesc +`
-  ` + showProxyServiceCmdLiteral + `		` + showProxyServiceCmdShortDesc +`
-  ` + showServiceCmdLiteral + `		` + showServiceCmdShortDesc +`
-  ` + listSequenceCmdLiteral + `		` + showApplicationCmdShortDesc +`
-  ` + showTaskCmdLiteral + `			` + showTaskCmdShortDesc +`
+  ` + showApplicationCmdLiteral + `		` + showApplicationCmdShortDesc + `
+  ` + showAPICmdLiteral + `			` + showAPICmdShortDesc + `
+  ` + showEndpointCmdLiteral + `		` + showEndpointCmdShortDesc + `
+  ` + showInboundEndpointCmdLiteral + `	` + showInboundEndpointCmdShortDesc + `
+  ` + showProxyServiceCmdLiteral + `		` + showProxyServiceCmdShortDesc + `
+  ` + showServiceCmdLiteral + `		` + showServiceCmdShortDesc + `
+  ` + listSequenceCmdLiteral + `		` + showApplicationCmdShortDesc + `
+  ` + showTaskCmdLiteral + `			` + showTaskCmdShortDesc + `
   `)
 
 var showCmdExamples = dedent.Dedent(`
@@ -61,9 +61,9 @@ Use "micli show [command] --help" for more information about a command.`
 var showCmd = &cobra.Command{
 	Use:   "show [COMMANDS]",
 	Short: "Show details about a carbon app, endpoint, api, proxy service, task or sequence",
-	Long: "Show details about a carbon app, endpoint, api, task or sequence",
+	Long:  "Show details about a carbon app, endpoint, api, task or sequence",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(showUsageError + showCmdExamples + showCmdHelp)		
+		fmt.Println(showUsageError + showCmdExamples + showCmdHelp)
 	},
 }
 

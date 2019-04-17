@@ -14,7 +14,7 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package utils
 
@@ -59,7 +59,7 @@ func GetServerConfigFromFile(filePath string) *ServerConfig {
 // Read and validate contents of server_config.yaml
 // will throw errors if the any of the lines is blank
 func (serverConfig *ServerConfig) ParseServerConfigFromFile(data []byte) error {
-	
+
 	if err := yaml.Unmarshal(data, serverConfig); err != nil {
 		return err
 	}

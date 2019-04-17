@@ -14,19 +14,18 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
-
+ */
 
 package cmd
 
 import (
+	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"github.com/spf13/cobra"
 	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 	"net/http"
-	"encoding/xml"
 )
 
 // List Proxy Services command related usage info
@@ -43,9 +42,9 @@ Example:
 var proxyServicesListCmd = &cobra.Command{
 	Use:   listProxyServicesCmdLiteral,
 	Short: listProxyServicesCmdShortDesc,
-	Long: listProxyServicesCmdLongDesc + listProxyServicesCmdExamples,
+	Long:  listProxyServicesCmdLongDesc + listProxyServicesCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"List proxy services called")
+		utils.Logln(utils.LogPrefixInfo + "List proxy services called")
 		executeListProxyServicesCmd()
 	},
 }

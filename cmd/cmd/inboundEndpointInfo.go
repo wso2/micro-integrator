@@ -14,19 +14,19 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-	"errors"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
 	"encoding/xml"
-	"os"
+	"errors"
+	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
+	"os"
 )
 
 var inboundEndpointName string
@@ -46,9 +46,9 @@ Example:
 var inboundEndpointShowCmd = &cobra.Command{
 	Use:   showInboundEndpointCmdLiteral,
 	Short: showInboundEndpointCmdShortDesc,
-	Long: showInboundEndpointCmdLongDesc + showInboundEndpointCmdExamples,
+	Long:  showInboundEndpointCmdLongDesc + showInboundEndpointCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show InboundEndpoint called")
+		utils.Logln(utils.LogPrefixInfo + "Show InboundEndpoint called")
 		executeGetInboundEndpointCmd(inboundEndpointName)
 	},
 }
@@ -59,57 +59,57 @@ func init() {
 	// Here you will define your flags and configuration settings.
 
 	inboundEndpointShowCmd.Flags().StringVarP(&inboundEndpointName, "name", "n", "", "Name of the Inbound Endpoint")
-    inboundEndpointShowCmd.MarkFlagRequired("name")
+	inboundEndpointShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetInboundEndpointCmd(inboundEndpointname string) {
 
-    inboundEndpoint, err := GetInboundEndpointInfo(inboundEndpointname)
+	inboundEndpoint, err := GetInboundEndpointInfo(inboundEndpointname)
 
-    if err == nil {
-        // Printing the details of the InboundEndpoint
+	if err == nil {
+		// Printing the details of the InboundEndpoint
 		printInboundEndpoint(*inboundEndpoint)
-		
-        utils.Logln(utils.LogPrefixInfo+"InboundEndpoint", inboundEndpoint)
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
-    }
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+		utils.Logln(utils.LogPrefixInfo+"InboundEndpoint", inboundEndpoint)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
+	}
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // GetInboundEndpointInfo
@@ -118,33 +118,33 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
 // @return error
 func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + name
+	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + name
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers := make(map[string]string)
+	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+	resp, err := utils.InvokeGETRequest(finalUrl, headers)
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        endpointResponse := &utils.InboundEndpoint{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &endpointResponse)
+	if resp.StatusCode() == http.StatusOK {
+		endpointResponse := &utils.InboundEndpoint{}
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &endpointResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+		if unmarshalError != nil {
+			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
+		}
 
-        return endpointResponse, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		return endpointResponse, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 
 }
 
@@ -158,23 +158,23 @@ func printInboundEndpoint(endpoint utils.InboundEndpoint) {
 
 	row = []string{"PROTOCOL", "", endpoint.Protocol}
 	table.Append(row)
-	
+
 	row = []string{"CLASS", "", endpoint.Class}
 	table.Append(row)
-	
+
 	row = []string{"SEQUENCE", "", endpoint.Sequence}
 	table.Append(row)
-	
+
 	row = []string{"ERROR SEQUENCE", "", endpoint.ErrorSequence}
-    table.Append(row)
-    
-    for _, param := range endpoint.Parameters {
-        row = []string{"PARAMETERS", param.Name, param.Value}
+	table.Append(row)
+
+	for _, param := range endpoint.Parameters {
+		row = []string{"PARAMETERS", param.Name, param.Value}
 		table.Append(row)
 	}
 
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
 	table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
+	table.SetAutoMergeCells(true)
 	table.Render() // Send output
 }

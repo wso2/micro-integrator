@@ -14,14 +14,14 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
@@ -33,7 +33,7 @@ Usage
   ` + utils.ProjectName + ` ` + deleteCmdLiteral + ` [command] [flags]
 
 Commands:
-  ` + deleteApplicationCmdLiteral + ` -n <name>	` + deleteApplicationCmdShortDesc +`
+  ` + deleteApplicationCmdLiteral + ` -n <name>	` + deleteApplicationCmdShortDesc + `
 `)
 
 var deleteCmdExamples = dedent.Dedent(`
@@ -44,7 +44,7 @@ Example:
 var deleteCmd = &cobra.Command{
 	Use:   "delete [COMMANDS]",
 	Short: "Delete a carbon app, endpoint, api, task or sequence",
-	Long: "Delete a carbon app, endpoint, api, task or sequence",
+	Long:  "Delete a carbon app, endpoint, api, task or sequence",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(deleteUsageError + deleteCmdExamples)
 	},
@@ -53,7 +53,7 @@ var deleteCmd = &cobra.Command{
 func init() {
 
 	// TODO: Complete delete functionility in Inbound endpoint, proxy services, tasks,
-	// sequences and uncommnet this 
+	// sequences and uncommnet this
 	// rootCmd.AddCommand(deleteCmd)
 
 	// Here you will define your flags and configuration settings.

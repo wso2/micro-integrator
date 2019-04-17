@@ -14,18 +14,18 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
+	"encoding/xml"
 	"errors"
 	"fmt"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"github.com/spf13/cobra"
 	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 	"net/http"
-	"encoding/xml"
 )
 
 // List APIs command related usage info
@@ -42,9 +42,9 @@ Example:
 var apisListCmd = &cobra.Command{
 	Use:   listAPICmdLiteral,
 	Short: listAPICmdShortDesc,
-	Long: listAPICmdLongDesc + listAPICmdExamples,
+	Long:  listAPICmdLongDesc + listAPICmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"List APIs called")
+		utils.Logln(utils.LogPrefixInfo + "List APIs called")
 		executeListAPIsCmd()
 	},
 }

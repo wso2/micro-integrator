@@ -14,7 +14,7 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
@@ -43,7 +43,7 @@ to quickly create a Cobra application.`,
 
 func init() {
 	// TODO: Complete functionility in server summary
-	// and uncommnet this 
+	// and uncommnet this
 	// rootCmd.AddCommand(serverCmd)
 
 	// Here you will define your flags and configuration settings.

@@ -14,19 +14,19 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-	"errors"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
 	"encoding/xml"
-	"os"
+	"errors"
+	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
+	"os"
 )
 
 var taskName string
@@ -46,9 +46,9 @@ Example:
 var taskShowCmd = &cobra.Command{
 	Use:   showTaskCmdLiteral,
 	Short: showTaskCmdShortDesc,
-	Long: showTaskCmdLongDesc + showTaskCmdExamples,
+	Long:  showTaskCmdLongDesc + showTaskCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show task called")
+		utils.Logln(utils.LogPrefixInfo + "Show task called")
 		executeGetTaskCmd(taskName)
 	},
 }
@@ -59,56 +59,56 @@ func init() {
 	// Here you will define your flags and configuration settings.
 
 	taskShowCmd.Flags().StringVarP(&taskName, "name", "n", "", "Name of the Task")
-    taskShowCmd.MarkFlagRequired("name")
+	taskShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetTaskCmd(taskname string) {
 
-    task, err := GetTaskInfo(taskname)
+	task, err := GetTaskInfo(taskname)
 
-    if err == nil {
-        // Printing the details of the Task
-        printTask(*task)
-        
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
-    }
+	if err == nil {
+		// Printing the details of the Task
+		printTask(*task)
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
+	}
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // GetTaskInfo
@@ -117,35 +117,35 @@ func executeGetTaskCmd(taskname string) {
 // @return error
 func GetTaskInfo(name string) (*utils.Task, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + name
+	finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + name
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers := make(map[string]string)
+	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+	resp, err := utils.InvokeGETRequest(finalUrl, headers)
 
-    // fmt.Println(resp)
+	// fmt.Println(resp)
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        taskResponse := &utils.Task{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &taskResponse)
+	if resp.StatusCode() == http.StatusOK {
+		taskResponse := &utils.Task{}
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &taskResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+		if unmarshalError != nil {
+			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
+		}
 
-        return taskResponse, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		return taskResponse, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 }
 
 // printTaskInfo
@@ -176,6 +176,6 @@ func printTask(task utils.Task) {
 	table.Append(d_cron)
 
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true) 
+	table.SetRowLine(true)
 	table.Render() // Send output
 }

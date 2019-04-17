@@ -14,16 +14,16 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package utils
 
 import (
-	//"errors"
-	// "io/ioutil"
-	// "os"
-	//"strings"
-	// "fmt"
+//"errors"
+// "io/ioutil"
+// "os"
+//"strings"
+// "fmt"
 )
 
 var RESTAPIBase = DefaultRESTAPIBase

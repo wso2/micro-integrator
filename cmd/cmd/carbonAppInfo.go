@@ -14,20 +14,20 @@
 * KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-    "errors"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
-    "encoding/xml"
-    "strconv"
-    "os"
+	"encoding/xml"
+	"errors"
+	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"net/http"
+	"os"
+	"strconv"
 )
 
 var appName string
@@ -45,70 +45,70 @@ Example:
 
 // carbonAppShowCmd represents the show carbonApp command
 var carbonAppShowCmd = &cobra.Command{
-    Use:   showApplicationCmdLiteral,
-    Short: showApplicationCmdShortDesc,
-    Long: showApplicationCmdLongDesc + showApplicationCmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo+"Show carbon app called")
-        executeGetCarbonAppCmd(appName)
-    },
+	Use:   showApplicationCmdLiteral,
+	Short: showApplicationCmdShortDesc,
+	Long:  showApplicationCmdLongDesc + showApplicationCmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		utils.Logln(utils.LogPrefixInfo + "Show carbon app called")
+		executeGetCarbonAppCmd(appName)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(carbonAppShowCmd)
+	showCmd.AddCommand(carbonAppShowCmd)
 
-    // Here you will define your flags and configuration settings.
+	// Here you will define your flags and configuration settings.
 
-    carbonAppShowCmd.Flags().StringVarP(&appName, "name", "n", "", "Name of the Carbon Application")
-    carbonAppShowCmd.MarkFlagRequired("name")
+	carbonAppShowCmd.Flags().StringVarP(&appName, "name", "n", "", "Name of the Carbon Application")
+	carbonAppShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetCarbonAppCmd(appname string) {
 
-    app, err := GetCarbonAppInfo(appname)
+	app, err := GetCarbonAppInfo(appname)
 
-    if err == nil {
-        // Printing the details of the Carbon App
-        printCarbonAppInfo(*app)
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Carbon App", err)
-    }
+	if err == nil {
+		// Printing the details of the Carbon App
+		printCarbonAppInfo(*app)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting Information of the Carbon App", err)
+	}
 
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
+	// if flagExportAPICmdToken != "" {
+	//  // token provided with --token (-t) flag
+	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
+	//      // username and/or password provided with -u and/or -p flags
+	//      // Error
+	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
+	//  } else {
+	//      // token only, proceed with token
+	//  }
+	// } else {
+	//  // no token provided with --token (-t) flag
+	//  // proceed with username and password
+	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
+	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
 
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
+	//  if preCommandErr == nil {
+	//      if listApisCmdQuery != "" {
+	//          fmt.Println("Search query:", listApisCmdQuery)
+	//      }
+	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
 
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
+	//      if err == nil {
+	//          // Printing the list of available APIs
+	//          fmt.Println("Environment:", listApisCmdEnvironment)
+	//          fmt.Println("No. of APIs:", count)
+	//          if count > 0 {
+	//              printAPIs(apis)
+	//          }
+	//      } else {
+	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+	//      }
+	//  } else {
+	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
+	//  }
+	// }
 }
 
 // GetCarbonAppInfo
@@ -117,33 +117,33 @@ func executeGetCarbonAppCmd(appname string) {
 // @return error
 func GetCarbonAppInfo(name string) (*utils.CarbonApp, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + name
+	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + name
 
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
+	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers := make(map[string]string)
+	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+	resp, err := utils.InvokeGETRequest(finalUrl, headers)
 
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
+	if err != nil {
+		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
+	}
 
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
+	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        carbonAppResponse := &utils.CarbonApp{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &carbonAppResponse)
+	if resp.StatusCode() == http.StatusOK {
+		carbonAppResponse := &utils.CarbonApp{}
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &carbonAppResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+		if unmarshalError != nil {
+			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
+		}
 
-        return carbonAppResponse, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		return carbonAppResponse, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 
 }
 
@@ -157,20 +157,20 @@ func printCarbonAppInfo(app utils.CarbonApp) {
 	table.Append(d_name)
 
 	d_version := []string{"VERSION", "", app.Version}
-    table.Append(d_version)
-    
-    for id, artifact := range app.Artifacts {
+	table.Append(d_version)
 
-        artifactId := "ARTIFACTS " + strconv.Itoa(id)
+	for id, artifact := range app.Artifacts {
 
-        data := []string{artifactId, "NAME", artifact.Name}
-        table.Append(data)
-        data = []string{artifactId, "TYPE", artifact.Type}
-        table.Append(data)
+		artifactId := "ARTIFACTS " + strconv.Itoa(id)
+
+		data := []string{artifactId, "NAME", artifact.Name}
+		table.Append(data)
+		data = []string{artifactId, "TYPE", artifact.Type}
+		table.Append(data)
 	}
 
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true) 
-    table.SetAutoMergeCells(true)
+	table.SetRowLine(true)
+	table.SetAutoMergeCells(true)
 	table.Render() // Send output
 }
