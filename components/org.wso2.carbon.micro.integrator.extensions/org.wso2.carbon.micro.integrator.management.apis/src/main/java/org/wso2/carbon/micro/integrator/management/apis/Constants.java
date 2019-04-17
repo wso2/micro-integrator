@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-public class CONSTANTS {
+public class Constants {
 
     public static final String REST_API_CONTEXT = "/management";
     public static final String PREFIX_APIS = "/apis";

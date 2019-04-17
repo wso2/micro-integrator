@@ -22,14 +22,14 @@ package org.wso2.carbon.micro.integrator.management.apis;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.PREFIX_APIS;
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.PREFIX_CARBON_APPS;
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.PREFIX_ENDPOINTS;
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.PREFIX_INBOUND_ENDPOINTS;
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.PREFIX_PROXY_SERVICES;
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.PREFIX_SEQUENCES;
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.PREFIX_TASKS;
-import static org.wso2.carbon.micro.integrator.management.apis.CONSTANTS.REST_API_CONTEXT;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_APIS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_ENDPOINTS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_INBOUND_ENDPOINTS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_TASKS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 
 public class ManagementInternalAPI implements InternalAPI {
 
