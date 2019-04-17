@@ -19,5 +19,4 @@
 # Base image
 FROM wso2/micro-integrator:latest
 
-COPY order-process-be/order-processCompositeApplication/target/order-processCompositeApplication_1.0.0.car /home/wso2ei/wso2mi/repository/deployment/server/carbonapps
 COPY composite-service/composite-service-capp/target/composite-serviceCompositeApplication_1.0.0.car /home/wso2ei/wso2mi/repository/deployment/server/carbonapps
