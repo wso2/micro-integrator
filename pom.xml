@@ -177,6 +177,27 @@
                 <version>${carbon.analytics.common.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.carbon.mediation</groupId>
+                <artifactId>org.wso2.carbon.inbound.endpoint</artifactId>
+                <version>${carbon.mediation.version}</version>
+                <scope>compile</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.application.deployer</artifactId>
+                <version>4.4.37</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.mediation</groupId>
+                <artifactId>org.wso2.carbon.application.mgt.synapse</artifactId>
+                <version>${carbon.mediation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.carbon.micro.integrator.core</artifactId>
+                <version>${carbon.mediation.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.ws.security.wso2</groupId>
                 <artifactId>wss4j</artifactId>
                 <version>${wss4j.version}</version>
@@ -270,9 +291,9 @@
         <carbon.kernel.version>4.4.38</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <synapse.version>2.1.7-wso2v92</synapse.version>
+        <synapse.version>2.1.7-wso2v98</synapse.version>
         <orbit.version.axis2>1.6.1-wso2v28</orbit.version.axis2>
-        <carbon.mediation.version>4.6.123</carbon.mediation.version>
+        <carbon.mediation.version>4.6.126</carbon.mediation.version>
         <carbon.data.version>4.4.92</carbon.data.version>
         <securevault.version>1.0.0-wso2v2</securevault.version>
 
