@@ -42,7 +42,6 @@ Available Commands:
   ` + showEndpointCmdLiteral + `		` + showEndpointCmdShortDesc + `
   ` + showInboundEndpointCmdLiteral + `	` + showInboundEndpointCmdShortDesc + `
   ` + showProxyServiceCmdLiteral + `		` + showProxyServiceCmdShortDesc + `
-  ` + showServiceCmdLiteral + `		` + showServiceCmdShortDesc + `
   ` + listSequenceCmdLiteral + `		` + showApplicationCmdShortDesc + `
   ` + showTaskCmdLiteral + `			` + showTaskCmdShortDesc + `
   `)
@@ -69,7 +68,4 @@ var showCmd = &cobra.Command{
 
 func init() {
 	rootCmd.AddCommand(showCmd)
-
-	// Here you will define your flags and configuration settings.
-
 }

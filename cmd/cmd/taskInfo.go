@@ -56,8 +56,6 @@ var taskShowCmd = &cobra.Command{
 func init() {
 	showCmd.AddCommand(taskShowCmd)
 
-	// Here you will define your flags and configuration settings.
-
 	taskShowCmd.Flags().StringVarP(&taskName, "name", "n", "", "Name of the Task")
 	taskShowCmd.MarkFlagRequired("name")
 }
@@ -69,46 +67,9 @@ func executeGetTaskCmd(taskname string) {
 	if err == nil {
 		// Printing the details of the Task
 		printTask(*task)
-
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
 	}
-
-	// if flagExportAPICmdToken != "" {
-	//  // token provided with --token (-t) flag
-	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-	//      // username and/or password provided with -u and/or -p flags
-	//      // Error
-	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-	//  } else {
-	//      // token only, proceed with token
-	//  }
-	// } else {
-	//  // no token provided with --token (-t) flag
-	//  // proceed with username and password
-	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
-
-	//  if preCommandErr == nil {
-	//      if listApisCmdQuery != "" {
-	//          fmt.Println("Search query:", listApisCmdQuery)
-	//      }
-	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
-
-	//      if err == nil {
-	//          // Printing the list of available APIs
-	//          fmt.Println("Environment:", listApisCmdEnvironment)
-	//          fmt.Println("No. of APIs:", count)
-	//          if count > 0 {
-	//              printAPIs(apis)
-	//          }
-	//      } else {
-	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-	//      }
-	//  } else {
-	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-	//  }
-	// }
 }
 
 // GetTaskInfo
@@ -122,11 +83,8 @@ func GetTaskInfo(name string) (*utils.Task, error) {
 	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
 	headers := make(map[string]string)
-	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
 	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	// fmt.Println(resp)
 
 	if err != nil {
 		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
@@ -141,7 +99,6 @@ func GetTaskInfo(name string) (*utils.Task, error) {
 		if unmarshalError != nil {
 			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
 		}
-
 		return taskResponse, nil
 	} else {
 		return nil, errors.New(resp.Status())

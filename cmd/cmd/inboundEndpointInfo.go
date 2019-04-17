@@ -56,8 +56,6 @@ var inboundEndpointShowCmd = &cobra.Command{
 func init() {
 	showCmd.AddCommand(inboundEndpointShowCmd)
 
-	// Here you will define your flags and configuration settings.
-
 	inboundEndpointShowCmd.Flags().StringVarP(&inboundEndpointName, "name", "n", "", "Name of the Inbound Endpoint")
 	inboundEndpointShowCmd.MarkFlagRequired("name")
 }
@@ -69,47 +67,9 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
 	if err == nil {
 		// Printing the details of the InboundEndpoint
 		printInboundEndpoint(*inboundEndpoint)
-
-		utils.Logln(utils.LogPrefixInfo+"InboundEndpoint", inboundEndpoint)
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
 	}
-
-	// if flagExportAPICmdToken != "" {
-	//  // token provided with --token (-t) flag
-	//  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-	//      // username and/or password provided with -u and/or -p flags
-	//      // Error
-	//      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-	//  } else {
-	//      // token only, proceed with token
-	//  }
-	// } else {
-	//  // no token provided with --token (-t) flag
-	//  // proceed with username and password
-	//  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-	//      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
-
-	//  if preCommandErr == nil {
-	//      if listApisCmdQuery != "" {
-	//          fmt.Println("Search query:", listApisCmdQuery)
-	//      }
-	//      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
-
-	//      if err == nil {
-	//          // Printing the list of available APIs
-	//          fmt.Println("Environment:", listApisCmdEnvironment)
-	//          fmt.Println("No. of APIs:", count)
-	//          if count > 0 {
-	//              printAPIs(apis)
-	//          }
-	//      } else {
-	//          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-	//      }
-	//  } else {
-	//      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-	//  }
-	// }
 }
 
 // GetInboundEndpointInfo
@@ -123,7 +83,6 @@ func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
 	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
 	headers := make(map[string]string)
-	// headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
 	resp, err := utils.InvokeGETRequest(finalUrl, headers)
 
@@ -140,12 +99,10 @@ func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
 		if unmarshalError != nil {
 			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
 		}
-
 		return endpointResponse, nil
 	} else {
 		return nil, errors.New(resp.Status())
 	}
-
 }
 
 // printInboundEndpointInfo
