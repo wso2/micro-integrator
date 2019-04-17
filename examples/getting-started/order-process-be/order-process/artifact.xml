@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?><artifacts>
+    <artifact name="OrderProcessApi" groupId="org.wso2.mi.api" version="1.0.0" type="synapse/api" serverRole="EnterpriseServiceBus">
+        <file>src/main/synapse-config/api/OrderProcessApi.xml</file>
+    </artifact>
+</artifacts>
