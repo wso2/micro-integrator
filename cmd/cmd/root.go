@@ -67,6 +67,13 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	// Init ServerConfigVars
+	err := utils.SetConfigVars(utils.ServerConfigFilePath)
+	if err != nil {
+		utils.HandleErrorAndExit("Error reading "+utils.ServerConfigFileName+".", err)
+	}
+
 }
 
 // initConfig reads in config file and ENV variables if set.

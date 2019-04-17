@@ -39,10 +39,10 @@ const EnvKeysAllFileName = "env_keys_all.yaml"
 
 var EnvKeysAllFilePath = filepath.Join(ConfigDirPath, EnvKeysAllFileName)
 
-const MainConfigFileName = "main_config.yaml"
+const ServerConfigFileName = "server_config.yaml"
 const SampleMainConfigFileName = "main_config.yaml.sample"
 
-var MainConfigFilePath = filepath.Join(ConfigDirPath, MainConfigFileName)
+var ServerConfigFilePath = filepath.Join(CurrentDir, ServerConfigFileName)
 var SampleMainConfigFilePath = filepath.Join(ConfigDirPath, SampleMainConfigFileName)
 
 const ExportDirName = "exported"
@@ -79,12 +79,13 @@ const LogPrefixError = "[ERROR] "
 const DefaultTokenValidityPeriod = "3600"
 const DefaultHttpRequestTimeout = 100000
 
-// Server Address
+// DO NOT CHANGE THESE MANUALLY
+// Default Server Address
 const Host = "http://localhost"
 const Port = "9091"
 const Context = "management"
 
-const RESTAPIBase = Host + ":" + Port + "/" + Context + "/"
+const DefaultRESTAPIBase = Host + ":" + Port + "/" + Context + "/"
 const PrefixCarbonApps = "applications"
 const PrefixAPIs = "apis"
 const PrefixServices = "services"

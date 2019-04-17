@@ -20,16 +20,16 @@ package utils
 
 import (
 	"errors"
-	"fmt"
+	// "fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	"os"
+	// "os"
 )
 
-// WriteConfigFile
+// WriteServerConfigFile
 // @param c : data
-// @param envConfigFilePath : Path to file where env endpoints are stored
-func WriteConfigFile(c interface{}, envConfigFilePath string) {
+// @param serverConfigFilePath : Path to file where env endpoints are stored
+func WriteServerConfigFile(c interface{}, envConfigFilePath string) {
 	data, err := yaml.Marshal(&c)
 	if err != nil {
 		HandleErrorAndExit("Unable to write configuration to file.", err)
@@ -45,25 +45,25 @@ func WriteConfigFile(c interface{}, envConfigFilePath string) {
 func GetServerConfigFromFile(filePath string) *ServerConfig {
 	data, err := ioutil.ReadFile(filePath)
 	if err != nil {
-		HandleErrorAndExit("MainConfig: File Not Found: "+filePath, err)
+		HandleErrorAndExit("ServerConfig: File Not Found: "+filePath, err)
 	}
 
 	var serverConfig ServerConfig
-	if err := serverConfig.ParseMainConfigFromFile(data); err != nil {
-		HandleErrorAndExit("MainConfig: Error parsing "+filePath, err)
+	if err := serverConfig.ParseServerConfigFromFile(data); err != nil {
+		HandleErrorAndExit("ServerConfig: Error parsing "+filePath, err)
 	}
 
 	return &serverConfig
 }
 
-// Read and validate contents of main_config.yaml
+// Read and validate contents of server_config.yaml
 // will throw errors if the any of the lines is blank
 func (serverConfig *ServerConfig) ParseServerConfigFromFile(data []byte) error {
 	
 	if err := yaml.Unmarshal(data, serverConfig); err != nil {
 		return err
 	}
-	
+
 	if serverConfig.Host == "" {
 		return errors.New("Blank Host")
 	}
@@ -72,36 +72,4 @@ func (serverConfig *ServerConfig) ParseServerConfigFromFile(data []byte) error {
 	}
 
 	return nil
-}
-
-// Check whether the file exists.
-func IsFileExist(path string) (isFileExist bool) {
-	if _, err := os.Stat(path); err != nil {
-		if os.IsNotExist(err) {
-			return false
-		} else {
-			HandleErrorAndExit(fmt.Sprintf(UnableToReadFileMsg, path), err)
-		}
-	}
-	return true
-}
-
-// exists returns whether the given file or directory exists or not
-func IsDirExist(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	return true, err
-}
-
-func CreateDirIfNotExist(path string) (err error) {
-	if _, err := os.Stat(path); os.IsNotExist(err) {
-		os.Mkdir(path, os.ModePerm)
-	}
-
-	return err
 }
