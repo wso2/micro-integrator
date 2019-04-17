@@ -17,40 +17,8 @@
 # ---------------------------------------------------------------------------
 
 # Base image
-FROM openjdk:8-jre-alpine
-MAINTAINER WSO2 Docker Maintainers "dev@wso2.org"
 
-# User details
-ARG USER=wso2ei
-ARG USER_GROUP=wso2ei
-ARG USER_HOME=/home/${USER}
+FROM wso2/micro-integrator:latest
 
-# Resource directory
-ARG FILES=./files
+COPY carbonapps /home/wso2ei/wso2mi/wso2/micro-integrator/repository/deployment/server/carbonapps
 
-# Broker details
-ARG MICROESB_NAME=wso2ei
-ARG MICROESB_VERSION=${product.version}
-ARG MICROESB_DISTRIBUTION=${MICROESB_NAME}-${MICROESB_VERSION}
-ARG MICROESB_HOME=${USER_HOME}/${MICROESB_DISTRIBUTION}
-
-# Add a user group and a user
-RUN addgroup -S ${USER_GROUP} && adduser -S -G ${USER_GROUP} ${USER}
-
-# Copy mico esb distribution to user's home directory
-COPY ${FILES}/${MICROESB_DISTRIBUTION} ${MICROESB_HOME}
-RUN chown -R wso2ei:wso2ei ${MICROESB_HOME}
-COPY ${FILES}/carbonapps  ${MICROESB_HOME}/wso2/micro-integrator/repository/deployment/server/carbonapps
-
-# set the user and work directory
-USER ${USER}
-WORKDIR ${USER_HOME}
-
-# Set environment variable
-ENV MICROESB_HOME ${MICROESB_HOME}
-
-# Expose mico esb ports
-EXPOSE 8290 8253
-
-# Execute micro esb startup script
-CMD ["sh", "-c", "${MICROESB_HOME}/bin/micro-integrator.sh"]
