@@ -139,6 +139,9 @@ spec:
         -
           name: web
           containerPort: 8290
+        -
+          name: web-secure
+          containerPort: 8253
 ---
 apiVersion: v1
 kind: Service
@@ -152,6 +155,10 @@ spec:
       name: web
       port: 8290
       targetPort: 8290
+    -
+      name: web-secure
+      port: 8253
+      targetPort: 8253
   selector:
     event: mi-helloworld
 ```
