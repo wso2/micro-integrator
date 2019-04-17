@@ -19,7 +19,7 @@
 package cmd
 
 import (
-	"cmd/utils"
+	"github.com/wso2/micro-integrator/cmd/utils"
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 	"fmt"

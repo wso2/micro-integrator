@@ -21,7 +21,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"cmd/utils"	
+	"github.com/wso2/micro-integrator/cmd/utils"	
 	"github.com/spf13/cobra"
 	"github.com/lithammer/dedent"
 	"time"

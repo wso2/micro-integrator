@@ -18,7 +18,7 @@
 
 package main
 
-import "cmd/cmd"
+import "github.com/wso2/micro-integrator/cmd/cmd"
 
 func main() {
 	cmd.Execute()

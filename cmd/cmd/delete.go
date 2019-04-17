@@ -22,7 +22,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/lithammer/dedent"
-	"cmd/utils"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 var deleteCmdLiteral = "delete"

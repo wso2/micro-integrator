@@ -20,7 +20,7 @@ package cmd
 
 import (
 	"fmt"
-	"cmd/utils"
+	"github.com/wso2/micro-integrator/cmd/utils"
 	"github.com/spf13/cobra"
 )
 
