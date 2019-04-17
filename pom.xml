@@ -47,6 +47,7 @@
         <module>p2-profile</module>
         <module>distribution</module>
         <module>integration</module>
+        <module>cmd</module>
     </modules>
 
     <dependencyManagement>
