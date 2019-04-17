@@ -185,16 +185,11 @@
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.application.deployer</artifactId>
-                <version>4.4.37</version>
+                <version>${carbon.kernel.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.mediation</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.synapse</artifactId>
-                <version>${carbon.mediation.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.carbon.micro.integrator.core</artifactId>
                 <version>${carbon.mediation.version}</version>
             </dependency>
             <dependency>
