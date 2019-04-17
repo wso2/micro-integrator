@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.wso2.ei</groupId>
+        <artifactId>wso2-micro-integrator-parent</artifactId>
+        <version>1.0.0-m4-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>micli</artifactId>
+    <packaging>mvn-golang</packaging>
+
+    <build>
+        <sourceDirectory>${basedir}</sourceDirectory>
+        <directory>${basedir}${file.separator}bin</directory>
+
+        <plugins>
+
+            <plugin>
+                <groupId>com.igormaznitsa</groupId>
+                <artifactId>mvn-golang-wrapper</artifactId>
+                <version>2.3.1</version>
+                <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <configuration>
+                            <packages>
+                                <package>github.com/wso2/micro-integrator/cmd</package>
+                            </packages>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>
