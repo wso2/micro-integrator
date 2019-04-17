@@ -18,6 +18,11 @@
 
 package utils
 
+type ServerConfig struct {
+	Host			string		`yaml:"server_address"`
+	Port			string		`yaml:"server_port"`
+}
+
 type CarbonApp struct {	
 	Name            string 		`xml:"Name"`	
 	Version         string 		`xml:"Version"`	
