@@ -43,7 +43,10 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	rootCmd.AddCommand(startCmd)
+
+	// TODO: Complete start functionility in Inbound endpoint, proxy services, tasks,
+	// sequences and uncommnet this 
+	// rootCmd.AddCommand(startCmd)
 
 	// Here you will define your flags and configuration settings.
 

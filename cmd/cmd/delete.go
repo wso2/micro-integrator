@@ -51,7 +51,10 @@ var deleteCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(deleteCmd)
+
+	// TODO: Complete delete functionility in Inbound endpoint, proxy services, tasks,
+	// sequences and uncommnet this 
+	// rootCmd.AddCommand(deleteCmd)
 
 	// Here you will define your flags and configuration settings.
 

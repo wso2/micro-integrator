@@ -60,7 +60,7 @@ Use "micli show [command] --help" for more information about a command.`
 // showCmd represents the show command
 var showCmd = &cobra.Command{
 	Use:   "show [COMMANDS]",
-	Short: "Show details about a carbon app, endpoint, api, service, task or sequence",
+	Short: "Show details about a carbon app, endpoint, api, proxy service, task or sequence",
 	Long: "Show details about a carbon app, endpoint, api, task or sequence",
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(showUsageError + showCmdExamples + showCmdHelp)		
