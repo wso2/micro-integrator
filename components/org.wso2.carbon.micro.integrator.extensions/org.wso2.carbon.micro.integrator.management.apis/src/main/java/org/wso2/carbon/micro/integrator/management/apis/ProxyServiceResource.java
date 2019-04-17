@@ -59,7 +59,6 @@ public class ProxyServiceResource extends APIResource {
 
     public ProxyServiceResource(String urlTemplate){
         super(urlTemplate);
-        log.info("Created");
     }
 
     @Override
@@ -72,6 +71,8 @@ public class ProxyServiceResource extends APIResource {
 
     @Override
     public boolean invoke(MessageContext messageContext) {
+
+        buildMessage(messageContext);
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();

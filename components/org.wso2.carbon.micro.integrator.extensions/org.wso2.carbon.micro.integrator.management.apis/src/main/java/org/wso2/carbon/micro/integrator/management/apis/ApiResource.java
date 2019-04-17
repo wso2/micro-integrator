@@ -71,7 +71,6 @@ public class ApiResource extends APIResource {
 
     public ApiResource(String urlTemplate){
         super(urlTemplate);
-        log.info("Created");
     }
 
     public Set<String> getMethods() {
@@ -85,7 +84,7 @@ public class ApiResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-        log.info("Message : " + messageContext.getEnvelope());
+//        log.info("Message : " + messageContext.getEnvelope());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
