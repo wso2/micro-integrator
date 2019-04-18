@@ -19,13 +19,10 @@
 package cmd
 
 import (
-	"encoding/xml"
-	"errors"
 	"fmt"
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"net/http"
 )
 
 // List APIs command related usage info
@@ -55,7 +52,9 @@ func init() {
 
 func executeListAPIsCmd() {
 
-	count, apis, err := GetAPIList()
+	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
+
+	count, apis, err := utils.GetArtifactList(finalUrl)
 
 	if err == nil {
 		// Printing the list of available APIs
@@ -65,38 +64,5 @@ func executeListAPIsCmd() {
 		}
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-	}
-}
-
-// GetAPIList
-// @return count (no. of APIs)
-// @return array of API names
-// @return error
-func GetAPIList() (int32, []string, error) {
-
-	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
-
-	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-	headers := make(map[string]string)
-
-	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	if err != nil {
-		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-	}
-
-	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		apiListResponse := &utils.ListResponse{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiListResponse)
-
-		if unmarshalError != nil {
-			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return apiListResponse.Count, apiListResponse.List, nil
-	} else {
-		return 0, nil, errors.New(resp.Status())
 	}
 }

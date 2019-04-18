@@ -19,13 +19,10 @@
 package cmd
 
 import (
-	"encoding/xml"
-	"errors"
 	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"net/http"
 	"os"
 	"strconv"
 )
@@ -63,46 +60,16 @@ func init() {
 
 func executeGetCarbonAppCmd(appname string) {
 
-	app, err := GetCarbonAppInfo(appname)
+	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + appname
+
+	resp, err := utils.UnmarshalData(finalUrl, &utils.CarbonApp{})
 
 	if err == nil {
 		// Printing the details of the Carbon App
+		app := resp.(*utils.CarbonApp)
 		printCarbonAppInfo(*app)
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting Information of the Carbon App", err)
-	}
-}
-
-// GetCarbonAppInfo
-// @param name of the carbon app
-// @return carbonApp object
-// @return error
-func GetCarbonAppInfo(name string) (*utils.CarbonApp, error) {
-
-	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + name
-
-	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-	headers := make(map[string]string)
-
-	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	if err != nil {
-		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-	}
-
-	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		carbonAppResponse := &utils.CarbonApp{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &carbonAppResponse)
-
-		if unmarshalError != nil {
-			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return carbonAppResponse, nil
-	} else {
-		return nil, errors.New(resp.Status())
 	}
 }
 

@@ -26,6 +26,9 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"encoding/xml"
+	"net/http"
+	"errors"
 )
 
 // Invoke http-post request using go-resty
@@ -103,5 +106,68 @@ func chopPath(original string) string {
 func PrintList(list []string) {
 	for _, item := range list {
 		fmt.Println(item)
+	}
+}
+
+// GetArtifactList
+// @return count (no. of Artifacts)
+// @return array of Artifact names
+// @return error
+func GetArtifactList(url string) (int32, []string, error) {
+
+	Logln(LogPrefixInfo+"URL:", url)
+
+	headers := make(map[string]string)
+
+	resp, err := InvokeGETRequest(url, headers)
+
+	if err != nil {
+		HandleErrorAndExit("Unable to connect to "+url, err)
+	}
+
+	Logln(LogPrefixInfo+"Response:", resp.Status())
+
+	if resp.StatusCode() == http.StatusOK {
+		apiListResponse := &ListResponse{}
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiListResponse)
+
+		if unmarshalError != nil {
+			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+		}
+		return apiListResponse.Count, apiListResponse.List, nil
+	} else {
+		return 0, nil, errors.New(resp.Status())
+	}
+}
+
+// UnmarshalData
+// @param url: url of rest api
+// @param model: struct object
+// @return struct object
+// @return error
+func UnmarshalData(url string, model interface{}) (interface{}, error) {
+
+	Logln(LogPrefixInfo+"URL:", url)
+
+	headers := make(map[string]string)
+
+	resp, err := InvokeGETRequest(url, headers)
+
+	if err != nil {
+		HandleErrorAndExit("Unable to connect to "+url, err)
+	}
+
+	Logln(LogPrefixInfo+"Response:", resp.Status())
+
+	if resp.StatusCode() == http.StatusOK {
+		response := model
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
+
+		if unmarshalError != nil {
+			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+		}
+		return response, nil
+	} else {
+		return nil, errors.New(resp.Status())
 	}
 }

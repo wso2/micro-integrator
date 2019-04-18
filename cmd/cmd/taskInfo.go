@@ -19,13 +19,10 @@
 package cmd
 
 import (
-	"encoding/xml"
-	"errors"
 	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"net/http"
 	"os"
 )
 
@@ -62,46 +59,16 @@ func init() {
 
 func executeGetTaskCmd(taskname string) {
 
-	task, err := GetTaskInfo(taskname)
+	finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + taskname
+
+	resp, err := utils.UnmarshalData(finalUrl, &utils.Task{})
 
 	if err == nil {
 		// Printing the details of the Task
+		task := resp.(*utils.Task)
 		printTask(*task)
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
-	}
-}
-
-// GetTaskInfo
-// @param name of the task
-// @return Task Object
-// @return error
-func GetTaskInfo(name string) (*utils.Task, error) {
-
-	finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + name
-
-	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-	headers := make(map[string]string)
-
-	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	if err != nil {
-		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-	}
-
-	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		taskResponse := &utils.Task{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &taskResponse)
-
-		if unmarshalError != nil {
-			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return taskResponse, nil
-	} else {
-		return nil, errors.New(resp.Status())
 	}
 }
 

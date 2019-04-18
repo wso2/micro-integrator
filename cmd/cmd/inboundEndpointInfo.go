@@ -19,13 +19,10 @@
 package cmd
 
 import (
-	"encoding/xml"
-	"errors"
 	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"net/http"
 	"os"
 )
 
@@ -62,46 +59,16 @@ func init() {
 
 func executeGetInboundEndpointCmd(inboundEndpointname string) {
 
-	inboundEndpoint, err := GetInboundEndpointInfo(inboundEndpointname)
+	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + inboundEndpointname
+
+	resp, err := utils.UnmarshalData(finalUrl, &utils.InboundEndpoint{})
 
 	if err == nil {
 		// Printing the details of the InboundEndpoint
+		inboundEndpoint := resp.(*utils.InboundEndpoint)
 		printInboundEndpoint(*inboundEndpoint)
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
-	}
-}
-
-// GetInboundEndpointInfo
-// @param name of the inbound endpoint
-// @return InboundEndpoint object
-// @return error
-func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
-
-	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + name
-
-	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-	headers := make(map[string]string)
-
-	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	if err != nil {
-		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-	}
-
-	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		endpointResponse := &utils.InboundEndpoint{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &endpointResponse)
-
-		if unmarshalError != nil {
-			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return endpointResponse, nil
-	} else {
-		return nil, errors.New(resp.Status())
 	}
 }
 

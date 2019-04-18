@@ -19,13 +19,10 @@
 package cmd
 
 import (
-	"encoding/xml"
-	"errors"
 	"fmt"
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"net/http"
 )
 
 // List Carbon App command related usage info
@@ -55,7 +52,9 @@ func init() {
 
 func executeListCarbonAppsCmd() {
 
-	count, carbonApps, err := GetCarbonAppList()
+	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
+
+	count, carbonApps, err := utils.GetArtifactList(finalUrl)
 
 	if err == nil {
 		// Printing the list of available Carbon Apps
@@ -65,38 +64,5 @@ func executeListCarbonAppsCmd() {
 		}
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Carbon Apps", err)
-	}
-}
-
-// GetCarbonAppList
-// @return count (no. of Carbon Apps)
-// @return array of Carbon App names
-// @return error
-func GetCarbonAppList() (int32, []string, error) {
-
-	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
-
-	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-	headers := make(map[string]string)
-
-	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	if err != nil {
-		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-	}
-
-	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		carbonAppListResponse := &utils.ListResponse{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &carbonAppListResponse)
-
-		if unmarshalError != nil {
-			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return carbonAppListResponse.Count, carbonAppListResponse.List, nil
-	} else {
-		return 0, nil, errors.New(resp.Status())
 	}
 }

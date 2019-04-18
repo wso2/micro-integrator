@@ -19,13 +19,10 @@
 package cmd
 
 import (
-	"encoding/xml"
-	"errors"
 	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"net/http"
 	"os"
 )
 
@@ -62,46 +59,16 @@ func init() {
 
 func executeGetProxyServiceCmd(proxyServiceName string) {
 
-	proxyService, err := GetProxyServiceInfo(proxyServiceName)
+	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + proxyServiceName
+
+	resp, err := utils.UnmarshalData(finalUrl, &utils.ProxyService{})
 
 	if err == nil {
 		// Printing the details of the Proxy Service
+		proxyService := resp.(*utils.ProxyService)
 		printProxyServiceInfo(*proxyService)
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
-	}
-}
-
-// GetProxyServiceInfo
-// @param name of the proxy service
-// @return ProxyService object
-// @return error
-func GetProxyServiceInfo(name string) (*utils.ProxyService, error) {
-
-	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + name
-
-	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-	headers := make(map[string]string)
-
-	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	if err != nil {
-		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-	}
-
-	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		proxyServiceResponse := &utils.ProxyService{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &proxyServiceResponse)
-
-		if unmarshalError != nil {
-			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return proxyServiceResponse, nil
-	} else {
-		return nil, errors.New(resp.Status())
 	}
 }
 

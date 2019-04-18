@@ -19,13 +19,10 @@
 package cmd
 
 import (
-	"encoding/xml"
-	"errors"
 	"github.com/lithammer/dedent"
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"net/http"
 	"os"
 )
 
@@ -62,46 +59,16 @@ func init() {
 
 func executeGetSequenceCmd(sequencename string) {
 
-	sequence, err := GetSequenceInfo(sequencename)
+	finalUrl := utils.RESTAPIBase + utils.PrefixSequences + "?inboundEndpointName=" + sequencename
+
+	resp, err := utils.UnmarshalData(finalUrl, &utils.Sequence{})
 
 	if err == nil {
 		// Printing the details of the Sequence
+		sequence := resp.(*utils.Sequence)
 		printSequenceInfo(*sequence)
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
-	}
-}
-
-// GetSequenceInfo
-// @param name of the sequence
-// @return Sequence Object
-// @return error
-func GetSequenceInfo(name string) (*utils.Sequence, error) {
-
-	finalUrl := utils.RESTAPIBase + utils.PrefixSequences + "?inboundEndpointName=" + name
-
-	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-	headers := make(map[string]string)
-
-	resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-	if err != nil {
-		utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-	}
-
-	utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		sequenceResponse := &utils.Sequence{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &sequenceResponse)
-
-		if unmarshalError != nil {
-			utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return sequenceResponse, nil
-	} else {
-		return nil, errors.New(resp.Status())
 	}
 }
 
