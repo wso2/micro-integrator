@@ -18,14 +18,6 @@
 
 package utils
 
-import (
-//"errors"
-// "io/ioutil"
-// "os"
-//"strings"
-// "fmt"
-)
-
 var RESTAPIBase = DefaultRESTAPIBase
 
 // SetServerConfigVars
@@ -33,11 +25,12 @@ var RESTAPIBase = DefaultRESTAPIBase
 // @return error
 func SetConfigVars(serverConfigFilePath string) error {
 
-	mainConfig := GetServerConfigFromFile(serverConfigFilePath)
-	Logln(LogPrefixInfo + " reading '" + serverConfigFilePath + "'")
+	if IsFileExist(serverConfigFilePath){
+		mainConfig := GetServerConfigFromFile(serverConfigFilePath)
+		Logln(LogPrefixInfo + " reading '" + serverConfigFilePath + "'")
 
-	RESTAPIBase = mainConfig.Host + ":" + mainConfig.Port + "/" + Context + "/"
-	Logln(LogPrefixInfo + "Setting REST API URL to " + RESTAPIBase)
-
+		RESTAPIBase = mainConfig.Host + ":" + mainConfig.Port + "/" + Context + "/"
+		Logln(LogPrefixInfo + "Setting REST API URL to " + RESTAPIBase)
+	}
 	return nil
 }

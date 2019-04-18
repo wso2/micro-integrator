@@ -20,10 +20,9 @@ package utils
 
 import (
 	"errors"
-	// "fmt"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
-	// "os"
+	"os"
 )
 
 // WriteServerConfigFile
@@ -72,4 +71,16 @@ func (serverConfig *ServerConfig) ParseServerConfigFromFile(data []byte) error {
 	}
 
 	return nil
+}
+
+// Check whether the file exists.
+func IsFileExist(path string) (isFileExist bool) {
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		} else {
+			HandleErrorAndExit("Unable to find file "+path, err)
+		}
+	}
+	return true
 }

@@ -57,6 +57,12 @@ func init() {
 
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	// Init ServerConfigVars
+	err := utils.SetConfigVars(utils.ServerConfigFilePath)
+	if err != nil {
+		utils.HandleErrorAndExit("Error reading "+utils.ServerConfigFileName+".", err)
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.
