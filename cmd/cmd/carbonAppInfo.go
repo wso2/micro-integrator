@@ -14,7 +14,7 @@
 * KIND, either express or implied. See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
@@ -52,8 +52,8 @@ var carbonAppShowCmd = &cobra.Command{
 }
 
 func init() {
-  showCmd.AddCommand(carbonAppShowCmd)
-    
+	showCmd.AddCommand(carbonAppShowCmd)
+
 	carbonAppShowCmd.Flags().StringVarP(&appName, "name", "n", "", "Name of the Carbon Application")
 	carbonAppShowCmd.MarkFlagRequired("name")
 }

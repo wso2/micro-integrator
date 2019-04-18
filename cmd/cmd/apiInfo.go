@@ -14,7 +14,7 @@
 * KIND, either express or implied. See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
@@ -64,7 +64,7 @@ func executeGetAPICmd(apiname string) {
 	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs + "?apiName=" + apiname
 
 	resp, err := utils.UnmarshalData(finalUrl, &utils.API{})
-	
+
 	if err == nil {
 		// Printing the details of the API
 		api := resp.(*utils.API)

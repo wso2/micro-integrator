@@ -14,21 +14,21 @@
 * KIND, either express or implied. See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package utils
 
 import (
 	"bufio"
+	"encoding/xml"
+	"errors"
 	"fmt"
 	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/resty.v1"
+	"net/http"
 	"os"
 	"runtime"
 	"strings"
-	"encoding/xml"
-	"net/http"
-	"errors"
 )
 
 // Invoke http-post request using go-resty

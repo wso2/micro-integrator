@@ -14,7 +14,7 @@
 * KIND, either express or implied. See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
@@ -89,8 +89,8 @@ func printEndpoint(endpoint utils.Endpoint) {
 	table.Append(d_container)
 
 	d_type := []string{"ENDPOINT STRING", endpoint.EndpointString}
-  table.Append(d_type)
-    
+	table.Append(d_type)
+
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
 	table.SetRowLine(true)
 	table.Render() // Send output
