@@ -1,4 +1,0 @@
-./elliptic.go
-./p224.go
-./p256_asm.go
-./p256_asm_amd64.s

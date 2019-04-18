@@ -1,7 +1,0 @@
-./builder.go
-./compare.go
-./reader.go
-./replace.go
-./search.go
-./strings.go
-./strings.s

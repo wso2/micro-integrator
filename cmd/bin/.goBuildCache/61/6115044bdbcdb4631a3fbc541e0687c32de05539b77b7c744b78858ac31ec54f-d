@@ -1,9 +1,0 @@
-./composition.go
-./forminfo.go
-./input.go
-./iter.go
-./normalize.go
-./readwriter.go
-./tables.go
-./transform.go
-./trie.go
