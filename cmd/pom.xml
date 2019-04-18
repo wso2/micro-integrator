@@ -29,6 +29,11 @@
     <artifactId>micli</artifactId>
     <packaging>mvn-golang</packaging>
 
+    <properties>
+        <maven.install.skip>true</maven.install.skip>
+        <maven.deploy.skip>true</maven.deploy.skip>
+    </properties>
+
     <build>
         <sourceDirectory>${basedir}</sourceDirectory>
         <directory>${basedir}${file.separator}bin</directory>
