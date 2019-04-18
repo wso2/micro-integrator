@@ -40,15 +40,6 @@
         </license>
     </licenses>
 
-    <modules>
-        <module>components</module>
-        <!--<module>samples</module>-->
-        <module>features</module>
-        <module>p2-profile</module>
-        <module>distribution</module>
-        <module>integration</module>
-    </modules>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -236,12 +227,46 @@
 
     <profiles>
         <profile>
+            <id>micli</id>
+            <modules>
+                <module>components</module>
+                <!--<module>samples</module>-->
+                <module>features</module>
+                <module>p2-profile</module>
+                <module>cmd</module>
+                <module>distribution</module>
+                <module>integration</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>components</module>
+                <!--<module>samples</module>-->
+                <module>features</module>
+                <module>p2-profile</module>
+                <module>distribution</module>
+                <module>integration</module>
+            </modules>
+        </profile>
+        <profile>
             <id>sign</id>
             <activation>
                 <property>
                     <name>sign</name>
                 </property>
             </activation>
+            <modules>
+                <module>components</module>
+                <!--<module>samples</module>-->
+                <module>features</module>
+                <module>p2-profile</module>
+                <module>distribution</module>
+                <module>integration</module>
+            </modules>
             <build>
                 <plugins>
                     <plugin>

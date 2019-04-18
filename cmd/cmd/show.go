@@ -1,28 +1,28 @@
 /*
-*  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
+* WSO2 Inc. licenses this file to you under the Apache License,
+* Version 2.0 (the "License"); you may not use this file except
+* in compliance with the License.
+* You may obtain a copy of the License at
 *
 *    http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing,
 * software distributed under the License is distributed on an
 * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
+* KIND, either express or implied. See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
 	"fmt"
-	"cmd/utils"
 	"github.com/lithammer/dedent"
 	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 var showCmdLiteral = "show"
@@ -37,14 +37,13 @@ Flags:
     --name, -n
 
 Available Commands:
-  ` + showApplicationCmdLiteral + `		` + showApplicationCmdShortDesc +`
-  ` + showAPICmdLiteral + `			` + showAPICmdShortDesc +`
-  ` + showEndpointCmdLiteral + `		` + showEndpointCmdShortDesc +`
-  ` + showInboundEndpointCmdLiteral + `	` + showInboundEndpointCmdShortDesc +`
-  ` + showProxyServiceCmdLiteral + `		` + showProxyServiceCmdShortDesc +`
-  ` + showServiceCmdLiteral + `		` + showServiceCmdShortDesc +`
-  ` + listSequenceCmdLiteral + `		` + showApplicationCmdShortDesc +`
-  ` + showTaskCmdLiteral + `			` + showTaskCmdShortDesc +`
+  ` + showApplicationCmdLiteral + `		` + showApplicationCmdShortDesc + `
+  ` + showAPICmdLiteral + `			` + showAPICmdShortDesc + `
+  ` + showEndpointCmdLiteral + `		` + showEndpointCmdShortDesc + `
+  ` + showInboundEndpointCmdLiteral + `	` + showInboundEndpointCmdShortDesc + `
+  ` + showProxyServiceCmdLiteral + `		` + showProxyServiceCmdShortDesc + `
+  ` + listSequenceCmdLiteral + `		` + showApplicationCmdShortDesc + `
+  ` + showTaskCmdLiteral + `			` + showTaskCmdShortDesc + `
   `)
 
 var showCmdExamples = dedent.Dedent(`
@@ -60,16 +59,13 @@ Use "micli show [command] --help" for more information about a command.`
 // showCmd represents the show command
 var showCmd = &cobra.Command{
 	Use:   "show [COMMANDS]",
-	Short: "Show details about a carbon app, endpoint, api, service, task or sequence",
-	Long: "Show details about a carbon app, endpoint, api, task or sequence",
+	Short: "Show details about a carbon app, endpoint, api, proxy service, task or sequence",
+	Long:  "Show details about a carbon app, endpoint, api, task or sequence",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(showUsageError + showCmdExamples + showCmdHelp)		
+		fmt.Println(showUsageError + showCmdExamples + showCmdHelp)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(showCmd)
-
-	// Here you will define your flags and configuration settings.
-
 }

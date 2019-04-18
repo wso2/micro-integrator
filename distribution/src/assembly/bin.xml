@@ -476,6 +476,13 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/conf/internal-apis.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>internal-apis.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
         <!--File based Synapse registry for Micro EI-->
         <file>
