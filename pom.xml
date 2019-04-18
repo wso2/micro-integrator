@@ -45,9 +45,9 @@
         <!--<module>samples</module>-->
         <module>features</module>
         <module>p2-profile</module>
+        <module>cmd</module>
         <module>distribution</module>
         <module>integration</module>
-        <module>cmd</module>
     </modules>
 
     <dependencyManagement>
