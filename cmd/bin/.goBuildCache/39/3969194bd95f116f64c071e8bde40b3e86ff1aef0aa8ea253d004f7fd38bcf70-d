@@ -1,0 +1,5 @@
+./idna.go
+./punycode.go
+./tables.go
+./trie.go
+./trieval.go

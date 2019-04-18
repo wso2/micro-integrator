@@ -1,0 +1,4 @@
+./search.go
+./slice.go
+./sort.go
+./zfuncversion.go

@@ -1,0 +1,6 @@
+./deepequal.go
+./makefunc.go
+./swapper.go
+./type.go
+./value.go
+./asm_amd64.s

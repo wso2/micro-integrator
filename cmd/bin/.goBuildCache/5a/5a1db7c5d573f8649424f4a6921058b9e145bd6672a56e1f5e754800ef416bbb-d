@@ -1,0 +1,10 @@
+./client.go
+./default.go
+./middleware.go
+./redirect.go
+./request.go
+./request17.go
+./response.go
+./resty.go
+./retry.go
+./util.go

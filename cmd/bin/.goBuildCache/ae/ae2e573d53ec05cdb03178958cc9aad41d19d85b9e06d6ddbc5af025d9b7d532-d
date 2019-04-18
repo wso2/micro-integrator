@@ -1,0 +1,3 @@
+./atomic_amd64x.go
+./stubs.go
+./asm_amd64.s

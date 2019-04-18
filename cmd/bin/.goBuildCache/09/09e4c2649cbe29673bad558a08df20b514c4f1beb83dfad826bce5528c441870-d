@@ -1,0 +1,6 @@
+./args.go
+./bash_completions.go
+./cobra.go
+./command.go
+./command_notwin.go
+./zsh_completions.go

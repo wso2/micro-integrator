@@ -1,0 +1,6 @@
+./at.go
+./at_sysnum_linux.go
+./at_sysnum_newfstatat_linux.go
+./getrandom_linux.go
+./getrandom_linux_amd64.go
+./nonblocking.go
