@@ -169,6 +169,8 @@ For instructions on trying out a simple use case using the micro Integrator prof
 [Deploying to a Kubernetes Cluster](examples/hello-world#deploying-to-a-kubernetes-cluster-optional)
 in the [Hello world sample](examples/hello-world).
 
+You can also try out on the [Getting Started Guide](../examples/getting-started/README.md) for trying out on a complete scenario of forwarding a request to a back-end which processes order requests.
+
 ## Configuring the file-based registry
 
 The H2 database-based registry is not available in the Micro Integrator profile. Instead, it has a file system based
