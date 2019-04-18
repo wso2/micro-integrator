@@ -377,6 +377,8 @@
             <KeyResolver className="org.wso2.carbon.crypto.defaultProvider.resolver.ContextIndependentKeyResolver" priority="-1"/>
         </KeyResolvers>
 
+        <Secret>SECRET_KEY</Secret>
+
     </CryptoService>
 
     <!--

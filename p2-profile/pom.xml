@@ -82,7 +82,7 @@
                                     org.wso2.carbon.mediation:org.apache.synapse.wso2.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.crypto:org.wso2.carbon.crypto.feature:1.0.3
+                                    org.wso2.carbon.crypto:org.wso2.carbon.crypto.feature:${carbon.crypto.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.apache.synapse.transport.fix.feature:${carbon.mediation.version}
@@ -554,7 +554,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.crypto.feature.group</id>
-                                    <version>1.0.3</version>
+                                    <version>${carbon.crypto.version}</version>
                                 </feature>
                             </features>
                         </configuration>
