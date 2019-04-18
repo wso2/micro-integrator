@@ -19,59 +19,58 @@
 package cmd
 
 import (
-    "errors"
+	"errors"
+    "fmt"
     "cmd/utils"
     "github.com/spf13/cobra"
     "github.com/lithammer/dedent"
     "net/http"
-    "encoding/xml"
-    "strconv"
-    "os"
-	"github.com/olekukonko/tablewriter"
 )
 
-var appName string
+var appToDelete string
 
-// Show Carbon App command related usage info
-const showApplicationCmdLiteral = "carbonApp"
-const showApplicationCmdShortDesc = "Get information about the specified Carbon Application"
+// Delete Carbon App command related usage info
+const deleteApplicationCmdLiteral = "carbonApp"
+const deleteApplicationCmdShortDesc = "Delete a specific Carbon Application"
 
-var showApplicationCmdLongDesc = "Get information about the Carbon App specified by the flag --name, -n\n"
+var deleteApplicationCmdLongDesc = "Delete the Carbon Application specified by the flag --name, -n\n"
 
-var showApplicationCmdExamples = dedent.Dedent(`
+var deleteApplicationCmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showApplicationCmdLiteral + ` -n TestApp
+  ` + utils.ProjectName + ` ` + deleteCmdLiteral + ` ` + deleteApplicationCmdLiteral + ` -n TestApp
 `)
 
-// carbonAppShowCmd represents the show carbonApp command
-var carbonAppShowCmd = &cobra.Command{
-    Use:   showApplicationCmdLiteral,
-    Short: showApplicationCmdShortDesc,
-    Long: showApplicationCmdLongDesc + showApplicationCmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo+"Show carbon app called")
-        executeGetCarbonAppCmd(appName)
-    },
+// carbonAppDeleteCmd represents the Delete carbonApp command
+var carbonAppDeleteCmd = &cobra.Command{
+	Use:   deleteApplicationCmdLiteral,
+	Short: deleteApplicationCmdShortDesc,
+	Long: deleteApplicationCmdLongDesc + deleteApplicationCmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		utils.Logln(utils.LogPrefixInfo+"Delete carbon app called")
+		executeDeleteCarbonAppCmd(appToDelete)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(carbonAppShowCmd)
+	deleteCmd.AddCommand(carbonAppDeleteCmd)
 
     // Here you will define your flags and configuration settings.
 
-    carbonAppShowCmd.Flags().StringVarP(&appName, "name", "n", "", "Name of the Carbon Application")
-    carbonAppShowCmd.MarkFlagRequired("name")
+	carbonAppDeleteCmd.Flags().StringVarP(&appToDelete, "name", "n", "", "Name of the Carbon Application to be deleted")
+    carbonAppDeleteCmd.MarkFlagRequired("name")
 }
 
-func executeGetCarbonAppCmd(appname string) {
+func executeDeleteCarbonAppCmd(appname string) {
 
-    app, err := GetCarbonAppInfo(appname)
+    err := DeleteCarbonApp(appname)
 
+    // Result after deleting the carbon application
     if err == nil {
-        // Printing the details of the Carbon App
-        printCarbonAppInfo(*app)
+        
+        fmt.Println("Successfully removed Carbon App")
+        
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Carbon App", err)
+        utils.Logln(utils.LogPrefixError+"Deleting Carbon Application", err)
     }
 
     // if flagExportAPICmdToken != "" {
@@ -111,20 +110,19 @@ func executeGetCarbonAppCmd(appname string) {
     // }
 }
 
-// GetCarbonAppInfo
+// DeleteCarbonApp
 // @param name of the carbon app
-// @return carbonApp object
 // @return error
-func GetCarbonAppInfo(name string) (*utils.CarbonApp, error) {
+func DeleteCarbonApp(name string) (error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + name
+    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "/" + name
 
     utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
     headers := make(map[string]string)
     // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+    resp, err := utils.InvokeDELETERequest(finalUrl, headers)
 
     if err != nil {
         utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
@@ -133,44 +131,16 @@ func GetCarbonAppInfo(name string) (*utils.CarbonApp, error) {
     utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
     if resp.StatusCode() == http.StatusOK {
-        carbonAppResponse := &utils.CarbonApp{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &carbonAppResponse)
+        // apiCarbonAppResponse := &utils.CarbonApp{}
+        // unmarshalError := json.Unmarshal([]byte(resp.Body()), &apiCarbonAppResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+        // if unmarshalError != nil {
+        //     utils.HandleErrorAndExit(utils.LogPrefixError+"invalid JSON response", unmarshalError)
+        // }
 
-        return carbonAppResponse, nil
+        return nil
     } else {
-        return nil, errors.New(resp.Status())
+        return errors.New(resp.Status())
     }
 
-}
-
-// printCarbonAppInfo
-// @param app : CarbonApp object
-func printCarbonAppInfo(app utils.CarbonApp) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-	d_name := []string{"NAME", "", app.Name}
-	table.Append(d_name)
-
-	d_version := []string{"VERSION", "", app.Version}
-    table.Append(d_version)
-    
-    for id, artifact := range app.Artifacts {
-
-        artifactId := "ARTIFACTS " + strconv.Itoa(id)
-
-        data := []string{artifactId, "NAME", artifact.Name}
-        table.Append(data)
-        data = []string{artifactId, "TYPE", artifact.Type}
-        table.Append(data)
-	}
-
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true) 
-    table.SetAutoMergeCells(true)
-	table.Render() // Send output
 }

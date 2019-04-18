@@ -20,32 +20,39 @@ package cmd
 
 import (
 	"fmt"
-	"cmd/utils"
 	"github.com/spf13/cobra"
+	"github.com/lithammer/dedent"
+	"cmd/utils"
 )
 
-var version = "0.1"
+var deleteCmdLiteral = "delete"
 
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Version of the CLI",
-	Long: `Display the version of the Command line tool`,
+var deleteUsageError = dedent.Dedent(`Error: required command(s) and flag(s) not set
+
+Usage
+  ` + utils.ProjectName + ` ` + deleteCmdLiteral + ` [command] [flags]
+
+Commands:
+  ` + deleteApplicationCmdLiteral + ` -n <name>	` + deleteApplicationCmdShortDesc +`
+`)
+
+var deleteCmdExamples = dedent.Dedent(`
+Example:
+  ` + utils.ProjectName + ` ` + deleteCmdLiteral + ` ` + deleteApplicationCmdLiteral + ` -n TestApp`)
+
+// deleteCmd represents the delete command
+var deleteCmd = &cobra.Command{
+	Use:   "delete [COMMANDS]",
+	Short: "Delete a carbon app, endpoint, api, task or sequence",
+	Long: "Delete a carbon app, endpoint, api, task or sequence",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(utils.ProjectName + " Version: " + version)
+		fmt.Println(deleteUsageError + deleteCmdExamples)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(deleteCmd)
 
 	// Here you will define your flags and configuration settings.
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// versionCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// versionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

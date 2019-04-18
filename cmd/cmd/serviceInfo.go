@@ -20,59 +20,60 @@ package cmd
 
 import (
 	"errors"
+    "fmt"
     "cmd/utils"
     "github.com/spf13/cobra"
     "github.com/lithammer/dedent"
     "net/http"
-	"encoding/xml"
-	"os"
+    "encoding/xml"
+    "os"
 	"github.com/olekukonko/tablewriter"
 )
 
-var inboundEndpointName string
+var serviceName string
 
-// Show InboundEndpoint command related usage info
-const showInboundEndpointCmdLiteral = "inboundEndpoint"
-const showInboundEndpointCmdShortDesc = "Get information about the specified Inbound Endpoint"
+// Show service command related usage info
+const showServiceCmdLiteral = "service"
+const showServiceCmdShortDesc = "Get information about the specified Service"
 
-var showInboundEndpointCmdLongDesc = "Get information about the InboundEndpoint specified by the flag --name, -n\n"
+var showServiceCmdLongDesc = "Get information about the Service specified by the flag --name, -n\n"
 
-var showInboundEndpointCmdExamples = dedent.Dedent(`
+var showServiceCmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showInboundEndpointCmdLiteral + ` -n TestInboundEndpoint
+  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showServiceCmdLiteral + ` -n TestService
 `)
 
-// InboundEndpointShowCmd represents the Show inboundEndpoint command
-var inboundEndpointShowCmd = &cobra.Command{
-	Use:   showInboundEndpointCmdLiteral,
-	Short: showInboundEndpointCmdShortDesc,
-	Long: showInboundEndpointCmdLongDesc + showInboundEndpointCmdExamples,
+// serviceShowCmd represents the show service command
+var serviceShowCmd = &cobra.Command{
+	Use:   showServiceCmdLiteral,
+	Short: showServiceCmdShortDesc,
+	Long: showServiceCmdLongDesc + showServiceCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show InboundEndpoint called")
-		executeGetInboundEndpointCmd(inboundEndpointName)
+		utils.Logln(utils.LogPrefixInfo+"Show service called")
+		executeGetServiceCmd(serviceName)
 	},
 }
 
 func init() {
-	showCmd.AddCommand(inboundEndpointShowCmd)
+	showCmd.AddCommand(serviceShowCmd)
 
 	// Here you will define your flags and configuration settings.
 
-	inboundEndpointShowCmd.Flags().StringVarP(&inboundEndpointName, "name", "n", "", "Name of the Inbound Endpoint")
-    inboundEndpointShowCmd.MarkFlagRequired("name")
+	serviceShowCmd.Flags().StringVarP(&serviceName, "name", "n", "", "Name of the Service")
+    serviceShowCmd.MarkFlagRequired("name")
 }
 
-func executeGetInboundEndpointCmd(inboundEndpointname string) {
+func executeGetServiceCmd(servicename string) {
 
-    inboundEndpoint, err := GetInboundEndpointInfo(inboundEndpointname)
+    service, err := GetServiceInfo(servicename)
 
     if err == nil {
-        // Printing the details of the InboundEndpoint
-		printInboundEndpoint(*inboundEndpoint)
-		
-        utils.Logln(utils.LogPrefixInfo+"InboundEndpoint", inboundEndpoint)
+        // Printing the details of the Service
+        printService(*service)
+        
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
+        utils.Logln(utils.LogPrefixError+"Getting Information of Service", err)
+        fmt.Println("Something went wrong", err)
     }
 
     // if flagExportAPICmdToken != "" {
@@ -112,13 +113,13 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
     // }
 }
 
-// GetInboundEndpointInfo
-// @param name of the inbound endpoint
-// @return InboundEndpoint object
+// GetServiceInfo
+// @param name of the service
+// @return Service object
 // @return error
-func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
+func GetServiceInfo(name string) (*utils.Service, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + name
+    finalUrl := utils.RESTAPIBase + utils.PrefixServices + "/" + name
 
     utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
@@ -134,45 +135,41 @@ func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
     utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
     if resp.StatusCode() == http.StatusOK {
-        endpointResponse := &utils.InboundEndpoint{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &endpointResponse)
+        serviceResponse := &utils.Service{}
+        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &serviceResponse)
 
         if unmarshalError != nil {
             utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
         }
 
-        return endpointResponse, nil
+        return serviceResponse, nil
     } else {
         return nil, errors.New(resp.Status())
     }
 
 }
 
-// printInboundEndpointInfo
-// @param InboundEndpoint : InboundEndpoint object
-func printInboundEndpoint(endpoint utils.InboundEndpoint) {
+// printService
+// @param Service : Service object
+func printService(service utils.Service) {
 	table := tablewriter.NewWriter(os.Stdout)
 
-	row := []string{"NAME", "", endpoint.Name}
-	table.Append(row)
-
-	row = []string{"PROTOCOL", "", endpoint.Protocol}
+	row := []string{"NAME", service.Name}
 	table.Append(row)
 	
-	row = []string{"CLASS", "", endpoint.Class}
+	row = []string{"DESCRIPTION", service.Description}
 	table.Append(row)
 	
-	row = []string{"SEQUENCE", "", endpoint.Sequence}
+	row = []string{"TYPE", service.Type}
 	table.Append(row)
 	
-	row = []string{"ERROR SEQUENCE", "", endpoint.ErrorSequence}
+	row = []string{"STATUS", service.Status}
     table.Append(row)
     
-    for _, param := range endpoint.Parameters {
-        row = []string{"PARAMETERS", param.Name, param.Value}
-		table.Append(row)
-	}
+    row = []string{"TRY IT URL", service.TryItURL}
+    table.Append(row)
 
+    table.SetAlignment(tablewriter.ALIGN_LEFT)   // Set Alignment
 	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
 	table.SetRowLine(true)
     table.SetAutoMergeCells(true)

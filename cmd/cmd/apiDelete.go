@@ -16,65 +16,61 @@
 * under the License.
 */
 
-
 package cmd
 
 import (
 	"errors"
+    "fmt"
     "cmd/utils"
     "github.com/spf13/cobra"
     "github.com/lithammer/dedent"
     "net/http"
-	"encoding/xml"
-	"os"
-    "github.com/olekukonko/tablewriter"
-    "strconv"
-    "fmt"
 )
 
-var apiName string
+var apiToDelete string
 
-// Show API command related usage info
-const showAPICmdLiteral = "api"
-const showAPICmdShortDesc = "Get information about the specified API"
+// Delete API command related usage info
+const deleteAPICmdLiteral = "api"
+const deleteAPICmdShortDesc = "Delete a specific API"
 
-var showAPICmdLongDesc = "Get information about the API specified by the flag --name, -n\n"
+var deleteAPICmdLongDesc = "Delete the API specified by the flag --name, -n\n"
 
-var showAPICmdExamples = dedent.Dedent(`
+var deleteAPICmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + ` -n TestAPI
+  ` + utils.ProjectName + ` ` + deleteCmdLiteral + ` ` + deleteAPICmdLiteral + ` -n TestAPI
 `)
 
-// apiShowCmd represents the show api command
-var apiShowCmd = &cobra.Command{
-	Use:   showAPICmdLiteral,
-	Short: showAPICmdShortDesc,
-	Long: showAPICmdLongDesc + showAPICmdExamples,
+// apiDeleteCmd represents the delete api command
+var apiDeleteCmd = &cobra.Command{
+	Use:   deleteAPICmdLiteral,
+	Short: deleteAPICmdShortDesc,
+	Long: deleteAPICmdLongDesc,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show API called")
-		executeGetAPICmd(apiName)
+		utils.Logln(utils.LogPrefixInfo+"Delete API called")
+		executeDeleteAPICmd(apiToDelete)
 	},
 }
 
 func init() {
-	showCmd.AddCommand(apiShowCmd)
+	deleteCmd.AddCommand(apiDeleteCmd)
 
 	// Here you will define your flags and configuration settings.
 
-	apiShowCmd.Flags().StringVarP(&apiName, "name", "n", "", "Name of the API")
-    apiShowCmd.MarkFlagRequired("name")
+	apiDeleteCmd.Flags().StringVarP(&apiToDelete, "name", "n", "", "Name of the API to be deleted")
+    apiDeleteCmd.MarkFlagRequired("name")	
 }
 
-func executeGetAPICmd(apiname string) {
+func executeDeleteAPICmd(apiname string) {
 
-    api, err := GetAPIInfo(apiname)
+    err := DeleteAPI(apiname)
 
+    // Result after deleting the API
     if err == nil {
-        // Printing the details of the API
-        printAPIInfo(*api)		
-
+        
+        fmt.Println("Successfully removed API")
+        
     } else {
-        fmt.Println(utils.LogPrefixError+"Getting Information of the API", err)
+        utils.Logln(utils.LogPrefixError+"Deleting API", err)
     }
 
     // if flagExportAPICmdToken != "" {
@@ -114,20 +110,19 @@ func executeGetAPICmd(apiname string) {
     // }
 }
 
-// GetAPIInfo
+// DeleteAPI
 // @param name of the api
-// @return API object
 // @return error
-func GetAPIInfo(name string) (*utils.API, error) {
+func DeleteAPI(name string) (error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs + "?apiName=" + name
+    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs + "/" + name
 
     utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
     headers := make(map[string]string)
     // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+    resp, err := utils.InvokeDELETERequest(finalUrl, headers)
 
     if err != nil {
         utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
@@ -136,51 +131,16 @@ func GetAPIInfo(name string) (*utils.API, error) {
     utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
     if resp.StatusCode() == http.StatusOK {
-        apiResponse := &utils.API{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiResponse)
+        // apiCarbonAppResponse := &utils.CarbonApp{}
+        // unmarshalError := json.Unmarshal([]byte(resp.Body()), &apiCarbonAppResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+        // if unmarshalError != nil {
+        //     utils.HandleErrorAndExit(utils.LogPrefixError+"invalid JSON response", unmarshalError)
+        // }
 
-        return apiResponse, nil
+        return nil
     } else {
-        return nil, errors.New(resp.Status())
+        return errors.New(resp.Status())
     }
 
-}
-
-// printAPIInfo
-// @param app : API object
-func printAPIInfo(api utils.API) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-	data := []string{"NAME", "", api.Name}
-	table.Append(data)
-
-	data = []string{"CONTEXT", "", api.Context}
-    table.Append(data)
-
-    for id, resource := range api.Resources {
-
-        resourceId := "RESOURCES " + strconv.Itoa(id)
-
-        for _, method := range resource.Methods {
-            data = []string{resourceId, "METHOD", method}
-		    table.Append(data)
-        }        
-		data = []string{resourceId, "STYLE", resource.Style}
-		table.Append(data)
-		data = []string{resourceId, "TEMPLATE", resource.Template}
-		table.Append(data)
-		data = []string{resourceId, "MAPPING", resource.Mapping}
-        table.Append(data)
-
-	}
-
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
-	table.Render() // Send output
 }
