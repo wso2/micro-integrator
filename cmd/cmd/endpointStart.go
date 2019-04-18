@@ -19,59 +19,59 @@
 package cmd
 
 import (
+	"cmd/utils"
+	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"fmt"
+	"net/http"
+	"encoding/json"
 	"errors"
-    "cmd/utils"
-    "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
-	"encoding/xml"
-	"os"
-	"github.com/olekukonko/tablewriter"
 )
 
-var taskName string
+var endpointToStart string
 
-// Show Task command related usage info
-const showTaskCmdLiteral = "task"
-const showTaskCmdShortDesc = "Get information about the specified Task"
+// Switch On endpoint command related usage info
+const startEndpointCmdLiteral = "endpoint"
+const startEndpointCmdShortDesc = "Switch ON a specific Endpoint"
 
-var showTaskCmdLongDesc = "Get information about the Task specified by the flag --name, -n\n"
+var startEndpointCmdLongDesc = "Switch ON an Endpoint specified by the flag --name, -n\n"
 
-var showTaskCmdExamples = dedent.Dedent(`
+var startEndpointCmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showTaskCmdLiteral + ` -n TestTask
+  ` + utils.ProjectName + ` ` + startCmdLiteral + ` ` + startEndpointCmdLiteral + ` -n TestEndpoint
 `)
 
-// taskShowCmd represents the task command
-var taskShowCmd = &cobra.Command{
-	Use:   showTaskCmdLiteral,
-	Short: showTaskCmdShortDesc,
-	Long: showTaskCmdLongDesc + showTaskCmdExamples,
+// startEndpointCmd represents the endpoint command
+var startEndpointCmd = &cobra.Command{
+	Use:   startEndpointCmdLiteral,
+	Short: startEndpointCmdShortDesc,
+	Long: startEndpointCmdLongDesc + startEndpointCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show task called")
-		executeGetTaskCmd(taskName)
+		utils.Logln(utils.LogPrefixInfo+"Switch ON endpoint called")
+		executeSwitchOnEndpointCmd(endpointToStart)
 	},
 }
 
 func init() {
-	showCmd.AddCommand(taskShowCmd)
+	startCmd.AddCommand(startEndpointCmd)
 
 	// Here you will define your flags and configuration settings.
 
-	taskShowCmd.Flags().StringVarP(&taskName, "name", "n", "", "Name of the Task")
-    taskShowCmd.MarkFlagRequired("name")
+	startEndpointCmd.Flags().StringVarP(&endpointToStart, "name", "n", "", "Name of the Endpoint to Switch on")
+    startEndpointCmd.MarkFlagRequired("name")
 }
 
-func executeGetTaskCmd(taskname string) {
+func executeSwitchOnEndpointCmd(endpoint string) {
 
-    task, err := GetTaskInfo(taskname)
+    err := SwitchOnEndpoint(endpoint)
 
+    // Result after switching on the endpoint
     if err == nil {
-        // Printing the details of the Task
-        printTask(*task)
+        
+        fmt.Println("Successfully switched on the endpoint:", endpoint)
         
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
+        utils.Logln(utils.LogPrefixError+"Switching On Endpoint", err)
     }
 
     // if flagExportAPICmdToken != "" {
@@ -111,22 +111,26 @@ func executeGetTaskCmd(taskname string) {
     // }
 }
 
-// GetTaskInfo
-// @param name of the task
-// @return Task Object
+// SwitchOnEndpoint
+// @param name of the endpoint
 // @return error
-func GetTaskInfo(name string) (*utils.Task, error) {
+func SwitchOnEndpoint(name string) (error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + name
+    finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints + "/on"
 
     utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
     headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
+	headers[utils.HeaderContentType] = utils.HeaderValueApplicationJSON
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+	key := "name"
+    _map := make(map[string]string)
 
-    // fmt.Println(resp)
+    _map[key] = name
+
+    body, _ := json.Marshal(_map)
+
+    resp, err := utils.InvokePOSTRequest(finalUrl, headers, string(body))
 
     if err != nil {
         utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
@@ -135,47 +139,11 @@ func GetTaskInfo(name string) (*utils.Task, error) {
     utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
     if resp.StatusCode() == http.StatusOK {
-        taskResponse := &utils.Task{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &taskResponse)
+        // return no error
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
-
-        return taskResponse, nil
+        return nil
     } else {
-        return nil, errors.New(resp.Status())
+        return errors.New(resp.Status())
     }
-}
 
-// printTaskInfo
-// @param task : Task object
-func printTask(task utils.Task) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-	d_name := []string{"NAME", task.Name}
-	table.Append(d_name)
-
-	d_class := []string{"CLASS", task.Class}
-	table.Append(d_class)
-
-	d_group := []string{"GROUP", task.Group}
-	table.Append(d_group)
-
-	d_type := []string{"TYPE", task.Type}
-	table.Append(d_type)
-
-	d_count := []string{"TRIGGER COUNT", task.TriggerCount}
-	table.Append(d_count)
-
-	d_interval := []string{"TRIGGER INTERVAL", task.TriggerInterval}
-	table.Append(d_interval)
-
-	d_cron := []string{"TRIGGER CRON", task.TriggerCron}
-	table.Append(d_cron)
-
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true) 
-	table.Render() // Send output
 }

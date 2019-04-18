@@ -16,36 +16,42 @@
 * under the License.
 */
 
+
 package cmd
 
 import (
 	"fmt"
-	"cmd/utils"
+
 	"github.com/spf13/cobra"
 )
 
-var version = "0.1"
+const startCmdLiteral = "start"
 
-// versionCmd represents the version command
-var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Version of the CLI",
-	Long: `Display the version of the Command line tool`,
+// startCmd represents the start command
+var startCmd = &cobra.Command{
+	Use:   startCmdLiteral,
+	Short: "A brief description of your command",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(utils.ProjectName + " Version: " + version)
+		fmt.Println("start called")
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+	rootCmd.AddCommand(startCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// versionCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// startCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// versionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// startCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }

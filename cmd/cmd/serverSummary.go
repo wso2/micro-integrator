@@ -25,54 +25,47 @@ import (
     "github.com/lithammer/dedent"
     "net/http"
 	"encoding/xml"
-	"os"
-	"github.com/olekukonko/tablewriter"
 )
 
-var inboundEndpointName string
+// Server Summary command related usage info
+const serverSummaryCmdLiteral = "summary"
+const serverSummaryCmdShortDesc = "Summary of the Server"
 
-// Show InboundEndpoint command related usage info
-const showInboundEndpointCmdLiteral = "inboundEndpoint"
-const showInboundEndpointCmdShortDesc = "Get information about the specified Inbound Endpoint"
+var serverSummaryCmdLongDesc = "Summary of the Micro Integrator Runtime"
 
-var showInboundEndpointCmdLongDesc = "Get information about the InboundEndpoint specified by the flag --name, -n\n"
-
-var showInboundEndpointCmdExamples = dedent.Dedent(`
+var serverSummaryCmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showInboundEndpointCmdLiteral + ` -n TestInboundEndpoint
+  ` + utils.ProjectName + ` ` + serverCmdLiteral + ` ` + serverSummaryCmdLiteral + `
 `)
 
-// InboundEndpointShowCmd represents the Show inboundEndpoint command
-var inboundEndpointShowCmd = &cobra.Command{
-	Use:   showInboundEndpointCmdLiteral,
-	Short: showInboundEndpointCmdShortDesc,
-	Long: showInboundEndpointCmdLongDesc + showInboundEndpointCmdExamples,
+// summaryCmd represents the summary command
+var summaryCmd = &cobra.Command{
+	Use:   serverSummaryCmdLiteral,
+	Short: serverSummaryCmdShortDesc,
+	Long: serverSummaryCmdLongDesc + serverSummaryCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show InboundEndpoint called")
-		executeGetInboundEndpointCmd(inboundEndpointName)
+		utils.Logln(utils.LogPrefixInfo+"Show server summary called")
+		executeGetServerSummaryCmd()
 	},
 }
 
 func init() {
-	showCmd.AddCommand(inboundEndpointShowCmd)
+	serverCmd.AddCommand(summaryCmd)
 
 	// Here you will define your flags and configuration settings.
 
-	inboundEndpointShowCmd.Flags().StringVarP(&inboundEndpointName, "name", "n", "", "Name of the Inbound Endpoint")
-    inboundEndpointShowCmd.MarkFlagRequired("name")
 }
 
-func executeGetInboundEndpointCmd(inboundEndpointname string) {
+func executeGetServerSummaryCmd() {
 
-    inboundEndpoint, err := GetInboundEndpointInfo(inboundEndpointname)
+    serverData, err := GetServerInfo()
 
     if err == nil {
-        // Printing the details of the InboundEndpoint
-		printInboundEndpoint(*inboundEndpoint)
-		
-        utils.Logln(utils.LogPrefixInfo+"InboundEndpoint", inboundEndpoint)
+        // Printing the details of the Server
+        // printTask(*sequence)
+        utils.Logln(utils.LogPrefixInfo+"Server Data", *serverData)
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
+        utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
     }
 
     // if flagExportAPICmdToken != "" {
@@ -112,13 +105,12 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
     // }
 }
 
-// GetInboundEndpointInfo
-// @param name of the inbound endpoint
-// @return InboundEndpoint object
+// GetServerInfo
+// @return Server Data Object
 // @return error
-func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
+func GetServerInfo() (*utils.ServerSummary, error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + name
+    finalUrl := utils.RESTAPIBase + utils.PrefixServer + "/summary"
 
     utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
@@ -134,47 +126,15 @@ func GetInboundEndpointInfo(name string) (*utils.InboundEndpoint, error) {
     utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
     if resp.StatusCode() == http.StatusOK {
-        endpointResponse := &utils.InboundEndpoint{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &endpointResponse)
+        serverDataResponse := &utils.ServerSummary{}
+        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &serverDataResponse)
 
         if unmarshalError != nil {
             utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
         }
 
-        return endpointResponse, nil
+        return serverDataResponse, nil
     } else {
         return nil, errors.New(resp.Status())
     }
-
-}
-
-// printInboundEndpointInfo
-// @param InboundEndpoint : InboundEndpoint object
-func printInboundEndpoint(endpoint utils.InboundEndpoint) {
-	table := tablewriter.NewWriter(os.Stdout)
-
-	row := []string{"NAME", "", endpoint.Name}
-	table.Append(row)
-
-	row = []string{"PROTOCOL", "", endpoint.Protocol}
-	table.Append(row)
-	
-	row = []string{"CLASS", "", endpoint.Class}
-	table.Append(row)
-	
-	row = []string{"SEQUENCE", "", endpoint.Sequence}
-	table.Append(row)
-	
-	row = []string{"ERROR SEQUENCE", "", endpoint.ErrorSequence}
-    table.Append(row)
-    
-    for _, param := range endpoint.Parameters {
-        row = []string{"PARAMETERS", param.Name, param.Value}
-		table.Append(row)
-	}
-
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
-	table.Render() // Send output
 }

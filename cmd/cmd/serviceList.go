@@ -16,6 +16,7 @@
 * under the License.
 */
 
+
 package cmd
 
 import (
@@ -28,45 +29,46 @@ import (
 	"encoding/xml"
 )
 
-// List Seqeunces command related usage info
-const listSequenceCmdLiteral = "sequences"
-const listSequenceCmdShortDesc = "List all the Sequences"
+// List Services command related usage info
+const listServicesCmdLiteral = "services"
+const listServicesCmdShortDesc = "List all the Services"
 
-var listSequenceCmdLongDesc = "List all the Sequences"
+var listServicesCmdLongDesc = "List all the Services"
 
-var listSequenceCmdExamples = dedent.Dedent(`
+var listServicesCmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listSequenceCmdLiteral)
+  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listServicesCmdLiteral)
 
-// sequencesListCmd represents the list sequences command
-var sequencesListCmd = &cobra.Command{
-	Use:   listSequenceCmdLiteral,
-	Short: listSequenceCmdShortDesc,
-	Long: listSequenceCmdLongDesc + listSequenceCmdExamples,
+// serviceListCmd represents the services command
+var serviceListCmd = &cobra.Command{
+	Use:   listServicesCmdLiteral,
+	Short: listServicesCmdShortDesc,
+	Long: listServicesCmdLongDesc + listServicesCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"List sequences called")
-		executeListSequencesCmd()
+		utils.Logln(utils.LogPrefixInfo+"List services called")
+		executeListServicesCmd()
 	},
 }
 
 func init() {
-	listCmd.AddCommand(sequencesListCmd)
+	listCmd.AddCommand(serviceListCmd)
 
 	// Here you will define your flags and configuration settings.
+
 }
 
-func executeListSequencesCmd() {
+func executeListServicesCmd() {
 
-	count, sequences, err := GetSequenceList()
+	count, services, err := GetServiceList()
 
 	if err == nil {
-		// Printing the list of available Sequences
-		fmt.Println("No. of Sequences:", count)
+		// Printing the list of available Services
+		fmt.Println("No. of Services:", count)
 		if count > 0 {
-			utils.PrintList(sequences)
+			utils.PrintList(services)
 		}
 	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of Sequences", err)
+		utils.Logln(utils.LogPrefixError+"Getting List of Services", err)
 		fmt.Println("Something went wrong", err)
 	}
 
@@ -107,13 +109,13 @@ func executeListSequencesCmd() {
 	// }
 }
 
-// GetSequenceList
-// @return count (no. of Sequences)
-// @return array of Sequence Names
+// GetServiceList
+// @return count (no. of Services)
+// @return array of Service names
 // @return error
-func GetSequenceList() (int32, []string, error) {
+func GetServiceList() (int32, []string, error) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixSequences
+	finalUrl := utils.RESTAPIBase + utils.PrefixServices
 
 	utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 

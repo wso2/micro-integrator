@@ -21,60 +21,56 @@ package cmd
 
 import (
 	"errors"
+    "fmt"
     "cmd/utils"
     "github.com/spf13/cobra"
     "github.com/lithammer/dedent"
     "net/http"
-	"encoding/xml"
-	"os"
-    "github.com/olekukonko/tablewriter"
-    "strconv"
-    "fmt"
 )
 
-var apiName string
+var endpointToDelete string
 
-// Show API command related usage info
-const showAPICmdLiteral = "api"
-const showAPICmdShortDesc = "Get information about the specified API"
+// Delete endpoint command related usage info
+const deleteEndpointCmdLiteral = "endpoint"
+const deleteEndpointCmdShortDesc = "Delete a specific Endpoint"
 
-var showAPICmdLongDesc = "Get information about the API specified by the flag --name, -n\n"
+var deleteEndpointCmdLongDesc = "Delete the Endpoint specified by the flag --name, -n\n"
 
-var showAPICmdExamples = dedent.Dedent(`
+var deleteEndpointCmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + ` -n TestAPI
+  ` + utils.ProjectName + ` ` + deleteCmdLiteral + ` ` + deleteEndpointCmdLiteral + ` -n TestEndpoint
 `)
 
-// apiShowCmd represents the show api command
-var apiShowCmd = &cobra.Command{
-	Use:   showAPICmdLiteral,
-	Short: showAPICmdShortDesc,
-	Long: showAPICmdLongDesc + showAPICmdExamples,
+// endpointendpointDeleteCmd represents the delete endpoint command
+var endpointDeleteCmd = &cobra.Command{
+	Use:   deleteEndpointCmdLiteral,
+	Short: deleteEndpointCmdShortDesc,
+	Long: deleteEndpointCmdLongDesc + deleteEndpointCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show API called")
-		executeGetAPICmd(apiName)
+		utils.Logln(utils.LogPrefixInfo+"Delete endpoint called")
+		executeDeleteEndpointCmd(endpointToDelete)
 	},
 }
 
 func init() {
-	showCmd.AddCommand(apiShowCmd)
+	deleteCmd.AddCommand(endpointDeleteCmd)
 
 	// Here you will define your flags and configuration settings.
-
-	apiShowCmd.Flags().StringVarP(&apiName, "name", "n", "", "Name of the API")
-    apiShowCmd.MarkFlagRequired("name")
+	endpointDeleteCmd.Flags().StringVarP(&endpointToDelete, "name", "n", "", "Name of the Endpoint to be deleted")
+    endpointDeleteCmd.MarkFlagRequired("name")	
 }
 
-func executeGetAPICmd(apiname string) {
+func executeDeleteEndpointCmd(endpointname string) {
 
-    api, err := GetAPIInfo(apiname)
+    err := DeleteEndpoint(endpointname)
 
+    // Result after deleting the endpoint
     if err == nil {
-        // Printing the details of the API
-        printAPIInfo(*api)		
-
+        
+        fmt.Println("Successfully removed Endpoint")
+        
     } else {
-        fmt.Println(utils.LogPrefixError+"Getting Information of the API", err)
+        utils.Logln(utils.LogPrefixError+"Deleting Endpoint", err)
     }
 
     // if flagExportAPICmdToken != "" {
@@ -114,20 +110,19 @@ func executeGetAPICmd(apiname string) {
     // }
 }
 
-// GetAPIInfo
-// @param name of the api
-// @return API object
+// DeleteEndpoint
+// @param name of the endpoint
 // @return error
-func GetAPIInfo(name string) (*utils.API, error) {
+func DeleteEndpoint(name string) (error) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs + "?apiName=" + name
+    finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints + "/" + name
 
     utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
 
     headers := make(map[string]string)
     // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
 
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
+    resp, err := utils.InvokeDELETERequest(finalUrl, headers)
 
     if err != nil {
         utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
@@ -136,51 +131,16 @@ func GetAPIInfo(name string) (*utils.API, error) {
     utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
 
     if resp.StatusCode() == http.StatusOK {
-        apiResponse := &utils.API{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiResponse)
+        // apiCarbonAppResponse := &utils.CarbonApp{}
+        // unmarshalError := json.Unmarshal([]byte(resp.Body()), &apiCarbonAppResponse)
 
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
+        // if unmarshalError != nil {
+        //     utils.HandleErrorAndExit(utils.LogPrefixError+"invalid JSON response", unmarshalError)
+        // }
 
-        return apiResponse, nil
+        return nil
     } else {
-        return nil, errors.New(resp.Status())
+        return errors.New(resp.Status())
     }
 
-}
-
-// printAPIInfo
-// @param app : API object
-func printAPIInfo(api utils.API) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-	data := []string{"NAME", "", api.Name}
-	table.Append(data)
-
-	data = []string{"CONTEXT", "", api.Context}
-    table.Append(data)
-
-    for id, resource := range api.Resources {
-
-        resourceId := "RESOURCES " + strconv.Itoa(id)
-
-        for _, method := range resource.Methods {
-            data = []string{resourceId, "METHOD", method}
-		    table.Append(data)
-        }        
-		data = []string{resourceId, "STYLE", resource.Style}
-		table.Append(data)
-		data = []string{resourceId, "TEMPLATE", resource.Template}
-		table.Append(data)
-		data = []string{resourceId, "MAPPING", resource.Mapping}
-        table.Append(data)
-
-	}
-
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
-	table.Render() // Send output
 }
