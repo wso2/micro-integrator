@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Inbound Endpoints command related usage info
@@ -37,32 +37,32 @@ Example:
 
 // inboundEndpointsListCmd represents the list inboundEndpoints command
 var inboundEndpointsListCmd = &cobra.Command{
-	Use:   listInboundEndpointsCmdLiteral,
-	Short: listInboundEndpointsCmdShortDesc,
-	Long:  listInboundEndpointsCmdLongDesc + listInboundEndpointsCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "List inbound endpoints called")
-		executeListInboundEndpointsCmd()
-	},
+    Use:   listInboundEndpointsCmdLiteral,
+    Short: listInboundEndpointsCmdShortDesc,
+    Long:  listInboundEndpointsCmdLongDesc + listInboundEndpointsCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "List inbound endpoints called")
+        executeListInboundEndpointsCmd()
+    },
 }
 
 func init() {
-	listCmd.AddCommand(inboundEndpointsListCmd)
+    listCmd.AddCommand(inboundEndpointsListCmd)
 }
 
 func executeListInboundEndpointsCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints
+    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints
 
-	count, inboundEndpoints, err := utils.GetArtifactList(finalUrl)
+    count, inboundEndpoints, err := utils.GetArtifactList(finalUrl)
 
-	if err == nil {
-		// Printing the list of available Inbound endpoints
-		fmt.Println("No. of Inbound Endpoints:", count)
-		if count > 0 {
-			utils.PrintList(inboundEndpoints)
-		}
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of Inbound Endpoints", err)
-	}
+    if err == nil {
+        // Printing the list of available Inbound endpoints
+        fmt.Println("No. of Inbound Endpoints:", count)
+        if count > 0 {
+            utils.PrintList(inboundEndpoints)
+        }
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Inbound Endpoints", err)
+    }
 }

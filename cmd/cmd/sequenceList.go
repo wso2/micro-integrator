@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Seqeunces command related usage info
@@ -37,32 +37,32 @@ Example:
 
 // sequencesListCmd represents the list sequences command
 var sequencesListCmd = &cobra.Command{
-	Use:   listSequenceCmdLiteral,
-	Short: listSequenceCmdShortDesc,
-	Long:  listSequenceCmdLongDesc + listSequenceCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "List sequences called")
-		executeListSequencesCmd()
-	},
+    Use:   listSequenceCmdLiteral,
+    Short: listSequenceCmdShortDesc,
+    Long:  listSequenceCmdLongDesc + listSequenceCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "List sequences called")
+        executeListSequencesCmd()
+    },
 }
 
 func init() {
-	listCmd.AddCommand(sequencesListCmd)
+    listCmd.AddCommand(sequencesListCmd)
 }
 
 func executeListSequencesCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixSequences
+    finalUrl := utils.RESTAPIBase + utils.PrefixSequences
 
-	count, sequences, err := utils.GetArtifactList(finalUrl)
+    count, sequences, err := utils.GetArtifactList(finalUrl)
 
-	if err == nil {
-		// Printing the list of available Sequences
-		fmt.Println("No. of Sequences:", count)
-		if count > 0 {
-			utils.PrintList(sequences)
-		}
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of Sequences", err)
-	}
+    if err == nil {
+        // Printing the list of available Sequences
+        fmt.Println("No. of Sequences:", count)
+        if count > 0 {
+            utils.PrintList(sequences)
+        }
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Sequences", err)
+    }
 }

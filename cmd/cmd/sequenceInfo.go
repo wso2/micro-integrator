@@ -19,11 +19,11 @@
 package cmd
 
 import (
-	"github.com/lithammer/dedent"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+    "github.com/lithammer/dedent"
+    "github.com/olekukonko/tablewriter"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
 )
 
 var sequenceName string
@@ -41,56 +41,56 @@ Example:
 
 // sequenceShowCmd represents the show sequence command
 var sequenceShowCmd = &cobra.Command{
-	Use:   showSequenceCmdLiteral,
-	Short: showSequenceCmdShortDesc,
-	Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Show sequence called")
-		executeGetSequenceCmd(sequenceName)
-	},
+    Use:   showSequenceCmdLiteral,
+    Short: showSequenceCmdShortDesc,
+    Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Show sequence called")
+        executeGetSequenceCmd(sequenceName)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(sequenceShowCmd)
+    showCmd.AddCommand(sequenceShowCmd)
 
-	sequenceShowCmd.Flags().StringVarP(&sequenceName, "name", "n", "", "Name of the Sequence")
-	sequenceShowCmd.MarkFlagRequired("name")
+    sequenceShowCmd.Flags().StringVarP(&sequenceName, "name", "n", "", "Name of the Sequence")
+    sequenceShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetSequenceCmd(sequencename string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixSequences + "?inboundEndpointName=" + sequencename
+    finalUrl := utils.RESTAPIBase + utils.PrefixSequences + "?inboundEndpointName=" + sequencename
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.Sequence{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.Sequence{})
 
-	if err == nil {
-		// Printing the details of the Sequence
-		sequence := resp.(*utils.Sequence)
-		printSequenceInfo(*sequence)
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
-	}
+    if err == nil {
+        // Printing the details of the Sequence
+        sequence := resp.(*utils.Sequence)
+        printSequenceInfo(*sequence)
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
+    }
 }
 
 // printSequenceInfo
 // @param task : Sequence object
 func printSequenceInfo(sequence utils.Sequence) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+    table := tablewriter.NewWriter(os.Stdout)
+    table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-	data := []string{"NAME", sequence.Name}
-	table.Append(data)
+    data := []string{"NAME", sequence.Name}
+    table.Append(data)
 
-	data = []string{"CONTAINER", sequence.Container}
-	table.Append(data)
+    data = []string{"CONTAINER", sequence.Container}
+    table.Append(data)
 
-	for _, mediator := range sequence.Mediators {
-		data = []string{"MEDIATORS", mediator}
-		table.Append(data)
-	}
+    for _, mediator := range sequence.Mediators {
+        data = []string{"MEDIATORS", mediator}
+        table.Append(data)
+    }
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-	table.SetAutoMergeCells(true)
-	table.Render() // Send output
+    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
+    table.SetRowLine(true)
+    table.SetAutoMergeCells(true)
+    table.Render() // Send output
 }

@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+  "fmt"
+  "github.com/lithammer/dedent"
+  "github.com/spf13/cobra"
+  "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 var listCmdLiteral = "list"
@@ -54,14 +54,14 @@ Use "micli list [command] --help" for more information about a command.`
 
 // listCmd represents the list command
 var listCmd = &cobra.Command{
-	Use:   "list [COMMANDS]",
-	Short: "List all carbon apps, endpoints, apis, tasks or sequences",
-	Long:  "List all carbon apps, endpoints, apis, tasks or sequences",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(listUsageError + listCmdExamples + listCmdHelp)
-	},
+  Use:   "list [COMMANDS]",
+  Short: "List all carbon apps, endpoints, apis, tasks or sequences",
+  Long:  "List all carbon apps, endpoints, apis, tasks or sequences",
+  Run: func(cmd *cobra.Command, args []string) {
+    fmt.Println(listUsageError + listCmdExamples + listCmdHelp)
+  },
 }
 
 func init() {
-	rootCmd.AddCommand(listCmd)
+  rootCmd.AddCommand(listCmd)
 }

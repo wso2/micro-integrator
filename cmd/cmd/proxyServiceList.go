@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Proxy Services command related usage info
@@ -37,32 +37,32 @@ Example:
 
 // proxyServicesListCmd represents the proxyServices command
 var proxyServicesListCmd = &cobra.Command{
-	Use:   listProxyServicesCmdLiteral,
-	Short: listProxyServicesCmdShortDesc,
-	Long:  listProxyServicesCmdLongDesc + listProxyServicesCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "List proxy services called")
-		executeListProxyServicesCmd()
-	},
+    Use:   listProxyServicesCmdLiteral,
+    Short: listProxyServicesCmdShortDesc,
+    Long:  listProxyServicesCmdLongDesc + listProxyServicesCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "List proxy services called")
+        executeListProxyServicesCmd()
+    },
 }
 
 func init() {
-	listCmd.AddCommand(proxyServicesListCmd)
+    listCmd.AddCommand(proxyServicesListCmd)
 }
 
 func executeListProxyServicesCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
+    finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
 
-	count, endpoints, err := utils.GetArtifactList(finalUrl)
+    count, endpoints, err := utils.GetArtifactList(finalUrl)
 
-	if err == nil {
-		// Printing the list of available Proxy Services
-		fmt.Println("No. of Proxy Services:", count)
-		if count > 0 {
-			utils.PrintList(endpoints)
-		}
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of Proxy Services", err)
-	}
+    if err == nil {
+        // Printing the list of available Proxy Services
+        fmt.Println("No. of Proxy Services:", count)
+        if count > 0 {
+            utils.PrintList(endpoints)
+        }
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Proxy Services", err)
+    }
 }

@@ -19,12 +19,12 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/olekukonko/tablewriter"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
 )
 
 var endpointName string
@@ -42,56 +42,56 @@ Example:
 
 // endpointShowCmd represents the show endpoint command
 var endpointShowCmd = &cobra.Command{
-	Use:   showEndpointCmdLiteral,
-	Short: showEndpointCmdShortDesc,
-	Long:  showEndpointCmdLongDesc + showEndpointCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Show endpoint called")
-		executeGetEndpointCmd(endpointName)
-	},
+    Use:   showEndpointCmdLiteral,
+    Short: showEndpointCmdShortDesc,
+    Long:  showEndpointCmdLongDesc + showEndpointCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Show endpoint called")
+        executeGetEndpointCmd(endpointName)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(endpointShowCmd)
+    showCmd.AddCommand(endpointShowCmd)
 
-	endpointShowCmd.Flags().StringVarP(&endpointName, "name", "n", "", "Name of the Endpoint")
-	endpointShowCmd.MarkFlagRequired("name")
+    endpointShowCmd.Flags().StringVarP(&endpointName, "name", "n", "", "Name of the Endpoint")
+    endpointShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetEndpointCmd(endpointname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints + "?endpointName=" + endpointname
+    finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints + "?endpointName=" + endpointname
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.Endpoint{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.Endpoint{})
 
-	if err == nil {
-		// Printing the details of the Endpoint
-		endpoint := resp.(*utils.Endpoint)
-		printEndpoint(*endpoint)
-	} else {
-		fmt.Println(utils.LogPrefixError+"Getting Information of Endpoint", err)
-	}
+    if err == nil {
+        // Printing the details of the Endpoint
+        endpoint := resp.(*utils.Endpoint)
+        printEndpoint(*endpoint)
+    } else {
+        fmt.Println(utils.LogPrefixError+"Getting Information of Endpoint", err)
+    }
 }
 
 // printEndpointInfo
 // @param Endpoint : Endpoint object
 func printEndpoint(endpoint utils.Endpoint) {
 
-	table := tablewriter.NewWriter(os.Stdout)
+    table := tablewriter.NewWriter(os.Stdout)
 
-	d_name := []string{"NAME", endpoint.Name}
-	table.Append(d_name)
+    d_name := []string{"NAME", endpoint.Name}
+    table.Append(d_name)
 
-	d_desc := []string{"DESCRIPTION", endpoint.Description}
-	table.Append(d_desc)
+    d_desc := []string{"DESCRIPTION", endpoint.Description}
+    table.Append(d_desc)
 
-	d_container := []string{"CONTAINER", endpoint.ArtifactContainer}
-	table.Append(d_container)
+    d_container := []string{"CONTAINER", endpoint.ArtifactContainer}
+    table.Append(d_container)
 
-	d_type := []string{"ENDPOINT STRING", endpoint.EndpointString}
-	table.Append(d_type)
+    d_type := []string{"ENDPOINT STRING", endpoint.EndpointString}
+    table.Append(d_type)
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-	table.Render() // Send output
+    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
+    table.SetRowLine(true)
+    table.Render() // Send output
 }

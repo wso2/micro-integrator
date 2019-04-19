@@ -19,11 +19,11 @@
 package cmd
 
 import (
-	"github.com/lithammer/dedent"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+    "github.com/lithammer/dedent"
+    "github.com/olekukonko/tablewriter"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
 )
 
 var taskName string
@@ -41,65 +41,65 @@ Example:
 
 // taskShowCmd represents the task command
 var taskShowCmd = &cobra.Command{
-	Use:   showTaskCmdLiteral,
-	Short: showTaskCmdShortDesc,
-	Long:  showTaskCmdLongDesc + showTaskCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Show task called")
-		executeGetTaskCmd(taskName)
-	},
+    Use:   showTaskCmdLiteral,
+    Short: showTaskCmdShortDesc,
+    Long:  showTaskCmdLongDesc + showTaskCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Show task called")
+        executeGetTaskCmd(taskName)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(taskShowCmd)
+    showCmd.AddCommand(taskShowCmd)
 
-	taskShowCmd.Flags().StringVarP(&taskName, "name", "n", "", "Name of the Task")
-	taskShowCmd.MarkFlagRequired("name")
+    taskShowCmd.Flags().StringVarP(&taskName, "name", "n", "", "Name of the Task")
+    taskShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetTaskCmd(taskname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + taskname
+    finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + taskname
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.Task{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.Task{})
 
-	if err == nil {
-		// Printing the details of the Task
-		task := resp.(*utils.Task)
-		printTask(*task)
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
-	}
+    if err == nil {
+        // Printing the details of the Task
+        task := resp.(*utils.Task)
+        printTask(*task)
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
+    }
 }
 
 // printTaskInfo
 // @param task : Task object
 func printTask(task utils.Task) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+    table := tablewriter.NewWriter(os.Stdout)
+    table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-	d_name := []string{"NAME", task.Name}
-	table.Append(d_name)
+    d_name := []string{"NAME", task.Name}
+    table.Append(d_name)
 
-	d_class := []string{"CLASS", task.Class}
-	table.Append(d_class)
+    d_class := []string{"CLASS", task.Class}
+    table.Append(d_class)
 
-	d_group := []string{"GROUP", task.Group}
-	table.Append(d_group)
+    d_group := []string{"GROUP", task.Group}
+    table.Append(d_group)
 
-	d_type := []string{"TYPE", task.Type}
-	table.Append(d_type)
+    d_type := []string{"TYPE", task.Type}
+    table.Append(d_type)
 
-	d_count := []string{"TRIGGER COUNT", task.TriggerCount}
-	table.Append(d_count)
+    d_count := []string{"TRIGGER COUNT", task.TriggerCount}
+    table.Append(d_count)
 
-	d_interval := []string{"TRIGGER INTERVAL", task.TriggerInterval}
-	table.Append(d_interval)
+    d_interval := []string{"TRIGGER INTERVAL", task.TriggerInterval}
+    table.Append(d_interval)
 
-	d_cron := []string{"TRIGGER CRON", task.TriggerCron}
-	table.Append(d_cron)
+    d_cron := []string{"TRIGGER CRON", task.TriggerCron}
+    table.Append(d_cron)
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-	table.Render() // Send output
+    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
+    table.SetRowLine(true)
+    table.Render() // Send output
 }

@@ -23,8 +23,8 @@ test "$1" && target="$1" # .go file to build
 
 if ! test "$target"
 then
-  echo "Target file required"
-  exit 1
+    echo "Target file required"
+    exit 1
 fi
 
 binary="" # default to default
@@ -35,9 +35,9 @@ test "$2" && binary="$2" # binary output
 platforms=`ls $(go env GOROOT)/pkg | grep -v "obj\|tool\|race"`
 
 if ! test "$platforms"; then
-  echo "no valid os/arch pairs were found to build"
-  echo "- see: https://gist.github.com/jmervine/7d3f455e923cf2ac3c9e#file-golang-crosscompile-setup-bash"
-  exit 1
+    echo "no valid os/arch pairs were found to build"
+    echo "- see: https://gist.github.com/jmervine/7d3f455e923cf2ac3c9e#file-golang-crosscompile-setup-bash"
+    exit 1
 fi
 
 for platform in ${platforms}

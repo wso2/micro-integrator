@@ -19,11 +19,11 @@
 package cmd
 
 import (
-	"github.com/lithammer/dedent"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+    "github.com/lithammer/dedent"
+    "github.com/olekukonko/tablewriter"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
 )
 
 var proxyServiceName string
@@ -41,67 +41,67 @@ Example:
 
 // proxyServiceShowCmd represents the proxyService command
 var proxyServiceShowCmd = &cobra.Command{
-	Use:   showProxyServiceCmdLiteral,
-	Short: showProxyServiceCmdShortDesc,
-	Long:  showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Show ProxyService called")
-		executeGetProxyServiceCmd(proxyServiceName)
-	},
+    Use:   showProxyServiceCmdLiteral,
+    Short: showProxyServiceCmdShortDesc,
+    Long:  showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Show ProxyService called")
+        executeGetProxyServiceCmd(proxyServiceName)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(proxyServiceShowCmd)
+    showCmd.AddCommand(proxyServiceShowCmd)
 
-	proxyServiceShowCmd.Flags().StringVarP(&proxyServiceName, "name", "n", "", "Name of the Proxy Service")
-	proxyServiceShowCmd.MarkFlagRequired("name")
+    proxyServiceShowCmd.Flags().StringVarP(&proxyServiceName, "name", "n", "", "Name of the Proxy Service")
+    proxyServiceShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetProxyServiceCmd(proxyServiceName string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + proxyServiceName
+    finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + proxyServiceName
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.ProxyService{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.ProxyService{})
 
-	if err == nil {
-		// Printing the details of the Proxy Service
-		proxyService := resp.(*utils.ProxyService)
-		printProxyServiceInfo(*proxyService)
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
-	}
+    if err == nil {
+        // Printing the details of the Proxy Service
+        proxyService := resp.(*utils.ProxyService)
+        printProxyServiceInfo(*proxyService)
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
+    }
 }
 
 // printProxyServiceInfo
 // @param ProxyService : ProxyService object
 func printProxyServiceInfo(proxyService utils.ProxyService) {
-	table := tablewriter.NewWriter(os.Stdout)
+    table := tablewriter.NewWriter(os.Stdout)
 
-	row := []string{"NAME", proxyService.Name}
-	table.Append(row)
+    row := []string{"NAME", proxyService.Name}
+    table.Append(row)
 
-	row = []string{"DESCRIPTION", proxyService.Description}
-	table.Append(row)
+    row = []string{"DESCRIPTION", proxyService.Description}
+    table.Append(row)
 
-	row = []string{"IN SEQUENCE", proxyService.InSequence}
-	table.Append(row)
+    row = []string{"IN SEQUENCE", proxyService.InSequence}
+    table.Append(row)
 
-	row = []string{"OUT SEQUENCE", proxyService.OutSequence}
-	table.Append(row)
+    row = []string{"OUT SEQUENCE", proxyService.OutSequence}
+    table.Append(row)
 
-	row = []string{"FAULT SEQUENCE", proxyService.FaultSequence}
-	table.Append(row)
+    row = []string{"FAULT SEQUENCE", proxyService.FaultSequence}
+    table.Append(row)
 
-	row = []string{"ENDPOINT", proxyService.Endpoint}
-	table.Append(row)
+    row = []string{"ENDPOINT", proxyService.Endpoint}
+    table.Append(row)
 
-	for _, transport := range proxyService.Transports {
-		row = []string{"TRANSPORTS", transport}
-		table.Append(row)
-	}
+    for _, transport := range proxyService.Transports {
+        row = []string{"TRANSPORTS", transport}
+        table.Append(row)
+    }
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-	table.SetAutoMergeCells(true)
-	table.Render() // Send output
+    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
+    table.SetRowLine(true)
+    table.SetAutoMergeCells(true)
+    table.Render() // Send output
 }

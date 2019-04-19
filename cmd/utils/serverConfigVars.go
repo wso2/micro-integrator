@@ -25,12 +25,12 @@ var RESTAPIBase = DefaultRESTAPIBase
 // @return error
 func SetConfigVars(serverConfigFilePath string) error {
 
-	if IsFileExist(serverConfigFilePath){
-		mainConfig := GetServerConfigFromFile(serverConfigFilePath)
-		Logln(LogPrefixInfo + " reading '" + serverConfigFilePath + "'")
+    if IsFileExist(serverConfigFilePath){
+        mainConfig := GetServerConfigFromFile(serverConfigFilePath)
+        Logln(LogPrefixInfo + " reading '" + serverConfigFilePath + "'")
 
-		RESTAPIBase = mainConfig.Host + ":" + mainConfig.Port + "/" + Context + "/"
-		Logln(LogPrefixInfo + "Setting REST API URL to " + RESTAPIBase)
-	}
-	return nil
+        RESTAPIBase = mainConfig.Host + ":" + mainConfig.Port + "/" + Context + "/"
+        Logln(LogPrefixInfo + "Setting REST API URL to " + RESTAPIBase)
+    }
+    return nil
 }

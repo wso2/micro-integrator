@@ -19,12 +19,12 @@
 package cmd
 
 import (
-	"github.com/lithammer/dedent"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
-	"strconv"
+    "github.com/lithammer/dedent"
+    "github.com/olekukonko/tablewriter"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
+    "strconv"
 )
 
 var appName string
@@ -42,61 +42,61 @@ Example:
 
 // carbonAppShowCmd represents the show carbonApp command
 var carbonAppShowCmd = &cobra.Command{
-	Use:   showApplicationCmdLiteral,
-	Short: showApplicationCmdShortDesc,
-	Long:  showApplicationCmdLongDesc + showApplicationCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Show carbon app called")
-		executeGetCarbonAppCmd(appName)
-	},
+    Use:   showApplicationCmdLiteral,
+    Short: showApplicationCmdShortDesc,
+    Long:  showApplicationCmdLongDesc + showApplicationCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Show carbon app called")
+        executeGetCarbonAppCmd(appName)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(carbonAppShowCmd)
+    showCmd.AddCommand(carbonAppShowCmd)
 
-	carbonAppShowCmd.Flags().StringVarP(&appName, "name", "n", "", "Name of the Carbon Application")
-	carbonAppShowCmd.MarkFlagRequired("name")
+    carbonAppShowCmd.Flags().StringVarP(&appName, "name", "n", "", "Name of the Carbon Application")
+    carbonAppShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetCarbonAppCmd(appname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + appname
+    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + appname
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.CarbonApp{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.CarbonApp{})
 
-	if err == nil {
-		// Printing the details of the Carbon App
-		app := resp.(*utils.CarbonApp)
-		printCarbonAppInfo(*app)
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting Information of the Carbon App", err)
-	}
+    if err == nil {
+        // Printing the details of the Carbon App
+        app := resp.(*utils.CarbonApp)
+        printCarbonAppInfo(*app)
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting Information of the Carbon App", err)
+    }
 }
 
 // printCarbonAppInfo
 // @param app : CarbonApp object
 func printCarbonAppInfo(app utils.CarbonApp) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+    table := tablewriter.NewWriter(os.Stdout)
+    table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-	d_name := []string{"NAME", "", app.Name}
-	table.Append(d_name)
+    d_name := []string{"NAME", "", app.Name}
+    table.Append(d_name)
 
-	d_version := []string{"VERSION", "", app.Version}
-	table.Append(d_version)
+    d_version := []string{"VERSION", "", app.Version}
+    table.Append(d_version)
 
-	for id, artifact := range app.Artifacts {
+    for id, artifact := range app.Artifacts {
 
-		artifactId := "ARTIFACTS " + strconv.Itoa(id)
+        artifactId := "ARTIFACTS " + strconv.Itoa(id)
 
-		data := []string{artifactId, "NAME", artifact.Name}
-		table.Append(data)
-		data = []string{artifactId, "TYPE", artifact.Type}
-		table.Append(data)
-	}
+        data := []string{artifactId, "NAME", artifact.Name}
+        table.Append(data)
+        data = []string{artifactId, "TYPE", artifact.Type}
+        table.Append(data)
+    }
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-	table.SetAutoMergeCells(true)
-	table.Render() // Send output
+    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
+    table.SetRowLine(true)
+    table.SetAutoMergeCells(true)
+    table.Render() // Send output
 }

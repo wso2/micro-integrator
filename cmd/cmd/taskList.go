@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Tasks command related usage info
@@ -37,32 +37,32 @@ Example:
 
 // taskListCmd represents the list tasks command
 var taskListCmd = &cobra.Command{
-	Use:   listTaskCmdLiteral,
-	Short: listTaskCmdShortDesc,
-	Long:  listTaskCmdLongDesc + listTaskCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "List Tasks called")
-		executeListTasksCmd()
-	},
+    Use:   listTaskCmdLiteral,
+    Short: listTaskCmdShortDesc,
+    Long:  listTaskCmdLongDesc + listTaskCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "List Tasks called")
+        executeListTasksCmd()
+    },
 }
 
 func init() {
-	listCmd.AddCommand(taskListCmd)
+    listCmd.AddCommand(taskListCmd)
 }
 
 func executeListTasksCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixTasks
+    finalUrl := utils.RESTAPIBase + utils.PrefixTasks
 
-	count, tasks, err := utils.GetArtifactList(finalUrl)
+    count, tasks, err := utils.GetArtifactList(finalUrl)
 
-	if err == nil {
-		// Printing the list of available Tasks
-		fmt.Println("No. of Tasks:", count)
-		if count > 0 {
-			utils.PrintList(tasks)
-		}
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
-	}
+    if err == nil {
+        // Printing the list of available Tasks
+        fmt.Println("No. of Tasks:", count)
+        if count > 0 {
+            utils.PrintList(tasks)
+        }
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
+    }
 }

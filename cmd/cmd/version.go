@@ -19,23 +19,23 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "fmt"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 var version = "0.1"
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
-	Use:   "version",
-	Short: "Version of the CLI",
-	Long:  `Display the version of the Command line tool`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(utils.ProjectName + " Version: " + version)
-	},
+    Use:   "version",
+    Short: "Version of the CLI",
+    Long:  `Display the version of the Command line tool`,
+    Run: func(cmd *cobra.Command, args []string) {
+        fmt.Println(utils.ProjectName + " Version: " + version)
+    },
 }
 
 func init() {
-	rootCmd.AddCommand(versionCmd)
+    rootCmd.AddCommand(versionCmd)
 }

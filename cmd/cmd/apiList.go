@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List APIs command related usage info
@@ -37,32 +37,32 @@ Example:
 
 // apisListCmd represents the list apis command
 var apisListCmd = &cobra.Command{
-	Use:   listAPICmdLiteral,
-	Short: listAPICmdShortDesc,
-	Long:  listAPICmdLongDesc + listAPICmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "List APIs called")
-		executeListAPIsCmd()
-	},
+    Use:   listAPICmdLiteral,
+    Short: listAPICmdShortDesc,
+    Long:  listAPICmdLongDesc + listAPICmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "List APIs called")
+        executeListAPIsCmd()
+    },
 }
 
 func init() {
-	listCmd.AddCommand(apisListCmd)
+    listCmd.AddCommand(apisListCmd)
 }
 
 func executeListAPIsCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
+    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
 
-	count, apis, err := utils.GetArtifactList(finalUrl)
+    count, apis, err := utils.GetArtifactList(finalUrl)
 
-	if err == nil {
-		// Printing the list of available APIs
-		fmt.Println("No. of APIs:", count)
-		if count > 0 {
-			utils.PrintList(apis)
-		}
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-	}
+    if err == nil {
+        // Printing the list of available APIs
+        fmt.Println("No. of APIs:", count)
+        if count > 0 {
+            utils.PrintList(apis)
+        }
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+    }
 }

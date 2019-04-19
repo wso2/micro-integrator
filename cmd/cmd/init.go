@@ -19,9 +19,9 @@
 package cmd
 
 import (
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "github.com/lithammer/dedent"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // Init command related usage info
@@ -39,25 +39,25 @@ var serverName, serverPort string
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
-	Use:   initCmdLiteral,
-	Short: initCmdShortDesc,
-	Long:  initCmdLongDesc + initCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Init called")
-		writeConfig()
-	},
+    Use:   initCmdLiteral,
+    Short: initCmdShortDesc,
+    Long:  initCmdLongDesc + initCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Init called")
+        writeConfig()
+    },
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+    rootCmd.AddCommand(initCmd)
 
-	initCmd.Flags().StringVarP(&serverName, "server", "s", "", "Address of the Server")
-	initCmd.MarkFlagRequired("server")
-	initCmd.Flags().StringVarP(&serverPort, "port", "p", "", "Port of the Management API")
-	initCmd.MarkFlagRequired("port")
+    initCmd.Flags().StringVarP(&serverName, "server", "s", "", "Address of the Server")
+    initCmd.MarkFlagRequired("server")
+    initCmd.Flags().StringVarP(&serverPort, "port", "p", "", "Port of the Management API")
+    initCmd.MarkFlagRequired("port")
 }
 
 func writeConfig(){
-	serverConfig := utils.ServerConfig{serverName, serverPort}
-	utils.WriteServerConfigFile(serverConfig, utils.ServerConfigFilePath)
+    serverConfig := utils.ServerConfig{serverName, serverPort}
+    utils.WriteServerConfigFile(serverConfig, utils.ServerConfigFilePath)
 }

@@ -19,11 +19,11 @@
 package cmd
 
 import (
-	"github.com/lithammer/dedent"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+    "github.com/lithammer/dedent"
+    "github.com/olekukonko/tablewriter"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
 )
 
 var inboundEndpointName string
@@ -41,64 +41,64 @@ Example:
 
 // InboundEndpointShowCmd represents the Show inboundEndpoint command
 var inboundEndpointShowCmd = &cobra.Command{
-	Use:   showInboundEndpointCmdLiteral,
-	Short: showInboundEndpointCmdShortDesc,
-	Long:  showInboundEndpointCmdLongDesc + showInboundEndpointCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Show InboundEndpoint called")
-		executeGetInboundEndpointCmd(inboundEndpointName)
-	},
+    Use:   showInboundEndpointCmdLiteral,
+    Short: showInboundEndpointCmdShortDesc,
+    Long:  showInboundEndpointCmdLongDesc + showInboundEndpointCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Show InboundEndpoint called")
+        executeGetInboundEndpointCmd(inboundEndpointName)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(inboundEndpointShowCmd)
+    showCmd.AddCommand(inboundEndpointShowCmd)
 
-	inboundEndpointShowCmd.Flags().StringVarP(&inboundEndpointName, "name", "n", "", "Name of the Inbound Endpoint")
-	inboundEndpointShowCmd.MarkFlagRequired("name")
+    inboundEndpointShowCmd.Flags().StringVarP(&inboundEndpointName, "name", "n", "", "Name of the Inbound Endpoint")
+    inboundEndpointShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetInboundEndpointCmd(inboundEndpointname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + inboundEndpointname
+    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + inboundEndpointname
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.InboundEndpoint{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.InboundEndpoint{})
 
-	if err == nil {
-		// Printing the details of the InboundEndpoint
-		inboundEndpoint := resp.(*utils.InboundEndpoint)
-		printInboundEndpoint(*inboundEndpoint)
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
-	}
+    if err == nil {
+        // Printing the details of the InboundEndpoint
+        inboundEndpoint := resp.(*utils.InboundEndpoint)
+        printInboundEndpoint(*inboundEndpoint)
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
+    }
 }
 
 // printInboundEndpointInfo
 // @param InboundEndpoint : InboundEndpoint object
 func printInboundEndpoint(endpoint utils.InboundEndpoint) {
-	table := tablewriter.NewWriter(os.Stdout)
+    table := tablewriter.NewWriter(os.Stdout)
 
-	row := []string{"NAME", "", endpoint.Name}
-	table.Append(row)
+    row := []string{"NAME", "", endpoint.Name}
+    table.Append(row)
 
-	row = []string{"PROTOCOL", "", endpoint.Protocol}
-	table.Append(row)
+    row = []string{"PROTOCOL", "", endpoint.Protocol}
+    table.Append(row)
 
-	row = []string{"CLASS", "", endpoint.Class}
-	table.Append(row)
+    row = []string{"CLASS", "", endpoint.Class}
+    table.Append(row)
 
-	row = []string{"SEQUENCE", "", endpoint.Sequence}
-	table.Append(row)
+    row = []string{"SEQUENCE", "", endpoint.Sequence}
+    table.Append(row)
 
-	row = []string{"ERROR SEQUENCE", "", endpoint.ErrorSequence}
-	table.Append(row)
+    row = []string{"ERROR SEQUENCE", "", endpoint.ErrorSequence}
+    table.Append(row)
 
-	for _, param := range endpoint.Parameters {
-		row = []string{"PARAMETERS", param.Name, param.Value}
-		table.Append(row)
-	}
+    for _, param := range endpoint.Parameters {
+        row = []string{"PARAMETERS", param.Name, param.Value}
+        table.Append(row)
+    }
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-	table.SetAutoMergeCells(true)
-	table.Render() // Send output
+    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
+    table.SetRowLine(true)
+    table.SetAutoMergeCells(true)
+    table.Render() // Send output
 }

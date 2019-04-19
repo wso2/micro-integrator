@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Carbon App command related usage info
@@ -37,32 +37,32 @@ Example:
 
 // carbonAppsListCmd represents the list carbonApps command
 var carbonAppsListCmd = &cobra.Command{
-	Use:   listApplicationCmdLiteral,
-	Short: listApplicationCmdShortDesc,
-	Long:  listApplicationCmdLongDesc + listApplicationCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "List Carbon apps called")
-		executeListCarbonAppsCmd()
-	},
+    Use:   listApplicationCmdLiteral,
+    Short: listApplicationCmdShortDesc,
+    Long:  listApplicationCmdLongDesc + listApplicationCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "List Carbon apps called")
+        executeListCarbonAppsCmd()
+    },
 }
 
 func init() {
-	listCmd.AddCommand(carbonAppsListCmd)
+    listCmd.AddCommand(carbonAppsListCmd)
 }
 
 func executeListCarbonAppsCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
+    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
 
-	count, carbonApps, err := utils.GetArtifactList(finalUrl)
+    count, carbonApps, err := utils.GetArtifactList(finalUrl)
 
-	if err == nil {
-		// Printing the list of available Carbon Apps
-		fmt.Println("No. of Carbon Apps:", count)
-		if count > 0 {
-			utils.PrintList(carbonApps)
-		}
-	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of Carbon Apps", err)
-	}
+    if err == nil {
+        // Printing the list of available Carbon Apps
+        fmt.Println("No. of Carbon Apps:", count)
+        if count > 0 {
+            utils.PrintList(carbonApps)
+        }
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Carbon Apps", err)
+    }
 }

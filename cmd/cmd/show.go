@@ -19,10 +19,10 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
+  "fmt"
+  "github.com/lithammer/dedent"
+  "github.com/spf13/cobra"
+  "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 var showCmdLiteral = "show"
@@ -58,14 +58,14 @@ Use "micli show [command] --help" for more information about a command.`
 
 // showCmd represents the show command
 var showCmd = &cobra.Command{
-	Use:   "show [COMMANDS]",
-	Short: "Show details about a carbon app, endpoint, api, proxy service, task or sequence",
-	Long:  "Show details about a carbon app, endpoint, api, task or sequence",
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(showUsageError + showCmdExamples + showCmdHelp)
-	},
+  Use:   "show [COMMANDS]",
+  Short: "Show details about a carbon app, endpoint, api, proxy service, task or sequence",
+  Long:  "Show details about a carbon app, endpoint, api, task or sequence",
+  Run: func(cmd *cobra.Command, args []string) {
+    fmt.Println(showUsageError + showCmdExamples + showCmdHelp)
+  },
 }
 
 func init() {
-	rootCmd.AddCommand(showCmd)
+  rootCmd.AddCommand(showCmd)
 }

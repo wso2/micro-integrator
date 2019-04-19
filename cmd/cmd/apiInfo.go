@@ -19,13 +19,13 @@
 package cmd
 
 import (
-	"fmt"
-	"github.com/lithammer/dedent"
-	"github.com/olekukonko/tablewriter"
-	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
-	"strconv"
+    "fmt"
+    "github.com/lithammer/dedent"
+    "github.com/olekukonko/tablewriter"
+    "github.com/spf13/cobra"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
+    "strconv"
 )
 
 var apiName string
@@ -43,67 +43,67 @@ Example:
 
 // apiShowCmd represents the show api command
 var apiShowCmd = &cobra.Command{
-	Use:   showAPICmdLiteral,
-	Short: showAPICmdShortDesc,
-	Long:  showAPICmdLongDesc + showAPICmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo + "Show API called")
-		executeGetAPICmd(apiName)
-	},
+    Use:   showAPICmdLiteral,
+    Short: showAPICmdShortDesc,
+    Long:  showAPICmdLongDesc + showAPICmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        utils.Logln(utils.LogPrefixInfo + "Show API called")
+        executeGetAPICmd(apiName)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(apiShowCmd)
+    showCmd.AddCommand(apiShowCmd)
 
-	apiShowCmd.Flags().StringVarP(&apiName, "name", "n", "", "Name of the API")
-	apiShowCmd.MarkFlagRequired("name")
+    apiShowCmd.Flags().StringVarP(&apiName, "name", "n", "", "Name of the API")
+    apiShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetAPICmd(apiname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs + "?apiName=" + apiname
+    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs + "?apiName=" + apiname
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.API{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.API{})
 
-	if err == nil {
-		// Printing the details of the API
-		api := resp.(*utils.API)
-		printAPIInfo(*api)
-	} else {
-		fmt.Println(utils.LogPrefixError+"Getting Information of the API", err)
-	}
+    if err == nil {
+        // Printing the details of the API
+        api := resp.(*utils.API)
+        printAPIInfo(*api)
+    } else {
+        fmt.Println(utils.LogPrefixError+"Getting Information of the API", err)
+    }
 }
 
 // printAPIInfo
 // @param app : API object
 func printAPIInfo(api utils.API) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+    table := tablewriter.NewWriter(os.Stdout)
+    table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-	data := []string{"NAME", "", api.Name}
-	table.Append(data)
+    data := []string{"NAME", "", api.Name}
+    table.Append(data)
 
-	data = []string{"CONTEXT", "", api.Context}
-	table.Append(data)
+    data = []string{"CONTEXT", "", api.Context}
+    table.Append(data)
 
-	for id, resource := range api.Resources {
+    for id, resource := range api.Resources {
 
-		resourceId := "RESOURCES " + strconv.Itoa(id)
+        resourceId := "RESOURCES " + strconv.Itoa(id)
 
-		for _, method := range resource.Methods {
-			data = []string{resourceId, "METHOD", method}
-			table.Append(data)
-		}
-		data = []string{resourceId, "STYLE", resource.Style}
-		table.Append(data)
-		data = []string{resourceId, "TEMPLATE", resource.Template}
-		table.Append(data)
-		data = []string{resourceId, "MAPPING", resource.Mapping}
-		table.Append(data)
-	}
+        for _, method := range resource.Methods {
+            data = []string{resourceId, "METHOD", method}
+            table.Append(data)
+        }
+        data = []string{resourceId, "STYLE", resource.Style}
+        table.Append(data)
+        data = []string{resourceId, "TEMPLATE", resource.Template}
+        table.Append(data)
+        data = []string{resourceId, "MAPPING", resource.Mapping}
+        table.Append(data)
+    }
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true)
-	table.SetAutoMergeCells(true)
-	table.Render() // Send output
+    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
+    table.SetRowLine(true)
+    table.SetAutoMergeCells(true)
+    table.Render() // Send output
 }
