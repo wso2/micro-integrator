@@ -20,6 +20,8 @@
 package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.axis2.Constants;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 
@@ -28,6 +30,8 @@ import java.net.URISyntaxException;
 import java.util.List;
 
 public class Utils {
+
+    private static Log log = LogFactory.getLog(Utils.class);
 
 
     /**
@@ -46,7 +50,7 @@ public class Utils {
             queryParameter = URLEncodedUtils.parse(new URI((String) axis2MessageContext.getProperty(
                     Constants.Configuration.TRANSPORT_IN_URL)), "UTF-8");
         }catch (URISyntaxException e){
-            e.printStackTrace();
+            log.error("Error occurred while processing query parameters", e);
         }
 
         if(queryParameter != null && queryParameter.size() > 0){
