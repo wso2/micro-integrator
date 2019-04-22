@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>wso2-micro-integrator-parent</artifactId>
-        <version>1.0.0-m4-SNAPSHOT</version>
+        <version>1.0.0-m6-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -82,7 +82,7 @@
                                     org.wso2.carbon.mediation:org.apache.synapse.wso2.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.crypto:org.wso2.carbon.crypto.feature:1.0.3
+                                    org.wso2.carbon.crypto:org.wso2.carbon.crypto.feature:${carbon.crypto.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.apache.synapse.transport.fix.feature:${carbon.mediation.version}
@@ -146,10 +146,6 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.mediator.publishevent.server.feature:${carbon.mediation.version}
-                                </featureArtifactDef>
-
-                                <featureArtifactDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.hl7.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
 
                                 <!--2 Carbon-Kernel-->
@@ -415,10 +411,6 @@
                                     <version>${carbon.mediation.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.hl7.feature.group</id>
-                                    <version>${carbon.mediation.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.wso2.carbon.application.mgt.synapse.server.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
                                 </feature>
@@ -562,7 +554,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.crypto.feature.group</id>
-                                    <version>1.0.3</version>
+                                    <version>${carbon.crypto.version}</version>
                                 </feature>
                             </features>
                         </configuration>

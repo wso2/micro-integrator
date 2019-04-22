@@ -32,7 +32,7 @@ To stop the Micro Integrator runtime, press Ctrl+C in the command window.
 WSO2 Micro Integrator allows you to perform all your integration needs with the use of ESB artifacts, which could be within a wide range of APIs, services, endpoints, tasks and so on. An artifact comprises of a set of configurations which defines the request/response flow where, the configuration is based on [Apache Synapse](http://synapse.apache.org/userguide/config.html).
 
 WSO2 EI tool is specifically designed with the capability of designing, developing, testing and deploying artifacts required to perform your integration. You can develop your integration solution in an [ESB Solutions Project](https://docs.wso2.com/display/EI6xx/Working+with+EI+Tooling#WorkingwithEITooling-CreatinganESBSolutionProjectCreatinganESBSolutionProject) via WSO2 EI Tooling, import the project as a [Composite
-Application](https://docs.wso2.com/display/ADMIN44x/Working+with+Composite+Applications), and add the CAR file to the `<MI_HOME>/wso2/micro-integrator/repository/deployment/server/carbonapps`
+Application](https://docs.wso2.com/display/ADMIN44x/Working+with+Composite+Applications), and add the CAR file to the `<MI_HOME>/repository/deployment/server/carbonapps`
 directory to deploy.
 
 Note: WSO2 Micro Integrator does not support hot deployment. Therefore, you need to restart the Micro Integrator after copying the artifacts, in order to get them deployed.
@@ -51,13 +51,13 @@ the required integration artifacts and configuration. You can follow the instruc
 ### Deploying artifacts in the Micro Integrator profile
 
 Micro Integrator docker image reads and deploys carbon application in the
-`/home/wso2ei/wso2mi/wso2/micro-integrator/repository/deployment/server/carbonapps` directory. Therefore you can use a
+`/home/wso2ei/wso2mi/repository/deployment/server/carbonapps` directory. Therefore you can use a
 simple Docker file like the following to create a docker image with the integration artifacts.
 
 ```docker
 FROM wso2/micro-integrator:latest
 
-COPY hello-world-capp_1.0.0.car /home/wso2ei/wso2mi/wso2/micro-integrator/repository/deployment/server/carbonapps
+COPY hello-world-capp_1.0.0.car /home/wso2ei/wso2mi/repository/deployment/server/carbonapps
 ```
 
 Then you can simply use the docker CLI to create the docker image.
@@ -139,6 +139,9 @@ spec:
         -
           name: web
           containerPort: 8290
+        -
+          name: web-secure
+          containerPort: 8253
 ---
 apiVersion: v1
 kind: Service
@@ -152,6 +155,10 @@ spec:
       name: web
       port: 8290
       targetPort: 8290
+    -
+      name: web-secure
+      port: 8253
+      targetPort: 8253
   selector:
     event: mi-helloworld
 ```
@@ -161,6 +168,8 @@ spec:
 For instructions on trying out a simple use case using the micro Integrator profile, see the section on
 [Deploying to a Kubernetes Cluster](examples/hello-world#deploying-to-a-kubernetes-cluster-optional)
 in the [Hello world sample](examples/hello-world).
+
+You can also try out on the [Getting Started Guide](../examples/getting-started/README.md) for trying out on a complete scenario of forwarding a request to a back-end which processes order requests.
 
 ## Configuring the file-based registry
 
@@ -177,14 +186,14 @@ any registry artifacts, you can create them manually.
 - Governance: To store all artifacts that are relevant to the governance of the product.
 
 If you want to change the default locations of the registry directories, uncomment and change the following configuration
- in the `<MI_HOME>/wso2/microIntegrator/repository/deployment/server/synapse-config/default/directoryregistry.xml` file.
+ in the `<MI_HOME>/repository/deployment/server/synapse-config/default/registry.xml` file.
 
 ```xml
 <registry xmlns="http://ws.apache.org/ns/synapse" provider="org.wso2.carbon.mediation.registry.MicroIntegratorRegistry">
     <parameter name="cachableDuration">15000</parameter>
     <!--
         Uncomment below parameters (ConfigRegRoot, GovRegRoot, LocalRegRoot) to configure registry root paths
-        Default : <MI_HOME>/wso2/micro-integrator/registry/{governance | config | local}
+        Default : <MI_HOME>/registry/{governance | config | local}
     -->
     <!--
     <parameter name="ConfigRegRoot">{Root directory path for configuration Registry}</parameter>

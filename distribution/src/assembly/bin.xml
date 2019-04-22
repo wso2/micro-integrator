@@ -320,6 +320,37 @@
                 <include>esapi-2.0.1.jar</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/components/lib
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/lib</outputDirectory>
+            <excludes>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                target/wso2carbon-core-${carbon.kernel.version}/repository/components/patches
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/patches</outputDirectory>
+            <excludes>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                target/wso2carbon-core-${carbon.kernel.version}/repository/components/servicepacks
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/servicepacks</outputDirectory>
+            <excludes>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                target/wso2carbon-core-${carbon.kernel.version}/repository/components/extensions
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/extensions</outputDirectory>
+            <excludes>
+            </excludes>
+        </fileSet>
     </fileSets>
 
     <files>
@@ -368,9 +399,7 @@
         </file>
 
         <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-processor.xml
-            </source>
+            <source>src/conf/event-processor.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
