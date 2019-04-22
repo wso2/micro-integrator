@@ -300,8 +300,8 @@
         <carbon.commons.version>4.6.64</carbon.commons.version>
         <carbon.rule.version>4.4.9</carbon.rule.version>
         <carbon.deployment.version>4.8.3</carbon.deployment.version>
-        <wss4j.version>1.5.11.wso2v17</wss4j.version>
-        <rampart.wso2.version>1.6.1-wso2v28</rampart.wso2.version>
+        <wss4j.version>1.5.11-wso2v18</wss4j.version>
+        <rampart.wso2.version>1.6.1-wso2v34</rampart.wso2.version>
         <siddhi.version>3.2.3</siddhi.version>
         <opensaml.orbit.version>2.6.4.wso2v3</opensaml.orbit.version>
         <bouncycastle.orbit.version>1.52.0.wso2v1</bouncycastle.orbit.version>
