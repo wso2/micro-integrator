@@ -80,12 +80,6 @@ func PromptForPassword() string {
     return password
 }
 
-// ShowHelpCommandTip function will print the instructions for displaying help info on a specific command
-// @params cmdLiteral : Command on which help command is to be displayed
-func ShowHelpCommandTip(cmdLiteral string) {
-	fmt.Printf("Execute '%s %s --help' for more info.\n")
-}
-
 // return a string containing the file name, function name
 // and the line number of a specified entry on the call stack
 func WhereAmI(depthList ...int) string {
