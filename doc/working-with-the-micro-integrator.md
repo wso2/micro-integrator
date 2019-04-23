@@ -39,7 +39,7 @@ Note: WSO2 Micro Integrator does not support hot deployment. Therefore, you need
 
 ### Configuring the Micro Integrator profile
 
-All configuration files related to the Micro Integrator profile are located in the `<MI-HOME>/wso2/micro-integrator/conf`
+All configuration files related to the Micro Integrator profile are located in the `<MI-HOME>/conf`
 directory.
 
 ## Micro Integrator with Docker
@@ -174,7 +174,7 @@ You can also try out on the [Getting Started Guide](../examples/getting-started/
 ## Configuring the file-based registry
 
 The H2 database-based registry is not available in the Micro Integrator profile. Instead, it has a file system based
-registry, which provides the same functionality. Thus, by default, the `<MI_HOME>/wso2/micro-integrator/registry`
+registry, which provides the same functionality. Thus, by default, the `<MI_HOME>/registry`
 directory will act as the registry to store registry artifacts etc. This main registry directory will consist of the
 following sub-registry directories.
 
