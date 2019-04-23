@@ -12,7 +12,8 @@ cloud-native distribution of [WSO2 Enterprise Integration
 ## Summary
 
 - [**Why Micro Integrator?**](#why-micro-integrator?)
-- [**Development**](#development)
+- [**Getting Started**](#getting-started)
+- [**Contributing**](#contributing)
 - [**Enterprise Support & Demo**](#enterprise-support--demo)
 - [**Licence**](#licence)
 - [**Copyright**](#copyright)
@@ -46,12 +47,13 @@ are the main design objectives for developing the Micro Integrator.
 - Building a runtime suitable for hybrid integration requirements
   (integration cloud).
 
-## Installation and working with Micro Integrator
+## Getting Started
 
-Please refer to the instructions by visiting the documentation for
+Please refer to the instructions on the installation of, and working with, the Micro Integrator by visiting the documentation for
 [Working with the Micro Integrator](doc/working-with-the-micro-integrator.md).
+You can also try out on a simple scenario of forwarding a request to a service by following the documenation on [Getting Started.](examples/getting-started/README.md)
 
-## Development
+## Contributing
 
 If you are planning on contributing to the development efforts of WSO2 Micro Integrator, you can do that by checking out
 the latest development version. The `master` branch holds the latest unreleased source code.
