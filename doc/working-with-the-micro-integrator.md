@@ -94,6 +94,8 @@ required configurations to modify the defaults in the Micro Integrator base imag
 For instructions on trying out a simple use case using the micro Integrator profile, see
 [Hello world sample](../examples/hello-world).
 
+You can also try out on the [Getting Started Guide](../examples/getting-started/README.md) for trying out on a complete scenario of forwarding a request to a back-end which processes order requests.
+
 ## Micro Integrator with Kubernetes
 
 Kubernetes is an open-source container orchestration system for automating application deployment, scaling, and
