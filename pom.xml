@@ -355,6 +355,7 @@
         <maven.surefire.plugin.version>2.20.1</maven.surefire.plugin.version>
         <jacoco.maven.plugin.version>0.8.3</jacoco.maven.plugin.version>
         <testng.version>6.11</testng.version>
+        <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
     </properties>
 
     <repositories>
@@ -555,6 +556,11 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.maven.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven.dependency.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
