@@ -28,6 +28,7 @@
 
     <artifactId>micli</artifactId>
     <packaging>mvn-golang</packaging>
+    <name>WSO2 Micro Integrator - Management CLI</name>
 
     <build>
         <sourceDirectory>${basedir}</sourceDirectory>
