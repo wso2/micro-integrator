@@ -379,6 +379,7 @@
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
         <maven.surefire.plugin.version>2.20.1</maven.surefire.plugin.version>
         <jacoco.maven.plugin.version>0.8.3</jacoco.maven.plugin.version>
+        <mvn.golang.wrapper.version>2.3.1</mvn.golang.wrapper.version>
         <testng.version>6.11</testng.version>
     </properties>
 
@@ -585,6 +586,11 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.maven.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>com.igormaznitsa</groupId>
+                    <artifactId>mvn-golang-wrapper</artifactId>
+                    <version>${mvn.golang.wrapper.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
