@@ -77,27 +77,27 @@ func executeGetProxyServiceCmd(proxyServiceName string) {
 func printProxyServiceInfo(proxyService utils.ProxyService) {
     table := tablewriter.NewWriter(os.Stdout)
 
-    row := []string{"NAME", proxyService.Name}
-    table.Append(row)
+    data := []string{"NAME", proxyService.Name}
+    table.Append(data)
 
-    row = []string{"DESCRIPTION", proxyService.Description}
-    table.Append(row)
+    data = []string{"DESCRIPTION", proxyService.Description}
+    table.Append(data)
 
-    row = []string{"IN SEQUENCE", proxyService.InSequence}
-    table.Append(row)
+    data = []string{"IN SEQUENCE", proxyService.InSequence}
+    table.Append(data)
 
-    row = []string{"OUT SEQUENCE", proxyService.OutSequence}
-    table.Append(row)
+    data = []string{"OUT SEQUENCE", proxyService.OutSequence}
+    table.Append(data)
 
-    row = []string{"FAULT SEQUENCE", proxyService.FaultSequence}
-    table.Append(row)
+    data = []string{"FAULT SEQUENCE", proxyService.FaultSequence}
+    table.Append(data)
 
-    row = []string{"ENDPOINT", proxyService.Endpoint}
-    table.Append(row)
+    data = []string{"ENDPOINT", proxyService.Endpoint}
+    table.Append(data)
 
     for _, transport := range proxyService.Transports {
-        row = []string{"TRANSPORTS", transport}
-        table.Append(row)
+        data = []string{"TRANSPORTS", transport}
+        table.Append(data)
     }
 
     table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})

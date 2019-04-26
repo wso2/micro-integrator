@@ -77,24 +77,24 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
 func printInboundEndpoint(endpoint utils.InboundEndpoint) {
     table := tablewriter.NewWriter(os.Stdout)
 
-    row := []string{"NAME", "", endpoint.Name}
-    table.Append(row)
+    data := []string{"NAME", "", endpoint.Name}
+    table.Append(data)
 
-    row = []string{"PROTOCOL", "", endpoint.Protocol}
-    table.Append(row)
+    data = []string{"PROTOCOL", "", endpoint.Protocol}
+    table.Append(data)
 
-    row = []string{"CLASS", "", endpoint.Class}
-    table.Append(row)
+    data = []string{"CLASS", "", endpoint.Class}
+    table.Append(data)
 
-    row = []string{"SEQUENCE", "", endpoint.Sequence}
-    table.Append(row)
+    data = []string{"SEQUENCE", "", endpoint.Sequence}
+    table.Append(data)
 
-    row = []string{"ERROR SEQUENCE", "", endpoint.ErrorSequence}
-    table.Append(row)
+    data = []string{"ERROR SEQUENCE", "", endpoint.ErrorSequence}
+    table.Append(data)
 
     for _, param := range endpoint.Parameters {
-        row = []string{"PARAMETERS", param.Name, param.Value}
-        table.Append(row)
+        data = []string{"PARAMETERS", param.Name, param.Value}
+        table.Append(data)
     }
 
     table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})

@@ -79,17 +79,17 @@ func printEndpoint(endpoint utils.Endpoint) {
 
     table := tablewriter.NewWriter(os.Stdout)
 
-    d_name := []string{"NAME", endpoint.Name}
-    table.Append(d_name)
+    data := []string{"NAME", endpoint.Name}
+    table.Append(data)
 
-    d_desc := []string{"DESCRIPTION", endpoint.Description}
-    table.Append(d_desc)
+    data = []string{"DESCRIPTION", endpoint.Description}
+    table.Append(data)
 
-    d_container := []string{"CONTAINER", endpoint.ArtifactContainer}
-    table.Append(d_container)
+    data = []string{"CONTAINER", endpoint.ArtifactContainer}
+    table.Append(data)
 
-    d_type := []string{"ENDPOINT STRING", endpoint.EndpointString}
-    table.Append(d_type)
+    data = []string{"ENDPOINT STRING", endpoint.EndpointString}
+    table.Append(data)
 
     table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
     table.SetRowLine(true)

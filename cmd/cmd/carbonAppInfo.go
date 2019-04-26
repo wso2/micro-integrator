@@ -79,17 +79,17 @@ func printCarbonAppInfo(app utils.CarbonApp) {
     table := tablewriter.NewWriter(os.Stdout)
     table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-    d_name := []string{"NAME", "", app.Name}
-    table.Append(d_name)
+    data := []string{"NAME", "", app.Name}
+    table.Append(data)
 
-    d_version := []string{"VERSION", "", app.Version}
-    table.Append(d_version)
+    data = []string{"VERSION", "", app.Version}
+    table.Append(data)
 
     for id, artifact := range app.Artifacts {
 
         artifactId := "ARTIFACTS " + strconv.Itoa(id)
 
-        data := []string{artifactId, "NAME", artifact.Name}
+        data = []string{artifactId, "NAME", artifact.Name}
         table.Append(data)
         data = []string{artifactId, "TYPE", artifact.Type}
         table.Append(data)

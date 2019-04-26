@@ -78,26 +78,26 @@ func printTask(task utils.Task) {
     table := tablewriter.NewWriter(os.Stdout)
     table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-    d_name := []string{"NAME", task.Name}
-    table.Append(d_name)
+    data := []string{"NAME", task.Name}
+    table.Append(data)
 
-    d_class := []string{"CLASS", task.Class}
-    table.Append(d_class)
+    data = []string{"CLASS", task.Class}
+    table.Append(data)
 
-    d_group := []string{"GROUP", task.Group}
-    table.Append(d_group)
+    data = []string{"GROUP", task.Group}
+    table.Append(data)
 
-    d_type := []string{"TYPE", task.Type}
-    table.Append(d_type)
+    data = []string{"TYPE", task.Type}
+    table.Append(data)
 
-    d_count := []string{"TRIGGER COUNT", task.TriggerCount}
-    table.Append(d_count)
+    data = []string{"TRIGGER COUNT", task.TriggerCount}
+    table.Append(data)
 
-    d_interval := []string{"TRIGGER INTERVAL", task.TriggerInterval}
-    table.Append(d_interval)
+    data = []string{"TRIGGER INTERVAL", task.TriggerInterval}
+    table.Append(data)
 
-    d_cron := []string{"TRIGGER CRON", task.TriggerCron}
-    table.Append(d_cron)
+    data = []string{"TRIGGER CRON", task.TriggerCron}
+    table.Append(data)
 
     table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
     table.SetRowLine(true)
