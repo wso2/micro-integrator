@@ -124,7 +124,11 @@ goto findJdk
 rem ----- commandSynapseUnitTest ---------------------------------------------------------
 :commandSynapseUnitTest
 set UNIT_TEST=true
-set UNIT_TEST_PORT=%2
+if [%2] == [] (
+    set UNIT_TEST_PORT=9008
+) else (
+    set UNIT_TEST_PORT=%2
+)
 goto findJdk
 
 :noDebugPort
