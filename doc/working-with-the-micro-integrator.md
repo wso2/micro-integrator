@@ -37,6 +37,9 @@ directory to deploy.
 
 Note: WSO2 Micro Integrator does not support hot deployment. Therefore, you need to restart the Micro Integrator after copying the artifacts, in order to get them deployed.
 
+#### Test artifacts in the Micro Integrator
+WSO2 Micro Integrator allows you to execute unit tests for your synapse configurations by using [Synapse Unit Testing Framework](synapse-unit-testing-framework.md). 
+
 ### Configuring the Micro Integrator profile
 
 All configuration files related to the Micro Integrator profile are located in the `<MI-HOME>/conf`
