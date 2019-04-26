@@ -20,7 +20,9 @@ package utils
 
 var RESTAPIBase = DefaultRESTAPIBase
 
-// SetServerConfigVars
+// Set Server Configuration
+// If yaml file exist set configuration according to the file
+// else use the default configuration
 // @param serverConfigFilePath : Path to file where Configuration details are stored
 // @return error
 func SetConfigVars(serverConfigFilePath string) error {

@@ -73,7 +73,8 @@ func executeGetCarbonAppCmd(appname string) {
     }
 }
 
-// printCarbonAppInfo
+// Print the details of a Carbon app
+// Name, Version, and summary about it's artifacts
 // @param app : CarbonApp object
 func printCarbonAppInfo(app utils.CarbonApp) {
     table := tablewriter.NewWriter(os.Stdout)

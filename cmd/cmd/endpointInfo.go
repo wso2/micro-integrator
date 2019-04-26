@@ -73,7 +73,8 @@ func executeGetEndpointCmd(endpointname string) {
     }
 }
 
-// printEndpointInfo
+// Print the details of an Endpoint
+// Name, Description, Container and the XML string of the endpoint
 // @param Endpoint : Endpoint object
 func printEndpoint(endpoint utils.Endpoint) {
 

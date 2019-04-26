@@ -72,7 +72,8 @@ func executeGetSequenceCmd(sequencename string) {
     }
 }
 
-// printSequenceInfo
+// Print the details of a Sequence
+// Name, Conatiner and list of mediators
 // @param task : Sequence object
 func printSequenceInfo(sequence utils.Sequence) {
     table := tablewriter.NewWriter(os.Stdout)

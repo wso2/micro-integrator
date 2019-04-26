@@ -72,7 +72,8 @@ func executeGetTaskCmd(taskname string) {
     }
 }
 
-// printTaskInfo
+// Print the details of a Task
+// Name, Class, Group, Type and Trigger details
 // @param task : Task object
 func printTask(task utils.Task) {
     table := tablewriter.NewWriter(os.Stdout)

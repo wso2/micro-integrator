@@ -25,7 +25,7 @@ import (
     "os"
 )
 
-// WriteServerConfigFile
+// Write Server configuration to the yaml file
 // @param c : data
 // @param serverConfigFilePath : Path to file where env endpoints are stored
 func WriteServerConfigFile(c interface{}, envConfigFilePath string) {
@@ -40,7 +40,7 @@ func WriteServerConfigFile(c interface{}, envConfigFilePath string) {
     }
 }
 
-// Read and return ServerConfig
+// Read and return Server Configuration from the yaml file
 func GetServerConfigFromFile(filePath string) *ServerConfig {
     data, err := ioutil.ReadFile(filePath)
     if err != nil {

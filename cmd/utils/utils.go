@@ -109,7 +109,7 @@ func PrintList(list []string) {
     }
 }
 
-// GetArtifactList
+// Get Artifact List depending on the @param url
 // @return count (no. of Artifacts)
 // @return array of Artifact names
 // @return error
@@ -140,7 +140,7 @@ func GetArtifactList(url string) (int32, []string, error) {
     }
 }
 
-// UnmarshalData
+// Unmarshal Data from the response to the respective struct
 // @param url: url of rest api
 // @param model: struct object
 // @return struct object

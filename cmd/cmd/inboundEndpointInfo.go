@@ -72,7 +72,8 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
     }
 }
 
-// printInboundEndpointInfo
+// Print the details of an Inbound endpoint
+// Name, Protocol, Sequences and a list of parameters
 // @param InboundEndpoint : InboundEndpoint object
 func printInboundEndpoint(endpoint utils.InboundEndpoint) {
     table := tablewriter.NewWriter(os.Stdout)

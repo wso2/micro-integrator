@@ -74,7 +74,8 @@ func executeGetAPICmd(apiname string) {
     }
 }
 
-// printAPIInfo
+// Print the details of an API
+// Name, Context, Http Method, URL Style
 // @param app : API object
 func printAPIInfo(api utils.API) {
     table := tablewriter.NewWriter(os.Stdout)

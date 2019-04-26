@@ -72,7 +72,8 @@ func executeGetProxyServiceCmd(proxyServiceName string) {
     }
 }
 
-// printProxyServiceInfo
+// Print the details of a Proxy service
+// Name, Description, Sequences(In, Out and Fault), Endpoint
 // @param ProxyService : ProxyService object
 func printProxyServiceInfo(proxyService utils.ProxyService) {
     table := tablewriter.NewWriter(os.Stdout)
