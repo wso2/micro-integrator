@@ -39,14 +39,15 @@ Note: WSO2 Micro Integrator does not support hot deployment. Therefore, you need
 
 ### Configuring the Micro Integrator profile
 
-All configuration files related to the Micro Integrator profile are located in the `<MI-HOME>/wso2/micro-integrator/conf`
+All configuration files related to the Micro Integrator profile are located in the `<MI-HOME>/conf`
 directory.
 
 ## Micro Integrator with Docker
 
 Micro Integrator is also distributed as a base docker image which you can use to create a deployable docker image with
-the required integration artifacts and configuration. You can follow the instructions in [Building the Docker Image](.
-./#building-the-docker-image) to build the Micro Integrator docker image and publish it in the local docker registry.
+the required integration artifacts and configuration. You can follow the instructions in [Building the Docker Image](
+../README.md#building-the-docker-image)
+to build the Micro Integrator docker image and publish it in the local docker registry.
 
 ### Deploying artifacts in the Micro Integrator profile
 
@@ -91,7 +92,9 @@ required configurations to modify the defaults in the Micro Integrator base imag
 ### Trying out a sample scenario
 
 For instructions on trying out a simple use case using the micro Integrator profile, see
-[Hello world sample](examples/hello-world).
+[Hello world sample](../examples/hello-world).
+
+You can also try out on the [Getting Started Guide](../examples/getting-started/README.md) for trying out on a complete scenario of forwarding a request to a back-end which processes order requests.
 
 ## Micro Integrator with Kubernetes
 
@@ -167,14 +170,14 @@ spec:
 
 For instructions on trying out a simple use case using the micro Integrator profile, see the section on
 [Deploying to a Kubernetes Cluster](examples/hello-world#deploying-to-a-kubernetes-cluster-optional)
-in the [Hello world sample](examples/hello-world).
+in the [Hello world sample](../examples/hello-world).
 
 You can also try out on the [Getting Started Guide](../examples/getting-started/README.md) for trying out on a complete scenario of forwarding a request to a back-end which processes order requests.
 
 ## Configuring the file-based registry
 
 The H2 database-based registry is not available in the Micro Integrator profile. Instead, it has a file system based
-registry, which provides the same functionality. Thus, by default, the `<MI_HOME>/wso2/micro-integrator/registry`
+registry, which provides the same functionality. Thus, by default, the `<MI_HOME>/registry`
 directory will act as the registry to store registry artifacts etc. This main registry directory will consist of the
 following sub-registry directories.
 
