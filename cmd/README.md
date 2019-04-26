@@ -23,6 +23,10 @@ Command Line tool for managing the WSO2 Micro Integrator
     NOTE: To execute the tool from anywhere, append the location of the executable (micli) to your $PATH variable.
 
 ### Configuration 
+
+- ### How to Enable the Management API
+    By default the Management API is disabled. To use the Management API you must set the property `internal.http.api.enabled=true` in the <MI_HOME>/conf/synapse.properties.
+
 - ### Management API Address and Port
     To configure the address and the port of the Management Api in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
 
