@@ -20,6 +20,8 @@ Command Line tool for managing the WSO2 Micro Integrator
     
     Execute `./micli --help` for further instructions.
 
+    NOTE: To execute the tool from anywhere, append the location of the executable (micli) to your $PATH variable.
+
 ### Configuration 
 - ### Management API Address and Port
     To configure the address and the port of the Management Api in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
