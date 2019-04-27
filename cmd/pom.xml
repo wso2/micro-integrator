@@ -33,6 +33,7 @@
     <build>
         <sourceDirectory>${basedir}</sourceDirectory>
         <directory>${basedir}${file.separator}bin</directory>
+        <finalName>micli</finalName>
 
         <plugins>
 
