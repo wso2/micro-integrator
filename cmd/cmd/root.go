@@ -54,7 +54,6 @@ func init() {
     cobra.OnInitialize(initConfig)
 
     rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
-    rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
     // Init ServerConfigVars
     err := utils.SetConfigVars(utils.ServerConfigFilePath)
