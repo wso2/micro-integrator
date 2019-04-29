@@ -270,7 +270,7 @@
         <!--Product Version-->
         <product.ei.version>1.0.0-m6-SNAPSHOT</product.ei.version>
 
-        <version.equinox.osgi>3.9.1.v20130814-1242</version.equinox.osgi>
+        <version.equinox.osgi>3.9.1.v20140110-1610</version.equinox.osgi>
         <version.equinox.osgi.services>3.3.100.v20130513-1956</version.equinox.osgi.services>
         <version.equinox.http.helper>1.1.0.wso2v1</version.equinox.http.helper>
         <version.equinox.p2.metadata>2.2.0.v20130523-1557</version.equinox.p2.metadata>
