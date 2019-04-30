@@ -518,9 +518,9 @@
                     <version>${maven.build.helper.plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>${maven.docker.plugin.version}</version>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>${maven.failsafe.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.spotify</groupId>
