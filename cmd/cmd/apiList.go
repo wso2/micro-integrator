@@ -19,12 +19,12 @@
 package cmd
 
 import (
-    "fmt"
+    // "fmt"
     "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
-    "github.com/olekukonko/tablewriter"
-    "os"
+    // "github.com/olekukonko/tablewriter"
+    // "os"
 )
 
 // List APIs command related usage info
@@ -35,7 +35,7 @@ var listAPICmdLongDesc = "List all the APIs\n"
 
 var listAPICmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listAPICmdLiteral)
+  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + listAPICmdLiteral)
 
 // apisListCmd represents the list apis command
 var apisListCmd = &cobra.Command{
@@ -43,47 +43,12 @@ var apisListCmd = &cobra.Command{
     Short: listAPICmdShortDesc,
     Long:  listAPICmdLongDesc + listAPICmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "List APIs called")
+        utils.Logln(utils.LogPrefixInfo + "Show APIs called")
+        // Defined in apiInfo.go
         executeListAPIsCmd()
     },
 }
 
 func init() {
     showCmd.AddCommand(apisListCmd)
-}
-
-func executeListAPIsCmd() {
-
-    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
-
-    resp, err := utils.GetArtifactList(finalUrl, &utils.APIList{})
-
-    if err == nil {
-        // Printing the list of available APIs
-        list := resp.(*utils.APIList)
-        printApiList(*list)        
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    }
-}
-
-func printApiList(apiList utils.APIList) {
-
-    if apiList.Count > 0 {
-        table := tablewriter.NewWriter(os.Stdout)
-        table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-        data := []string{"NAME", "CONTEXT"}
-        table.Append(data)
-
-        for _, api := range apiList.Apis {
-            data = []string{api.Name, api.Context}
-            table.Append(data)
-        }
-        table.SetBorder(false)
-        table.SetColumnSeparator("  ")
-        table.Render()
-    }else {
-        fmt.Println("No APIs found")
-    }    
 }

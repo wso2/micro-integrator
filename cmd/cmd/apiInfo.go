@@ -25,7 +25,8 @@ import (
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
     "os"
-    "strconv"
+    // "strconv"
+    //"reflect"
 )
 
 var apiName string
@@ -34,11 +35,20 @@ var apiName string
 const showAPICmdLiteral = "api"
 const showAPICmdShortDesc = "Get information about the specified API"
 
-var showAPICmdLongDesc = "Get information about the API specified by the flag --name, -n\n"
+var showAPICmdLongDesc = "Get information about the API specified by command line argument [apiName] or list all the apis\n"
 
 var showAPICmdExamples = dedent.Dedent(`
 Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + ` -n TestAPI
+To get details about a specific api
+  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + ` TestAPI
+
+To list all the apis
+  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + `
+`)
+
+var showAPICmdUsage = dedent.Dedent(
+`Usage:
+  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + ` [apiName]
 `)
 
 // apiShowCmd represents the show api command
@@ -48,15 +58,28 @@ var apiShowCmd = &cobra.Command{
     Long:  showAPICmdLongDesc + showAPICmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
         utils.Logln(utils.LogPrefixInfo + "Show API called")
-        executeGetAPICmd(apiName)
+        if len(args) == 0 {
+            executeListAPIsCmd()
+        }else if len(args) == 1{
+            if args[0] == "help" {
+                fmt.Print(showAPICmdLongDesc + showAPICmdExamples + showAPICmdUsage)
+            }else {
+                apiName = args[0]
+                executeGetAPICmd(apiName)
+            }
+        }else {
+            fmt.Println("Too many arguments. See the usage below")
+            fmt.Print(showAPICmdExamples + showAPICmdUsage)
+        }
     },
 }
 
 func init() {
     showCmd.AddCommand(apiShowCmd)
+    apiShowCmd.SetUsageTemplate(showAPICmdUsage)
 
-    apiShowCmd.Flags().StringVarP(&apiName, "name", "n", "", "Name of the API")
-    apiShowCmd.MarkFlagRequired("name")
+    // apiShowCmd.Flags().StringVarP(&apiName, "name", "n", "", "Name of the API")
+    // apiShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetAPICmd(apiname string) {
@@ -78,33 +101,103 @@ func executeGetAPICmd(apiname string) {
 // Name, Context, Http Method, URL Style
 // @param app : API object
 func printAPIInfo(api utils.API) {
+
+
+    
+    // s := reflect.ValueOf(&api).Elem()
+    // typeOfT := s.Type()
+
+    // for i := 0; i < s.NumField(); i++ {
+    //     f := s.Field(i)
+    //     fmt.Printf("%s : %v\n",
+    //         typeOfT.Field(i).Name, f.Interface())
+    // }
+
+
+    // data := []string{"Name - ", api.Name}
+    // table.Append(data)
+
+    // data = []string{"Context - ", api.Context}
+    // table.Append(data)
+
+    // data = []string{"Version - ", api.Version}
+    // table.Append(data)
+
+    // data = []string{"Stats - ", api.Stats}
+    // table.Append(data)
+
+    // data = []string{"Tracing - ", api.Tracing}
+    // table.Append(data)
+
+    // data = []string{"Resources : ", ""}
+    // table.Append(data)
+
+    fmt.Println("Name - " + api.Name)
+    fmt.Println("Context - " + api.Context)
+    fmt.Println("Version - " + api.Version)
+    fmt.Println("Stats - " + api.Stats)
+    fmt.Println("Tracing - " + api.Tracing)
+    fmt.Println("Resources : ")
+
     table := tablewriter.NewWriter(os.Stdout)
     table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-    data := []string{"NAME", "", api.Name}
+    data := []string{"URL", "METHOD"}
     table.Append(data)
 
-    data = []string{"CONTEXT", "", api.Context}
-    table.Append(data)
+    for _, resource := range api.Resources {
 
-    for id, resource := range api.Resources {
+        var methodSring string
 
-        resourceId := "RESOURCES " + strconv.Itoa(id)
-
-        for _, method := range resource.Methods {
-            data = []string{resourceId, "METHOD", method}
-            table.Append(data)
+        for i, method := range resource.Methods {
+            if i > 1 {
+                methodSring += "/"    
+            }
+            methodSring += method
         }
-        data = []string{resourceId, "STYLE", resource.Style}
-        table.Append(data)
-        data = []string{resourceId, "TEMPLATE", resource.Template}
-        table.Append(data)
-        data = []string{resourceId, "MAPPING", resource.Mapping}
+
+        data = []string{resource.Url, methodSring}
         table.Append(data)
     }
 
-    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true)
+    table.SetBorder(false)
+    table.SetColumnSeparator(" ")
     table.SetAutoMergeCells(true)
-    table.Render() // Send output
+    table.Render()
+}
+
+func executeListAPIsCmd() {
+
+    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
+
+    resp, err := utils.GetArtifactList(finalUrl, &utils.APIList{})
+
+    if err == nil {
+        // Printing the list of available APIs
+        list := resp.(*utils.APIList)
+        printApiList(*list)        
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+    }
+}
+
+func printApiList(apiList utils.APIList) {
+
+    if apiList.Count > 0 {
+        table := tablewriter.NewWriter(os.Stdout)
+        table.SetAlignment(tablewriter.ALIGN_LEFT)
+
+        data := []string{"NAME", "CONTEXT"}
+        table.Append(data)
+
+        for _, api := range apiList.Apis {
+            data = []string{api.Name, api.Context}
+            table.Append(data)
+        }
+        table.SetBorder(false)
+        table.SetColumnSeparator("  ")
+        table.Render()
+    }else {
+        fmt.Println("No APIs found")
+    }    
 }
