@@ -296,6 +296,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/endorsed/xalan*.jar</exclude>
+                <exclude>**/endorsed/geronimo-jms_1.1_spec*.jar</exclude>
             </excludes>
         </fileSet>
 
