@@ -42,6 +42,10 @@
             <artifactId>rampart</artifactId>
             <type>mar</type>
         </dependency>
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

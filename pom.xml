@@ -224,6 +224,11 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>javax.jms</groupId>
+                <artifactId>javax.jms-api</artifactId>
+                <version>${javax.jms-api.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -354,6 +359,7 @@
         <maven.surefire.plugin.version>2.20.1</maven.surefire.plugin.version>
         <jacoco.maven.plugin.version>0.8.3</jacoco.maven.plugin.version>
         <testng.version>6.11</testng.version>
+        <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
     </properties>
 

@@ -609,5 +609,11 @@
                 <include>org.apache.rampart:rampart:mar</include>
             </includes>
         </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
+            <includes>
+                <include>javax.jms:javax.jms-api:jar</include>
+            </includes>
+        </dependencySet>
     </dependencySets>
 </assembly>
