@@ -45,7 +45,6 @@ public class ApiResource extends APIResource {
 
     private static Log log = LogFactory.getLog(ApiResource.class);
 
-    private static final String ROOT_ELEMENT_APIS = "<APIs></APIs>";
     private static final String COUNT_ELEMENT = "<Count></Count>";
     private static final String LIST_ELEMENT = "<List></List>";
     private static final String LIST_ITEM = "<Item></Item>";
@@ -62,12 +61,8 @@ public class ApiResource extends APIResource {
     private static final String RESOURCES_ELEMENT = "<Resources></Resources>";
     private static final String RESOURCE_ELEMENT = "<Resource></Resource>";
     private static final String METHOD_ELEMENT = "<Methods></Methods>";
-    private static final String STYLE_ELEMENT = "<Style></Style>";
-    private static final String TEMPLATE_ELEMENT = "<Template></Template>";
-    private static final String MAPPING_ELEMENT = "<Mapping></Mapping>";
-    private static final String INSEQ_ELEMENT = "<Inseq></Inseq>";
-    private static final String OUTSEQ_ELEMENT = "<Outseq></Outseq>";
-    private static final String FAULT_ELEMENT = "<Faultseq></Faultseq>";
+    private static final String STAT_ELEMENT = "<Stats></Stats>";
+    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
 
     public ApiResource(String urlTemplate){
@@ -124,18 +119,8 @@ public class ApiResource extends APIResource {
         OMElement rootElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
         OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
 
-        // OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_API);
-//        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-//        OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
-//        OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
-        OMElement hostElement = AXIOMUtil.stringToOM(HOST_ELEMENT);
-        OMElement portElement = AXIOMUtil.stringToOM(PORT_ELEMENT);
-        OMElement fileNameElement = AXIOMUtil.stringToOM(FILENAME_ELEMENT);
-        OMElement versionElement = AXIOMUtil.stringToOM(VERSION_ELEMENT);
-
         countElement.setText(String.valueOf(apis.size()));
         rootElement.addChild(countElement);
-
 
         for (API api: apis) {
 
@@ -191,8 +176,9 @@ public class ApiResource extends APIResource {
         OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
         OMElement hostElement = AXIOMUtil.stringToOM(HOST_ELEMENT);
         OMElement portElement = AXIOMUtil.stringToOM(PORT_ELEMENT);
-        OMElement fileNameElement = AXIOMUtil.stringToOM(FILENAME_ELEMENT);
         OMElement versionElement = AXIOMUtil.stringToOM(VERSION_ELEMENT);
+        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
 
         nameElement.setText(api.getName());
         rootElement.addChild(nameElement);
@@ -206,11 +192,18 @@ public class ApiResource extends APIResource {
         portElement.setText(String.valueOf(api.getPort()));
         rootElement.addChild(portElement);
 
-        fileNameElement.setText(api.getFileName());
-        rootElement.addChild(fileNameElement);
-
         versionElement.setText(api.getVersion());
         rootElement.addChild(versionElement);
+
+        String statisticState = api.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
+
+        statsElement.setText(statisticState);
+        rootElement.addChild(statsElement);
+
+        String tracingState = api.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+
+        tracingElement.setText(tracingState);
+        rootElement.addChild(tracingElement);
 
         OMElement resourcesElement = AXIOMUtil.stringToOM(RESOURCES_ELEMENT);
         rootElement.addChild(resourcesElement);
@@ -225,23 +218,8 @@ public class ApiResource extends APIResource {
             OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
             resourceElement.addChild(methodElement);
 
-            OMElement styleElement = AXIOMUtil.stringToOM(STYLE_ELEMENT);
-            resourceElement.addChild(styleElement);
-
-            OMElement templateElement = AXIOMUtil.stringToOM(TEMPLATE_ELEMENT);
-            resourceElement.addChild(templateElement);
-
-            OMElement mappingElement = AXIOMUtil.stringToOM(MAPPING_ELEMENT);
-            resourceElement.addChild(mappingElement);
-
-            OMElement inSeqElement = AXIOMUtil.stringToOM(INSEQ_ELEMENT);
-            resourceElement.addChild(inSeqElement);
-
-            OMElement outSeqElement = AXIOMUtil.stringToOM(OUTSEQ_ELEMENT);
-            resourceElement.addChild(outSeqElement);
-
-            OMElement faultSeqElement = AXIOMUtil.stringToOM(FAULT_ELEMENT);
-            resourceElement.addChild(faultSeqElement);
+            OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
+            resourceElement.addChild(urlElement);
 
             String[] methods = resource.getMethods();
 
@@ -251,41 +229,14 @@ public class ApiResource extends APIResource {
                 methodElement.addChild(itemElement);
             }
 
-
             DispatcherHelper dispatcherHelper = resource.getDispatcherHelper();
             if (dispatcherHelper instanceof URITemplateHelper) {
-                styleElement.setText("URL-Template");
-                templateElement.setText(dispatcherHelper.getString());
+                urlElement.setText(dispatcherHelper.getString());
 
             } else if (dispatcherHelper instanceof URLMappingHelper) {
-                styleElement.setText("URL-mapping");
-                mappingElement.setText(dispatcherHelper.getString());
+                urlElement.setText(dispatcherHelper.getString());
             }
-
-//            if (resource.getInSequenceKey() != null) {
-//                data.setInSequenceKey(resource.getInSequenceKey());
-//            } else if (resource.getInSequence() != null) {
-//                data.setInSeqXml(RestApiAdminUtils.createAnonymousSequenceElement(
-//                        resource.getInSequence(), "inSequence").toString());
-//            }
-//
-//            if (resource.getOutSequenceKey() != null) {
-//                data.setOutSequenceKey(resource.getOutSequenceKey());
-//            } else if (resource.getOutSequence() != null) {
-//                data.setOutSeqXml(RestApiAdminUtils.createAnonymousSequenceElement(
-//                        resource.getOutSequence(), "outSequence").toString());
-//            }
-//
-//            if (resource.getFaultSequenceKey() != null) {
-//                data.setFaultSequenceKey(resource.getFaultSequenceKey());
-//            } else if (resource.getFaultSequence() != null) {
-//                data.setFaultSeqXml(RestApiAdminUtils.createAnonymousSequenceElement(
-//                        resource.getFaultSequence(), "faultSequence").toString());
-//            }
-//            data.setUserAgent(resource.getUserAgent());
-//            resourceDatas[i] = data;
         }
         return rootElement;
     }
-
 }
