@@ -122,7 +122,7 @@ func GetArtifactList(url string) (int32, []string, error) {
     resp, err := InvokeGETRequest(url, headers)
 
     if err != nil {
-        HandleErrorAndExit("Unable to connect to "+url, err)
+        HandleErrorAndExit("Unable to connect to host", nil)
     }
 
     Logln(LogPrefixInfo+"Response:", resp.Status())
@@ -154,7 +154,7 @@ func UnmarshalData(url string, model interface{}) (interface{}, error) {
     resp, err := InvokeGETRequest(url, headers)
 
     if err != nil {
-        HandleErrorAndExit("Unable to connect to "+url, err)
+        HandleErrorAndExit("Unable to connect to host", nil)
     }
 
     Logln(LogPrefixInfo+"Response:", resp.Status())

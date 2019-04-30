@@ -26,24 +26,26 @@ import (
 var IsVerbose bool
 
 func HandleErrorAndExit(msg string, err error) {
-    fmt.Println("\n=======  ERROR LOG ==================")
-    // TODO:: Remove debug log in production
-    for i := 1; i <= 6; i++ {
-        fmt.Println(WhereAmI(i))
+    if IsVerbose {
+        fmt.Println("\n=======  ERROR LOG ==================")
+        // TODO:: Remove debug log in production
+        for i := 1; i <= 6; i++ {
+            fmt.Println(WhereAmI(i))
+        }
+        fmt.Println("=======  END OF ERROR LOG ===========")
     }
-    fmt.Println("=======  END OF ERROR LOG ===========")
+    
     if err == nil {
         fmt.Fprintf(os.Stderr, "%s: %v\n", ProjectName, msg)
     } else {
         fmt.Fprintf(os.Stderr, "%s: %v Reason: %v\n", ProjectName, msg, err.Error())
-        Logln(LogPrefixError + msg + ": " + err.Error())
     }
 
     defer printAndExit()
 }
 
 func printAndExit() {
-    fmt.Println("Exit status 1")
+
     if !IsVerbose {
         fmt.Println("Execute with --verbose to see detailed info.")
     }
