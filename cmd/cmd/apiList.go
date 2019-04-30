@@ -19,12 +19,9 @@
 package cmd
 
 import (
-    // "fmt"
     "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
-    // "github.com/olekukonko/tablewriter"
-    // "os"
 )
 
 // List APIs command related usage info

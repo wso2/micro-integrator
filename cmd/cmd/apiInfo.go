@@ -25,8 +25,6 @@ import (
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
     "os"
-    // "strconv"
-    //"reflect"
 )
 
 var apiName string
@@ -77,9 +75,6 @@ var apiShowCmd = &cobra.Command{
 func init() {
     showCmd.AddCommand(apiShowCmd)
     apiShowCmd.SetUsageTemplate(showAPICmdUsage)
-
-    // apiShowCmd.Flags().StringVarP(&apiName, "name", "n", "", "Name of the API")
-    // apiShowCmd.MarkFlagRequired("name")
 }
 
 func executeGetAPICmd(apiname string) {
@@ -101,36 +96,6 @@ func executeGetAPICmd(apiname string) {
 // Name, Context, Http Method, URL Style
 // @param app : API object
 func printAPIInfo(api utils.API) {
-
-
-    
-    // s := reflect.ValueOf(&api).Elem()
-    // typeOfT := s.Type()
-
-    // for i := 0; i < s.NumField(); i++ {
-    //     f := s.Field(i)
-    //     fmt.Printf("%s : %v\n",
-    //         typeOfT.Field(i).Name, f.Interface())
-    // }
-
-
-    // data := []string{"Name - ", api.Name}
-    // table.Append(data)
-
-    // data = []string{"Context - ", api.Context}
-    // table.Append(data)
-
-    // data = []string{"Version - ", api.Version}
-    // table.Append(data)
-
-    // data = []string{"Stats - ", api.Stats}
-    // table.Append(data)
-
-    // data = []string{"Tracing - ", api.Tracing}
-    // table.Append(data)
-
-    // data = []string{"Resources : ", ""}
-    // table.Append(data)
 
     fmt.Println("Name - " + api.Name)
     fmt.Println("Context - " + api.Context)
