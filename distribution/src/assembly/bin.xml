@@ -152,6 +152,7 @@
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/wso2carbon-version.txt</exclude>
                 <exclude>**/user-mgt.xml</exclude>
+                <exclude>**/repository/conf/etc/logging-bridge.properties</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/README.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
@@ -479,6 +480,12 @@
 
         <file>
             <source>src/conf/etc/logging-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/etc/logging-bridge.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
             <fileMode>644</fileMode>
         </file>
