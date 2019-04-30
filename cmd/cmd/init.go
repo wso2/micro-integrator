@@ -19,7 +19,9 @@
 package cmd
 
 import (
-    "github.com/lithammer/dedent"
+    "os"
+    "fmt"
+    "strconv"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
 )
@@ -28,36 +30,56 @@ import (
 const initCmdLiteral = "init"
 const initCmdShortDesc = "Set Management API configuration"
 
-var initCmdLongDesc = "Set the URL and the port of the Management API with flags --server, -s and --port, -p\n"
-
-var initCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + initCmdLiteral + ` -s https://localhost -p 9091
-`)
-
-var serverName, serverPort string
+var initCmdLongDesc = "Set the Hostname and the Port of the Management API\n"
 
 // initCmd represents the init command
 var initCmd = &cobra.Command{
     Use:   initCmdLiteral,
     Short: initCmdShortDesc,
-    Long:  initCmdLongDesc + initCmdExamples,
+    Long:  initCmdLongDesc,
     Run: func(cmd *cobra.Command, args []string) {
         utils.Logln(utils.LogPrefixInfo + "Init called")
-        writeConfig()
+        promptUserForConfig()
     },
 }
 
 func init() {
     rootCmd.AddCommand(initCmd)
-
-    initCmd.Flags().StringVarP(&serverName, "server", "s", "", "Address of the Server")
-    initCmd.MarkFlagRequired("server")
-    initCmd.Flags().StringVarP(&serverPort, "port", "p", "", "Port of the Management API")
-    initCmd.MarkFlagRequired("port")
 }
 
-func writeConfig(){
-    serverConfig := utils.ServerConfig{serverName, serverPort}
+func promptUserForConfig(){
+    fmt.Println("Follow the instructions below to configure the CLI")
+    fmt.Print("Enter Host name: ")
+    var host string
+    fmt.Scanln(&host)
+    if len(host) == 0 {
+        fmt.Println("Host name is not specified, default value is used")
+        host = utils.DefaultHost
+    }
+    fmt.Print("Enter Port number: ")
+    var strPort string
+    fmt.Scanln(&strPort)
+    if len(strPort) == 0 {
+        fmt.Println("Port number is not specified, default value is used")
+        strPort = utils.DefaultPort
+    }else {
+        port, err := strconv.Atoi(strPort)
+        if err == nil{
+            if (port < 1000) || (port > 10000) {
+                fmt.Println("Port number is out of range. Please specify a port number between 1000 and 10000")
+                os.Exit(1)
+            }
+            strPort = strconv.Itoa(int(port))
+        }else {
+            fmt.Println("Port number is invalid. Please specify a port number between 1000 and 10000")
+            os.Exit(1)
+        }
+    }
+    writeConfig(host, strPort)
+}
+
+func writeConfig(host, port string){
+    serverConfig := utils.ServerConfig{Host:host, Port:port}
     utils.WriteServerConfigFile(serverConfig, utils.ServerConfigFilePath)
+    fmt.Println("CLI configuration is successful")
 }

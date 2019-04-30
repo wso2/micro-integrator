@@ -81,11 +81,13 @@ const DefaultHttpRequestTimeout = 100000
 
 // DO NOT CHANGE THESE MANUALLY
 // Default Server Address
-const Host = "http://localhost"
-const Port = "9091"
+const HTTPProtocol = "http://"
+const HTTPSProtocol = "https://"
+const DefaultHost = "localhost"
+const DefaultPort = "9091"
 const Context = "management"
 
-const DefaultRESTAPIBase = Host + ":" + Port + "/" + Context + "/"
+const DefaultRESTAPIBase = HTTPProtocol + DefaultHost + ":" + DefaultPort + "/" + Context + "/"
 const PrefixCarbonApps = "applications"
 const PrefixAPIs = "apis"
 const PrefixServices = "services"
