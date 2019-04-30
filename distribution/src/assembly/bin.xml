@@ -162,6 +162,7 @@
                 <exclude>**/tomcat/carbon/WEB-INF/web.xml</exclude>
                 <exclude>**/tomcat/carbon/META-INF/context.xml</exclude>
                 <exclude>**//tomcat/catalina-server.xml</exclude>
+                <exclude>**/launch.ini</exclude>
             </excludes>
         </fileSet>
 
@@ -296,6 +297,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/endorsed/xalan*.jar</exclude>
+                <exclude>**/endorsed/geronimo-jms_1.1_spec*.jar</exclude>
             </excludes>
         </fileSet>
 
@@ -485,6 +487,12 @@
         </file>
 
         <file>
+            <source>src/conf/etc/launch.ini</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/etc/logging-bridge.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
             <fileMode>644</fileMode>
@@ -599,6 +607,12 @@
             </outputDirectory>
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
+            <includes>
+                <include>javax.jms:javax.jms-api:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>
