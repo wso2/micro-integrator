@@ -280,7 +280,6 @@
         <maven.xmlbeans-maven-plugin.plugin.version>2.3.3</maven.xmlbeans-maven-plugin.plugin.version>
         <carbon.p2.plugin.version>1.5.8</carbon.p2.plugin.version>
         <maven.docker.plugin.version>0.28.0</maven.docker.plugin.version>
-        <maven.failsafe.plugin.version>2.22.1</maven.failsafe.plugin.version>
 
         <!-- Carbon kernel version-->
         <carbon.kernel.version>4.4.40</carbon.kernel.version>
@@ -522,11 +521,6 @@
                     <groupId>io.fabric8</groupId>
                     <artifactId>docker-maven-plugin</artifactId>
                     <version>${maven.docker.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-failsafe-plugin</artifactId>
-                    <version>${maven.failsafe.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>com.spotify</groupId>
