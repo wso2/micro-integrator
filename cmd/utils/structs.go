@@ -61,6 +61,16 @@ type API struct {
     Resources []Resource `xml:"Resources>Resource"`
 }
 
+type APIList struct {
+    Count     int32         `xml:"Count"`
+    Apis      []APISummary  `xml:"API"`
+}
+
+type APISummary struct {
+    Name      string     `xml:"Name"`
+    Context   string     `xml:"Context"`
+}
+
 type Resource struct {
     Methods       []string `xml:"Methods>Item"`
     Style         string   `xml:"Style"`

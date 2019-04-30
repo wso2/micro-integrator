@@ -23,6 +23,8 @@ import (
     "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
+    "github.com/olekukonko/tablewriter"
+    "os"
 )
 
 // List APIs command related usage info
@@ -47,22 +49,41 @@ var apisListCmd = &cobra.Command{
 }
 
 func init() {
-    listCmd.AddCommand(apisListCmd)
+    showCmd.AddCommand(apisListCmd)
 }
 
 func executeListAPIsCmd() {
 
     finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
 
-    count, apis, err := utils.GetArtifactList(finalUrl)
+    resp, err := utils.GetArtifactList(finalUrl, &utils.APIList{})
 
     if err == nil {
         // Printing the list of available APIs
-        fmt.Println("No. of APIs:", count)
-        if count > 0 {
-            utils.PrintList(apis)
-        }
+        list := resp.(*utils.APIList)
+        printApiList(*list)        
     } else {
         utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
     }
+}
+
+func printApiList(apiList utils.APIList) {
+
+    if apiList.Count > 0 {
+        table := tablewriter.NewWriter(os.Stdout)
+        table.SetAlignment(tablewriter.ALIGN_LEFT)
+
+        data := []string{"NAME", "CONTEXT"}
+        table.Append(data)
+
+        for _, api := range apiList.Apis {
+            data = []string{api.Name, api.Context}
+            table.Append(data)
+        }
+        table.SetBorder(false)
+        table.SetColumnSeparator("  ")
+        table.Render()
+    }else {
+        fmt.Println("No APIs found")
+    }    
 }

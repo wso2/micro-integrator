@@ -113,8 +113,39 @@ func PrintList(list []string) {
 // @return count (no. of Artifacts)
 // @return array of Artifact names
 // @return error
-func GetArtifactList(url string) (int32, []string, error) {
+// func GetArtifactList(url string) (int32, []string, error) {
 
+//     Logln(LogPrefixInfo+"URL:", url)
+
+//     headers := make(map[string]string)
+
+//     resp, err := InvokeGETRequest(url, headers)
+
+//     if err != nil {
+//         HandleErrorAndExit("Unable to connect to host", nil)
+//     }
+
+//     Logln(LogPrefixInfo+"Response:", resp.Status())
+
+//     if resp.StatusCode() == http.StatusOK {
+//         apiListResponse := &ListResponse{}
+//         unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiListResponse)
+
+//         if unmarshalError != nil {
+//             HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+//         }
+//         return apiListResponse.Count, apiListResponse.List, nil
+//     } else {
+//         return 0, nil, errors.New(resp.Status())
+//     }
+// }
+
+// Get Artifact List depending on the @param url and unmarshal it
+// @param url: url of rest api
+// @param model: struct object
+// @return struct object
+// @return error
+func GetArtifactList(url string, model interface{}) (interface{}, error) {
     Logln(LogPrefixInfo+"URL:", url)
 
     headers := make(map[string]string)
@@ -128,15 +159,15 @@ func GetArtifactList(url string) (int32, []string, error) {
     Logln(LogPrefixInfo+"Response:", resp.Status())
 
     if resp.StatusCode() == http.StatusOK {
-        apiListResponse := &ListResponse{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiListResponse)
+        response := model
+        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
 
         if unmarshalError != nil {
             HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
         }
-        return apiListResponse.Count, apiListResponse.List, nil
+        return response, nil
     } else {
-        return 0, nil, errors.New(resp.Status())
+        return nil, errors.New(resp.Status())
     }
 }
 

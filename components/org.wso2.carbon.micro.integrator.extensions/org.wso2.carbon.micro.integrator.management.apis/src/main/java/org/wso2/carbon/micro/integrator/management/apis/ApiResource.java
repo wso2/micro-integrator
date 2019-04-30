@@ -53,6 +53,7 @@ public class ApiResource extends APIResource {
     private static final String ROOT_ELEMENT_API = "<API></API>";
     private static final String NAME_ELEMENT = "<Name></Name>";
     private static final String CONTEXT_ELEMENT = "<Context></Context>";
+    private static final String URL_ELEMENT = "<Url></Url>";
     private static final String HOST_ELEMENT = "<Host></Host>";
     private static final String PORT_ELEMENT = "<Port></Port>";
     private static final String FILENAME_ELEMENT = "<FileName></FileName>";
@@ -120,22 +121,35 @@ public class ApiResource extends APIResource {
 
         Collection<API> apis = configuration.getAPIs();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_APIS);
+        OMElement rootElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
         OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
+
+        // OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_API);
+//        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+//        OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
+//        OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
+        OMElement hostElement = AXIOMUtil.stringToOM(HOST_ELEMENT);
+        OMElement portElement = AXIOMUtil.stringToOM(PORT_ELEMENT);
+        OMElement fileNameElement = AXIOMUtil.stringToOM(FILENAME_ELEMENT);
+        OMElement versionElement = AXIOMUtil.stringToOM(VERSION_ELEMENT);
 
         countElement.setText(String.valueOf(apis.size()));
         rootElement.addChild(countElement);
-        rootElement.addChild(listElement);
+
 
         for (API api: apis) {
 
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+            OMElement apiElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_API);
+            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
 
-            String apiName = api.getAPIName();
-            nameElement.setText(apiName);
+            nameElement.setText(api.getName());
+            contextElement.setText(api.getContext());
 
-            listElement.addChild(nameElement);
+            apiElement.addChild(nameElement);
+            apiElement.addChild(contextElement);
+
+            rootElement.addChild(apiElement);
 
         }
 
