@@ -8,6 +8,148 @@ scenarios without sacrificing the speed required for a container-based deploymen
 For information on what the Micro Integrator profile brings with this release, see
 [releases](https://github.com/wso2/micro-integrator/releases).
 
+## Folder Structure of the distribution
+
+```
+.
+├── bin
+│   ├── micro-integrator.bat
+│   ├── micro-integrator.sh
+|   |
+├── conf
+│   ├── access-log.properties
+│   ├── axis2
+|   |    ├── axis2_blocking_client.xml
+|   |    ├── axis2_client.xml
+|   |    └── axis2.xml
+|   |
+│   ├── carbon.xml
+│   ├── datasources
+|   |     └── master-datasources.xml
+|   |
+│   ├── log4j.properties
+│   ├── nhttp.properties
+│   ├── passthru-http.properties
+│   ├── security
+│   ├── synapse-handlers.xml
+│   ├── synapse.properties
+│   └── wso2-log-masking.properties
+|
+├── dbscripts
+|
+├── dockerfiles
+|    ├── Dockerfile
+│    └── files
+|  
+├── dropins
+|
+├── lib
+|
+├── LICENSE.txt
+|
+├── patches
+|
+├── README.txt
+|
+├── registry
+|
+├── release-notes.html
+|
+├── repository 
+|   ├── database
+|   │   
+|   ├── deployment
+|   │   ├── client
+|   │   │   ├── modules
+|   │   │       
+|   │   └── server
+|   │       ├── axis2modules
+|   │       │   
+|   │       ├── axis2services
+|   │       │   
+|   │       ├── carbonapps
+|   │       │   
+|   │       ├── synapse-configs
+|   │       │   
+|   │       └── webapps
+|   ├── logs
+|   │   ├── audit.log
+|   │   ├── http_access_management_console_2019-05-01.log
+|   │   ├── patches.log
+|   │   ├── tm.out
+|   │   ├── wso2carbon.log
+|   │   ├── wso2carbon-trace-messages.log
+|   │   ├── wso2-ei-service.log
+|   │   ├── wso2-ei-trace.log
+|   │   └── wso2error.log
+|   ├── resources
+|       └── security
+|
+├── tmp
+|
+├── updates
+|
+└── wso2
+    ├── components
+    └── lib
+
+```
+- **bin** 
+  - **micro-integrator.sh** - script used to start the micro-integrator in Linux/Mac OS
+  - **micro-integrator.bat** - windows executable used to run micro-integrator
+- **conf** 
+  - **access-log.properties** - used to customize the format of the [Access Logs](https://docs.wso2.com/display/EI6xx/Monitoring+Access+Logs) 
+  - **axis2**
+    - **axis2_blocking_client.xml** - contains parameters which apply to scenarios where blocking transports
+    - **axis2_client.xml** - used in creating the configuration context by the FE server calling to BE server
+    - **axis2.xml** - can be used to change the default functionality-related configurations [related doc](https://docs.wso2.com/display/WSO2EI/Configuring+axis2.xml)
+  - **carbon.xml** - can be used to change the configurations related to the default Carbon functionality [related doc](https://docs.wso2.com/display/CONFREF/Configuring+carbon.xml)
+  - **datasources**
+    - **master-datasources.xml** - can be used to edit the data source configs given in [doc](https://docs.wso2.com/display/CONFREF/Configuring+master-datasources.xml)
+  - **log4j.properties** - logging configuration file
+  - **nhttp.properties** -  contains tuning parameters related to non-blocking HTTPs
+  - **passthru-http.properties** - contains tuning parameters related to the HTTP Pass Through transport. This is the default transport of the micro-integrator
+  - **security** - used to keep security related config files. for more detail about individual files please follow the [doc](https://docs.wso2.com/display/CONFREF/Security+Configurations)
+  - **synapse-handlers.xml** - used to engage the deployed Synapse handlers
+  - **synapse.properties** - contains tuning parameters relating to the mediation engine. please follow [doc](https://docs.wso2.com/display/CONFREF/Configuring+synapse.properties)
+  - **wso2-log-masking.properties** - default property file used for masking pattern configuration [doc](https://docs.wso2.com/display/ADMIN44x/Masking+Sensitive+Information+in+Logs)
+- **dbscripts** - database schemas related to supported databases 
+- **dockerfiles** - for more details follow the section on [Micro Integrator with Docker](#micro-integrator-with-docker)
+  - **Dockerfile**  dockerfile related to creating a custom docker image with the required synapse artifacts andconfigurations
+  - **files** - micro-integrator docker image reads and deploys carbon application in this location.
+- **dropins** - to add class mediators/handles/client jars which are already OSGI bundles. 
+- **lib** - to add class mediators/handles/client jars which are not bundles. a regular JAR can be put into this directory and it will be automatically converted to an OSGI bundle 
+- **LICENSE.txt** - Apache License 2.0 and other relevant licenses under which the WSO2 product is distributed.
+- **patches** - to copy patchxxx directory in the patch applying process given in [doc](https://docs.wso2.com/display/ADMIN44x/WSO2+Patch+Application+Process#WSO2PatchApplicationProcess-Applyingpatchestotheproduct)
+- **README.txt** - discription about WSO2 MI distribution
+- **registry** -  act as the registry to store registry artifacts etc. follow the section on [Configuring the file-based registry](#Configuring-thse-file-based-registry)
+- **release-notes.html** - Release information for the WSO2 product.
+- **repository**  
+  - **database** - contains files related to the embedded H2 database
+  - **deployment** - the repository where services and modules deployed
+    - **clint/modules** - to deploy axis2 client modules
+    - **server**
+      - **axis2modules** - to deploy axis2 module archives (mar) in micro-integrator
+      - **axis2services** - to deploy Axis2 Service in the form of an Axis2 archive file (aar)
+      - **carbonapps** - to deploy composite applications (.car files) in the micro-integrator
+      - **synapse-configs** - deploy synapse configs such as apis, proxy-services, end-points, sequences etc using .xml files
+      - **webapps** - to deploy Apache Tomcat based Web applications.
+  - **logs**
+    - **wso2carbon.log** - main logging file of micro integrator
+    - **audit.log** - used to monitor the user operations
+    - **http_access_management_console.log** - contains the details related to HTTP Requests and Responses 
+    - **patches.log** - contains the details related to applied patches to the product
+    - **tm.out** - information related to Atomikos (transaction manager) are logged in tm.out file.
+    - **wso2-ei-trace.log** - provides a way to monitor a mediation execution
+    - **wso2carbon-trace-messages.log** -  trace log for specific required component
+  - **resources** 
+    - **security** - contains both the keystore and the truststore used to create the SSL engine
+- **tmp** - Used for storing temporary files,and is pointed to by the java.io.tmpdir system property.
+- **updates** - to keep the wum update details such as changes applied and the wum level
+- **wso2**
+  - **components** - contains different components (OSGI bundles, features etc.) that are related to the product.
+  - **lib** - contains the basic set of libraries required for starting a WSO2 product in standalone mode.
+
 ## Micro Integrator in a VM
 
 ### Running Micro Integrator
