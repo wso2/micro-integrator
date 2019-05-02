@@ -1,0 +1,19 @@
+version: "3.7"
+services:
+  service:
+    image: wso2/mi-getting-started:latest
+    build: 
+        context: ./composite-service
+        dockerfile: Dockerfile
+    ports:
+      - 8290:8290
+  backend:
+    container_name: backend
+    image: wso2/mi-order-process-be:latest
+    build:
+        context: ./order-process-be
+        dockerfile: Dockerfile
+    expose:
+      - 8290
+    ports:
+      - 8291:8290
