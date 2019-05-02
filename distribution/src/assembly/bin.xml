@@ -457,14 +457,6 @@
         </file>
 
         <file>
-            <source>src/conf/hl7.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>hl7.properties</destName>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-
-        <file>
             <source>src/conf/access-log.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>access-log.properties</destName>
