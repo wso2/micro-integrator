@@ -115,8 +115,11 @@
                             <skip>${docker.skip}</skip>
                             <target>
                                 <echo message="prepare phase" />
-                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}.zip" dest="${project.build.directory}/docker" />
-                                <chmod file="${project.build.directory}/docker/${project.artifactId}-${project.version}/bin/*.sh" perm="+x" />
+                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}.zip"
+                                       dest="${project.build.directory}/docker" />
+                                <move file="${project.build.directory}/docker/${project.artifactId}-${project.version}"
+                                      tofile="${project.build.directory}/docker/${project.artifactId}" />
+                                <chmod file="${project.build.directory}/docker/${project.artifactId}/bin/*.sh" perm="+x" />
                             </target>
                         </configuration>
                         <goals>
