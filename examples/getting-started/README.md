@@ -141,5 +141,12 @@ Upon invocation you should be able to observe the following response
 
 Alternatively, the Integrator Tool brings in the capability of debugging the mediation flow with the the tool interactively. for more information on debugging the mediation flow, please refer to [this blog.](https://medium.com/@rosensilva/debugging-integration-flows-using-wso2-enterprise-integrator-16bc127732d)
 
- 
+## Tracing and Monitoring with Micro Integrator
+
+#### Monitoring Statistics with Prometheus
+
+Please refer the section [Configuring and Monitoring statistics using Prometheus](
+../../doc/working-with-the-micro-integrator.md#configuring-and-Monitoring-statistics-using-Prometheus) for more 
+information on 
+this. 
  

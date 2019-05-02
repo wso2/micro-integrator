@@ -350,3 +350,74 @@ If you want to change the default locations of the registry directories, uncomme
     -->
 </registry>
 ```
+
+## Configuring and Monitoring statistics using Prometheus
+
+This Guide includes the following subsections.
+
+- [Introduction to Prometheus](#introduction-to-Prometheus)
+  - [Prometheus Publisher Component](#prometheus-Publisher-Component)
+- [Configuring Prometheus with Micro Integrator](#configuring-Prometheus-with-Micro-Integrator)
+  - [Configuring Prometheus Server](#configuring-Prometheus-Server)
+  - [Configuring Micro Integrator to Publish](#Configuring-Micro-Integrator-to-Publish)
+- [Monitoring Using Prometheus](#monitoring-Using-Prometheus)
+
+### Introduction to Prometheus
+
+[Prometheus](https://prometheus.io/) is an open source toolkit that can monitor systems and produce useful information such as graphs and 
+alerts. It collects statistical data exposed over an HTTP endpoint in the form of multi dimensional time series data,
+ which can then be visualized and queried. Since its inception, Prometheus has become a widely used monitoring tool among various companies and organizations, as it can be easily incorporated into existing systems, and is also integrable with popular graphical tools such as Grafana to visualize system behavior. Furthermore, Prometheus has its own querying language ‘PromQL’, and an expression browser to view basic graphical representations of data.
+
+The main objective of this feature is to facilitate users to make use of an extensively used system monitoring tool 
+to analyze the behavior of WSO2 Micro Integrator.  
+
+![prometheus_intro](images/prometheus_intro.png)
+
+
+#### Prometheus Publisher Component
+
+The HTTP endpoint exposing the metric data is a service exposed by an internal API, bundled as an OSGi component and 
+added as a feature to the WSO2 MI product. WSO2 Micro Integrator exposes its statistical data through JMX as MBeans. 
+The 
+Prometheus publisher in WSO2 MI scrapes these bean data, and converts them to the Prometheus format. The converted 
+metrics are then exposed via an HTTP endpoint, which is used by Prometheus to scrape the statistical data.
+
+![prometheus_publisher](images/prometheus_publisher.png)
+
+### Configuring Prometheus with Micro Integrator
+
+#### Configuring Prometheus Server
+
+Prometheus server can be configured by changing the ‘prometheus.yml’ file found in the Prometheus distribution.
+The user should add a scrape config in the configuration file as shown below. The port number and the endpoint name should be as specified below.
+
+```yaml
+scrape_configs:
+ - job_name: "esb_stats"
+   static_configs:
+     - targets: ['localhost:9191']
+   metrics_path: "metric-service/metrics"
+```
+
+
+#### Configuring Micro Integrator to Publish
+
+Publishing metrics to Prometheus has to be enabled via system property `enablePrometheusApi` in Micro 
+Integrator.
+
+For example, 
+
+`sh micro-integrator.sh -DenablePrometheusApi`
+
+
+### Monitoring Using Prometheus
+
+Configure the Prometheus server and Micro Integrator and start them.
+The stats can be viewed in following urls.
+
+`http://localhost:9191/metric-service/metrics`
+
+You may also visit following url in Prometheus server to plot the graphs.
+
+`http://localhost:9090/graph`
+
