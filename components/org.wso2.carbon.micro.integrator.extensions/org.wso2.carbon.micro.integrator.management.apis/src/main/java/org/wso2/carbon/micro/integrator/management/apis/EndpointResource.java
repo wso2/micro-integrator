@@ -28,7 +28,10 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.endpoints.EndpointSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
+import org.apache.synapse.endpoints.EndpointDefinition;
+import org.apache.synapse.mediators.MediatorProperty;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.Collection;
@@ -36,6 +39,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
@@ -51,9 +55,11 @@ public class EndpointResource extends APIResource {
 
     private static final String ROOT_ELEMENT_ENDPOINT = "<Endpoint></Endpoint>";
     private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String DESCRIPTION_ELEMENT = "<Description></Description>";
-    private static final String CONTAINER_ELEMENT = "<Container></Container>";
-    private static final String ENDPOINT_STRING_ELEMENT = "<EndpointString></EndpointString>";
+    private static final String TYPE_ELEMENT = "<Type></Type>";
+    private static final String METHOD_ELEMENT = "<Method></Method>";
+    private static final String URL_ELEMENT = "<Url></Url>";
+    private static final String STAT_ELEMENT = "<Stats></Stats>";
+    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
     public EndpointResource(String urlTemplate){
         super(urlTemplate);
@@ -110,25 +116,40 @@ public class EndpointResource extends APIResource {
         Map<String, Endpoint> namedEndpointMap = configuration.getDefinedEndpoints();
         Collection<Endpoint> namedEndpointCollection = namedEndpointMap.values();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINTS);
         OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
         OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
 
         countElement.setText(String.valueOf(namedEndpointCollection.size()));
-        rootElement.addChild(countElement);
-        rootElement.addChild(listElement);
+        listElement.addChild(countElement);
 
         for(Endpoint ep : namedEndpointCollection){
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+
+            OMElement endpointElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINT);
+            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement typeElement = AXIOMUtil.stringToOM(TYPE_ELEMENT);
+            OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
+            OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
 
             String epName = ep.getName();
             nameElement.setText(epName);
+            endpointElement.addChild(nameElement);
 
-            listElement.addChild(nameElement);
+            OMElement element = EndpointSerializer.getElementFromEndpoint(ep);
+            OMElement getQuote = element.getFirstElement();
+
+            String method = getQuote.getAttributeValue(new QName("method"));
+            methodElement.setText(method);
+            endpointElement.addChild(methodElement);
+
+            String url = getQuote.getAttributeValue(new QName("uri-template"));
+            urlElement.setText(url);
+            endpointElement.addChild(urlElement);
+
+            listElement.addChild(endpointElement);
 
         }
 
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        axis2MessageContext.getEnvelope().getBody().addChild(listElement);
     }
 
     private void populateEndpointData(MessageContext messageContext, String endpointName) throws XMLStreamException {
@@ -164,21 +185,36 @@ public class EndpointResource extends APIResource {
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINT);
         OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement descriptionElement = AXIOMUtil.stringToOM(DESCRIPTION_ELEMENT);
-        OMElement containerElement = AXIOMUtil.stringToOM(CONTAINER_ELEMENT);
-        OMElement endpointStringElement = AXIOMUtil.stringToOM(ENDPOINT_STRING_ELEMENT);
+        OMElement typeElement = AXIOMUtil.stringToOM(TYPE_ELEMENT);
+        OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
+        OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
+        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
 
         nameElement.setText(endpoint.getName());
         rootElement.addChild(nameElement);
 
-        descriptionElement.setText(endpoint.getDescription());
-        rootElement.addChild(descriptionElement);
+        OMElement epElement = EndpointSerializer.getElementFromEndpoint(endpoint);
+        OMElement element = epElement.getFirstElement();
 
-        containerElement.setText(endpoint.getArtifactContainerName());
-        rootElement.addChild(containerElement);
+        String method = element.getAttributeValue(new QName("method"));
+        methodElement.setText(method);
+        rootElement.addChild(methodElement);
 
-        endpointStringElement.setText(EndpointSerializer.getElementFromEndpoint(endpoint).toString());
-        rootElement.addChild(endpointStringElement);
+        String url = element.getAttributeValue(new QName("uri-template"));
+        urlElement.setText(url);
+        rootElement.addChild(urlElement);
+
+        EndpointDefinition def = ((AbstractEndpoint) endpoint).getDefinition();
+        if (null != def) {
+            if (def.isStatisticsEnable()) {
+                statsElement.setText("enabled");
+            } else {
+                statsElement.setText("disabled");
+            }
+        }
+
+        rootElement.addChild(statsElement);
 
         return rootElement;
 
