@@ -23,6 +23,16 @@ type ServerConfig struct {
     Port string `yaml:"server_port"`
 }
 
+type CarbonAppList struct {
+    Count       int32                   `xml:"Count"`
+    CarbonApps  []CarbonAppSummary      `xml:"CarbonApp"`
+}
+
+type CarbonAppSummary struct {
+    Name      string     `xml:"Name"`
+    Version   string     `xml:"Version"`
+}
+
 type CarbonApp struct {
     Name      string     `xml:"Name"`
     Version   string     `xml:"Version"`
@@ -34,19 +44,41 @@ type Artifact struct {
     Type string `xml:"Type"`
 }
 
+type EndpointList struct {
+    Count       int32               `xml:"Count"`
+    Endpoints  []EndpointSummary    `xml:"Endpoint"`
+}
+
+type EndpointSummary struct {
+    Name      string     `xml:"Name"`
+    Type      string     `xml:"Type"`
+    Method    string     `xml:"Method"`
+    Url       string     `xml:"Url"`
+}
+
 type Endpoint struct {
-    Name              string `xml:"Name"`
-    ArtifactContainer string `xml:"Container"`
-    Description       string `xml:"Description"`
-    EndpointString    string `xml:"EndpointString"`
+    Name      string     `xml:"Name"`
+    Type      string     `xml:"Type"`
+    Method    string     `xml:"Method"`
+    Url       string     `xml:"Url"`
+    Stats     string     `xml:"Stats"`
+}
+
+type InboundEndpointList struct {
+    Count               int32                       `xml:"Count"`
+    InboundEndpoints    []InboundEndpointSummary    `xml:"InboundEndpoint"`
+}
+
+type InboundEndpointSummary struct {
+    Name      string     `xml:"Name"`
+    Type      string     `xml:"Type"`
 }
 
 type InboundEndpoint struct {
     Name          string      `xml:"Name"`
-    Class         string      `xml:"Class"`
-    Protocol      string      `xml:"Protocol"`
-    Sequence      string      `xml:"Sequence"`
-    ErrorSequence string      `xml:"ErrorSequence"`
+    Type          string      `xml:"Type"`
+    Stats         string      `xml:"Stats"`
+    Tracing       string      `xml:"Tracing"`
     Parameters    []Parameter `xml:"Parameters>Parameter"`
 }
 
@@ -58,6 +90,11 @@ type Parameter struct {
 type API struct {
     Name      string     `xml:"Name"`
     Context   string     `xml:"Context"`
+    Host      string     `xml:"Host"`
+    Port      string     `xml:"Port"`
+    Version   string     `xml:"Version"`
+    Stats     string     `xml:"Stats"`
+    Tracing   string     `xml:"Tracing"`
     Resources []Resource `xml:"Resources>Resource"`
 }
 
@@ -72,23 +109,27 @@ type APISummary struct {
 }
 
 type Resource struct {
-    Methods       []string `xml:"Methods>Item"`
-    Style         string   `xml:"Style"`
-    Template      string   `xml:"Template"`
-    Mapping       string   `xml:"Mapping"`
-    InSequence    string   `xml:"Inseq"`
-    OutSequence   string   `xml:"Outseq"`
-    FaultSequence string   `xml:"Faultseq"`
+    Methods       []string  `xml:"Methods>Item"`
+    Url             string  `xml:"Url"`
 }
 
-type ProxyService struct {
-    Name          string   `xml:"Name"`
-    Description   string   `xml:"Description"`
-    InSequence    string   `xml:"InSequence"`
-    OutSequence   string   `xml:"OutSequence"`
-    FaultSequence string   `xml:"FaultSequence"`
-    Endpoint      string   `xml:"Endpoint"`
-    Transports    []string `xml:"Transports>Value"`
+type ProxyServiceList struct {
+    Count           int32             `xml:"Count"`
+    Proxies         []ProxySummary    `xml:"Proxy"`
+}
+
+type ProxySummary struct {
+    Name      string     `xml:"Name"`
+    WSDL1_1   string     `xml:"WSDL1_1"`
+    WSDL2_0   string     `xml:"WSDL2_0"`
+}
+
+type Proxy struct {
+    Name      string     `xml:"Name"`
+    WSDL1_1   string     `xml:"WSDL1_1"`
+    WSDL2_0   string     `xml:"WSDL2_0"`
+    Stats     string     `xml:"Stats"`
+    Tracing   string     `xml:"Tracing"`
 }
 
 type Service struct {
@@ -99,16 +140,26 @@ type Service struct {
     TryItURL    string `xml:"TryItUrl"`
 }
 
+type SequenceList struct {
+    Count       int32               `xml:"Count"`
+    Sequences  []SequenceSummary    `xml:"Sequence"`
+}
+
+type SequenceSummary struct {
+    Name        string     `xml:"Name"`
+    Container   string     `xml:"Container"`
+}
+
 type Sequence struct {
     Name      string   `xml:"Name"`
     Container string   `xml:"Container"`
+    Stats     string   `xml:"Stats"`
+    Tracing   string   `xml:"Tracing"`
     Mediators []string `xml:"Mediators>Mediator"`
 }
 
 type Task struct {
     Name            string `xml:"Name"`
-    Class           string `xml:"Class"`
-    Group           string `xml:"Group"`
     Type            string `xml:"Type"`
     TriggerCount    string `xml:"TriggerCount"`
     TriggerInterval string `xml:"TriggerInterval"`
