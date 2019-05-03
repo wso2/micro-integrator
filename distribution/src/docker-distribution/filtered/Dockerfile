@@ -20,9 +20,11 @@
 FROM adoptopenjdk/openjdk8:jdk8u192-b12-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>"
 
-# User details
-ARG USER=wso2ei
-ARG USER_GROUP=wso2ei
+# docker image build arguments for user/group configurations
+ARG USER=wso2carbon
+ARG USER_ID=802
+ARG USER_GROUP=wso2
+ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
 
 # Resource directory
@@ -33,11 +35,13 @@ ARG MICROESB_NAME=wso2mi
 ARG MICROESB_DISTRIBUTION=${MICROESB_NAME}
 ARG MICROESB_HOME=${USER_HOME}/${MICROESB_NAME}
 
-# Add a user group and a user
-RUN addgroup -S ${USER_GROUP} && adduser -S -G ${USER_GROUP} ${USER}
+# create the user and group
+RUN \
+    addgroup --system -g ${USER_GROUP_ID} ${USER_GROUP} \
+    && adduser --system --home ${USER_HOME} -g ${USER_GROUP_ID} -u ${USER_ID} ${USER}
 
 # Copy mico esb distribution to user's home directory
-COPY --chown=wso2ei:wso2ei ${MICROESB_DISTRIBUTION} ${MICROESB_HOME}
+COPY --chown=wso2carbon:wso2 ${MICROESB_DISTRIBUTION} ${MICROESB_HOME}
 
 # set the user and work directory
 USER ${USER}
