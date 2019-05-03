@@ -374,7 +374,16 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </repository>
-
+        <repository>
+            <id>wso2-dist</id>
+            <name>WSO2 Dist Repository</name>
+            <url>http://dist.wso2.org/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+                <checksumPolicy>ignore</checksumPolicy>
+            </releases>
+        </repository>
         <!--add the elasticsearch repo-->
         <repository>
             <id>elasticsearch-releases</id>
@@ -399,6 +408,7 @@
                 <checksumPolicy>ignore</checksumPolicy>
             </releases>
         </pluginRepository>
+
         <pluginRepository>
             <id>wso2.snapshots</id>
             <name>Apache Snapshot Repository</name>
@@ -411,6 +421,7 @@
                 <enabled>false</enabled>
             </releases>
         </pluginRepository>
+
         <pluginRepository>
             <id>wso2-nexus</id>
             <name>WSO2 internal Repository</name>
