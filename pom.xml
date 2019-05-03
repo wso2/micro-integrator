@@ -165,6 +165,12 @@
                 <groupId>org.wso2.carbon.data</groupId>
                 <artifactId>org.wso2.carbon.dataservices.core</artifactId>
                 <version>${carbon.data.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.htmlcleaner</groupId>
+                        <artifactId>htmlcleaner</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
