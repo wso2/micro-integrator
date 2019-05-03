@@ -16,8 +16,8 @@
 #  under the License.
 # ---------------------------------------------------------------------------
 
-# Base image
-FROM openjdk:8-jre-alpine
+# set base Docker image to AdoptOpenJDK Alpine Docker image
+FROM adoptopenjdk/openjdk8:jdk8u192-b12-alpine
 MAINTAINER WSO2 Docker Maintainers "dev@wso2.org"
 
 # User details
