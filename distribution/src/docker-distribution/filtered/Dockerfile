@@ -26,22 +26,21 @@ ARG USER_ID=802
 ARG USER_GROUP=wso2
 ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
-
-# Resource directory
+# docker image build argument for image build context
 ARG FILES=./files
-
-# Broker details
+# docker image build arguments for wso2 product installation
 ARG MICROESB_NAME=wso2mi
-ARG MICROESB_DISTRIBUTION=${MICROESB_NAME}
-ARG MICROESB_HOME=${USER_HOME}/${MICROESB_NAME}
+ARG MICROESB_VERSION=1.0.0
+ARG MICROESB_PACK=${MICROESB_NAME}-${MICROESB_VERSION}
+ARG MICROESB_HOME=${USER_HOME}/${MICROESB_PACK}
 
 # create the user and group
 RUN \
     addgroup --system -g ${USER_GROUP_ID} ${USER_GROUP} \
     && adduser --system --home ${USER_HOME} -g ${USER_GROUP_ID} -u ${USER_ID} ${USER}
 
-# Copy mico esb distribution to user's home directory
-COPY --chown=wso2carbon:wso2 ${MICROESB_DISTRIBUTION} ${MICROESB_HOME}
+# copy the wso2 micro intergator product distribution to user's home directory
+COPY --chown=wso2carbon:wso2 ${FILES}/${MICROESB_PACK}/ ${MICROESB_HOME}
 
 # set the user and work directory
 USER ${USER}
