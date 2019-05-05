@@ -356,7 +356,6 @@ If you want to change the default locations of the registry directories, uncomme
 This Guide includes the following subsections.
 
 - [Introduction to Prometheus](#introduction-to-Prometheus)
-  - [Prometheus Publisher Component](#prometheus-Publisher-Component)
 - [Configuring Prometheus with Micro Integrator](#configuring-Prometheus-with-Micro-Integrator)
   - [Configuring Prometheus Server](#configuring-Prometheus-Server)
   - [Configuring Micro Integrator to Publish](#Configuring-Micro-Integrator-to-Publish)
@@ -372,17 +371,6 @@ The main objective of this feature is to facilitate users to make use of an exte
 to analyze the behavior of WSO2 Micro Integrator.  
 
 ![prometheus_intro](images/prometheus_intro.png)
-
-
-#### Prometheus Publisher Component
-
-The HTTP endpoint exposing the metric data is a service exposed by an internal API, bundled as an OSGi component and 
-added as a feature to the WSO2 MI product. WSO2 Micro Integrator exposes its statistical data through JMX as MBeans. 
-The 
-Prometheus publisher in WSO2 MI scrapes these bean data, and converts them to the Prometheus format. The converted 
-metrics are then exposed via an HTTP endpoint, which is used by Prometheus to scrape the statistical data.
-
-![prometheus_publisher](images/prometheus_publisher.png)
 
 ### Configuring Prometheus with Micro Integrator
 
