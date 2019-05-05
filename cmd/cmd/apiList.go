@@ -19,6 +19,7 @@
 package cmd
 
 import (
+    "fmt"
     "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
@@ -41,8 +42,21 @@ var apisListCmd = &cobra.Command{
     Long:  listAPICmdLongDesc + listAPICmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
         utils.Logln(utils.LogPrefixInfo + "Show APIs called")
-        // Defined in apiInfo.go
-        executeListAPIsCmd()
+        if len(args) == 0 {
+            // Defined in apiInfo.go
+            executeListAPIsCmd()
+        }else if len(args) == 1{
+            if args[0] == "help" {
+                fmt.Print(showAPICmdLongDesc + APICmdUsage(listAPICmdLiteral) + showAPICmdExamples)
+            }else {
+                apiName = args[0]
+                // Defined in apiInfo.go
+                executeGetAPICmd(apiName)
+            }
+        }else {
+            fmt.Println("Too many arguments. See the usage below")
+            fmt.Print(APICmdUsage(listAPICmdLiteral) + showAPICmdExamples)
+        }
     },
 }
 
