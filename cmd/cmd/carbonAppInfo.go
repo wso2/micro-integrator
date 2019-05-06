@@ -19,26 +19,28 @@
 package cmd
 
 import (
-    "github.com/lithammer/dedent"
+    "fmt"
     "github.com/olekukonko/tablewriter"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
     "os"
-    "strconv"
 )
 
 var appName string
 
 // Show Carbon App command related usage info
-const showApplicationCmdLiteral = "carbonApp"
-const showApplicationCmdShortDesc = "Get information about the specified Carbon Application"
+const showApplicationCmdLiteral = "carbonapp"
+const showApplicationCmdShortDesc = "Get information about Carbon Applications"
 
-var showApplicationCmdLongDesc = "Get information about the Carbon App specified by the flag --name, -n\n"
+var showApplicationCmdLongDesc = "Get information about the Carbon App specified by command line argument [app-name] If not specified, list all the carbon apps\n"
 
-var showApplicationCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showApplicationCmdLiteral + ` -n TestApp
-`)
+var showApplicationCmdExamples = 
+"Example:\n" + 
+"To get details about a carbon app\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + " SampleApp\n\n" +
+"To list all the carbon apps\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + "\n\n"
+
 
 // carbonAppShowCmd represents the show carbonApp command
 var carbonAppShowCmd = &cobra.Command{
@@ -46,16 +48,36 @@ var carbonAppShowCmd = &cobra.Command{
     Short: showApplicationCmdShortDesc,
     Long:  showApplicationCmdLongDesc + showApplicationCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "Show carbon app called")
-        executeGetCarbonAppCmd(appName)
+        handleApplicationCmdArguments(args)
     },
 }
 
 func init() {
     showCmd.AddCommand(carbonAppShowCmd)
+    carbonAppShowCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showApplicationCmdLiteral, "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
+}
 
-    carbonAppShowCmd.Flags().StringVarP(&appName, "name", "n", "", "Name of the Carbon Application")
-    carbonAppShowCmd.MarkFlagRequired("name")
+func handleApplicationCmdArguments(args []string) {
+    utils.Logln(utils.LogPrefixInfo + "Show Carbon app called")
+    if len(args) == 0 {
+        executeListCarbonAppsCmd()
+    } else if len(args) == 1 {
+        if args[0] == "help" {
+            printAppHelp()
+        } else {
+            appName = args[0]
+            executeGetCarbonAppCmd(appName)
+        }
+    } else {
+        fmt.Println("Too many arguments. See the usage below")
+        printAppHelp()
+    }
+}
+
+func printAppHelp() {
+    fmt.Print(showApplicationCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showApplicationCmdLiteral, 
+        "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
 }
 
 func executeGetCarbonAppCmd(appname string) {
@@ -69,7 +91,7 @@ func executeGetCarbonAppCmd(appname string) {
         app := resp.(*utils.CarbonApp)
         printCarbonAppInfo(*app)
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Carbon App", err)
+        fmt.Println(utils.LogPrefixError+"Getting Information of the Carbon App", err)
     }
 }
 
@@ -77,27 +99,58 @@ func executeGetCarbonAppCmd(appname string) {
 // Name, Version, and summary about it's artifacts
 // @param app : CarbonApp object
 func printCarbonAppInfo(app utils.CarbonApp) {
+
+    fmt.Println("Name - " + app.Name)
+    fmt.Println("Version - " + app.Version)
+    fmt.Println("Artifacts :")
+
     table := tablewriter.NewWriter(os.Stdout)
     table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-    data := []string{"NAME", "", app.Name}
+    data := []string{"NAME", "TYPE"}
     table.Append(data)
 
-    data = []string{"VERSION", "", app.Version}
-    table.Append(data)
-
-    for id, artifact := range app.Artifacts {
-
-        artifactId := "ARTIFACTS " + strconv.Itoa(id)
-
-        data = []string{artifactId, "NAME", artifact.Name}
-        table.Append(data)
-        data = []string{artifactId, "TYPE", artifact.Type}
+    for _, artifact := range app.Artifacts {
+        data = []string{artifact.Name, artifact.Type}
         table.Append(data)
     }
-
-    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
+    table.SetBorder(false)
+    table.SetColumnSeparator(" ")
     table.Render() // Send output
+}
+
+func executeListCarbonAppsCmd() {
+
+    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
+
+    resp, err := utils.GetArtifactList(finalUrl, &utils.CarbonAppList{})
+
+    if err == nil {
+        // Printing the list of available Carbon apps
+        list := resp.(*utils.CarbonAppList)
+        printAppList(*list)        
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Carbon apps", err)
+    }
+}
+
+func printAppList(appList utils.CarbonAppList) {
+
+    if appList.Count > 0 {
+        table := tablewriter.NewWriter(os.Stdout)
+        table.SetAlignment(tablewriter.ALIGN_LEFT)
+
+        data := []string{"NAME", "VERSION"}
+        table.Append(data)
+
+        for _, app := range appList.CarbonApps {
+            data = []string{app.Name, app.Version}
+            table.Append(data)
+        }
+        table.SetBorder(false)
+        table.SetColumnSeparator("  ")
+        table.Render()
+    } else {
+        fmt.Println("No Carbon Apps found")
+    }    
 }

@@ -19,50 +19,26 @@
 package cmd
 
 import (
-    "fmt"
-    "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Tasks command related usage info
 const listTaskCmdLiteral = "tasks"
-const listTaskCmdShortDesc = "List all the Tasks"
-
-var listTaskCmdLongDesc = "List all the Tasks"
-
-var listTaskCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listTaskCmdLiteral)
 
 // taskListCmd represents the list tasks command
 var taskListCmd = &cobra.Command{
     Use:   listTaskCmdLiteral,
-    Short: listTaskCmdShortDesc,
-    Long:  listTaskCmdLongDesc + listTaskCmdExamples,
+    Short: showTaskCmdShortDesc,
+    Long:  showTaskCmdLongDesc + showTaskCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "List Tasks called")
-        executeListTasksCmd()
+        // defined in taskInfo.go
+        handleTaskCmdArguments(args)
     },
 }
 
 func init() {
-    listCmd.AddCommand(taskListCmd)
-}
-
-func executeListTasksCmd() {
-
-    finalUrl := utils.RESTAPIBase + utils.PrefixTasks
-
-    count, tasks, err := utils.GetArtifactList(finalUrl)
-
-    if err == nil {
-        // Printing the list of available Tasks
-        fmt.Println("No. of Tasks:", count)
-        if count > 0 {
-            utils.PrintList(tasks)
-        }
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
-    }
+    showCmd.AddCommand(taskListCmd)
+    taskListCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }

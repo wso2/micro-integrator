@@ -19,50 +19,26 @@
 package cmd
 
 import (
-    "fmt"
-    "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Proxy Services command related usage info
-const listProxyServicesCmdLiteral = "proxyServices"
-const listProxyServicesCmdShortDesc = "List all the Proxy Services"
-
-var listProxyServicesCmdLongDesc = "List all the Proxy Services\n"
-
-var listProxyServicesCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listProxyServicesCmdLiteral)
+const listProxyServicesCmdLiteral = "proxyservices"
 
 // proxyServicesListCmd represents the proxyServices command
 var proxyServicesListCmd = &cobra.Command{
     Use:   listProxyServicesCmdLiteral,
-    Short: listProxyServicesCmdShortDesc,
-    Long:  listProxyServicesCmdLongDesc + listProxyServicesCmdExamples,
+    Short: showProxyServiceCmdShortDesc,
+    Long:  showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "List proxy services called")
-        executeListProxyServicesCmd()
+        // defined in proxyServiceInfo.go
+        handleProxyServiceCmdArguments(args)
     },
 }
 
 func init() {
-    listCmd.AddCommand(proxyServicesListCmd)
-}
-
-func executeListProxyServicesCmd() {
-
-    finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
-
-    count, endpoints, err := utils.GetArtifactList(finalUrl)
-
-    if err == nil {
-        // Printing the list of available Proxy Services
-        fmt.Println("No. of Proxy Services:", count)
-        if count > 0 {
-            utils.PrintList(endpoints)
-        }
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting List of Proxy Services", err)
-    }
+    showCmd.AddCommand(proxyServicesListCmd)
+    proxyServicesListCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showProxyServiceCmdLiteral, "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
 }

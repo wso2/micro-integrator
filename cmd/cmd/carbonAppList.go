@@ -19,50 +19,26 @@
 package cmd
 
 import (
-    "fmt"
-    "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Carbon App command related usage info
-const listApplicationCmdLiteral = "carbonApps"
-const listApplicationCmdShortDesc = "List all the Carbon Applications"
-
-var listApplicationCmdLongDesc = "List all the Carbon Applications\n"
-
-var listApplicationCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listApplicationCmdLiteral)
+const listApplicationCmdLiteral = "carbonapps"
 
 // carbonAppsListCmd represents the list carbonApps command
 var carbonAppsListCmd = &cobra.Command{
     Use:   listApplicationCmdLiteral,
-    Short: listApplicationCmdShortDesc,
-    Long:  listApplicationCmdLongDesc + listApplicationCmdExamples,
+    Short: showAPICmdShortDesc,
+    Long:  showAPICmdLongDesc + showAPICmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "List Carbon apps called")
-        executeListCarbonAppsCmd()
+        // defined in carbonAppInfo.go
+        handleApplicationCmdArguments(args)
     },
 }
 
 func init() {
-    listCmd.AddCommand(carbonAppsListCmd)
-}
-
-func executeListCarbonAppsCmd() {
-
-    finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
-
-    count, carbonApps, err := utils.GetArtifactList(finalUrl)
-
-    if err == nil {
-        // Printing the list of available Carbon Apps
-        fmt.Println("No. of Carbon Apps:", count)
-        if count > 0 {
-            utils.PrintList(carbonApps)
-        }
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting List of Carbon Apps", err)
-    }
+    showCmd.AddCommand(carbonAppsListCmd)
+    carbonAppsListCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showApplicationCmdLiteral, "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
 }

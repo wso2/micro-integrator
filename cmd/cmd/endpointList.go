@@ -19,50 +19,26 @@
 package cmd
 
 import (
-    "fmt"
-    "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Endpoints command related usage info
 const listEndpointsCmdLiteral = "endpoints"
-const listEndpointsCmdShortDesc = "List all the Endpoints"
-
-var listEndpointsCmdLongDesc = "List all the Endpoints\n"
-
-var listEndpointsCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listEndpointsCmdLiteral)
 
 // endpointsListCmd represents the list endpoints command
 var endpointsListCmd = &cobra.Command{
     Use:   listEndpointsCmdLiteral,
-    Short: listEndpointsCmdShortDesc,
-    Long:  listEndpointsCmdLongDesc + listEndpointsCmdExamples,
+    Short: showEndpointCmdShortDesc,
+    Long:  showEndpointCmdLongDesc + showEndpointCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "List endpoints called")
-        executeListEndpointsCmd()
+        // defined in endpointInfo.go
+        handleEndpointCmdArguments(args)
     },
 }
 
 func init() {
-    listCmd.AddCommand(endpointsListCmd)
-}
-
-func executeListEndpointsCmd() {
-
-    finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints
-
-    count, endpoints, err := utils.GetArtifactList(finalUrl)
-
-    if err == nil {
-        // Printing the list of available Endpoints
-        fmt.Println("No. of Endpoints:", count)
-        if count > 0 {
-            utils.PrintList(endpoints)
-        }
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting List of Endpoints", err)
-    }
+    showCmd.AddCommand(endpointsListCmd)
+    endpointsListCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showEndpointCmdLiteral, "[endpointname]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
 }

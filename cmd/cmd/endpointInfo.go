@@ -20,7 +20,6 @@ package cmd
 
 import (
     "fmt"
-    "github.com/lithammer/dedent"
     "github.com/olekukonko/tablewriter"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
@@ -31,14 +30,16 @@ var endpointName string
 
 // Show Endpoint command related usage info
 const showEndpointCmdLiteral = "endpoint"
-const showEndpointCmdShortDesc = "Get information about the specified Endpoint"
+const showEndpointCmdShortDesc = "Get information about endpoints"
 
-var showEndpointCmdLongDesc = "Get information about the Endpoint specified by the flag --name, -n\n"
+var showEndpointCmdLongDesc = "Get information about the endpoint specified by command line argument [endpoint-name] If not specified, list all the endpoints\n"
 
-var showEndpointCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showEndpointCmdLiteral + ` -n TestEndpoint
-`)
+var showEndpointCmdExamples = 
+"Example:\n" +
+"To get details about a specific endpoint\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + " TestEndpoint\n\n" +
+"To list all the endpoints\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + "\n\n"
 
 // endpointShowCmd represents the show endpoint command
 var endpointShowCmd = &cobra.Command{
@@ -46,16 +47,36 @@ var endpointShowCmd = &cobra.Command{
     Short: showEndpointCmdShortDesc,
     Long:  showEndpointCmdLongDesc + showEndpointCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "Show endpoint called")
-        executeGetEndpointCmd(endpointName)
+        handleEndpointCmdArguments(args)
     },
 }
 
 func init() {
     showCmd.AddCommand(endpointShowCmd)
+    endpointShowCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showEndpointCmdLiteral, "[endpoint-name]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
+}
 
-    endpointShowCmd.Flags().StringVarP(&endpointName, "name", "n", "", "Name of the Endpoint")
-    endpointShowCmd.MarkFlagRequired("name")
+func handleEndpointCmdArguments(args []string) {
+    utils.Logln(utils.LogPrefixInfo + "Show Endpoint called")
+    if len(args) == 0 {
+        executeListEndpointsCmd()
+    } else if len(args) == 1 {
+        if args[0] == "help" {
+            printEndpointHelp()
+        } else {
+            endpointName = args[0]
+            executeGetEndpointCmd(endpointName)
+        }
+    } else {
+        fmt.Println("Too many arguments. See the usage below")
+        printEndpointHelp()
+    }
+}
+
+func printEndpointHelp() {
+    fmt.Print(showEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showEndpointCmdLiteral, 
+        "[endpoint-name]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
 }
 
 func executeGetEndpointCmd(endpointname string) {
@@ -74,25 +95,49 @@ func executeGetEndpointCmd(endpointname string) {
 }
 
 // Print the details of an Endpoint
-// Name, Description, Container and the XML string of the endpoint
+// Name, Type, Method, Url, Stats
 // @param Endpoint : Endpoint object
 func printEndpoint(endpoint utils.Endpoint) {
 
-    table := tablewriter.NewWriter(os.Stdout)
+    fmt.Println("Name - " + endpoint.Name)
+    fmt.Println("Type - " + endpoint.Type)
+    fmt.Println("Method - " + endpoint.Method)
+    fmt.Println("Url - " + endpoint.Url)
+    fmt.Println("Stats - " + endpoint.Stats)
+}
 
-    data := []string{"NAME", endpoint.Name}
-    table.Append(data)
+func executeListEndpointsCmd() {
 
-    data = []string{"DESCRIPTION", endpoint.Description}
-    table.Append(data)
+    finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints
 
-    data = []string{"CONTAINER", endpoint.ArtifactContainer}
-    table.Append(data)
+    resp, err := utils.GetArtifactList(finalUrl, &utils.EndpointList{})
 
-    data = []string{"ENDPOINT STRING", endpoint.EndpointString}
-    table.Append(data)
+    if err == nil {
+        // Printing the list of available Endpoints
+        list := resp.(*utils.EndpointList)
+        printEndpointsist(*list)        
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Endpoints", err)
+    }
+}
 
-    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true)
-    table.Render() // Send output
+func printEndpointsist(endpointList utils.EndpointList) {
+
+    if endpointList.Count > 0 {
+        table := tablewriter.NewWriter(os.Stdout)
+        table.SetAlignment(tablewriter.ALIGN_LEFT)
+
+        data := []string{"NAME", "TYPE", "METHOD", "URL"}
+        table.Append(data)
+
+        for _, endpoint := range endpointList.Endpoints {
+            data = []string{endpoint.Name, endpoint.Type, endpoint.Method, endpoint.Url}
+            table.Append(data)
+        }
+        table.SetBorder(false)
+        table.SetColumnSeparator("  ")
+        table.Render()
+    } else {
+        fmt.Println("No Endpoints found")
+    }    
 }

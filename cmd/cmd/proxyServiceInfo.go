@@ -19,7 +19,7 @@
 package cmd
 
 import (
-    "github.com/lithammer/dedent"
+    "fmt"
     "github.com/olekukonko/tablewriter"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
@@ -29,15 +29,17 @@ import (
 var proxyServiceName string
 
 // Show ProxyService command related usage info
-const showProxyServiceCmdLiteral = "proxyService"
-const showProxyServiceCmdShortDesc = "Get information about the specified Proxy Service"
+const showProxyServiceCmdLiteral = "proxyservice"
+const showProxyServiceCmdShortDesc = "Get information about proxy services"
 
-var showProxyServiceCmdLongDesc = "Get information about the Proxy Service specified by the flag --name, -n\n"
+var showProxyServiceCmdLongDesc = "Get information about the Proxy Service specified by command line argument [proxy-name] If not specified, list all the proxy services\n"
 
-var showProxyServiceCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showProxyServiceCmdLiteral + ` -n TestProxyService
-`)
+var showProxyServiceCmdExamples = 
+"Example:\n" +
+"To get details about a specific prxoy\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + " SampleProxy\n\n" +
+"To list all the proxies\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + "\n\n"
 
 // proxyServiceShowCmd represents the proxyService command
 var proxyServiceShowCmd = &cobra.Command{
@@ -45,64 +47,97 @@ var proxyServiceShowCmd = &cobra.Command{
     Short: showProxyServiceCmdShortDesc,
     Long:  showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "Show ProxyService called")
-        executeGetProxyServiceCmd(proxyServiceName)
+        handleProxyServiceCmdArguments(args)
     },
 }
 
 func init() {
     showCmd.AddCommand(proxyServiceShowCmd)
+    proxyServiceShowCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showProxyServiceCmdLiteral, "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
+}
 
-    proxyServiceShowCmd.Flags().StringVarP(&proxyServiceName, "name", "n", "", "Name of the Proxy Service")
-    proxyServiceShowCmd.MarkFlagRequired("name")
+func handleProxyServiceCmdArguments(args []string) {
+    utils.Logln(utils.LogPrefixInfo + "Show ProxyService called")
+    if len(args) == 0 {
+        executeListProxyServicesCmd()
+    } else if len(args) == 1 {
+        if args[0] == "help" {
+            printProxyServiceHelp()
+        } else {
+            proxyServiceName = args[0]
+            executeGetProxyServiceCmd(proxyServiceName)
+        }
+    } else {
+        fmt.Println("Too many arguments. See the usage below")
+        printProxyServiceHelp()
+    }
+}
+
+func printProxyServiceHelp() {
+    fmt.Print(showProxyServiceCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showProxyServiceCmdLiteral, 
+        "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
 }
 
 func executeGetProxyServiceCmd(proxyServiceName string) {
 
     finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + proxyServiceName
 
-    resp, err := utils.UnmarshalData(finalUrl, &utils.ProxyService{})
+    resp, err := utils.UnmarshalData(finalUrl, &utils.Proxy{})
 
     if err == nil {
         // Printing the details of the Proxy Service
-        proxyService := resp.(*utils.ProxyService)
+        proxyService := resp.(*utils.Proxy)
         printProxyServiceInfo(*proxyService)
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
+        fmt.Println(utils.LogPrefixError+"Getting Information of ProxyService", err)
     }
 }
 
 // Print the details of a Proxy service
 // Name, Description, Sequences(In, Out and Fault), Endpoint
 // @param ProxyService : ProxyService object
-func printProxyServiceInfo(proxyService utils.ProxyService) {
-    table := tablewriter.NewWriter(os.Stdout)
+func printProxyServiceInfo(proxyService utils.Proxy) {
 
-    data := []string{"NAME", proxyService.Name}
-    table.Append(data)
+    fmt.Println("Name - " + proxyService.Name)
+    fmt.Println("WSDL 1.1 - " + proxyService.WSDL1_1)
+    fmt.Println("WSDL 2.0 - " + proxyService.WSDL2_0)
+    fmt.Println("Stats - " + proxyService.Stats)
+    fmt.Println("Tracing - " + proxyService.Tracing)
+}
 
-    data = []string{"DESCRIPTION", proxyService.Description}
-    table.Append(data)
+func executeListProxyServicesCmd() {
 
-    data = []string{"IN SEQUENCE", proxyService.InSequence}
-    table.Append(data)
+    finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
 
-    data = []string{"OUT SEQUENCE", proxyService.OutSequence}
-    table.Append(data)
+    resp, err := utils.GetArtifactList(finalUrl, &utils.ProxyServiceList{})
 
-    data = []string{"FAULT SEQUENCE", proxyService.FaultSequence}
-    table.Append(data)
-
-    data = []string{"ENDPOINT", proxyService.Endpoint}
-    table.Append(data)
-
-    for _, transport := range proxyService.Transports {
-        data = []string{"TRANSPORTS", transport}
-        table.Append(data)
+    if err == nil {
+        // Printing the list of available Endpoints
+        list := resp.(*utils.ProxyServiceList)
+        printProxyList(*list)        
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Proxies", err)
     }
+}
 
-    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
-    table.Render() // Send output
+func printProxyList(proxyList utils.ProxyServiceList) {
+
+    if proxyList.Count > 0 {
+        table := tablewriter.NewWriter(os.Stdout)
+        table.SetAlignment(tablewriter.ALIGN_LEFT)
+
+        data := []string{"NAME", "WSDL 1.1", "WSDL 2.0"}
+        table.Append(data)
+
+        for _, proxy := range proxyList.Proxies {
+            data = []string{proxy.Name, proxy.WSDL1_1, proxy.WSDL2_0}
+            table.Append(data)
+        }
+        table.SetBorder(false)
+        table.SetColumnSeparator("  ")
+        table.Render()
+    } else {
+        fmt.Println("No proxies found")
+    }
 }

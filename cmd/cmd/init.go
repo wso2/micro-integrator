@@ -62,15 +62,15 @@ func promptUserForConfig(){
     if len(strPort) == 0 {
         fmt.Println("Port number is not specified, default value is used")
         strPort = utils.DefaultPort
-    }else {
+    } else {
         port, err := strconv.Atoi(strPort)
-        if err == nil{
+        if err == nil {
             if (port < 1000) || (port > 10000) {
                 fmt.Println("Port number is out of range. Please specify a port number between 1000 and 10000")
                 os.Exit(1)
             }
             strPort = strconv.Itoa(int(port))
-        }else {
+        } else {
             fmt.Println("Port number is invalid. Please specify a port number between 1000 and 10000")
             os.Exit(1)
         }

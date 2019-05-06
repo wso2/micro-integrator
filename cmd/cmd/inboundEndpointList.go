@@ -19,50 +19,26 @@
 package cmd
 
 import (
-    "fmt"
-    "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Inbound Endpoints command related usage info
-const listInboundEndpointsCmdLiteral = "inboundEndpoints"
-const listInboundEndpointsCmdShortDesc = "List all the Inbound Endpoints"
-
-var listInboundEndpointsCmdLongDesc = "List all the Inbound Endpoints\n"
-
-var listInboundEndpointsCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + listCmdLiteral + ` ` + listInboundEndpointsCmdLiteral)
+const listInboundEndpointsCmdLiteral = "inboundendpoints"
 
 // inboundEndpointsListCmd represents the list inboundEndpoints command
 var inboundEndpointsListCmd = &cobra.Command{
     Use:   listInboundEndpointsCmdLiteral,
-    Short: listInboundEndpointsCmdShortDesc,
-    Long:  listInboundEndpointsCmdLongDesc + listInboundEndpointsCmdExamples,
+    Short: showInboundEndpointCmdShortDesc,
+    Long:  showInboundEndpointCmdLongDesc + showInboundEndpointCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "List inbound endpoints called")
-        executeListInboundEndpointsCmd()
+        // defined in inboundEndpointInfo.go
+        handleInboundCmdArguments(args)
     },
 }
 
 func init() {
-    listCmd.AddCommand(inboundEndpointsListCmd)
-}
-
-func executeListInboundEndpointsCmd() {
-
-    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints
-
-    count, inboundEndpoints, err := utils.GetArtifactList(finalUrl)
-
-    if err == nil {
-        // Printing the list of available Inbound endpoints
-        fmt.Println("No. of Inbound Endpoints:", count)
-        if count > 0 {
-            utils.PrintList(inboundEndpoints)
-        }
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting List of Inbound Endpoints", err)
-    }
+    showCmd.AddCommand(inboundEndpointsListCmd)
+    inboundEndpointsListCmd.SetHelpTemplate(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showInboundEndpointCmdLiteral, "[inboundname]") + showInboundEndpointCmdExamples + utils.GetCmdFlags("inboundendpoint(s)"))
 }

@@ -20,7 +20,6 @@ package cmd
 
 import (
     "fmt"
-    "github.com/lithammer/dedent"
     "github.com/olekukonko/tablewriter"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
@@ -31,23 +30,16 @@ var apiName string
 
 // Show API command related usage info
 const showAPICmdLiteral = "api"
-const showAPICmdShortDesc = "Get information about the specified API"
+const showAPICmdShortDesc = "Get information about APIs"
 
-var showAPICmdLongDesc = "Get information about the API specified by command line argument [apiName] or list all the apis\n"
+var showAPICmdLongDesc = "Get information about the API specified by command line argument [api-name] If not specified, list all the apis\n"
 
-var showAPICmdExamples = dedent.Dedent(`
-Example:
-To get details about a specific api
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + ` TestAPI
-
-To list all the apis
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + `
-`)
-
-var showAPICmdUsage = dedent.Dedent(
-`Usage:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showAPICmdLiteral + ` [apiName]
-`)
+var showAPICmdExamples = 
+"Example:\n" + 
+"To get details about a specific api\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showAPICmdLiteral + " TestAPI\n\n" +
+"To list all the apis\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showAPICmdLiteral + "\n\n"
 
 // apiShowCmd represents the show api command
 var apiShowCmd = &cobra.Command{
@@ -55,26 +47,36 @@ var apiShowCmd = &cobra.Command{
     Short: showAPICmdShortDesc,
     Long:  showAPICmdLongDesc + showAPICmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "Show API called")
-        if len(args) == 0 {
-            executeListAPIsCmd()
-        }else if len(args) == 1{
-            if args[0] == "help" {
-                fmt.Print(showAPICmdLongDesc + showAPICmdExamples + showAPICmdUsage)
-            }else {
-                apiName = args[0]
-                executeGetAPICmd(apiName)
-            }
-        }else {
-            fmt.Println("Too many arguments. See the usage below")
-            fmt.Print(showAPICmdExamples + showAPICmdUsage)
-        }
+        handleAPICmdArguments(args)
     },
 }
 
 func init() {
     showCmd.AddCommand(apiShowCmd)
-    apiShowCmd.SetUsageTemplate(showAPICmdUsage)
+    apiShowCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showAPICmdLiteral, "[api-name]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
+}
+
+func handleAPICmdArguments(args []string) {
+    utils.Logln(utils.LogPrefixInfo + "Show API called")
+    if len(args) == 0 {
+        executeListAPIsCmd()
+    } else if len(args) == 1 {
+        if args[0] == "help" {
+            printAPIHelp()
+        } else {
+            apiName = args[0]
+            executeGetAPICmd(apiName)
+        }
+    } else {
+        fmt.Println("Too many arguments. See the usage below")
+        printAPIHelp()
+    }
+}
+
+func printAPIHelp() {
+    fmt.Print(showAPICmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showAPICmdLiteral, 
+        "[api-name]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
 }
 
 func executeGetAPICmd(apiname string) {
@@ -98,8 +100,10 @@ func executeGetAPICmd(apiname string) {
 func printAPIInfo(api utils.API) {
 
     fmt.Println("Name - " + api.Name)
-    fmt.Println("Context - " + api.Context)
+    // fmt.Println("Host - " + api.Host)
+    // fmt.Println("Port - " + api.Port)
     fmt.Println("Version - " + api.Version)
+    fmt.Println("Url - " + api.Context)
     fmt.Println("Stats - " + api.Stats)
     fmt.Println("Tracing - " + api.Tracing)
     fmt.Println("Resources : ")
@@ -115,16 +119,14 @@ func printAPIInfo(api utils.API) {
         var methodSring string
 
         for i, method := range resource.Methods {
-            if i > 1 {
+            if i > 0 {
                 methodSring += "/"    
             }
             methodSring += method
         }
-
         data = []string{resource.Url, methodSring}
         table.Append(data)
     }
-
     table.SetBorder(false)
     table.SetColumnSeparator(" ")
     table.SetAutoMergeCells(true)
@@ -152,7 +154,7 @@ func printApiList(apiList utils.APIList) {
         table := tablewriter.NewWriter(os.Stdout)
         table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-        data := []string{"NAME", "CONTEXT"}
+        data := []string{"NAME", "URL"}
         table.Append(data)
 
         for _, api := range apiList.Apis {
@@ -162,7 +164,7 @@ func printApiList(apiList utils.APIList) {
         table.SetBorder(false)
         table.SetColumnSeparator("  ")
         table.Render()
-    }else {
+    } else {
         fmt.Println("No APIs found")
     }    
 }

@@ -19,7 +19,7 @@
 package cmd
 
 import (
-    "github.com/lithammer/dedent"
+    "fmt"
     "github.com/olekukonko/tablewriter"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
@@ -30,14 +30,16 @@ var sequenceName string
 
 // Show Sequence command related usage info
 const showSequenceCmdLiteral = "sequence"
-const showSequenceCmdShortDesc = "Get information about the specified Sequence"
+const showSequenceCmdShortDesc = "Get information about sequences"
 
-var showSequenceCmdLongDesc = "Get information about the Sequence specified by the flag --name, -n\n"
+var showSequenceCmdLongDesc = "Get information about the Sequence specified by command line argument [sequence-name] If not specified, list all the sequences\n"
 
-var showSequenceCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showSequenceCmdLiteral + ` -n TestSequence
-`)
+var showSequenceCmdExamples = 
+"Example:\n" +
+"To get details about a specific sequence\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + " SampleSequence\n\n" +
+"To list all the sequences\n" +
+"  " + utils.ProjectName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + "\n\n"
 
 // sequenceShowCmd represents the show sequence command
 var sequenceShowCmd = &cobra.Command{
@@ -45,16 +47,36 @@ var sequenceShowCmd = &cobra.Command{
     Short: showSequenceCmdShortDesc,
     Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "Show sequence called")
-        executeGetSequenceCmd(sequenceName)
+        handleSequenceCmdArguments(args)
     },
 }
 
 func init() {
     showCmd.AddCommand(sequenceShowCmd)
+    sequenceShowCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
+}
 
-    sequenceShowCmd.Flags().StringVarP(&sequenceName, "name", "n", "", "Name of the Sequence")
-    sequenceShowCmd.MarkFlagRequired("name")
+func handleSequenceCmdArguments(args []string) {
+    utils.Logln(utils.LogPrefixInfo + "Show sequence called")
+    if len(args) == 0 {
+        executeListSequencesCmd()
+    } else if len(args) == 1 {
+        if args[0] == "help" {
+            printSequenceHelp()
+        } else {
+            sequenceName = args[0]
+            executeGetSequenceCmd(sequenceName)
+        }
+    } else {
+        fmt.Println("Too many arguments. See the usage below")
+        printSequenceHelp()
+    }
+}
+
+func printSequenceHelp() {
+    fmt.Print(showSequenceCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showSequenceCmdLiteral, 
+        "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
 }
 
 func executeGetSequenceCmd(sequencename string) {
@@ -68,7 +90,7 @@ func executeGetSequenceCmd(sequencename string) {
         sequence := resp.(*utils.Sequence)
         printSequenceInfo(*sequence)
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Sequence", err)
+        fmt.Println(utils.LogPrefixError+"Getting Information of the Sequence", err)
     }
 }
 
@@ -76,22 +98,56 @@ func executeGetSequenceCmd(sequencename string) {
 // Name, Conatiner and list of mediators
 // @param task : Sequence object
 func printSequenceInfo(sequence utils.Sequence) {
-    table := tablewriter.NewWriter(os.Stdout)
-    table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-    data := []string{"NAME", sequence.Name}
-    table.Append(data)
+    fmt.Println("Name - " + sequence.Name)
+    fmt.Println("Container - " + sequence.Container)
+    fmt.Println("Stats - " + sequence.Stats)
+    fmt.Println("Tracing - " + sequence.Tracing)
 
-    data = []string{"CONTAINER", sequence.Container}
-    table.Append(data)
+    var mediatorSring string
 
-    for _, mediator := range sequence.Mediators {
-        data = []string{"MEDIATORS", mediator}
-        table.Append(data)
+    for i, mediator := range sequence.Mediators {
+        if i > 0 {
+            mediatorSring += " , "    
+        }
+        mediatorSring += mediator
     }
+    if mediatorSring != "" {
+        fmt.Println("Mediators - " + mediatorSring)
+    }
+}
 
-    table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-    table.SetRowLine(true)
-    table.SetAutoMergeCells(true)
-    table.Render() // Send output
+func executeListSequencesCmd() {
+
+    finalUrl := utils.RESTAPIBase + utils.PrefixSequences
+
+    resp, err := utils.GetArtifactList(finalUrl, &utils.SequenceList{})
+
+    if err == nil {
+        // Printing the list of available Sequences
+        list := resp.(*utils.SequenceList)
+        printSequenceList(*list)
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Sequences", err)
+    }
+}
+
+func printSequenceList(sequenceList utils.SequenceList){
+    if sequenceList.Count > 0 {
+        table := tablewriter.NewWriter(os.Stdout)
+        table.SetAlignment(tablewriter.ALIGN_LEFT)
+
+        data := []string{"NAME", "STATS", "TRACING"}
+        table.Append(data)
+
+        for _, sequence := range sequenceList.Sequences {
+            data = []string{sequence.Name, sequence.Stats, sequence.Tracing}
+            table.Append(data)
+        }
+        table.SetBorder(false)
+        table.SetColumnSeparator("  ")
+        table.Render()
+    } else {
+        fmt.Println("No Sequences found")
+    }
 }

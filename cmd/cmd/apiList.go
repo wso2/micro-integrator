@@ -19,47 +19,26 @@
 package cmd
 
 import (
-    "fmt"
-    "github.com/lithammer/dedent"
     "github.com/spf13/cobra"
     "github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List APIs command related usage info
 const listAPICmdLiteral = "apis"
-const listAPICmdShortDesc = "List all the APIs"
-
-var listAPICmdLongDesc = "List all the APIs\n"
-
-var listAPICmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + listAPICmdLiteral)
 
 // apisListCmd represents the list apis command
 var apisListCmd = &cobra.Command{
     Use:   listAPICmdLiteral,
-    Short: listAPICmdShortDesc,
-    Long:  listAPICmdLongDesc + listAPICmdExamples,
+    Short: showAPICmdShortDesc,
+    Long:  showAPICmdLongDesc + showAPICmdExamples,
     Run: func(cmd *cobra.Command, args []string) {
-        utils.Logln(utils.LogPrefixInfo + "Show APIs called")
-        if len(args) == 0 {
-            // Defined in apiInfo.go
-            executeListAPIsCmd()
-        }else if len(args) == 1{
-            if args[0] == "help" {
-                fmt.Print(showAPICmdLongDesc + APICmdUsage(listAPICmdLiteral) + showAPICmdExamples)
-            }else {
-                apiName = args[0]
-                // Defined in apiInfo.go
-                executeGetAPICmd(apiName)
-            }
-        }else {
-            fmt.Println("Too many arguments. See the usage below")
-            fmt.Print(APICmdUsage(listAPICmdLiteral) + showAPICmdExamples)
-        }
+        // defined in apiInfo.go
+        handleAPICmdArguments(args)
     },
 }
 
 func init() {
     showCmd.AddCommand(apisListCmd)
+    apisListCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+        showAPICmdLiteral, "[apiname]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
 }
