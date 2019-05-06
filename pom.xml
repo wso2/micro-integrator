@@ -290,7 +290,7 @@
         <carbon.kernel.version>4.4.40</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <synapse.version>2.1.7-wso2v106</synapse.version>
+        <synapse.version>3.0.1</synapse.version>
         <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
         <carbon.mediation.version>4.6.142</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
