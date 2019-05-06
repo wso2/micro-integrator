@@ -41,6 +41,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.stream.XMLStreamException;
 
 /**
@@ -52,10 +54,12 @@ public class CAppDeploymentManager {
 
     private AxisConfiguration axisConfiguration;
     private List<AppDeploymentHandler> appDeploymentHandlers;
+    private static Map<String, ArrayList<CarbonApplication>> tenantcAppMap;
 
     public CAppDeploymentManager(AxisConfiguration axisConfiguration) {
         this.axisConfiguration = axisConfiguration;
         this.appDeploymentHandlers = new ArrayList<AppDeploymentHandler>();
+        tenantcAppMap = new ConcurrentHashMap<String, ArrayList<CarbonApplication>>();
     }
 
     public void deploy() throws CarbonException {
@@ -133,7 +137,7 @@ public class CAppDeploymentManager {
 
                         // Deployment Completed
                         currentApp.setDeploymentCompleted(true);
-                        //this.addCarbonApp(tenantId, currentApp);
+                        this.addCarbonApp(String.valueOf(AppDeployerUtils.getTenantId()), currentApp);
                         log.info("Successfully Deployed Carbon Application : " + currentApp.getAppNameWithVersion() +
                                 AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
 
@@ -145,6 +149,46 @@ public class CAppDeploymentManager {
         }
     }
 
+    /**
+     * Add a new cApp for a particular tenant. If there are no cApps currently, create a new
+     * ArrayList and add the new cApp.
+     *
+     * @param tenantId - tenant id of the cApp
+     * @param carbonApp - CarbonApplication instance
+     */
+    public void addCarbonApp(String tenantId, CarbonApplication carbonApp) {
+        ArrayList<CarbonApplication> cApps;
+        synchronized (tenantId.intern()) {
+            cApps = tenantcAppMap.get(tenantId);
+            if (null == cApps) {
+                cApps = new ArrayList<CarbonApplication>();
+                tenantcAppMap.put(tenantId, cApps);
+            }
+        }
+        // don't add the cApp if it already exists
+        for (CarbonApplication cApp : cApps) {
+            String appNameWithVersion = cApp.getAppNameWithVersion();
+            if (appNameWithVersion != null && appNameWithVersion.equals(carbonApp.getAppNameWithVersion())) {
+                return;
+            }
+        }
+        cApps.add(carbonApp);
+    }
+
+    /**
+     * Get the list of CarbonApplications for the give tenant id. If the list is null, return
+     * an empty ArrayList
+     *
+     * @param tenantId - tenant id to find cApps
+     * @return - list of tenant cApps
+     */
+    public static ArrayList<CarbonApplication> getCarbonApps(String tenantId) {
+        ArrayList<CarbonApplication> cApps = tenantcAppMap.get(tenantId);
+        if (null == cApps) {
+            cApps = new ArrayList<CarbonApplication>();
+        }
+        return cApps;
+    }
 
     /**
      * Checks whether a given file is a jar or an aar file.
