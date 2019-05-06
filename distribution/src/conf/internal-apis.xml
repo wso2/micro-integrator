@@ -19,5 +19,5 @@
 -->
 
 <apis>
-    <api name="MetricAPI" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>
+    <api name="PrometheusApi" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>
 </apis>
