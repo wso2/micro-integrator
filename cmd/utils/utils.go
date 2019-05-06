@@ -109,37 +109,6 @@ func PrintList(list []string) {
     }
 }
 
-// Get Artifact List depending on the @param url
-// @return count (no. of Artifacts)
-// @return array of Artifact names
-// @return error
-// func GetArtifactList(url string) (int32, []string, error) {
-
-//     Logln(LogPrefixInfo+"URL:", url)
-
-//     headers := make(map[string]string)
-
-//     resp, err := InvokeGETRequest(url, headers)
-
-//     if err != nil {
-//         HandleErrorAndExit("Unable to connect to host", nil)
-//     }
-
-//     Logln(LogPrefixInfo+"Response:", resp.Status())
-
-//     if resp.StatusCode() == http.StatusOK {
-//         apiListResponse := &ListResponse{}
-//         unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiListResponse)
-
-//         if unmarshalError != nil {
-//             HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
-//         }
-//         return apiListResponse.Count, apiListResponse.List, nil
-//     } else {
-//         return 0, nil, errors.New(resp.Status())
-//     }
-// }
-
 // Get Artifact List depending on the @param url and unmarshal it
 // @param url: url of rest api
 // @param model: struct object
@@ -201,4 +170,21 @@ func UnmarshalData(url string, model interface{}) (interface{}, error) {
     } else {
         return nil, errors.New(resp.Status())
     }
+}
+
+func GetCmdFlags(cmd string) string {
+    var showCmdFlags = 
+    "Flags:\n" + 
+    "  -h, --help\t\thelp for " + cmd + "\n" +
+    "Global Flags:\n" +
+    "  -v, --verbose\t\tEnable verbose mode\n"
+    return showCmdFlags
+}
+
+func GetCmdUsage(cmd, subcmd, arg string) string {
+    var showCmdUsage = 
+    "Usage:\n" + 
+    "  " + ProjectName + " " + cmd + " " + subcmd + "(s)\n" +
+    "  " + ProjectName + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
+    return showCmdUsage
 }
