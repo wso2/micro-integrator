@@ -27,7 +27,7 @@ var RESTAPIBase = DefaultRESTAPIBase
 // @return error
 func SetConfigVars(serverConfigFilePath string) error {
 
-    if IsFileExist(serverConfigFilePath){
+    if IsFileExist(serverConfigFilePath) {
         mainConfig := GetServerConfigFromFile(serverConfigFilePath)
         Logln(LogPrefixInfo + " reading '" + serverConfigFilePath + "'")
 
