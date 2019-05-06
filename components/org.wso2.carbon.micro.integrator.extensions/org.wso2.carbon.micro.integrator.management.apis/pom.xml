@@ -47,12 +47,9 @@
                         <Export-Package>
                             org.wso2.carbon.micro.integrator.management.apis.*;version="${project.version}"
                         </Export-Package>
-                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
