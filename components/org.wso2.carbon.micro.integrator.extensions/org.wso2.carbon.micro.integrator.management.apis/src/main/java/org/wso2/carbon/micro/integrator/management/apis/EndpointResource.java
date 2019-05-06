@@ -31,7 +31,6 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.endpoints.EndpointDefinition;
-import org.apache.synapse.mediators.MediatorProperty;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.Collection;
@@ -51,7 +50,6 @@ public class EndpointResource extends APIResource {
     private static final String ROOT_ELEMENT_ENDPOINTS = "<Endpoints></Endpoints>";
     private static final String COUNT_ELEMENT = "<Count></Count>";
     private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
 
     private static final String ROOT_ELEMENT_ENDPOINT = "<Endpoint></Endpoint>";
     private static final String NAME_ELEMENT = "<Name></Name>";
@@ -59,7 +57,6 @@ public class EndpointResource extends APIResource {
     private static final String METHOD_ELEMENT = "<Method></Method>";
     private static final String URL_ELEMENT = "<Url></Url>";
     private static final String STAT_ELEMENT = "<Stats></Stats>";
-    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
     public EndpointResource(String urlTemplate){
         super(urlTemplate);
@@ -87,23 +84,21 @@ public class EndpointResource extends APIResource {
 
         try {
             // if query params exists retrieve data about specific endpoint
-            if(queryParameter != null){
-                for(NameValuePair nvPair : queryParameter){
-                    if(nvPair.getName().equals("endpointName")){
+            if (null != queryParameter) {
+                for (NameValuePair nvPair : queryParameter) {
+                    if (nvPair.getName().equals("endpointName")) {
                         populateEndpointData(messageContext, nvPair.getValue());
                     }
                 }
-            }else {
+            } else {
                 populateEndpointList(messageContext);
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             log.error("Error occurred while processing response", e);
         }
-
         return true;
-
     }
 
     private void populateEndpointList(MessageContext messageContext) throws XMLStreamException {
@@ -116,13 +111,16 @@ public class EndpointResource extends APIResource {
         Map<String, Endpoint> namedEndpointMap = configuration.getDefinedEndpoints();
         Collection<Endpoint> namedEndpointCollection = namedEndpointMap.values();
 
+        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINTS);
         OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
         OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
 
         countElement.setText(String.valueOf(namedEndpointCollection.size()));
-        listElement.addChild(countElement);
+        rootElement.addChild(countElement);
 
-        for(Endpoint ep : namedEndpointCollection){
+        rootElement.addChild(listElement);
+
+        for (Endpoint ep : namedEndpointCollection) {
 
             OMElement endpointElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINT);
             OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
@@ -135,21 +133,23 @@ public class EndpointResource extends APIResource {
             endpointElement.addChild(nameElement);
 
             OMElement element = EndpointSerializer.getElementFromEndpoint(ep);
-            OMElement getQuote = element.getFirstElement();
+            OMElement firstElement = element.getFirstElement();
 
-            String method = getQuote.getAttributeValue(new QName("method"));
+            String type = firstElement.getLocalName();
+            typeElement.setText(type);
+            endpointElement.addChild(typeElement);
+
+            String method = firstElement.getAttributeValue(new QName("method"));
             methodElement.setText(method);
             endpointElement.addChild(methodElement);
 
-            String url = getQuote.getAttributeValue(new QName("uri-template"));
+            String url = firstElement.getAttributeValue(new QName("uri-template"));
             urlElement.setText(url);
             endpointElement.addChild(urlElement);
 
             listElement.addChild(endpointElement);
-
         }
-
-        axis2MessageContext.getEnvelope().getBody().addChild(listElement);
+        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
     }
 
     private void populateEndpointData(MessageContext messageContext, String endpointName) throws XMLStreamException {
@@ -159,14 +159,11 @@ public class EndpointResource extends APIResource {
 
         OMElement rootElement = getEndpointByName(messageContext, endpointName);
 
-        if(rootElement != null){
+        if (null != rootElement) {
             axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
-
-        }else{
+        } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
-
-
     }
 
     private OMElement getEndpointByName(MessageContext messageContext, String endpointName) throws XMLStreamException {
@@ -174,12 +171,11 @@ public class EndpointResource extends APIResource {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         Endpoint ep = configuration.getEndpoint(endpointName);
         return convertEndpointToOMElement(ep);
-
     }
 
     private OMElement convertEndpointToOMElement(Endpoint endpoint) throws XMLStreamException{
 
-        if(endpoint == null){
+        if (null == endpoint) {
             return null;
         }
 
@@ -189,19 +185,22 @@ public class EndpointResource extends APIResource {
         OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
         OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
         OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
-        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
 
         nameElement.setText(endpoint.getName());
         rootElement.addChild(nameElement);
 
         OMElement epElement = EndpointSerializer.getElementFromEndpoint(endpoint);
-        OMElement element = epElement.getFirstElement();
+        OMElement firstElement = epElement.getFirstElement();
 
-        String method = element.getAttributeValue(new QName("method"));
+        String type = firstElement.getLocalName();
+        typeElement.setText(type);
+        rootElement.addChild(typeElement);
+
+        String method = firstElement.getAttributeValue(new QName("method"));
         methodElement.setText(method);
         rootElement.addChild(methodElement);
 
-        String url = element.getAttributeValue(new QName("uri-template"));
+        String url = firstElement.getAttributeValue(new QName("uri-template"));
         urlElement.setText(url);
         rootElement.addChild(urlElement);
 
@@ -213,11 +212,7 @@ public class EndpointResource extends APIResource {
                 statsElement.setText("disabled");
             }
         }
-
         rootElement.addChild(statsElement);
-
         return rootElement;
-
     }
-
 }
