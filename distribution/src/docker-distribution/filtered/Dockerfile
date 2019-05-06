@@ -32,7 +32,7 @@ ARG FILES=./files
 ARG MICROESB_NAME=wso2mi
 ARG MICROESB_VERSION=1.0.0
 ARG MICROESB_PACK=${MICROESB_NAME}-${MICROESB_VERSION}
-ARG MICROESB_HOME=${USER_HOME}/${MICROESB_PACK}
+ARG MICROESB_HOME=${USER_HOME}/wso2mi
 
 # create the user and group
 RUN \
@@ -46,11 +46,8 @@ COPY --chown=wso2carbon:wso2 ${FILES}/${MICROESB_PACK}/ ${MICROESB_HOME}
 USER ${USER}
 WORKDIR ${USER_HOME}
 
-# Set environment variable
-ENV MICROESB_HOME ${MICROESB_HOME}
-
-# Expose mico esb ports
+# expose micro-integrator ports
 EXPOSE 8290 8253
 
-# Execute micro esb startup script
-CMD ["sh", "-c", "${MICROESB_HOME}/bin/micro-integrator.sh"]
+# initiate container and execute the micro integrator product startup script
+ENTRYPOINT ["/home/wso2carbon/wso2mi/bin/micro-integrator.sh"]
