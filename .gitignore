@@ -32,9 +32,3 @@ hs_err_pid*
 
 # Temporary directories
 target/
-
-# Docker resources
-# exclude dependencies
-distribution/src/docker-distribution/filtered/files/*
-# exception to the rule
-!distribution/src/docker-distribution/filtered/files/.gitkeep
