@@ -33,7 +33,6 @@ public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
 
-
     /**
      * Gives a List of query parameters
      *
@@ -49,15 +48,13 @@ public class Utils {
         try {
             queryParameter = URLEncodedUtils.parse(new URI((String) axis2MessageContext.getProperty(
                     Constants.Configuration.TRANSPORT_IN_URL)), "UTF-8");
-        }catch (URISyntaxException e){
+        } catch (URISyntaxException e) {
             log.error("Error occurred while processing query parameters", e);
         }
 
-        if(queryParameter != null && queryParameter.size() > 0){
+        if (null != queryParameter && queryParameter.size() > 0) {
             return queryParameter;
         }
-
         return null;
-
     }
 }
