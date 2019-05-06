@@ -352,6 +352,13 @@
             <excludes>
             </excludes>
         </fileSet>
+        <fileSet>
+            <directory>src/resources/capps</directory>
+            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
+            <excludes>
+                <exclude>empty.txt</exclude>
+            </excludes>
+        </fileSet>
     </fileSets>
 
     <files>
@@ -535,13 +542,6 @@
             <destName>synapse-handlers.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-
-        <file>
-            <source>
-                src/resources/capps/org.wso2.carbon.micro.integrator.admin.api_1.0.0.car
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
         </file>
 
         <file>
