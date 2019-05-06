@@ -25,7 +25,7 @@ type ServerConfig struct {
 
 type CarbonAppList struct {
     Count       int32                   `xml:"Count"`
-    CarbonApps  []CarbonAppSummary      `xml:"CarbonApp"`
+    CarbonApps  []CarbonAppSummary      `xml:"List>Application"`
 }
 
 type CarbonAppSummary struct {
@@ -46,7 +46,7 @@ type Artifact struct {
 
 type EndpointList struct {
     Count       int32               `xml:"Count"`
-    Endpoints  []EndpointSummary    `xml:"Endpoint"`
+    Endpoints  []EndpointSummary    `xml:"List>Endpoint"`
 }
 
 type EndpointSummary struct {
@@ -66,17 +66,17 @@ type Endpoint struct {
 
 type InboundEndpointList struct {
     Count               int32                       `xml:"Count"`
-    InboundEndpoints    []InboundEndpointSummary    `xml:"InboundEndpoint"`
+    InboundEndpoints    []InboundEndpointSummary    `xml:"List>InboundEndpoint"`
 }
 
 type InboundEndpointSummary struct {
     Name      string     `xml:"Name"`
-    Type      string     `xml:"Type"`
+    Type      string     `xml:"Protocol"`
 }
 
 type InboundEndpoint struct {
     Name          string      `xml:"Name"`
-    Type          string      `xml:"Type"`
+    Type          string      `xml:"Protocol"`
     Stats         string      `xml:"Stats"`
     Tracing       string      `xml:"Tracing"`
     Parameters    []Parameter `xml:"Parameters>Parameter"`
@@ -90,8 +90,8 @@ type Parameter struct {
 type API struct {
     Name      string     `xml:"Name"`
     Context   string     `xml:"Context"`
-    Host      string     `xml:"Host"`
-    Port      string     `xml:"Port"`
+    // Host      string     `xml:"Host"`
+    // Port      string     `xml:"Port"`
     Version   string     `xml:"Version"`
     Stats     string     `xml:"Stats"`
     Tracing   string     `xml:"Tracing"`
@@ -100,7 +100,7 @@ type API struct {
 
 type APIList struct {
     Count     int32         `xml:"Count"`
-    Apis      []APISummary  `xml:"API"`
+    Apis      []APISummary  `xml:"List>API"`
 }
 
 type APISummary struct {
@@ -115,7 +115,7 @@ type Resource struct {
 
 type ProxyServiceList struct {
     Count           int32             `xml:"Count"`
-    Proxies         []ProxySummary    `xml:"Proxy"`
+    Proxies         []ProxySummary    `xml:"List>Proxy"`
 }
 
 type ProxySummary struct {
@@ -142,12 +142,14 @@ type Service struct {
 
 type SequenceList struct {
     Count       int32               `xml:"Count"`
-    Sequences  []SequenceSummary    `xml:"Sequence"`
+    Sequences  []SequenceSummary    `xml:"List>Sequence"`
 }
 
 type SequenceSummary struct {
-    Name        string     `xml:"Name"`
-    Container   string     `xml:"Container"`
+    Name        string      `xml:"Name"`
+    Container   string      `xml:"Container"`
+    Stats       string      `xml:"Stats"`
+    Tracing     string      `xml:"Tracing"`
 }
 
 type Sequence struct {
@@ -158,9 +160,14 @@ type Sequence struct {
     Mediators []string `xml:"Mediators>Mediator"`
 }
 
+type TaskList struct {
+    Count       int32     `xml:"Count"`
+    Tasks       []Task    `xml:"List>Task"`
+}
+
 type Task struct {
     Name            string `xml:"Name"`
-    Type            string `xml:"Type"`
+    Type            string `xml:"TriggerType"`
     TriggerCount    string `xml:"TriggerCount"`
     TriggerInterval string `xml:"TriggerInterval"`
     TriggerCron     string `xml:"TriggerCron"`
