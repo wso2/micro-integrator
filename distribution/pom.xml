@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>wso2-micro-integrator-parent</artifactId>
-        <version>1.0.0-m6-SNAPSHOT</version>
+        <version>1.0.0-m6</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -115,10 +115,8 @@
                             <skip>${docker.skip}</skip>
                             <target>
                                 <echo message="prepare phase" />
-                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}.zip"
-                                       dest="${project.build.directory}/docker" />
-                                <move file="${project.build.directory}/docker/${project.artifactId}-${project.version}"
-                                      tofile="${project.build.directory}/docker/${project.artifactId}" />
+                                <unzip src="${project.build.directory}/${project.artifactId}-${project.version}.zip" dest="${project.build.directory}/docker" />
+                                <move file="${project.build.directory}/docker/${project.artifactId}-${project.version}" tofile="${project.build.directory}/docker/${project.artifactId}" />
                                 <chmod file="${project.build.directory}/docker/${project.artifactId}/bin/*.sh" perm="+x" />
                             </target>
                         </configuration>
