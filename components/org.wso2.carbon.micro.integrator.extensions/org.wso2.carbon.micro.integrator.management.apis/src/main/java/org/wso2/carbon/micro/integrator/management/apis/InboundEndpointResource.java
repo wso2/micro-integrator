@@ -46,14 +46,12 @@ public class InboundEndpointResource extends APIResource {
     private static final String ROOT_ELEMENT_INBOUND_ENDPOINTS = "<InboundEndpoints></InboundEndpoints>";
     private static final String COUNT_ELEMENT = "<Count></Count>";
     private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
 
     private static final String ROOT_ELEMENT_INBOUND_ENDPOINT = "<InboundEndpoint></InboundEndpoint>";
     private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String CLASS_ELEMENT = "<Class></Class>";
     private static final String PROTOCOL_ELEMENT = "<Protocol></Protocol>";
-    private static final String SEQUENCE_ELEMENT = "<Sequence></Sequence>";
-    private static final String ERROR_SEQUENCE_ELEMENT = "<ErrorSequence></ErrorSequence>";
+    private static final String STAT_ELEMENT = "<Stats></Stats>";
+    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
     private static final String PARAMETERS_ELEMENT = "<Parameters></Parameters>";
     private static final String PARAMETER_ELEMENT = "<Parameter></Parameter>";
@@ -85,21 +83,20 @@ public class InboundEndpointResource extends APIResource {
 
         try {
             // if query params exists retrieve data about specific inbound endpoint
-            if(queryParameter != null){
-                for(NameValuePair nvPair : queryParameter){
-                    if(nvPair.getName().equals("inboundEndpointName")){
+            if (null != queryParameter) {
+                for (NameValuePair nvPair : queryParameter) {
+                    if (nvPair.getName().equals("inboundEndpointName")) {
                         populateInboundEndpointData(messageContext, nvPair.getValue());
                     }
                 }
-            }else {
+            } else {
                 populateInboundEndpointList(messageContext);
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             log.error("Error occurred while processing response", e);
         }
-
         return true;
     }
 
@@ -118,18 +115,23 @@ public class InboundEndpointResource extends APIResource {
 
         countElement.setText(String.valueOf(inboundEndpoints.size()));
         rootElement.addChild(countElement);
+
         rootElement.addChild(listElement);
 
-        for(InboundEndpoint inboundEndpoint : inboundEndpoints){
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+        for (InboundEndpoint inboundEndpoint : inboundEndpoints) {
 
-            String epName = inboundEndpoint.getName();
-            nameElement.setText(epName);
+            OMElement inboundElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_INBOUND_ENDPOINT);
+            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement protocolElement = AXIOMUtil.stringToOM(PROTOCOL_ELEMENT);
 
-            listElement.addChild(nameElement);
+            nameElement.setText(inboundEndpoint.getName());
+            inboundElement.addChild(nameElement);
 
+            protocolElement.setText(inboundEndpoint.getProtocol());
+            inboundElement.addChild(protocolElement);
+
+            listElement.addChild(inboundElement);
         }
-
         axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
     }
 
@@ -140,14 +142,11 @@ public class InboundEndpointResource extends APIResource {
 
         OMElement rootElement = getInboundEndpointByName(messageContext, inboundEndpointName);
 
-        if(rootElement != null){
+        if (null != rootElement) {
             axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
-
-        }else{
+        } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
-
-
     }
 
     private OMElement getInboundEndpointByName(MessageContext messageContext, String inboundEndpointName) throws XMLStreamException {
@@ -155,43 +154,40 @@ public class InboundEndpointResource extends APIResource {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         InboundEndpoint ep = configuration.getInboundEndpoint(inboundEndpointName);
         return convertInboundEndpointToOMElement(ep);
-
     }
 
     private OMElement convertInboundEndpointToOMElement(InboundEndpoint inboundEndpoint) throws XMLStreamException{
 
-        if(inboundEndpoint == null){
+        if (null == inboundEndpoint) {
             return null;
         }
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_INBOUND_ENDPOINT);
         OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement classElement = AXIOMUtil.stringToOM(CLASS_ELEMENT);
         OMElement protocolElement = AXIOMUtil.stringToOM(PROTOCOL_ELEMENT);
-        OMElement sequenceElement = AXIOMUtil.stringToOM(SEQUENCE_ELEMENT);
-        OMElement errorSequenceElement = AXIOMUtil.stringToOM(ERROR_SEQUENCE_ELEMENT);
+        OMElement statElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
         OMElement parametersElement = AXIOMUtil.stringToOM(PARAMETERS_ELEMENT);
 
         nameElement.setText(inboundEndpoint.getName());
         rootElement.addChild(nameElement);
 
-        classElement.setText(inboundEndpoint.getClassImpl());
-        rootElement.addChild(classElement);
-
         protocolElement.setText(inboundEndpoint.getProtocol());
         rootElement.addChild(protocolElement);
 
-        sequenceElement.setText(inboundEndpoint.getInjectingSeq());
-        rootElement.addChild(sequenceElement);
+        String statisticState = inboundEndpoint.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
+        statElement.setText(statisticState);
+        rootElement.addChild(statElement);
 
-        errorSequenceElement.setText(inboundEndpoint.getOnErrorSeq());
-        rootElement.addChild(errorSequenceElement);
+        String tracingState = inboundEndpoint.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+        tracingElement.setText(tracingState);
+        rootElement.addChild(tracingElement);
 
         rootElement.addChild(parametersElement);
 
         Map<String, String> params = inboundEndpoint.getParametersMap();
 
-        for(Map.Entry<String,String> param : params.entrySet()){
+        for (Map.Entry<String,String> param : params.entrySet()) {
 
             OMElement parameterElement = AXIOMUtil.stringToOM(PARAMETER_ELEMENT);
 
@@ -205,8 +201,6 @@ public class InboundEndpointResource extends APIResource {
             parameterElement.addChild(valueElement);
             parametersElement.addChild(parameterElement);
         }
-
         return rootElement;
-
     }
 }
