@@ -47,13 +47,14 @@ public class SequenceResource extends APIResource {
     private static final String ROOT_ELEMENT_SEQUENCES = "<Sequences></Sequences>";
     private static final String COUNT_ELEMENT = "<Count></Count>";
     private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
 
     private static final String ROOT_ELEMENT_SEQUENCE = "<Sequence></Sequence>";
     private static final String NAME_ELEMENT = "<Name></Name>";
     private static final String CONTAINER_ELEMENT = "<Container></Container>";
     private static final String MEDIATORS_ELEMENT = "<Mediators></Mediators>";
     private static final String MEDIATOR_ELEMENT = "<Mediator></Mediator>";
+    private static final String STAT_ELEMENT = "<Stats></Stats>";
+    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
     public SequenceResource(String urlTemplate){
         super(urlTemplate);
@@ -80,21 +81,20 @@ public class SequenceResource extends APIResource {
 
         try {
             // if query params exists retrieve data about specific sequence
-            if(queryParameter != null){
-                for(NameValuePair nvPair : queryParameter){
-                    if(nvPair.getName().equals("inboundEndpointName")){
+            if (null != queryParameter) {
+                for (NameValuePair nvPair : queryParameter) {
+                    if (nvPair.getName().equals("inboundEndpointName")) {
                         populateSequenceData(messageContext, nvPair.getValue());
                     }
                 }
-            }else {
+            } else {
                 populateSequenceList(messageContext);
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             log.error("Error occurred while processing response", e);
         }
-
         return true;
     }
 
@@ -113,19 +113,35 @@ public class SequenceResource extends APIResource {
 
         countElement.setText(String.valueOf(sequenceMediatorMap.size()));
         rootElement.addChild(countElement);
+
         rootElement.addChild(listElement);
 
         for (SequenceMediator sequence: sequenceMediatorMap.values()) {
 
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+            OMElement sequenceElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_SEQUENCE);
+            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement containerElement = AXIOMUtil.stringToOM(CONTAINER_ELEMENT);
+            OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+            OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
 
-            String sequenceName = sequence.getName();
-            nameElement.setText(sequenceName);
+            nameElement.setText(sequence.getName());
+            sequenceElement.addChild(nameElement);
 
-            listElement.addChild(nameElement);
+            containerElement.setText(sequence.getArtifactContainerName());
+            sequenceElement.addChild(containerElement);
 
+            String statisticState = sequence.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
+
+            statsElement.setText(statisticState);
+            sequenceElement.addChild(statsElement);
+
+            String tracingState = sequence.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+
+            tracingElement.setText(tracingState);
+            sequenceElement.addChild(tracingElement);
+
+            listElement.addChild(sequenceElement);
         }
-
         axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
     }
 
@@ -136,10 +152,10 @@ public class SequenceResource extends APIResource {
 
         OMElement rootElement = getSequenceByName(messageContext, sequenceName);
 
-        if(rootElement != null){
+        if (null != rootElement) {
             axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
 
-        }else{
+        } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
@@ -148,19 +164,19 @@ public class SequenceResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         SequenceMediator sequence = configuration.getDefinedSequences().get(sequenceName);
-
         return convertInboundEndpointToOMElement(sequence);
-
     }
 
     private OMElement convertInboundEndpointToOMElement(SequenceMediator sequenceMediator) throws XMLStreamException{
 
-        if(sequenceMediator == null){
+        if (null == sequenceMediator) {
             return null;
         }
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_SEQUENCE);
         OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
         OMElement containerElement = AXIOMUtil.stringToOM(CONTAINER_ELEMENT);
         OMElement mediatorsElement = AXIOMUtil.stringToOM(MEDIATORS_ELEMENT);
 
@@ -170,20 +186,27 @@ public class SequenceResource extends APIResource {
         containerElement.setText(sequenceMediator.getArtifactContainerName());
         rootElement.addChild(containerElement);
 
+        String statisticState = sequenceMediator.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
+
+        statsElement.setText(statisticState);
+        rootElement.addChild(statsElement);
+
+        String tracingState = sequenceMediator.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+
+        tracingElement.setText(tracingState);
+        rootElement.addChild(tracingElement);
+
         List<Mediator> mediators = sequenceMediator.getList();
 
-        for(Mediator mediator : mediators){
+        for (Mediator mediator : mediators) {
 
             OMElement mediatorElement = AXIOMUtil.stringToOM(MEDIATOR_ELEMENT);
 
             mediatorElement.setText(mediator.getType());
             mediatorsElement.addChild(mediatorElement);
         }
-
         rootElement.addChild(mediatorsElement);
 
         return rootElement;
-
     }
-
 }
