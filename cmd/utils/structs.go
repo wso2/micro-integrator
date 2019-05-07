@@ -115,7 +115,7 @@ type Resource struct {
 
 type ProxyServiceList struct {
     Count           int32             `xml:"Count"`
-    Proxies         []ProxySummary    `xml:"List>Proxy"`
+    Proxies         []ProxySummary    `xml:"List>ProxyService"`
 }
 
 type ProxySummary struct {
