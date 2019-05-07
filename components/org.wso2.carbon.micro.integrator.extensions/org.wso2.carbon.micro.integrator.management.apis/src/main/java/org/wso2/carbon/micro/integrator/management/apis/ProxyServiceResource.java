@@ -29,6 +29,9 @@ import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.service.mgt.ServiceAdmin;
+import org.wso2.carbon.service.mgt.ServiceMetaData;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -47,7 +50,8 @@ public class ProxyServiceResource extends APIResource {
 
     private static final String ROOT_ELEMENT_PROXY_SERVICE = "<ProxyService></ProxyService>";
     private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String WSDL_ELEMENT = "<Wsdl></Wsdl>";
+    private static final String WSDL1_1_ELEMENT = "<WSDL1_1></WSDL1_1>";
+    private static final String WSDL2_0_ELEMENT = "<WSDL2_0></WSDL2_0>";
     private static final String STAT_ELEMENT = "<Stats></Stats>";
     private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
@@ -113,9 +117,26 @@ public class ProxyServiceResource extends APIResource {
 
             OMElement proxyElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_PROXY_SERVICE);
             OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement wsdl1Element = AXIOMUtil.stringToOM(WSDL1_1_ELEMENT);
+            OMElement wsdl2Element = AXIOMUtil.stringToOM(WSDL2_0_ELEMENT);
 
-            nameElement.setText(proxyService.getName());
-            proxyElement.addChild(nameElement);
+            try {
+                ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
+
+                nameElement.setText(proxyService.getName());
+                proxyElement.addChild(nameElement);
+
+                String []wsdlUrls = data.getWsdlURLs();
+
+                wsdl1Element.setText(wsdlUrls[0]);
+                proxyElement.addChild(wsdl1Element);
+
+                wsdl2Element.setText(wsdlUrls[1]);
+                proxyElement.addChild(wsdl2Element);
+
+            } catch (Exception e) {
+                log.error("Error occurred while processing service data", e);
+            }
 
             listElement.addChild(proxyElement);
         }
@@ -152,12 +173,27 @@ public class ProxyServiceResource extends APIResource {
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_PROXY_SERVICE);
         OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement wsdlElement = AXIOMUtil.stringToOM(WSDL_ELEMENT);
+        OMElement wsdl1Element = AXIOMUtil.stringToOM(WSDL1_1_ELEMENT);
+        OMElement wsdl2Element = AXIOMUtil.stringToOM(WSDL2_0_ELEMENT);
         OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
         OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
 
         nameElement.setText(proxyService.getName());
         rootElement.addChild(nameElement);
+
+        try {
+            ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
+
+            String []wsdlUrls = data.getWsdlURLs();
+
+            wsdl1Element.setText(wsdlUrls[0]);
+            rootElement.addChild(wsdl1Element);
+
+            wsdl2Element.setText(wsdlUrls[1]);
+            rootElement.addChild(wsdl2Element);
+        } catch (Exception e) {
+            log.error("Error occurred while processing service data", e);
+        }
 
         String statisticState = proxyService.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
 
