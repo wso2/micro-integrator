@@ -84,7 +84,7 @@ const DefaultHttpRequestTimeout = 100000
 const HTTPProtocol = "http://"
 const HTTPSProtocol = "https://"
 const DefaultHost = "localhost"
-const DefaultPort = "9091"
+const DefaultPort = "9191"
 const Context = "management"
 
 const DefaultRESTAPIBase = HTTPProtocol + DefaultHost + ":" + DefaultPort + "/" + Context + "/"
