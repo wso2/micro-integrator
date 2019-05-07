@@ -292,7 +292,7 @@
 
         <synapse.version>2.1.7-wso2v106</synapse.version>
         <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
-        <carbon.mediation.version>4.6.142</carbon.mediation.version>
+        <carbon.mediation.version>4.6.143</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
         <carbon.data.version>4.4.100</carbon.data.version>
         <securevault.version>1.0.0-wso2v2</securevault.version>
