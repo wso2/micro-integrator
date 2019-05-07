@@ -3,7 +3,7 @@
 function showUsageAndExit() {
     echo "Insufficient or invalid options provided"
     echo
-    echo "Usage: "$'\e[1m'"./build.sh -t [target-file] -v [build-version] -f"$'\e[0m'
+    echo "Usage: ./build.sh -t [target-file] -v [build-version] -f"
     echo -en "  -t\t"
     echo "[REQUIRED] Target file to build."
     echo -en "  -v\t"
@@ -12,7 +12,7 @@ function showUsageAndExit() {
     echo "[OPTIONAL] Cross compile for all the list of platforms. If not specified, the specified target" \
         "file will be compiled only for the autodetected native platform."
     echo
-    echo "Ex: "$'\e[1m'"./build.sh -t micli.go -v 1.0.0 -f"$'\e[0m'" - Builds Micro Integrator CLI" \
+    echo "Ex: ./build.sh -t micli.go -v 1.0.0 -f : Builds Micro Integrator CLI" \
         "version 1.0.0 for all platforms."
     echo
     exit 1
@@ -77,11 +77,19 @@ fi
 #platforms="linux/amd64/linux/x64"
 #platforms="darwin/amd64/macosx/x64"
 if [ "${full_build}" == "true" ]; then
-    echo "Building "$'\e[1m'"${filename}:${build_version}"$'\e[0m'" for all platforms..."
+    echo "Building ${filename}:${build_version} for all platforms..."
     platforms="darwin/amd64/macosx/x64 linux/386/linux/i586 linux/amd64/linux/x64 windows/386/windows/i586 windows/amd64/windows/x64"
 else
     detectPlatformSpecificBuild
-    echo "Building "$'\e[1m'"${filename^^}:${build_version}"$'\e[0m'" for detected "$'\e[1m'"${platform}"$'\e[0m'" platform..."
+    echo "Building ${filename}:${build_version} for detected ${platform} platform..."
+fi
+
+go_executable=$(which go)
+if [[ -x "$go_executable" ]] ; then
+    echo "Go found in \$PATH"
+else
+    echo "Go not found in \$PATH"
+    exit 1
 fi
 
 for platform in ${platforms}
