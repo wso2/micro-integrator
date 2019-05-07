@@ -138,8 +138,14 @@ public class TaskResource extends APIResource {
     private OMElement getTaskByName(MessageContext messageContext, String taskName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        TaskDescription task = configuration.getTaskManager().getTask(taskName);
-        return convertTaskToOMElement(task);
+
+        String []taskNames = configuration.getTaskManager().getTaskNames();
+        for (String task : taskNames) {
+            if (task.equals(taskName)) {
+                return convertTaskToOMElement(configuration.getTaskManager().getTask(taskName));
+            }
+        }
+        return null;
     }
 
     private OMElement convertTaskToOMElement(TaskDescription task) throws XMLStreamException{
