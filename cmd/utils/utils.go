@@ -1,31 +1,28 @@
 /*
-* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+*  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
-* WSO2 Inc. licenses this file to you under the Apache License,
-* Version 2.0 (the "License"); you may not use this file except
-* in compliance with the License.
-* You may obtain a copy of the License at
+*  WSO2 Inc. licenses this file to you under the Apache License,
+*  Version 2.0 (the "License"); you may not use this file except
+*  in compliance with the License.
+*  You may obtain a copy of the License at
 *
 *    http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing,
 * software distributed under the License is distributed on an
 * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
+* KIND, either express or implied.  See the License for the
 * specific language governing permissions and limitations
 * under the License.
- */
+*/
 
 package utils
 
 import (
 	"bufio"
-	"encoding/xml"
-	"errors"
 	"fmt"
-	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/resty.v1"
-	"net/http"
+	"golang.org/x/crypto/ssh/terminal"
 	"os"
 	"runtime"
 	"strings"
@@ -80,6 +77,12 @@ func PromptForPassword() string {
 	return password
 }
 
+// ShowHelpCommandTip function will print the instructions for displaying help info on a specific command
+// @params cmdLiteral : Command on which help command is to be displayed
+func ShowHelpCommandTip(cmdLiteral string) {
+	fmt.Printf("Execute '%s %s --help' for more info.\n")
+}
+
 // return a string containing the file name, function name
 // and the line number of a specified entry on the call stack
 func WhereAmI(depthList ...int) string {
@@ -103,71 +106,8 @@ func chopPath(original string) string {
 	}
 }
 
-func PrintList(list []string) {
+func PrintList(list []string){
 	for _, item := range list {
-		fmt.Println(item)
-	}
-}
-
-// GetArtifactList
-// @return count (no. of Artifacts)
-// @return array of Artifact names
-// @return error
-func GetArtifactList(url string) (int32, []string, error) {
-
-	Logln(LogPrefixInfo+"URL:", url)
-
-	headers := make(map[string]string)
-
-	resp, err := InvokeGETRequest(url, headers)
-
-	if err != nil {
-		HandleErrorAndExit("Unable to connect to "+url, err)
-	}
-
-	Logln(LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		apiListResponse := &ListResponse{}
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &apiListResponse)
-
-		if unmarshalError != nil {
-			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return apiListResponse.Count, apiListResponse.List, nil
-	} else {
-		return 0, nil, errors.New(resp.Status())
-	}
-}
-
-// UnmarshalData
-// @param url: url of rest api
-// @param model: struct object
-// @return struct object
-// @return error
-func UnmarshalData(url string, model interface{}) (interface{}, error) {
-
-	Logln(LogPrefixInfo+"URL:", url)
-
-	headers := make(map[string]string)
-
-	resp, err := InvokeGETRequest(url, headers)
-
-	if err != nil {
-		HandleErrorAndExit("Unable to connect to "+url, err)
-	}
-
-	Logln(LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		response := model
-		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
-
-		if unmarshalError != nil {
-			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return response, nil
-	} else {
-		return nil, errors.New(resp.Status())
+       fmt.Println(item)
 	}
 }

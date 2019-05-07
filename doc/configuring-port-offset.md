@@ -8,7 +8,7 @@ The portOffset feature in WSO2 Micro Integrator allows you to run multiple WSO2 
 
  PortOffset can be passed in during server startup as follows:
 
- ```./wso2server.sh -DportOffset=3```
+ ```./micro-integrator.sh -DportOffset=3```
 
  PortOffset can be set in the carbon.xml as follows, under the Ports section:
 

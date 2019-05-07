@@ -152,6 +152,7 @@
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/wso2carbon-version.txt</exclude>
                 <exclude>**/user-mgt.xml</exclude>
+                <exclude>**/repository/conf/etc/logging-bridge.properties</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/README.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
@@ -161,6 +162,7 @@
                 <exclude>**/tomcat/carbon/WEB-INF/web.xml</exclude>
                 <exclude>**/tomcat/carbon/META-INF/context.xml</exclude>
                 <exclude>**//tomcat/catalina-server.xml</exclude>
+                <exclude>**/launch.ini</exclude>
             </excludes>
         </fileSet>
 
@@ -172,6 +174,7 @@
                 <exclude>**/*.bat</exclude>
                 <exclude>**/wrapper.conf</exclude>
                 <exclude>build.xml</exclude>
+                <exclude>version.txt</exclude>
             </excludes>
         </fileSet>
 
@@ -294,6 +297,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/endorsed/xalan*.jar</exclude>
+                <exclude>**/endorsed/geronimo-jms_1.1_spec*.jar</exclude>
             </excludes>
         </fileSet>
 
@@ -320,9 +324,31 @@
                 <include>esapi-2.0.1.jar</include>
             </includes>
         </fileSet>
+        <fileSet>
+            <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/components/lib
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/lib</outputDirectory>
+            <excludes>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>
+                target/wso2carbon-core-${carbon.kernel.version}/repository/components/patches
+            </directory>
+            <outputDirectory>wso2mi-${pom.version}/patches</outputDirectory>
+            <excludes>
+            </excludes>
+        </fileSet>
     </fileSets>
 
     <files>
+        <file>
+            <source>target/wso2carbon-core-${carbon.kernel.version}/bin/version.txt</source>
+            <outputDirectory>wso2mi-${pom.version}/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
         <file>
             <source>src/conf/wrapper.conf</source>
             <outputDirectory>wso2mi-${pom.version}/bin/yajsw</outputDirectory>
@@ -368,9 +394,7 @@
         </file>
 
         <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-processor.xml
-            </source>
+            <source>src/conf/event-processor.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
@@ -433,17 +457,17 @@
         </file>
 
         <file>
-            <source>src/conf/hl7.properties</source>
+            <source>src/conf/access-log.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>hl7.properties</destName>
+            <destName>access-log.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
 
         <file>
-            <source>src/conf/access-log.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>access-log.properties</destName>
+            <source>src/conf/internal-apis.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf</outputDirectory>
+            <destName>internal-apis.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -463,6 +487,18 @@
         </file>
 
         <file>
+            <source>src/conf/etc/launch.ini</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/etc/logging-bridge.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/passthru-http.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>passthru-http.properties</destName>
@@ -473,13 +509,6 @@
             <source>src/conf/synapse.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>synapse.properties</destName>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>src/conf/internal-apis.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>internal-apis.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -578,6 +607,12 @@
             </outputDirectory>
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
+            <includes>
+                <include>javax.jms:javax.jms-api:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>

@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>wso2-micro-integrator-parent</artifactId>
-        <version>1.0.0-m6-SNAPSHOT</version>
+        <version>1.0.0-m7-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -146,6 +146,9 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.mediator.publishevent.server.feature:${carbon.mediation.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.carbon.mediation:org.wso2.carbon.prometheus.publisher.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
 
                                 <!--2 Carbon-Kernel-->
@@ -416,6 +419,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.application.deployer.synapse.feature.group</id>
+                                    <version>${carbon.mediation.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.prometheus.publisher.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
                                 </feature>
 

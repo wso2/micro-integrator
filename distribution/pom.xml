@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>wso2-micro-integrator-parent</artifactId>
-        <version>1.0.0-m6-SNAPSHOT</version>
+        <version>1.0.0-m7-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -42,13 +42,16 @@
             <artifactId>rampart</artifactId>
             <type>mar</type>
         </dependency>
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>2.4</version>
                 <inherited>false</inherited>
                 <executions>
                     <execution>
@@ -113,7 +116,8 @@
                             <target>
                                 <echo message="prepare phase" />
                                 <unzip src="${project.build.directory}/${project.artifactId}-${project.version}.zip" dest="${project.build.directory}/docker" />
-                                <chmod file="${project.build.directory}/docker/${project.artifactId}-${project.version}/bin/*.sh" perm="+x" />
+                                <move file="${project.build.directory}/docker/${project.artifactId}-${project.version}" tofile="${project.build.directory}/docker/${project.artifactId}" />
+                                <chmod file="${project.build.directory}/docker/${project.artifactId}/bin/*.sh" perm="+x" />
                             </target>
                         </configuration>
                         <goals>

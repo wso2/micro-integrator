@@ -10,21 +10,28 @@ Command Line tool for managing the WSO2 Micro Integrator
     1. Install [Go 1.12.x](https://golang.org/dl)
     2. Fork the [repository](https://github.com/wso2/micro-integrator)
     3. Clone your fork into any directory
-    5. `cd` into cloned directory and then cd into `micro-integrator`
-    6. Execute `mvn clean install` to build the project
+    5. `cd` into cloned directory and then cd into `micro-integrator/cmd`
+    6. Execute `go mod vendor` or `go mod download` to download all the dependencies
+
+- ### Building
+   `cd` into `micro-integrator/cmd`
+   
+    Execute `./build.sh -t micli.go -v 1.0.0 -f` to build for all platforms. (Can only be built in Mac or Linux)
+      
+    Created packages will be available at `build/target` directory
     
 - ### Running
-    `cd` into `micro-integrator/cmd/bin`
+    Extract the compressed archive generated to a desired location.
     
     Then execute `./micli` to start the application.
     
     Execute `./micli --help` for further instructions.
+    
+    NOTE: To execute the tool from anywhere, append the location of the executable (micli) to your $PATH variable.
 
 ### Configuration 
-- ### Management API Address and Port
-    To configure the address and the port of the Management Api in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
-
-    NOTE: The default address is http://localhost and the port is 9091
+- ### Inbound Listening Port
+    The default listening port of the Management API is `9091`
 
 ## Usage 
 ```bash
@@ -40,19 +47,6 @@ Command Line tool for managing the WSO2 Micro Integrator
 ```
 
 ### Commands
-   * #### init
-```bash
-        Usage:
-            micli init [flags]
-
-        Flags:
-            Required:
-                --server, -s
-                --port, -p
-
-        Examples:
-            micli init -s http://localhost -p 9091
-```
    * #### list
 ```bash
         Usage:

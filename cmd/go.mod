@@ -1,4 +1,4 @@
-module github.com/wso2/micro-integrator/cmd
+module cmd
 
 go 1.12
 
