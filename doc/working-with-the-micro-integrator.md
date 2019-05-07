@@ -383,7 +383,7 @@ The user should add a scrape config in the configuration file as shown below. Th
 scrape_configs:
  - job_name: "esb_stats"
    static_configs:
-     - targets: ['localhost:9191']
+     - targets: ['localhost:9201']
    metrics_path: "metric-service/metrics"
 ```
 
@@ -403,7 +403,7 @@ For example,
 Configure the Prometheus server and Micro Integrator and start them.
 The stats can be viewed in following urls.
 
-`http://localhost:9191/metric-service/metrics`
+`http://localhost:9201/metric-service/metrics`
 
 You may also visit following url in Prometheus server to plot the graphs.
 
