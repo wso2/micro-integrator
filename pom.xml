@@ -40,6 +40,15 @@
         </license>
     </licenses>
 
+    <modules>
+        <module>components</module>
+        <!--<module>samples</module>-->
+        <module>features</module>
+        <module>p2-profile</module>
+        <module>distribution</module>
+        <module>integration</module>
+    </modules>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -232,46 +241,12 @@
 
     <profiles>
         <profile>
-            <id>micli</id>
-            <modules>
-                <module>components</module>
-                <!--<module>samples</module>-->
-                <module>features</module>
-                <module>p2-profile</module>
-                <module>cmd</module>
-                <module>distribution</module>
-                <module>integration</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>components</module>
-                <!--<module>samples</module>-->
-                <module>features</module>
-                <module>p2-profile</module>
-                <module>distribution</module>
-                <module>integration</module>
-            </modules>
-        </profile>
-        <profile>
             <id>sign</id>
             <activation>
                 <property>
                     <name>sign</name>
                 </property>
             </activation>
-            <modules>
-                <module>components</module>
-                <!--<module>samples</module>-->
-                <module>features</module>
-                <module>p2-profile</module>
-                <module>distribution</module>
-                <module>integration</module>
-            </modules>
             <build>
                 <plugins>
                     <plugin>
@@ -383,7 +358,6 @@
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
         <maven.surefire.plugin.version>2.20.1</maven.surefire.plugin.version>
         <jacoco.maven.plugin.version>0.8.3</jacoco.maven.plugin.version>
-        <mvn.golang.wrapper.version>2.3.1</mvn.golang.wrapper.version>
         <testng.version>6.11</testng.version>
         <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
@@ -578,11 +552,6 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${jacoco.maven.plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>com.igormaznitsa</groupId>
-                    <artifactId>mvn-golang-wrapper</artifactId>
-                    <version>${mvn.golang.wrapper.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
