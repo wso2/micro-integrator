@@ -15,49 +15,133 @@
 # under the License.
 
 #!/bin/bash
-#
-# usage: ./build.bash target-file.go
 
-# argument handling
-test "$1" && target="$1" # .go file to build
-
-if ! test "$target"
-then
-    echo "Target file required"
+function showUsageAndExit() {
+    echo "Insufficient or invalid options provided"
+    echo
+    echo "Usage: "$'\e[1m'"./build.sh -t [target-file] -v [build-version] -f"$'\e[0m'
+    echo -en "  -t\t"
+    echo "[REQUIRED] Target file to build."
+    echo -en "  -v\t"
+    echo "[REQUIRED] Build version. If not specified a default value will be used."
+    echo -en "  -f\t"
+    echo "[OPTIONAL] Cross compile for all the list of platforms. If not specified, the specified target" \
+        "file will be compiled only for the autodetected native platform."
+    echo
+    echo "Ex: "$'\e[1m'"./build.sh -t micli.go -v 1.0.0 -f"$'\e[0m'" - Builds Micro Integrator CLI" \
+        "version 1.0.0 for all platforms."
+    echo
     exit 1
+}
+
+function detectPlatformSpecificBuild() {
+    platform=$(uname -s)
+    if [[ "${platform}" == "Linux" ]]; then
+        platforms="linux/386/linux/i586 linux/amd64/linux/x64"
+    elif [[ "${platform}" == "Darwin" ]]; then
+        platforms="darwin/amd64/macosx/x64"
+    else
+        platforms="windows/386/windows/i586 windows/amd64/windows/x64"
+    fi
+}
+
+while getopts :t:v:f FLAG; do
+  case $FLAG in
+    t)
+      target=$OPTARG
+      ;;
+    v)
+      build_version=$OPTARG
+      ;;
+    f)
+      full_build="true"
+      ;;
+    \?)
+      showUsageAndExit
+      ;;
+  esac
+done
+
+if [ ! -e "$target" ]; then
+  echo "Target file is needed. "
+  showUsageAndExit
+  exit 1
 fi
 
-binary="" # default to default
-test "$2" && binary="$2" # binary output
+if [ -z "$build_version" ]
+then
+  echo "Build version is needed. "
+  showUsageAndExit
+fi
 
 
-# find available build types
-platforms=`ls $(go env GOROOT)/pkg | grep -v "obj\|tool\|race"`
+rootPath=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+buildDir="build/target"
+buildPath="$rootPath/${buildDir}"
 
-if ! test "$platforms"; then
-    echo "no valid os/arch pairs were found to build"
-    echo "- see: https://gist.github.com/jmervine/7d3f455e923cf2ac3c9e#file-golang-crosscompile-setup-bash"
-    exit 1
+echo "Cleaning build path ${buildDir}..."
+rm -rf $buildPath
+
+filename=$(basename ${target})
+baseDir=$(dirname ${target})
+if [ ".go" == ${filename:(-3)} ]
+then
+    filename=${filename%.go}
+fi
+
+#platforms="darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm windows/386 windows/amd64"
+#platforms="linux/amd64/linux/x64"
+#platforms="darwin/amd64/macosx/x64"
+if [ "${full_build}" == "true" ]; then
+    echo "Building "$'\e[1m'"${filename}:${build_version}"$'\e[0m'" for all platforms..."
+    platforms="darwin/amd64/macosx/x64 linux/386/linux/i586 linux/amd64/linux/x64 windows/386/windows/i586 windows/amd64/windows/x64"
+else
+    detectPlatformSpecificBuild
+    echo "Building "$'\e[1m'"${filename^^}:${build_version}"$'\e[0m'" for detected "$'\e[1m'"${platform}"$'\e[0m'" platform..."
 fi
 
 for platform in ${platforms}
 do
-    split=(${platform//_/ })
+    split=(${platform//\// })
     goos=${split[0]}
     goarch=${split[1]}
+    pos=${split[2]}
+    parch=${split[3]}
 
     # ensure output file name
-    output="$binary"
-    test "$output" || output="$(basename $target | sed 's/\.go//')"
+    output="micli"
+    test "$output" || output="$(basename ${target} | sed 's/\.go//')"
 
     # add exe to windows output
     [[ "windows" == "$goos" ]] && output="$output.exe"
 
-    # set destination path for binary
-    destination="$(dirname $target)/builds/$goos/$goarch/$output"
+    echo -en "\t - $goos/$goarch..."
 
-    echo "GOOS=$goos GOARCH=$goarch go build -x -o $destination $target"
-    GOOS=$goos GOARCH=$goarch go build -x -o $destination $target
+    zipfile="$filename-$build_version-$pos-$parch"
+    zipdir="${buildPath}/$filename"
+    mkdir -p $zipdir
+
+    cp -r "${baseDir}/server_config.yaml" $zipdir > /dev/null 2>&1
+    cp -r "${baseDir}/LICENSE" $zipdir > /dev/null 2>&1
+
+    # set destination path for binary
+    destination="$zipdir/$output"
+
+    GOOS=$goos GOARCH=$goarch go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH -ldflags  \
+    "-X micli.MICLI=$build_version -X 'micli.buildDate=$(date -u '+%Y-%m-%d
+    %H:%M:%S UTC')'" -o $destination $target
+
+    pwd=`pwd`
+    cd $buildPath
+    if [[ "windows" == "$goos" ]]; then
+        zip -r "$zipfile.zip" $filename > /dev/null 2>&1
+    else
+    	tar czf "$zipfile.tar.gz" $filename > /dev/null 2>&1
+    fi
+    rm -rf $filename
+    cd $pwd
+    echo -en $'✔ '
+    echo
 done
 
 echo "Build complete!"

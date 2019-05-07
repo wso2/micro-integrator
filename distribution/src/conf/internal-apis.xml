@@ -17,5 +17,5 @@
   -->
 
 <apis>
-  <api name="ManagementInternalAPI" class="org.wso2.carbon.micro.integrator.management.apis.ManagementInternalAPI"/>
+    <api name="ManagementInternalAPI" class="org.wso2.carbon.micro.integrator.management.apis.ManagementInternalAPI"/>
 </apis>

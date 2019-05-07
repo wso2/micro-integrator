@@ -97,10 +97,6 @@ if ""%1""==""version""   goto commandVersion
 if ""%1""==""-version""  goto commandVersion
 if ""%1""==""--version"" goto commandVersion
 
-if ""%1""==""synapseTest""   goto commandSynapseUnitTest
-if ""%1""==""-synapseTest""  goto commandSynapseUnitTest
-if ""%1""==""--synapseTest"" goto commandSynapseUnitTest
-
 shift
 goto setupArgs
 
@@ -119,12 +115,6 @@ if "%DEBUG_PORT%"=="" goto noDebugPort
 if not "%JAVA_OPTS%"=="" echo Warning !!!. User specified JAVA_OPTS will be ignored, once you give the --debug option.
 set JAVA_OPTS=-Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=%DEBUG_PORT%
 echo Please start the remote debugging client to continue...
-goto findJdk
-
-rem ----- commandSynapseUnitTest ---------------------------------------------------------
-:commandSynapseUnitTest
-set UNIT_TEST=true
-set UNIT_TEST_PORT=%2
 goto findJdk
 
 :noDebugPort
@@ -190,7 +180,7 @@ if "%profileSet%" == "false" (
     set profile=-Dprofile=micro-integrator-default
 )
 
-set CMD_LINE_ARGS=-Xbootclasspath/a:%CARBON_XBOOTCLASSPATH% -Xms1024m -Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="%CARBON_HOME%\repository\logs\heap-dump.hprof" -Dcom.sun.management.jmxremote -classpath %CARBON_CLASSPATH% %JAVA_OPTS% -Djava.endorsed.dirs=%JAVA_ENDORSED% -DandesConfig=broker.xml -Dcarbon.registry.root=/ -Dcarbon.home="%CARBON_HOME%" -Dwso2.server.standalone=true -Djava.command="%JAVA_HOME%\bin\java" -Djava.opts="%JAVA_OPTS%" -Djava.io.tmpdir="%CARBON_HOME%\tmp" -Dcatalina.base="%CARBON_HOME%\wso2\lib\tomcat" -Dwso2.carbon.xml=%CARBON_HOME%\conf\carbon.xml -Dwso2.registry.xml="%CARBON_HOME%\conf\registry.xml" -Dwso2.user.mgt.xml="%CARBON_HOME%\conf\user-mgt.xml" -Dwso2.transports.xml="%CARBON_HOME%\conf\mgt-transports.xml" -Djava.util.logging.config.file="%CARBON_HOME%\conf\log4j.properties" -Dcarbon.config.dir.path="%CARBON_HOME%\conf" -DNonUserCoreMode=true -DNonRegistryMode=true -Dserver.main.class=org.wso2.carbon.micro.integrator.server.Main -Dcarbon.logs.path="%CARBON_HOME%\repository\logs" -Dcomponents.repo="%CARBON_HOME%\wso2\components\plugins" -Dcarbon.config.dir.path="%CARBON_HOME%\conf" -Dcarbon.components.dir.path="%CARBON_HOME%\wso2\components" -Dcarbon.extensions.dir.path="%CARBON_HOME%\extensions" -Dcarbon.dropins.dir.path="%CARBON_HOME%\dropins" -Dcarbon.external.lib.dir.path="%CARBON_HOME%\lib" -Dcarbon.patches.dir.path="%CARBON_HOME%\patches" -Dcarbon.servicepacks.dir.path="%CARBON_HOME%\servicepacks" -Dcarbon.internal.lib.dir.path="%CARBON_HOME%\wso2\lib" -Dconf.location="%CARBON_HOME%\conf" -Dcom.atomikos.icatch.file="%CARBON_HOME%\wso2\lib\transactions.properties" -Dei.extendedURIBasedDispatcher=org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler -Dcom.atomikos.icatch.hide_init_file_path="true" -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true -Dcom.sun.jndi.ldap.connect.pool.authentication=simple -Dcom.sun.jndi.ldap.connect.pool.timeout=3000 -Dorg.terracotta.quartz.skipUpdateCheck=true -Dcarbon.classpath=%CARBON_CLASSPATH% -Dfile.encoding=UTF8 -Dlogger.server.name="micro-integrator" -Dqpid.conf="\conf\advanced" %profile%
+set CMD_LINE_ARGS=-Xbootclasspath/a:%CARBON_XBOOTCLASSPATH% -Xms1024m -Xmx2048m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath="%CARBON_HOME%\repository\logs\heap-dump.hprof" -Dcom.sun.management.jmxremote -classpath %CARBON_CLASSPATH% %JAVA_OPTS% -Djava.endorsed.dirs=%JAVA_ENDORSED% -DandesConfig=broker.xml -Dcarbon.registry.root=/ -Dcarbon.home="%CARBON_HOME%" -Dwso2.server.standalone=true -Djava.command="%JAVA_HOME%\bin\java" -Djava.opts="%JAVA_OPTS%" -Djava.io.tmpdir="%CARBON_HOME%\tmp" -Dcatalina.base="%CARBON_HOME%\wso2\lib\tomcat" -Dwso2.carbon.xml=%CARBON_HOME%\conf\carbon.xml -Dwso2.registry.xml="%CARBON_HOME%\conf\registry.xml" -Dwso2.user.mgt.xml="%CARBON_HOME%\conf\user-mgt.xml" -Dwso2.transports.xml="%CARBON_HOME%\conf\mgt-transports.xml" -Djava.util.logging.config.file="%CARBON_HOME%\conf\log4j.properties" -Dcarbon.config.dir.path="%CARBON_HOME%\conf" -DNonUserCoreMode=true -DNonRegistryMode=true -Dserver.main.class=org.wso2.carbon.micro.integrator.server.Main -Dcarbon.logs.path="%CARBON_HOME%\repository\logs" -Dcomponents.repo="%CARBON_HOME%\wso2\components\plugins" -Dcarbon.config.dir.path="%CARBON_HOME%\conf" -Dcarbon.components.dir.path="%CARBON_HOME%\wso2\components" -Dcarbon.dropins.dir.path="%CARBON_HOME%\dropins" -Dcarbon.external.lib.dir.path="%CARBON_HOME%\lib" -Dcarbon.patches.dir.path="%CARBON_HOME%\patches" -Dcarbon.internal.lib.dir.path="%CARBON_HOME%\wso2\lib" -Dconf.location="%CARBON_HOME%\conf" -Dcom.atomikos.icatch.file="%CARBON_HOME%\wso2\lib\transactions.properties" -Dei.extendedURIBasedDispatcher=org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler -Dcom.atomikos.icatch.hide_init_file_path="true" -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true -Dcom.sun.jndi.ldap.connect.pool.authentication=simple -Dcom.sun.jndi.ldap.connect.pool.timeout=3000 -Dorg.terracotta.quartz.skipUpdateCheck=true -Dcarbon.classpath=%CARBON_CLASSPATH% -Dfile.encoding=UTF8 -Dlogger.server.name="micro-integrator" -Dqpid.conf="\conf\advanced" %profile%
 
 :runJava
 rem echo JAVA_HOME environment variable is set to %JAVA_HOME%

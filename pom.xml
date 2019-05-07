@@ -28,7 +28,7 @@
     <groupId>org.wso2.ei</groupId>
     <artifactId>wso2-micro-integrator-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-m6-SNAPSHOT</version>
+    <version>1.0.0-m7-SNAPSHOT</version>
     <name>WSO2 Micro Integrator</name>
     <url>http://wso2.com/products/enterprise-integrator/</url>
     <description>WSO2 Micro Integrator</description>
@@ -215,6 +215,11 @@
                 <version>${testng.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>javax.jms</groupId>
+                <artifactId>javax.jms-api</artifactId>
+                <version>${javax.jms-api.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -293,7 +298,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!--Product Version-->
-        <product.ei.version>1.0.0-m6-SNAPSHOT</product.ei.version>
+        <product.ei.version>1.0.0-m7-SNAPSHOT</product.ei.version>
 
         <version.equinox.osgi>3.9.1.v20130814-1242</version.equinox.osgi>
         <version.equinox.osgi.services>3.3.100.v20130513-1956</version.equinox.osgi.services>
@@ -304,16 +309,15 @@
         <maven.build.helper.plugin.version>3.0.0</maven.build.helper.plugin.version>
         <maven.xmlbeans-maven-plugin.plugin.version>2.3.3</maven.xmlbeans-maven-plugin.plugin.version>
         <carbon.p2.plugin.version>1.5.8</carbon.p2.plugin.version>
-        <maven.docker.plugin.version>0.28.0</maven.docker.plugin.version>
         <maven.failsafe.plugin.version>2.20.1</maven.failsafe.plugin.version>
 
         <!-- Carbon kernel version-->
         <carbon.kernel.version>4.4.40</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <synapse.version>2.1.7-wso2v103</synapse.version>
+        <synapse.version>2.1.7-wso2v106</synapse.version>
         <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
-        <carbon.mediation.version>4.6.137</carbon.mediation.version>
+        <carbon.mediation.version>4.6.142</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
         <carbon.data.version>4.4.100</carbon.data.version>
         <securevault.version>1.0.0-wso2v2</securevault.version>
@@ -381,6 +385,7 @@
         <jacoco.maven.plugin.version>0.8.3</jacoco.maven.plugin.version>
         <mvn.golang.wrapper.version>2.3.1</mvn.golang.wrapper.version>
         <testng.version>6.11</testng.version>
+        <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
     </properties>
 
@@ -545,11 +550,6 @@
                     <version>${maven.build.helper.plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>io.fabric8</groupId>
-                    <artifactId>docker-maven-plugin</artifactId>
-                    <version>${maven.docker.plugin.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-failsafe-plugin</artifactId>
                     <version>${maven.failsafe.plugin.version}</version>
@@ -593,4 +593,3 @@
         </pluginManagement>
     </build>
 </project>
-

@@ -152,6 +152,7 @@
                 <exclude>**/registry.xml</exclude>
                 <exclude>**/wso2carbon-version.txt</exclude>
                 <exclude>**/user-mgt.xml</exclude>
+                <exclude>**/repository/conf/etc/logging-bridge.properties</exclude>
                 <exclude>**/wso2server.bat</exclude>
                 <exclude>**/README.txt</exclude>
                 <exclude>**/LICENSE.txt</exclude>
@@ -161,6 +162,7 @@
                 <exclude>**/tomcat/carbon/WEB-INF/web.xml</exclude>
                 <exclude>**/tomcat/carbon/META-INF/context.xml</exclude>
                 <exclude>**//tomcat/catalina-server.xml</exclude>
+                <exclude>**/launch.ini</exclude>
             </excludes>
         </fileSet>
 
@@ -295,6 +297,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/endorsed/xalan*.jar</exclude>
+                <exclude>**/endorsed/geronimo-jms_1.1_spec*.jar</exclude>
             </excludes>
         </fileSet>
 
@@ -477,14 +480,6 @@
         </file>
 
         <file>
-            <source>src/conf/hl7.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>hl7.properties</destName>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-
-        <file>
             <source>src/conf/access-log.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>access-log.properties</destName>
@@ -502,6 +497,18 @@
 
         <file>
             <source>src/conf/etc/logging-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/etc/launch.ini</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/etc/logging-bridge.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
             <fileMode>644</fileMode>
         </file>
@@ -615,6 +622,12 @@
             </outputDirectory>
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
+            <includes>
+                <include>javax.jms:javax.jms-api:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>

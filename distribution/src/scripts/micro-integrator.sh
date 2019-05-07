@@ -136,8 +136,6 @@ do
           CMD="version"
     elif [ "$c" = "--restart" ] || [ "$c" = "-restart" ] || [ "$c" = "restart" ]; then
           CMD="restart"
-    elif [ "$c" = "--synapseTest" ] || [ "$c" = "-synapseTest" ] || [ "$c" = "synapseTest" ]; then
-          CMD="synapseTest"
     else
         args="$args $c"
     fi
@@ -184,10 +182,6 @@ elif [ "$CMD" = "restart" ]; then
 # using nohup sh to avoid erros in solaris OS.TODO
   nohup sh "$CARBON_HOME"/bin/micro-integrator.sh $args > /dev/null 2>&1 &
   exit 0
-
-elif [ "$CMD" = "synapseTest" ]; then
-  export UNIT_TEST="true"
-  export UNIT_TEST_PORT="$2"
 
 elif [ "$CMD" = "version" ]; then
   cat "$CARBON_HOME"/bin/version.txt
@@ -300,11 +294,9 @@ do
     -Dcarbon.config.dir.path="$CARBON_HOME/conf" \
     -Dcarbon.repository.dir.path="$CARBON_HOME/repository" \
     -Dcarbon.components.dir.path="$CARBON_HOME/wso2/components" \
-    -Dcarbon.extensions.dir.path="$CARBON_HOME/extensions" \
     -Dcarbon.dropins.dir.path="$CARBON_HOME/dropins" \
     -Dcarbon.external.lib.dir.path="$CARBON_HOME/lib" \
     -Dcarbon.patches.dir.path="$CARBON_HOME/patches" \
-    -Dcarbon.servicepacks.dir.path="$CARBON_HOME/servicepacks" \
     -Dcarbon.internal.lib.dir.path="$CARBON_HOME/wso2/lib" \
     -Dei.extendedURIBasedDispatcher=org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler \
     -Djava.util.logging.config.file="$CARBON_HOME/conf/etc/logging-bridge.properties" \
