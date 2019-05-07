@@ -488,6 +488,14 @@
         </file>
 
         <file>
+            <source>src/conf/internal-apis.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf</outputDirectory>
+            <destName>internal-apis.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/jndi.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>jndi.properties</destName>
@@ -524,13 +532,6 @@
             <source>src/conf/synapse.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>synapse.properties</destName>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
-            <source>src/conf/internal-apis.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>internal-apis.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
