@@ -39,6 +39,6 @@ var apisListCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(apisListCmd)
-    apisListCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    apisListCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showAPICmdLiteral, "[apiname]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
 }

@@ -39,6 +39,6 @@ var proxyServicesListCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(proxyServicesListCmd)
-    proxyServicesListCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    proxyServicesListCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showProxyServiceCmdLiteral, "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
 }

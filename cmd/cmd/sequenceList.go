@@ -39,6 +39,6 @@ var sequencesListCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(sequencesListCmd)
-    sequencesListCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    sequencesListCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
 }

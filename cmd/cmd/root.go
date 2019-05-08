@@ -29,6 +29,8 @@ import (
 var cfgFile string
 var verbose bool
 
+var programName = os.Args[0]
+
 var rootCmdShortDesc = "CLI for Micro Integrator"
 
 var rootCmdLongDesc = dedent.Dedent(`

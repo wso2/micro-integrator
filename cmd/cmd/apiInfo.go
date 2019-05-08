@@ -37,9 +37,9 @@ var showAPICmdLongDesc = "Get information about the API specified by command lin
 var showAPICmdExamples = 
 "Example:\n" + 
 "To get details about a specific api\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showAPICmdLiteral + " TestAPI\n\n" +
+"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + " TestAPI\n\n" +
 "To list all the apis\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showAPICmdLiteral + "\n\n"
+"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + "\n\n"
 
 // apiShowCmd represents the show api command
 var apiShowCmd = &cobra.Command{
@@ -53,7 +53,7 @@ var apiShowCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(apiShowCmd)
-    apiShowCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    apiShowCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showAPICmdLiteral, "[api-name]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
 }
 
@@ -75,7 +75,7 @@ func handleAPICmdArguments(args []string) {
 }
 
 func printAPIHelp() {
-    fmt.Print(showAPICmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showAPICmdLiteral, 
+    fmt.Print(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showAPICmdLiteral, 
         "[api-name]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
 }
 

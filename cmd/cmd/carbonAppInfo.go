@@ -37,9 +37,9 @@ var showApplicationCmdLongDesc = "Get information about the Carbon App specified
 var showApplicationCmdExamples = 
 "Example:\n" + 
 "To get details about a carbon app\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + " SampleApp\n\n" +
+"  " + programName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + " SampleApp\n\n" +
 "To list all the carbon apps\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + "\n\n"
+"  " + programName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + "\n\n"
 
 
 // carbonAppShowCmd represents the show carbonApp command
@@ -54,7 +54,7 @@ var carbonAppShowCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(carbonAppShowCmd)
-    carbonAppShowCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    carbonAppShowCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showApplicationCmdLiteral, "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
 }
 
@@ -76,7 +76,7 @@ func handleApplicationCmdArguments(args []string) {
 }
 
 func printAppHelp() {
-    fmt.Print(showApplicationCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showApplicationCmdLiteral, 
+    fmt.Print(showApplicationCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showApplicationCmdLiteral, 
         "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
 }
 

@@ -181,10 +181,10 @@ func GetCmdFlags(cmd string) string {
     return showCmdFlags
 }
 
-func GetCmdUsage(cmd, subcmd, arg string) string {
+func GetCmdUsage(program, cmd, subcmd, arg string) string {
     var showCmdUsage = 
     "Usage:\n" + 
-    "  " + ProjectName + " " + cmd + " " + subcmd + "(s)\n" +
-    "  " + ProjectName + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
+    "  " + program + " " + cmd + " " + subcmd + "(s)\n" +
+    "  " + program + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
     return showCmdUsage
 }

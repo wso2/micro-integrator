@@ -39,6 +39,6 @@ var endpointsListCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(endpointsListCmd)
-    endpointsListCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    endpointsListCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showEndpointCmdLiteral, "[endpointname]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
 }

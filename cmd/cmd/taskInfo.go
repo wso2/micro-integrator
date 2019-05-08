@@ -37,9 +37,9 @@ var showTaskCmdLongDesc = "Get information about the Task specified by command l
 var showTaskCmdExamples = 
 "Example:\n" +
 "To get details about a specific task\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
+"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
 "To list all the tasks\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
+"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
 
 // taskShowCmd represents the task command
 var taskShowCmd = &cobra.Command{
@@ -53,7 +53,7 @@ var taskShowCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(taskShowCmd)
-    taskShowCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    taskShowCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }
 
@@ -75,7 +75,7 @@ func handleTaskCmdArguments(args []string) {
 }
 
 func printTaskHelp() {
-    fmt.Print(showTaskCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showTaskCmdLiteral,
+    fmt.Print(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showTaskCmdLiteral,
         "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }
 

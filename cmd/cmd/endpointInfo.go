@@ -37,9 +37,9 @@ var showEndpointCmdLongDesc = "Get information about the endpoint specified by c
 var showEndpointCmdExamples = 
 "Example:\n" +
 "To get details about a specific endpoint\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + " TestEndpoint\n\n" +
+"  " + programName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + " TestEndpoint\n\n" +
 "To list all the endpoints\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + "\n\n"
+"  " + programName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + "\n\n"
 
 // endpointShowCmd represents the show endpoint command
 var endpointShowCmd = &cobra.Command{
@@ -53,7 +53,7 @@ var endpointShowCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(endpointShowCmd)
-    endpointShowCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    endpointShowCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showEndpointCmdLiteral, "[endpoint-name]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
 }
 
@@ -75,7 +75,7 @@ func handleEndpointCmdArguments(args []string) {
 }
 
 func printEndpointHelp() {
-    fmt.Print(showEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showEndpointCmdLiteral, 
+    fmt.Print(showEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showEndpointCmdLiteral, 
         "[endpoint-name]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
 }
 

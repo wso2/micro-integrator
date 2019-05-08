@@ -39,6 +39,6 @@ var inboundEndpointsListCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(inboundEndpointsListCmd)
-    inboundEndpointsListCmd.SetHelpTemplate(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    inboundEndpointsListCmd.SetHelpTemplate(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showInboundEndpointCmdLiteral, "[inboundname]") + showInboundEndpointCmdExamples + utils.GetCmdFlags("inboundendpoint(s)"))
 }

@@ -39,6 +39,6 @@ var carbonAppsListCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(carbonAppsListCmd)
-    carbonAppsListCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    carbonAppsListCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showApplicationCmdLiteral, "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
 }

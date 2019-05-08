@@ -53,7 +53,7 @@ var inboundEndpointShowCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(inboundEndpointShowCmd)
-    inboundEndpointShowCmd.SetHelpTemplate(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    inboundEndpointShowCmd.SetHelpTemplate(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showInboundEndpointCmdLiteral, "[inbound-name]") + showInboundEndpointCmdExamples + utils.GetCmdFlags("inboundendpoint(s)"))
 }
 
@@ -75,7 +75,7 @@ func handleInboundCmdArguments(args []string) {
 }
 
 func printInboundHelp() {
-    fmt.Print(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, showInboundEndpointCmdLiteral,
+    fmt.Print(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showInboundEndpointCmdLiteral,
         "[inbound-name]") + showInboundEndpointCmdExamples + utils.GetCmdFlags("inboundendpoint(s)"))
 }
 

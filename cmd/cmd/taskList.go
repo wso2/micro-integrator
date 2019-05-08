@@ -39,6 +39,6 @@ var taskListCmd = &cobra.Command{
 
 func init() {
     showCmd.AddCommand(taskListCmd)
-    taskListCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(showCmdLiteral, 
+    taskListCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
         showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }
