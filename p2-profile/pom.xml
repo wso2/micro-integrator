@@ -240,7 +240,7 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.carbon.micro.integrator.server.feature:${product.ei.version}
+                                    org.wso2.ei:org.wso2.carbon.micro.integrator.server.feature:${product.mi.version}
                                 </featureArtifactDef>
 
                                 <!--Identity-->
@@ -496,7 +496,7 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.micro.integrator.server.feature.group</id>
-                                    <version>${product.ei.version}</version>
+                                    <version>${product.mi.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.crypto.feature.group</id>

@@ -77,7 +77,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.core</bundleDef>
-                                <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.security:${product.ei.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.security:${product.mi.version}</bundleDef>
                                 <bundleDef>org.apache.ws.security.wso2:wss4j:${wss4j.version}</bundleDef>
                                 <bundleDef>org.apache.rampart.wso2:rampart-core:${rampart.wso2.version}</bundleDef>
                                 <bundleDef>org.apache.rampart.wso2:rampart-policy:${rampart.wso2.version}</bundleDef>
@@ -223,7 +223,7 @@
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.addressing:${carbon.kernel.version}
                                 </bundleDef>
                                 <!--Management API-->
-                                <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.management.apis:${product.ei.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.management.apis:${product.mi.version}</bundleDef>
                                 <!--Inbound Endpoints-->
 
                                 <!--Deployment-->
