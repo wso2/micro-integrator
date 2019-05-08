@@ -340,22 +340,6 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>
-                target/wso2carbon-core-${carbon.kernel.version}/repository/components/servicepacks
-            </directory>
-            <outputDirectory>wso2mi-${pom.version}/servicepacks</outputDirectory>
-            <excludes>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>
-                target/wso2carbon-core-${carbon.kernel.version}/repository/components/extensions
-            </directory>
-            <outputDirectory>wso2mi-${pom.version}/extensions</outputDirectory>
-            <excludes>
-            </excludes>
-        </fileSet>
-        <fileSet>
             <directory>src/resources/capps</directory>
             <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/carbonapps</outputDirectory>
             <excludes>
