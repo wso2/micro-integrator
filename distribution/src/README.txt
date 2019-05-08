@@ -14,7 +14,7 @@ Key features of WSO2 MI @product.version@
 ==================================
 
 See the online WSO2 EI documentation for more information on product features: https://docs.wso2
-.com/display/EI640/WSO2+Enterprise+Integrator+Documentation
+.com/display/EI650/WSO2+Enterprise+Integrator+Documentation
 
 
 Installation & Running
@@ -39,22 +39,18 @@ WSO2 EI distribution directory
 	  Used to add external jars(dependencies) to all runtimes.
 
  - repository
-	  The repository where services and modules deployed in WSO2 EI integrator runtime
+	  The repository where services and modules deployed in WSO2 MI runtime
 	  are stored.
 
  - conf
 	  Contains configuration files specific to integrator runtime.
 
  - logs
-	  Contains all log files created during execution of EI.
+	  Contains all log files created during execution of MI.
 
  - resources
 	  Contains additional resources that may be required, including sample
 	  configurations and sample resources.
-
- - samples
-	  Contains some sample services and client applications that demonstrate
-	  the functionality and capabilities of WSO2 EI.
 
  - tmp
 	  Used for storing temporary files, and is pointed to by the
@@ -62,47 +58,30 @@ WSO2 EI distribution directory
 
  - LICENSE.txt
 	  Apache License 2.0 and the relevant other licenses under which
-	  WSO2 EI is distributed.
+	  WSO2 MI is distributed.
 
  - README.txt
 	  This document.
 
  - release-notes.html
-	  Release information for WSO2 EI @product.version@
+	  Release information for WSO2 MI @product.version@
 
  - patches
-	  Used to add patches related for all runtimes.
+	  Used to add patches related for all run time.
 
  -dropins
-	  Used to add external osgi bundles(dependencies) to all runtimes.
+	  Used to add external osgi bundles(dependencies) to the runtime.
 
  -extensions
 	  Used to add carbon extensions.
 
- -servicepacks
-	  Used to add service packs related to all runtimes.
-
- -webapp-mode
-
  -wso2/components
-	  Contains profiles for all runtimes and the plugins folder.
+	  Contains different components (OSGI bundles, features etc.) that are related to the product.
 
  -wso2/lib
-	  Contains jars that are required/shared by all runtimes.
+	  Contains jars that are required/shared by run time.
 
- -wso2/micro-integrator
-      Contains micro integrator runtime related files/folders.
-
-      -wso2/micro-integrator/conf
-        Directory where micro integrator specific configuration files are stored.
-
-      -wso2/micro-integrator/repository
-        Directory where deployments of micro integrator runtime is stored.
-
- -wso2/tools
-      Forget-me tool for user anonymization tasks.
-
-Known issues of WSO2 EI @product.version@
+Known issues of WSO2 MI @product.version@
 ==================================
 
      - https://github.com/wso2/micro-integrator/issues
