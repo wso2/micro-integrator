@@ -175,6 +175,7 @@
                 <exclude>**/wrapper.conf</exclude>
                 <exclude>build.xml</exclude>
                 <exclude>version.txt</exclude>
+                <exclude>README.txt</exclude>
             </excludes>
         </fileSet>
 
@@ -589,6 +590,12 @@
         <file>
             <source>src/resources/updates/product.txt</source>
             <outputDirectory>wso2mi-${pom.version}/updates</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.kernel.version}/bin/README.txt</source>
+            <outputDirectory>wso2mi-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
