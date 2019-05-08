@@ -224,21 +224,6 @@
             <fileMode>755</fileMode>
         </fileSet>
 
-        <fileSet>
-            <directory>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventpublishers
-            </directory>
-            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/eventpublishers
-            </outputDirectory>
-        </fileSet>
-
-        <fileSet>
-            <directory>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventstreams
-            </directory>
-            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/eventstreams
-            </outputDirectory>
-        </fileSet>
 
         <fileSet>
             <directory>src/resources/dockerfiles</directory>
@@ -393,19 +378,7 @@
             <fileMode>644</fileMode>
         </file>
 
-        <file>
-            <source>src/conf/event-processor.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
 
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/output-event-adapters.xml
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
         <file>
             <source>src/conf/axis2.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
