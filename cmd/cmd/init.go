@@ -75,11 +75,11 @@ func promptUserForConfig(){
             os.Exit(1)
         }
     }
-    writeConfig(host, strPort)
+    writeConfig( utils.HTTPProtocol + host, strPort)
 }
 
-func writeConfig(host, port string){
-    serverConfig := utils.ServerConfig{Host:host, Port:port}
+func writeConfig(url, port string){
+    serverConfig := utils.ServerConfig{Url:url, Port:port}
     utils.WriteServerConfigFile(serverConfig, utils.ServerConfigFilePath)
     fmt.Println("CLI configuration is successful")
 }
