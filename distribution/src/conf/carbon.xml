@@ -650,7 +650,7 @@
 	    <RepositoryURL>http://product-dist.wso2.com/p2/carbon/releases/wilkes/</RepositoryURL>
     </FeatureRepository>
     
-       <!-- 
+   <!-- 
     Configuring EI analytics server details. 
     mediation.flow.statistics.enable has to be set to true in synapse.properties 
     file in addition to these configs
