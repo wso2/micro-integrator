@@ -31,40 +31,28 @@ var showCmdLongDesc = "List or show details about carbon app, endpoint, api, inb
 
 var showUsageError = dedent.Dedent(`
 Usage
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` [command] [argument] [flags]
+  ` + programName + ` ` + showCmdLiteral + ` [command] [argument] [flags]
 
 Available Commands:
-  api [apiname]                 Get information about the API specified by argument [apiname]
-                                If not specified, list all the apis
-  carbonapp [appname]           Get information about the Carbon App specified by argument [appname]
-                                If not specified, list all the carbon apps
-  endpoint [endpointname]       Get information about the Endpoint specified by argument [endpointname]
-                                If not specified, list all the endpoints
-  inboundendpoint [inboundname] Get information about the Inbound specified by argument [inboundname]
-                                If not specified, list all the inbound endpoints
-  proxyservice [proxyname]      Get information about the Proxy specified by argument [proxyname]
-                                If not specified, list all the proxies
-  sequence [sequencename]       Get information about the Sequence specified by argument [sequencename]
-                                If not specified, list all the sequences
-  task [taskname]               Get information about the Task specified by argument [taskname]
-                                If not specified, list all the tasks
-Flags:
-  -h, --help   help for show
-  
-Global Flags:
-  -v, --verbose   Enable verbose mode
+    api [api-name]                  Get information about one or more Apis
+    carbonapp [app-name]            Get information about one or more Carbon Apps
+    endpoint [endpoint-name]        Get information about one or more Endpoints
+    inboundendpoint [inbound-name]  Get information about one or more Inbounds
+    proxyservice [proxy-name]       Get information about one or more Proxies 
+    sequence [sequence-name]        Get information about one or more Sequences
+    task [task-name]                Get information about one or more Task
 `)
 
 var showCmdExamples = dedent.Dedent(`
 Examples:
 To list all the carbon apps
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showApplicationCmdLiteral + `
+  ` + programName + ` ` + showCmdLiteral + ` ` + showApplicationCmdLiteral + `
 To get details about a specific carbon app
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showApplicationCmdLiteral + ` sampleApp` + `
+  ` + programName + ` ` + showCmdLiteral + ` ` + showApplicationCmdLiteral + ` sampleApp` + `
 `)
 
 var showCmdHelp = `
-Use "micli show [command] --help" for more information about a command
+Use " show [command] --help" for more information about a command
 `
 
 // showCmd represents the show command
@@ -73,11 +61,11 @@ var showCmd = &cobra.Command{
   Short: showCmdShortDesc,
   Long:  showCmdLongDesc,
   Run: func(cmd *cobra.Command, args []string) {
-    fmt.Println(showCmdLongDesc + showUsageError + showCmdExamples + showCmdHelp)
+    fmt.Print(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
   },
 }
 
 func init() {
   rootCmd.AddCommand(showCmd)
-  showCmd.SetHelpTemplate(showCmdLongDesc + showUsageError + showCmdExamples + showCmdHelp)
+  showCmd.SetHelpTemplate(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
 }
