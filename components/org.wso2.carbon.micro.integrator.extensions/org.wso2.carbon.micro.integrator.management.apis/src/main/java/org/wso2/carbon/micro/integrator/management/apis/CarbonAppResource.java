@@ -26,12 +26,12 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.wso2.carbon.application.deployer.AppDeployerUtils;
 import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.mediation.initializer.ServiceBusInitializer;
-import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -40,6 +40,7 @@ import java.util.Set;
 
 import javax.xml.stream.XMLStreamException;
 
+import static org.wso2.carbon.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager.getCarbonApps;
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
 
 public class CarbonAppResource extends APIResource {
@@ -49,7 +50,6 @@ public class CarbonAppResource extends APIResource {
     private static final String ROOT_ELEMENT_CARBON_APPS = "<Applications></Applications>";
     private static final String COUNT_ELEMENT = "<Count></Count>";
     private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
 
     private static final String ROOT_ELEMENT_CARBON_APP = "<Application></Application>";
     private static final String NAME_ELEMENT = "<Name></Name>";
@@ -84,21 +84,20 @@ public class CarbonAppResource extends APIResource {
 
         try {
             // if query params exists retrieve data about specific inbound endpoint
-            if(queryParameter != null){
-                for(NameValuePair nvPair : queryParameter){
-                    if(nvPair.getName().equals("carbonAppName")){
+            if (null != queryParameter) {
+                for (NameValuePair nvPair : queryParameter) {
+                    if (nvPair.getName().equals("carbonAppName")) {
                         populateCarbonAppData(messageContext, nvPair.getValue());
                     }
                 }
-            }else {
+            } else {
                 populateCarbonAppList(messageContext);
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             log.error("Error occurred while processing response", e);
         }
-
         return true;
     }
 
@@ -107,15 +106,8 @@ public class CarbonAppResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        // TODO Fix this to use the getTenantIdString
-        String tenantId = String.valueOf(MultitenantConstants.SUPER_TENANT_ID);
-
-//        This Only Works in EI
-//        ArrayList<CarbonApplication> appList
-//                = ServiceBusInitializer.getAppManager().getCarbonApps(tenantId);
-
         ArrayList<CarbonApplication> appList
-                = CarbonCoreDataHolder.getInstance().getApplicationManager().getCarbonApps(tenantId);
+                = getCarbonApps(String.valueOf(AppDeployerUtils.getTenantId()));
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_CARBON_APPS);
         OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
@@ -123,19 +115,23 @@ public class CarbonAppResource extends APIResource {
 
         countElement.setText(String.valueOf(appList.size()));
         rootElement.addChild(countElement);
+
         rootElement.addChild(listElement);
 
         for (CarbonApplication app: appList) {
 
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+            OMElement appElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_CARBON_APP);
+            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement versionElement = AXIOMUtil.stringToOM(VERSION_ELEMENT);
 
-            String apiName = app.getAppName();
-            nameElement.setText(apiName);
+            nameElement.setText(app.getAppName());
+            appElement.addChild(nameElement);
 
-            listElement.addChild(nameElement);
+            versionElement.setText(app.getAppVersion());
+            appElement.addChild(versionElement);
 
+            listElement.addChild(appElement);
         }
-
         axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
     }
 
@@ -146,39 +142,29 @@ public class CarbonAppResource extends APIResource {
 
         OMElement rootElement = getCarbonAppByName(messageContext, carbonAppName);
 
-        if(rootElement != null){
+        if (null != rootElement) {
             axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
-
-        }else{
+        } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
-
-
     }
 
     private OMElement getCarbonAppByName(MessageContext messageContext, String carbonAppName) throws XMLStreamException {
 
-        // TODO Fix this to use the getTenantIdString
-        String tenantId = String.valueOf(MultitenantConstants.SUPER_TENANT_ID);
-
         ArrayList<CarbonApplication> appList
-                = ServiceBusInitializer.getAppManager().getCarbonApps(tenantId);
+                = getCarbonApps(String.valueOf(AppDeployerUtils.getTenantId()));
 
         for (CarbonApplication app: appList) {
-
-            if(app.getAppName().equals(carbonAppName)){
+            if (app.getAppName().equals(carbonAppName)) {
                 return convertCarbonAppToOMElement(app);
             }
-
         }
-
         return null;
-
     }
 
     private OMElement convertCarbonAppToOMElement(CarbonApplication carbonApp) throws XMLStreamException{
 
-        if(carbonApp == null){
+        if (null == carbonApp) {
             return null;
         }
 
@@ -202,11 +188,11 @@ public class CarbonAppResource extends APIResource {
 
             Artifact artifact = dependency.getArtifact();
 
-            String type = artifact.getType();
+            String type = artifact.getType().split("/")[1];
             String artifactName = artifact.getName();
 
             // if the artifactName is null, artifact deployment has failed..
-            if (artifactName == null) {
+            if (null == artifactName) {
                 continue;
             }
 
@@ -222,11 +208,7 @@ public class CarbonAppResource extends APIResource {
             artifactElement.addChild(typeElement);
 
             artifactsElement.addChild(artifactElement);
-
         }
-
         return rootElement;
-
     }
-
 }

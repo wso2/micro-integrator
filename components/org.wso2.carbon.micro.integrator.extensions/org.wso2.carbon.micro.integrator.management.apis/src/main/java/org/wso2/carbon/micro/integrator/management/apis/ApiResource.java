@@ -20,6 +20,9 @@ package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axis2.description.Parameter;
+import org.apache.axis2.description.TransportInDescription;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -32,13 +35,19 @@ import org.apache.synapse.rest.dispatch.DispatcherHelper;
 import org.apache.synapse.rest.dispatch.URITemplateHelper;
 import org.apache.synapse.rest.dispatch.URLMappingHelper;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.utils.NetworkUtils;
 
+import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
+import static org.wso2.carbon.micro.integrator.core.internal.ServiceComponent.getServerConfigurationService;
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
 
 public class ApiResource extends APIResource {
@@ -53,20 +62,16 @@ public class ApiResource extends APIResource {
     private static final String ROOT_ELEMENT_API = "<API></API>";
     private static final String NAME_ELEMENT = "<Name></Name>";
     private static final String CONTEXT_ELEMENT = "<Context></Context>";
+    private static final String URL_ELEMENT = "<Url></Url>";
     private static final String HOST_ELEMENT = "<Host></Host>";
     private static final String PORT_ELEMENT = "<Port></Port>";
-    private static final String FILENAME_ELEMENT = "<FileName></FileName>";
     private static final String VERSION_ELEMENT = "<Version></Version>";
 
     private static final String RESOURCES_ELEMENT = "<Resources></Resources>";
     private static final String RESOURCE_ELEMENT = "<Resource></Resource>";
     private static final String METHOD_ELEMENT = "<Methods></Methods>";
-    private static final String STYLE_ELEMENT = "<Style></Style>";
-    private static final String TEMPLATE_ELEMENT = "<Template></Template>";
-    private static final String MAPPING_ELEMENT = "<Mapping></Mapping>";
-    private static final String INSEQ_ELEMENT = "<Inseq></Inseq>";
-    private static final String OUTSEQ_ELEMENT = "<Outseq></Outseq>";
-    private static final String FAULT_ELEMENT = "<Faultseq></Faultseq>";
+    private static final String STAT_ELEMENT = "<Stats></Stats>";
+    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
 
     public ApiResource(String urlTemplate){
@@ -93,21 +98,20 @@ public class ApiResource extends APIResource {
 
         try {
 
-            if(queryParameter != null){
-                for(NameValuePair nvPair : queryParameter){
-                    if(nvPair.getName().equals("apiName")){
+            if (null != queryParameter) {
+                for (NameValuePair nvPair : queryParameter) {
+                    if (nvPair.getName().equals("apiName")) {
                         populateApiData(messageContext, nvPair.getValue());
                     }
                 }
-            }else {
+            } else {
                 populateApiList(messageContext);
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
            log.error("Error occurred while processing response", e);
         }
-
         return true;
     }
 
@@ -126,19 +130,27 @@ public class ApiResource extends APIResource {
 
         countElement.setText(String.valueOf(apis.size()));
         rootElement.addChild(countElement);
+
         rootElement.addChild(listElement);
+
+        String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
 
         for (API api: apis) {
 
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+            OMElement apiElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_API);
+            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
 
-            String apiName = api.getAPIName();
-            nameElement.setText(apiName);
+            String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
 
-            listElement.addChild(nameElement);
+            nameElement.setText(api.getName());
+            apiElement.addChild(nameElement);
 
+            contextElement.setText(apiUrl);
+            apiElement.addChild(contextElement);
+
+            listElement.addChild(apiElement);
         }
-
         axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
     }
 
@@ -149,26 +161,23 @@ public class ApiResource extends APIResource {
 
         OMElement rootElement = getApiByName(messageContext, apiName);
 
-        if(rootElement != null){
+        if (null != rootElement) {
             axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
-
-        }else{
+        } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
-
     }
 
     private OMElement getApiByName(MessageContext messageContext, String apiName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         API api = configuration.getAPI(apiName);
-        return convertApiToOMElement(api);
-
+        return convertApiToOMElement(api, messageContext);
     }
 
-    private OMElement convertApiToOMElement(API api) throws XMLStreamException{
+    private OMElement convertApiToOMElement(API api, MessageContext messageContext) throws XMLStreamException{
 
-        if (api == null) {
+        if (null == api) {
             return null;
         }
 
@@ -177,26 +186,42 @@ public class ApiResource extends APIResource {
         OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
         OMElement hostElement = AXIOMUtil.stringToOM(HOST_ELEMENT);
         OMElement portElement = AXIOMUtil.stringToOM(PORT_ELEMENT);
-        OMElement fileNameElement = AXIOMUtil.stringToOM(FILENAME_ELEMENT);
         OMElement versionElement = AXIOMUtil.stringToOM(VERSION_ELEMENT);
+        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
 
         nameElement.setText(api.getName());
         rootElement.addChild(nameElement);
 
-        contextElement.setText(api.getContext());
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+
+        String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
+        String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
+
+        contextElement.setText(apiUrl);
         rootElement.addChild(contextElement);
 
-        hostElement.setText(api.getHost());
-        rootElement.addChild(hostElement);
+//        hostElement.setText(api.getHost());
+//        rootElement.addChild(hostElement);
+//
+//        portElement.setText(String.valueOf(api.getPort()));
+//        rootElement.addChild(portElement);
 
-        portElement.setText(String.valueOf(api.getPort()));
-        rootElement.addChild(portElement);
+        String version = api.getVersion().equals("") ? "N/A" : api.getVersion();
 
-        fileNameElement.setText(api.getFileName());
-        rootElement.addChild(fileNameElement);
-
-        versionElement.setText(api.getVersion());
+        versionElement.setText(version);
         rootElement.addChild(versionElement);
+
+        String statisticState = api.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
+
+        statsElement.setText(statisticState);
+        rootElement.addChild(statsElement);
+
+        String tracingState = api.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+
+        tracingElement.setText(tracingState);
+        rootElement.addChild(tracingElement);
 
         OMElement resourcesElement = AXIOMUtil.stringToOM(RESOURCES_ELEMENT);
         rootElement.addChild(resourcesElement);
@@ -211,67 +236,73 @@ public class ApiResource extends APIResource {
             OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
             resourceElement.addChild(methodElement);
 
-            OMElement styleElement = AXIOMUtil.stringToOM(STYLE_ELEMENT);
-            resourceElement.addChild(styleElement);
-
-            OMElement templateElement = AXIOMUtil.stringToOM(TEMPLATE_ELEMENT);
-            resourceElement.addChild(templateElement);
-
-            OMElement mappingElement = AXIOMUtil.stringToOM(MAPPING_ELEMENT);
-            resourceElement.addChild(mappingElement);
-
-            OMElement inSeqElement = AXIOMUtil.stringToOM(INSEQ_ELEMENT);
-            resourceElement.addChild(inSeqElement);
-
-            OMElement outSeqElement = AXIOMUtil.stringToOM(OUTSEQ_ELEMENT);
-            resourceElement.addChild(outSeqElement);
-
-            OMElement faultSeqElement = AXIOMUtil.stringToOM(FAULT_ELEMENT);
-            resourceElement.addChild(faultSeqElement);
+            OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
+            resourceElement.addChild(urlElement);
 
             String[] methods = resource.getMethods();
 
-            for(String method : methods){
+            for (String method : methods) {
                 OMElement itemElement = AXIOMUtil.stringToOM(LIST_ITEM);
                 itemElement.setText(method);
                 methodElement.addChild(itemElement);
             }
 
-
             DispatcherHelper dispatcherHelper = resource.getDispatcherHelper();
             if (dispatcherHelper instanceof URITemplateHelper) {
-                styleElement.setText("URL-Template");
-                templateElement.setText(dispatcherHelper.getString());
+                urlElement.setText(dispatcherHelper.getString());
 
             } else if (dispatcherHelper instanceof URLMappingHelper) {
-                styleElement.setText("URL-mapping");
-                mappingElement.setText(dispatcherHelper.getString());
+                urlElement.setText(dispatcherHelper.getString());
             }
-
-//            if (resource.getInSequenceKey() != null) {
-//                data.setInSequenceKey(resource.getInSequenceKey());
-//            } else if (resource.getInSequence() != null) {
-//                data.setInSeqXml(RestApiAdminUtils.createAnonymousSequenceElement(
-//                        resource.getInSequence(), "inSequence").toString());
-//            }
-//
-//            if (resource.getOutSequenceKey() != null) {
-//                data.setOutSequenceKey(resource.getOutSequenceKey());
-//            } else if (resource.getOutSequence() != null) {
-//                data.setOutSeqXml(RestApiAdminUtils.createAnonymousSequenceElement(
-//                        resource.getOutSequence(), "outSequence").toString());
-//            }
-//
-//            if (resource.getFaultSequenceKey() != null) {
-//                data.setFaultSequenceKey(resource.getFaultSequenceKey());
-//            } else if (resource.getFaultSequence() != null) {
-//                data.setFaultSeqXml(RestApiAdminUtils.createAnonymousSequenceElement(
-//                        resource.getFaultSequence(), "faultSequence").toString());
-//            }
-//            data.setUserAgent(resource.getUserAgent());
-//            resourceDatas[i] = data;
         }
         return rootElement;
     }
 
+    private String getServerContext(AxisConfiguration configuration) {
+
+        String portValue;
+        String protocol;
+
+        TransportInDescription transportInDescription = configuration.getTransportIn("http");
+        if (null == transportInDescription) {
+            transportInDescription = configuration.getTransportIn("https");
+        }
+
+        if (null != transportInDescription) {
+            protocol = transportInDescription.getName();
+            portValue = (String) transportInDescription.getParameter("port").getValue();
+        } else {
+            return "err";
+        }
+
+        String host;
+
+        Parameter hostParam =  configuration.getParameter("hostname");
+
+        if (null != hostParam) {
+            host = (String)hostParam.getValue();
+        } else {
+            try {
+                host = NetworkUtils.getLocalHostname();
+            } catch (SocketException e) {
+                host = "localhost";
+            }
+        }
+
+        String serverContext;
+
+        try {
+            int port = Integer.parseInt(portValue);
+            if ("http".equals(protocol) && port == 80) {
+                port = -1;
+            } else if ("https".equals(protocol) && port == 443) {
+                port = -1;
+            }
+            URL serverURL = new URL(protocol, host, port, "");
+            serverContext = serverURL.toExternalForm();
+        } catch (MalformedURLException e) {
+            serverContext = "err";
+        }
+        return serverContext;
+    }
 }

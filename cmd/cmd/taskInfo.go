@@ -1,181 +1,145 @@
 /*
-*  Copyright (c) WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+* Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
+* WSO2 Inc. licenses this file to you under the Apache License,
+* Version 2.0 (the "License"); you may not use this file except
+* in compliance with the License.
+* You may obtain a copy of the License at
 *
 *    http://www.apache.org/licenses/LICENSE-2.0
 *
 * Unless required by applicable law or agreed to in writing,
 * software distributed under the License is distributed on an
 * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
+* KIND, either express or implied. See the License for the
 * specific language governing permissions and limitations
 * under the License.
-*/
+ */
 
 package cmd
 
 import (
-	"errors"
-    "cmd/utils"
+    "fmt"
+    "github.com/olekukonko/tablewriter"
     "github.com/spf13/cobra"
-    "github.com/lithammer/dedent"
-    "net/http"
-	"encoding/xml"
-	"os"
-	"github.com/olekukonko/tablewriter"
+    "github.com/wso2/micro-integrator/cmd/utils"
+    "os"
 )
 
 var taskName string
 
 // Show Task command related usage info
 const showTaskCmdLiteral = "task"
-const showTaskCmdShortDesc = "Get information about the specified Task"
+const showTaskCmdShortDesc = "Get information about tasks"
 
-var showTaskCmdLongDesc = "Get information about the Task specified by the flag --name, -n\n"
+var showTaskCmdLongDesc = "Get information about the Task specified by command line argument [task-name] If not specified, list all the tasks\n"
 
-var showTaskCmdExamples = dedent.Dedent(`
-Example:
-  ` + utils.ProjectName + ` ` + showCmdLiteral + ` ` + showTaskCmdLiteral + ` -n TestTask
-`)
+var showTaskCmdExamples = 
+"Example:\n" +
+"To get details about a specific task\n" +
+"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
+"To list all the tasks\n" +
+"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
 
 // taskShowCmd represents the task command
 var taskShowCmd = &cobra.Command{
-	Use:   showTaskCmdLiteral,
-	Short: showTaskCmdShortDesc,
-	Long: showTaskCmdLongDesc + showTaskCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		utils.Logln(utils.LogPrefixInfo+"Show task called")
-		executeGetTaskCmd(taskName)
-	},
+    Use:   showTaskCmdLiteral,
+    Short: showTaskCmdShortDesc,
+    Long:  showTaskCmdLongDesc + showTaskCmdExamples,
+    Run: func(cmd *cobra.Command, args []string) {
+        handleTaskCmdArguments(args)
+    },
 }
 
 func init() {
-	showCmd.AddCommand(taskShowCmd)
+    showCmd.AddCommand(taskShowCmd)
+    taskShowCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
+        showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
+}
 
-	// Here you will define your flags and configuration settings.
+func handleTaskCmdArguments(args []string) {
+    utils.Logln(utils.LogPrefixInfo + "Show task called")
+    if len(args) == 0 {
+        executeListTasksCmd()
+    } else if len(args) == 1 {
+        if args[0] == "help" {
+            printTaskHelp()
+        } else {
+            taskName = args[0]
+            executeGetTaskCmd(taskName)
+        }
+    } else {
+        fmt.Println("Too many arguments. See the usage below")
+        printTaskHelp()
+    }
+}
 
-	taskShowCmd.Flags().StringVarP(&taskName, "name", "n", "", "Name of the Task")
-    taskShowCmd.MarkFlagRequired("name")
+func printTaskHelp() {
+    fmt.Print(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showTaskCmdLiteral,
+        "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }
 
 func executeGetTaskCmd(taskname string) {
 
-    task, err := GetTaskInfo(taskname)
+    finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + taskname
+
+    resp, err := utils.UnmarshalData(finalUrl, &utils.Task{})
 
     if err == nil {
         // Printing the details of the Task
+        task := resp.(*utils.Task)
         printTask(*task)
-        
     } else {
-        utils.Logln(utils.LogPrefixError+"Getting Information of the Task", err)
-    }
-
-    // if flagExportAPICmdToken != "" {
-    //  // token provided with --token (-t) flag
-    //  if exportAPICmdUsername != "" || exportAPICmdPassword != "" {
-    //      // username and/or password provided with -u and/or -p flags
-    //      // Error
-    //      utils.HandleErrorAndExit("username/password provided with OAuth token.", nil)
-    //  } else {
-    //      // token only, proceed with token
-    //  }
-    // } else {
-    //  // no token provided with --token (-t) flag
-    //  // proceed with username and password
-    //  accessToken, apiManagerEndpoint, preCommandErr := utils.ExecutePreCommand(listApisCmdEnvironment, listApisCmdUsername,
-    //      listApisCmdPassword, utils.MainConfigFilePath, utils.EnvKeysAllFilePath)
-
-    //  if preCommandErr == nil {
-    //      if listApisCmdQuery != "" {
-    //          fmt.Println("Search query:", listApisCmdQuery)
-    //      }
-    //      count, apis, err := GetCarbonAppInfo(listApisCmdQuery, accessToken, apiManagerEndpoint)
-
-    //      if err == nil {
-    //          // Printing the list of available APIs
-    //          fmt.Println("Environment:", listApisCmdEnvironment)
-    //          fmt.Println("No. of APIs:", count)
-    //          if count > 0 {
-    //              printAPIs(apis)
-    //          }
-    //      } else {
-    //          utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-    //      }
-    //  } else {
-    //      utils.HandleErrorAndExit("Error calling '"+listCmdLiteral+" "+apisCmdLiteral+"'", preCommandErr)
-    //  }
-    // }
-}
-
-// GetTaskInfo
-// @param name of the task
-// @return Task Object
-// @return error
-func GetTaskInfo(name string) (*utils.Task, error) {
-
-    finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + name
-
-    utils.Logln(utils.LogPrefixInfo+"URL:", finalUrl)
-
-    headers := make(map[string]string)
-    // headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " + accessToken
-
-    resp, err := utils.InvokeGETRequest(finalUrl, headers)
-
-    // fmt.Println(resp)
-
-    if err != nil {
-        utils.HandleErrorAndExit("Unable to connect to "+finalUrl, err)
-    }
-
-    utils.Logln(utils.LogPrefixInfo+"Response:", resp.Status())
-
-    if resp.StatusCode() == http.StatusOK {
-        taskResponse := &utils.Task{}
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &taskResponse)
-
-        if unmarshalError != nil {
-            utils.HandleErrorAndExit(utils.LogPrefixError+"invalid XML response", unmarshalError)
-        }
-
-        return taskResponse, nil
-    } else {
-        return nil, errors.New(resp.Status())
+        fmt.Println(utils.LogPrefixError+"Getting Information of the Task", err)
     }
 }
 
-// printTaskInfo
+// Print the details of a Task
+// Name, Class, Group, Type and Trigger details
 // @param task : Task object
 func printTask(task utils.Task) {
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+    fmt.Println("Name - " + task.Name)
+    fmt.Println("Trigger Type - " + task.Type)
+    if task.Type == "cron" {
+        fmt.Println("Cron Expression - " + task.TriggerCron)
+    } else {
+        fmt.Println("Trigger Count - " + task.TriggerCount)
+        fmt.Println("Trigger Interval - " + task.TriggerInterval)
+    }    
+}
 
-	d_name := []string{"NAME", task.Name}
-	table.Append(d_name)
+func executeListTasksCmd() {
 
-	d_class := []string{"CLASS", task.Class}
-	table.Append(d_class)
+    finalUrl := utils.RESTAPIBase + utils.PrefixTasks
 
-	d_group := []string{"GROUP", task.Group}
-	table.Append(d_group)
+    resp, err := utils.GetArtifactList(finalUrl, &utils.TaskList{})
 
-	d_type := []string{"TYPE", task.Type}
-	table.Append(d_type)
+    if err == nil {
+        // Printing the list of available Tasks
+        list := resp.(*utils.TaskList)
+        printTaskList(*list)
+    } else {
+        utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
+    }
+}
 
-	d_count := []string{"TRIGGER COUNT", task.TriggerCount}
-	table.Append(d_count)
+func printTaskList(taskList utils.TaskList) {
 
-	d_interval := []string{"TRIGGER INTERVAL", task.TriggerInterval}
-	table.Append(d_interval)
+    if taskList.Count > 0 {
+        table := tablewriter.NewWriter(os.Stdout)
+        table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-	d_cron := []string{"TRIGGER CRON", task.TriggerCron}
-	table.Append(d_cron)
+        data := []string{"NAME", "TRIGGER TYPE", "COUNT", "INTERVAL", "CRON EXPRESSION"}
+        table.Append(data)
 
-	table.SetBorders(tablewriter.Border{Left: true, Top: true, Right: true, Bottom: false})
-	table.SetRowLine(true) 
-	table.Render() // Send output
+        for _, task := range taskList.Tasks {
+            data = []string{task.Name, task.Type, task.TriggerCount, task.TriggerInterval, task.TriggerCron}
+            table.Append(data)
+        }
+        table.SetBorder(false)
+        table.SetColumnSeparator("  ")
+        table.Render()
+    } else {
+        fmt.Println("No Tasks found")
+    }    
 }

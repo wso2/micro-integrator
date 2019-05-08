@@ -29,7 +29,9 @@ import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
-import java.util.ArrayList;
+import org.wso2.carbon.service.mgt.ServiceAdmin;
+import org.wso2.carbon.service.mgt.ServiceMetaData;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -45,17 +47,13 @@ public class ProxyServiceResource extends APIResource {
     private static final String ROOT_ELEMENT_PROXY_SERVICES = "<ProxyServices></ProxyServices>";
     private static final String COUNT_ELEMENT = "<Count></Count>";
     private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
 
     private static final String ROOT_ELEMENT_PROXY_SERVICE = "<ProxyService></ProxyService>";
     private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String DESCRIPTION_ELEMENT = "<Description></Description>";
-    private static final String IN_SEQUENCE_ELEMENT = "<InSequence></InSequence>";
-    private static final String OUT_SEQUENCE_ELEMENT = "<OutSequence></OutSequence>";
-    private static final String FAULT_SEQUENCE_ELEMENT = "<FaultSequence></FaultSequence>";
-    private static final String TRANSPORTS_ELEMENT = "<Transports></Transports>";
-    private static final String VALUE_ELEMENT = "<Value></Value>";
-    private static final String ENDPOINT_ELEMENT = "<Endpoint></Endpoint>";
+    private static final String WSDL1_1_ELEMENT = "<WSDL1_1></WSDL1_1>";
+    private static final String WSDL2_0_ELEMENT = "<WSDL2_0></WSDL2_0>";
+    private static final String STAT_ELEMENT = "<Stats></Stats>";
+    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
     public ProxyServiceResource(String urlTemplate){
         super(urlTemplate);
@@ -81,23 +79,21 @@ public class ProxyServiceResource extends APIResource {
 
         try {
             // if query params exists retrieve data about specific inbound endpoint
-            if(queryParameter != null){
-                for(NameValuePair nvPair : queryParameter){
-                    if(nvPair.getName().equals("proxyServiceName")){
+            if (null != queryParameter) {
+                for (NameValuePair nvPair : queryParameter) {
+                    if (nvPair.getName().equals("proxyServiceName")) {
                         populateProxyServiceData(messageContext, nvPair.getValue());
                     }
                 }
-            }else {
+            } else {
                 populateProxyServiceList(messageContext);
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             log.error("Error occurred while processing response", e);
         }
-
         return true;
-
     }
 
     private void populateProxyServiceList(MessageContext messageContext) throws XMLStreamException {
@@ -117,16 +113,33 @@ public class ProxyServiceResource extends APIResource {
         rootElement.addChild(countElement);
         rootElement.addChild(listElement);
 
-        for(ProxyService proxyService : proxyServices){
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+        for (ProxyService proxyService : proxyServices) {
 
-            String epName = proxyService.getName();
-            nameElement.setText(epName);
+            OMElement proxyElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_PROXY_SERVICE);
+            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
+            OMElement wsdl1Element = AXIOMUtil.stringToOM(WSDL1_1_ELEMENT);
+            OMElement wsdl2Element = AXIOMUtil.stringToOM(WSDL2_0_ELEMENT);
 
-            listElement.addChild(nameElement);
+            try {
+                ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
 
+                nameElement.setText(proxyService.getName());
+                proxyElement.addChild(nameElement);
+
+                String []wsdlUrls = data.getWsdlURLs();
+
+                wsdl1Element.setText(wsdlUrls[0]);
+                proxyElement.addChild(wsdl1Element);
+
+                wsdl2Element.setText(wsdlUrls[1]);
+                proxyElement.addChild(wsdl2Element);
+
+            } catch (Exception e) {
+                log.error("Error occurred while processing service data", e);
+            }
+
+            listElement.addChild(proxyElement);
         }
-
         axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
     }
 
@@ -138,14 +151,11 @@ public class ProxyServiceResource extends APIResource {
 
         OMElement rootElement = getProxyServiceByName(messageContext, proxyServiceName);
 
-        if(rootElement != null){
+        if (rootElement != null) {
             axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
-
-        }else{
+        } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
-
-
     }
 
     private OMElement getProxyServiceByName(MessageContext messageContext, String proxyServiceName) throws XMLStreamException {
@@ -153,54 +163,48 @@ public class ProxyServiceResource extends APIResource {
         SynapseConfiguration configuration = messageContext.getConfiguration();
         ProxyService proxyService = configuration.getProxyService(proxyServiceName);
         return convertProxyServiceToOMElement(proxyService);
-
     }
 
     private OMElement convertProxyServiceToOMElement(ProxyService proxyService) throws XMLStreamException{
 
-        if(proxyService == null){
+        if (null == proxyService) {
             return null;
         }
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_PROXY_SERVICE);
         OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement descriptionElement = AXIOMUtil.stringToOM(DESCRIPTION_ELEMENT);
-        OMElement inSequenceElement = AXIOMUtil.stringToOM(IN_SEQUENCE_ELEMENT);
-        OMElement outSequenceElement = AXIOMUtil.stringToOM(OUT_SEQUENCE_ELEMENT);
-        OMElement faultSequenceElement = AXIOMUtil.stringToOM(FAULT_SEQUENCE_ELEMENT);
-        OMElement endpointSequenceElement = AXIOMUtil.stringToOM(ENDPOINT_ELEMENT);
-        OMElement transportsElement = AXIOMUtil.stringToOM(TRANSPORTS_ELEMENT);
+        OMElement wsdl1Element = AXIOMUtil.stringToOM(WSDL1_1_ELEMENT);
+        OMElement wsdl2Element = AXIOMUtil.stringToOM(WSDL2_0_ELEMENT);
+        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
 
         nameElement.setText(proxyService.getName());
         rootElement.addChild(nameElement);
 
-        descriptionElement.setText(proxyService.getDescription());
-        rootElement.addChild(descriptionElement);
+        try {
+            ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
 
-        inSequenceElement.setText(proxyService.getTargetInSequence());
-        rootElement.addChild(inSequenceElement);
+            String []wsdlUrls = data.getWsdlURLs();
 
-        outSequenceElement.setText(proxyService.getTargetOutSequence());
-        rootElement.addChild(outSequenceElement);
+            wsdl1Element.setText(wsdlUrls[0]);
+            rootElement.addChild(wsdl1Element);
 
-        faultSequenceElement.setText(proxyService.getTargetFaultSequence());
-        rootElement.addChild(faultSequenceElement);
-
-        endpointSequenceElement.setText(proxyService.getTargetEndpoint());
-        rootElement.addChild(endpointSequenceElement);
-
-        rootElement.addChild(transportsElement);
-
-        ArrayList list = proxyService.getTransports();
-
-        for(Object o : list){
-            OMElement valueElement = AXIOMUtil.stringToOM(VALUE_ELEMENT);
-            valueElement.setText((String) o);
-            transportsElement.addChild(valueElement);
+            wsdl2Element.setText(wsdlUrls[1]);
+            rootElement.addChild(wsdl2Element);
+        } catch (Exception e) {
+            log.error("Error occurred while processing service data", e);
         }
 
+        String statisticState = proxyService.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
+
+        statsElement.setText(statisticState);
+        rootElement.addChild(statsElement);
+
+        String tracingState = proxyService.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+
+        tracingElement.setText(tracingState);
+        rootElement.addChild(tracingElement);
+
         return rootElement;
-
     }
-
 }

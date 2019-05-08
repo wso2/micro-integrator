@@ -12,26 +12,32 @@ Command Line tool for managing the WSO2 Micro Integrator
     3. Clone your fork into any directory
     5. `cd` into cloned directory and then cd into `micro-integrator/cmd`
     6. Execute `go mod vendor` or `go mod download` to download all the dependencies
-
-- ### Building
-   `cd` into `micro-integrator/cmd`
-   
-    Execute `./build.sh -t micli.go -v 1.0.0 -f` to build for all platforms. (Can only be built in Mac or Linux)
-      
-    Created packages will be available at `build/target` directory
     
+- ### Building from source
+    cd into micro-integrator home directory
+
+    Execute `make install` to build both the **Micro Integrator** and **MIcro Integrator CLI** at once.
+
+    Created Command Line tool packages will be available at cmd/build/target directory
+
 - ### Running
     Extract the compressed archive generated to a desired location.
     
     Then execute `./micli` to start the application.
     
     Execute `./micli --help` for further instructions.
-    
+
     NOTE: To execute the tool from anywhere, append the location of the executable (micli) to your $PATH variable.
 
 ### Configuration 
-- ### Inbound Listening Port
-    The default listening port of the Management API is `9091`
+
+- ### How to Enable the Management API
+    By default the Management Api is disabled. To use the Management Api you must use the system property `-DenableManagementApi` when starting the micro integrator
+
+- ### Management API Address and Port
+    To configure the address and the port of the Management Api in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
+
+    NOTE: The default address is http://localhost and the port is 9201
 
 ## Usage 
 ```bash
@@ -47,48 +53,42 @@ Command Line tool for managing the WSO2 Micro Integrator
 ```
 
 ### Commands
-   * #### list
+   * #### init
 ```bash
         Usage:
-            micli list [COMMANDS] [flags]
-
-        Available Commands:
-            apis             List all the APIs
-            carbonApps       List all the Carbon Applications
-            endpoints        List all the Endpoints
-            inboundEndpoints List all the Inbound Endpoints
-            sequences        List all the Sequences
-            proxyServices    List all the Proxy Services
-            services         List all the Services
-            tasks            List all the Tasks
+            micli init
 
         Examples:
-            micli list carbonApps
-            micli list apis
+            micli init
+            Enter following parameters to configure the cli
+            Host name(default localhost): abc.com
+            Port number(default 9201): 9595
+            CLI configuration is successful
 ```
 
 * #### show
 ```bash
         Usage:
-            micli show [COMMANDS] [flags]
-
-        Flags:
-            Required:
-                --name, -n
+            micli show [command] [argument] [flag]
                
         Available Commands:
-            api             Get information about the specified API
-            carbonApp       Get information about the specified Carbon Application
-            endpoint        Get information about the specified Endpoint
-            inboundEndpoint Get information about the specified Inbound Endpoint
-            sequence        Get information about the specified Sequence
-            proxyService    Get information about the specified Proxy Service
-            service         Get information about the specified Service
-            task            Get information about the specified Task
+            api [api-name]                  Get information about one or more Apis
+            carbonapp [app-name]            Get information about one or more Carbon Apps
+            endpoint [endpoint-name]        Get information about one or more Endpoints
+            inboundendpoint [inbound-name]  Get information about one or more Inbounds
+            proxyservice [proxy-name]       Get information about one or more Proxies 
+            sequence [sequence-name]        Get information about one or more Sequences
+            task [task-name]                Get information about one or more Task
         
         Examples:
-            micli show api -n TestAPI
-            micli show proxyService -n SampleProxyService
+            # To list all the apis
+            micli show api
+
+            # To get details about specific proxy service
+            micli show proxyService SampleProxyService
+
+        Flags:
+            -h, --help   Display information and example usage of the command
 ```
 
 * #### version

@@ -45,12 +45,10 @@ public class TaskResource extends APIResource {
     private static final String ROOT_ELEMENT_TASKS = "<Tasks></Tasks>";
     private static final String COUNT_ELEMENT = "<Count></Count>";
     private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
 
     private static final String ROOT_ELEMENT_TASK = "<Task></Task>";
     private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String CLASS_ELEMENT = "<Class></Class>";
-    private static final String GROUP_ELEMENT = "<Group></Group>";
+    private static final String TRIGGER_TYPE_ELEMENT = "<TriggerType></TriggerType>";
     private static final String TRIGGER_COUNT_ELEMENT = "<TriggerCount></TriggerCount>";
     private static final String TRIGGER_INTERVAL_ELEMENT = "<TriggerInterval></TriggerInterval>";
     private static final String TRIGGER_CRON_ELEMENT = "<TriggerCron></TriggerCron>";
@@ -80,18 +78,18 @@ public class TaskResource extends APIResource {
 
         try {
             // if query params exists retrieve data about specific task
-            if(queryParameter != null){
-                for(NameValuePair nvPair : queryParameter){
-                    if(nvPair.getName().equals("taskName")){
+            if (null != queryParameter) {
+                for (NameValuePair nvPair : queryParameter) {
+                    if (nvPair.getName().equals("taskName")) {
                         populateTaskData(messageContext, nvPair.getValue());
                     }
                 }
-            }else {
+            } else {
                 populateTasksList(messageContext);
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        }catch (XMLStreamException e) {
+        } catch (XMLStreamException e) {
             log.error("Error occurred while processing response", e);
         }
         return true;
@@ -112,17 +110,14 @@ public class TaskResource extends APIResource {
 
         countElement.setText(String.valueOf(taskNames.length));
         rootElement.addChild(countElement);
+
         rootElement.addChild(listElement);
 
-        for(String taskName : taskNames){
-            OMElement nameElement = AXIOMUtil.stringToOM(LIST_ITEM);
+        for (String taskName : taskNames) {
 
-            nameElement.setText(taskName);
-
-            listElement.addChild(nameElement);
-
+            OMElement taskElement = getTaskByName(messageContext, taskName);
+            listElement.addChild(taskElement);
         }
-
         axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
     }
 
@@ -133,33 +128,35 @@ public class TaskResource extends APIResource {
 
         OMElement rootElement = getTaskByName(messageContext, taskName);
 
-        if(rootElement != null){
+        if (null != rootElement) {
             axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
-
-        }else{
+        } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
-
     }
 
     private OMElement getTaskByName(MessageContext messageContext, String taskName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
-        TaskDescription task = configuration.getTaskManager().getTask(taskName);
-        return convertTaskToOMElement(task);
 
+        String []taskNames = configuration.getTaskManager().getTaskNames();
+        for (String task : taskNames) {
+            if (task.equals(taskName)) {
+                return convertTaskToOMElement(configuration.getTaskManager().getTask(taskName));
+            }
+        }
+        return null;
     }
 
     private OMElement convertTaskToOMElement(TaskDescription task) throws XMLStreamException{
 
-        if(task == null){
+        if (null == task) {
             return null;
         }
 
         OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_TASK);
         OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement classElement = AXIOMUtil.stringToOM(CLASS_ELEMENT);
-        OMElement groupElement = AXIOMUtil.stringToOM(GROUP_ELEMENT);
+        OMElement triggerTypeElement = AXIOMUtil.stringToOM(TRIGGER_TYPE_ELEMENT);
         OMElement triggerCountElement = AXIOMUtil.stringToOM(TRIGGER_COUNT_ELEMENT);
         OMElement triggerIntervalElement = AXIOMUtil.stringToOM(TRIGGER_INTERVAL_ELEMENT);
         OMElement triggerCronElement = AXIOMUtil.stringToOM(TRIGGER_CRON_ELEMENT);
@@ -167,11 +164,14 @@ public class TaskResource extends APIResource {
         nameElement.setText(task.getName());
         rootElement.addChild(nameElement);
 
-        classElement.setText(task.getTaskImplClassName());
-        rootElement.addChild(classElement);
+        String triggerType = "cron";
 
-        groupElement.setText(task.getTaskGroup());
-        rootElement.addChild(groupElement);
+        if (null == task.getCronExpression()) {
+            triggerType = "simple";
+        }
+
+        triggerTypeElement.setText(triggerType);
+        rootElement.addChild(triggerTypeElement);
 
         triggerCountElement.setText(String.valueOf(task.getCount()));
         rootElement.addChild(triggerCountElement);
@@ -183,7 +183,5 @@ public class TaskResource extends APIResource {
         rootElement.addChild(triggerCronElement);
 
         return rootElement;
-
     }
-
 }

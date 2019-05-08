@@ -20,4 +20,5 @@
 
 <apis>
     <api name="PrometheusApi" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>
+    <api name="ManagementApi" class="org.wso2.carbon.micro.integrator.management.apis.ManagementInternalAPI"/>
 </apis>
