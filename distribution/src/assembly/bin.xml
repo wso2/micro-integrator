@@ -175,6 +175,7 @@
                 <exclude>**/wrapper.conf</exclude>
                 <exclude>build.xml</exclude>
                 <exclude>version.txt</exclude>
+                <exclude>README.txt</exclude>
             </excludes>
         </fileSet>
 
@@ -224,21 +225,6 @@
             <fileMode>755</fileMode>
         </fileSet>
 
-        <fileSet>
-            <directory>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventpublishers
-            </directory>
-            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/eventpublishers
-            </outputDirectory>
-        </fileSet>
-
-        <fileSet>
-            <directory>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/deployment/server/eventstreams
-            </directory>
-            <outputDirectory>wso2mi-${pom.version}/repository/deployment/server/eventstreams
-            </outputDirectory>
-        </fileSet>
 
         <fileSet>
             <directory>src/resources/dockerfiles</directory>
@@ -400,19 +386,7 @@
             <fileMode>644</fileMode>
         </file>
 
-        <file>
-            <source>src/conf/event-processor.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
 
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/output-event-adapters.xml
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
         <file>
             <source>src/conf/axis2.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
@@ -589,6 +563,12 @@
         <file>
             <source>src/resources/updates/product.txt</source>
             <outputDirectory>wso2mi-${pom.version}/updates</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-core-${carbon.kernel.version}/bin/README.txt</source>
+            <outputDirectory>wso2mi-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>

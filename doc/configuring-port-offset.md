@@ -13,3 +13,5 @@ The portOffset feature in WSO2 Micro Integrator allows you to run multiple WSO2 
  PortOffset can be set in the carbon.xml as follows, under the Ports section:
 
  ```<Offset>3</Offset>```
+ 
+ Please note that a port offset value of 10 is added in the `carbon.xml` by default.

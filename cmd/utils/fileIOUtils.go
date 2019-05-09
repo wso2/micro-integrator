@@ -63,7 +63,7 @@ func (serverConfig *ServerConfig) ParseServerConfigFromFile(data []byte) error {
         return err
     }
 
-    if serverConfig.Host == "" {
+    if serverConfig.Url == "" {
         return errors.New("Blank Host")
     }
     if serverConfig.Port == "" {

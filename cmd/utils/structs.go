@@ -19,7 +19,7 @@
 package utils
 
 type ServerConfig struct {
-    Host string `yaml:"server_address"`
+    Url string `yaml:"server_address"`
     Port string `yaml:"server_port"`
 }
 

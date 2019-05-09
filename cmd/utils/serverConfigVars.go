@@ -31,7 +31,7 @@ func SetConfigVars(serverConfigFilePath string) error {
         mainConfig := GetServerConfigFromFile(serverConfigFilePath)
         Logln(LogPrefixInfo + " reading '" + serverConfigFilePath + "'")
 
-        RESTAPIBase = mainConfig.Host + ":" + mainConfig.Port + "/" + Context + "/"
+        RESTAPIBase = mainConfig.Url + ":" + mainConfig.Port + "/" + Context + "/"
         Logln(LogPrefixInfo + "Setting REST API URL to " + RESTAPIBase)
     }
     return nil
