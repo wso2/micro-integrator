@@ -23,11 +23,11 @@ Command Line tool for managing the WSO2 Micro Integrator
 - ### Running
     Extract the compressed archive generated to a desired location.
     
-    Then execute `./micli` to start the application.
+    Then execute `./mi` to start the application.
     
-    Execute `./micli --help` for further instructions.
+    Execute `./mi --help` for further instructions.
 
-    NOTE: To execute the tool from anywhere, append the location of the executable (micli) to your $PATH variable.
+    NOTE: To execute the tool from anywhere, append the location of the executable (mi) to your $PATH variable.
 
 ### Configuration 
 
@@ -41,7 +41,7 @@ Command Line tool for managing the WSO2 Micro Integrator
 
 ## Usage 
 ```bash
-     micli [command]
+     mi [command]
 ```
 
 #### Global Flags
@@ -56,10 +56,10 @@ Command Line tool for managing the WSO2 Micro Integrator
    * #### init
 ```bash
         Usage:
-            micli init
+            mi init
 
         Examples:
-            micli init
+            mi init
             Enter following parameters to configure the cli
             Host name(default localhost): abc.com
             Port number(default 9201): 9595
@@ -69,7 +69,7 @@ Command Line tool for managing the WSO2 Micro Integrator
 * #### show
 ```bash
         Usage:
-            micli show [command] [argument] [flag]
+            mi show [command] [argument] [flag]
                
         Available Commands:
             api [api-name]                  Get information about one or more Apis
@@ -82,10 +82,10 @@ Command Line tool for managing the WSO2 Micro Integrator
         
         Examples:
             # To list all the apis
-            micli show api
+            mi show api
 
             # To get details about specific proxy service
-            micli show proxyService SampleProxyService
+            mi show proxyService SampleProxyService
 
         Flags:
             -h, --help   Display information and example usage of the command
@@ -93,5 +93,5 @@ Command Line tool for managing the WSO2 Micro Integrator
 
 * #### version
 ```bash
-        micli version 
+        mi version 
 ```

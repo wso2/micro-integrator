@@ -28,7 +28,7 @@ function showUsageAndExit() {
     echo "[OPTIONAL] Cross compile for all the list of platforms. If not specified, the specified target" \
         "file will be compiled only for the autodetected native platform."
     echo
-    echo "Ex: ./build.sh -t micli.go -v 1.0.0 -f : Builds Micro Integrator CLI" \
+    echo "Ex: ./build.sh -t mi.go -v 1.0.0 -f : Builds Micro Integrator CLI" \
         "version 1.0.0 for all platforms."
     echo
     exit 1
@@ -117,7 +117,7 @@ do
     parch=${split[3]}
 
     # ensure output file name
-    output="micli"
+    output="mi"
     test "$output" || output="$(basename ${target} | sed 's/\.go//')"
 
     # add exe to windows output
@@ -136,7 +136,7 @@ do
     destination="$zipdir/$output"
 
     GOOS=$goos GOARCH=$goarch go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH -ldflags  \
-    "-X micli.MICLI=$build_version -X 'micli.buildDate=$(date -u '+%Y-%m-%d
+    "-X mi.MICLI=$build_version -X 'mi.buildDate=$(date -u '+%Y-%m-%d
     %H:%M:%S UTC')'" -o $destination $target
 
     pwd=`pwd`
