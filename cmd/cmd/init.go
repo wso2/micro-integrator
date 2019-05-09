@@ -32,6 +32,18 @@ const initCmdShortDesc = "Set Management API configuration"
 
 var initCmdLongDesc = "Set the Hostname and the Port of the Management API\n"
 
+var initCmdUsage = 
+"Usage:\n" +
+"  " + programName + " " + initCmdLiteral + "\n"
+
+var initCmdExample = 
+"Examples:\n" +
+"  " + programName + " " + initCmdLiteral + "\n" +
+"  " + "Enter following parameters to configure the cli\n" +
+"  " + "Host name(default localhost): abc.com\n" +
+"  " + "Port number(default 9201): 9595\n" +
+"  " + "CLI configuration is successful\n"
+
 // initCmd represents the init command
 var initCmd = &cobra.Command{
     Use:   initCmdLiteral,
@@ -39,28 +51,37 @@ var initCmd = &cobra.Command{
     Long:  initCmdLongDesc,
     Run: func(cmd *cobra.Command, args []string) {
         utils.Logln(utils.LogPrefixInfo + "Init called")
-        promptUserForConfig()
+        if len(args) > 0 {
+            printInitHelp()
+        } else {
+            promptUserForConfig()
+        }
     },
 }
 
 func init() {
     rootCmd.AddCommand(initCmd)
+    initCmd.SetHelpTemplate(initCmdLongDesc + initCmdUsage + initCmdExample + utils.GetCmdFlags("init"))
 }
 
-func promptUserForConfig(){
-    fmt.Println("Follow the instructions below to configure the CLI")
-    fmt.Print("Enter Host name: ")
+func printInitHelp() {
+    fmt.Print(initCmdLongDesc + initCmdUsage + initCmdExample + utils.GetCmdFlags("init"))
+}
+
+func promptUserForConfig() {
+    fmt.Println("Enter following parameters to configure the cli")
+    fmt.Print("Host name(default localhost): ")
     var host string
     fmt.Scanln(&host)
     if len(host) == 0 {
-        fmt.Println("Host name is not specified, default value is used")
+        fmt.Println("Host name is not specified, default value localhost is used")
         host = utils.DefaultHost
     }
-    fmt.Print("Enter Port number: ")
+    fmt.Print("Port number(default 9201): ")
     var strPort string
     fmt.Scanln(&strPort)
     if len(strPort) == 0 {
-        fmt.Println("Port number is not specified, default value is used")
+        fmt.Println("Port number is not specified, default value 9201 is used")
         strPort = utils.DefaultPort
     } else {
         port, err := strconv.Atoi(strPort)
