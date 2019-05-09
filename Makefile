@@ -17,8 +17,8 @@
 .PHONY: install
 install:
 	mvn clean install
-	cd cmd && ./build.sh -t micli.go -v 1.0.0 -f;
+	cd cmd && ./build.sh -t mi.go -v 1.0.0 -f;
 
 .PHONY: install-cli
 install-cli:
-	cd cmd && ./build.sh -t micli.go -v 1.0.0 -f
+	cd cmd && ./build.sh -t mi.go -v 1.0.0 -f
