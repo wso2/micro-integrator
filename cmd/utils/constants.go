@@ -23,7 +23,7 @@ import (
     "path/filepath"
 )
 
-const ProjectName = "micli"
+const ProjectName = "mi"
 
 // File Names and Paths
 var CurrentDir, _ = os.Getwd()
