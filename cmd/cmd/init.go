@@ -96,7 +96,7 @@ func promptUserForConfig() {
             os.Exit(1)
         }
     }
-    writeConfig( utils.HTTPProtocol + host, strPort)
+    writeConfig(utils.HTTPSProtocol + host, strPort)
 }
 
 func writeConfig(url, port string){

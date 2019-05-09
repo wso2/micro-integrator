@@ -87,7 +87,7 @@ const DefaultHost = "localhost"
 const DefaultPort = "9201"
 const Context = "management"
 
-const DefaultRESTAPIBase = HTTPProtocol + DefaultHost + ":" + DefaultPort + "/" + Context + "/"
+const DefaultRESTAPIBase = HTTPSProtocol + DefaultHost + ":" + DefaultPort + "/" + Context + "/"
 const PrefixCarbonApps = "applications"
 const PrefixAPIs = "apis"
 const PrefixServices = "services"
