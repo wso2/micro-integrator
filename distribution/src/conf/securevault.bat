@@ -72,7 +72,8 @@ rem loop through the libs and add them to the class path
 cd "%CARBON_HOME%"
 
 set CARBON_CLASSPATH=.\conf
-FOR %%c in ("%CARBON_HOME%\..\components\plugins\org.wso2.carbon.micro.integrator.security*.jar") DO set CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\..\components\plugins\%%~nc%%~xc"
+FOR %%c in ("%CARBON_HOME%\wso2\components\plugins\org.wso2.carbon.micro.integrator.security*.jar") DO set
+CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\wso2\components\plugins\%%~nc%%~xc"
 
 rem ----- Execute The Requested Command ---------------------------------------
 echo Using CARBON_HOME:   %CARBON_HOME%

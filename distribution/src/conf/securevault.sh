@@ -104,7 +104,7 @@ fi
 
 # update classpath
 CARBON_CLASSPATH=""
-for f in "$CARBON_HOME"/../components/plugins/org.wso2.carbon.micro.integrator.security*.jar
+for f in "$CARBON_HOME"/wso2/components/plugins/org.wso2.carbon.micro.integrator.security*.jar
 do
   CARBON_CLASSPATH=$CARBON_CLASSPATH:$f
 done
