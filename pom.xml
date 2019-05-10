@@ -289,18 +289,18 @@
         <carbon.kernel.version>4.4.40</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <synapse.version>2.1.7-wso2v108</synapse.version>
+        <synapse.version>2.1.7-wso2v109</synapse.version>
         <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
-        <carbon.mediation.version>4.6.145</carbon.mediation.version>
+        <carbon.mdiation.version>4.6.146</carbon.mdiation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
-        <carbon.data.version>4.4.101</carbon.data.version>
+        <carbon.data.version>4.4.105</carbon.data.version>
         <securevault.version>1.0.0-wso2v2</securevault.version>
 
         <cipher.tool.version>1.0.0-wso2v8</cipher.tool.version>
         <axis2.transport.version>2.0.0-wso2v34</axis2.transport.version>
         <axis2.wso2.version>1.6.1-wso2v35</axis2.wso2.version>
         <carbon.analytics.common.version>5.1.57</carbon.analytics.common.version>
-        <carbon.commons.version>4.6.64</carbon.commons.version>
+        <carbon.commons.version>4.6.65</carbon.commons.version>
         <carbon.rule.version>4.4.9</carbon.rule.version>
         <carbon.deployment.version>4.8.3</carbon.deployment.version>
         <wss4j.version>1.5.11-wso2v18</wss4j.version>
