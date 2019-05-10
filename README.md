@@ -47,6 +47,10 @@ are the main design objectives for developing the Micro Integrator.
 - Building a runtime suitable for hybrid integration requirements
   (integration cloud).
 
+### Micro Integrator CI/CD workflow
+
+![Micro Integrator CI/CD workflow](doc/images/micro-Integrator-ci-cd-workflow.png)
+
 ## Getting Started
 
 Please refer to the instructions on the installation of, and working with, the Micro Integrator by visiting the documentation for
