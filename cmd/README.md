@@ -37,7 +37,7 @@ Command Line tool for managing the WSO2 Micro Integrator
 - ### Management API Address and Port
     To configure the address and the port of the Management Api in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
 
-    NOTE: The default address is https://localhost and the port is 9154
+    NOTE: The default address is https://localhost and the port is 9164
 
 ## Usage 
 ```bash
@@ -62,7 +62,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             mi init
             Enter following parameters to configure the cli
             Host name(default localhost): abc.com
-            Port number(default 9154): 9595
+            Port number(default 9164): 9595
             CLI configuration is successful
 ```
 

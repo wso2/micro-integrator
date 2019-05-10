@@ -41,7 +41,7 @@ var initCmdExample =
 "  " + programName + " " + initCmdLiteral + "\n" +
 "  " + "Enter following parameters to configure the cli\n" +
 "  " + "Host name(default localhost): abc.com\n" +
-"  " + "Port number(default 9154): 9595\n" +
+"  " + "Port number(default 9164): 9595\n" +
 "  " + "CLI configuration is successful\n"
 
 // initCmd represents the init command
@@ -77,11 +77,11 @@ func promptUserForConfig() {
         fmt.Println("Host name is not specified, default value localhost is used")
         host = utils.DefaultHost
     }
-    fmt.Print("Port number(default 9154): ")
+    fmt.Print("Port number(default 9164): ")
     var strPort string
     fmt.Scanln(&strPort)
     if len(strPort) == 0 {
-        fmt.Println("Port number is not specified, default value 9154 is used")
+        fmt.Println("Port number is not specified, default value 9164 is used")
         strPort = utils.DefaultPort
     } else {
         port, err := strconv.Atoi(strPort)
