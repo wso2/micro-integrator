@@ -22,6 +22,7 @@
     <!--
         Uncomment below parameters (ConfigRegRoot, GovRegRoot, LocalRegRoot) to configure registry root paths
         Default : <EI_HOME>/wso2/micro-integrator/registry/{governance | config | local}
+        Example : <parameter name="GovRegRoot">file:///Users/JohnDoe/registry/governance</parameter>
     -->
     <!--
     <parameter name="ConfigRegRoot">{Root directory path for configuration Registry}</parameter>
