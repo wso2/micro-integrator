@@ -136,7 +136,7 @@ do
     destination="$zipdir/$output"
 
     GOOS=$goos GOARCH=$goarch go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH -ldflags  \
-    "-X mi.MICLI=$build_version -X 'mi.buildDate=$(date -u '+%Y-%m-%d
+    "-X github.com/wso2/micro-integrator/cmd/cmd.version=$build_version -X 'mi.buildDate=$(date -u '+%Y-%m-%d
     %H:%M:%S UTC')'" -o $destination $target
 
     pwd=`pwd`

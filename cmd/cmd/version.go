@@ -24,7 +24,7 @@ import (
     "github.com/wso2/micro-integrator/cmd/utils"
 )
 
-var version = "0.1"
+var version string
 
 // versionCmd represents the version command
 var versionCmd = &cobra.Command{
@@ -32,7 +32,7 @@ var versionCmd = &cobra.Command{
     Short: "Version of the CLI",
     Long:  `Display the version of the Command line tool`,
     Run: func(cmd *cobra.Command, args []string) {
-        fmt.Println(utils.ProjectName + " Version: " + version)
+        fmt.Println(utils.ProjectName + " version: " + version)
     },
 }
 
