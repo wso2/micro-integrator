@@ -35,7 +35,7 @@ import (
 // Invoke http-post request using go-resty
 func InvokePOSTRequest(url string, headers map[string]string, body string) (*resty.Response, error) {
 
-    resty.SetTLSClientConfig(&tls.Config{ InsecureSkipVerify: true })
+    AllowInsecureSSLConnection()
     resp, err := resty.R().SetHeaders(headers).SetBody(body).Post(url)
 
     return resp, err
@@ -44,7 +44,7 @@ func InvokePOSTRequest(url string, headers map[string]string, body string) (*res
 // Invoke http-get request using go-resty
 func InvokeGETRequest(url string, headers map[string]string) (*resty.Response, error) {
 
-    resty.SetTLSClientConfig(&tls.Config{ InsecureSkipVerify: true })
+    AllowInsecureSSLConnection()
     resp, err := resty.R().SetHeaders(headers).Get(url)
 
     return resp, err
@@ -110,6 +110,10 @@ func PrintList(list []string) {
     for _, item := range list {
         fmt.Println(item)
     }
+}
+
+func AllowInsecureSSLConnection() {
+    resty.SetTLSClientConfig(&tls.Config{ InsecureSkipVerify: true })
 }
 
 // Get Artifact List depending on the @param url and unmarshal it
