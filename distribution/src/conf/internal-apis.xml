@@ -17,8 +17,36 @@
 <!--
     This is the configuration file for internal APIs
 -->
-
-<apis>
-    <api name="PrometheusApi" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>
-    <api name="ManagementApi" class="org.wso2.carbon.micro.integrator.management.apis.ManagementInternalAPI"/>
-</apis>
+<internalApis>
+    <apis>
+        <api name="PrometheusApi" protocol="http" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>
+        <api name="ManagementApi" protocol="https"
+             class="org.wso2.carbon.micro.integrator.management.apis.ManagementInternalAPI"/>
+    </apis>
+    <sslConfig>
+        <parameter name="keystore">
+            <KeyStore>
+                <Location>repository/resources/security/wso2carbon.jks</Location>
+                <Type>JKS</Type>
+                <Password>wso2carbon</Password>
+                <KeyPassword>wso2carbon</KeyPassword>
+            </KeyStore>
+        </parameter>
+        <parameter name="truststore">
+            <TrustStore>
+                <Location>repository/resources/security/client-truststore.jks</Location>
+                <Type>JKS</Type>
+                <Password>wso2carbon</Password>
+            </TrustStore>
+        </parameter>
+        <parameter name="sslVerifyClient">false</parameter>
+        <parameter name="httpsProtocols">TLSv1,TLSv1.1,TLSv1.2</parameter>
+        <parameter name="sslProtocol">SSLV3</parameter>
+        <parameter name="certificateRevocationVerifier">
+            <CertificateRevocationVerifier enable="false">
+                <CacheSize>10</CacheSize>
+                <CacheDelay>2</CacheDelay>
+            </CertificateRevocationVerifier>
+        </parameter>
+    </sslConfig>
+</internalApis>
