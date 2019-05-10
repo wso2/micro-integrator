@@ -55,6 +55,8 @@ var showCmdHelp = `
 Use " show [command] --help" for more information about a command
 `
 
+var showCmdValidArgs = []string{"api", "carbonapp", "endpoint", "inboundendpoint", "proxyservice", "sequence", "task", "help"}
+
 // showCmd represents the show command
 var showCmd = &cobra.Command{
   Use:   "show [command]",
@@ -63,6 +65,7 @@ var showCmd = &cobra.Command{
   Run: func(cmd *cobra.Command, args []string) {
     fmt.Print(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
   },
+  ValidArgs: showCmdValidArgs,
 }
 
 func init() {

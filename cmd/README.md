@@ -29,6 +29,9 @@ Command Line tool for managing the WSO2 Micro Integrator
 
     NOTE: To execute the tool from anywhere, append the location of the executable (mi) to your $PATH variable.
 
+- ### Command Autocompletion
+    Copy the file mi_bash_completion.sh to /etc/bash_completion.d/ and source it with source /etc/bash_completion.d/mi_bash_completion.sh to enable bash auto-completion.
+
 ### Configuration 
 
 - ### How to Enable the Management API
