@@ -37,11 +37,14 @@ var rootCmdLongDesc = dedent.Dedent(`
         ` + utils.ProjectName + ` is a Command Line Tool for Management of WSO2 Micro Integrator
         `)
 
+var rootCmdValidArgs = []string{"init", "show", "version", "help"}
+
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
     Use:   utils.ProjectName,
     Short: rootCmdShortDesc,
     Long:  rootCmdLongDesc,
+    ValidArgs: rootCmdValidArgs,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.

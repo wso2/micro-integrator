@@ -29,6 +29,9 @@ Command Line tool for managing the WSO2 Micro Integrator
 
     NOTE: To execute the tool from anywhere, append the location of the executable (mi) to your $PATH variable.
 
+- ### Command Autocompletion
+    Copy the file mi_bash_completion.sh to /etc/bash_completion.d/ and source it with source /etc/bash_completion.d/mi_bash_completion.sh to enable bash auto-completion.
+
 ### Configuration 
 
 - ### How to Enable the Management API
@@ -37,7 +40,7 @@ Command Line tool for managing the WSO2 Micro Integrator
 - ### Management API Address and Port
     To configure the address and the port of the Management Api in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
 
-    NOTE: The default address is http://localhost and the port is 9201
+    NOTE: The default address is https://localhost and the port is 9164
 
 ## Usage 
 ```bash
@@ -62,7 +65,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             mi init
             Enter following parameters to configure the cli
             Host name(default localhost): abc.com
-            Port number(default 9201): 9595
+            Port number(default 9164): 9595
             CLI configuration is successful
 ```
 
