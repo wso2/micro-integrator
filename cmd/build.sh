@@ -76,7 +76,7 @@ fi
 
 
 rootPath=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
-buildDir="build/target"
+buildDir="build"
 buildPath="$rootPath/${buildDir}"
 
 echo "Cleaning build path ${buildDir}..."
