@@ -18,7 +18,7 @@ Command Line tool for managing the WSO2 Micro Integrator
 
     Execute `make install` to build both the **Micro Integrator** and **MIcro Integrator CLI** at once.
 
-    Created Command Line tool packages will be available at cmd/build/target directory
+    Created Command Line tool packages will be available at cmd/build directory
 
 - ### Running
     Extract the compressed archive generated to a desired location.
