@@ -103,7 +103,7 @@ You have successfully deployed 'order-process-backend' and the 'composite-servic
 
 ### Docker Deployment
 
-We assume that you have followed all the steps in the section [Create the order processing back-end.](#1-create-the-order-processing-back-end) and [Create the composite service to invoke the back-end.](#2-create-the-composite-service-to-invoke-the-back-end)
+We assume that you have followed all the steps in the section [Create the order processing back-end](#1-create-the-order-processing-back-end) and [Create the composite service to invoke the back-end.](#2-create-the-composite-service-to-invoke-the-back-end)
 In [Create the composite service to invoke the back-end](#2-create-the-composite-service-to-invoke-the-back-end) step 3 you need to replace 'order-process-backend' endpoint address in [forwardOrderApi.xml](https://github.com/wso2/micro-integrator/blob/master/examples/getting-started/composite-service/composite-service/src/main/synapse-config/api/forwardOrderApi.xml) file as follows because in docker containers each container has their own localhost.
 ```xml
 <endpoint>
@@ -145,14 +145,13 @@ You have successfully deployed 'order-process-backend' and the 'composite-servic
 
 ### Kubernetes Deployment
 
-Please follow all the steps in the section [Create the order processing back-end.]
-(#1-create-the-order-processing-back-end) and [Create the composite service to invoke the back-end.]
-(#2-create-the-composite-service-to-invoke-the-back-end) if you have not already done. In step 3 of
+Please follow all the steps in the section [Create the order processing back-end](#1-create-the-order-processing-back-end) and
+[Create the composite service to invoke the back-end.](#2-create-the-composite-service-to-invoke-the-back-end) if you have not already done. In step 3 of
 [Create the composite service to invoke the back-end](#2-create-the-composite-service-to-invoke-the-back-end), you need
 to replace 'order-process-backend' endpoint address in [forwardOrderApi.xml](https://github.com/wso2/micro-integrator/blob/master/examples/getting-started/composite-service/composite-service/src/main/synapse-config/api/forwardOrderApi.xml) file as follows because in docker containers each container has their own localhost.
 ```xml
 <endpoint>
-    <address uri="http://backend:8290/order"/>
+    <address uri="http://order-process-be-service:8290/order"/>
 </endpoint>
 ```
 

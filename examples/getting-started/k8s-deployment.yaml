@@ -28,7 +28,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: backend
+  name: order-process-be-service
   labels:
     event: mi-order-process-be
 spec:
