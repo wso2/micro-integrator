@@ -188,9 +188,9 @@ integrator service in a Kubernetes cluster. You can use `kubectl create` to depl
     pod/mi-order-process-be-deployment-bdd8b577d-z2zn9   1/1     Running   0          87m
 
     NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
-    service/backend                      ClusterIP   10.106.186.211   <none>        8290/TCP         87m
     service/kubernetes                   ClusterIP   10.96.0.1        <none>        443/TCP          105d
     service/mi-getting-started-service   NodePort    10.101.64.224    <none>        8290:32100/TCP   87m
+    service/order-process-be-service     ClusterIP   10.106.186.211   <none>        8290/TCP         87m
 
     NAME                                             READY   UP-TO-DATE   AVAILABLE   AGE
     deployment.apps/mi-getting-started-deployment    1/1     1            1           87m
