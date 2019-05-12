@@ -20,5 +20,5 @@
 
 FROM wso2/micro-integrator:latest
 
-COPY files/carbonapps /home/wso2ei/wso2mi/repository/deployment/server/carbonapps
+COPY files/carbonapps /home/wso2carbon/wso2mi/repository/deployment/server/carbonapps
 

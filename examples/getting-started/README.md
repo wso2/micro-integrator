@@ -102,7 +102,8 @@ Assume you have followed steps 1-4 in the section [Create the composite service 
 You have successfully deployed 'order-process-backend' and the 'composite-service' services locally. Now you can test your deployments by using [Testing](#Testing) section.
 
 ### Docker Deployment
-Please note that the distribution must be built with ```-Ddocker.skip=false``` prior to this step, for the base image to be created. And also assume that you have followed all the steps in the section [Create the order processing back-end.](#1-create-the-order-processing-back-end) and [Create the composite service to invoke the back-end.](#2-create-the-composite-service-to-invoke-the-back-end)
+
+We assume that you have followed all the steps in the section [Create the order processing back-end](#1-create-the-order-processing-back-end) and [Create the composite service to invoke the back-end.](#2-create-the-composite-service-to-invoke-the-back-end)
 In [Create the composite service to invoke the back-end](#2-create-the-composite-service-to-invoke-the-back-end) step 3 you need to replace 'order-process-backend' endpoint address in [forwardOrderApi.xml](https://github.com/wso2/micro-integrator/blob/master/examples/getting-started/composite-service/composite-service/src/main/synapse-config/api/forwardOrderApi.xml) file as follows because in docker containers each container has their own localhost.
 ```xml
 <endpoint>
@@ -142,6 +143,71 @@ We have already added this file in to the ```<mi-work-directory>/examples/gettin
 You have successfully deployed 'order-process-backend' and the 'composite-service' services in docker. Now you can test your deployments by using [Testing](#Testing) section.
 
 
+### Kubernetes Deployment
+
+Please follow all the steps in the section [Create the order processing back-end](#1-create-the-order-processing-back-end) and
+[Create the composite service to invoke the back-end.](#2-create-the-composite-service-to-invoke-the-back-end) if you have not already done. In step 3 of
+[Create the composite service to invoke the back-end](#2-create-the-composite-service-to-invoke-the-back-end), you need
+to replace 'order-process-backend' endpoint address in [forwardOrderApi.xml](https://github.com/wso2/micro-integrator/blob/master/examples/getting-started/composite-service/composite-service/src/main/synapse-config/api/forwardOrderApi.xml) file as follows because in docker containers each container has their own localhost.
+```xml
+<endpoint>
+    <address uri="http://order-process-be-service:8290/order"/>
+</endpoint>
+```
+
+We are using [Minikube](https://github.com/kubernetes/minikube) to test deploying to a Kubernetes cluster in this
+example. We assume that you already have a working minikube setup locally. If not please follow the
+[installation guide](https://kubernetes.io/docs/tasks/tools/install-minikube/).
+
+**Note**: You have to build the docker image while the docker CLI is using the Minikube’s built-in Docker daemon.
+Otherwise the docker image will not be available in the Minikube environment. You can execute `eval $(minikube
+docker-env)` to use the Minikube’s built-in Docker daemon. Please refer
+[Use local images by re-using the Docker daemon](https://kubernetes.io/docs/setup/minikube/#use-local-images-by-re-using-the-docker-daemon)
+for more details.
+
+1. Create docker images for the order processing back-end and the composite service to invoke the back-end.
+
+   ```
+   $ docker build -t wso2/mi-order-process-be order-process-be/
+   $ docker build -t wso2/mi-getting-started composite-service/
+   ```
+
+2. The [k8s-deployment.yaml](k8s-deployment.yaml) file is the Kubernetes artifact descriptor used to deploy the micro
+integrator service in a Kubernetes cluster. You can use `kubectl create` to deploy.
+
+    ```
+    $ kubectl create -f k8s-deployment.yaml
+    ```
+
+3. Check whether all the Kubernetes artifacts are deployed successfully by executing the following command.
+    ```
+    $ kubectl get all
+
+    NAME                                                 READY   STATUS    RESTARTS   AGE
+    pod/mi-getting-started-deployment-5b459bc5b9-w5r2q   1/1     Running   0          87m
+    pod/mi-order-process-be-deployment-bdd8b577d-z2zn9   1/1     Running   0          87m
+
+    NAME                                 TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)          AGE
+    service/kubernetes                   ClusterIP   10.96.0.1        <none>        443/TCP          105d
+    service/mi-getting-started-service   NodePort    10.101.64.224    <none>        8290:32100/TCP   87m
+    service/order-process-be-service     ClusterIP   10.106.186.211   <none>        8290/TCP         87m
+
+    NAME                                             READY   UP-TO-DATE   AVAILABLE   AGE
+    deployment.apps/mi-getting-started-deployment    1/1     1            1           87m
+    deployment.apps/mi-order-process-be-deployment   1/1     1            1           87m
+
+    NAME                                                       DESIRED   CURRENT   READY   AGE
+    replicaset.apps/mi-getting-started-deployment-5b459bc5b9   1         1         1       87m
+    replicaset.apps/mi-order-process-be-deployment-bdd8b577d   1         1         1       87m
+
+    ```
+
+4. Follow the section on [Testing](#testing). Please note that you will have to use following URL to invoke the
+   composite service
+   ```
+   http://MINIKUBE_IP:32100/forward
+   ```
+
 ## Testing
 #### Verifying the invocation
 
@@ -158,6 +224,9 @@ Upon invocation you should be able to observe the following response
 	"status":"successful"
 }
 ```
+
+**Note**: Please use `http://MINIKUBE_IP:32100/forward` to invoke the composite service if you have deployed in Kubernetes.
+
 #### Debugging the mediation
 
 Alternatively, the Integrator Tool brings in the capability of debugging the mediation flow with the the tool interactively. for more information on debugging the mediation flow, please refer to [this blog.](https://medium.com/@rosensilva/debugging-integration-flows-using-wso2-enterprise-integrator-16bc127732d)

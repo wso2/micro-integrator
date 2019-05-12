@@ -197,13 +197,13 @@ to build the Micro Integrator docker image and publish it in the local docker re
 ### Deploying artifacts in the Micro Integrator profile
 
 Micro Integrator docker image reads and deploys carbon application in the
-`/home/wso2ei/wso2mi/repository/deployment/server/carbonapps` directory. Therefore you can use a
+`/home/wso2carbon/wso2mi/repository/deployment/server/carbonapps` directory. Therefore you can use a
 simple Docker file like the following to create a docker image with the integration artifacts.
 
 ```docker
 FROM wso2/micro-integrator:latest
 
-COPY hello-world-capp_1.0.0.car /home/wso2ei/wso2mi/repository/deployment/server/carbonapps
+COPY hello-world-capp_1.0.0.car /home/wso2carbon/wso2mi/repository/deployment/server/carbonapps
 ```
 
 Then you can simply use the docker CLI to create the docker image.
@@ -231,7 +231,7 @@ $ docker container stop wso2-mi-container
 ### Configuring the Micro Integrator profile
 
 All configuration files related to the Micro Integrator profile are located in the
-`/home/wso2ei/wso2mi/wso2/micro-integrator/conf` directory. You can either mount a volume to that location or copy
+`/home/wso2carbon/wso2mi/wso2/micro-integrator/conf` directory. You can either mount a volume to that location or copy
 required configurations to modify the defaults in the Micro Integrator base image.
 
 ### Trying out a sample scenario
