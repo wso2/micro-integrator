@@ -69,7 +69,7 @@ You can build the order process back-end and deploy it in Micro Integrator using
    ```
 ## Deployment
 
-Here we have illustrated two types of deployments and you can choose prefer one for the rest of this example. Throughout this section, it will be assumed that you have created two C-apps for 'composite-service' and 'order-process-backend' which are reside in ```<mi-work-directory>/examples/getting-started/composite-service/composite-service-capp/target``` and ```<mi-work-directory>/examples/getting-started/order-process-be/order-processCompositeApplication/target``` folders.
+Here we have illustrated three types of deployments and you can choose prefer one for the rest of this example. Throughout this section, it will be assumed that you have created two C-apps for 'composite-service' and 'order-process-backend' which are reside in ```<mi-work-directory>/examples/getting-started/composite-service/composite-service-capp/target``` and ```<mi-work-directory>/examples/getting-started/order-process-be/order-processCompositeApplication/target``` folders.
 
 ### Local Deployment
 
