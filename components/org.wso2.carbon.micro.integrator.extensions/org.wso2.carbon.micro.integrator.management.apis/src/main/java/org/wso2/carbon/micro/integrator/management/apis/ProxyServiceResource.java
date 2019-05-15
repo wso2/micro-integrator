@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -28,6 +26,8 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
 import org.wso2.carbon.service.mgt.ServiceMetaData;
@@ -39,21 +39,11 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
+import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class ProxyServiceResource extends APIResource {
 
     private static Log log = LogFactory.getLog(ProxyServiceResource.class);
-
-    private static final String ROOT_ELEMENT_PROXY_SERVICES = "<ProxyServices></ProxyServices>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-
-    private static final String ROOT_ELEMENT_PROXY_SERVICE = "<ProxyService></ProxyService>";
-    private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String WSDL1_1_ELEMENT = "<WSDL1_1></WSDL1_1>";
-    private static final String WSDL2_0_ELEMENT = "<WSDL2_0></WSDL2_0>";
-    private static final String STAT_ELEMENT = "<Stats></Stats>";
-    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
     public ProxyServiceResource(String urlTemplate){
         super(urlTemplate);
@@ -103,44 +93,33 @@ public class ProxyServiceResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_PROXY_SERVICES);
-        OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
-
         Collection<ProxyService> proxyServices = configuration.getProxyServices();
 
-        countElement.setText(String.valueOf(proxyServices.size()));
-        rootElement.addChild(countElement);
-        rootElement.addChild(listElement);
+        JSONObject jsonBody = new JSONObject();
+        JSONArray proxyList = new JSONArray();
+        jsonBody.put("count", proxyServices.size());
+        jsonBody.put("list", proxyList);
 
         for (ProxyService proxyService : proxyServices) {
 
-            OMElement proxyElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_PROXY_SERVICE);
-            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-            OMElement wsdl1Element = AXIOMUtil.stringToOM(WSDL1_1_ELEMENT);
-            OMElement wsdl2Element = AXIOMUtil.stringToOM(WSDL2_0_ELEMENT);
+            JSONObject proxyObject = new JSONObject();
 
             try {
                 ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
 
-                nameElement.setText(proxyService.getName());
-                proxyElement.addChild(nameElement);
+                proxyObject.put("name", proxyService.getName());
 
                 String []wsdlUrls = data.getWsdlURLs();
-
-                wsdl1Element.setText(wsdlUrls[0]);
-                proxyElement.addChild(wsdl1Element);
-
-                wsdl2Element.setText(wsdlUrls[1]);
-                proxyElement.addChild(wsdl2Element);
+                proxyObject.put("wsdl1_1", wsdlUrls[0]);
+                proxyObject.put("wsdl2_0", wsdlUrls[1]);
 
             } catch (Exception e) {
                 log.error("Error occurred while processing service data", e);
             }
 
-            listElement.addChild(proxyElement);
+            proxyList.put(proxyObject);
         }
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
 
@@ -149,62 +128,49 @@ public class ProxyServiceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        OMElement rootElement = getProxyServiceByName(messageContext, proxyServiceName);
+        JSONObject jsonBody = getProxyServiceByName(messageContext, proxyServiceName);
 
-        if (rootElement != null) {
-            axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        if (null != jsonBody) {
+            setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private OMElement getProxyServiceByName(MessageContext messageContext, String proxyServiceName) throws XMLStreamException {
+    private JSONObject getProxyServiceByName(MessageContext messageContext, String proxyServiceName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         ProxyService proxyService = configuration.getProxyService(proxyServiceName);
         return convertProxyServiceToOMElement(proxyService);
     }
 
-    private OMElement convertProxyServiceToOMElement(ProxyService proxyService) throws XMLStreamException{
+    private JSONObject convertProxyServiceToOMElement(ProxyService proxyService) throws XMLStreamException{
 
         if (null == proxyService) {
             return null;
         }
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_PROXY_SERVICE);
-        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement wsdl1Element = AXIOMUtil.stringToOM(WSDL1_1_ELEMENT);
-        OMElement wsdl2Element = AXIOMUtil.stringToOM(WSDL2_0_ELEMENT);
-        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
-        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
+        JSONObject proxyObject = new JSONObject();
 
-        nameElement.setText(proxyService.getName());
-        rootElement.addChild(nameElement);
+        proxyObject.put("name", proxyService.getName());
 
         try {
             ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
 
             String []wsdlUrls = data.getWsdlURLs();
 
-            wsdl1Element.setText(wsdlUrls[0]);
-            rootElement.addChild(wsdl1Element);
-
-            wsdl2Element.setText(wsdlUrls[1]);
-            rootElement.addChild(wsdl2Element);
+            proxyObject.put("wsdl1_1", wsdlUrls[0]);
+            proxyObject.put("wsdl2_0", wsdlUrls[1]);
         } catch (Exception e) {
             log.error("Error occurred while processing service data", e);
         }
 
         String statisticState = proxyService.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-
-        statsElement.setText(statisticState);
-        rootElement.addChild(statsElement);
+        proxyObject.put("stats", statisticState);
 
         String tracingState = proxyService.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+        proxyObject.put("tracing", tracingState);
 
-        tracingElement.setText(tracingState);
-        rootElement.addChild(tracingElement);
-
-        return rootElement;
+        return proxyObject;
     }
 }

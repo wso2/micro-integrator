@@ -24,164 +24,159 @@ type ServerConfig struct {
 }
 
 type CarbonAppList struct {
-    Count       int32                   `xml:"Count"`
-    CarbonApps  []CarbonAppSummary      `xml:"List>Application"`
+    Count       int32                   `json:"count"`
+    CarbonApps  []CarbonAppSummary      `json:"list"`
 }
 
 type CarbonAppSummary struct {
-    Name      string     `xml:"Name"`
-    Version   string     `xml:"Version"`
+    Name      string     `json:"name"`
+    Version   string     `json:"version"`
 }
 
 type CarbonApp struct {
-    Name      string     `xml:"Name"`
-    Version   string     `xml:"Version"`
-    Artifacts []Artifact `xml:"Artifacts>Artifact"`
+    Name      string     `json:"name"`
+    Version   string     `json:"version"`
+    Artifacts []Artifact `json:"artifacts"`
 }
 
 type Artifact struct {
-    Name string `xml:"Name"`
-    Type string `xml:"Type"`
+    Name string `json:"name"`
+    Type string `json:"type"`
 }
 
 type EndpointList struct {
-    Count       int32               `xml:"Count"`
-    Endpoints  []EndpointSummary    `xml:"List>Endpoint"`
+    Count       int32               `json:"count"`
+    Endpoints  []EndpointSummary    `json:"list"`
 }
 
 type EndpointSummary struct {
-    Name      string     `xml:"Name"`
-    Type      string     `xml:"Type"`
-    Method    string     `xml:"Method"`
-    Url       string     `xml:"Url"`
+    Name      string     `json:"name"`
+    Type      string     `json:"type"`
+    Method    string     `json:"method"`
+    Url       string     `json:"url"`
 }
 
 type Endpoint struct {
-    Name      string     `xml:"Name"`
-    Type      string     `xml:"Type"`
-    Method    string     `xml:"Method"`
-    Url       string     `xml:"Url"`
-    Stats     string     `xml:"Stats"`
+    Name      string     `json:"name"`
+    Type      string     `json:"type"`
+    Method    string     `json:"method"`
+    Url       string     `json:"url"`
+    Stats     string     `json:"stats"`
 }
 
 type InboundEndpointList struct {
-    Count               int32                       `xml:"Count"`
-    InboundEndpoints    []InboundEndpointSummary    `xml:"List>InboundEndpoint"`
+    Count               int32                       `json:"count"`
+    InboundEndpoints    []InboundEndpointSummary    `json:"list"`
 }
 
 type InboundEndpointSummary struct {
-    Name      string     `xml:"Name"`
-    Type      string     `xml:"Protocol"`
+    Name      string     `json:"name"`
+    Type      string     `json:"protocol"`
 }
 
 type InboundEndpoint struct {
-    Name          string      `xml:"Name"`
-    Type          string      `xml:"Protocol"`
-    Stats         string      `xml:"Stats"`
-    Tracing       string      `xml:"Tracing"`
-    Parameters    []Parameter `xml:"Parameters>Parameter"`
+    Name          string      `json:"name"`
+    Type          string      `json:"protocol"`
+    Stats         string      `json:"stats"`
+    Tracing       string      `json:"tracing"`
+    Parameters    []Parameter `json:"parameters"`
 }
 
 type Parameter struct {
-    Name  string `xml:"Name"`
-    Value string `xml:"Value"`
+    Name  string `json:"name"`
+    Value string `json:"value"`
 }
 
 type API struct {
-    Name      string     `xml:"Name"`
-    Context   string     `xml:"Context"`
-    // Host      string     `xml:"Host"`
-    // Port      string     `xml:"Port"`
-    Version   string     `xml:"Version"`
-    Stats     string     `xml:"Stats"`
-    Tracing   string     `xml:"Tracing"`
-    Resources []Resource `xml:"Resources>Resource"`
+    Name      string     `json:"name"`
+    Context   string     `json:"url"`
+    // Host      string     `json:"Host"`
+    // Port      string     `json:"Port"`
+    Version   string     `json:"version"`
+    Stats     string     `json:"stats"`
+    Tracing   string     `json:"tracing"`
+    Resources []Resource `json:"resources"`
 }
 
 type APIList struct {
-    Count     int32         `xml:"Count"`
-    Apis      []APISummary  `xml:"List>API"`
+    Count     int32         `json:"count"`
+    Apis      []APISummary  `json:"list"`
 }
 
 type APISummary struct {
-    Name      string     `xml:"Name"`
-    Context   string     `xml:"Context"`
+    Name      string     `json:"name"`
+    Url       string     `json:"url"`
 }
 
 type Resource struct {
-    Methods       []string  `xml:"Methods>Item"`
-    Url             string  `xml:"Url"`
+    Methods       []string  `json:"methods"`
+    Url             string  `json:"url"`
 }
 
 type ProxyServiceList struct {
-    Count           int32             `xml:"Count"`
-    Proxies         []ProxySummary    `xml:"List>ProxyService"`
+    Count           int32             `json:"count"`
+    Proxies         []ProxySummary    `json:"list"`
 }
 
 type ProxySummary struct {
-    Name      string     `xml:"Name"`
-    WSDL1_1   string     `xml:"WSDL1_1"`
-    WSDL2_0   string     `xml:"WSDL2_0"`
+    Name      string     `json:"name"`
+    WSDL1_1   string     `json:"wsdl1_1"`
+    WSDL2_0   string     `json:"wsdl2_0"`
 }
 
 type Proxy struct {
-    Name      string     `xml:"Name"`
-    WSDL1_1   string     `xml:"WSDL1_1"`
-    WSDL2_0   string     `xml:"WSDL2_0"`
-    Stats     string     `xml:"Stats"`
-    Tracing   string     `xml:"Tracing"`
+    Name      string     `json:"name"`
+    WSDL1_1   string     `json:"wsdl1_1"`
+    WSDL2_0   string     `json:"wsdl2_0"`
+    Stats     string     `json:"stats"`
+    Tracing   string     `json:"tracing"`
 }
 
 type Service struct {
-    Name        string `xml:"Name"`
-    Description string `xml:"Description"`
-    Type        string `xml:"Type"`
-    Status      string `xml:"Status"`
-    TryItURL    string `xml:"TryItUrl"`
+    Name        string `json:"name"`
+    Description string `json:"description"`
+    Type        string `json:"type"`
+    Status      string `json:"status"`
+    TryItURL    string `json:"tryItUrl"`
 }
 
 type SequenceList struct {
-    Count       int32               `xml:"Count"`
-    Sequences  []SequenceSummary    `xml:"List>Sequence"`
+    Count       int32               `json:"count"`
+    Sequences  []SequenceSummary    `json:"list"`
 }
 
 type SequenceSummary struct {
-    Name        string      `xml:"Name"`
-    Container   string      `xml:"Container"`
-    Stats       string      `xml:"Stats"`
-    Tracing     string      `xml:"Tracing"`
+    Name        string      `json:"name"`
+    Container   string      `json:"container"`
+    Stats       string      `json:"stats"`
+    Tracing     string      `json:"tracing"`
 }
 
 type Sequence struct {
-    Name      string   `xml:"Name"`
-    Container string   `xml:"Container"`
-    Stats     string   `xml:"Stats"`
-    Tracing   string   `xml:"Tracing"`
-    Mediators []string `xml:"Mediators>Mediator"`
+    Name      string   `json:"name"`
+    Container string   `json:"container"`
+    Stats     string   `json:"stats"`
+    Tracing   string   `json:"tracing"`
+    Mediators []string `json:"mediators"`
 }
 
 type TaskList struct {
-    Count       int32     `xml:"Count"`
-    Tasks       []Task    `xml:"List>Task"`
+    Count       int32     `json:"count"`
+    Tasks       []Task    `json:"list"`
 }
 
 type Task struct {
-    Name            string `xml:"Name"`
-    Type            string `xml:"TriggerType"`
-    TriggerCount    string `xml:"TriggerCount"`
-    TriggerInterval string `xml:"TriggerInterval"`
-    TriggerCron     string `xml:"TriggerCron"`
+    Name            string `json:"name"`
+    Type            string `json:"triggerType"`
+    TriggerCount    string `json:"triggerCount"`
+    TriggerInterval string `json:"triggerInterval"`
+    TriggerCron     string `json:"triggerCron"`
 }
 
 type ServerSummary struct {
-    Name     string `xml:"Name"`
-    Version  string `xml:"Version"`
-    Location string `xml:"Location"`
-}
-
-type ListResponse struct {
-    Count int32    `xml:"Count"`
-    List  []string `xml:"List>Item"`
+    Name     string `json:"name"`
+    Version  string `json:"version"`
+    Location string `json:"location"`
 }
 
 type RegistrationResponse struct {

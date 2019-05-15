@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -28,30 +26,21 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.task.TaskDescription;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
+import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class TaskResource extends APIResource {
 
     private static Log log = LogFactory.getLog(TaskResource.class);
-
-    private static final String ROOT_ELEMENT_TASKS = "<Tasks></Tasks>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-
-    private static final String ROOT_ELEMENT_TASK = "<Task></Task>";
-    private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String TRIGGER_TYPE_ELEMENT = "<TriggerType></TriggerType>";
-    private static final String TRIGGER_COUNT_ELEMENT = "<TriggerCount></TriggerCount>";
-    private static final String TRIGGER_INTERVAL_ELEMENT = "<TriggerInterval></TriggerInterval>";
-    private static final String TRIGGER_CRON_ELEMENT = "<TriggerCron></TriggerCron>";
 
     public TaskResource(String urlTemplate){
         super(urlTemplate);
@@ -104,21 +93,17 @@ public class TaskResource extends APIResource {
 
         String[] taskNames = configuration.getTaskManager().getTaskNames();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_TASKS);
-        OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
-
-        countElement.setText(String.valueOf(taskNames.length));
-        rootElement.addChild(countElement);
-
-        rootElement.addChild(listElement);
+        JSONObject jsonBody = new JSONObject();
+        JSONArray taskList = new JSONArray();
+        jsonBody.put("count", taskNames.length);
+        jsonBody.put("list", taskList);
 
         for (String taskName : taskNames) {
 
-            OMElement taskElement = getTaskByName(messageContext, taskName);
-            listElement.addChild(taskElement);
+            JSONObject taskObject = getTaskByName(messageContext, taskName);
+            taskList.put(taskObject);
         }
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateTaskData(MessageContext messageContext, String taskName) throws XMLStreamException {
@@ -126,16 +111,16 @@ public class TaskResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        OMElement rootElement = getTaskByName(messageContext, taskName);
+        JSONObject jsonBody = getTaskByName(messageContext, taskName);
 
-        if (null != rootElement) {
-            axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        if (null != jsonBody) {
+            setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private OMElement getTaskByName(MessageContext messageContext, String taskName) throws XMLStreamException {
+    private JSONObject getTaskByName(MessageContext messageContext, String taskName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
 
@@ -148,21 +133,15 @@ public class TaskResource extends APIResource {
         return null;
     }
 
-    private OMElement convertTaskToOMElement(TaskDescription task) throws XMLStreamException{
+    private JSONObject convertTaskToOMElement(TaskDescription task) throws XMLStreamException{
 
         if (null == task) {
             return null;
         }
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_TASK);
-        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement triggerTypeElement = AXIOMUtil.stringToOM(TRIGGER_TYPE_ELEMENT);
-        OMElement triggerCountElement = AXIOMUtil.stringToOM(TRIGGER_COUNT_ELEMENT);
-        OMElement triggerIntervalElement = AXIOMUtil.stringToOM(TRIGGER_INTERVAL_ELEMENT);
-        OMElement triggerCronElement = AXIOMUtil.stringToOM(TRIGGER_CRON_ELEMENT);
+        JSONObject taskObject = new JSONObject();
 
-        nameElement.setText(task.getName());
-        rootElement.addChild(nameElement);
+        taskObject.put("name", task.getName());
 
         String triggerType = "cron";
 
@@ -170,18 +149,12 @@ public class TaskResource extends APIResource {
             triggerType = "simple";
         }
 
-        triggerTypeElement.setText(triggerType);
-        rootElement.addChild(triggerTypeElement);
+        taskObject.put("triggerType", triggerType);
 
-        triggerCountElement.setText(String.valueOf(task.getCount()));
-        rootElement.addChild(triggerCountElement);
+        taskObject.put("triggerCount", String.valueOf(task.getCount()));
+        taskObject.put("triggerInterval", String.valueOf(task.getInterval()));
+        taskObject.put("triggerCron", task.getCronExpression());
 
-        triggerIntervalElement.setText(String.valueOf(task.getInterval()));
-        rootElement.addChild(triggerIntervalElement);
-
-        triggerCronElement.setText(task.getCronExpression());
-        rootElement.addChild(triggerCronElement);
-
-        return rootElement;
+        return taskObject;
     }
 }

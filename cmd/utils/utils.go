@@ -21,7 +21,7 @@ package utils
 import (
     "bufio"
     "crypto/tls"
-    "encoding/xml"
+    "encoding/json"
     "errors"
     "fmt"
     "golang.org/x/crypto/ssh/terminal"
@@ -136,7 +136,7 @@ func GetArtifactList(url string, model interface{}) (interface{}, error) {
 
     if resp.StatusCode() == http.StatusOK {
         response := model
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
+        unmarshalError := json.Unmarshal([]byte(resp.Body()), &response)
 
         if unmarshalError != nil {
             HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
@@ -168,7 +168,7 @@ func UnmarshalData(url string, model interface{}) (interface{}, error) {
 
     if resp.StatusCode() == http.StatusOK {
         response := model
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
+        unmarshalError := json.Unmarshal([]byte(resp.Body()), &response)
 
         if unmarshalError != nil {
             HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)

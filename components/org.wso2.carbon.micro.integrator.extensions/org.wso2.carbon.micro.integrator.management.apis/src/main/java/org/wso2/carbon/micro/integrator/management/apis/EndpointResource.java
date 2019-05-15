@@ -20,7 +20,6 @@
 package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -31,6 +30,8 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.endpoints.EndpointDefinition;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.Collection;
@@ -42,21 +43,11 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
+import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class EndpointResource extends APIResource {
 
     private static Log log = LogFactory.getLog(EndpointResource.class);
-
-    private static final String ROOT_ELEMENT_ENDPOINTS = "<Endpoints></Endpoints>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-
-    private static final String ROOT_ELEMENT_ENDPOINT = "<Endpoint></Endpoint>";
-    private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String TYPE_ELEMENT = "<Type></Type>";
-    private static final String METHOD_ELEMENT = "<Method></Method>";
-    private static final String URL_ELEMENT = "<Url></Url>";
-    private static final String STAT_ELEMENT = "<Stats></Stats>";
 
     public EndpointResource(String urlTemplate){
         super(urlTemplate);
@@ -111,45 +102,33 @@ public class EndpointResource extends APIResource {
         Map<String, Endpoint> namedEndpointMap = configuration.getDefinedEndpoints();
         Collection<Endpoint> namedEndpointCollection = namedEndpointMap.values();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINTS);
-        OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
-
-        countElement.setText(String.valueOf(namedEndpointCollection.size()));
-        rootElement.addChild(countElement);
-
-        rootElement.addChild(listElement);
+        JSONObject jsonBody = new JSONObject();
+        JSONArray endpointList = new JSONArray();
+        jsonBody.put("count", namedEndpointCollection.size());
+        jsonBody.put("list", endpointList);
 
         for (Endpoint ep : namedEndpointCollection) {
 
-            OMElement endpointElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINT);
-            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-            OMElement typeElement = AXIOMUtil.stringToOM(TYPE_ELEMENT);
-            OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
-            OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
+            JSONObject endpointObject = new JSONObject();
 
             String epName = ep.getName();
-            nameElement.setText(epName);
-            endpointElement.addChild(nameElement);
+            endpointObject.put("name", epName);
 
             OMElement element = EndpointSerializer.getElementFromEndpoint(ep);
             OMElement firstElement = element.getFirstElement();
 
             String type = firstElement.getLocalName();
-            typeElement.setText(type);
-            endpointElement.addChild(typeElement);
+            endpointObject.put("type", type);
 
             String method = firstElement.getAttributeValue(new QName("method"));
-            methodElement.setText(method);
-            endpointElement.addChild(methodElement);
+            endpointObject.put("method", method);
 
             String url = firstElement.getAttributeValue(new QName("uri-template"));
-            urlElement.setText(url);
-            endpointElement.addChild(urlElement);
+            endpointObject.put("url", url);
 
-            listElement.addChild(endpointElement);
+            endpointList.put(endpointObject);
         }
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateEndpointData(MessageContext messageContext, String endpointName) throws XMLStreamException {
@@ -157,62 +136,52 @@ public class EndpointResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        OMElement rootElement = getEndpointByName(messageContext, endpointName);
+        JSONObject jsonBody = getEndpointByName(messageContext, endpointName);
 
-        if (null != rootElement) {
-            axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        if (null != jsonBody) {
+            setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private OMElement getEndpointByName(MessageContext messageContext, String endpointName) throws XMLStreamException {
+    private JSONObject getEndpointByName(MessageContext messageContext, String endpointName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         Endpoint ep = configuration.getEndpoint(endpointName);
         return convertEndpointToOMElement(ep);
     }
 
-    private OMElement convertEndpointToOMElement(Endpoint endpoint) throws XMLStreamException{
+    private JSONObject convertEndpointToOMElement(Endpoint endpoint) throws XMLStreamException{
 
         if (null == endpoint) {
             return null;
         }
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINT);
-        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement typeElement = AXIOMUtil.stringToOM(TYPE_ELEMENT);
-        OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
-        OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
-        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        JSONObject endpointObject = new JSONObject();
 
-        nameElement.setText(endpoint.getName());
-        rootElement.addChild(nameElement);
+        endpointObject.put("name", endpoint.getName());
 
         OMElement epElement = EndpointSerializer.getElementFromEndpoint(endpoint);
         OMElement firstElement = epElement.getFirstElement();
 
         String type = firstElement.getLocalName();
-        typeElement.setText(type);
-        rootElement.addChild(typeElement);
+        endpointObject.put("type", type);
 
         String method = firstElement.getAttributeValue(new QName("method"));
-        methodElement.setText(method);
-        rootElement.addChild(methodElement);
+        endpointObject.put("method", method);
 
         String url = firstElement.getAttributeValue(new QName("uri-template"));
-        urlElement.setText(url);
-        rootElement.addChild(urlElement);
+        endpointObject.put("url", url);
 
         EndpointDefinition def = ((AbstractEndpoint) endpoint).getDefinition();
         if (null != def) {
             if (def.isStatisticsEnable()) {
-                statsElement.setText("enabled");
+                endpointObject.put("stats", "enabled");
             } else {
-                statsElement.setText("disabled");
+                endpointObject.put("stats", "disabled");
             }
         }
-        rootElement.addChild(statsElement);
-        return rootElement;
+        return endpointObject;
     }
 }

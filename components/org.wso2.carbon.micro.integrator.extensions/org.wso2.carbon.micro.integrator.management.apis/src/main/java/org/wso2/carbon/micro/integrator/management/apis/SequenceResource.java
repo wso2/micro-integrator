@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -29,32 +27,22 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.base.SequenceMediator;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
+import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class SequenceResource extends APIResource {
 
     private static Log log = LogFactory.getLog(TaskResource.class);
-
-    private static final String ROOT_ELEMENT_SEQUENCES = "<Sequences></Sequences>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-
-    private static final String ROOT_ELEMENT_SEQUENCE = "<Sequence></Sequence>";
-    private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String CONTAINER_ELEMENT = "<Container></Container>";
-    private static final String MEDIATORS_ELEMENT = "<Mediators></Mediators>";
-    private static final String MEDIATOR_ELEMENT = "<Mediator></Mediator>";
-    private static final String STAT_ELEMENT = "<Stats></Stats>";
-    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
 
     public SequenceResource(String urlTemplate){
         super(urlTemplate);
@@ -107,42 +95,27 @@ public class SequenceResource extends APIResource {
 
         Map<String, SequenceMediator> sequenceMediatorMap = configuration.getDefinedSequences();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_SEQUENCES);
-        OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
-
-        countElement.setText(String.valueOf(sequenceMediatorMap.size()));
-        rootElement.addChild(countElement);
-
-        rootElement.addChild(listElement);
+        JSONObject jsonBody = new JSONObject();
+        JSONArray sequenceList = new JSONArray();
+        jsonBody.put("count", sequenceMediatorMap.size());
+        jsonBody.put("list", sequenceList);
 
         for (SequenceMediator sequence: sequenceMediatorMap.values()) {
 
-            OMElement sequenceElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_SEQUENCE);
-            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-            OMElement containerElement = AXIOMUtil.stringToOM(CONTAINER_ELEMENT);
-            OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
-            OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
+            JSONObject sequenceObject = new JSONObject();
 
-            nameElement.setText(sequence.getName());
-            sequenceElement.addChild(nameElement);
-
-            containerElement.setText(sequence.getArtifactContainerName());
-            sequenceElement.addChild(containerElement);
+            sequenceObject.put("name", sequence.getName());
+            sequenceObject.put("container", sequence.getArtifactContainerName());
 
             String statisticState = sequence.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-
-            statsElement.setText(statisticState);
-            sequenceElement.addChild(statsElement);
+            sequenceObject.put("stats", statisticState);
 
             String tracingState = sequence.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+            sequenceObject.put("tracing", tracingState);
 
-            tracingElement.setText(tracingState);
-            sequenceElement.addChild(tracingElement);
-
-            listElement.addChild(sequenceElement);
+            sequenceList.put(sequenceObject);
         }
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateSequenceData(MessageContext messageContext, String sequenceName) throws XMLStreamException {
@@ -150,63 +123,46 @@ public class SequenceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        OMElement rootElement = getSequenceByName(messageContext, sequenceName);
+        JSONObject jsonBody = getSequenceByName(messageContext, sequenceName);
 
-        if (null != rootElement) {
-            axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
-
+        if (null != jsonBody) {
+            setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private OMElement getSequenceByName(MessageContext messageContext, String sequenceName) throws XMLStreamException {
+    private JSONObject getSequenceByName(MessageContext messageContext, String sequenceName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         SequenceMediator sequence = configuration.getDefinedSequences().get(sequenceName);
         return convertInboundEndpointToOMElement(sequence);
     }
 
-    private OMElement convertInboundEndpointToOMElement(SequenceMediator sequenceMediator) throws XMLStreamException{
+    private JSONObject convertInboundEndpointToOMElement(SequenceMediator sequenceMediator) throws XMLStreamException{
 
         if (null == sequenceMediator) {
             return null;
         }
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_SEQUENCE);
-        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
-        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
-        OMElement containerElement = AXIOMUtil.stringToOM(CONTAINER_ELEMENT);
-        OMElement mediatorsElement = AXIOMUtil.stringToOM(MEDIATORS_ELEMENT);
+        JSONObject sequenceObject = new JSONObject();
 
-        nameElement.setText(sequenceMediator.getName());
-        rootElement.addChild(nameElement);
-
-        containerElement.setText(sequenceMediator.getArtifactContainerName());
-        rootElement.addChild(containerElement);
+        sequenceObject.put("name", sequenceMediator.getName());
+        sequenceObject.put("container", sequenceMediator.getArtifactContainerName());
 
         String statisticState = sequenceMediator.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-
-        statsElement.setText(statisticState);
-        rootElement.addChild(statsElement);
+        sequenceObject.put("stats", statisticState);
 
         String tracingState = sequenceMediator.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
-
-        tracingElement.setText(tracingState);
-        rootElement.addChild(tracingElement);
+        sequenceObject.put("tracing", tracingState);
 
         List<Mediator> mediators = sequenceMediator.getList();
-
-        for (Mediator mediator : mediators) {
-
-            OMElement mediatorElement = AXIOMUtil.stringToOM(MEDIATOR_ELEMENT);
-
-            mediatorElement.setText(mediator.getType());
-            mediatorsElement.addChild(mediatorElement);
+        String []mediatorTypes = new String[mediators.size()];
+        for(int i = 0; i < mediators.size(); i++){
+            mediatorTypes[i] = mediators.get(i).getType();
         }
-        rootElement.addChild(mediatorsElement);
+        sequenceObject.put("mediators", mediatorTypes);
 
-        return rootElement;
+        return sequenceObject;
     }
 }

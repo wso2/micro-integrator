@@ -24,6 +24,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.synapse.commons.json.JsonUtil;
+import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -57,4 +59,11 @@ public class Utils {
         }
         return null;
     }
+
+    public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload){
+        JsonUtil.newJsonPayload(axis2MessageContext, payload.toString(),  true, true);
+        axis2MessageContext.setProperty("messageType", "application/json");
+        axis2MessageContext.setProperty("ContentType", "application/json");
+    }
+
 }

@@ -18,8 +18,7 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -27,6 +26,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.API;
@@ -34,8 +34,9 @@ import org.apache.synapse.rest.Resource;
 import org.apache.synapse.rest.dispatch.DispatcherHelper;
 import org.apache.synapse.rest.dispatch.URITemplateHelper;
 import org.apache.synapse.rest.dispatch.URLMappingHelper;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
 
 import java.net.MalformedURLException;
@@ -47,32 +48,12 @@ import java.util.List;
 import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
-import static org.wso2.carbon.micro.integrator.core.internal.ServiceComponent.getServerConfigurationService;
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
+import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class ApiResource extends APIResource {
 
     private static Log log = LogFactory.getLog(ApiResource.class);
-
-    private static final String ROOT_ELEMENT_APIS = "<APIs></APIs>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
-
-    private static final String ROOT_ELEMENT_API = "<API></API>";
-    private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String CONTEXT_ELEMENT = "<Context></Context>";
-    private static final String URL_ELEMENT = "<Url></Url>";
-    private static final String HOST_ELEMENT = "<Host></Host>";
-    private static final String PORT_ELEMENT = "<Port></Port>";
-    private static final String VERSION_ELEMENT = "<Version></Version>";
-
-    private static final String RESOURCES_ELEMENT = "<Resources></Resources>";
-    private static final String RESOURCE_ELEMENT = "<Resource></Resource>";
-    private static final String METHOD_ELEMENT = "<Methods></Methods>";
-    private static final String STAT_ELEMENT = "<Stats></Stats>";
-    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
-
 
     public ApiResource(String urlTemplate){
         super(urlTemplate);
@@ -109,13 +90,13 @@ public class ApiResource extends APIResource {
             }
 
             axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException e) {
+        } catch (XMLStreamException | AxisFault e) {
            log.error("Error occurred while processing response", e);
         }
         return true;
     }
 
-    private void populateApiList(MessageContext messageContext) throws XMLStreamException {
+    private void populateApiList(MessageContext messageContext) throws XMLStreamException, AxisFault {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -124,34 +105,26 @@ public class ApiResource extends APIResource {
 
         Collection<API> apis = configuration.getAPIs();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_APIS);
-        OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
-
-        countElement.setText(String.valueOf(apis.size()));
-        rootElement.addChild(countElement);
-
-        rootElement.addChild(listElement);
+        JSONObject jsonBody = new JSONObject();
+        JSONArray apiList = new JSONArray();
+        jsonBody.put("count", apis.size());
+        jsonBody.put("list", apiList);
 
         String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
 
         for (API api: apis) {
 
-            OMElement apiElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_API);
-            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-            OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
+            JSONObject apiObject = new JSONObject();
 
             String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
 
-            nameElement.setText(api.getName());
-            apiElement.addChild(nameElement);
+            apiObject.put("name", api.getName());
+            apiObject.put("url", apiUrl);
 
-            contextElement.setText(apiUrl);
-            apiElement.addChild(contextElement);
+            apiList.put(apiObject);
 
-            listElement.addChild(apiElement);
         }
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateApiData(MessageContext messageContext, String apiName) throws XMLStreamException {
@@ -159,39 +132,31 @@ public class ApiResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        OMElement rootElement = getApiByName(messageContext, apiName);
+        JSONObject jsonBody = getApiByName(messageContext, apiName);
 
-        if (null != rootElement) {
-            axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        if (null != jsonBody) {
+            setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private OMElement getApiByName(MessageContext messageContext, String apiName) throws XMLStreamException {
+    private JSONObject getApiByName(MessageContext messageContext, String apiName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         API api = configuration.getAPI(apiName);
         return convertApiToOMElement(api, messageContext);
     }
 
-    private OMElement convertApiToOMElement(API api, MessageContext messageContext) throws XMLStreamException{
+    private JSONObject convertApiToOMElement(API api, MessageContext messageContext) throws XMLStreamException{
 
         if (null == api) {
             return null;
         }
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_API);
-        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement contextElement = AXIOMUtil.stringToOM(CONTEXT_ELEMENT);
-        OMElement hostElement = AXIOMUtil.stringToOM(HOST_ELEMENT);
-        OMElement portElement = AXIOMUtil.stringToOM(PORT_ELEMENT);
-        OMElement versionElement = AXIOMUtil.stringToOM(VERSION_ELEMENT);
-        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
-        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
+        JSONObject apiObject = new JSONObject();
 
-        nameElement.setText(api.getName());
-        rootElement.addChild(nameElement);
+        apiObject.put("name", api.getName());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -199,8 +164,7 @@ public class ApiResource extends APIResource {
         String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
         String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
 
-        contextElement.setText(apiUrl);
-        rootElement.addChild(contextElement);
+        apiObject.put("url", apiUrl);
 
 //        hostElement.setText(api.getHost());
 //        rootElement.addChild(hostElement);
@@ -210,52 +174,37 @@ public class ApiResource extends APIResource {
 
         String version = api.getVersion().equals("") ? "N/A" : api.getVersion();
 
-        versionElement.setText(version);
-        rootElement.addChild(versionElement);
+        apiObject.put("version", version);
 
         String statisticState = api.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-
-        statsElement.setText(statisticState);
-        rootElement.addChild(statsElement);
+        apiObject.put("stats", statisticState);
 
         String tracingState = api.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
+        apiObject.put("tracing", tracingState);
 
-        tracingElement.setText(tracingState);
-        rootElement.addChild(tracingElement);
-
-        OMElement resourcesElement = AXIOMUtil.stringToOM(RESOURCES_ELEMENT);
-        rootElement.addChild(resourcesElement);
+        JSONArray resourceListObject = new JSONArray();
+        apiObject.put("resources", resourceListObject);
 
         Resource[] resources = api.getResources();
 
         for (Resource resource : resources) {
 
-            OMElement resourceElement = AXIOMUtil.stringToOM(RESOURCE_ELEMENT);
-            resourcesElement.addChild(resourceElement);
-
-            OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
-            resourceElement.addChild(methodElement);
-
-            OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
-            resourceElement.addChild(urlElement);
+            JSONObject resourceObject = new JSONObject();
 
             String[] methods = resource.getMethods();
 
-            for (String method : methods) {
-                OMElement itemElement = AXIOMUtil.stringToOM(LIST_ITEM);
-                itemElement.setText(method);
-                methodElement.addChild(itemElement);
-            }
+            resourceObject.put("methods", methods);
 
             DispatcherHelper dispatcherHelper = resource.getDispatcherHelper();
             if (dispatcherHelper instanceof URITemplateHelper) {
-                urlElement.setText(dispatcherHelper.getString());
+                resourceObject.put("url", dispatcherHelper.getString());
 
             } else if (dispatcherHelper instanceof URLMappingHelper) {
-                urlElement.setText(dispatcherHelper.getString());
+                resourceObject.put("url", dispatcherHelper.getString());
             }
+            resourceListObject.put(resourceObject);
         }
-        return rootElement;
+        return apiObject;
     }
 
     private String getServerContext(AxisConfiguration configuration) {

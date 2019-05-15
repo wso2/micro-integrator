@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
@@ -28,6 +26,8 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.inbound.InboundEndpoint;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.Collection;
@@ -38,25 +38,11 @@ import java.util.Set;
 import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
+import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class InboundEndpointResource extends APIResource {
 
     private static Log log = LogFactory.getLog(InboundEndpointResource.class);
-
-    private static final String ROOT_ELEMENT_INBOUND_ENDPOINTS = "<InboundEndpoints></InboundEndpoints>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-
-    private static final String ROOT_ELEMENT_INBOUND_ENDPOINT = "<InboundEndpoint></InboundEndpoint>";
-    private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String PROTOCOL_ELEMENT = "<Protocol></Protocol>";
-    private static final String STAT_ELEMENT = "<Stats></Stats>";
-    private static final String TRACING_ELEMENT = "<Tracing></Tracing>";
-
-    private static final String PARAMETERS_ELEMENT = "<Parameters></Parameters>";
-    private static final String PARAMETER_ELEMENT = "<Parameter></Parameter>";
-    private static final String KEY_ELEMENT = "<Name></Name>";
-    private static final String VALUE_ELEMENT = "<Value></Value>";
 
     public InboundEndpointResource(String urlTemplate){
         super(urlTemplate);
@@ -109,30 +95,21 @@ public class InboundEndpointResource extends APIResource {
 
         Collection<InboundEndpoint> inboundEndpoints = configuration.getInboundEndpoints();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_INBOUND_ENDPOINTS);
-        OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
-
-        countElement.setText(String.valueOf(inboundEndpoints.size()));
-        rootElement.addChild(countElement);
-
-        rootElement.addChild(listElement);
+        JSONObject jsonBody = new JSONObject();
+        JSONArray inboundList = new JSONArray();
+        jsonBody.put("count", inboundEndpoints.size());
+        jsonBody.put("list", inboundList);
 
         for (InboundEndpoint inboundEndpoint : inboundEndpoints) {
 
-            OMElement inboundElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_INBOUND_ENDPOINT);
-            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-            OMElement protocolElement = AXIOMUtil.stringToOM(PROTOCOL_ELEMENT);
+            JSONObject inboundObject = new JSONObject();
 
-            nameElement.setText(inboundEndpoint.getName());
-            inboundElement.addChild(nameElement);
+            inboundObject.put("name", inboundEndpoint.getName());
+            inboundObject.put("protocol", inboundEndpoint.getProtocol());
 
-            protocolElement.setText(inboundEndpoint.getProtocol());
-            inboundElement.addChild(protocolElement);
-
-            listElement.addChild(inboundElement);
+            inboundList.put(inboundObject);
         }
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateInboundEndpointData(MessageContext messageContext, String inboundEndpointName) throws XMLStreamException {
@@ -140,67 +117,54 @@ public class InboundEndpointResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        OMElement rootElement = getInboundEndpointByName(messageContext, inboundEndpointName);
+        JSONObject jsonBody = getInboundEndpointByName(messageContext, inboundEndpointName);
 
-        if (null != rootElement) {
-            axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        if (null != jsonBody) {
+            setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private OMElement getInboundEndpointByName(MessageContext messageContext, String inboundEndpointName) throws XMLStreamException {
+    private JSONObject getInboundEndpointByName(MessageContext messageContext, String inboundEndpointName) throws XMLStreamException {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         InboundEndpoint ep = configuration.getInboundEndpoint(inboundEndpointName);
         return convertInboundEndpointToOMElement(ep);
     }
 
-    private OMElement convertInboundEndpointToOMElement(InboundEndpoint inboundEndpoint) throws XMLStreamException{
+    private JSONObject convertInboundEndpointToOMElement(InboundEndpoint inboundEndpoint) throws XMLStreamException{
 
         if (null == inboundEndpoint) {
             return null;
         }
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_INBOUND_ENDPOINT);
-        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement protocolElement = AXIOMUtil.stringToOM(PROTOCOL_ELEMENT);
-        OMElement statElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
-        OMElement tracingElement = AXIOMUtil.stringToOM(TRACING_ELEMENT);
-        OMElement parametersElement = AXIOMUtil.stringToOM(PARAMETERS_ELEMENT);
+        JSONObject inboundObject = new JSONObject();
 
-        nameElement.setText(inboundEndpoint.getName());
-        rootElement.addChild(nameElement);
-
-        protocolElement.setText(inboundEndpoint.getProtocol());
-        rootElement.addChild(protocolElement);
+        inboundObject.put("name", inboundEndpoint.getName());
+        inboundObject.put("protocol", inboundEndpoint.getProtocol());
 
         String statisticState = inboundEndpoint.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-        statElement.setText(statisticState);
-        rootElement.addChild(statElement);
+        inboundObject.put("stats", statisticState);
 
         String tracingState = inboundEndpoint.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
-        tracingElement.setText(tracingState);
-        rootElement.addChild(tracingElement);
+        inboundObject.put("tracing", tracingState);
 
-        rootElement.addChild(parametersElement);
+        JSONArray parameterListObject = new JSONArray();
+
+        inboundObject.put("parameters", parameterListObject);
 
         Map<String, String> params = inboundEndpoint.getParametersMap();
 
         for (Map.Entry<String,String> param : params.entrySet()) {
 
-            OMElement parameterElement = AXIOMUtil.stringToOM(PARAMETER_ELEMENT);
+            JSONObject paramObject = new JSONObject();
 
-            OMElement keyElement = AXIOMUtil.stringToOM(KEY_ELEMENT);
-            OMElement valueElement = AXIOMUtil.stringToOM(VALUE_ELEMENT);
+            paramObject.put("name", param.getKey());
+            paramObject.put("value", param.getValue());
 
-            keyElement.setText(param.getKey());
-            valueElement.setText(param.getValue());
-
-            parameterElement.addChild(keyElement);
-            parameterElement.addChild(valueElement);
-            parametersElement.addChild(parameterElement);
+            parameterListObject.put(paramObject);
         }
-        return rootElement;
+        return inboundObject;
     }
 }
