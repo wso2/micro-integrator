@@ -19,6 +19,7 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +43,7 @@ public class Utils {
      * @return List<NameValuePair> - List of query parameters
      *
      */
-    public static List<NameValuePair> getQueryParameters(org.apache.axis2.context.MessageContext axis2MessageContext){
+    public List<NameValuePair> getQueryParameters(org.apache.axis2.context.MessageContext axis2MessageContext){
 
         List<NameValuePair> queryParameter = null;
 
@@ -60,8 +61,13 @@ public class Utils {
         return null;
     }
 
-    public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload){
-        JsonUtil.newJsonPayload(axis2MessageContext, payload.toString(),  true, true);
+    public void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload){
+
+        try {
+            JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(),  true, true);
+        } catch (AxisFault axisFault) {
+            log.error("Error occurred while setting json payload", axisFault);
+        }
         axis2MessageContext.setProperty("messageType", "application/json");
         axis2MessageContext.setProperty("ContentType", "application/json");
     }

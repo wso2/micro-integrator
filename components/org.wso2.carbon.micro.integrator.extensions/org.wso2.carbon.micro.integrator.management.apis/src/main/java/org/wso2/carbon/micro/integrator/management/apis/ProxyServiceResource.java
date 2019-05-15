@@ -36,13 +36,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.xml.stream.XMLStreamException;
-
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class ProxyServiceResource extends APIResource {
 
+    private Utils utils = new Utils();
     private static Log log = LogFactory.getLog(ProxyServiceResource.class);
 
     public ProxyServiceResource(String urlTemplate){
@@ -51,7 +48,7 @@ public class ProxyServiceResource extends APIResource {
 
     @Override
     public Set<String> getMethods() {
-        Set<String> methods = new HashSet<String>();
+        Set<String> methods = new HashSet<>();
         methods.add("GET");
         methods.add("POST");
         return methods;
@@ -65,28 +62,24 @@ public class ProxyServiceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
 
-        try {
-            // if query params exists retrieve data about specific inbound endpoint
-            if (null != queryParameter) {
-                for (NameValuePair nvPair : queryParameter) {
-                    if (nvPair.getName().equals("proxyServiceName")) {
-                        populateProxyServiceData(messageContext, nvPair.getValue());
-                    }
+        // if query params exists retrieve data about specific inbound endpoint
+        if (null != queryParameter) {
+            for (NameValuePair nvPair : queryParameter) {
+                if (nvPair.getName().equals("proxyServiceName")) {
+                    populateProxyServiceData(messageContext, nvPair.getValue());
                 }
-            } else {
-                populateProxyServiceList(messageContext);
             }
-
-            axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException e) {
-            log.error("Error occurred while processing response", e);
+        } else {
+            populateProxyServiceList(messageContext);
         }
+
+        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
         return true;
     }
 
-    private void populateProxyServiceList(MessageContext messageContext) throws XMLStreamException {
+    private void populateProxyServiceList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -119,11 +112,11 @@ public class ProxyServiceResource extends APIResource {
 
             proxyList.put(proxyObject);
         }
-        setJsonPayLoad(axis2MessageContext, jsonBody);
+        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
 
-    private void populateProxyServiceData(MessageContext messageContext, String proxyServiceName) throws XMLStreamException {
+    private void populateProxyServiceData(MessageContext messageContext, String proxyServiceName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -131,20 +124,20 @@ public class ProxyServiceResource extends APIResource {
         JSONObject jsonBody = getProxyServiceByName(messageContext, proxyServiceName);
 
         if (null != jsonBody) {
-            setJsonPayLoad(axis2MessageContext, jsonBody);
+            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private JSONObject getProxyServiceByName(MessageContext messageContext, String proxyServiceName) throws XMLStreamException {
+    private JSONObject getProxyServiceByName(MessageContext messageContext, String proxyServiceName) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         ProxyService proxyService = configuration.getProxyService(proxyServiceName);
         return convertProxyServiceToOMElement(proxyService);
     }
 
-    private JSONObject convertProxyServiceToOMElement(ProxyService proxyService) throws XMLStreamException{
+    private JSONObject convertProxyServiceToOMElement(ProxyService proxyService) {
 
         if (null == proxyService) {
             return null;

@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.synapse.Mediator;
 import org.apache.synapse.MessageContext;
@@ -35,14 +33,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.stream.XMLStreamException;
-
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class SequenceResource extends APIResource {
 
-    private static Log log = LogFactory.getLog(TaskResource.class);
+    private Utils utils = new Utils();
 
     public SequenceResource(String urlTemplate){
         super(urlTemplate);
@@ -50,7 +44,7 @@ public class SequenceResource extends APIResource {
 
     @Override
     public Set<String> getMethods() {
-        Set<String> methods = new HashSet<String>();
+        Set<String> methods = new HashSet<>();
         methods.add("GET");
         methods.add("POST");
         return methods;
@@ -65,28 +59,24 @@ public class SequenceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
 
-        try {
-            // if query params exists retrieve data about specific sequence
-            if (null != queryParameter) {
-                for (NameValuePair nvPair : queryParameter) {
-                    if (nvPair.getName().equals("inboundEndpointName")) {
-                        populateSequenceData(messageContext, nvPair.getValue());
-                    }
+        // if query params exists retrieve data about specific sequence
+        if (null != queryParameter) {
+            for (NameValuePair nvPair : queryParameter) {
+                if (nvPair.getName().equals("inboundEndpointName")) {
+                    populateSequenceData(messageContext, nvPair.getValue());
                 }
-            } else {
-                populateSequenceList(messageContext);
             }
-
-            axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException e) {
-            log.error("Error occurred while processing response", e);
+        } else {
+            populateSequenceList(messageContext);
         }
+
+        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
         return true;
     }
 
-    private void populateSequenceList(MessageContext messageContext) throws XMLStreamException {
+    private void populateSequenceList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -115,10 +105,10 @@ public class SequenceResource extends APIResource {
 
             sequenceList.put(sequenceObject);
         }
-        setJsonPayLoad(axis2MessageContext, jsonBody);
+        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
-    private void populateSequenceData(MessageContext messageContext, String sequenceName) throws XMLStreamException {
+    private void populateSequenceData(MessageContext messageContext, String sequenceName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -126,20 +116,20 @@ public class SequenceResource extends APIResource {
         JSONObject jsonBody = getSequenceByName(messageContext, sequenceName);
 
         if (null != jsonBody) {
-            setJsonPayLoad(axis2MessageContext, jsonBody);
+            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private JSONObject getSequenceByName(MessageContext messageContext, String sequenceName) throws XMLStreamException {
+    private JSONObject getSequenceByName(MessageContext messageContext, String sequenceName) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         SequenceMediator sequence = configuration.getDefinedSequences().get(sequenceName);
         return convertInboundEndpointToOMElement(sequence);
     }
 
-    private JSONObject convertInboundEndpointToOMElement(SequenceMediator sequenceMediator) throws XMLStreamException{
+    private JSONObject convertInboundEndpointToOMElement(SequenceMediator sequenceMediator) {
 
         if (null == sequenceMediator) {
             return null;

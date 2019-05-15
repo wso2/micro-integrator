@@ -19,11 +19,8 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
-import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -36,15 +33,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.xml.stream.XMLStreamException;
 
 import static org.wso2.carbon.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager.getCarbonApps;
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class CarbonAppResource extends APIResource {
 
-    private static Log log = LogFactory.getLog(CarbonAppResource.class);
+    private Utils utils = new Utils();
 
     public CarbonAppResource(String urlTemplate){
         super(urlTemplate);
@@ -53,7 +47,7 @@ public class CarbonAppResource extends APIResource {
     @Override
     public Set<String> getMethods() {
 
-        Set<String> methods = new HashSet<String>();
+        Set<String> methods = new HashSet<>();
         methods.add("GET");
         methods.add("POST");
         return methods;
@@ -68,28 +62,24 @@ public class CarbonAppResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
 
-        try {
-            // if query params exists retrieve data about specific inbound endpoint
-            if (null != queryParameter) {
-                for (NameValuePair nvPair : queryParameter) {
-                    if (nvPair.getName().equals("carbonAppName")) {
-                        populateCarbonAppData(messageContext, nvPair.getValue());
-                    }
+        // if query params exists retrieve data about specific inbound endpoint
+        if (null != queryParameter) {
+            for (NameValuePair nvPair : queryParameter) {
+                if (nvPair.getName().equals("carbonAppName")) {
+                    populateCarbonAppData(messageContext, nvPair.getValue());
                 }
-            } else {
-                populateCarbonAppList(messageContext);
             }
-
-            axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException e) {
-            log.error("Error occurred while processing response", e);
+        } else {
+            populateCarbonAppList(messageContext);
         }
+
+        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
         return true;
     }
 
-    private void populateCarbonAppList(MessageContext messageContext) throws XMLStreamException {
+    private void populateCarbonAppList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -111,24 +101,24 @@ public class CarbonAppResource extends APIResource {
 
             cappList.put(appObject);
         }
-        setJsonPayLoad(axis2MessageContext, jsonBody);
+        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
-    private void populateCarbonAppData(MessageContext messageContext, String carbonAppName) throws XMLStreamException {
+    private void populateCarbonAppData(MessageContext messageContext, String carbonAppName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        JSONObject jsonBody = getCarbonAppByName(messageContext, carbonAppName);
+        JSONObject jsonBody = getCarbonAppByName(carbonAppName);
 
         if (null != jsonBody) {
-            setJsonPayLoad(axis2MessageContext, jsonBody);
+            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private JSONObject getCarbonAppByName(MessageContext messageContext, String carbonAppName) throws XMLStreamException {
+    private JSONObject getCarbonAppByName(String carbonAppName) {
 
         ArrayList<CarbonApplication> appList
                 = getCarbonApps(String.valueOf(AppDeployerUtils.getTenantId()));
@@ -141,7 +131,7 @@ public class CarbonAppResource extends APIResource {
         return null;
     }
 
-    private JSONObject convertCarbonAppToOMElement(CarbonApplication carbonApp) throws XMLStreamException{
+    private JSONObject convertCarbonAppToOMElement(CarbonApplication carbonApp) {
 
         if (null == carbonApp) {
             return null;

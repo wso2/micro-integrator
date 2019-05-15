@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
@@ -33,14 +31,10 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.xml.stream.XMLStreamException;
-
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class TaskResource extends APIResource {
 
-    private static Log log = LogFactory.getLog(TaskResource.class);
+    private Utils utils = new Utils();
 
     public TaskResource(String urlTemplate){
         super(urlTemplate);
@@ -48,7 +42,7 @@ public class TaskResource extends APIResource {
 
     @Override
     public Set<String> getMethods() {
-        Set<String> methods = new HashSet<String>();
+        Set<String> methods = new HashSet<>();
         methods.add("GET");
         methods.add("POST");
         return methods;
@@ -63,28 +57,24 @@ public class TaskResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
 
-        try {
-            // if query params exists retrieve data about specific task
-            if (null != queryParameter) {
-                for (NameValuePair nvPair : queryParameter) {
-                    if (nvPair.getName().equals("taskName")) {
-                        populateTaskData(messageContext, nvPair.getValue());
-                    }
+        // if query params exists retrieve data about specific task
+        if (null != queryParameter) {
+            for (NameValuePair nvPair : queryParameter) {
+                if (nvPair.getName().equals("taskName")) {
+                    populateTaskData(messageContext, nvPair.getValue());
                 }
-            } else {
-                populateTasksList(messageContext);
             }
-
-            axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException e) {
-            log.error("Error occurred while processing response", e);
+        } else {
+            populateTasksList(messageContext);
         }
+
+        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
         return true;
     }
 
-    private void populateTasksList(MessageContext messageContext) throws XMLStreamException {
+    private void populateTasksList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -103,10 +93,10 @@ public class TaskResource extends APIResource {
             JSONObject taskObject = getTaskByName(messageContext, taskName);
             taskList.put(taskObject);
         }
-        setJsonPayLoad(axis2MessageContext, jsonBody);
+        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
-    private void populateTaskData(MessageContext messageContext, String taskName) throws XMLStreamException {
+    private void populateTaskData(MessageContext messageContext, String taskName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -114,13 +104,13 @@ public class TaskResource extends APIResource {
         JSONObject jsonBody = getTaskByName(messageContext, taskName);
 
         if (null != jsonBody) {
-            setJsonPayLoad(axis2MessageContext, jsonBody);
+            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private JSONObject getTaskByName(MessageContext messageContext, String taskName) throws XMLStreamException {
+    private JSONObject getTaskByName(MessageContext messageContext, String taskName) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
 
@@ -133,7 +123,7 @@ public class TaskResource extends APIResource {
         return null;
     }
 
-    private JSONObject convertTaskToOMElement(TaskDescription task) throws XMLStreamException{
+    private JSONObject convertTaskToOMElement(TaskDescription task) {
 
         if (null == task) {
             return null;

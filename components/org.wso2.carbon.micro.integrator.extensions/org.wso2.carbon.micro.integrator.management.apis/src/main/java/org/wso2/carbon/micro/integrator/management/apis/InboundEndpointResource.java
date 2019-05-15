@@ -19,8 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
@@ -35,14 +33,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.stream.XMLStreamException;
-
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class InboundEndpointResource extends APIResource {
 
-    private static Log log = LogFactory.getLog(InboundEndpointResource.class);
+    private Utils utils = new Utils();
 
     public InboundEndpointResource(String urlTemplate){
         super(urlTemplate);
@@ -65,28 +59,24 @@ public class InboundEndpointResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
 
-        try {
-            // if query params exists retrieve data about specific inbound endpoint
-            if (null != queryParameter) {
-                for (NameValuePair nvPair : queryParameter) {
-                    if (nvPair.getName().equals("inboundEndpointName")) {
-                        populateInboundEndpointData(messageContext, nvPair.getValue());
-                    }
+        // if query params exists retrieve data about specific inbound endpoint
+        if (null != queryParameter) {
+            for (NameValuePair nvPair : queryParameter) {
+                if (nvPair.getName().equals("inboundEndpointName")) {
+                    populateInboundEndpointData(messageContext, nvPair.getValue());
                 }
-            } else {
-                populateInboundEndpointList(messageContext);
             }
-
-            axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException e) {
-            log.error("Error occurred while processing response", e);
+        } else {
+            populateInboundEndpointList(messageContext);
         }
+
+        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
         return true;
     }
 
-    private void populateInboundEndpointList(MessageContext messageContext) throws XMLStreamException {
+    private void populateInboundEndpointList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -109,10 +99,10 @@ public class InboundEndpointResource extends APIResource {
 
             inboundList.put(inboundObject);
         }
-        setJsonPayLoad(axis2MessageContext, jsonBody);
+        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
-    private void populateInboundEndpointData(MessageContext messageContext, String inboundEndpointName) throws XMLStreamException {
+    private void populateInboundEndpointData(MessageContext messageContext, String inboundEndpointName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -120,20 +110,20 @@ public class InboundEndpointResource extends APIResource {
         JSONObject jsonBody = getInboundEndpointByName(messageContext, inboundEndpointName);
 
         if (null != jsonBody) {
-            setJsonPayLoad(axis2MessageContext, jsonBody);
+            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private JSONObject getInboundEndpointByName(MessageContext messageContext, String inboundEndpointName) throws XMLStreamException {
+    private JSONObject getInboundEndpointByName(MessageContext messageContext, String inboundEndpointName) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         InboundEndpoint ep = configuration.getInboundEndpoint(inboundEndpointName);
         return convertInboundEndpointToOMElement(ep);
     }
 
-    private JSONObject convertInboundEndpointToOMElement(InboundEndpoint inboundEndpoint) throws XMLStreamException{
+    private JSONObject convertInboundEndpointToOMElement(InboundEndpoint inboundEndpoint) {
 
         if (null == inboundEndpoint) {
             return null;

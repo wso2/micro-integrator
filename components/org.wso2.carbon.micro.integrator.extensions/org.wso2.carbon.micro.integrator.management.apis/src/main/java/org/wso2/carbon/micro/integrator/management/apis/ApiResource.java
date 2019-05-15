@@ -18,15 +18,11 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
-import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.API;
@@ -46,14 +42,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.xml.stream.XMLStreamException;
-
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.setJsonPayLoad;
 
 public class ApiResource extends APIResource {
 
-    private static Log log = LogFactory.getLog(ApiResource.class);
+    private Utils utils = new Utils();
 
     public ApiResource(String urlTemplate){
         super(urlTemplate);
@@ -61,7 +53,7 @@ public class ApiResource extends APIResource {
 
     public Set<String> getMethods() {
 
-        Set<String> methods = new HashSet<String>();
+        Set<String> methods = new HashSet<>();
         methods.add("GET");
         methods.add("POST");
         return methods;
@@ -75,28 +67,23 @@ public class ApiResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
 
-        try {
-
-            if (null != queryParameter) {
-                for (NameValuePair nvPair : queryParameter) {
-                    if (nvPair.getName().equals("apiName")) {
-                        populateApiData(messageContext, nvPair.getValue());
-                    }
+        if (null != queryParameter) {
+            for (NameValuePair nvPair : queryParameter) {
+                if (nvPair.getName().equals("apiName")) {
+                    populateApiData(messageContext, nvPair.getValue());
                 }
-            } else {
-                populateApiList(messageContext);
             }
-
-            axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException | AxisFault e) {
-           log.error("Error occurred while processing response", e);
+        } else {
+            populateApiList(messageContext);
         }
+
+        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
         return true;
     }
 
-    private void populateApiList(MessageContext messageContext) throws XMLStreamException, AxisFault {
+    private void populateApiList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -124,10 +111,10 @@ public class ApiResource extends APIResource {
             apiList.put(apiObject);
 
         }
-        setJsonPayLoad(axis2MessageContext, jsonBody);
+        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
-    private void populateApiData(MessageContext messageContext, String apiName) throws XMLStreamException {
+    private void populateApiData(MessageContext messageContext, String apiName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -135,20 +122,20 @@ public class ApiResource extends APIResource {
         JSONObject jsonBody = getApiByName(messageContext, apiName);
 
         if (null != jsonBody) {
-            setJsonPayLoad(axis2MessageContext, jsonBody);
+            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
     }
 
-    private JSONObject getApiByName(MessageContext messageContext, String apiName) throws XMLStreamException {
+    private JSONObject getApiByName(MessageContext messageContext, String apiName) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         API api = configuration.getAPI(apiName);
         return convertApiToOMElement(api, messageContext);
     }
 
-    private JSONObject convertApiToOMElement(API api, MessageContext messageContext) throws XMLStreamException{
+    private JSONObject convertApiToOMElement(API api, MessageContext messageContext) {
 
         if (null == api) {
             return null;
