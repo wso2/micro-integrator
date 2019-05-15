@@ -89,9 +89,7 @@ type Parameter struct {
 
 type API struct {
     Name      string     `json:"name"`
-    Url   string     `json:"url"`
-    // Host      string     `json:"Host"`
-    // Port      string     `json:"Port"`
+    Url       string     `json:"url"`
     Version   string     `json:"version"`
     Stats     string     `json:"stats"`
     Tracing   string     `json:"tracing"`

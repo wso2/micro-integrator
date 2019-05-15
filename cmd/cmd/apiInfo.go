@@ -100,8 +100,6 @@ func executeGetAPICmd(apiname string) {
 func printAPIInfo(api utils.API) {
 
     fmt.Println("Name - " + api.Name)
-    // fmt.Println("Host - " + api.Host)
-    // fmt.Println("Port - " + api.Port)
     fmt.Println("Version - " + api.Version)
     fmt.Println("Url - " + api.Url)
     fmt.Println("Stats - " + api.Stats)
