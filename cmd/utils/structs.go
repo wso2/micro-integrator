@@ -89,7 +89,7 @@ type Parameter struct {
 
 type API struct {
     Name      string     `json:"name"`
-    Context   string     `json:"url"`
+    Url   string     `json:"url"`
     // Host      string     `json:"Host"`
     // Port      string     `json:"Port"`
     Version   string     `json:"version"`

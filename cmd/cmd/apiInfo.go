@@ -103,7 +103,7 @@ func printAPIInfo(api utils.API) {
     // fmt.Println("Host - " + api.Host)
     // fmt.Println("Port - " + api.Port)
     fmt.Println("Version - " + api.Version)
-    fmt.Println("Url - " + api.Context)
+    fmt.Println("Url - " + api.Url)
     fmt.Println("Stats - " + api.Stats)
     fmt.Println("Tracing - " + api.Tracing)
     fmt.Println("Resources : ")
@@ -158,7 +158,7 @@ func printApiList(apiList utils.APIList) {
         table.Append(data)
 
         for _, api := range apiList.Apis {
-            data = []string{api.Name, api.Context}
+            data = []string{api.Name, api.Url}
             table.Append(data)
         }
         table.SetBorder(false)
