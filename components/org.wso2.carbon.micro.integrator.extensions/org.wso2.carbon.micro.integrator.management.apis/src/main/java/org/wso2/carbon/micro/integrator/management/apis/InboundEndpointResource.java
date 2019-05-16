@@ -36,8 +36,6 @@ import java.util.Set;
 
 public class InboundEndpointResource extends APIResource {
 
-    private Utils utils = new Utils();
-
     public InboundEndpointResource(String urlTemplate){
         super(urlTemplate);
     }
@@ -59,7 +57,7 @@ public class InboundEndpointResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific inbound endpoint
         if (null != queryParameter) {
@@ -99,7 +97,7 @@ public class InboundEndpointResource extends APIResource {
 
             inboundList.put(inboundObject);
         }
-        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateInboundEndpointData(MessageContext messageContext, String inboundEndpointName) {
@@ -110,7 +108,7 @@ public class InboundEndpointResource extends APIResource {
         JSONObject jsonBody = getInboundEndpointByName(messageContext, inboundEndpointName);
 
         if (null != jsonBody) {
-            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }

@@ -36,8 +36,6 @@ import java.util.Set;
 
 public class SequenceResource extends APIResource {
 
-    private Utils utils = new Utils();
-
     public SequenceResource(String urlTemplate){
         super(urlTemplate);
     }
@@ -59,7 +57,7 @@ public class SequenceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific sequence
         if (null != queryParameter) {
@@ -105,7 +103,7 @@ public class SequenceResource extends APIResource {
 
             sequenceList.put(sequenceObject);
         }
-        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateSequenceData(MessageContext messageContext, String sequenceName) {
@@ -116,7 +114,7 @@ public class SequenceResource extends APIResource {
         JSONObject jsonBody = getSequenceByName(messageContext, sequenceName);
 
         if (null != jsonBody) {
-            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }

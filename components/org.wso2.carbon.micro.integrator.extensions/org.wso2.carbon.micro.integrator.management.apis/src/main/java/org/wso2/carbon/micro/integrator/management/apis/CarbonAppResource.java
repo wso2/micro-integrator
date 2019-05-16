@@ -38,8 +38,6 @@ import static org.wso2.carbon.micro.integrator.core.deployment.application.deplo
 
 public class CarbonAppResource extends APIResource {
 
-    private Utils utils = new Utils();
-
     public CarbonAppResource(String urlTemplate){
         super(urlTemplate);
     }
@@ -62,7 +60,7 @@ public class CarbonAppResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific inbound endpoint
         if (null != queryParameter) {
@@ -101,7 +99,7 @@ public class CarbonAppResource extends APIResource {
 
             cappList.put(appObject);
         }
-        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateCarbonAppData(MessageContext messageContext, String carbonAppName) {
@@ -112,7 +110,7 @@ public class CarbonAppResource extends APIResource {
         JSONObject jsonBody = getCarbonAppByName(carbonAppName);
 
         if (null != jsonBody) {
-            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }

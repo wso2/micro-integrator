@@ -41,8 +41,6 @@ import javax.xml.namespace.QName;
 
 public class EndpointResource extends APIResource {
 
-    private Utils utils = new Utils();
-
     public EndpointResource(String urlTemplate){
         super(urlTemplate);
     }
@@ -65,7 +63,7 @@ public class EndpointResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific endpoint
         if (null != queryParameter) {
@@ -118,7 +116,7 @@ public class EndpointResource extends APIResource {
 
             endpointList.put(endpointObject);
         }
-        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateEndpointData(MessageContext messageContext, String endpointName) {
@@ -129,7 +127,7 @@ public class EndpointResource extends APIResource {
         JSONObject jsonBody = getEndpointByName(messageContext, endpointName);
 
         if (null != jsonBody) {
-            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }

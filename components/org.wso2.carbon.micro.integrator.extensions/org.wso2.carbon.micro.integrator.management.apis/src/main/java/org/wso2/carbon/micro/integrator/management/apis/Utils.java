@@ -43,7 +43,7 @@ public class Utils {
      * @return List<NameValuePair> - List of query parameters
      *
      */
-    public List<NameValuePair> getQueryParameters(org.apache.axis2.context.MessageContext axis2MessageContext){
+    public static List<NameValuePair> getQueryParameters(org.apache.axis2.context.MessageContext axis2MessageContext){
 
         List<NameValuePair> queryParameter = null;
 
@@ -61,7 +61,7 @@ public class Utils {
         return null;
     }
 
-    public void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload){
+    public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload){
 
         try {
             JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(),  true, true);

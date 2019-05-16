@@ -45,8 +45,6 @@ import java.util.Set;
 
 public class ApiResource extends APIResource {
 
-    private Utils utils = new Utils();
-
     public ApiResource(String urlTemplate){
         super(urlTemplate);
     }
@@ -67,7 +65,7 @@ public class ApiResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = utils.getQueryParameters(axis2MessageContext);
+        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         if (null != queryParameter) {
             for (NameValuePair nvPair : queryParameter) {
@@ -111,7 +109,7 @@ public class ApiResource extends APIResource {
             apiList.put(apiObject);
 
         }
-        utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateApiData(MessageContext messageContext, String apiName) {
@@ -122,7 +120,7 @@ public class ApiResource extends APIResource {
         JSONObject jsonBody = getApiByName(messageContext, apiName);
 
         if (null != jsonBody) {
-            utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty("HTTP_SC", "404");
         }
