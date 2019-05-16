@@ -12,11 +12,11 @@ Following are the sections available in this guide.
 
 ## What You'll Build
 
-During this guide, you will be creating a composite service which, upon invocation will call a that which processes order requests. The following diagram illustrates the use case clearly.
+In this guide, you will be creating a composite service which will process order requests upon invocation. The following diagram illustrates the use case clearly.
 
 ![scenario](images/scenario.png)
 
-You will be invoking a composite service which wraps the back-end service to process orders. The composite service, upon invocation will forward the request received without any alteration to the back-end service and will forward the response back to the client intact.   
+You will be invoking a composite service which wraps the back-end service to process orders. The composite service, upon invocation, will forward the request received without any alteration to the back-end service and will forward the response back to the client intact.   
 
 ## Prerequisites
 
@@ -38,7 +38,7 @@ The behaviour of the order processing back-end, in a nutshell, is shown below.
 
 ![backend](images/backend.png)
 
-It receives order details in a request and and responds by appending the 'orderID', 'price' and 'status' to the order details.
+It receives order details in a request and responds by appending the 'orderID', 'price' and 'status' to the order details.
 
 You can build the order process back-end and deploy it in Micro Integrator using the following step:
 
@@ -60,7 +60,7 @@ You can build the order process back-end and deploy it in Micro Integrator using
 3. Open the project and [create a REST API](https://docs.wso2.com/display/EI6xx/Working+with+EI+Tooling#WorkingwithEITooling-CreatingartifactsforanESBSolutionProject). You can either create an API from scratch and configure it as shown in the following diagram  or directly import the config from [here](composite-service/composite-service/src/main/synapse-config/api/forwardOrderApi.xml).
  ![diagram](images/api-config.png) 
  
-4. Save the project and export the composite application to a desired location. (You can refere [How to working with EI Tooling](https://docs.wso2.com/display/EI6xx/Working+with+EI+Tooling#WorkingwithEITooling-PackagingESBartifacts) document for get to know more information about this)
+4. Save the project and export the composite application to a desired location. (You can refer [How to working with EI Tooling](https://docs.wso2.com/display/EI6xx/Working+with+EI+Tooling#WorkingwithEITooling-PackagingESBartifacts) document for more information about this)
 
 **Note -** Alternatively, you can build the project 'composite-service' using maven and 'composite-serviceCompositeApplication_1.0.0.car' C-App will be located in `<mi-work-directory>/examples/getting-started/composite-service/composite-service-capp/target` when you use the following command.
 ```
@@ -69,13 +69,13 @@ You can build the order process back-end and deploy it in Micro Integrator using
    ```
 ## Deployment
 
-Here we have illustrated three types of deployments and you can choose prefer one for the rest of this example. Throughout this section, it will be assumed that you have created two C-apps for 'composite-service' and 'order-process-backend' which are reside in ```<mi-work-directory>/examples/getting-started/composite-service/composite-service-capp/target``` and ```<mi-work-directory>/examples/getting-started/order-process-be/order-processCompositeApplication/target``` folders.
+Here we have illustrated three types of deployments from which you can choose one for the rest of this example. Throughout this section, it will be assumed that you have created two C-apps for 'composite-service' and 'order-process-backend' which reside in ```<mi-work-directory>/examples/getting-started/composite-service/composite-service-capp/target``` and ```<mi-work-directory>/examples/getting-started/order-process-be/order-processCompositeApplication/target``` folders.
 
 ### Local Deployment
 
-Even though the Micro Integrator integrator is specifically designed to be container native, it is possible for you to deploy services and run the Micro Integrator locally. Since it does not support hot deployment of artifacts, it is required for you to start/restart the server after copying the artifacts into the correct location so that the services are available for use.
+Even though the Micro Integrator integrator is specifically designed to be container native, it is possible for you to deploy services and run the Micro Integrator locally. Since it does not support hot-deployment of artifacts, it is required for you to start/restart the server after copying the artifacts into the correct location so that the services are available for use.
 
-You would be deploying the 2 services, 'order-process-backend' and the 'composite-service' in 2 different WSO2 Micro Integrator instances. Therefore, it is required have 2 separate distribution of MI. We will be referring to them as MI1 and MI2 in the following sections respectively.
+You would be deploying the 2 services, 'order-process-backend' and the 'composite-service' in 2 different WSO2 Micro Integrator instances. Therefore, it is required to have 2 separate distribution of MI. We will be referring to them as MI1 and MI2 in the following sections respectively.
 
 #### Deploying the backend locally
 
@@ -104,14 +104,14 @@ You have successfully deployed 'order-process-backend' and the 'composite-servic
 ### Docker Deployment
 
 We assume that you have followed all the steps in the section [Create the order processing back-end](#1-create-the-order-processing-back-end) and [Create the composite service to invoke the back-end.](#2-create-the-composite-service-to-invoke-the-back-end)
-In [Create the composite service to invoke the back-end](#2-create-the-composite-service-to-invoke-the-back-end) step 3 you need to replace 'order-process-backend' endpoint address in [forwardOrderApi.xml](https://github.com/wso2/micro-integrator/blob/master/examples/getting-started/composite-service/composite-service/src/main/synapse-config/api/forwardOrderApi.xml) file as follows because in docker containers each container has their own localhost.
+In [Create the composite service to invoke the back-end](#2-create-the-composite-service-to-invoke-the-back-end) step 3 you need to replace 'order-process-backend' endpoint address in [forwardOrderApi.xml](https://github.com/wso2/micro-integrator/blob/master/examples/getting-started/composite-service/composite-service/src/main/synapse-config/api/forwardOrderApi.xml) file as follows because in Docker containers, each container has its own localhost.
 ```xml
 <endpoint>
     <address uri="http://backend:8290/order"/>
 </endpoint>
 ```
 
-Here we are going to use **docker-compose** command for docker deployment. Therefore we need a ```docker-compose.yml``` file which include all the details about the docker containers. This is the docker-compose.yml file we are going to use in this example.    
+Here we are going to use **docker-compose** command for docker deployment. Therefore, we need a ```docker-compose.yml``` file which includes all the details about the Docker containers. This is the docker-compose.yml file we are going to use in this example.    
 
 ```yml
 version: "3.7"
@@ -160,7 +160,7 @@ example. We assume that you already have a working minikube setup locally. If no
 [installation guide](https://kubernetes.io/docs/tasks/tools/install-minikube/).
 
 **Note**: You have to build the docker image while the docker CLI is using the Minikube’s built-in Docker daemon.
-Otherwise the docker image will not be available in the Minikube environment. You can execute `eval $(minikube
+Otherwise, the docker image will not be available in the Minikube environment. You can execute `eval $(minikube
 docker-env)` to use the Minikube’s built-in Docker daemon. Please refer
 [Use local images by re-using the Docker daemon](https://kubernetes.io/docs/setup/minikube/#use-local-images-by-re-using-the-docker-daemon)
 for more details.
@@ -202,7 +202,7 @@ integrator service in a Kubernetes cluster. You can use `kubectl create` to depl
 
     ```
 
-4. Follow the section on [Testing](#testing). Please note that you will have to use following URL to invoke the
+4. Follow the section on [Testing](#testing). Please note that you will have to use the following URL to invoke the
    composite service
    ```
    http://MINIKUBE_IP:32100/forward
@@ -215,7 +215,7 @@ Invoke the composite service using the following curl command
 ```
 curl --header "Content-Type: application/json" --request POST   --data '{"store": {"book": [{"author": "Nigel Rees","title": "Sayings of the Century"},{"author": "J. R. R. Tolkien","title": "The Lord of the Rings","isbn": "0-395-19395-8"}]}}' http://localhost:8290/forward
 ```
-Upon invocation you should be able to observe the following response
+Upon invocation, you should be able to observe the following response
  ```
 {
 	"orderDetails":{"store": {"book": [{"author": "Nigel Rees","title": "Sayings of the Century"},{"author": "J. R. R. Tolkien","title": "The Lord of the Rings","isbn": "0-395-19395-8"}]}},
@@ -229,7 +229,7 @@ Upon invocation you should be able to observe the following response
 
 #### Debugging the mediation
 
-Alternatively, the Integrator Tool brings in the capability of debugging the mediation flow with the the tool interactively. for more information on debugging the mediation flow, please refer to [this blog.](https://medium.com/@rosensilva/debugging-integration-flows-using-wso2-enterprise-integrator-16bc127732d)
+Alternatively, the Integrator Tool brings in the capability of debugging the mediation flow with the tool interactively. For more information on debugging the mediation flow, please refer to [this blog.](https://medium.com/@rosensilva/debugging-integration-flows-using-wso2-enterprise-integrator-16bc127732d)
 
 ## Tracing and Monitoring with Micro Integrator
 
