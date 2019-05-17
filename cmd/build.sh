@@ -141,7 +141,11 @@ do
 
     pwd=`pwd`
     cd $buildPath
-    tar czf "$zipfile.tar.gz" $filename > /dev/null 2>&1
+    if [[ "windows" == "$goos" ]]; then
+        zip -r "$zipfile.zip" $filename > /dev/null 2>&1
+    else
+    	tar czf "$zipfile.tar.gz" $filename > /dev/null 2>&1
+    fi
     rm -rf $filename
     cd $pwd
     echo -en $'✔ '
