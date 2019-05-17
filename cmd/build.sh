@@ -82,12 +82,7 @@ buildPath="$rootPath/${buildDir}"
 echo "Cleaning build path ${buildDir}..."
 rm -rf $buildPath
 
-filename=$(basename ${target})
-baseDir=$(dirname ${target})
-if [ ".go" == ${filename:(-3)} ]
-then
-    filename=${filename%.go}
-fi
+filename="wso2mi-cli"
 
 #platforms="darwin/amd64 freebsd/386 freebsd/amd64 freebsd/arm linux/386 linux/amd64 linux/arm windows/386 windows/amd64"
 #platforms="linux/amd64/linux/x64"
@@ -125,7 +120,7 @@ do
 
     echo -en "\t - $goos/$goarch..."
 
-    zipfile="$filename-$build_version-$pos-$parch"
+    zipfile=$filename-$build_version-$pos-$parch
     zipdir="${buildPath}/$filename"
     mkdir -p $zipdir
 
