@@ -125,7 +125,7 @@ do
 
     echo -en "\t - $goos/$goarch..."
 
-    zipfile="$filename-$build_version-$pos-$parch"
+    zipfile="wso2$filename-cli-$build_version-$pos-$parch"
     zipdir="${buildPath}/$filename"
     mkdir -p $zipdir
 
