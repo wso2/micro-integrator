@@ -110,8 +110,15 @@ In [Create the composite service to invoke the back-end](#2-create-the-composite
     <address uri="http://backend:8290/order"/>
 </endpoint>
 ```
+Note: Using `http://backend:8290/order` will correctly map the IP address of the container (see the `docker-compose.yml` file below).
 
-Here we are going to use **docker-compose** command for docker deployment. Therefore, we need a ```docker-compose.yml``` file which includes all the details about the Docker containers. This is the docker-compose.yml file we are going to use in this example.    
+After updating `forwardOrderApil.xml`, execute the following commands to build the composite-service once more.
+```
+   $ cd <mi-work-directory>/examples/getting-started/composite-service
+   $ mvn clean install
+   ```
+
+Next, we are going to use **docker-compose** for docker deployment. Therefore, we need a ```docker-compose.yml``` file which includes all the details about the Docker containers. This is the `docker-compose.yml` file we are going to use in this example.    
 
 ```yml
 version: "3.7"
@@ -135,13 +142,15 @@ services:
       - 8291:8290
 ```
 
-We have already added this file in to the ```<mi-work-directory>/examples/getting-started/``` directory. You can use the following command to navigate to that file and execute it.
+This file can be found in the ```<mi-work-directory>/examples/getting-started/``` directory. Navigate to the directory and run the `docker-compose.yml` file using the following commands.
+(Make sure you have `docker-compose` installed by executing `docker-compose -v`).
    ```
    $ cd <mi-work-directory>/examples/getting-started/
    $ docker-compose up -d
    ```
-You have successfully deployed 'order-process-backend' and the 'composite-service' services in docker. Now you can test your deployments by using [Testing](#Testing) section.
+Now you have successfully deployed 'order-process-backend' and the 'composite-service' services in Docker. (Execute `docker container ls` to see the running containers).
 
+Head over to the [Testing](#Testing) section to test your deployment.
 
 ### Kubernetes Deployment
 
