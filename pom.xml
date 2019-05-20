@@ -298,7 +298,7 @@
 
         <cipher.tool.version>1.1.1</cipher.tool.version>
         <axis2.transport.version>2.0.0-wso2v34</axis2.transport.version>
-        <axis2.wso2.version>1.6.1-wso2v35</axis2.wso2.version>
+        <axis2.wso2.version>1.6.2.wso2v13</axis2.wso2.version>
         <carbon.analytics.common.version>5.1.57</carbon.analytics.common.version>
         <carbon.commons.version>4.6.65</carbon.commons.version>
         <carbon.rule.version>4.4.9</carbon.rule.version>
