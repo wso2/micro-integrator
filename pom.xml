@@ -301,7 +301,7 @@
         <axis2.wso2.version>1.6.1-wso2v35</axis2.wso2.version>
         <carbon.analytics.common.version>5.1.57</carbon.analytics.common.version>
         <carbon.commons.version>4.6.65</carbon.commons.version>
-        <carbon.rule.version>4.4.9</carbon.rule.version>
+        <carbon.rule.version>4.4.10</carbon.rule.version>
         <carbon.deployment.version>4.8.3</carbon.deployment.version>
         <wss4j.version>1.5.11-wso2v18</wss4j.version>
         <rampart.wso2.version>1.6.1-wso2v34</rampart.wso2.version>

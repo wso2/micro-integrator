@@ -442,6 +442,11 @@
                                     <version>${carbon.commons.version}</version>
                                 </feature>
 
+                                <!--10 Carbon rule-->
+                                <feature>
+                                    <id>org.wso2.carbon.rule.mediation.server.feature.group</id>
+                                    <version>${carbon.rule.version}</version>
+                                </feature>
 
                                 <!--11 Axis2 Transports-->
                                 <feature>
