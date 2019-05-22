@@ -77,7 +77,7 @@ public class ApiResource extends APIResource {
             populateApiList(messageContext);
         }
 
-        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -92,8 +92,8 @@ public class ApiResource extends APIResource {
 
         JSONObject jsonBody = new JSONObject();
         JSONArray apiList = new JSONArray();
-        jsonBody.put("count", apis.size());
-        jsonBody.put("list", apiList);
+        jsonBody.put(Constants.COUNT, apis.size());
+        jsonBody.put(Constants.LIST, apiList);
 
         String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
 
@@ -103,8 +103,8 @@ public class ApiResource extends APIResource {
 
             String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
 
-            apiObject.put("name", api.getName());
-            apiObject.put("url", apiUrl);
+            apiObject.put(Constants.NAME, api.getName());
+            apiObject.put(Constants.URL, apiUrl);
 
             apiList.put(apiObject);
 
@@ -122,7 +122,7 @@ public class ApiResource extends APIResource {
         if (null != jsonBody) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
@@ -141,7 +141,7 @@ public class ApiResource extends APIResource {
 
         JSONObject apiObject = new JSONObject();
 
-        apiObject.put("name", api.getName());
+        apiObject.put(Constants.NAME, api.getName());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -149,7 +149,7 @@ public class ApiResource extends APIResource {
         String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
         String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
 
-        apiObject.put("url", apiUrl);
+        apiObject.put(Constants.URL, apiUrl);
 
 //        hostElement.setText(api.getHost());
 //        rootElement.addChild(hostElement);
@@ -159,13 +159,13 @@ public class ApiResource extends APIResource {
 
         String version = api.getVersion().equals("") ? "N/A" : api.getVersion();
 
-        apiObject.put("version", version);
+        apiObject.put(Constants.VERSION, version);
 
-        String statisticState = api.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-        apiObject.put("stats", statisticState);
+        String statisticState = api.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
+        apiObject.put(Constants.STATS, statisticState);
 
-        String tracingState = api.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
-        apiObject.put("tracing", tracingState);
+        String tracingState = api.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+        apiObject.put(Constants.TRACING, tracingState);
 
         JSONArray resourceListObject = new JSONArray();
         apiObject.put("resources", resourceListObject);
@@ -182,10 +182,10 @@ public class ApiResource extends APIResource {
 
             DispatcherHelper dispatcherHelper = resource.getDispatcherHelper();
             if (dispatcherHelper instanceof URITemplateHelper) {
-                resourceObject.put("url", dispatcherHelper.getString());
+                resourceObject.put(Constants.URL, dispatcherHelper.getString());
 
             } else if (dispatcherHelper instanceof URLMappingHelper) {
-                resourceObject.put("url", dispatcherHelper.getString());
+                resourceObject.put(Constants.URL, dispatcherHelper.getString());
             }
             resourceListObject.put(resourceObject);
         }

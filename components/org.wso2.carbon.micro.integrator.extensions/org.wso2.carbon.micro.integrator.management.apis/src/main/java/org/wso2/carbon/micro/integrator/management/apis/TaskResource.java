@@ -68,7 +68,7 @@ public class TaskResource extends APIResource {
             populateTasksList(messageContext);
         }
 
-        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -83,8 +83,8 @@ public class TaskResource extends APIResource {
 
         JSONObject jsonBody = new JSONObject();
         JSONArray taskList = new JSONArray();
-        jsonBody.put("count", taskNames.length);
-        jsonBody.put("list", taskList);
+        jsonBody.put(Constants.COUNT, taskNames.length);
+        jsonBody.put(Constants.LIST, taskList);
 
         for (String taskName : taskNames) {
 
@@ -104,7 +104,7 @@ public class TaskResource extends APIResource {
         if (null != jsonBody) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
@@ -129,7 +129,7 @@ public class TaskResource extends APIResource {
 
         JSONObject taskObject = new JSONObject();
 
-        taskObject.put("name", task.getName());
+        taskObject.put(Constants.NAME, task.getName());
 
         String triggerType = "cron";
 

@@ -76,7 +76,7 @@ public class EndpointResource extends APIResource {
             populateEndpointList(messageContext);
         }
 
-        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -92,27 +92,27 @@ public class EndpointResource extends APIResource {
 
         JSONObject jsonBody = new JSONObject();
         JSONArray endpointList = new JSONArray();
-        jsonBody.put("count", namedEndpointCollection.size());
-        jsonBody.put("list", endpointList);
+        jsonBody.put(Constants.COUNT, namedEndpointCollection.size());
+        jsonBody.put(Constants.LIST, endpointList);
 
         for (Endpoint ep : namedEndpointCollection) {
 
             JSONObject endpointObject = new JSONObject();
 
             String epName = ep.getName();
-            endpointObject.put("name", epName);
+            endpointObject.put(Constants.NAME, epName);
 
             OMElement element = EndpointSerializer.getElementFromEndpoint(ep);
             OMElement firstElement = element.getFirstElement();
 
             String type = firstElement.getLocalName();
-            endpointObject.put("type", type);
+            endpointObject.put(Constants.TYPE, type);
 
             String method = firstElement.getAttributeValue(new QName("method"));
             endpointObject.put("method", method);
 
             String url = firstElement.getAttributeValue(new QName("uri-template"));
-            endpointObject.put("url", url);
+            endpointObject.put(Constants.URL, url);
 
             endpointList.put(endpointObject);
         }
@@ -129,7 +129,7 @@ public class EndpointResource extends APIResource {
         if (null != jsonBody) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
@@ -148,26 +148,26 @@ public class EndpointResource extends APIResource {
 
         JSONObject endpointObject = new JSONObject();
 
-        endpointObject.put("name", endpoint.getName());
+        endpointObject.put(Constants.NAME, endpoint.getName());
 
         OMElement epElement = EndpointSerializer.getElementFromEndpoint(endpoint);
         OMElement firstElement = epElement.getFirstElement();
 
         String type = firstElement.getLocalName();
-        endpointObject.put("type", type);
+        endpointObject.put(Constants.TYPE, type);
 
         String method = firstElement.getAttributeValue(new QName("method"));
         endpointObject.put("method", method);
 
         String url = firstElement.getAttributeValue(new QName("uri-template"));
-        endpointObject.put("url", url);
+        endpointObject.put(Constants.URL, url);
 
         EndpointDefinition def = ((AbstractEndpoint) endpoint).getDefinition();
         if (null != def) {
             if (def.isStatisticsEnable()) {
-                endpointObject.put("stats", "enabled");
+                endpointObject.put(Constants.STATS, Constants.ENABLED);
             } else {
-                endpointObject.put("stats", "disabled");
+                endpointObject.put(Constants.STATS, Constants.DISABLED);
             }
         }
         return endpointObject;

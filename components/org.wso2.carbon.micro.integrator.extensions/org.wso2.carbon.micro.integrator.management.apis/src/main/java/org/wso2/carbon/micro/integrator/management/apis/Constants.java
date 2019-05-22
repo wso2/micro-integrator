@@ -29,4 +29,19 @@ public class Constants {
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
 
+    public static final String COUNT = "count";
+    public static final String LIST = "list";
+    public static final String NAME = "name";
+    public static final String URL = "url";
+    public static final String VERSION = "version";
+    public static final String CONTAINER = "container";
+    public static final String TYPE = "type";
+    public static final String STATS = "stats";
+    public static final String TRACING = "tracing";
+    public static final String ENABLED = "enabled";
+    public static final String DISABLED = "disabled";
+
+    public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
+    public static final String HTTP_STATUS_CODE = "HTTP_SC";
+    public static final String NOT_FOUND = "404";
 }

@@ -70,7 +70,7 @@ public class InboundEndpointResource extends APIResource {
             populateInboundEndpointList(messageContext);
         }
 
-        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -85,14 +85,14 @@ public class InboundEndpointResource extends APIResource {
 
         JSONObject jsonBody = new JSONObject();
         JSONArray inboundList = new JSONArray();
-        jsonBody.put("count", inboundEndpoints.size());
-        jsonBody.put("list", inboundList);
+        jsonBody.put(Constants.COUNT, inboundEndpoints.size());
+        jsonBody.put(Constants.LIST, inboundList);
 
         for (InboundEndpoint inboundEndpoint : inboundEndpoints) {
 
             JSONObject inboundObject = new JSONObject();
 
-            inboundObject.put("name", inboundEndpoint.getName());
+            inboundObject.put(Constants.NAME, inboundEndpoint.getName());
             inboundObject.put("protocol", inboundEndpoint.getProtocol());
 
             inboundList.put(inboundObject);
@@ -110,7 +110,7 @@ public class InboundEndpointResource extends APIResource {
         if (null != jsonBody) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
@@ -129,14 +129,14 @@ public class InboundEndpointResource extends APIResource {
 
         JSONObject inboundObject = new JSONObject();
 
-        inboundObject.put("name", inboundEndpoint.getName());
+        inboundObject.put(Constants.NAME, inboundEndpoint.getName());
         inboundObject.put("protocol", inboundEndpoint.getProtocol());
 
-        String statisticState = inboundEndpoint.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-        inboundObject.put("stats", statisticState);
+        String statisticState = inboundEndpoint.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
+        inboundObject.put(Constants.STATS, statisticState);
 
-        String tracingState = inboundEndpoint.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
-        inboundObject.put("tracing", tracingState);
+        String tracingState = inboundEndpoint.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+        inboundObject.put(Constants.TRACING, tracingState);
 
         JSONArray parameterListObject = new JSONArray();
 
@@ -148,7 +148,7 @@ public class InboundEndpointResource extends APIResource {
 
             JSONObject paramObject = new JSONObject();
 
-            paramObject.put("name", param.getKey());
+            paramObject.put(Constants.NAME, param.getKey());
             paramObject.put("value", param.getValue());
 
             parameterListObject.put(paramObject);

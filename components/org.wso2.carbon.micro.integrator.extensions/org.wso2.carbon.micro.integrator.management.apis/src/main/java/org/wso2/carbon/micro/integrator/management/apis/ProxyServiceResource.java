@@ -74,7 +74,7 @@ public class ProxyServiceResource extends APIResource {
             populateProxyServiceList(messageContext);
         }
 
-        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -89,8 +89,8 @@ public class ProxyServiceResource extends APIResource {
 
         JSONObject jsonBody = new JSONObject();
         JSONArray proxyList = new JSONArray();
-        jsonBody.put("count", proxyServices.size());
-        jsonBody.put("list", proxyList);
+        jsonBody.put(Constants.COUNT, proxyServices.size());
+        jsonBody.put(Constants.LIST, proxyList);
 
         for (ProxyService proxyService : proxyServices) {
 
@@ -99,7 +99,7 @@ public class ProxyServiceResource extends APIResource {
             try {
                 ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
 
-                proxyObject.put("name", proxyService.getName());
+                proxyObject.put(Constants.NAME, proxyService.getName());
 
                 String []wsdlUrls = data.getWsdlURLs();
                 proxyObject.put("wsdl1_1", wsdlUrls[0]);
@@ -125,7 +125,7 @@ public class ProxyServiceResource extends APIResource {
         if (null != jsonBody) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
@@ -144,7 +144,7 @@ public class ProxyServiceResource extends APIResource {
 
         JSONObject proxyObject = new JSONObject();
 
-        proxyObject.put("name", proxyService.getName());
+        proxyObject.put(Constants.NAME, proxyService.getName());
 
         try {
             ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
@@ -157,11 +157,11 @@ public class ProxyServiceResource extends APIResource {
             log.error("Error occurred while processing service data", e);
         }
 
-        String statisticState = proxyService.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-        proxyObject.put("stats", statisticState);
+        String statisticState = proxyService.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
+        proxyObject.put(Constants.STATS, statisticState);
 
-        String tracingState = proxyService.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
-        proxyObject.put("tracing", tracingState);
+        String tracingState = proxyService.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+        proxyObject.put(Constants.TRACING, tracingState);
 
         return proxyObject;
     }

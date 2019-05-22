@@ -73,7 +73,7 @@ public class CarbonAppResource extends APIResource {
             populateCarbonAppList(messageContext);
         }
 
-        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -87,15 +87,15 @@ public class CarbonAppResource extends APIResource {
 
         JSONObject jsonBody = new JSONObject();
         JSONArray cappList = new JSONArray();
-        jsonBody.put("count", appList.size());
-        jsonBody.put("list", cappList);
+        jsonBody.put(Constants.COUNT, appList.size());
+        jsonBody.put(Constants.LIST, cappList);
 
         for (CarbonApplication app: appList) {
 
             JSONObject appObject = new JSONObject();
 
-            appObject.put("name", app.getAppName());
-            appObject.put("version", app.getAppVersion());
+            appObject.put(Constants.NAME, app.getAppName());
+            appObject.put(Constants.VERSION, app.getAppVersion());
 
             cappList.put(appObject);
         }
@@ -112,7 +112,7 @@ public class CarbonAppResource extends APIResource {
         if (null != jsonBody) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
@@ -137,8 +137,8 @@ public class CarbonAppResource extends APIResource {
 
         JSONObject appObject = new JSONObject();
 
-        appObject.put("name", carbonApp.getAppName());
-        appObject.put("version", carbonApp.getAppVersion());
+        appObject.put(Constants.NAME, carbonApp.getAppName());
+        appObject.put(Constants.VERSION, carbonApp.getAppVersion());
 
         JSONArray artifactListObject = new JSONArray();
         appObject.put("artifacts", artifactListObject);
@@ -160,8 +160,8 @@ public class CarbonAppResource extends APIResource {
 
             JSONObject artifactObject = new JSONObject();
 
-            artifactObject.put("name", artifactName);
-            artifactObject.put("type", type);
+            artifactObject.put(Constants.NAME, artifactName);
+            artifactObject.put(Constants.TYPE, type);
 
             artifactListObject.put(artifactObject);
         }

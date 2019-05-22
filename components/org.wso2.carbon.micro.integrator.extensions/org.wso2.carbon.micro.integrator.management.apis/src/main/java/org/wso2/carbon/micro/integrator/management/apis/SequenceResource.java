@@ -70,7 +70,7 @@ public class SequenceResource extends APIResource {
             populateSequenceList(messageContext);
         }
 
-        axis2MessageContext.removeProperty("NO_ENTITY_BODY");
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -85,21 +85,21 @@ public class SequenceResource extends APIResource {
 
         JSONObject jsonBody = new JSONObject();
         JSONArray sequenceList = new JSONArray();
-        jsonBody.put("count", sequenceMediatorMap.size());
-        jsonBody.put("list", sequenceList);
+        jsonBody.put(Constants.COUNT, sequenceMediatorMap.size());
+        jsonBody.put(Constants.LIST, sequenceList);
 
         for (SequenceMediator sequence: sequenceMediatorMap.values()) {
 
             JSONObject sequenceObject = new JSONObject();
 
-            sequenceObject.put("name", sequence.getName());
-            sequenceObject.put("container", sequence.getArtifactContainerName());
+            sequenceObject.put(Constants.NAME, sequence.getName());
+            sequenceObject.put(Constants.CONTAINER, sequence.getArtifactContainerName());
 
-            String statisticState = sequence.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-            sequenceObject.put("stats", statisticState);
+            String statisticState = sequence.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
+            sequenceObject.put(Constants.STATS, statisticState);
 
-            String tracingState = sequence.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
-            sequenceObject.put("tracing", tracingState);
+            String tracingState = sequence.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+            sequenceObject.put(Constants.TRACING, tracingState);
 
             sequenceList.put(sequenceObject);
         }
@@ -116,7 +116,7 @@ public class SequenceResource extends APIResource {
         if (null != jsonBody) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
@@ -135,14 +135,14 @@ public class SequenceResource extends APIResource {
 
         JSONObject sequenceObject = new JSONObject();
 
-        sequenceObject.put("name", sequenceMediator.getName());
-        sequenceObject.put("container", sequenceMediator.getArtifactContainerName());
+        sequenceObject.put(Constants.NAME, sequenceMediator.getName());
+        sequenceObject.put(Constants.CONTAINER, sequenceMediator.getArtifactContainerName());
 
-        String statisticState = sequenceMediator.getAspectConfiguration().isStatisticsEnable() ? "enabled" : "disabled";
-        sequenceObject.put("stats", statisticState);
+        String statisticState = sequenceMediator.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
+        sequenceObject.put(Constants.STATS, statisticState);
 
-        String tracingState = sequenceMediator.getAspectConfiguration().isTracingEnabled() ? "enabled" : "disabled";
-        sequenceObject.put("tracing", tracingState);
+        String tracingState = sequenceMediator.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
+        sequenceObject.put(Constants.TRACING, tracingState);
 
         List<Mediator> mediators = sequenceMediator.getList();
         String []mediatorTypes = new String[mediators.size()];
