@@ -5,7 +5,7 @@ info:
   description: |
     This describes the API resources that make up the Micro Integrator RESTful API.
     
-    Please see [full swagger definition](https://raw.githubusercontent.com/wso2/micro-integrator/master/doc/management-api.yaml) of the API which is written using [swagger 2.0](http://swagger.io/) specification.
+    Please see [full swagger definition](https://raw.githubusercontent.com/wso2/micro-integrator/master/doc/mi-rest-api.yaml) of the API which is written using [swagger 2.0](http://swagger.io/) specification.
   license:
     name: "Apache 2.0"
     url: "http://www.apache.org/licenses/LICENSE-2.0.html"
