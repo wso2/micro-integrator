@@ -351,6 +351,16 @@ If you want to change the default locations of the registry directories, uncomme
 </registry>
 ```
 
+## Micro Integrator CLI
+
+Micro Integrator CLI is a command line tool for managing the WSO2 Micro Integrator. You can retrieve information about the artifacts deployed in the Micro Integrator with this tool.
+
+Please refer to the instructions on working with the Micro Integrator CLI tool by visiting the documentation [Working with the CLI](../cmd/README.md)
+
+### Micro Integrator REST API
+
+The Micro Integrator REST API can be used to get data about the deployed artifacts. It is an HTTP based API that can use to query data about the artifacts. More details can be found in the [REST API Documentation](mi-rest-api.md)
+
 ## Configuring and Monitoring statistics using Prometheus
 
 This Guide includes the following subsections.
