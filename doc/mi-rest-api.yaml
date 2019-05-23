@@ -1,9 +1,9 @@
 swagger: '2.0'
 info:
-  version: '1.0.0-RC1'
-  title: WSO2 Micro Integrator Management Api
-  description: | 
-    This specifies a RESTful API for WSO2 Micro Integrator Management
+  version: '1.0.0'
+  title: WSO2 Micro Integrator REST API
+  description: |
+    This describes the API resources that make up the Micro Integrator RESTful API.
     
     Please see [full swagger definition](https://raw.githubusercontent.com/wso2/micro-integrator/master/doc/management-api.yaml) of the API which is written using [swagger 2.0](http://swagger.io/) specification.
   license:

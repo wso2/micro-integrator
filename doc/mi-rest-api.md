@@ -1,10 +1,9 @@
-# WSO2 Micro Integrator Management Api
-This specifies a RESTful API for WSO2 Micro Integrator Management
+# WSO2 Micro Integrator REST API
+This describes the API resources that make up the Micro Integrator RESTful API.
 
-Please see [full swagger definition](https://raw.githubusercontent.com/wso2/micro-integrator/master/doc/management-api.yaml) of the API which is written using [swagger 2.0](http://swagger.io/) specification.
+Please see [full swagger definition](mi-rest-api.yaml) of the API which is written using [swagger 2.0](http://swagger.io/) specification.
 
-
-## Version: 1.0.0-RC1
+## Version: 1.0.0
 
 **License:** [Apache 2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
 
@@ -15,13 +14,11 @@ Please see [full swagger definition](https://raw.githubusercontent.com/wso2/micr
 
 Retrieve Applications
 
-
 ##### Description:
 
 This operation provides you a list of available Applications.
 
 Each retrieved Application is represented with a minimal amount of attributes. If you want to get complete details of an Application, you need to use **Get details of an Application** operation.
-
 
 ##### Responses
 
@@ -54,11 +51,9 @@ curl -X GET "https://localhost:9164/management/applications" -H "accept: applica
 
 Get details of an application
 
-
 ##### Description:
 
 This operation can be used to retrieve details of an individual application. You need to provide the name of the application to retrieve it.
-
 
 ##### Parameters
 
@@ -101,13 +96,11 @@ curl -X GET "https://localhost:9164/management/applications?carbonAppName=Sample
 
 Retrieve APIs 
 
-
 ##### Description:
 
 This operation provides you a list of available APIs.
 
 Each retrieved API is represented with a minimal amount of attributes. If you want to get complete details of an API, you need to use **Get details of an API** operation.
-
 
 ##### Responses
 
@@ -140,11 +133,9 @@ curl -X GET "https://localhost:9164/management/apis" -H "accept: application/jso
 
 Get details of an API
 
-
 ##### Description:
 
 This operation can be used to retrieve details of an individual api. You need to provide the name of the api to retrieve it.
-
 
 ##### Parameters
 
@@ -191,13 +182,11 @@ curl -X GET "https://localhost:9164/management/apis?apiName=HealthcareAPI" -H "a
 
 Retrieve Endpoints 
 
-
 ##### Description:
 
 This operation provides you a list of available Endpoints.
 
 Each retrieved Endpoint is represented with a minimal amount of attributes. If you want to get complete details of an Endpoint, you need to use **Get details of an Endpoint** operation.
-
 
 ##### Responses
 
@@ -232,11 +221,9 @@ curl -X GET "https://localhost:9164/management/endpoints" -H "accept: applicatio
 
 Get details of an Endpoint
 
-
 ##### Description:
 
 This operation can be used to retrieve details of an individual endpoint. You need to provide the name of the endpoint to retrieve it.
-
 
 ##### Parameters
 
@@ -277,13 +264,11 @@ curl -X GET "https://localhost:9164/management/endpoints?endpointName=ClemencyEP
 
 Retrieve Inbound Endpoints 
 
-
 ##### Description:
 
 This operation provides you a list of available Inbound Endpoints.
 
 Each retrieved Inbound Endpoint is represented with a minimal amount of attributes. If you want to get complete details of an Inbound Endpoint, you need to use **Get details of an Inbound Endpoint** operation.
-
 
 ##### Responses
 
@@ -316,11 +301,9 @@ curl -X GET "https://localhost:9164/management/inbound-endpoints" -H "accept: ap
 
 Get details of an Inbound Endpoints 
 
-
 ##### Description:
 
 This operation can be used to retrieve details of an individual Inboundendpoint. You need to provide the name of the Inboundendpoint to retrieve it.
-
 
 ##### Parameters
 
@@ -366,13 +349,11 @@ curl -X GET "https://localhost:9164/management/inbound-endpoints?inboundEndpoint
 
 Retrieve Proxy Services
 
-
 ##### Description:
 
 This operation provides you a list of available Proxy Services.
 
 Each retrieved Proxy Service is represented with a minimal amount of attributes. If you want to get complete details of a Proxy Service, you need to use **Get details of a Proxy Service** operation.
-
 
 ##### Responses
 
@@ -406,11 +387,9 @@ curl -X GET "https://localhost:9164/management/proxy-services" -H "accept: appli
 
 Get details of a Proxy Services 
 
-
 ##### Description:
 
 This operation can be used to retrieve details of an individual Proxy Service. You need to provide the name of the Proxy Service to retrieve it.
-
 
 ##### Parameters
 
@@ -451,13 +430,11 @@ curl -X GET "https://localhost:9164/management/proxy-services?proxyServiceName=T
 
 Retrieve Tasks
 
-
 ##### Description:
 
 This operation provides you a list of available Tasks.
 
 Each retrieved Task is represented with a minimal amount of attributes. If you want to get complete details of a Task, you need to use **Get details of a Task** operation.
-
 
 ##### Responses
 
@@ -492,11 +469,9 @@ curl -X GET "https://localhost:9164/management/tasks" -H "accept: application/js
 
 Get details of a Task
 
-
 ##### Description:
 
 This operation can be used to retrieve details of an individual Task. You need to provide the name of the Task to retrieve it.
-
 
 ##### Parameters
 
@@ -536,13 +511,11 @@ curl -X GET "https://localhost:9164/management/tasks?taskName=InjectXMLTask" -H 
 
 Retrieve Sequences
 
-
 ##### Description:
 
 This operation provides you a list of available Sequences.
 
 Each retrieved Sequence is represented with a minimal amount of attributes. If you want to get complete details of a Sequence, you need to use **Get details of a Sequence** operation.
-
 
 ##### Responses
 
@@ -577,11 +550,9 @@ curl -X GET "https://localhost:9164/management/sequences" -H "accept: applicatio
 
 Get details of a Sequence
 
-
 ##### Description:
 
 This operation can be used to retrieve details of an individual Sequence. You need to provide the name of the Sequence to retrieve it.
-
 
 ##### Parameters
 
@@ -618,7 +589,6 @@ curl -X GET "https://localhost:9164/management/sequences?sequenceName=InjectXMLS
 | 404 | Not Found. Requested Sequence doesnot exist |  |
 
 ### Models
-
 
 #### Artifacts
 
