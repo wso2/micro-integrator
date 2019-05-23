@@ -1,0 +1,652 @@
+swagger: '2.0'
+info:
+  version: '1.0.0-RC1'
+  title: WSO2 Micro Integrator Management Api
+  description: | 
+    This specifies a RESTful API for WSO2 Micro Integrator Management
+    
+    Please see [full swagger definition](https://raw.githubusercontent.com/wso2/micro-integrator/master/doc/management-api.yaml) of the API which is written using [swagger 2.0](http://swagger.io/) specification.
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+
+schemes:
+  - https
+
+host: localhost:9164
+basePath: /management
+
+paths:
+
+######################################################
+# "Carbon Application Collection"
+######################################################
+  /applications:
+    get:
+      summary: |
+        Retrieve Applications
+      description: |
+        This operation provides you a list of available Applications.
+        
+        Each retrieved Application is represented with a minimal amount of attributes. If you want to get complete details of an Application, you need to use **Get details of an Application** operation.
+      produces:
+        - application/json
+      tags:
+        - Application (Collection)
+      responses:
+        '200':
+          description: OK. List of Applications is returned.
+          schema:
+            $ref: '#/definitions/ApplicationList'
+  
+######################################################
+# "Individual Carbon Application"
+######################################################  
+  /applications?carbonAppName={appname}:
+    get:
+      summary: |
+        Get details of an application
+      description: |
+        This operation can be used to retrieve details of an individual application. You need to provide the name of the application to retrieve it.
+      produces:
+        - application/json
+      parameters:
+        - name: carbonAppName
+          description: Name of the Carbon app
+          in: query
+          required: true
+          type: string
+          x-example: SampleServicesCompositeApplication
+      tags:
+        - Application (Individual)
+      responses:
+        '200':
+          description: OK. Requested Application is returned
+          schema:
+            $ref: '#/definitions/ApplicationInfo'
+        '404':
+          description: Not Found. Requested Application doesnot exist
+
+######################################################
+# "API Collection"
+######################################################
+  /apis:
+    get:
+      summary: |
+        Retrieve APIs 
+      description: |
+        This operation provides you a list of available APIs.
+        
+        Each retrieved API is represented with a minimal amount of attributes. If you want to get complete details of an API, you need to use **Get details of an API** operation.
+      produces:
+        - application/json
+      tags:
+        - API (Collection)
+      responses:
+        '200':
+          description: |
+            OK. List of APIs is returned.
+          schema:
+            $ref: '#/definitions/ApiList'
+  
+######################################################
+# "Individual API"
+######################################################  
+  /apis?apiName={apiname}:
+    get:
+      summary: |
+        Get details of an API
+      description: |
+        This operation can be used to retrieve details of an individual api. You need to provide the name of the api to retrieve it.
+      produces:
+        - application/json
+      parameters:
+        - name: apiName
+          description: Name of the Api
+          in: query
+          required: true
+          type: string
+          x-example: HealthcareAPI
+      tags:
+        - API (Individual)
+      responses:
+        '200':
+          description: |
+            OK. Requested API is returned.
+          schema:
+            $ref: '#/definitions/ApiInfo'
+        '404':
+          description: Not Found. Requested Api doesnot exist
+  
+######################################################
+# "Endpoint Collection"
+######################################################  
+  /endpoints:
+    get:
+      summary: |
+        Retrieve Endpoints 
+      description: |
+        This operation provides you a list of available Endpoints.
+        
+        Each retrieved Endpoint is represented with a minimal amount of attributes. If you want to get complete details of an Endpoint, you need to use **Get details of an Endpoint** operation.
+      produces:
+        - application/json
+      tags:
+        - Endpoint (Collection)
+      responses:
+        '200':
+          description: OK. List of Endpoints is returned.
+          schema:
+            $ref: '#/definitions/EndpointList'
+  
+######################################################
+# "Individual Endpoint"
+######################################################    
+  /endpoints?endpointName={endpointname}:
+    get:
+      summary: |
+        Get details of an Endpoint
+      description: |
+        This operation can be used to retrieve details of an individual endpoint. You need to provide the name of the endpoint to retrieve it.
+      produces:
+        - application/json
+      parameters:
+        - name: endpointName
+          description: Name of the Endpoint
+          in: query
+          required: true
+          type: string
+          x-example: ClemencyEP
+      tags:
+        - Endpoint (Individual)
+      responses:
+        '200':
+          description: OK. Requested Endpoint is returned.
+          schema:
+            $ref: '#/definitions/EndpointInfo'
+        '404':
+          description: Not Found. Requested Endpoint doesnot exist
+  
+######################################################
+# "Inbound Collection"
+######################################################  
+  /inbound-endpoints:
+    get:
+      summary: |
+        Retrieve Inbound Endpoints 
+      description: |
+        This operation provides you a list of available Inbound Endpoints.
+        
+        Each retrieved Inbound Endpoint is represented with a minimal amount of attributes. If you want to get complete details of an Inbound Endpoint, you need to use **Get details of an Inbound Endpoint** operation.
+      produces:
+        - application/json
+      tags:
+        - InboundEndpoint (Collection)
+      responses:
+        '200':
+          description: OK. List of InboundEndpoints is returned.
+          schema:
+            $ref: '#/definitions/InboundEndpointList'
+  
+######################################################
+# "Individual Inbound"
+######################################################    
+  /inbound-endpoints?inboundEndpointName={inboundname}:
+    get:
+      summary: |
+        Get details of an Inbound Endpoints 
+      description: |
+        This operation can be used to retrieve details of an individual Inboundendpoint. You need to provide the name of the Inboundendpoint to retrieve it.
+      produces:
+        - application/json
+      tags:
+        - InboundEndpoint (Individual)
+      parameters:
+        - name: inboundEndpointName
+          description: Name of the InboundEndpoint
+          in: query
+          required: true
+          type: string
+          x-example: TestInbound
+      responses:
+        '200':
+          description: OK. Requested InboundEndpoint is returned.
+          schema:
+            $ref: '#/definitions/InboundEndpointInfo'
+        '404':
+          description: Not Found. Requested InboundEndpoint doesnot exist
+  
+######################################################
+# "Proxy service Collection"
+######################################################  
+  /proxy-services:
+    get:
+      summary: |
+        Retrieve Proxy Services
+      description: |
+        This operation provides you a list of available Proxy Services.
+        
+        Each retrieved Proxy Service is represented with a minimal amount of attributes. If you want to get complete details of a Proxy Service, you need to use **Get details of a Proxy Service** operation.
+      produces:
+        - application/json
+      tags:
+        - Proxy Service (Collection)
+      responses:
+        '200':
+          description: OK. List of Proxy Services is returned.
+          schema:
+            $ref: '#/definitions/ProxyServiceList'
+  
+######################################################
+# "Individual Proxy service"
+######################################################    
+  /proxy-services?proxyServiceName={proxyname}:
+    get:
+      summary: |
+        Get details of a Proxy Services 
+      description: |
+        This operation can be used to retrieve details of an individual Proxy Service. You need to provide the name of the Proxy Service to retrieve it.
+      produces:
+        - application/json
+      parameters:
+        - name: proxyServiceName
+          description: Name of the Proxy service
+          in: query
+          required: true
+          type: string
+          x-example: TestProxy
+      tags:
+        - Proxy Service (Individual)
+      responses:
+        '200':
+          description: OK. Requested Proxy Service is returned.
+          schema:
+            $ref: '#/definitions/ProxyServiceInfo'
+        '404':
+          description: Not Found. Requested Proxy Service doesnot exist
+  
+######################################################
+# "Task Collection"
+######################################################  
+  /tasks:
+    get:
+      summary: |
+        Retrieve Tasks
+      description: |
+        This operation provides you a list of available Tasks.
+        
+        Each retrieved Task is represented with a minimal amount of attributes. If you want to get complete details of a Task, you need to use **Get details of a Task** operation.
+      produces:
+        - application/json
+      tags:
+        - Task (Collection)
+      responses:
+        '200':
+          description: OK. List of Tasks is returned.
+          schema:
+            $ref: '#/definitions/TaskList'
+              
+  
+######################################################
+# "Individual Task"
+######################################################    
+  /tasks?taskName={taskname}:
+    get:
+      summary: |
+        Get details of a Task
+      description: |
+        This operation can be used to retrieve details of an individual Task. You need to provide the name of the Task to retrieve it.
+      produces:
+        - application/json
+      parameters:
+        - name: taskName
+          description: Name of the Task
+          in: query
+          required: true
+          type: string
+          x-example: InjectXMLTask
+      tags:
+        - Task (Individual)
+      responses:
+        '200':
+          description: OK. Requested Task is returned.
+          schema:
+            $ref: '#/definitions/TaskInfo'
+        '404':
+          description: Not Found. Requested Task doesnot exist
+  
+######################################################
+# "Sequence Collection"
+######################################################  
+  /sequences:
+    get:
+      summary: |
+        Retrieve Sequences
+      description: |
+        This operation provides you a list of available Sequences.
+        
+        Each retrieved Sequence is represented with a minimal amount of attributes. If you want to get complete details of a Sequence, you need to use **Get details of a Sequence** operation.
+      produces:
+        - application/json
+      tags:
+        - Sequence (Collection)
+      responses:
+        '200':
+          description: OK. List of Sequences is returned.
+          schema:
+            $ref: '#/definitions/SequenceList'
+  
+######################################################
+# "Individual Sequence"
+######################################################    
+  /sequences?sequenceName={sequencename}:
+    get:
+      summary: |
+        Get details of a Sequence
+      description: |
+        This operation can be used to retrieve details of an individual Sequence. You need to provide the name of the Sequence to retrieve it.
+      produces:
+        - application/json
+      parameters:
+        - name: sequenceName
+          description: Name of the Sequence
+          in: query
+          required: true
+          type: string
+          x-example: InjectXMLSequence
+      tags:
+        - Sequence (Individual)
+      responses:
+        '200':
+          description: OK. List of Sequences is returned.
+          schema:
+            $ref: '#/definitions/SequenceInfo'
+        '404':
+          description: Not Found. Requested Sequence doesnot exist
+definitions:
+  Artifacts:
+    properties:
+      name:
+        type: string
+        example: HealthcareAPI
+      type:
+        type: string
+        example: api
+  ApplicationInfo:
+    properties:
+      name:
+        type: string
+        example: SampleServicesCompositeApplication
+      version:
+        type: string
+        example: 1.0.0
+      artifacts:
+        type: array
+        items:
+          $ref: '#/definitions/Artifacts'
+  ApplicationSummary:
+    properties:
+      name:
+        type: string
+        example: SampleServicesCompositeApplication
+      version:
+        type: string
+        example: 1.0.0
+  ApplicationList:
+    properties:
+      count:
+        type: integer
+        description: |
+          Number of Carbon Applications returned.
+        example: 1
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/ApplicationSummary'
+  Resources:
+    properties:
+      methods:
+        type: array
+        items:
+          type: string
+          example: GET
+      url:
+        type: string
+        example: /querydoctor/{category}
+  ApiInfo:
+    properties:
+      tracing:
+        type: string
+        example: disabled
+      stats:
+        type: string
+        example: disabled
+      name:
+        type: string
+        example: HealthcareAPI
+      resources:
+        type: array
+        items:
+          $ref: '#/definitions/Resources'
+      version:
+        type: string
+        example: N/A
+      url:
+        type: string
+        example: http://172.17.0.1:8290/healthcare
+  ApiSummary:
+    properties:
+      name:
+        type: string
+        example: HealthcareAPI
+      url:
+        type: string
+        example: http://172.17.0.1:8290/healthcare
+  ApiList:
+    properties:
+      count:
+        type: integer
+        example: 1
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/ApiSummary'
+  EndpointSummary:
+    properties:
+      method:
+        type: string
+        example: POST
+      name:
+        type: string
+        example: ClemencyEP
+      type:
+        type: string
+        example: http
+      url:
+        type: string
+        example: http://localhost:9090/clemency/categories/{uri.var.category}/reserve
+  EndpointList:
+    properties:
+      count:
+        type: integer
+        example: 1
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/EndpointSummary'
+  EndpointInfo:
+    properties:
+      method:
+        type: string
+        example: POST
+      stats:
+        type: string
+        example: disabled
+      name:
+        type: string
+        example: ClemencyEP
+      type:
+        type: string
+        example: http
+      url:
+        type: string
+        example: http://localhost:9090/clemency/categories/{uri.var.category}/reserve
+  InboundEndpointSummary:
+    properties:
+      name:
+        type: string
+        example: TestInbound
+      protocol:
+        type: string
+        example: http
+  InboundEndpointList:
+    properties:
+      count:
+        type: integer
+        example: 1
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/InboundEndpointSummary'
+  Parameters:
+    properties:
+      name:
+        type: string
+        example: inbound.http.port
+      value:
+        type: string
+        example: 8000
+  InboundEndpointInfo:
+    properties:
+      protocol:
+        type: string
+        example: http
+      tracing:
+        type: string
+        example: disabled
+      stats:
+        type: string
+        example: disabled
+      name:
+        type: string
+        example: TestInbound
+      parameters:
+        type: array
+        items:
+          $ref: '#/definitions/Parameters'
+  ProxySummary:
+    properties:
+      name:
+        type: string
+        example: TestProxy
+      wsdl1_1:
+        type: string
+        example: http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl
+      wsdl2_0:
+        type: string
+        example: http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl2
+  ProxyServiceList:
+    properties:
+      count:
+        type: integer
+        example: 1
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/ProxySummary'
+  ProxyServiceInfo:
+    properties:
+      tracing:
+        type: string
+        example: disabled
+      stats:
+        type: string
+        example: disabled
+      name:
+        type: string
+        example: TestProxy
+      wsdl1_1:
+        type: string
+        example: http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl
+      wsdl2_0:
+        type: string
+        example: http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl2
+  TaskSummary:
+    properties:
+      triggerInterval:
+        type: string
+        example: 5000
+      name:
+        type: string
+        example: InjectXMLTask
+      triggerType:
+        type: string
+        example: simple
+      triggerCount:
+        type: string
+        example: 10
+  TaskList:
+    properties:
+      count:
+        type: integer
+        example: 1
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/TaskSummary'
+  TaskInfo:
+    properties:
+      triggerInterval:
+        type: string
+        example: 5000
+      name:
+        type: string
+        example: InjectXMLTask
+      triggerType:
+        type: string
+        example: simple
+      triggerCount:
+        type: string
+        example: 10
+  SequenceInfo:
+    properties:
+      container:
+        type: string
+        example: "[ Deployed From Artifact Container: SampleInboundCompositeApplication ]"
+      tracing:
+        type: string
+        example: disabled
+      mediators:
+        type: array
+        items:
+          type: string
+          example: LogMediator
+      stats:
+        type: string
+        example: disabled
+      name:
+        type: string
+        example: InjectXMLSequence
+  SequenceSummary:
+    properties:
+      container:
+        type: string
+        example: "[ Deployed From Artifact Container: SampleInboundCompositeApplication ]"
+      tracing:
+        type: string
+        example: disabled
+      stats:
+        type: string
+        example: disabled
+      name:
+        type: string
+        example: InjectXMLSequence
+  SequenceList:
+    properties:
+      count:
+        type: integer
+        example: 1
+      list:
+        type: array
+        items:
+          $ref: '#/definitions/SequenceSummary'
