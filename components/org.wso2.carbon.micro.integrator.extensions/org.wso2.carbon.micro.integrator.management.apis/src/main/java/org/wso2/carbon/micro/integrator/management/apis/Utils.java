@@ -31,6 +31,7 @@ import org.json.JSONObject;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.List;
+import java.util.Objects;
 
 public class Utils {
 
@@ -55,7 +56,7 @@ public class Utils {
             log.error("Error occurred while processing query parameters", e);
         }
 
-        if (null != queryParameter && queryParameter.size() > 0) {
+        if (Objects.nonNull(queryParameter) && !queryParameter.isEmpty()) {
             return queryParameter;
         }
         return null;

@@ -36,6 +36,7 @@ public class Constants {
     public static final String VERSION = "version";
     public static final String CONTAINER = "container";
     public static final String TYPE = "type";
+    public static final String METHOD = "method";
     public static final String STATS = "stats";
     public static final String TRACING = "tracing";
     public static final String ENABLED = "enabled";

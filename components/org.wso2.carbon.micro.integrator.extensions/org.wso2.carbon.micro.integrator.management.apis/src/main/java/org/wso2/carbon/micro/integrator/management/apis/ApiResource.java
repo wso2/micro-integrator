@@ -41,6 +41,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class ApiResource extends APIResource {
@@ -60,17 +61,17 @@ public class ApiResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-//        log.info("Message : " + messageContext.getEnvelope());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
         List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
-        if (null != queryParameter) {
+        if (Objects.nonNull(queryParameter)) {
             for (NameValuePair nvPair : queryParameter) {
                 if (nvPair.getName().equals("apiName")) {
                     populateApiData(messageContext, nvPair.getValue());
+                    break;
                 }
             }
         } else {
@@ -119,7 +120,7 @@ public class ApiResource extends APIResource {
 
         JSONObject jsonBody = getApiByName(messageContext, apiName);
 
-        if (null != jsonBody) {
+        if (Objects.nonNull(jsonBody)) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
@@ -135,7 +136,7 @@ public class ApiResource extends APIResource {
 
     private JSONObject convertApiToOMElement(API api, MessageContext messageContext) {
 
-        if (null == api) {
+        if (Objects.isNull(api)) {
             return null;
         }
 
@@ -150,12 +151,6 @@ public class ApiResource extends APIResource {
         String apiUrl = serverUrl.equals("err") ? api.getContext() : serverUrl + api.getContext();
 
         apiObject.put(Constants.URL, apiUrl);
-
-//        hostElement.setText(api.getHost());
-//        rootElement.addChild(hostElement);
-//
-//        portElement.setText(String.valueOf(api.getPort()));
-//        rootElement.addChild(portElement);
 
         String version = api.getVersion().equals("") ? "N/A" : api.getVersion();
 
@@ -186,6 +181,8 @@ public class ApiResource extends APIResource {
 
             } else if (dispatcherHelper instanceof URLMappingHelper) {
                 resourceObject.put(Constants.URL, dispatcherHelper.getString());
+            } else {
+                resourceObject.put(Constants.URL, "N/A");
             }
             resourceListObject.put(resourceObject);
         }
@@ -198,11 +195,11 @@ public class ApiResource extends APIResource {
         String protocol;
 
         TransportInDescription transportInDescription = configuration.getTransportIn("http");
-        if (null == transportInDescription) {
+        if (Objects.isNull(transportInDescription)) {
             transportInDescription = configuration.getTransportIn("https");
         }
 
-        if (null != transportInDescription) {
+        if (Objects.nonNull(transportInDescription)) {
             protocol = transportInDescription.getName();
             portValue = (String) transportInDescription.getParameter("port").getValue();
         } else {
@@ -213,7 +210,7 @@ public class ApiResource extends APIResource {
 
         Parameter hostParam =  configuration.getParameter("hostname");
 
-        if (null != hostParam) {
+        if (Objects.nonNull(hostParam)) {
             host = (String)hostParam.getValue();
         } else {
             try {
@@ -227,9 +224,7 @@ public class ApiResource extends APIResource {
 
         try {
             int port = Integer.parseInt(portValue);
-            if ("http".equals(protocol) && port == 80) {
-                port = -1;
-            } else if ("https".equals(protocol) && port == 443) {
+            if (("http".equals(protocol) && port == 80) || ("https".equals(protocol) && port == 443)) {
                 port = -1;
             }
             URL serverURL = new URL(protocol, host, port, "");

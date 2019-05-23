@@ -35,6 +35,7 @@ import org.wso2.carbon.service.mgt.ServiceMetaData;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class ProxyServiceResource extends APIResource {
@@ -64,10 +65,11 @@ public class ProxyServiceResource extends APIResource {
         List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific inbound endpoint
-        if (null != queryParameter) {
+        if (Objects.nonNull(queryParameter)) {
             for (NameValuePair nvPair : queryParameter) {
                 if (nvPair.getName().equals("proxyServiceName")) {
                     populateProxyServiceData(messageContext, nvPair.getValue());
+                    break;
                 }
             }
         } else {
@@ -122,7 +124,7 @@ public class ProxyServiceResource extends APIResource {
 
         JSONObject jsonBody = getProxyServiceByName(messageContext, proxyServiceName);
 
-        if (null != jsonBody) {
+        if (Objects.nonNull(jsonBody)) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
@@ -138,7 +140,7 @@ public class ProxyServiceResource extends APIResource {
 
     private JSONObject convertProxyServiceToOMElement(ProxyService proxyService) {
 
-        if (null == proxyService) {
+        if (Objects.isNull(proxyService)) {
             return null;
         }
 

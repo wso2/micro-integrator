@@ -32,6 +32,7 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import static org.wso2.carbon.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager.getCarbonApps;
@@ -55,7 +56,6 @@ public class CarbonAppResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-//        log.info("Message : " + messageContext.getEnvelope());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -63,10 +63,11 @@ public class CarbonAppResource extends APIResource {
         List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific inbound endpoint
-        if (null != queryParameter) {
+        if (Objects.nonNull(queryParameter)) {
             for (NameValuePair nvPair : queryParameter) {
                 if (nvPair.getName().equals("carbonAppName")) {
                     populateCarbonAppData(messageContext, nvPair.getValue());
+                    break;
                 }
             }
         } else {
@@ -109,7 +110,7 @@ public class CarbonAppResource extends APIResource {
 
         JSONObject jsonBody = getCarbonAppByName(carbonAppName);
 
-        if (null != jsonBody) {
+        if (Objects.nonNull(jsonBody)) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
@@ -131,7 +132,7 @@ public class CarbonAppResource extends APIResource {
 
     private JSONObject convertCarbonAppToOMElement(CarbonApplication carbonApp) {
 
-        if (null == carbonApp) {
+        if (Objects.isNull(carbonApp)) {
             return null;
         }
 
@@ -154,7 +155,7 @@ public class CarbonAppResource extends APIResource {
             String artifactName = artifact.getName();
 
             // if the artifactName is null, artifact deployment has failed..
-            if (null == artifactName) {
+            if (Objects.isNull(artifactName)) {
                 continue;
             }
 

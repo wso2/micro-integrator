@@ -30,6 +30,7 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 public class TaskResource extends APIResource {
@@ -50,7 +51,6 @@ public class TaskResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-//        log.info("Message : " + messageContext.getEnvelope());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -58,10 +58,11 @@ public class TaskResource extends APIResource {
         List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific task
-        if (null != queryParameter) {
+        if (Objects.nonNull(queryParameter)) {
             for (NameValuePair nvPair : queryParameter) {
                 if (nvPair.getName().equals("taskName")) {
                     populateTaskData(messageContext, nvPair.getValue());
+                    break;
                 }
             }
         } else {
@@ -101,7 +102,7 @@ public class TaskResource extends APIResource {
 
         JSONObject jsonBody = getTaskByName(messageContext, taskName);
 
-        if (null != jsonBody) {
+        if (Objects.nonNull(jsonBody)) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
@@ -123,7 +124,7 @@ public class TaskResource extends APIResource {
 
     private JSONObject convertTaskToOMElement(TaskDescription task) {
 
-        if (null == task) {
+        if (Objects.isNull(task)) {
             return null;
         }
 
@@ -133,7 +134,7 @@ public class TaskResource extends APIResource {
 
         String triggerType = "cron";
 
-        if (null == task.getCronExpression()) {
+        if (Objects.isNull(task.getCronExpression())) {
             triggerType = "simple";
         }
 

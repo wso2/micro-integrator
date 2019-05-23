@@ -32,6 +32,7 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 public class SequenceResource extends APIResource {
@@ -52,7 +53,6 @@ public class SequenceResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-//        log.info("Message : " + messageContext.getEnvelope());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -60,10 +60,11 @@ public class SequenceResource extends APIResource {
         List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific sequence
-        if (null != queryParameter) {
+        if (Objects.nonNull(queryParameter)) {
             for (NameValuePair nvPair : queryParameter) {
                 if (nvPair.getName().equals("inboundEndpointName")) {
                     populateSequenceData(messageContext, nvPair.getValue());
+                    break;
                 }
             }
         } else {
@@ -113,7 +114,7 @@ public class SequenceResource extends APIResource {
 
         JSONObject jsonBody = getSequenceByName(messageContext, sequenceName);
 
-        if (null != jsonBody) {
+        if (Objects.nonNull(jsonBody)) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
@@ -129,7 +130,7 @@ public class SequenceResource extends APIResource {
 
     private JSONObject convertInboundEndpointToOMElement(SequenceMediator sequenceMediator) {
 
-        if (null == sequenceMediator) {
+        if (Objects.isNull(sequenceMediator)) {
             return null;
         }
 

@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -58,7 +59,6 @@ public class EndpointResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-//        log.info("Message : " + messageContext.getEnvelope());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -66,10 +66,11 @@ public class EndpointResource extends APIResource {
         List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
 
         // if query params exists retrieve data about specific endpoint
-        if (null != queryParameter) {
+        if (Objects.nonNull(queryParameter)) {
             for (NameValuePair nvPair : queryParameter) {
                 if (nvPair.getName().equals("endpointName")) {
                     populateEndpointData(messageContext, nvPair.getValue());
+                    break;
                 }
             }
         } else {
@@ -108,8 +109,8 @@ public class EndpointResource extends APIResource {
             String type = firstElement.getLocalName();
             endpointObject.put(Constants.TYPE, type);
 
-            String method = firstElement.getAttributeValue(new QName("method"));
-            endpointObject.put("method", method);
+            String method = firstElement.getAttributeValue(new QName(Constants.METHOD));
+            endpointObject.put(Constants.METHOD, method);
 
             String url = firstElement.getAttributeValue(new QName("uri-template"));
             endpointObject.put(Constants.URL, url);
@@ -126,7 +127,7 @@ public class EndpointResource extends APIResource {
 
         JSONObject jsonBody = getEndpointByName(messageContext, endpointName);
 
-        if (null != jsonBody) {
+        if (Objects.nonNull(jsonBody)) {
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
@@ -142,7 +143,7 @@ public class EndpointResource extends APIResource {
 
     private JSONObject convertEndpointToOMElement(Endpoint endpoint) {
 
-        if (null == endpoint) {
+        if (Objects.isNull(endpoint)) {
             return null;
         }
 
@@ -156,14 +157,14 @@ public class EndpointResource extends APIResource {
         String type = firstElement.getLocalName();
         endpointObject.put(Constants.TYPE, type);
 
-        String method = firstElement.getAttributeValue(new QName("method"));
-        endpointObject.put("method", method);
+        String method = firstElement.getAttributeValue(new QName(Constants.METHOD));
+        endpointObject.put(Constants.METHOD, method);
 
         String url = firstElement.getAttributeValue(new QName("uri-template"));
         endpointObject.put(Constants.URL, url);
 
         EndpointDefinition def = ((AbstractEndpoint) endpoint).getDefinition();
-        if (null != def) {
+        if (Objects.nonNull(def)) {
             if (def.isStatisticsEnable()) {
                 endpointObject.put(Constants.STATS, Constants.ENABLED);
             } else {
