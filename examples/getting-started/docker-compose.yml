@@ -7,7 +7,7 @@ services:
         dockerfile: Dockerfile
     ports:
       - 8290:8290
-  backend:
+  order-process-be-service:
     container_name: backend
     image: wso2/mi-order-process-be:latest
     build:

@@ -4,7 +4,7 @@
         <inSequence>
             <call>
                 <endpoint>
-                    <address uri="http://localhost:8291/order"/>
+                    <address uri="http://order-process-be-service:8291/order"/>
                 </endpoint>
             </call>
             <respond/>
