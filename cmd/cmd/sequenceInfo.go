@@ -83,7 +83,7 @@ func executeGetSequenceCmd(sequencename string) {
 
     finalUrl := utils.RESTAPIBase + utils.PrefixSequences
     params := make(map[string]string)
-    params["inboundEndpointName"] = sequencename
+    params["sequenceName"] = sequencename
 
     resp, err := utils.UnmarshalData(finalUrl, params, &utils.Sequence{})
 

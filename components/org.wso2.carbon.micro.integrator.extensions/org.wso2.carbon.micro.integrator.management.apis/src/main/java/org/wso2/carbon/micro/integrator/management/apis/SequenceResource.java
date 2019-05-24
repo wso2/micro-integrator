@@ -56,7 +56,7 @@ public class SequenceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        String param = Utils.getQueryParameter(messageContext, "inboundEndpointName");
+        String param = Utils.getQueryParameter(messageContext, "sequenceName");
 
         if (Objects.nonNull(param)) {
             populateSequenceData(messageContext, param);
