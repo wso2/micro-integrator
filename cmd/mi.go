@@ -16,11 +16,10 @@
 * under the License.
  */
 
- package main
+package main
 
- import "github.com/wso2/micro-integrator/cmd/cmd"
- 
- func main() {
-     cmd.Execute()
- }
- 
+import "github.com/wso2/micro-integrator/cmd/cmd"
+
+func main() {
+	cmd.Execute()
+}
