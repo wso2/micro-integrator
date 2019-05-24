@@ -19,8 +19,8 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Seqeunces command related usage info
@@ -28,17 +28,17 @@ const listSequenceCmdLiteral = "sequences"
 
 // sequencesListCmd represents the list sequences command
 var sequencesListCmd = &cobra.Command{
-    Use:   listSequenceCmdLiteral,
-    Short: showSequenceCmdShortDesc,
-    Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        // defined in seqeunceInfo.go
-        handleSequenceCmdArguments(args)
-    },
+	Use:   listSequenceCmdLiteral,
+	Short: showSequenceCmdShortDesc,
+	Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		// defined in seqeunceInfo.go
+		handleSequenceCmdArguments(args)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(sequencesListCmd)
-    sequencesListCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
-        showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
+	showCmd.AddCommand(sequencesListCmd)
+	sequencesListCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
+		showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
 }

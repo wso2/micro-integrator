@@ -19,19 +19,19 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
+	"github.com/spf13/cobra"
 )
 
 // completionCmd represents the completion command
 var completionCmd = &cobra.Command{
-    Use:   "completion",
+	Use:   "completion",
 	Short: "Generates bash completion scripts",
-    Long: `This command will generate a bash completion script`,
-    Run: func(cmd *cobra.Command, args []string) {
-        rootCmd.GenBashCompletionFile("mi_bash_completion.sh")
-    },
+	Long:  `This command will generate a bash completion script`,
+	Run: func(cmd *cobra.Command, args []string) {
+		rootCmd.GenBashCompletionFile("mi_bash_completion.sh")
+	},
 }
 
 func init() {
-    rootCmd.AddCommand(completionCmd)
+	rootCmd.AddCommand(completionCmd)
 }

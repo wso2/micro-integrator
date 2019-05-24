@@ -19,8 +19,8 @@
 package utils
 
 import (
-    "os"
-    "path/filepath"
+	"os"
+	"path/filepath"
 )
 
 const ProjectName = "mi"
@@ -91,8 +91,8 @@ const DefaultRESTAPIBase = HTTPSProtocol + DefaultHost + ":" + DefaultPort + "/"
 const PrefixCarbonApps = "applications"
 const PrefixAPIs = "apis"
 const PrefixServices = "services"
-const PrefixProxyServices ="proxy-services"
-const PrefixInboundEndpoints ="inbound-endpoints"
+const PrefixProxyServices = "proxy-services"
+const PrefixInboundEndpoints = "inbound-endpoints"
 const PrefixEndpoints = "endpoints"
 const PrefixSequences = "sequences"
 const PrefixTasks = "tasks"

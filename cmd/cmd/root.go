@@ -19,11 +19,11 @@
 package cmd
 
 import (
-    "github.com/lithammer/dedent"
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "os"
-    "time"
+	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"os"
+	"time"
 )
 
 var cfgFile string
@@ -41,41 +41,41 @@ var rootCmdValidArgs = []string{"init", "show", "version", "help"}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-    Use:   utils.ProjectName,
-    Short: rootCmdShortDesc,
-    Long:  rootCmdLongDesc,
-    ValidArgs: rootCmdValidArgs,
+	Use:       utils.ProjectName,
+	Short:     rootCmdShortDesc,
+	Long:      rootCmdLongDesc,
+	ValidArgs: rootCmdValidArgs,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-    if err := rootCmd.Execute(); err != nil {
-        os.Exit(1)
-    }
+	if err := rootCmd.Execute(); err != nil {
+		os.Exit(1)
+	}
 }
 
 func init() {
-    cobra.OnInitialize(initConfig)
+	cobra.OnInitialize(initConfig)
 
-    rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
+	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
 
-    // Init ServerConfigVars
-    err := utils.SetConfigVars(utils.ServerConfigFilePath)
-    if err != nil {
-        utils.HandleErrorAndExit("Error reading "+utils.ServerConfigFileName+".", err)
-    }
+	// Init ServerConfigVars
+	err := utils.SetConfigVars(utils.ServerConfigFilePath)
+	if err != nil {
+		utils.HandleErrorAndExit("Error reading "+utils.ServerConfigFileName+".", err)
+	}
 }
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
 
-    if verbose {
-        utils.IsVerbose = true
-        utils.EnableVerboseMode()
-        t := time.Now()
-        utils.Logf(utils.LogPrefixInfo+"Executed ManagementCLI (%s) on %v\n", utils.ProjectName, t.Format(time.RFC1123))
-    } else {
-        utils.IsVerbose = false
-    }
+	if verbose {
+		utils.IsVerbose = true
+		utils.EnableVerboseMode()
+		t := time.Now()
+		utils.Logf(utils.LogPrefixInfo+"Executed ManagementCLI (%s) on %v\n", utils.ProjectName, t.Format(time.RFC1123))
+	} else {
+		utils.IsVerbose = false
+	}
 }

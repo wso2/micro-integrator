@@ -19,8 +19,8 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Endpoints command related usage info
@@ -28,17 +28,17 @@ const listEndpointsCmdLiteral = "endpoints"
 
 // endpointsListCmd represents the list endpoints command
 var endpointsListCmd = &cobra.Command{
-    Use:   listEndpointsCmdLiteral,
-    Short: showEndpointCmdShortDesc,
-    Long:  showEndpointCmdLongDesc + showEndpointCmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        // defined in endpointInfo.go
-        handleEndpointCmdArguments(args)
-    },
+	Use:   listEndpointsCmdLiteral,
+	Short: showEndpointCmdShortDesc,
+	Long:  showEndpointCmdLongDesc + showEndpointCmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		// defined in endpointInfo.go
+		handleEndpointCmdArguments(args)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(endpointsListCmd)
-    endpointsListCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
-        showEndpointCmdLiteral, "[endpointname]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
+	showCmd.AddCommand(endpointsListCmd)
+	endpointsListCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
+		showEndpointCmdLiteral, "[endpointname]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
 }

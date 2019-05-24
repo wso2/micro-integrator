@@ -19,68 +19,68 @@
 package utils
 
 import (
-    "errors"
-    "gopkg.in/yaml.v2"
-    "io/ioutil"
-    "os"
+	"errors"
+	"gopkg.in/yaml.v2"
+	"io/ioutil"
+	"os"
 )
 
 // Write Server configuration to the yaml file
 // @param c : data
 // @param serverConfigFilePath : Path to file where env endpoints are stored
 func WriteServerConfigFile(c interface{}, envConfigFilePath string) {
-    data, err := yaml.Marshal(&c)
-    if err != nil {
-        HandleErrorAndExit("Unable to write configuration to file.", err)
-    }
+	data, err := yaml.Marshal(&c)
+	if err != nil {
+		HandleErrorAndExit("Unable to write configuration to file.", err)
+	}
 
-    err = ioutil.WriteFile(envConfigFilePath, data, 0644)
-    if err != nil {
-        HandleErrorAndExit("Unable to write configuration to file.", err)
-    }
+	err = ioutil.WriteFile(envConfigFilePath, data, 0644)
+	if err != nil {
+		HandleErrorAndExit("Unable to write configuration to file.", err)
+	}
 }
 
 // Read and return Server Configuration from the yaml file
 func GetServerConfigFromFile(filePath string) *ServerConfig {
-    data, err := ioutil.ReadFile(filePath)
-    if err != nil {
-        HandleErrorAndExit("ServerConfig: File Not Found: "+filePath, err)
-    }
+	data, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		HandleErrorAndExit("ServerConfig: File Not Found: "+filePath, err)
+	}
 
-    var serverConfig ServerConfig
-    if err := serverConfig.ParseServerConfigFromFile(data); err != nil {
-        HandleErrorAndExit("ServerConfig: Error parsing "+filePath, err)
-    }
+	var serverConfig ServerConfig
+	if err := serverConfig.ParseServerConfigFromFile(data); err != nil {
+		HandleErrorAndExit("ServerConfig: Error parsing "+filePath, err)
+	}
 
-    return &serverConfig
+	return &serverConfig
 }
 
 // Read and validate contents of server_config.yaml
 // will throw errors if the any of the lines is blank
 func (serverConfig *ServerConfig) ParseServerConfigFromFile(data []byte) error {
 
-    if err := yaml.Unmarshal(data, serverConfig); err != nil {
-        return err
-    }
+	if err := yaml.Unmarshal(data, serverConfig); err != nil {
+		return err
+	}
 
-    if serverConfig.Url == "" {
-        return errors.New("Blank Host")
-    }
-    if serverConfig.Port == "" {
-        return errors.New("Blank Port")
-    }
+	if serverConfig.Url == "" {
+		return errors.New("Blank Host")
+	}
+	if serverConfig.Port == "" {
+		return errors.New("Blank Port")
+	}
 
-    return nil
+	return nil
 }
 
 // Check whether the file exists.
 func IsFileExist(path string) (isFileExist bool) {
-    if _, err := os.Stat(path); err != nil {
-        if os.IsNotExist(err) {
-            return false
-        } else {
-            HandleErrorAndExit("Unable to find file "+path, err)
-        }
-    }
-    return true
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			return false
+		} else {
+			HandleErrorAndExit("Unable to find file "+path, err)
+		}
+	}
+	return true
 }

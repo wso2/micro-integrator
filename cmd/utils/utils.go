@@ -19,101 +19,101 @@
 package utils
 
 import (
-    "bufio"
-    "crypto/tls"
-    "encoding/xml"
-    "errors"
-    "fmt"
-    "golang.org/x/crypto/ssh/terminal"
-    "gopkg.in/resty.v1"
-    "net/http"
-    "os"
-    "runtime"
-    "strings"
+	"bufio"
+	"crypto/tls"
+	"encoding/xml"
+	"errors"
+	"fmt"
+	"golang.org/x/crypto/ssh/terminal"
+	"gopkg.in/resty.v1"
+	"net/http"
+	"os"
+	"runtime"
+	"strings"
 )
 
 // Invoke http-post request using go-resty
 func InvokePOSTRequest(url string, headers map[string]string, body string) (*resty.Response, error) {
 
-    AllowInsecureSSLConnection()
-    resp, err := resty.R().SetHeaders(headers).SetBody(body).Post(url)
+	AllowInsecureSSLConnection()
+	resp, err := resty.R().SetHeaders(headers).SetBody(body).Post(url)
 
-    return resp, err
+	return resp, err
 }
 
 // Invoke http-get request using go-resty
 func InvokeGETRequest(url string, headers map[string]string) (*resty.Response, error) {
 
-    AllowInsecureSSLConnection()
-    resp, err := resty.R().SetHeaders(headers).Get(url)
+	AllowInsecureSSLConnection()
+	resp, err := resty.R().SetHeaders(headers).Get(url)
 
-    return resp, err
+	return resp, err
 }
 
 // Invoke http-put request using go-resty
 func InvokeUPDATERequest(url string, headers map[string]string, body string) (*resty.Response, error) {
 
-    resp, err := resty.R().SetHeaders(headers).SetBody(body).Put(url)
+	resp, err := resty.R().SetHeaders(headers).SetBody(body).Put(url)
 
-    return resp, err
+	return resp, err
 }
 
 // Invoke http-delete request using go-resty
 func InvokeDELETERequest(url string, headers map[string]string) (*resty.Response, error) {
 
-    resp, err := resty.R().SetHeaders(headers).Delete(url)
+	resp, err := resty.R().SetHeaders(headers).Delete(url)
 
-    return resp, err
+	return resp, err
 }
 
 func PromptForUsername() string {
-    reader := bufio.NewReader(os.Stdin)
+	reader := bufio.NewReader(os.Stdin)
 
-    fmt.Print("Enter Username: ")
-    username, _ := reader.ReadString('\n')
+	fmt.Print("Enter Username: ")
+	username, _ := reader.ReadString('\n')
 
-    return username
+	return username
 }
 
 func PromptForPassword() string {
-    fmt.Print("Enter Password: ")
-    bytePassword, _ := terminal.ReadPassword(0)
-    password := string(bytePassword)
-    fmt.Println()
-    return password
+	fmt.Print("Enter Password: ")
+	bytePassword, _ := terminal.ReadPassword(0)
+	password := string(bytePassword)
+	fmt.Println()
+	return password
 }
 
 // return a string containing the file name, function name
 // and the line number of a specified entry on the call stack
 func WhereAmI(depthList ...int) string {
-    var depth int
-    if depthList == nil {
-        depth = 1
-    } else {
-        depth = depthList[0]
-    }
-    function, file, line, _ := runtime.Caller(depth)
-    return fmt.Sprintf("File: %s Line: %d Function: %s ", chopPath(file), line, runtime.FuncForPC(function).Name())
+	var depth int
+	if depthList == nil {
+		depth = 1
+	} else {
+		depth = depthList[0]
+	}
+	function, file, line, _ := runtime.Caller(depth)
+	return fmt.Sprintf("File: %s Line: %d Function: %s ", chopPath(file), line, runtime.FuncForPC(function).Name())
 }
 
 // return the source filename after the last slash
 func chopPath(original string) string {
-    i := strings.LastIndex(original, "/")
-    if i == -1 {
-        return original
-    } else {
-        return original[i+1:]
-    }
+	i := strings.LastIndex(original, "/")
+	if i == -1 {
+		return original
+	} else {
+		return original[i+1:]
+	}
 }
 
 func PrintList(list []string) {
-    for _, item := range list {
-        fmt.Println(item)
-    }
+	for _, item := range list {
+		fmt.Println(item)
+	}
 }
 
 func AllowInsecureSSLConnection() {
-    resty.SetTLSClientConfig(&tls.Config{ InsecureSkipVerify: true })
+	resty.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 }
 
 // Get Artifact List depending on the @param url and unmarshal it
@@ -122,29 +122,29 @@ func AllowInsecureSSLConnection() {
 // @return struct object
 // @return error
 func GetArtifactList(url string, model interface{}) (interface{}, error) {
-    Logln(LogPrefixInfo+"URL:", url)
+	Logln(LogPrefixInfo+"URL:", url)
 
-    headers := make(map[string]string)
+	headers := make(map[string]string)
 
-    resp, err := InvokeGETRequest(url, headers)
+	resp, err := InvokeGETRequest(url, headers)
 
-    if err != nil {
-        HandleErrorAndExit("Unable to connect to host", nil)
-    }
+	if err != nil {
+		HandleErrorAndExit("Unable to connect to host", nil)
+	}
 
-    Logln(LogPrefixInfo+"Response:", resp.Status())
+	Logln(LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        response := model
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
+	if resp.StatusCode() == http.StatusOK {
+		response := model
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
 
-        if unmarshalError != nil {
-            HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
-        }
-        return response, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		if unmarshalError != nil {
+			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+		}
+		return response, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 }
 
 // Unmarshal Data from the response to the respective struct
@@ -154,44 +154,42 @@ func GetArtifactList(url string, model interface{}) (interface{}, error) {
 // @return error
 func UnmarshalData(url string, model interface{}) (interface{}, error) {
 
-    Logln(LogPrefixInfo+"URL:", url)
+	Logln(LogPrefixInfo+"URL:", url)
 
-    headers := make(map[string]string)
+	headers := make(map[string]string)
 
-    resp, err := InvokeGETRequest(url, headers)
+	resp, err := InvokeGETRequest(url, headers)
 
-    if err != nil {
-        HandleErrorAndExit("Unable to connect to host", nil)
-    }
+	if err != nil {
+		HandleErrorAndExit("Unable to connect to host", nil)
+	}
 
-    Logln(LogPrefixInfo+"Response:", resp.Status())
+	Logln(LogPrefixInfo+"Response:", resp.Status())
 
-    if resp.StatusCode() == http.StatusOK {
-        response := model
-        unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
+	if resp.StatusCode() == http.StatusOK {
+		response := model
+		unmarshalError := xml.Unmarshal([]byte(resp.Body()), &response)
 
-        if unmarshalError != nil {
-            HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
-        }
-        return response, nil
-    } else {
-        return nil, errors.New(resp.Status())
-    }
+		if unmarshalError != nil {
+			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+		}
+		return response, nil
+	} else {
+		return nil, errors.New(resp.Status())
+	}
 }
 
 func GetCmdFlags(cmd string) string {
-    var showCmdFlags = 
-    "Flags:\n" + 
-    "  -h, --help\t\thelp for " + cmd + "\n" +
-    "Global Flags:\n" +
-    "  -v, --verbose\t\tEnable verbose mode\n"
-    return showCmdFlags
+	var showCmdFlags = "Flags:\n" +
+		"  -h, --help\t\thelp for " + cmd + "\n" +
+		"Global Flags:\n" +
+		"  -v, --verbose\t\tEnable verbose mode\n"
+	return showCmdFlags
 }
 
 func GetCmdUsage(program, cmd, subcmd, arg string) string {
-    var showCmdUsage = 
-    "Usage:\n" + 
-    "  " + program + " " + cmd + " " + subcmd + "(s)\n" +
-    "  " + program + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
-    return showCmdUsage
+	var showCmdUsage = "Usage:\n" +
+		"  " + program + " " + cmd + " " + subcmd + "(s)\n" +
+		"  " + program + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
+	return showCmdUsage
 }

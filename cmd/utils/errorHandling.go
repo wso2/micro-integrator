@@ -19,25 +19,25 @@
 package utils
 
 import (
-    "fmt"
-    "os"
+	"fmt"
+	"os"
 )
 
 var IsVerbose bool
 
-func HandleErrorAndExit(msg string, err error) {    
-    if err == nil {
-        fmt.Fprintf(os.Stderr, "%s: %v\n", ProjectName, msg)
-    } else {
-        fmt.Fprintf(os.Stderr, "%s: %v Reason: %v\n", ProjectName, msg, err.Error())
-    }
-    defer printAndExit()
+func HandleErrorAndExit(msg string, err error) {
+	if err == nil {
+		fmt.Fprintf(os.Stderr, "%s: %v\n", ProjectName, msg)
+	} else {
+		fmt.Fprintf(os.Stderr, "%s: %v Reason: %v\n", ProjectName, msg, err.Error())
+	}
+	defer printAndExit()
 }
 
 func printAndExit() {
 
-    if !IsVerbose {
-        fmt.Println("Execute with --verbose to see detailed info.")
-    }
-    os.Exit(1)
+	if !IsVerbose {
+		fmt.Println("Execute with --verbose to see detailed info.")
+	}
+	os.Exit(1)
 }

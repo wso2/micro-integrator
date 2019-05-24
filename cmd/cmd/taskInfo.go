@@ -19,11 +19,11 @@
 package cmd
 
 import (
-    "fmt"
-    "github.com/olekukonko/tablewriter"
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
-    "os"
+	"fmt"
+	"github.com/olekukonko/tablewriter"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
+	"os"
 )
 
 var taskName string
@@ -34,112 +34,111 @@ const showTaskCmdShortDesc = "Get information about tasks"
 
 var showTaskCmdLongDesc = "Get information about the Task specified by command line argument [task-name] If not specified, list all the tasks\n"
 
-var showTaskCmdExamples = 
-"Example:\n" +
-"To get details about a specific task\n" +
-"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
-"To list all the tasks\n" +
-"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
+var showTaskCmdExamples = "Example:\n" +
+	"To get details about a specific task\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
+	"To list all the tasks\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
 
 // taskShowCmd represents the task command
 var taskShowCmd = &cobra.Command{
-    Use:   showTaskCmdLiteral,
-    Short: showTaskCmdShortDesc,
-    Long:  showTaskCmdLongDesc + showTaskCmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        handleTaskCmdArguments(args)
-    },
+	Use:   showTaskCmdLiteral,
+	Short: showTaskCmdShortDesc,
+	Long:  showTaskCmdLongDesc + showTaskCmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		handleTaskCmdArguments(args)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(taskShowCmd)
-    taskShowCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
-        showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
+	showCmd.AddCommand(taskShowCmd)
+	taskShowCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
+		showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }
 
 func handleTaskCmdArguments(args []string) {
-    utils.Logln(utils.LogPrefixInfo + "Show task called")
-    if len(args) == 0 {
-        executeListTasksCmd()
-    } else if len(args) == 1 {
-        if args[0] == "help" {
-            printTaskHelp()
-        } else {
-            taskName = args[0]
-            executeGetTaskCmd(taskName)
-        }
-    } else {
-        fmt.Println("Too many arguments. See the usage below")
-        printTaskHelp()
-    }
+	utils.Logln(utils.LogPrefixInfo + "Show task called")
+	if len(args) == 0 {
+		executeListTasksCmd()
+	} else if len(args) == 1 {
+		if args[0] == "help" {
+			printTaskHelp()
+		} else {
+			taskName = args[0]
+			executeGetTaskCmd(taskName)
+		}
+	} else {
+		fmt.Println("Too many arguments. See the usage below")
+		printTaskHelp()
+	}
 }
 
 func printTaskHelp() {
-    fmt.Print(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showTaskCmdLiteral,
-        "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
+	fmt.Print(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showTaskCmdLiteral,
+		"[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }
 
 func executeGetTaskCmd(taskname string) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + taskname
+	finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + taskname
 
-    resp, err := utils.UnmarshalData(finalUrl, &utils.Task{})
+	resp, err := utils.UnmarshalData(finalUrl, &utils.Task{})
 
-    if err == nil {
-        // Printing the details of the Task
-        task := resp.(*utils.Task)
-        printTask(*task)
-    } else {
-        fmt.Println(utils.LogPrefixError+"Getting Information of the Task", err)
-    }
+	if err == nil {
+		// Printing the details of the Task
+		task := resp.(*utils.Task)
+		printTask(*task)
+	} else {
+		fmt.Println(utils.LogPrefixError+"Getting Information of the Task", err)
+	}
 }
 
 // Print the details of a Task
 // Name, Class, Group, Type and Trigger details
 // @param task : Task object
 func printTask(task utils.Task) {
-    fmt.Println("Name - " + task.Name)
-    fmt.Println("Trigger Type - " + task.Type)
-    if task.Type == "cron" {
-        fmt.Println("Cron Expression - " + task.TriggerCron)
-    } else {
-        fmt.Println("Trigger Count - " + task.TriggerCount)
-        fmt.Println("Trigger Interval - " + task.TriggerInterval)
-    }    
+	fmt.Println("Name - " + task.Name)
+	fmt.Println("Trigger Type - " + task.Type)
+	if task.Type == "cron" {
+		fmt.Println("Cron Expression - " + task.TriggerCron)
+	} else {
+		fmt.Println("Trigger Count - " + task.TriggerCount)
+		fmt.Println("Trigger Interval - " + task.TriggerInterval)
+	}
 }
 
 func executeListTasksCmd() {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixTasks
+	finalUrl := utils.RESTAPIBase + utils.PrefixTasks
 
-    resp, err := utils.GetArtifactList(finalUrl, &utils.TaskList{})
+	resp, err := utils.GetArtifactList(finalUrl, &utils.TaskList{})
 
-    if err == nil {
-        // Printing the list of available Tasks
-        list := resp.(*utils.TaskList)
-        printTaskList(*list)
-    } else {
-        utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
-    }
+	if err == nil {
+		// Printing the list of available Tasks
+		list := resp.(*utils.TaskList)
+		printTaskList(*list)
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
+	}
 }
 
 func printTaskList(taskList utils.TaskList) {
 
-    if taskList.Count > 0 {
-        table := tablewriter.NewWriter(os.Stdout)
-        table.SetAlignment(tablewriter.ALIGN_LEFT)
+	if taskList.Count > 0 {
+		table := tablewriter.NewWriter(os.Stdout)
+		table.SetAlignment(tablewriter.ALIGN_LEFT)
 
-        data := []string{"NAME", "TRIGGER TYPE", "COUNT", "INTERVAL", "CRON EXPRESSION"}
-        table.Append(data)
+		data := []string{"NAME", "TRIGGER TYPE", "COUNT", "INTERVAL", "CRON EXPRESSION"}
+		table.Append(data)
 
-        for _, task := range taskList.Tasks {
-            data = []string{task.Name, task.Type, task.TriggerCount, task.TriggerInterval, task.TriggerCron}
-            table.Append(data)
-        }
-        table.SetBorder(false)
-        table.SetColumnSeparator("  ")
-        table.Render()
-    } else {
-        fmt.Println("No Tasks found")
-    }    
+		for _, task := range taskList.Tasks {
+			data = []string{task.Name, task.Type, task.TriggerCount, task.TriggerInterval, task.TriggerCron}
+			table.Append(data)
+		}
+		table.SetBorder(false)
+		table.SetColumnSeparator("  ")
+		table.Render()
+	} else {
+		fmt.Println("No Tasks found")
+	}
 }
