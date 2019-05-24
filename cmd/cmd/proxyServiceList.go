@@ -19,8 +19,8 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Proxy Services command related usage info
@@ -28,17 +28,17 @@ const listProxyServicesCmdLiteral = "proxyservices"
 
 // proxyServicesListCmd represents the proxyServices command
 var proxyServicesListCmd = &cobra.Command{
-    Use:   listProxyServicesCmdLiteral,
-    Short: showProxyServiceCmdShortDesc,
-    Long:  showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        // defined in proxyServiceInfo.go
-        handleProxyServiceCmdArguments(args)
-    },
+	Use:   listProxyServicesCmdLiteral,
+	Short: showProxyServiceCmdShortDesc,
+	Long:  showProxyServiceCmdLongDesc + showProxyServiceCmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		// defined in proxyServiceInfo.go
+		handleProxyServiceCmdArguments(args)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(proxyServicesListCmd)
-    proxyServicesListCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
-        showProxyServiceCmdLiteral, "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
+	showCmd.AddCommand(proxyServicesListCmd)
+	proxyServicesListCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
+		showProxyServiceCmdLiteral, "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
 }

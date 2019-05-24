@@ -19,8 +19,8 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List APIs command related usage info
@@ -28,17 +28,17 @@ const listAPICmdLiteral = "apis"
 
 // apisListCmd represents the list apis command
 var apisListCmd = &cobra.Command{
-    Use:   listAPICmdLiteral,
-    Short: showAPICmdShortDesc,
-    Long:  showAPICmdLongDesc + showAPICmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        // defined in apiInfo.go
-        handleAPICmdArguments(args)
-    },
+	Use:   listAPICmdLiteral,
+	Short: showAPICmdShortDesc,
+	Long:  showAPICmdLongDesc + showAPICmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		// defined in apiInfo.go
+		handleAPICmdArguments(args)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(apisListCmd)
-    apisListCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
-        showAPICmdLiteral, "[apiname]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
+	showCmd.AddCommand(apisListCmd)
+	apisListCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
+		showAPICmdLiteral, "[apiname]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
 }

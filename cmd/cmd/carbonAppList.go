@@ -19,8 +19,8 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Carbon App command related usage info
@@ -28,17 +28,17 @@ const listApplicationCmdLiteral = "carbonapps"
 
 // carbonAppsListCmd represents the list carbonApps command
 var carbonAppsListCmd = &cobra.Command{
-    Use:   listApplicationCmdLiteral,
-    Short: showAPICmdShortDesc,
-    Long:  showAPICmdLongDesc + showAPICmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        // defined in carbonAppInfo.go
-        handleApplicationCmdArguments(args)
-    },
+	Use:   listApplicationCmdLiteral,
+	Short: showAPICmdShortDesc,
+	Long:  showAPICmdLongDesc + showAPICmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		// defined in carbonAppInfo.go
+		handleApplicationCmdArguments(args)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(carbonAppsListCmd)
-    carbonAppsListCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
-        showApplicationCmdLiteral, "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
+	showCmd.AddCommand(carbonAppsListCmd)
+	carbonAppsListCmd.SetHelpTemplate(showApplicationCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
+		showApplicationCmdLiteral, "[app-name]") + showApplicationCmdExamples + utils.GetCmdFlags("carbonapp(s)"))
 }

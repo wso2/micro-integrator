@@ -19,8 +19,8 @@
 package cmd
 
 import (
-    "github.com/spf13/cobra"
-    "github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 // List Tasks command related usage info
@@ -28,17 +28,17 @@ const listTaskCmdLiteral = "tasks"
 
 // taskListCmd represents the list tasks command
 var taskListCmd = &cobra.Command{
-    Use:   listTaskCmdLiteral,
-    Short: showTaskCmdShortDesc,
-    Long:  showTaskCmdLongDesc + showTaskCmdExamples,
-    Run: func(cmd *cobra.Command, args []string) {
-        // defined in taskInfo.go
-        handleTaskCmdArguments(args)
-    },
+	Use:   listTaskCmdLiteral,
+	Short: showTaskCmdShortDesc,
+	Long:  showTaskCmdLongDesc + showTaskCmdExamples,
+	Run: func(cmd *cobra.Command, args []string) {
+		// defined in taskInfo.go
+		handleTaskCmdArguments(args)
+	},
 }
 
 func init() {
-    showCmd.AddCommand(taskListCmd)
-    taskListCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, 
-        showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
+	showCmd.AddCommand(taskListCmd)
+	taskListCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
+		showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
 }

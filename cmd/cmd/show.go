@@ -19,10 +19,10 @@
 package cmd
 
 import (
-  "fmt"
-  "github.com/lithammer/dedent"
-  "github.com/spf13/cobra"
-  "github.com/wso2/micro-integrator/cmd/utils"
+	"fmt"
+	"github.com/lithammer/dedent"
+	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
 var showCmdLiteral = "show"
@@ -34,13 +34,13 @@ Usage
   ` + programName + ` ` + showCmdLiteral + ` [command] [argument] [flags]
 
 Available Commands:
-    api [api-name]                  Get information about one or more Apis
-    carbonapp [app-name]            Get information about one or more Carbon Apps
-    endpoint [endpoint-name]        Get information about one or more Endpoints
-    inboundendpoint [inbound-name]  Get information about one or more Inbounds
-    proxyservice [proxy-name]       Get information about one or more Proxies 
-    sequence [sequence-name]        Get information about one or more Sequences
-    task [task-name]                Get information about one or more Task
+  api [api-name]                  Get information about one or more Apis
+  carbonapp [app-name]            Get information about one or more Carbon Apps
+  endpoint [endpoint-name]        Get information about one or more Endpoints
+  inboundendpoint [inbound-name]  Get information about one or more Inbounds
+  proxyservice [proxy-name]       Get information about one or more Proxies
+  sequence [sequence-name]        Get information about one or more Sequences
+  task [task-name]                Get information about one or more Task
 `)
 
 var showCmdExamples = dedent.Dedent(`
@@ -59,16 +59,16 @@ var showCmdValidArgs = []string{"api", "carbonapp", "endpoint", "inboundendpoint
 
 // showCmd represents the show command
 var showCmd = &cobra.Command{
-  Use:   "show [command]",
-  Short: showCmdShortDesc,
-  Long:  showCmdLongDesc,
-  Run: func(cmd *cobra.Command, args []string) {
-    fmt.Print(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
-  },
-  ValidArgs: showCmdValidArgs,
+	Use:   "show [command]",
+	Short: showCmdShortDesc,
+	Long:  showCmdLongDesc,
+	Run: func(cmd *cobra.Command, args []string) {
+		fmt.Print(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
+	},
+	ValidArgs: showCmdValidArgs,
 }
 
 func init() {
-  rootCmd.AddCommand(showCmd)
-  showCmd.SetHelpTemplate(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
+	rootCmd.AddCommand(showCmd)
+	showCmd.SetHelpTemplate(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
 }
