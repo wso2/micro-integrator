@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.http.NameValuePair;
 import org.apache.synapse.Mediator;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
@@ -57,16 +56,10 @@ public class SequenceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
+        String param = Utils.getQueryParameter(messageContext, "inboundEndpointName");
 
-        // if query params exists retrieve data about specific sequence
-        if (Objects.nonNull(queryParameter)) {
-            for (NameValuePair nvPair : queryParameter) {
-                if (nvPair.getName().equals("inboundEndpointName")) {
-                    populateSequenceData(messageContext, nvPair.getValue());
-                    break;
-                }
-            }
+        if (Objects.nonNull(param)) {
+            populateSequenceData(messageContext, param);
         } else {
             populateSequenceList(messageContext);
         }

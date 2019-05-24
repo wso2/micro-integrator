@@ -21,7 +21,6 @@ package org.wso2.carbon.micro.integrator.management.apis;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -40,7 +39,6 @@ import java.net.SocketException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -65,15 +63,10 @@ public class ApiResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
+        String param = Utils.getQueryParameter(messageContext, "apiName");
 
-        if (Objects.nonNull(queryParameter)) {
-            for (NameValuePair nvPair : queryParameter) {
-                if (nvPair.getName().equals("apiName")) {
-                    populateApiData(messageContext, nvPair.getValue());
-                    break;
-                }
-            }
+        if (Objects.nonNull(param)) {
+            populateApiData(messageContext, param);
         } else {
             populateApiList(messageContext);
         }

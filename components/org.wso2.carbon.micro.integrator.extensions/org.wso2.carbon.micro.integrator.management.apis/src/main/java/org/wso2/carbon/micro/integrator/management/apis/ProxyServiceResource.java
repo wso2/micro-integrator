@@ -21,7 +21,6 @@ package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -34,7 +33,6 @@ import org.wso2.carbon.service.mgt.ServiceMetaData;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -62,16 +60,10 @@ public class ProxyServiceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
+        String param = Utils.getQueryParameter(messageContext, "proxyServiceName");
 
-        // if query params exists retrieve data about specific inbound endpoint
-        if (Objects.nonNull(queryParameter)) {
-            for (NameValuePair nvPair : queryParameter) {
-                if (nvPair.getName().equals("proxyServiceName")) {
-                    populateProxyServiceData(messageContext, nvPair.getValue());
-                    break;
-                }
-            }
+        if (Objects.nonNull(param)) {
+            populateProxyServiceData(messageContext, param);
         } else {
             populateProxyServiceList(messageContext);
         }

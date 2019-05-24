@@ -19,7 +19,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONArray;
@@ -60,16 +59,10 @@ public class CarbonAppResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = Utils.getQueryParameters(axis2MessageContext);
+        String param = Utils.getQueryParameter(messageContext, "carbonAppName");
 
-        // if query params exists retrieve data about specific inbound endpoint
-        if (Objects.nonNull(queryParameter)) {
-            for (NameValuePair nvPair : queryParameter) {
-                if (nvPair.getName().equals("carbonAppName")) {
-                    populateCarbonAppData(messageContext, nvPair.getValue());
-                    break;
-                }
-            }
+        if (Objects.nonNull(param)) {
+            populateCarbonAppData(messageContext, param);
         } else {
             populateCarbonAppList(messageContext);
         }
