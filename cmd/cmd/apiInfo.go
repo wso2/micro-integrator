@@ -81,9 +81,11 @@ func printAPIHelp() {
 
 func executeGetAPICmd(apiname string) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs + "?apiName=" + apiname
+    finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
+    params := make(map[string]string)
+    params["apiName"] = apiname
 
-    resp, err := utils.UnmarshalData(finalUrl, &utils.API{})
+    resp, err := utils.UnmarshalData(finalUrl, params, &utils.API{})
 
     if err == nil {
         // Printing the details of the API

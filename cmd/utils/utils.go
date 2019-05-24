@@ -42,10 +42,10 @@ func InvokePOSTRequest(url string, headers map[string]string, body string) (*res
 }
 
 // Invoke http-get request using go-resty
-func InvokeGETRequest(url string, headers map[string]string) (*resty.Response, error) {
+func InvokeGETRequest(url string, headers map[string]string, params map[string]string) (*resty.Response, error) {
 
     AllowInsecureSSLConnection()
-    resp, err := resty.R().SetHeaders(headers).Get(url)
+    resp, err := resty.R().SetQueryParams(params).SetHeaders(headers).Get(url)
 
     return resp, err
 }
@@ -126,7 +126,7 @@ func GetArtifactList(url string, model interface{}) (interface{}, error) {
 
     headers := make(map[string]string)
 
-    resp, err := InvokeGETRequest(url, headers)
+    resp, err := InvokeGETRequest(url, headers, nil)
 
     if err != nil {
         HandleErrorAndExit("Unable to connect to host", nil)
@@ -152,13 +152,13 @@ func GetArtifactList(url string, model interface{}) (interface{}, error) {
 // @param model: struct object
 // @return struct object
 // @return error
-func UnmarshalData(url string, model interface{}) (interface{}, error) {
+func UnmarshalData(url string, params map[string]string, model interface{}) (interface{}, error) {
 
     Logln(LogPrefixInfo+"URL:", url)
 
     headers := make(map[string]string)
 
-    resp, err := InvokeGETRequest(url, headers)
+    resp, err := InvokeGETRequest(url, headers, params)
 
     if err != nil {
         HandleErrorAndExit("Unable to connect to host", nil)

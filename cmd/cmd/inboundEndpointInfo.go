@@ -81,9 +81,11 @@ func printInboundHelp() {
 
 func executeGetInboundEndpointCmd(inboundEndpointname string) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints + "?inboundEndpointName=" + inboundEndpointname
+    finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints
+    params := make(map[string]string)
+    params["inboundEndpointName"] = inboundEndpointname
 
-    resp, err := utils.UnmarshalData(finalUrl, &utils.InboundEndpoint{})
+    resp, err := utils.UnmarshalData(finalUrl, params, &utils.InboundEndpoint{})
 
     if err == nil {
         // Printing the details of the InboundEndpoint

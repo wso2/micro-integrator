@@ -81,9 +81,11 @@ func printSequenceHelp() {
 
 func executeGetSequenceCmd(sequencename string) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixSequences + "?inboundEndpointName=" + sequencename
+    finalUrl := utils.RESTAPIBase + utils.PrefixSequences
+    params := make(map[string]string)
+    params["inboundEndpointName"] = sequencename
 
-    resp, err := utils.UnmarshalData(finalUrl, &utils.Sequence{})
+    resp, err := utils.UnmarshalData(finalUrl, params, &utils.Sequence{})
 
     if err == nil {
         // Printing the details of the Sequence

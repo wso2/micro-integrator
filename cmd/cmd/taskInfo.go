@@ -81,9 +81,11 @@ func printTaskHelp() {
 
 func executeGetTaskCmd(taskname string) {
 
-    finalUrl := utils.RESTAPIBase + utils.PrefixTasks + "?taskName=" + taskname
+    finalUrl := utils.RESTAPIBase + utils.PrefixTasks
+    params := make(map[string]string)
+    params["taskName"] = taskname
 
-    resp, err := utils.UnmarshalData(finalUrl, &utils.Task{})
+    resp, err := utils.UnmarshalData(finalUrl, params, &utils.Task{})
 
     if err == nil {
         // Printing the details of the Task
