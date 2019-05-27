@@ -19,11 +19,13 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import java.util.ArrayList;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_APIS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_DATA_SERVICES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_ENDPOINTS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_INBOUND_ENDPOINTS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
@@ -37,14 +39,18 @@ public class ManagementInternalAPI implements InternalAPI {
 
     public APIResource[] getResources() {
 
-        APIResource[] resources = new APIResource[7];
-        resources[0] = new ApiResource(PREFIX_APIS);
-        resources[1] = new EndpointResource(PREFIX_ENDPOINTS);
-        resources[2] = new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS);
-        resources[3] = new ProxyServiceResource(PREFIX_PROXY_SERVICES);
-        resources[4] = new CarbonAppResource(PREFIX_CARBON_APPS);
-        resources[5] = new TaskResource(PREFIX_TASKS);
-        resources[6] = new SequenceResource(PREFIX_SEQUENCES);
+        ArrayList<APIResource> resourcesList = new ArrayList<>();
+        resourcesList.add(new ApiResource(PREFIX_APIS));
+        resourcesList.add(new EndpointResource(PREFIX_ENDPOINTS));
+        resourcesList.add(new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS));
+        resourcesList.add(new ProxyServiceResource(PREFIX_PROXY_SERVICES));
+        resourcesList.add(new CarbonAppResource(PREFIX_CARBON_APPS));
+        resourcesList.add(new TaskResource(PREFIX_TASKS));
+        resourcesList.add(new SequenceResource(PREFIX_SEQUENCES));
+        resourcesList.add(new DataServiceResource(PREFIX_DATA_SERVICES));
+
+        APIResource[] resources = new APIResource[resourcesList.size()];
+        resources = resourcesList.toArray(resources);
         return resources;
     }
 
