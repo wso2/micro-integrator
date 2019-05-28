@@ -35,10 +35,10 @@ const showEndpointCmdShortDesc = "Get information about endpoints"
 var showEndpointCmdLongDesc = "Get information about the endpoint specified by command line argument [endpoint-name] If not specified, list all the endpoints\n"
 
 var showEndpointCmdExamples = "Example:\n" +
-"To get details about a specific endpoint\n" +
-"  " + programName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + " TestEndpoint\n\n" +
-"To list all the endpoints\n" +
-"  " + programName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + "\n\n"
+	"To get details about a specific endpoint\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + " TestEndpoint\n\n" +
+	"To list all the endpoints\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showEndpointCmdLiteral + "\n\n"
 
 // endpointShowCmd represents the show endpoint command
 var endpointShowCmd = &cobra.Command{
@@ -80,9 +80,7 @@ func printEndpointHelp() {
 
 func executeGetEndpointCmd(endpointname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints
-	params := make(map[string]string)
-	params["endpointName"] = endpointname
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixEndpoints, "endpointName", endpointname)
 
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Endpoint{})
 

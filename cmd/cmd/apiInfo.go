@@ -35,10 +35,10 @@ const showAPICmdShortDesc = "Get information about APIs"
 var showAPICmdLongDesc = "Get information about the API specified by command line argument [api-name] If not specified, list all the apis\n"
 
 var showAPICmdExamples = "Example:\n" +
-"To get details about a specific api\n" +
-"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + " TestAPI\n\n" +
-"To list all the apis\n" +
-"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + "\n\n"
+	"To get details about a specific api\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + " TestAPI\n\n" +
+	"To list all the apis\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + "\n\n"
 
 // apiShowCmd represents the show api command
 var apiShowCmd = &cobra.Command{
@@ -80,9 +80,7 @@ func printAPIHelp() {
 
 func executeGetAPICmd(apiname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
-	params := make(map[string]string)
-	params["apiName"] = apiname
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixAPIs, "apiName", apiname)
 
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.API{})
 

@@ -35,10 +35,10 @@ const showSequenceCmdShortDesc = "Get information about sequences"
 var showSequenceCmdLongDesc = "Get information about the Sequence specified by command line argument [sequence-name] If not specified, list all the sequences\n"
 
 var showSequenceCmdExamples = "Example:\n" +
-"To get details about a specific sequence\n" +
-"  " + programName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + " SampleSequence\n\n" +
-"To list all the sequences\n" +
-"  " + programName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + "\n\n"
+	"To get details about a specific sequence\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + " SampleSequence\n\n" +
+	"To list all the sequences\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + "\n\n"
 
 // sequenceShowCmd represents the show sequence command
 var sequenceShowCmd = &cobra.Command{
@@ -80,9 +80,7 @@ func printSequenceHelp() {
 
 func executeGetSequenceCmd(sequencename string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixSequences
-	params := make(map[string]string)
-	params["sequenceName"] = sequencename
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixSequences, "sequenceName", sequencename)
 
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Sequence{})
 

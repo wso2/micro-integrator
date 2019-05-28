@@ -35,10 +35,10 @@ const showInboundEndpointCmdShortDesc = "Get information about inbound endpoints
 var showInboundEndpointCmdLongDesc = "Get information about the InboundEndpoint specified by command line argument [inbound-name] If not specified, list all the Inbound Endpoints\n"
 
 var showInboundEndpointCmdExamples = "Example:\n" +
-"To get details about a specific inbound endpoint\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + " TestInboundEndpoint\n\n" +
-"To list all the inbound endpoints\n" +
-"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + "\n\n"
+	"To get details about a specific inbound endpoint\n" +
+	"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + " TestInboundEndpoint\n\n" +
+	"To list all the inbound endpoints\n" +
+	"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + "\n\n"
 
 // InboundEndpointShowCmd represents the Show inboundEndpoint command
 var inboundEndpointShowCmd = &cobra.Command{
@@ -80,9 +80,7 @@ func printInboundHelp() {
 
 func executeGetInboundEndpointCmd(inboundEndpointname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints
-	params := make(map[string]string)
-	params["inboundEndpointName"] = inboundEndpointname
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixInboundEndpoints, "inboundEndpointName", inboundEndpointname)
 
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.InboundEndpoint{})
 

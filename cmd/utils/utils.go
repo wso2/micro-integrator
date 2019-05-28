@@ -179,6 +179,13 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 	}
 }
 
+func GetUrlAndParams(urlPrefix, key, value string) (string, map[string]string) {
+	url := RESTAPIBase + urlPrefix
+	params := make(map[string]string)
+	params[key] = value
+	return url, params
+}
+
 func GetCmdFlags(cmd string) string {
 	var showCmdFlags = "Flags:\n" +
 		"  -h, --help\t\thelp for " + cmd + "\n" +
