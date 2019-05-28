@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.rest.RESTConstants;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -51,4 +52,11 @@ public class Utils {
         axis2MessageContext.setProperty("ContentType", "application/json");
     }
 
+    public static JSONObject createJSONList(int count) {
+        JSONObject jsonBody = new JSONObject();
+        JSONArray list = new JSONArray();
+        jsonBody.put(Constants.COUNT, count);
+        jsonBody.put(Constants.LIST, list);
+        return jsonBody;
+    }
 }

@@ -84,10 +84,7 @@ public class ApiResource extends APIResource {
 
         Collection<API> apis = configuration.getAPIs();
 
-        JSONObject jsonBody = new JSONObject();
-        JSONArray apiList = new JSONArray();
-        jsonBody.put(Constants.COUNT, apis.size());
-        jsonBody.put(Constants.LIST, apiList);
+        JSONObject jsonBody = Utils.createJSONList(apis.size());
 
         String serverUrl = getServerContext(axis2MessageContext.getConfigurationContext().getAxisConfiguration());
 
@@ -100,7 +97,7 @@ public class ApiResource extends APIResource {
             apiObject.put(Constants.NAME, api.getName());
             apiObject.put(Constants.URL, apiUrl);
 
-            apiList.put(apiObject);
+            jsonBody.getJSONArray(Constants.LIST).put(apiObject);
 
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);

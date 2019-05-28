@@ -45,4 +45,5 @@ public class Constants {
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String HTTP_STATUS_CODE = "HTTP_SC";
     public static final String NOT_FOUND = "404";
+    public static final String INTERNAL_SERVER_ERROR = "500";
 }

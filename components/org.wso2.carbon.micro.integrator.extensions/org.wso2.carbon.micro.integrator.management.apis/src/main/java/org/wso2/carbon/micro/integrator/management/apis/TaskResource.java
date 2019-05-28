@@ -23,7 +23,6 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.task.TaskDescription;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
@@ -74,15 +73,12 @@ public class TaskResource extends APIResource {
 
         String[] taskNames = configuration.getTaskManager().getTaskNames();
 
-        JSONObject jsonBody = new JSONObject();
-        JSONArray taskList = new JSONArray();
-        jsonBody.put(Constants.COUNT, taskNames.length);
-        jsonBody.put(Constants.LIST, taskList);
+        JSONObject jsonBody = Utils.createJSONList(taskNames.length);
 
         for (String taskName : taskNames) {
 
             JSONObject taskObject = getTaskByName(messageContext, taskName);
-            taskList.put(taskObject);
+            jsonBody.getJSONArray(Constants.LIST).put(taskObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }

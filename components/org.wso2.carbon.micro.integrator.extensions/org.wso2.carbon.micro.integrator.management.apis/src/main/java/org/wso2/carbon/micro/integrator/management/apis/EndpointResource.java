@@ -27,7 +27,6 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.endpoints.EndpointDefinition;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
@@ -83,10 +82,7 @@ public class EndpointResource extends APIResource {
         Map<String, Endpoint> namedEndpointMap = configuration.getDefinedEndpoints();
         Collection<Endpoint> namedEndpointCollection = namedEndpointMap.values();
 
-        JSONObject jsonBody = new JSONObject();
-        JSONArray endpointList = new JSONArray();
-        jsonBody.put(Constants.COUNT, namedEndpointCollection.size());
-        jsonBody.put(Constants.LIST, endpointList);
+        JSONObject jsonBody = Utils.createJSONList(namedEndpointCollection.size());
 
         for (Endpoint ep : namedEndpointCollection) {
 
@@ -107,7 +103,7 @@ public class EndpointResource extends APIResource {
             String url = firstElement.getAttributeValue(new QName("uri-template"));
             endpointObject.put(Constants.URL, url);
 
-            endpointList.put(endpointObject);
+            jsonBody.getJSONArray(Constants.LIST).put(endpointObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
