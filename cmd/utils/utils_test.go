@@ -94,7 +94,7 @@ func TestGetArtifactListOK(t *testing.T) {
 	}
 }
 
-func TestUnmarshalDataOK(t *testing.T) {
+func TestUnmarshalDataApiOK(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		if r.Method != http.MethodGet {
@@ -103,7 +103,7 @@ func TestUnmarshalDataOK(t *testing.T) {
 		if !strings.Contains(r.URL.String(), "apiName=HealthcareAPI") {
 			t.Errorf("Expected query param '%s', got '%s'\n", "apiName=HealthcareAPI", r.URL.String())
 		}
-		
+
 		w.Header().Set(HeaderContentType, HeaderValueApplicationJSON)
 
 		body := dedent.Dedent(`
@@ -148,6 +148,106 @@ func TestUnmarshalDataOK(t *testing.T) {
 
 	if !reflect.DeepEqual(*api, expected) {
 		t.Errorf("Unexpected API struct. Exptected %v, got %v\n", expected, *api)
+	}
+
+	if err != nil {
+		t.Error("Error" + err.Error())
+	}
+}
+
+func TestUnmarshalDataAppOK(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		if r.Method != http.MethodGet {
+			t.Errorf("Expected method '%s', got '%s'\n", http.MethodGet, r.Method)
+		}
+		if !strings.Contains(r.URL.String(), "carbonAppName=SampleServicesCompositeApplication") {
+			t.Errorf("Expected query param '%s', got '%s'\n", "carbonAppName=SampleServicesCompositeApplication", r.URL.String())
+		}
+
+		w.Header().Set(HeaderContentType, HeaderValueApplicationJSON)
+
+		body := dedent.Dedent(`
+        {
+			"name": "SampleServicesCompositeApplication",
+			"version": "1.0.0",
+			"artifacts": [
+			  {
+				"name": "HealthcareAPI",
+				"type": "api"
+			  }
+			]
+		}`)
+		w.Write([]byte(body))
+	}))
+	defer server.Close()
+
+	params := make(map[string]string)
+	params["carbonAppName"] = "SampleServicesCompositeApplication"
+
+	resp, err := UnmarshalData(server.URL, params, &CarbonApp{})
+	capp := resp.(*CarbonApp)
+
+	expected := CarbonApp{
+		Name:    "SampleServicesCompositeApplication",
+		Version: "1.0.0",
+		Artifacts: []Artifact{
+			{
+				Name: "HealthcareAPI",
+				Type: "api",
+			},
+		},
+	}
+
+	if !reflect.DeepEqual(*capp, expected) {
+		t.Errorf("Unexpected CarbonApp struct. Exptected %v, got %v\n", expected, *capp)
+	}
+
+	if err != nil {
+		t.Error("Error" + err.Error())
+	}
+}
+
+func TestUnmarshalDataEndpointOK(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		if r.Method != http.MethodGet {
+			t.Errorf("Expected method '%s', got '%s'\n", http.MethodGet, r.Method)
+		}
+		if !strings.Contains(r.URL.String(), "endpointName=ClemencyEP") {
+			t.Errorf("Expected query param '%s', got '%s'\n", "endpointName=ClemencyEP", r.URL.String())
+		}
+
+		w.Header().Set(HeaderContentType, HeaderValueApplicationJSON)
+
+		body := dedent.Dedent(`
+        {
+			"method": "POST",
+			"stats": "disabled",
+			"name": "ClemencyEP",
+			"type": "http",
+			"url": "http://localhost:9090/clemency/categories/{uri.var.category}/reserve"
+		}`)
+		w.Write([]byte(body))
+	}))
+	defer server.Close()
+
+	params := make(map[string]string)
+	params["endpointName"] = "ClemencyEP"
+
+	resp, err := UnmarshalData(server.URL, params, &Endpoint{})
+	endpoint := resp.(*Endpoint)
+
+	expected := Endpoint{
+		Name:    "ClemencyEP",
+		Type: "http",
+		Method: "POST",
+		Stats: "disabled",
+		Url: "http://localhost:9090/clemency/categories/{uri.var.category}/reserve",
+	}
+
+	if !reflect.DeepEqual(*endpoint, expected) {
+		t.Errorf("Unexpected Endpoint struct.\nExptected:\n%v\nGot\n%v\n", expected, *endpoint)
 	}
 
 	if err != nil {
