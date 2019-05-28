@@ -239,11 +239,11 @@ func TestUnmarshalDataEndpointOK(t *testing.T) {
 	endpoint := resp.(*Endpoint)
 
 	expected := Endpoint{
-		Name:    "ClemencyEP",
-		Type: "http",
+		Name:   "ClemencyEP",
+		Type:   "http",
 		Method: "POST",
-		Stats: "disabled",
-		Url: "http://localhost:9090/clemency/categories/{uri.var.category}/reserve",
+		Stats:  "disabled",
+		Url:    "http://localhost:9090/clemency/categories/{uri.var.category}/reserve",
 	}
 
 	if !reflect.DeepEqual(*endpoint, expected) {
