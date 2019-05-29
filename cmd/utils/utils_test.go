@@ -27,6 +27,36 @@ import (
 	"testing"
 )
 
+func createServer(t *testing.T, param string, body string) *httptest.Server {
+
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		if r.Method != http.MethodGet {
+			t.Errorf("Expected method '%s', got '%s'\n", http.MethodGet, r.Method)
+		}
+		if !strings.Contains(r.URL.String(), param) {
+			t.Errorf("Expected query param '%s', got '%s'\n", param, r.URL.String())
+		}
+
+		w.Header().Set(HeaderContentType, HeaderValueApplicationJSON)
+
+		w.Write([]byte(body))
+	}))
+	return server
+}
+
+func compareStruct(t *testing.T, result, expected interface{}) {
+	if !reflect.DeepEqual(result, expected) {
+		t.Errorf("Unexpected Inbound Endpoint struct.\nExptected:\n%v\nGot\n%v\n", expected, result)
+	}
+}
+
+func createParamMap(key, value string) map[string]string {
+	params := make(map[string]string)
+	params[key] = value
+	return params
+}
+
 func TestInvokeGETRequestUnreachable(t *testing.T) {
 	var httpStub = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.Method != http.MethodGet {
@@ -95,39 +125,28 @@ func TestGetArtifactListOK(t *testing.T) {
 }
 
 func TestUnmarshalDataApiOK(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		if r.Method != http.MethodGet {
-			t.Errorf("Expected method '%s', got '%s'\n", http.MethodGet, r.Method)
-		}
-		if !strings.Contains(r.URL.String(), "apiName=HealthcareAPI") {
-			t.Errorf("Expected query param '%s', got '%s'\n", "apiName=HealthcareAPI", r.URL.String())
-		}
 
-		w.Header().Set(HeaderContentType, HeaderValueApplicationJSON)
+	body := dedent.Dedent(`
+	{
+		"tracing": "disabled",
+		"stats": "disabled",
+		"name": "HealthcareAPI",
+		"resources": [
+			{
+			"methods": [
+				"GET"
+			],
+			"url": "/querydoctor/{category}"
+			}
+		],
+		"version": "N/A",
+		"url": "http://172.17.0.1:8290/healthcare"
+	}`)
 
-		body := dedent.Dedent(`
-        {
-            "tracing": "disabled",
-            "stats": "disabled",
-            "name": "HealthcareAPI",
-            "resources": [
-              {
-                "methods": [
-                  "GET"
-                ],
-                "url": "/querydoctor/{category}"
-              }
-            ],
-            "version": "N/A",
-            "url": "http://172.17.0.1:8290/healthcare"
-        }`)
-		w.Write([]byte(body))
-	}))
+	server := createServer(t, "apiName=HealthcareAPI", body)
 	defer server.Close()
 
-	params := make(map[string]string)
-	params["apiName"] = "HealthcareAPI"
+	params := createParamMap("apiName", "HealthcareAPI")
 
 	resp, err := UnmarshalData(server.URL, params, &API{})
 	api := resp.(*API)
@@ -146,9 +165,7 @@ func TestUnmarshalDataApiOK(t *testing.T) {
 		Url:     "http://172.17.0.1:8290/healthcare",
 	}
 
-	if !reflect.DeepEqual(*api, expected) {
-		t.Errorf("Unexpected API struct. Exptected %v, got %v\n", expected, *api)
-	}
+	compareStruct(t, *api, expected)
 
 	if err != nil {
 		t.Error("Error" + err.Error())
@@ -156,34 +173,23 @@ func TestUnmarshalDataApiOK(t *testing.T) {
 }
 
 func TestUnmarshalDataAppOK(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		if r.Method != http.MethodGet {
-			t.Errorf("Expected method '%s', got '%s'\n", http.MethodGet, r.Method)
-		}
-		if !strings.Contains(r.URL.String(), "carbonAppName=SampleServicesCompositeApplication") {
-			t.Errorf("Expected query param '%s', got '%s'\n", "carbonAppName=SampleServicesCompositeApplication", r.URL.String())
-		}
 
-		w.Header().Set(HeaderContentType, HeaderValueApplicationJSON)
+	body := dedent.Dedent(`
+	{
+		"name": "SampleServicesCompositeApplication",
+		"version": "1.0.0",
+		"artifacts": [
+			{
+			"name": "HealthcareAPI",
+			"type": "api"
+			}
+		]
+	}`)
 
-		body := dedent.Dedent(`
-        {
-			"name": "SampleServicesCompositeApplication",
-			"version": "1.0.0",
-			"artifacts": [
-			  {
-				"name": "HealthcareAPI",
-				"type": "api"
-			  }
-			]
-		}`)
-		w.Write([]byte(body))
-	}))
+	server := createServer(t, "carbonAppName=SampleServicesCompositeApplication", body)
 	defer server.Close()
 
-	params := make(map[string]string)
-	params["carbonAppName"] = "SampleServicesCompositeApplication"
+	params := createParamMap("carbonAppName", "SampleServicesCompositeApplication")
 
 	resp, err := UnmarshalData(server.URL, params, &CarbonApp{})
 	capp := resp.(*CarbonApp)
@@ -199,9 +205,7 @@ func TestUnmarshalDataAppOK(t *testing.T) {
 		},
 	}
 
-	if !reflect.DeepEqual(*capp, expected) {
-		t.Errorf("Unexpected CarbonApp struct. Exptected %v, got %v\n", expected, *capp)
-	}
+	compareStruct(t, *capp, expected)
 
 	if err != nil {
 		t.Error("Error" + err.Error())
@@ -209,31 +213,20 @@ func TestUnmarshalDataAppOK(t *testing.T) {
 }
 
 func TestUnmarshalDataEndpointOK(t *testing.T) {
-	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
-		if r.Method != http.MethodGet {
-			t.Errorf("Expected method '%s', got '%s'\n", http.MethodGet, r.Method)
-		}
-		if !strings.Contains(r.URL.String(), "endpointName=ClemencyEP") {
-			t.Errorf("Expected query param '%s', got '%s'\n", "endpointName=ClemencyEP", r.URL.String())
-		}
 
-		w.Header().Set(HeaderContentType, HeaderValueApplicationJSON)
+	body := dedent.Dedent(`
+	{
+		"method": "POST",
+		"stats": "disabled",
+		"name": "ClemencyEP",
+		"type": "http",
+		"url": "http://localhost:9090/clemency/categories/{uri.var.category}/reserve"
+	}`)
 
-		body := dedent.Dedent(`
-        {
-			"method": "POST",
-			"stats": "disabled",
-			"name": "ClemencyEP",
-			"type": "http",
-			"url": "http://localhost:9090/clemency/categories/{uri.var.category}/reserve"
-		}`)
-		w.Write([]byte(body))
-	}))
+	server := createServer(t, "endpointName=ClemencyEP", body)
 	defer server.Close()
 
-	params := make(map[string]string)
-	params["endpointName"] = "ClemencyEP"
+	params := createParamMap("endpointName", "ClemencyEP")
 
 	resp, err := UnmarshalData(server.URL, params, &Endpoint{})
 	endpoint := resp.(*Endpoint)
@@ -246,9 +239,155 @@ func TestUnmarshalDataEndpointOK(t *testing.T) {
 		Url:    "http://localhost:9090/clemency/categories/{uri.var.category}/reserve",
 	}
 
-	if !reflect.DeepEqual(*endpoint, expected) {
-		t.Errorf("Unexpected Endpoint struct.\nExptected:\n%v\nGot\n%v\n", expected, *endpoint)
+	compareStruct(t, *endpoint, expected)
+
+	if err != nil {
+		t.Error("Error" + err.Error())
 	}
+}
+
+func TestUnmarshalDataInboundEndpointOK(t *testing.T) {
+
+	body := dedent.Dedent(`
+	{
+		"protocol": "http",
+		"tracing": "disabled",
+		"stats": "disabled",
+		"name": "TestInbound",
+		"parameters": [
+			{
+				"name": "inbound.http.port",
+				"value": "8000"
+			}
+		]
+	}`)
+
+	server := createServer(t, "inboundEndpointName=TestInbound", body)
+	defer server.Close()
+
+	params := createParamMap("inboundEndpointName", "TestInbound")
+
+	resp, err := UnmarshalData(server.URL, params, &InboundEndpoint{})
+	inboundEndpoint := resp.(*InboundEndpoint)
+
+	expected := InboundEndpoint{
+		Name:    "TestInbound",
+		Type:    "http",
+		Tracing: "disabled",
+		Stats:   "disabled",
+		Parameters: []Parameter{
+			{
+				Name:  "inbound.http.port",
+				Value: "8000",
+			},
+		},
+	}
+
+	compareStruct(t, *inboundEndpoint, expected)
+
+	if err != nil {
+		t.Error("Error" + err.Error())
+	}
+}
+
+func TestUnmarshalDataProxyOK(t *testing.T) {
+
+	body := dedent.Dedent(`
+	{
+		"tracing": "disabled",
+		"stats": "disabled",
+		"name": "TestProxy",
+		"wsdl1_1": "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl",
+		"wsdl2_0": "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl2"
+	}`)
+
+	server := createServer(t, "proxyServiceName=TestProxy", body)
+	defer server.Close()
+
+	params := createParamMap("proxyServiceName", "TestProxy")
+
+	resp, err := UnmarshalData(server.URL, params, &Proxy{})
+	proxy := resp.(*Proxy)
+
+	expected := Proxy{
+		Tracing: "disabled",
+		Stats:   "disabled",
+		Name:    "TestProxy",
+		WSDL1_1: "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl",
+		WSDL2_0: "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl2",
+	}
+
+	compareStruct(t, *proxy, expected)
+
+	if err != nil {
+		t.Error("Error" + err.Error())
+	}
+}
+
+func TestUnmarshalDataSequenceOK(t *testing.T) {
+
+	body := dedent.Dedent(`
+	{
+		"container": "[ Deployed From Artifact Container: SampleInboundCompositeApplication ]",
+		"tracing": "disabled",
+		"mediators": [
+			"LogMediator"
+		],
+		"stats": "disabled",
+		"name": "InjectXMLSequence"
+	}`)
+
+	server := createServer(t, "sequenceName=InjectXMLSequence", body)
+	defer server.Close()
+
+	params := createParamMap("sequenceName", "InjectXMLSequence")
+
+	resp, err := UnmarshalData(server.URL, params, &Sequence{})
+	sequence := resp.(*Sequence)
+
+	expected := Sequence{
+		Container: "[ Deployed From Artifact Container: SampleInboundCompositeApplication ]",
+		Tracing:   "disabled",
+		Mediators: []string{
+			"LogMediator",
+		},
+		Stats: "disabled",
+		Name:  "InjectXMLSequence",
+	}
+
+	compareStruct(t, *sequence, expected)
+
+	if err != nil {
+		t.Error("Error" + err.Error())
+	}
+}
+
+func TestUnmarshalDataTaskOK(t *testing.T) {
+
+	body := dedent.Dedent(`
+	{
+		"triggerInterval": "5000",
+		"name": "InjectXMLTask",
+		"triggerType": "simple",
+		"triggerCount": "10"
+	}`)
+
+	server := createServer(t, "taskName=InjectXMLTask", body)
+	defer server.Close()
+
+	params := createParamMap("taskName", "InjectXMLTask")
+
+	resp, err := UnmarshalData(server.URL, params, &Task{})
+	sequence := resp.(*Task)
+
+	expected := Task{
+		TriggerInterval: "5000",
+		Name:            "InjectXMLTask",
+		Type:            "simple",
+		TriggerCount:    "10",
+	}
+
+	compareStruct(t, *sequence, expected)
 
 	if err != nil {
 		t.Error("Error" + err.Error())
