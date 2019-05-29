@@ -35,10 +35,10 @@ const showTaskCmdShortDesc = "Get information about tasks"
 var showTaskCmdLongDesc = "Get information about the Task specified by command line argument [task-name] If not specified, list all the tasks\n"
 
 var showTaskCmdExamples = "Example:\n" +
-"To get details about a specific task\n" +
-"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
-"To list all the tasks\n" +
-"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
+	"To get details about a specific task\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
+	"To list all the tasks\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
 
 // taskShowCmd represents the task command
 var taskShowCmd = &cobra.Command{
@@ -80,9 +80,7 @@ func printTaskHelp() {
 
 func executeGetTaskCmd(taskname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixTasks
-	params := make(map[string]string)
-	params["taskName"] = taskname
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixTasks, "taskName", taskname)
 
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Task{})
 

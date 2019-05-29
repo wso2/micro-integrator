@@ -79,10 +79,7 @@ public class CarbonAppResource extends APIResource {
         ArrayList<CarbonApplication> appList
                 = getCarbonApps(String.valueOf(AppDeployerUtils.getTenantId()));
 
-        JSONObject jsonBody = new JSONObject();
-        JSONArray cappList = new JSONArray();
-        jsonBody.put(Constants.COUNT, appList.size());
-        jsonBody.put(Constants.LIST, cappList);
+        JSONObject jsonBody = Utils.createJSONList(appList.size());
 
         for (CarbonApplication app: appList) {
 
@@ -91,7 +88,7 @@ public class CarbonAppResource extends APIResource {
             appObject.put(Constants.NAME, app.getAppName());
             appObject.put(Constants.VERSION, app.getAppVersion());
 
-            cappList.put(appObject);
+            jsonBody.getJSONArray(Constants.LIST).put(appObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }

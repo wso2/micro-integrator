@@ -76,10 +76,7 @@ public class InboundEndpointResource extends APIResource {
 
         Collection<InboundEndpoint> inboundEndpoints = configuration.getInboundEndpoints();
 
-        JSONObject jsonBody = new JSONObject();
-        JSONArray inboundList = new JSONArray();
-        jsonBody.put(Constants.COUNT, inboundEndpoints.size());
-        jsonBody.put(Constants.LIST, inboundList);
+        JSONObject jsonBody = Utils.createJSONList(inboundEndpoints.size());
 
         for (InboundEndpoint inboundEndpoint : inboundEndpoints) {
 
@@ -88,7 +85,7 @@ public class InboundEndpointResource extends APIResource {
             inboundObject.put(Constants.NAME, inboundEndpoint.getName());
             inboundObject.put("protocol", inboundEndpoint.getProtocol());
 
-            inboundList.put(inboundObject);
+            jsonBody.getJSONArray(Constants.LIST).put(inboundObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }

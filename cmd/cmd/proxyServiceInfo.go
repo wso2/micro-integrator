@@ -35,10 +35,10 @@ const showProxyServiceCmdShortDesc = "Get information about proxy services"
 var showProxyServiceCmdLongDesc = "Get information about the Proxy Service specified by command line argument [proxy-name] If not specified, list all the proxy services\n"
 
 var showProxyServiceCmdExamples = "Example:\n" +
-"To get details about a specific prxoy\n" +
-"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + " SampleProxy\n\n" +
-"To list all the proxies\n" +
-"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + "\n\n"
+	"To get details about a specific prxoy\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + " SampleProxy\n\n" +
+	"To list all the proxies\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + "\n\n"
 
 // proxyServiceShowCmd represents the proxyService command
 var proxyServiceShowCmd = &cobra.Command{
@@ -80,9 +80,7 @@ func printProxyServiceHelp() {
 
 func executeGetProxyServiceCmd(proxyServiceName string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
-	params := make(map[string]string)
-	params["proxyServiceName"] = proxyServiceName
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixProxyServices, "proxyServiceName", proxyServiceName)
 
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Proxy{})
 

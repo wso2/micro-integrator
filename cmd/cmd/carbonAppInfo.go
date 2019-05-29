@@ -35,10 +35,10 @@ const showApplicationCmdShortDesc = "Get information about Carbon Applications"
 var showApplicationCmdLongDesc = "Get information about the Carbon App specified by command line argument [app-name] If not specified, list all the carbon apps\n"
 
 var showApplicationCmdExamples = "Example:\n" +
-"To get details about a carbon app\n" +
-"  " + programName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + " SampleApp\n\n" +
-"To list all the carbon apps\n" +
-"  " + programName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + "\n\n"
+	"To get details about a carbon app\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + " SampleApp\n\n" +
+	"To list all the carbon apps\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showApplicationCmdLiteral + "\n\n"
 
 // carbonAppShowCmd represents the show carbonApp command
 var carbonAppShowCmd = &cobra.Command{
@@ -80,9 +80,7 @@ func printAppHelp() {
 
 func executeGetCarbonAppCmd(appname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
-	params := make(map[string]string)
-	params["carbonAppName"] = appname
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixCarbonApps, "carbonAppName", appname)
 
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.CarbonApp{})
 

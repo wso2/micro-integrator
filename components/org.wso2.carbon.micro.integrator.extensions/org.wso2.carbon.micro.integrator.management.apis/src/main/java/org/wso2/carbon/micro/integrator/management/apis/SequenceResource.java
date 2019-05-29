@@ -24,7 +24,6 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.base.SequenceMediator;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
@@ -77,10 +76,7 @@ public class SequenceResource extends APIResource {
 
         Map<String, SequenceMediator> sequenceMediatorMap = configuration.getDefinedSequences();
 
-        JSONObject jsonBody = new JSONObject();
-        JSONArray sequenceList = new JSONArray();
-        jsonBody.put(Constants.COUNT, sequenceMediatorMap.size());
-        jsonBody.put(Constants.LIST, sequenceList);
+        JSONObject jsonBody = Utils.createJSONList(sequenceMediatorMap.size());
 
         for (SequenceMediator sequence: sequenceMediatorMap.values()) {
 
@@ -95,7 +91,7 @@ public class SequenceResource extends APIResource {
             String tracingState = sequence.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
             sequenceObject.put(Constants.TRACING, tracingState);
 
-            sequenceList.put(sequenceObject);
+            jsonBody.getJSONArray(Constants.LIST).put(sequenceObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }

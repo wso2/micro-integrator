@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.rest.RESTConstants;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Objects;
@@ -45,10 +46,18 @@ public class Utils {
         try {
             JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(),  true, true);
         } catch (AxisFault axisFault) {
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
             log.error("Error occurred while setting json payload", axisFault);
         }
         axis2MessageContext.setProperty("messageType", "application/json");
         axis2MessageContext.setProperty("ContentType", "application/json");
     }
 
+    public static JSONObject createJSONList(int count) {
+        JSONObject jsonBody = new JSONObject();
+        JSONArray list = new JSONArray();
+        jsonBody.put(Constants.COUNT, count);
+        jsonBody.put(Constants.LIST, list);
+        return jsonBody;
+    }
 }

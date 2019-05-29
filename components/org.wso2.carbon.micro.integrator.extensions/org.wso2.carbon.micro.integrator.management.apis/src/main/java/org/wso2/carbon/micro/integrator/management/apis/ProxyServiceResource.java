@@ -25,7 +25,6 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
-import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
@@ -81,10 +80,7 @@ public class ProxyServiceResource extends APIResource {
 
         Collection<ProxyService> proxyServices = configuration.getProxyServices();
 
-        JSONObject jsonBody = new JSONObject();
-        JSONArray proxyList = new JSONArray();
-        jsonBody.put(Constants.COUNT, proxyServices.size());
-        jsonBody.put(Constants.LIST, proxyList);
+        JSONObject jsonBody = Utils.createJSONList(proxyServices.size());
 
         for (ProxyService proxyService : proxyServices) {
 
@@ -103,7 +99,7 @@ public class ProxyServiceResource extends APIResource {
                 log.error("Error occurred while processing service data", e);
             }
 
-            proxyList.put(proxyObject);
+            jsonBody.getJSONArray(Constants.LIST).put(proxyObject);
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
