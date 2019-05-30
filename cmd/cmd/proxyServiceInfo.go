@@ -80,9 +80,9 @@ func printProxyServiceHelp() {
 
 func executeGetProxyServiceCmd(proxyServiceName string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices + "?proxyServiceName=" + proxyServiceName
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixProxyServices, "proxyServiceName", proxyServiceName)
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.Proxy{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Proxy{})
 
 	if err == nil {
 		// Printing the details of the Proxy Service

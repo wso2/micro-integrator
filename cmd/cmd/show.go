@@ -34,13 +34,13 @@ Usage
   ` + programName + ` ` + showCmdLiteral + ` [command] [argument] [flags]
 
 Available Commands:
-    api [api-name]                  Get information about one or more Apis
-    carbonapp [app-name]            Get information about one or more Carbon Apps
-    endpoint [endpoint-name]        Get information about one or more Endpoints
-    inboundendpoint [inbound-name]  Get information about one or more Inbounds
-    proxyservice [proxy-name]       Get information about one or more Proxies 
-    sequence [sequence-name]        Get information about one or more Sequences
-    task [task-name]                Get information about one or more Task
+  api [api-name]                  Get information about one or more Apis
+  carbonapp [app-name]            Get information about one or more Carbon Apps
+  endpoint [endpoint-name]        Get information about one or more Endpoints
+  inboundendpoint [inbound-name]  Get information about one or more Inbounds
+  proxyservice [proxy-name]       Get information about one or more Proxies
+  sequence [sequence-name]        Get information about one or more Sequences
+  task [task-name]                Get information about one or more Task
 `)
 
 var showCmdExamples = dedent.Dedent(`
