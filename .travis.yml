@@ -15,15 +15,13 @@
 matrix:
   include:
     - language: go
-      go:
-        - "1.12.x"
 
       env:
         - GO111MODULE=on
-        - GOFLAGS='-mod vendor'
 
       before_install:
         - cd cmd/
+        - go mod download
 
       script:
         - go test -v ./...
