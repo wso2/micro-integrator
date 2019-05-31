@@ -709,7 +709,7 @@
             <modules>
                 <module>automation-extensions</module>
                 <module>mediation-tests</module>
-                <!-- <module>dataservice-hosting-tests</module>-->
+                <module>dataservice-hosting-tests</module>
             </modules>
         </profile>
     </profiles>
