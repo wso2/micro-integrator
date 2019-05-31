@@ -17,9 +17,17 @@
   ~ under the License.
   -->
 
-<!-- Registry declaration of the WSO2 EI -->
-<registry xmlns="http://ws.apache.org/ns/synapse" provider="org.wso2.carbon.mediation.registry.WSO2Registry">
-    <!--all resources loaded from the URL registry would be
-    cached for this number of milliseconds -->
-    <parameter name="cachableDuration">15000</parameter>
-</registry>
+<!-- Default fault sequence shipped with the Apache Synapse -->
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="fault">
+
+    <!-- Log the message at the full log level with the ERROR_MESSAGE and the ERROR_CODE-->
+    <log level="full">
+        <property name="MESSAGE" value="Executing default 'fault' sequence"/>
+        <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
+        <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+    </log>
+
+    <!-- Drops the messages by default if there is a fault -->
+    <drop/>
+
+</sequence>
