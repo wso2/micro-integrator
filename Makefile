@@ -22,3 +22,7 @@ install:
 .PHONY: install-cli
 install-cli:
 	cd cmd && ./build.sh -t mi.go -v 1.0.0 -f
+
+.PHONY: install-cli-skip-test
+install-cli-skip-test:
+	cd cmd && ./build.sh -t mi.go -v 1.0.0 -f test.skip
