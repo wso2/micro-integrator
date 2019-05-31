@@ -266,11 +266,8 @@
                 <class>
                     <name>org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension</name>
                     <parameter name="-DportOffset" value="200" />
-                    <parameter name="startupScript" value="integrator" />
+                    <parameter name="startupScript" value="micro-integrator" />
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
-                </class>
-                <class>
-                    <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>
                 </class>
                 <class>
                     <name>org.wso2.esb.integration.common.extensions.axis2server.Axis2ServerExtension</name>

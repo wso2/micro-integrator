@@ -9,7 +9,7 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <test name="ESB-Sample-Endpoint-Test" preserve-order="true" verbose="2">
+    <!--<test name="ESB-Sample-Endpoint-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.samples.test.endpoint.*"/>
         </packages>
@@ -88,7 +88,7 @@
         </packages>
 
         <classes>
-            <!--excluded due to wso2/product-ei/#1234-->
+            &lt;!&ndash;excluded due to wso2/product-ei/#1234&ndash;&gt;
             <class name="org.wso2.carbon.esb.samples.test.transport.Sample254TestCase">
                 <methods>
                     <exclude name=".*"/>
@@ -106,6 +106,6 @@
         <packages>
             <package name="org.wso2.carbon.esb.samples.test.mediation.priorityexecutor.*"/>
         </packages>
-    </test>
+    </test>-->
 </suite>
 

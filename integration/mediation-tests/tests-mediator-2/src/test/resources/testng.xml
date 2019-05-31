@@ -10,7 +10,7 @@
     </listeners>
 
     <!-- This was commented since fails in batch execution - passed locally when individual run-->
-    <test name="Server-Stratup" preserve-order="true" verbose="2">
+   <!-- <test name="Server-Stratup" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.mediator.test.xquery.XQueryCustomVariableAsFloat"/>
             <class name="org.wso2.carbon.esb.mediator.test.xquery.XQueryCustomVariableAsLong"/>
@@ -112,7 +112,7 @@
             <package name="org.wso2.carbon.esb.message.processor.test.forwarding"/>
             <package name="org.wso2.carbon.esb.message.processor.test"/>
         </packages>
-        <!--Disabled test due to the issue https://github.com/wso2/product-ei/issues/515-->
+        &lt;!&ndash;Disabled test due to the issue https://github.com/wso2/product-ei/issues/515&ndash;&gt;
         <classes>
             <class name="org.wso2.carbon.esb.message.processor.test.failover.FailoverForwardingProcessorTestCase">
                 <methods>
@@ -163,5 +163,5 @@
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.classMediator"/>
         </packages>
-    </test>
+    </test>-->
 </suite>

@@ -1,5 +1,7 @@
-<proxy name="CallMediatorReplyNoDefaultContentTypeTestProxy"
-       startOnLoad="true" trace="disable" transports="http https">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="CallMediatorReplyNoDefaultContentTypeTestProxy"
+       transports="http https"
+       startOnLoad="true"
+       trace="disable">
 <description/>
 <target>
     <inSequence>

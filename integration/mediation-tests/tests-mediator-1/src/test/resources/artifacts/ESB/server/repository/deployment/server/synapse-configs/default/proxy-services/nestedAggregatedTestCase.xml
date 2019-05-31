@@ -15,46 +15,16 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="aggregateEmptyJsonPayloadTestProxy" transports="http https"
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="nestedAggregatedTestCase" transports="http https"
        startOnLoad="true" trace="disable">
     <description />
     <target>
         <inSequence>
-            <property name="ROOT_ELEMENT" scope="default">
-                <OverallResponse />
-            </property>
-            <iterate xmlns:m0="http://services.samples"
-                    xmlns:ns="http://org.apache.synapse/xsd"
-                    id="restoreIterator"
-                    expression="//m0:getQuote/m0:request">
-                <target>
-                    <sequence>
-                        <send>
-                            <endpoint>
-                                <address uri="http://localhost:8480/no-content-response" />
-                            </endpoint>
-                        </send>
-                    </sequence>
-                </target>
-            </iterate>
+            <log level="full"/>
+            <sequence key="IterateMediatorSequence"/>
         </inSequence>
         <outSequence>
-            <payloadFactory media-type="json">
-                <format>{}</format>
-                <args />
-            </payloadFactory>
-            <property name="messageCount" value="2.0" />
-            <aggregate id="restoreIterator">
-                <completeCondition>
-                    <messageCount min="-1" max="-1" />
-                </completeCondition>
-                <onComplete expression="$body/*" enclosingElementProperty="ROOT_ELEMENT">
-                    <log level="full">
-                        <property name="AGG_ENV" value="aggregated envelope" />
-                    </log>
-                    <respond />
-                </onComplete>
-            </aggregate>
+            <sequence key="aggregateMessages"/>
         </outSequence>
     </target>
 </proxy>

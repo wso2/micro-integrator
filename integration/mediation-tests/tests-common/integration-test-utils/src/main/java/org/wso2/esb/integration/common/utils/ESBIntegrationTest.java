@@ -126,14 +126,14 @@ public abstract class ESBIntegrationTest {
 		axis2Client = new StockQuoteClient();
 		context = new AutomationContext(ESBTestConstant.ESB_PRODUCT_GROUP, userMode);
 		contextUrls = context.getContextUrls();
-		sessionCookie = login(context);
+		//sessionCookie = login(context);
 		esbUtils = new ESBTestCaseUtils();
 		tenantInfo = context.getContextTenant();
 		userInfo = tenantInfo.getContextUser();
 	}
 
 	protected void cleanup() throws Exception {
-		try {
+		/*try {
 			if (synapseConfiguration != null) {
 				esbUtils.deleteArtifact(synapseConfiguration, contextUrls.getBackEndUrl(), sessionCookie);
 				if (context.getProductGroup().isClusterEnabled()) {
@@ -179,7 +179,9 @@ public abstract class ESBIntegrationTest {
 			axis2Client = null;
 			esbUtils = null;
 			scheduledTaskList = null;
-		}
+		}*/
+
+		// DO NOTHING;
 	}
 
 	protected String getMainSequenceURL() {

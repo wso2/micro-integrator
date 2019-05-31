@@ -32,16 +32,14 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.fail;
 
-/*
-Put a send mediator after drop mediator and test whether response is null.
-*/
+/**
+ * Put a send mediator after drop mediator and test whether response is null.
+ */
 public class DropIntegrationTest extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void deployArtifacts() throws Exception {
         super.init();
-        esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "DropMediatorTestProxy");
-
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2240*/

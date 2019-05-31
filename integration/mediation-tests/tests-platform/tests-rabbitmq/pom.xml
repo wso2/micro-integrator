@@ -18,15 +18,17 @@
   -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>org.wso2.carbon.ei.tests.platform</artifactId>
-        <version>6.6.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.carbon.ei.tests.platform.rabbitmq</artifactId>
-    <name>EI test Module - Platform - RabbitMQ Transport</name>
+    <name>MI test Module - Platform - RabbitMQ Transport</name>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -167,7 +169,7 @@
                                 <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                                 <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                                 <carbon.zip>
-                                    ${basedir}/../../../../distribution/target/wso2ei-${product.ei.version}.zip
+                                    ${basedir}/../../../distribution/target/wso2mi-${product.mi.version}.zip
                                 </carbon.zip>
                                 <instr.file>${basedir}/../../coverage-report/instrumentation.txt</instr.file>
                                 <filters.file>${basedir}/../../coverage-report/filters.txt</filters.file>
@@ -198,39 +200,39 @@
                                     <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
                                 </configuration>
                             </execution>
-                            <execution>
-                                <id>copy-secVerifier</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-dependencies</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
-                                    <includeTypes>aar</includeTypes>
-                                    <includeArtifactIds>SecVerifier</includeArtifactIds>
-                                    <stripVersion>true</stripVersion>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>unpack-mar-jks</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-                                <configuration>
-                                    <artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.wso2.ei</groupId>
-                                            <artifactId>wso2ei</artifactId>
-                                            <version>${product.ei.version}</version>
-                                            <type>zip</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
-                                            <includes>**/*.jks,**/*.mar,**/synapse_sample*.xml</includes>
-                                        </artifactItem>
-                                    </artifactItems>
-                                </configuration>
-                            </execution>
+                                <!--<execution>
+                                    <id>copy-secVerifier</id>
+                                    <phase>compile</phase>
+                                    <goals>
+                                        <goal>copy-dependencies</goal>
+                                    </goals>
+                                    <configuration>
+                                        <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                                        <includeTypes>aar</includeTypes>
+                                        <includeArtifactIds>SecVerifier</includeArtifactIds>
+                                        <stripVersion>true</stripVersion>
+                                    </configuration>
+                                </execution>
+                                <execution>
+                                    <id>unpack-mar-jks</id>
+                                    <phase>compile</phase>
+                                    <goals>
+                                        <goal>unpack</goal>
+                                    </goals>
+                                    <configuration>
+                                        <artifactItems>
+                                            <artifactItem>
+                                                <groupId>org.wso2.ei</groupId>
+                                                <artifactId>wso2ei</artifactId>
+                                                <version>${product.mi.version}</version>
+                                                <type>zip</type>
+                                                <overWrite>true</overWrite>
+                                                <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
+                                                <includes>**/*.jks,**/*.mar,**/synapse_sample*.xml</includes>
+                                            </artifactItem>
+                                        </artifactItems>
+                                    </configuration>
+                                </execution>-->
 
                         </executions>
                     </plugin>

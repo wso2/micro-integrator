@@ -49,6 +49,8 @@ public class AggregatedRequestClient {
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
+
+            System.out.println(" Proxy service URL in Aggregated Response client ======== " + proxyServiceUrl);
             response = operationClient.send(proxyServiceUrl, null,
                                             createMultipleQuoteRequestBody(symbol, no_of_iterations), "urn:getQuote");
         } finally {

@@ -123,7 +123,7 @@ public class TestServerManager {
             if (carbonZip == null) {
                 throw new IllegalArgumentException("carbon zip file cannot find in the given location");
             }
-            carbonHome = carbonServer.setUpCarbonHome(carbonZip);
+            carbonHome = carbonServer.setUpCarbonHome(carbonZip, commandMap.get("startupScript"));
             configureServer();
         }
         log.info("Carbon Home - " + carbonHome);
