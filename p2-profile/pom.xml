@@ -94,9 +94,6 @@
                                     org.wso2.carbon.mediation:org.apache.synapse.transport.vfs.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.mediation:org.apache.synapse.transport.vfs.smb.feature:${carbon.mediation.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.mediators.server.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
@@ -318,10 +315,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.apache.synapse.transport.vfs.feature.group</id>
-                                    <version>${carbon.mediation.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.synapse.transport.vfs.smb.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
                                 </feature>
                                 <feature>

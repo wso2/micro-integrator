@@ -153,7 +153,7 @@ do
 
     echo -en "\t - $goos/$goarch..."
 
-    mi_archive_name="$filename-$build_version-$pos-$parch"
+    mi_archive_name="wso2$filename-cli-$build_version-$pos-$parch"
     mi_archive_dir="${buildPath}/$filename"
     mkdir -p $mi_archive_dir
 
