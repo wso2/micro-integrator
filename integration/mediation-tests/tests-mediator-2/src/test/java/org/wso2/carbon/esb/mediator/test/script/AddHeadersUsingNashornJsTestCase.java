@@ -23,9 +23,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+
 import static org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil.doPost;
 
 /**
@@ -34,57 +36,56 @@ import static org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil.
 public class AddHeadersUsingNashornJsTestCase extends ESBIntegrationTest {
 
     private static final String ADD_HEADER_API = "addHeadersWithNashornJsAPI";
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Adding soap headers by NashornJS with String")
-    public void testAddHeaderUsingString() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Adding soap headers by NashornJS with String") public void testAddHeaderUsingString()
+            throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/xml");
         String payload = "<m:CheckPriceResponse xmlns:m=\"http://services.samples/xsd\">\n"
                 + "<m:stringHead>STRING</m:stringHead>\n" + "    <m:domHead>DOM</m:domHead>\n"
                 + "<m:omHead>OM</m:omHead>\n" + "</m:CheckPriceResponse>";
-        HttpResponse response = doPost(new URL(getApiInvocationURL(ADD_HEADER_API)), payload,
-                httpHeaders);
-        Assert.assertTrue((response.getData().contains("STRING")), "Response does not contain the keyword "
-                + "\"STRING\". Response: " + response.getData());
+        HttpResponse response = doPost(new URL(getApiInvocationURL(ADD_HEADER_API)), payload, httpHeaders);
+        Assert.assertTrue((response.getData().contains("STRING")),
+                "Response does not contain the keyword " + "\"STRING\". Response: " + response.getData());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Adding soap headers by NashornJS with DOMElement")
-    public void testAddHeaderUsingDomElement() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Adding soap headers by NashornJS with DOMElement") public void testAddHeaderUsingDomElement()
+            throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/xml");
         String payload = "<m:CheckPriceResponse xmlns:m=\"http://services.samples/xsd\">\n"
                 + "<m:stringHead>STRING</m:stringHead>\n" + "    <m:domHead>DOM</m:domHead>\n"
                 + "<m:omHead>OM</m:omHead>\n" + "</m:CheckPriceResponse>";
-        HttpResponse response = doPost(new URL(getApiInvocationURL(ADD_HEADER_API)), payload,
-                httpHeaders);
-        Assert.assertTrue((response.getData().contains("DOM")), "Response does not contain the keyword \"DOM\". "
-                + "Response: " + response.getData());
+        HttpResponse response = doPost(new URL(getApiInvocationURL(ADD_HEADER_API)), payload, httpHeaders);
+        Assert.assertTrue((response.getData().contains("DOM")),
+                "Response does not contain the keyword \"DOM\". " + "Response: " + response.getData());
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Adding soap headers by NashornJS with OMElement")
-    public void testAddHeaderUsingOmElement() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Adding soap headers by NashornJS with OMElement") public void testAddHeaderUsingOmElement()
+            throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/xml");
         String payload = "<m:CheckPriceResponse xmlns:m=\"http://services.samples/xsd\">\n"
                 + "<m:stringHead>STRING</m:stringHead>\n" + "    <m:domHead>DOM</m:domHead>\n"
                 + "<m:omHead>OM</m:omHead>\n" + "</m:CheckPriceResponse>";
-        HttpResponse response = doPost(new URL(getApiInvocationURL(ADD_HEADER_API)), payload,
-                httpHeaders);
-        Assert.assertTrue((response.getData().contains("OM")), "Response does not contain the keyword \"OM\". "
-                + "Response: " + response.getData());
+        HttpResponse response = doPost(new URL(getApiInvocationURL(ADD_HEADER_API)), payload, httpHeaders);
+        Assert.assertTrue((response.getData().contains("OM")),
+                "Response does not contain the keyword \"OM\". " + "Response: " + response.getData());
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

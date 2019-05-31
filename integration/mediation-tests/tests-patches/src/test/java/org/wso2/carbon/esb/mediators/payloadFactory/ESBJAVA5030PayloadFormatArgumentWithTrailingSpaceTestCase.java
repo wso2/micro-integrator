@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* WSO2 Inc. licenses this file to you under the Apache License,
-* Version 2.0 (the "License"); you may not use this file except
-* in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.mediators.payloadFactory;
 
 import org.apache.axis2.AxisFault;
@@ -25,7 +25,6 @@ import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException
 import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -42,33 +41,28 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESBJAVA5030PayloadFormatArgumentWithTrailingSpaceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("trailingSpaceAPI");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "invoke service - Trailing space trim check")
-    public void testPayloadFactoryArgsWithTrailingSpaces()
+    @Test(groups = "wso2.esb", description = "invoke service - Trailing space trim check") public void testPayloadFactoryArgsWithTrailingSpaces()
             throws AxisFault, MalformedURLException, AutomationFrameworkException {
 
         //json request payload.
-        String payload = "{\n" +
-                         "  \"input\": { \"value\": \"<abc>sample</abc> \" }\n" +
-                         "}";
+        String payload = "{\n" + "  \"input\": { \"value\": \"<abc>sample</abc> \" }\n" + "}";
 
         Reader data = new StringReader(payload);
         Writer writer = new StringWriter();
 
         String serviceURL = this.getApiInvocationURL("trailingSpaceAPI");
 
-        String response = HttpURLConnectionClient.sendPostRequestAndReadResponse(data,
-                                                                                 new URL(serviceURL), writer, "application/json");
+        String response = HttpURLConnectionClient
+                .sendPostRequestAndReadResponse(data, new URL(serviceURL), writer, "application/json");
 
         assertNotNull(response, "Response is null");
         //should return the response without throwing any errors.

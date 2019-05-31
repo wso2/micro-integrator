@@ -26,147 +26,119 @@ import java.io.IOException;
 
 public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
 
-	@BeforeClass(alwaysRun = true)
-	public void init() throws Exception {
-		super.init();
-	}
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+        super.init();
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void restoreServerConfiguration() throws Exception {
-		super.cleanup();
-	}
+    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+        super.cleanup();
+    }
 
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-	@Test(groups = { "wso2.esb" }, description = "Checking VFSTransportListener not logs the clear password on error")
-	public void testVFSListenerHidePasswordInLog() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Checking VFSTransportListener not logs the clear password on error") public void testVFSListenerHidePasswordInLog()
+            throws Exception {
 
-		addProxyService(AXIOMUtil
-				.stringToOM("<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n"
-						+ "       name=\"HidePasswordListenerProxy\"\n"
-						+ "       transports=\"vfs\"\n"
-						+ "       statistics=\"disable\"\n"
-						+ "       trace=\"disable\"\n"
-						+ "       startOnLoad=\"true\">\n"
-						+ "   <target>\n"
-						+ "      <outSequence>\n"
-						+ "         <property name=\"transport.vfs.ReplyFileName\"\n"
-						+ "                   expression=\"fn:concat(fn:substring-after(get-property('MessageID'), 'urn:uuid:'), '.xml')\"\n"
-						+ "                   scope=\"transport\"/>\n"
-						+ "         <property name=\"OUT_ONLY\" value=\"true\"/>\n"
-						+ "         <send>\n"
-						+ "            <endpoint>\n"
-						+ "               <address uri=\"vfs:smb://username:ClearPassword@localhost/test/out\"/>\n"
-						+ "            </endpoint>\n"
-						+ "         </send>\n"
-						+ "      </outSequence>\n"
-						+ "      <endpoint>\n"
-						+ "         <address uri=\"http://localhost:9000/services/SimpleStockQuoteService\"\n"
-						+ "                  format=\"soap12\"/>\n"
-						+ "      </endpoint>\n"
-						+ "   </target>\n"
-						+ "   <publishWSDL uri=\"file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl\"/>\n"
-						+ "   <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n"
-						+ "   <parameter name=\"transport.PollInterval\">1</parameter>\n"
-						+ "   <parameter name=\"transport.vfs.MoveAfterProcess\">vfs:smb://username:ClearPassword@localhost/test/original</parameter>\n"
-						+ "   <parameter name=\"transport.vfs.FileURI\">vfs:smb://username:ClearPassword@localhost/test/out</parameter>\n"
-						+ "   <parameter name=\"transport.vfs.MoveAfterFailure\">vfs:smb://username:ClearPassword@localhost/test/original</parameter>\n"
-						+ "   <parameter name=\"transport.vfs.FileNamePattern\">.*\\.text</parameter>\n"
-						+ "   <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
-						+ "   <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>\n"
-						+ "   <parameter name=\"ScenarioID\">scenario1</parameter>\n"
-						+ "   <description/>\n" + "</proxy>"));
+        addProxyService(AXIOMUtil.stringToOM(
+                "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"HidePasswordListenerProxy\"\n"
+                        + "       transports=\"vfs\"\n" + "       statistics=\"disable\"\n"
+                        + "       trace=\"disable\"\n" + "       startOnLoad=\"true\">\n" + "   <target>\n"
+                        + "      <outSequence>\n" + "         <property name=\"transport.vfs.ReplyFileName\"\n"
+                        + "                   expression=\"fn:concat(fn:substring-after(get-property('MessageID'), 'urn:uuid:'), '.xml')\"\n"
+                        + "                   scope=\"transport\"/>\n"
+                        + "         <property name=\"OUT_ONLY\" value=\"true\"/>\n" + "         <send>\n"
+                        + "            <endpoint>\n"
+                        + "               <address uri=\"vfs:smb://username:ClearPassword@localhost/test/out\"/>\n"
+                        + "            </endpoint>\n" + "         </send>\n" + "      </outSequence>\n"
+                        + "      <endpoint>\n"
+                        + "         <address uri=\"http://localhost:9000/services/SimpleStockQuoteService\"\n"
+                        + "                  format=\"soap12\"/>\n" + "      </endpoint>\n" + "   </target>\n"
+                        + "   <publishWSDL uri=\"file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl\"/>\n"
+                        + "   <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n"
+                        + "   <parameter name=\"transport.PollInterval\">1</parameter>\n"
+                        + "   <parameter name=\"transport.vfs.MoveAfterProcess\">vfs:smb://username:ClearPassword@localhost/test/original</parameter>\n"
+                        + "   <parameter name=\"transport.vfs.FileURI\">vfs:smb://username:ClearPassword@localhost/test/out</parameter>\n"
+                        + "   <parameter name=\"transport.vfs.MoveAfterFailure\">vfs:smb://username:ClearPassword@localhost/test/original</parameter>\n"
+                        + "   <parameter name=\"transport.vfs.FileNamePattern\">.*\\.text</parameter>\n"
+                        + "   <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
+                        + "   <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>\n"
+                        + "   <parameter name=\"ScenarioID\">scenario1</parameter>\n" + "   <description/>\n"
+                        + "</proxy>"));
 
-		Thread.sleep(3000);
+        Thread.sleep(3000);
 
-		Assert.assertFalse(isClearPassword(),
-				" The password is getting printed in the log in the VFSTransportListener.");
+        Assert.assertFalse(isClearPassword(),
+                " The password is getting printed in the log in the VFSTransportListener.");
 
-	}
+    }
 
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-	@Test(groups = { "wso2.esb" }, description = "Checking VFSTransportSender not logs the clear password on error")
-	public void testVFSSenderHidePasswordInLog() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Checking VFSTransportSender not logs the clear password on error") public void testVFSSenderHidePasswordInLog()
+            throws Exception {
 
-		addProxyService(AXIOMUtil
-				.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-						+ "    <proxy name=\"HidePasswordSenderProxy\"\n"
-						+ "           xmlns=\"http://ws.apache.org/ns/synapse\""
-						+ "           transports=\"https http\"\n"
-						+ "           startOnLoad=\"true\"\n"
-						+ "           trace=\"disable\">\n"
-						+ "        <target>\n"
-						+ "            <inSequence>\n"
-						+ "                <header name=\"To\" value=\"vfs:smb://username:ClearPassword@localhost/test/out\"/>"
-						+ "                <property name=\"OUT_ONLY\" value=\"true\"/>\n"
-						+ "                <property name=\"FORCE_SC_ACCEPTED\" value=\"true\" scope=\"axis2\"/>\n"
-						+ "                <send>\n"
-						+ "                    <endpoint>\n"
-						+ "                        <default trace=\"disable\" format=\"pox\">\n"
-						+ "                            <timeout>\n"
-						+ "                                <duration>1000</duration>\n"
-						+ "                                <responseAction>discard</responseAction>\n"
-						+ "                            </timeout>\n"
-						+ "                            <suspendOnFailure>\n"
-						+ "                                <initialDuration>0</initialDuration>\n"
-						+ "                                <progressionFactor>1.0</progressionFactor>\n"
-						+ "                                <maximumDuration>0</maximumDuration>\n"
-						+ "                            </suspendOnFailure>\n"
-						+ "                        </default>\n"
-						+ "                    </endpoint>\n"
-						+ "                </send>\n"
-						+ "            </inSequence>\n"
-						+ "            <outSequence>\n"
-						+ "                <drop/>\n"
-						+ "            </outSequence>\n"
-						+ "            <faultSequence/>\n"
-						+ "        </target>\n" + "    </proxy>"));
+        addProxyService(AXIOMUtil.stringToOM(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"HidePasswordSenderProxy\"\n"
+                        + "           xmlns=\"http://ws.apache.org/ns/synapse\""
+                        + "           transports=\"https http\"\n" + "           startOnLoad=\"true\"\n"
+                        + "           trace=\"disable\">\n" + "        <target>\n" + "            <inSequence>\n"
+                        + "                <header name=\"To\" value=\"vfs:smb://username:ClearPassword@localhost/test/out\"/>"
+                        + "                <property name=\"OUT_ONLY\" value=\"true\"/>\n"
+                        + "                <property name=\"FORCE_SC_ACCEPTED\" value=\"true\" scope=\"axis2\"/>\n"
+                        + "                <send>\n" + "                    <endpoint>\n"
+                        + "                        <default trace=\"disable\" format=\"pox\">\n"
+                        + "                            <timeout>\n"
+                        + "                                <duration>1000</duration>\n"
+                        + "                                <responseAction>discard</responseAction>\n"
+                        + "                            </timeout>\n"
+                        + "                            <suspendOnFailure>\n"
+                        + "                                <initialDuration>0</initialDuration>\n"
+                        + "                                <progressionFactor>1.0</progressionFactor>\n"
+                        + "                                <maximumDuration>0</maximumDuration>\n"
+                        + "                            </suspendOnFailure>\n" + "                        </default>\n"
+                        + "                    </endpoint>\n" + "                </send>\n"
+                        + "            </inSequence>\n" + "            <outSequence>\n" + "                <drop/>\n"
+                        + "            </outSequence>\n" + "            <faultSequence/>\n" + "        </target>\n"
+                        + "    </proxy>"));
 
-		try {
-			OMElement response = axis2Client
-					.sendSimpleStockQuoteRequest(
-							getProxyServiceURLHttp("HidePasswordSenderProxy"),
-							getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE),
-							"WSO2");
-		} catch (AxisFault e) {
-		}
+        try {
+            OMElement response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("HidePasswordSenderProxy"),
+                            getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        } catch (AxisFault e) {
+        }
 
+        Assert.assertFalse(isClearPassword(), " The password is getting printed in the log VFSTransportSender.");
+    }
 
-		Assert.assertFalse(isClearPassword(),
-				" The password is getting printed in the log VFSTransportSender.");
-	}
+    /**
+     * The wso2carbon.log is used here, coz the LogViewerClient stack
+     * is not logs this exception.
+     *
+     * @return true if the password printed in the log, else false.
+     */
+    private boolean isClearPassword() {
 
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader(
+                    CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "logs"
+                            + File.separator + "wso2carbon.log"));
+            String currentLine;
+            while ((currentLine = reader.readLine()) != null) {
+                if (currentLine.contains("ClearPassword")) {
+                    return true;
+                }
+            }
 
-	/**
-	 * The wso2carbon.log is used here, coz the LogViewerClient stack
-	 * is not logs this exception.
-	 * @return true if the password printed in the log, else false.
-	 */
-	private boolean isClearPassword() {
+        } catch (IOException e) {
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException ex) {
+            }
+        }
 
-		BufferedReader reader = null;
-		try {
-			reader = new BufferedReader(new FileReader(
-					CarbonUtils.getCarbonHome()
-							+ File.separator + "repository"
-							+ File.separator + "logs" + File.separator
-							+ "wso2carbon.log"));
-			String currentLine;
-			while ((currentLine = reader.readLine()) != null) {
-				if (currentLine.contains("ClearPassword")) {
-					return true;
-				}
-			}
-
-		} catch (IOException e) {
-		} finally {
-			try {
-				if (reader != null) {
-					reader.close();
-				}
-			} catch (IOException ex) {
-			}
-		}
-
-		return false;
-	}
+        return false;
+    }
 }

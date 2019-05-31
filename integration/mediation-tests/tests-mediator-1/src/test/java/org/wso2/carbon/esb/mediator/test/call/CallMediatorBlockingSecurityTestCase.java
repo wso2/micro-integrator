@@ -19,15 +19,13 @@ package org.wso2.carbon.esb.mediator.test.call;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import java.io.File;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -36,8 +34,7 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingSecurityTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
@@ -46,9 +43,9 @@ public class CallMediatorBlockingSecurityTestCase extends ESBIntegrationTest {
         verifyLocalEntryExistence("sec_policy_3");
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Call the security endpoint with blocking external calls")
-    public void callMediatorBlockingSecurityTest() throws AxisFault, XPathExpressionException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Call the security endpoint with blocking external calls") public void callMediatorBlockingSecurityTest()
+            throws AxisFault, XPathExpressionException {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callMediatorBlockingEndpointSecurityProxy"), "",
                         "WSO2");
@@ -56,8 +53,7 @@ public class CallMediatorBlockingSecurityTestCase extends ESBIntegrationTest {
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

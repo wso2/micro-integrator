@@ -38,21 +38,20 @@ public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
     private IterateClient client;
     private LogViewerClient logViewer;
 
-    @BeforeClass
-    public void setEnvironment() throws Exception {
+    @BeforeClass public void setEnvironment() throws Exception {
         init();
         client = new IterateClient();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to sequentially transform payload")
-    public void testSequentialExecution() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/foreach/foreach_simple.xml");
+    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to sequentially transform payload") public void testSequentialExecution()
+            throws Exception {
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple.xml");
         logViewer.clearLogs();
 
-        String response = client.send(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), createMultipleSymbolPayLoad(10),
-                "urn:getQuote");
+        String response = client
+                .send(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), createMultipleSymbolPayLoad(10),
+                        "urn:getQuote");
         Assert.assertNotNull(response);
 
         LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
@@ -60,11 +59,12 @@ public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
 
         // Verify logs to check that the order of symbols is same as in the payload. The symbols should be as SYM[1-10]
         // as in payload. Since loop iterates from the last log onwards, verifying whether the symbols are in SYM[10-1] order
-        for (int i = (logs.length- 1); i >= 0; i--) {
+        for (int i = (logs.length - 1); i >= 0; i--) {
             String message = logs[i].getMessage();
             if (message.contains("foreach = in")) {
                 if (!message.contains("SYM" + forEachCount)) {
-                    Assert.fail("Incorrect message entered ForEach scope. Could not find symbol SYM" + forEachCount + " Found : " + message);
+                    Assert.fail("Incorrect message entered ForEach scope. Could not find symbol SYM" + forEachCount
+                            + " Found : " + message);
                 }
                 forEachCount++;
             }
@@ -89,8 +89,7 @@ public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
         return method;
     }
 
-    @AfterClass
-    public void close() throws Exception {
+    @AfterClass public void close() throws Exception {
         client = null;
         super.cleanup();
     }

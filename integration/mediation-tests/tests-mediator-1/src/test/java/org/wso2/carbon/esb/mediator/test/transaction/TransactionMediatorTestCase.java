@@ -51,8 +51,7 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         HttpRequestUtil.doPost(new URL(API_URL + INIT_CONTEXT), "");
     }
 
@@ -61,8 +60,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test commit transaction")
-    public void commitTransactionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test commit transaction") public void commitTransactionTest()
+            throws Exception {
 
         String expectedOutput = "<response><table1/><table2>2</table2></response>";
 
@@ -77,17 +76,16 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test rollback transaction")
-    public void rollbackTransactionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test rollback transaction") public void rollbackTransactionTest()
+            throws Exception {
 
         String expectedOutput = "<response><table1>2</table1><table2>1</table2></response>";
 
         HttpRequestUtil.doPost(new URL(API_URL + ROLLBACK_CONTEXT), "");
-        HttpResponse httpResponse = HttpRequestUtil
-                .doPost(new URL(API_URL + TEST_CONTEXT + "?testEntry=Bob"), "");
+        HttpResponse httpResponse = HttpRequestUtil.doPost(new URL(API_URL + TEST_CONTEXT + "?testEntry=Bob"), "");
 
         Assert.assertEquals(httpResponse.getData(), expectedOutput,
-                            "Rollback transaction fails in transaction mediator");
+                "Rollback transaction fails in transaction mediator");
     }
 
     /**
@@ -95,15 +93,15 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test fault-if-no-tx transaction")
-    public void faultIfNoTxTransactionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test fault-if-no-tx transaction") public void faultIfNoTxTransactionTest()
+            throws Exception {
 
         String expectedOutput = "<response><message>No Transactions</message></response>";
 
         HttpResponse httpResponse = HttpRequestUtil.doPost(new URL(API_URL + FAULT_NOTX_CONTEXT), "");
 
         Assert.assertEquals(httpResponse.getData(), expectedOutput,
-                            "Fault-if-no-tx transaction fails in transaction mediator");
+                "Fault-if-no-tx transaction fails in transaction mediator");
     }
 
     /**
@@ -111,17 +109,16 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for creating new transaction")
-    public void createNewTransactionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for creating new transaction") public void createNewTransactionTest()
+            throws Exception {
 
         String expectedOutput = "<response><table1>3</table1><table2>3</table2></response>";
 
         HttpRequestUtil.doPost(new URL(API_URL + USE_EXISTING_NEW_CONTEXT + "?testEntry=Anne&entryId=3"), "");
-        HttpResponse httpResponse = HttpRequestUtil
-                .doPost(new URL(API_URL + TEST_CONTEXT + "?testEntry=Anne"), "");
+        HttpResponse httpResponse = HttpRequestUtil.doPost(new URL(API_URL + TEST_CONTEXT + "?testEntry=Anne"), "");
 
         Assert.assertEquals(httpResponse.getData(), expectedOutput,
-                            "Use-existing-or-new action fails for creating new transaction in transaction mediator");
+                "Use-existing-or-new action fails for creating new transaction in transaction mediator");
     }
 
     /**
@@ -129,8 +126,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for using an existing transaction")
-    public void useExistingTransactionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for using an existing transaction") public void useExistingTransactionTest()
+            throws Exception {
 
         String expectedOutputForNick = "<response><table1>4</table1><table2>4</table2></response>";
         String expectedOutputForJohn = "<response><table1>5</table1><table2>5</table2></response>";
@@ -145,7 +142,7 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
         boolean satisfyEntryJohn = httpResponseForJohn.getData().equals(expectedOutputForJohn);
 
         Assert.assertTrue(satisfyEntryJohn & satisfyEntryNick,
-                          "Use-existing-or-new action fails for using an existing transaction in transaction mediator");
+                "Use-existing-or-new action fails for using an existing transaction in transaction mediator");
     }
 
     /**
@@ -153,8 +150,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test new action without commit transaction")
-    public void newActionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test new action without commit transaction") public void newActionTest()
+            throws Exception {
 
         String expectedOutput = "<response><table1/><table2/></response>";
 
@@ -162,7 +159,7 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
         HttpResponse httpResponse = HttpRequestUtil.doPost(new URL(API_URL + TEST_CONTEXT + "?testEntry=Max"), "");
 
         Assert.assertEquals(httpResponse.getData(), expectedOutput,
-                            "New action without commit transaction fails in transaction mediator");
+                "New action without commit transaction fails in transaction mediator");
     }
 
     /**
@@ -171,16 +168,15 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend action without commit transaction")
-    public void suspendActionTest() throws Exception {
+    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend action without commit transaction") public void suspendActionTest()
+            throws Exception {
 
         String expectedOutput = "<response><table1/><table2/></response>";
 
         HttpRequestUtil.doPost(new URL(API_URL + SUSPEND_CONTEXT), "");
         HttpResponse httpResponse = HttpRequestUtil.doPost(new URL(API_URL + TEST_CONTEXT + "?testEntry=Mike"), "");
 
-        Assert.assertEquals(httpResponse.getData(), expectedOutput,
-                            "Suspend action fails in transaction mediator");
+        Assert.assertEquals(httpResponse.getData(), expectedOutput, "Suspend action fails in transaction mediator");
     }
 
     /**
@@ -189,12 +185,11 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend and resume actions  transaction")
-    public void suspendResumeActionTest() throws Exception {
+    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend and resume actions  transaction") public void suspendResumeActionTest()
+            throws Exception {
 
         String expectedSuspendActionOutput = "<response1><response><table1/><table2/></response></response1>";
-        String expectedResumeActionOutput =
-                "<response2><response><table1>8</table1><table2>8</table2></response></response2>";
+        String expectedResumeActionOutput = "<response2><response><table1>8</table1><table2>8</table2></response></response2>";
 
         HttpResponse httpResponse = HttpRequestUtil.doPost(new URL(API_URL + SUSPEND_RESUME_CONTEXT), "");
 
@@ -202,7 +197,7 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
         boolean satisfyResumeAction = httpResponse.getData().contains(expectedResumeActionOutput);
 
         Assert.assertEquals(satisfySuspendAction & satisfyResumeAction,
-                            "Suspend and resume actions fail in transaction mediator");
+                "Suspend and resume actions fail in transaction mediator");
     }
 
     /**
@@ -210,8 +205,7 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         HttpRequestUtil.doPost(new URL(API_URL + CLEANUP_CONTEXT), "");
     }
 }

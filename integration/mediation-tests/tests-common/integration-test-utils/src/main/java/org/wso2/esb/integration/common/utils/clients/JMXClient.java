@@ -19,6 +19,9 @@ package org.wso2.esb.integration.common.utils.clients;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.util.Hashtable;
 import javax.management.InstanceNotFoundException;
 import javax.management.ListenerNotFoundException;
 import javax.management.MBeanServerConnection;
@@ -27,9 +30,6 @@ import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 import javax.management.remote.JMXConnectorFactory;
 import javax.management.remote.JMXServiceURL;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.Hashtable;
 
 /**
  * JMX Client which can be used to connect and invoke operations on local JMX Services
@@ -49,10 +49,10 @@ public class JMXClient {
     private static final Log log = LogFactory.getLog(JMXClient.class);
 
     /**
-     * @param connectionName  full name of the service with the connection
-     * @param hostName        host name of the data service server
-     * @param userName        user name
-     * @param password        password
+     * @param connectionName full name of the service with the connection
+     * @param hostName       host name of the data service server
+     * @param userName       user name
+     * @param password       password
      * @throws MalformedObjectNameException - throws if the connection unsuccessful
      */
     public JMXClient(String connectionName, String hostName, String rmiServerPort, String rmiRegistryPort,
@@ -68,7 +68,7 @@ public class JMXClient {
     /**
      * connect to org.wso2.carbon for JMX monitoring
      *
-     * @return  return MBeanServerConnection
+     * @return return MBeanServerConnection
      * @throws java.io.IOException                           - error in making connection
      * @throws javax.management.MalformedObjectNameException - error in making connection
      */
@@ -115,11 +115,11 @@ public class JMXClient {
     }
 
     /**
-     * @param operationName    operation name to be invoked
-     * @param params           parameters for the operation
+     * @param operationName  operation name to be invoked
+     * @param params         parameters for the operation
      * @param signatureTypes array of Strings which contains each parameters' type
-     * @return  results of the operation invocation
-     * @throws Exception  throws if operation invocation fails
+     * @return results of the operation invocation
+     * @throws Exception throws if operation invocation fails
      */
     public Object invoke(String operationName, Object[] params, String[] signatureTypes) throws Exception {
         try {
@@ -134,9 +134,9 @@ public class JMXClient {
     /**
      * Get attribute for the given name
      *
-     * @param attribute  String name of the attribute
-     * @return  Object returned as attribute for the given name
-     * @throws Exception  Throws exception if attribute retrieval failed
+     * @param attribute String name of the attribute
+     * @return Object returned as attribute for the given name
+     * @throws Exception Throws exception if attribute retrieval failed
      */
     public Object getAttribute(String attribute) throws Exception {
         try {

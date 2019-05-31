@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,7 +25,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.util.concurrent.TimeUnit;
@@ -39,29 +38,26 @@ public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(groups = "wso2.esb")
-    public void setEnvironment() throws Exception {
+    @BeforeClass(groups = "wso2.esb") public void setEnvironment() throws Exception {
         super.init();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_functional_context.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry")
-    public void testSequence() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry") public void testSequence()
+            throws Exception {
         logViewer.clearLogs();
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneFunctionalContextTestProxy"), null, "IBM");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneFunctionalContextTestProxy"), null, "IBM");
         Assert.assertNotNull(response);
 
         //Added to ensure that carbon log is updated with required entries
-        Awaitility.await()
-                  .pollInterval(500, TimeUnit.MILLISECONDS)
-                  .atMost(300, TimeUnit.SECONDS)
-                  .until(AvailabilityPollingUtils.isMessageRecived(logViewer));
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(300, TimeUnit.SECONDS)
+                .until(AvailabilityPollingUtils.isMessageRecived(logViewer));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 }

@@ -21,41 +21,37 @@ import junit.framework.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.io.File;
 
 public class ESBJAVA4781EscapeAutoPrimitiveTestCase extends ESBIntegrationTest {
 
-  @BeforeClass(alwaysRun = true)
-  public void setEnvironment() throws Exception {
-    super.init();
-    verifyAPIExistence("FormatterEscapePrimitiveSequenceAPI");
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+        super.init();
+        verifyAPIExistence("FormatterEscapePrimitiveSequenceAPI");
 
-  }
+    }
 
-  @Test(groups = "wso2.esb", description = "Check whether JSON field value auto primitive is escaped if field value starting region " +
-          "is matched with replace regex after flowing through Staxon formatter in passthrough transport | matched starting region" +
-          "will be replaced")
-  public void testJSONEmptyArrayMissingNHTTPTransport() throws Exception {
-    HttpResponse response = HttpRequestUtil.sendGetRequest(getApiInvocationURL("formatterEscapePrimitiveSequenceAPI/escapePrimitive"), null);
-    String expected = "{\"testEscapePrimitive\":{\"integer\":1989,\"float\":1989.9,\"null\":null,\"boolean_true\":true," +
-            "\"boolean_false\":false,\"string\":\"string\",\"integer_escaped\":\"1989\",\"float_escaped\":\"1989.9\",\"null_escaped\":\"null\"," +
-            "\"boolean_true_escaped\":\"true\",\"boolean_false_escaped\":\"false\",\"string_escaped\":\"string\"}}";
+    @Test(groups = "wso2.esb", description =
+            "Check whether JSON field value auto primitive is escaped if field value starting region "
+                    + "is matched with replace regex after flowing through Staxon formatter in passthrough transport | matched starting region"
+                    + "will be replaced") public void testJSONEmptyArrayMissingNHTTPTransport() throws Exception {
+        HttpResponse response = HttpRequestUtil
+                .sendGetRequest(getApiInvocationURL("formatterEscapePrimitiveSequenceAPI/escapePrimitive"), null);
+        String expected =
+                "{\"testEscapePrimitive\":{\"integer\":1989,\"float\":1989.9,\"null\":null,\"boolean_true\":true,"
+                        + "\"boolean_false\":false,\"string\":\"string\",\"integer_escaped\":\"1989\",\"float_escaped\":\"1989.9\",\"null_escaped\":\"null\","
+                        + "\"boolean_true_escaped\":\"true\",\"boolean_false_escaped\":\"false\",\"string_escaped\":\"string\"}}";
 
-    Assert.assertTrue("JSON field value auto primitive has not not been escaped from formatter" +
-            " when if field value starting region is matched with replace regex.", expected.equals(response.getData()));
+        Assert.assertTrue("JSON field value auto primitive has not not been escaped from formatter"
+                        + " when if field value starting region is matched with replace regex.",
+                expected.equals(response.getData()));
 
-  }
+    }
 
-  @AfterClass(alwaysRun = true)
-  public void destroy() throws Exception {
-    super.cleanup();
-  }
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+        super.cleanup();
+    }
 
 }

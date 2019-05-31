@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.esb.https.inbound.transport.test;
 
-
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -26,17 +25,15 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SecureServiceClient;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileNotFoundException;
+import javax.xml.stream.XMLStreamException;
 
 public class HttpsInboundTransportTenantTestCase extends ESBIntegrationTest {
 
     private SecureServiceClient secureAxisServiceClient;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init(TestUserMode.TENANT_ADMIN);
         secureAxisServiceClient = new SecureServiceClient();
         addSequence(getArtifactConfig("TestIn.xml"));
@@ -46,26 +43,22 @@ public class HttpsInboundTransportTenantTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "" )
-    public void testSecureProxyEndPointThruUri() throws Exception {
+    @Test(groups = "wso2.esb", description = "") public void testSecureProxyEndPointThruUri() throws Exception {
 
         OMElement response = secureAxisServiceClient.
-                   sendSecuredStockQuoteRequest(userInfo, "https://localhost:8083/t/wso2.com/", "WSO2", true);
+                sendSecuredStockQuoteRequest(userInfo, "https://localhost:8083/t/wso2.com/", "WSO2", true);
         Assert.assertNotNull(response);
         Assert.assertEquals("getQuoteResponse", response.getLocalName());
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-
     private OMElement getArtifactConfig(String fileName) throws Exception {
         OMElement synapseConfig = null;
-        String path = "artifacts" + File.separator + "ESB" + File.separator
-                      + "https.inbound.transport" + File.separator + fileName;
+        String path = "artifacts" + File.separator + "ESB" + File.separator + "https.inbound.transport" + File.separator
+                + fileName;
         try {
             synapseConfig = esbUtils.loadResource(path);
         } catch (FileNotFoundException e) {
@@ -75,6 +68,5 @@ public class HttpsInboundTransportTenantTestCase extends ESBIntegrationTest {
         }
         return synapseConfig;
     }
-
 
 }

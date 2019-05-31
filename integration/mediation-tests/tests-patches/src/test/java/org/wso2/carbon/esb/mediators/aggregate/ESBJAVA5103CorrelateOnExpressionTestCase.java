@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
@@ -39,15 +38,14 @@ import java.io.InputStreamReader;
  */
 public class ESBJAVA5103CorrelateOnExpressionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         verifyAPIExistence("AggregatorTestAPI");
         verifyAPIExistence("CorrelateOnExpressionTestAPI1");
     }
 
-    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ")
-    public void testAggregateWithCorrelateExpression() throws IOException{
+    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ") public void testAggregateWithCorrelateExpression()
+            throws IOException {
         String expectedOutput1 = "<result><value>value1</value><value>value2</value></result>";
         String expectedOutput2 = "<result><value>value2</value><value>value1</value></result>";
 
@@ -63,15 +61,14 @@ public class ESBJAVA5103CorrelateOnExpressionTestCase extends ESBIntegrationTest
             while ((line = rd.readLine()) != null) {
                 result += line;
             }
-            Assert.assertTrue(expectedOutput1.equals(result) || expectedOutput2.equals(result), "Aggregated response is not correct.");
-        }
-        finally {
+            Assert.assertTrue(expectedOutput1.equals(result) || expectedOutput2.equals(result),
+                    "Aggregated response is not correct.");
+        } finally {
             httpclient.clearRequestInterceptors();
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

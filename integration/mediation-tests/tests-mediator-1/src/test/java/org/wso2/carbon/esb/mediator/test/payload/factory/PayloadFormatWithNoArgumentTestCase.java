@@ -23,8 +23,8 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
 import static org.testng.Assert.assertTrue;
 
@@ -34,29 +34,26 @@ import static org.testng.Assert.assertTrue;
  */
 public class PayloadFormatWithNoArgumentTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         // applying changes to esb - source view
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/payloadmediatype/" +
-                "no_arguments.xml");
+        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/payloadmediatype/" + "no_arguments.xml");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "invoke service - operation echoString")
-    public void invokeServiceFromXmlRequest() throws AxisFault {
+    @Test(groups = "wso2.esb", description = "invoke service - operation echoString") public void invokeServiceFromXmlRequest()
+            throws AxisFault {
 
         AxisServiceClient axisServiceClient = new AxisServiceClient();
 
-        OMElement response = axisServiceClient.sendReceive(createPayload(),
-                contextUrls.getServiceUrl() + "/ProxyPF", "echoString");
+        OMElement response = axisServiceClient
+                .sendReceive(createPayload(), contextUrls.getServiceUrl() + "/ProxyPF", "echoString");
 
-        assertTrue(response.toString().contains("wso2testautomation@wso2.com"), "Response mismatch. " +
-                "Actual Response " + response.toString());
+        assertTrue(response.toString().contains("wso2testautomation@wso2.com"),
+                "Response mismatch. " + "Actual Response " + response.toString());
     }
 
     private OMElement createPayload() {   // creation of payload for echoString

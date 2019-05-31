@@ -40,29 +40,24 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass
-    public void setEnvironment() throws Exception {
+    @BeforeClass public void setEnvironment() throws Exception {
         init();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test multiple foreach constructs with property mediator in flow")
-    public void testForEachPropertyMediator() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test multiple foreach constructs with property mediator in flow") public void testForEachPropertyMediator()
+            throws Exception {
         verifyProxyServiceExistence("foreachPropertyTestProxy");
 
         logViewer.clearLogs();
 
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n" +
-                        "    <soap:Header/>\n" +
-                        "    <soap:Body>\n" +
-                        "        <m0:getQuote>\n" +
-                        "            <m0:request><m0:code>IBM</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" +
-                        "        </m0:getQuote>\n" +
-                        "    </soap:Body>\n" +
-                        "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
+                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
+                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
+                        + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
         sendRequest(getProxyServiceURLHttp("foreachPropertyTestProxy"), request);
 
@@ -114,25 +109,19 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
         assertEquals(verifyCount, 20, "Property log count mismatched");
     }
 
-
-    @Test(groups = "wso2.esb", description = "Test nested foreach constructs with property mediator in flow")
-    public void testNestedForEachPropertiesWithID() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/foreach/nested_foreach_property_mediator.xml");
+    @Test(groups = "wso2.esb", description = "Test nested foreach constructs with property mediator in flow") public void testNestedForEachPropertiesWithID()
+            throws Exception {
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/nested_foreach_property_mediator.xml");
 
         logViewer.clearLogs();
 
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n" +
-                        "    <soap:Header/>\n" +
-                        "    <soap:Body>\n" +
-                        "        <m0:getQuote>\n" +
-                        "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>\n" +
-                        "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n" +
-                        "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n" +
-                        "        </m0:getQuote>\n" +
-                        "    </soap:Body>\n" +
-                        "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
+                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
+                        + "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>\n"
+                        + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
+                        + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
+                        + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
         sendRequest(getMainSequenceURL(), request);
 
@@ -181,19 +170,16 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass
-    public void close() throws Exception {
+    @AfterClass public void close() throws Exception {
         super.cleanup();
     }
 
-    private void sendRequest(String addUrl, String query)
-            throws IOException {
+    private void sendRequest(String addUrl, String query) throws IOException {
         String charset = "UTF-8";
         URLConnection connection = new URL(addUrl).openConnection();
         connection.setDoOutput(true);
         connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type",
-                "application/xml;charset=" + charset);
+        connection.setRequestProperty("Content-Type", "application/xml;charset=" + charset);
         OutputStream output = null;
         try {
             output = connection.getOutputStream();

@@ -27,19 +27,18 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * This test case is testing the following functionality in logging admin.
- *    1. Restore to defaults functionality.
- *    2. Get appender data for an appender name.
+ * 1. Restore to defaults functionality.
+ * 2. Get appender data for an appender name.
  */
 public class Log4jLoggingTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         // start the server in super tenant mode
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Set the global logging to different levels and restore defaults")
-    public void testRestoreDefaults() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set the global logging to different levels and restore defaults") public void testRestoreDefaults()
+            throws Exception {
         LoggingAdminClient loggingAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), sessionCookie);
 
         String logPattern = "[%d] - %x %m {%c}%n";
@@ -48,20 +47,20 @@ public class Log4jLoggingTest extends ESBIntegrationTest {
         loggingAdminClient.updateSystemLog(logLevel, logPattern, true);
         assertEquals(loggingAdminClient.getSysLog().getLogLevel(), logLevel, "Unexpected log level was returned.");
         assertEquals(loggingAdminClient.getSysLog().getLogPattern(), logPattern,
-                     "Unexpected log pattern was returned.");
+                "Unexpected log pattern was returned.");
 
         String defaultLogLevel = LogLevel.ERROR.getLabel();
         String defaultLogPattern = "[%d] %5p - %x %m {%c}%n";
 
         loggingAdminClient.restoreToDefaults();
         assertEquals(loggingAdminClient.getSysLog().getLogLevel(), defaultLogLevel,
-                     "Default log level was not returned.");
+                "Default log level was not returned.");
         assertEquals(loggingAdminClient.getSysLog().getLogPattern(), defaultLogPattern,
-                     "Default log pattern was not returned.");
+                "Default log pattern was not returned.");
     }
 
-    @Test(groups = "wso2.esb", description = "Get Appender data for appender name")
-    public void testGetAppenderData() throws Exception {
+    @Test(groups = "wso2.esb", description = "Get Appender data for appender name") public void testGetAppenderData()
+            throws Exception {
         LoggingAdminClient loggingAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), sessionCookie);
 
         String appenderName = "AUDIT_LOGFILE";

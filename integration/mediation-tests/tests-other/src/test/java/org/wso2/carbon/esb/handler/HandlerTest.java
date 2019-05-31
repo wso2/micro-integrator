@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.handler;
 
 import org.apache.axiom.om.OMElement;
@@ -48,8 +48,7 @@ public class HandlerTest extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         copyToComponentConf(getClass().getResource(LOCATION + "/" + CONF_NAME).getPath(), CONF_NAME);
@@ -59,9 +58,8 @@ public class HandlerTest extends ESBIntegrationTest {
         logViewerClient.clearLogs();
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Sending a Message Via proxy to check synapse handler logs")
-    public void testSynapseHandlerExecution()
+    @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message Via proxy to check synapse handler logs") public void testSynapseHandlerExecution()
             throws IOException, LogViewerLogViewerException {
         boolean requestInStatus = false;
         boolean requestOutStatus = false;
@@ -99,16 +97,15 @@ public class HandlerTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sending a message via proxy to check whether Synapse Handlers get "
-            + "invoked when a SoapFault come as a response")
-    public void testSynapseHandlerExecutionWhenSoapFaultRecieved() throws IOException, LogViewerLogViewerException,
-            InterruptedException {
+    @Test(groups = { "wso2.esb" }, description = "Sending a message via proxy to check whether Synapse Handlers get "
+            + "invoked when a SoapFault come as a response") public void testSynapseHandlerExecutionWhenSoapFaultRecieved()
+            throws IOException, LogViewerLogViewerException, InterruptedException {
         boolean responseInStatus = false;
         boolean errorOnSoapFaultStatus = false;
         logViewerClient.clearLogs();
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxyWithSoapfault"), null,
-                    "WSO2");
+            axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxyWithSoapfault"), null, "WSO2");
             fail("This query must throw an exception since SoapFault come as response");
         } catch (AxisFault expected) {
             assertEquals(expected.getReason(), "Custom ERROR Message", "Custom ERROR Message mismatched");
@@ -134,8 +131,7 @@ public class HandlerTest extends ESBIntegrationTest {
         FileManager.deleteFile(filePath);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         removeFromComponentConf(getClass().getResource(LOCATION + "/" + CONF_NAME).getPath());
         super.cleanup();
     }

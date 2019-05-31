@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*  http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing,
-*  software distributed under the License is distributed on an
-*  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*  KIND, either express or implied.  See the License for the
-*  specific language governing permissions and limitations
-*  under the License.
-*/
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
 package org.wso2.carbon.esb.hotdeployment.test;
 
 import org.apache.commons.io.FileUtils;
@@ -60,16 +60,14 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
         super.init();
         copyArtifactsToDeploymentDirectory();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Proxy Service Hot Deployment")
-    public void testProxyServiceHotDeployment() throws Exception {
+    @Test(groups = "wso2.esb", description = "Proxy Service Hot Deployment") public void testProxyServiceHotDeployment()
+            throws Exception {
         String proxyName = "HotDeploymentTestProxy";
         String proxyServiceFile = SERVER_DEPLOYMENT_DIR + "proxy-services" + File.separator + proxyFileName;
 
@@ -88,9 +86,8 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
                 "Proxy Undeployment failed");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Sequence Hot Deployment")
-    public void testSequenceHotDeployment() throws Exception {
+    @Test(groups = "wso2.esb", description = "Sequence Hot Deployment") public void testSequenceHotDeployment()
+            throws Exception {
         String sequenceName = "HotDeploymentTestSequence";
         String sequenceFile = SERVER_DEPLOYMENT_DIR + "sequences" + File.separator + sequenceFileName;
 
@@ -110,9 +107,8 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
                 "Sequence Undeployment failed");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Endpoint Hot Deployment")
-    public void testEndpointHotDeployment() throws Exception {
+    @Test(groups = "wso2.esb", description = "Endpoint Hot Deployment") public void testEndpointHotDeployment()
+            throws Exception {
         String endpointName = "HotDeploymentTestEndpoint";
         String endpointFile = SERVER_DEPLOYMENT_DIR + "endpoints" + File.separator + endpointFileName;
 
@@ -132,9 +128,7 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
                 "Endpoint Undeployment failed");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "API Hot Deployment")
-    public void testAPIHotDeployment() throws Exception {
+    @Test(groups = "wso2.esb", description = "API Hot Deployment") public void testAPIHotDeployment() throws Exception {
         String apiName = "HotDeploymentTestAPI";
         String apiFile = SERVER_DEPLOYMENT_DIR + "api" + File.separator + apiFileName;
 
@@ -154,9 +148,8 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
                 "API Undeployment failed");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Local Entry Hot Deployment")
-    public void testLocalEntryHotDeployment() throws Exception {
+    @Test(groups = "wso2.esb", description = "Local Entry Hot Deployment") public void testLocalEntryHotDeployment()
+            throws Exception {
         String localEntryName = "HotDeploymentTestLocalEntry";
         String localEntryFile = SERVER_DEPLOYMENT_DIR + "local-entries" + File.separator + localEntryFileName;
 
@@ -175,9 +168,8 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
                 "Local Entry Undeployment failed");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Message Store Hot Deployment")
-    public void testMessageStoreHotDeployment() throws Exception {
+    @Test(groups = "wso2.esb", description = "Message Store Hot Deployment") public void testMessageStoreHotDeployment()
+            throws Exception {
         String messageStoreName = "HotDeploymentTestMessageStore";
         String messageStoreFile = SERVER_DEPLOYMENT_DIR + "message-stores" + File.separator + messageStoreFileName;
 
@@ -196,8 +188,7 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
                 "Message Store Undeployment failed");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
         super.cleanup();
     }
 

@@ -32,36 +32,32 @@ import java.rmi.RemoteException;
  */
 public class ESBJAVA3650_CustomHeaderPreserved_MessageProcessorOutMessage_TestCase extends ESBIntegrationTest {
 
-	private static final String PROXY_SERVICE_NAME = "testProxy";
-	private TCPMonListener tcpMonListener;
+    private static final String PROXY_SERVICE_NAME = "testProxy";
+    private TCPMonListener tcpMonListener;
 
-	@BeforeClass(alwaysRun = true)
-	public void deployeService() throws Exception {
-		super.init();
-		loadESBConfigurationFromClasspath(
-				"/artifacts/ESB/messageProcessorConfig/CustomHeaderPreserved_MessageProcessorOutMessage.xml");
-		isProxyDeployed(PROXY_SERVICE_NAME);
-		tcpMonListener = new TCPMonListener(8999, "localhost", 9000);
-		tcpMonListener.start();
-	}
+    @BeforeClass(alwaysRun = true) public void deployeService() throws Exception {
+        super.init();
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/messageProcessorConfig/CustomHeaderPreserved_MessageProcessorOutMessage.xml");
+        isProxyDeployed(PROXY_SERVICE_NAME);
+        tcpMonListener = new TCPMonListener(8999, "localhost", 9000);
+        tcpMonListener.start();
+    }
 
-	@Test(groups = { "wso2.esb" },
-	      description = "Test whether HTTP headers are not preserved when the message goes through Message store > Message processor")
-	public void testCustomHeaderPreserved_MessageProcessorOutMessage()
-			throws RemoteException,
-			       InterruptedException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test whether HTTP headers are not preserved when the message goes through Message store > Message processor") public void testCustomHeaderPreserved_MessageProcessorOutMessage()
+            throws RemoteException, InterruptedException {
 
-		axis2Client.sendPlaceOrderRequest(getProxyServiceURLHttp(PROXY_SERVICE_NAME), null, "IBM");
-		Thread.sleep(5000);
+        axis2Client.sendPlaceOrderRequest(getProxyServiceURLHttp(PROXY_SERVICE_NAME), null, "IBM");
+        Thread.sleep(5000);
 
-		String inputText = tcpMonListener.getConnectionData().get(1).getInputText().toString();
-		Assert.assertTrue(inputText.contains("customHeader: customHeadervalue"),
-		                  "customHeader:customHeaderValue does not exist in out message of ESB");
-	}
+        String inputText = tcpMonListener.getConnectionData().get(1).getInputText().toString();
+        Assert.assertTrue(inputText.contains("customHeader: customHeadervalue"),
+                "customHeader:customHeaderValue does not exist in out message of ESB");
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void UndeployeService() throws Exception {
-		tcpMonListener.stop();
-		super.cleanup();
-	}
+    @AfterClass(alwaysRun = true) public void UndeployeService() throws Exception {
+        tcpMonListener.stop();
+        super.cleanup();
+    }
 }

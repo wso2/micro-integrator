@@ -38,8 +38,7 @@ public class ESBJAVA4402MessageWithoutPayloadTestCase extends ESBIntegrationTest
     private static final Log log = LogFactory.getLog(ESBJAVA4402MessageWithoutPayloadTestCase.class);
     private static final String PROXY_SERVICE_NAME = "TestProxy";
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/MessageWithoutPayload/synapse.xml");
     }
@@ -52,9 +51,9 @@ public class ESBJAVA4402MessageWithoutPayloadTestCase extends ESBIntegrationTest
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
-    @Test(groups = "wso2.esb")
-    public void testMessageWithoutContentType() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testMessageWithoutContentType()
+            throws Exception {
         // Get target URL
         String strURL = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         // Get SOAP action
@@ -81,8 +80,7 @@ public class ESBJAVA4402MessageWithoutPayloadTestCase extends ESBIntegrationTest
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 

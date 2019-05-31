@@ -23,32 +23,30 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
-
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
-import javax.xml.namespace.QName;
 import java.io.File;
+import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
-public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest{
+public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
 
-    private static final String CLASS_JAR_FIVE_PROPERTIES="org.wso2.carbon.test.mediator.stockmediator-v1.0.jar";
-    private static final String CLASS_JAR_THREE_PROPERTIES="org.wso2.carbon.test.mediator.stockmediator-v1.0.1.jar";
-    private static final String JAR_LOCATION= "/artifacts/ESB/jar";
+    private static final String CLASS_JAR_FIVE_PROPERTIES = "org.wso2.carbon.test.mediator.stockmediator-v1.0.jar";
+    private static final String CLASS_JAR_THREE_PROPERTIES = "org.wso2.carbon.test.mediator.stockmediator-v1.0.1.jar";
+    private static final String JAR_LOCATION = "/artifacts/ESB/jar";
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init();
-        serverConfigurationManager=new ServerConfigurationManager(context);
-        serverConfigurationManager.copyToComponentLib
-                (new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_THREE_PROPERTIES).toURI()));
+        serverConfigurationManager = new ServerConfigurationManager(context);
+        serverConfigurationManager.copyToComponentLib(
+                new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_THREE_PROPERTIES).toURI()));
         serverConfigurationManager.restartGracefully();
 
         super.init();
@@ -56,20 +54,19 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest{
                 "/artifacts/ESB/mediatorconfig/class/class_property_persistence_three_properties.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb","localOnly"}, description = "Class Mediator " +
-                                                           " -Class mediator property persistence -adding properties")
-    public void testMediationPropertyPersistenceAdding() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Class Mediator "
+            + " -Class mediator property persistence -adding properties") public void testMediationPropertyPersistenceAdding()
+            throws Exception {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
-        String lastPrice=response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd","last")).getText();
+        String lastPrice = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-        String symbol=response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd","symbol")).getText();
+        String symbol = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
         //TODO Log Assertion
@@ -84,7 +81,6 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest{
         refer: https://wso2.org/jira/browse/TA-532                  param 3
          */
 
-
         serverConfigurationManager.removeFromComponentLib(CLASS_JAR_THREE_PROPERTIES);
         serverConfigurationManager.copyToComponentLib(
                 new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FIVE_PROPERTIES).toURI()));
@@ -97,14 +93,14 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest{
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/class/class_property_persistence_five_properties.xml");
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),null, "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 
-        lastPrice=response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd","last")).getText();
+        lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
+                .getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-        symbol=response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd","symbol")).getText();
+        symbol = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
+                .getText();
         assertEquals(symbol, "IBM", "Fault: value 'symbol' mismatched");
 
         //TODO Log Assertion
@@ -123,11 +119,9 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest{
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception{
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.removeFromComponentLib(CLASS_JAR_FIVE_PROPERTIES);
-        serverConfigurationManager=null;
+        serverConfigurationManager = null;
     }
 }

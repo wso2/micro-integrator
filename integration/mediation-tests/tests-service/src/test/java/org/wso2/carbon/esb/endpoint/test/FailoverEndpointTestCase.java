@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,7 +22,11 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
@@ -35,15 +39,17 @@ import org.wso2.esb.integration.common.utils.clients.LoadbalanceFailoverClient;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClientUtils;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import javax.activation.DataHandler;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
+import javax.activation.DataHandler;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class FailoverEndpointTestCase extends ESBIntegrationTest {
 
@@ -55,8 +61,7 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server3;
     private LoadbalanceFailoverClient lbClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
@@ -73,27 +78,33 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
 
         axis2Server3.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
         axis2Server3.start();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator + "failoverEndpointConfig" + File.separator + "synapse.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
+                        + "failoverEndpointConfig" + File.separator + "synapse.xml");
 
         //Test weather all the axis2 servers are up and running
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), null,
+                        "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
-        response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:9001/services/SimpleStockQuoteService", null, "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest("http://localhost:9001/services/SimpleStockQuoteService", null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
-        response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:9002/services/SimpleStockQuoteService", null, "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest("http://localhost:9002/services/SimpleStockQuoteService", null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
-        response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:9003/services/SimpleStockQuoteService", null, "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest("http://localhost:9003/services/SimpleStockQuoteService", null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
         lbClient = new LoadbalanceFailoverClient();
 
-        resourceAdminServiceClient = new ResourceAdminServiceClient
-                (context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        resourceAdminServiceClient = new ResourceAdminServiceClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
         uploadResourcesToConfigRegistry();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         log.info("Tests Are Completed");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -113,8 +124,7 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @AfterMethod(groups = "wso2.esb")
-    public void startServersA() throws InterruptedException, IOException {
+    @AfterMethod(groups = "wso2.esb") public void startServersA() throws InterruptedException, IOException {
         if (!axis2Server1.isStarted()) {
             axis2Server1.start();
         }
@@ -127,8 +137,7 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    @BeforeMethod(groups = "wso2.esb")
-    public void startServersB() throws InterruptedException, IOException {
+    @BeforeMethod(groups = "wso2.esb") public void startServersB() throws InterruptedException, IOException {
         if (!axis2Server1.isStarted()) {
             axis2Server1.start();
         }
@@ -141,17 +150,16 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint")
-    public void testSendingFailOverEndpoint() throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint") public void testSendingFailOverEndpoint()
+            throws IOException, InterruptedException {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"),
-                                                                     null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
         axis2Server1.stop();
-        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"),
-                                                           null, "WSO2");
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
         axis2Server1.start();
@@ -171,8 +179,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
             throw new AssertionError("Axis2 Server didn't started with in expected time period.");
         } else {
 
-            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"),
-                                                               null, "WSO2");
+            response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"), null, "WSO2");
             Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
             axis2Server2.start();
@@ -181,7 +189,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
             Thread.sleep(1000);
 
             counter = 0;
-            while (!AxisServiceClientUtils.isServiceAvailable("http://localhost:9002/services/SimpleStockQuoteService")) {
+            while (!AxisServiceClientUtils
+                    .isServiceAvailable("http://localhost:9002/services/SimpleStockQuoteService")) {
                 if (counter > 100) {
                     break;
                 }
@@ -191,25 +200,25 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
             if (counter > 100) {
                 throw new AssertionError("Axis2 Server didn't started with in expected time period.");
             } else {
-                response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"),
-                                                                   null, "WSO2");
+                response = axis2Client
+                        .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"), null, "WSO2");
                 Assert.assertTrue(response.toString().contains("WSO2 Company"));
             }
 
         }
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint in Config Registry")
-    public void testSendingFailOverEndpoint_ConfigReg() throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint in Config Registry") public void testSendingFailOverEndpoint_ConfigReg()
+            throws IOException, InterruptedException {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"),
-                                                                     null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
         axis2Server1.stop();
-        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"),
-                                                           null, "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
         axis2Server1.start();
@@ -229,8 +238,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
             throw new AssertionError("Axis2 Server didn't started with in expected time period.");
         } else {
 
-            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"),
-                                                               null, "WSO2");
+            response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"), null, "WSO2");
             Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
             axis2Server2.start();
@@ -239,7 +248,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
             Thread.sleep(1000);
 
             counter = 0;
-            while (!AxisServiceClientUtils.isServiceAvailable("http://localhost:9002/services/SimpleStockQuoteService")) {
+            while (!AxisServiceClientUtils
+                    .isServiceAvailable("http://localhost:9002/services/SimpleStockQuoteService")) {
                 if (counter > 100) {
                     break;
                 }
@@ -249,17 +259,17 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
             if (counter > 100) {
                 throw new AssertionError("Axis2 Server didn't started with in expected time period.");
             } else {
-                response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"),
-                                                                   null, "WSO2");
+                response = axis2Client
+                        .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"), null,
+                                "WSO2");
                 Assert.assertTrue(response.toString().contains("WSO2 Company"));
             }
 
         }
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"})
-    public void testFailOverEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }) public void testFailOverEndpoint() throws Exception {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
 
         cleanupEndpoints();
@@ -269,16 +279,15 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         endpointDeletionScenario();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint which Suspend Endpoints to Specific Errors")
-    public void testSendingFailOverEndpoint_With_Specific_Errors()
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint which Suspend Endpoints to Specific Errors") public void testSendingFailOverEndpoint_With_Specific_Errors()
             throws IOException, InterruptedException {
         //Check the fail over endpoint is functioning well
-        String response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"),
-                                                          null);
+        String response = lbClient
+                .sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_1"),
-                          "Failover endpoint is working fine, reply is coming from endpoint one");
+                "Failover endpoint is working fine, reply is coming from endpoint one");
 
         //Stop one server to generate a failure in one endpoint
         //But the suspend cant be triggered here. because suspend the endpoint happen only for Timeouts 101504,101508
@@ -286,11 +295,11 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         //since retriesBeforeSuspension is 3
         for (int i = 0; i < 4; i++) {
             try {
-                lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"),
-                                                null, "5000");
+                lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), null,
+                        "5000");
             } catch (AxisFault e) {
                 Assert.assertFalse(e.getMessage().equalsIgnoreCase(ESBTestConstant.READ_TIME_OUT),
-                                   "The client was timeout due to Failover Logic doesn't retry for connection refused");
+                        "The client was timeout due to Failover Logic doesn't retry for connection refused");
             }
 
         }
@@ -312,41 +321,38 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
             //Checaxiaxis2Server1.start()s2Server1.stop()k that the endpoint one is suspended.
             //If reply comes that means not suspended.
             //Because suspend duration of the endpoint is 20 seconds. So reply cant come in this time.
-            response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"),
-                                                       null);
+            response = lbClient
+                    .sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), null);
             Assert.assertNotNull(response);
             Assert.assertFalse(response.toString().contains("Response from server: Server_1"),
-                               "Endpoint 1 is not suspended so reply coming from endpoint 1");
+                    "Endpoint 1 is not suspended so reply coming from endpoint 1");
 
             //Invoke a web service method which will invoke a time out and cause the endpoint to suspend.
-            response = lbClient.sendSleepRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), "3000", "1000000");
+            response = lbClient
+                    .sendSleepRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), "3000", "1000000");
 
             //Invoke a web service method which will invoke a time out and cause the endpoint to suspend.
-            response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"),
-                                                       null);
+            response = lbClient
+                    .sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), null);
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("Response from server: Server_2"),
-                              "Endpoint 1 is suspended so reply coming from endpoint 2");
+                    "Endpoint 1 is suspended so reply coming from endpoint 2");
 
         }
     }
 
-    private void cleanupEndpoints()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void cleanupEndpoints() throws RemoteException, EndpointAdminEndpointAdminException {
         EndpointTestUtils.cleanupDefaultEndpoint(ENDPOINT_NAME, endPointAdminClient);
     }
 
-    private void endpointAdditionScenario()
-            throws Exception {
+    private void endpointAdditionScenario() throws Exception {
         int beforeCount = endPointAdminClient.getEndpointCount();
-        addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                         "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + ENDPOINT_NAME + "\">\n" +
-                                         "    <failover>\n" +
-                                         "        <endpoint name=\"endpoint_urn_uuid_7E71CCD625D839E55A26565478643333-1076628880\">\n" +
-                                         "            <address uri=\"http://webservices.amazon.com/AWSECommerceService/UK/AWSECommerceService.wsdl\"/>\n" +
-                                         "        </endpoint>\n" +
-                                         "    </failover>\n" +
-                                         "</endpoint>"));
+        addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + ENDPOINT_NAME + "\">\n"
+                + "    <failover>\n"
+                + "        <endpoint name=\"endpoint_urn_uuid_7E71CCD625D839E55A26565478643333-1076628880\">\n"
+                + "            <address uri=\"http://webservices.amazon.com/AWSECommerceService/UK/AWSECommerceService.wsdl\"/>\n"
+                + "        </endpoint>\n" + "    </failover>\n" + "</endpoint>"));
 
         int afterCount = endPointAdminClient.getEndpointCount();
         assertEquals(1, afterCount - beforeCount);
@@ -360,8 +366,7 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    private void endpointStatisticsScenario()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void endpointStatisticsScenario() throws RemoteException, EndpointAdminEndpointAdminException {
         try {
             endPointAdminClient.enableEndpointStatistics(ENDPOINT_NAME);
         } catch (EndpointAdminEndpointAdminException e) {
@@ -372,8 +377,7 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         fail("Enabling statistics on a fail-over endpoint did not cause an error");
     }
 
-    private void endpointDeletionScenario()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void endpointDeletionScenario() throws RemoteException, EndpointAdminEndpointAdminException {
         int beforeCount = endPointAdminClient.getEndpointCount();
         endPointAdminClient.deleteEndpoint(ENDPOINT_NAME);
         EndpointTestUtils.assertDefaultEndpointDeletion(beforeCount, endPointAdminClient);
@@ -381,12 +385,13 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
 
     private void uploadResourcesToConfigRegistry() throws Exception {
 
-        resourceAdminServiceClient.addCollection("/_system/config/", "test_ep_config", "",
-                                                 "Contains test Default EP files");
-        resourceAdminServiceClient.addResource(
-                "/_system/config/test_ep_config/failoverEP_Test.xml", "application/xml", "xml files",
-                new DataHandler(new URL("file:///" + getClass().getResource(
-                        "/artifacts/ESB/endpoint/failoverEndpointConfig/failoverEP_Test.xml").getPath())));
+        resourceAdminServiceClient
+                .addCollection("/_system/config/", "test_ep_config", "", "Contains test Default EP files");
+        resourceAdminServiceClient
+                .addResource("/_system/config/test_ep_config/failoverEP_Test.xml", "application/xml", "xml files",
+                        new DataHandler(new URL("file:///" + getClass()
+                                .getResource("/artifacts/ESB/endpoint/failoverEndpointConfig/failoverEP_Test.xml")
+                                .getPath())));
         Thread.sleep(1000);
 
     }

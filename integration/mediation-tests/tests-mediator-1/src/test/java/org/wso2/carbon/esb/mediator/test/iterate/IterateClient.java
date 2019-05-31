@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -26,8 +26,8 @@ import org.apache.axiom.soap.SOAPFactory;
 import org.testng.Assert;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisOperationClient;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
 
 /*
  * This class can be used to send a simple stock quote request and get the
@@ -78,13 +78,13 @@ public class IterateClient {
      * @return
      * @throws java.io.IOException
      */
-    public String getMultipleResponse(String address, String symbol, int iterations)
-            throws IOException {
+    public String getMultipleResponse(String address, String symbol, int iterations) throws IOException {
 
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
-            response = operationClient.send(address, null, createMultipleQuoteRequestBody(symbol, iterations), "urn:getQuote");
+            response = operationClient
+                    .send(address, null, createMultipleQuoteRequestBody(symbol, iterations), "urn:getQuote");
         } finally {
             operationClient.destroy();
         }
@@ -102,13 +102,13 @@ public class IterateClient {
      * @return
      * @throws java.io.IOException
      */
-    public String getMultipleCustomResponse(String address, String symbol, int iterations)
-            throws IOException {
+    public String getMultipleCustomResponse(String address, String symbol, int iterations) throws IOException {
 
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
-            response = operationClient.send(address, null, createMultipleCustomQuoteRequestBody(symbol, iterations), "urn:getQuote");
+            response = operationClient
+                    .send(address, null, createMultipleCustomQuoteRequestBody(symbol, iterations), "urn:getQuote");
         } finally {
             operationClient.destroy();
         }
@@ -126,13 +126,13 @@ public class IterateClient {
      * @return
      * @throws java.io.IOException
      */
-    public String getGetQuotesResponse(String address, String symbol, int iterations)
-            throws IOException {
+    public String getGetQuotesResponse(String address, String symbol, int iterations) throws IOException {
 
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
-            response = operationClient.send(address, null, createGetQuotesRequestBody(symbol, iterations), "urn:getQuote");
+            response = operationClient
+                    .send(address, null, createGetQuotesRequestBody(symbol, iterations), "urn:getQuote");
         } finally {
             operationClient.destroy();
         }
@@ -153,7 +153,6 @@ public class IterateClient {
         method.addChild(value1);
         return method;
     }
-
 
     public OMElement toOMElement(String s) throws XMLStreamException {
         return AXIOMUtil.stringToOM(s);
@@ -188,7 +187,6 @@ public class IterateClient {
         }
         return method;
     }
-
 
     private OMElement createGetQuotesRequestBody(String symbol, int iterations) {
         SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();

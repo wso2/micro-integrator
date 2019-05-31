@@ -18,9 +18,6 @@
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
-import java.util.Iterator;
-import javax.xml.namespace.QName;
-
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -28,6 +25,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
+import java.util.Iterator;
+import javax.xml.namespace.QName;
 
 /**
  * Tests a sequence with a iterate mediator that calls only an 'anonymous'
@@ -38,8 +37,7 @@ public class IterateTargetSequenceTypeTestCase extends ESBIntegrationTest {
 
     private IterateClient client;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         client = new IterateClient();
     }
@@ -51,30 +49,25 @@ public class IterateTargetSequenceTypeTestCase extends ESBIntegrationTest {
         Assert.assertNotNull(response);
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                                                       "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
             OMElement getQuote = (OMElement) iterator.next();
             Assert.assertTrue(getQuote.toString().contains("WSO2"));
         }
-        Assert.assertEquals(i , 2, "Child Element Count mismatched");
+        Assert.assertEquals(i, 2, "Child Element Count mismatched");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for named sequences")
-    public void testNamedSequences() throws Exception {
-        String response = client.getMultipleResponse(
-                getProxyServiceURLHttp("iterateWithNamedSequenceTestProxy"), "WSO2",
-                2);
+    @Test(groups = "wso2.esb", description = "Tests for named sequences") public void testNamedSequences()
+            throws Exception {
+        String response = client
+                .getMultipleResponse(getProxyServiceURLHttp("iterateWithNamedSequenceTestProxy"), "WSO2", 2);
         Assert.assertNotNull(response);
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                                                       "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
@@ -85,8 +78,7 @@ public class IterateTargetSequenceTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         client = null;
         super.cleanup();
     }

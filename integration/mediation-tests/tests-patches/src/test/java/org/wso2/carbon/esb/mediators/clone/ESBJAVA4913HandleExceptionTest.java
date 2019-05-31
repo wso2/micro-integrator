@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
@@ -21,8 +20,7 @@ import java.rmi.RemoteException;
 public class ESBJAVA4913HandleExceptionTest extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true)
-    public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
         // Initializing server configuration
         super.init();
         verifyAPIExistence("ESBJAVA4913testapi");
@@ -32,8 +30,7 @@ public class ESBJAVA4913HandleExceptionTest extends ESBIntegrationTest {
         logViewerClient.clearLogs();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
         // Remove deployed artifact
         super.cleanup();
         // Cleanup all system logs
@@ -46,8 +43,7 @@ public class ESBJAVA4913HandleExceptionTest extends ESBIntegrationTest {
      * @throws InterruptedException
      * @throws RemoteException
      */
-    @Test(groups = "wso2.esb", description = "Check if clone mediator reach error sequence on error.")
-    public void testExceptionHandlingInCloneMediator()
+    @Test(groups = "wso2.esb", description = "Check if clone mediator reach error sequence on error.") public void testExceptionHandlingInCloneMediator()
             throws InterruptedException, IOException, LogViewerLogViewerException {
 
         final String expectedErrorMsg = "This is error sequence from sequenceOne";

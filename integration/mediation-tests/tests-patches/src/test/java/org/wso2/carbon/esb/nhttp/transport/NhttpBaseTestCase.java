@@ -25,7 +25,6 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 import java.nio.file.Paths;
 
@@ -36,19 +35,18 @@ import java.nio.file.Paths;
 public class NhttpBaseTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @BeforeTest(alwaysRun = true)
-    public void startJMSBrokerAndConfigureESB() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @BeforeTest(alwaysRun = true) public void startJMSBrokerAndConfigureESB()
+            throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(
-                Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile());
+        serverConfigurationManager
+                .applyConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile());
 
     }
 
-    @AfterTest(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterTest(alwaysRun = true) public void close() throws Exception {
         serverConfigurationManager.restoreToLastConfiguration();
     }
 }

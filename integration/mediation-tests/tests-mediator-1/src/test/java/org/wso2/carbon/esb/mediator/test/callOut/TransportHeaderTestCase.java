@@ -30,51 +30,45 @@ import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
  * proxy configuration which send messages to an endpoint using call out
  * mediatior. With that there is a transport header set and test check whether
  * it gets added to the request send to the endpoint.
- * */
+ */
 
 public class TransportHeaderTestCase extends ESBIntegrationTest {
-	public WireMonitorServer wireServer;
+    public WireMonitorServer wireServer;
 
-	@BeforeClass(alwaysRun = true)
-	public void setEnvironment() throws Exception {
-		super.init();
-		wireServer = new WireMonitorServer(8991);
-		wireServer.start();
-		loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/callout/transport_headers.xml");
-	}
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+        super.init();
+        wireServer = new WireMonitorServer(8991);
+        wireServer.start();
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/callout/transport_headers.xml");
+    }
 
-	@Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.1")
-	public void testContentTypeSoap11() throws Exception {
-		try {
-			axis2Client.sendSimpleStockQuoteRequest(
-                    getProxyServiceURLHttp("SimpleStockQuote"), null,
+    @Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.1") public void testContentTypeSoap11()
+            throws Exception {
+        try {
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SimpleStockQuote"), null,
                     "transport_header_test");
         } catch (Exception e) {
             log.warn("Error sending SimpleStockQuoteRequest ", e);
         }
         String response = wireServer.getCapturedMessage();
-		Assert.assertNotNull(response);
-		Assert.assertTrue(response
-				.contains("Authorization: Basic cHVubmFkaTpwYXNzd29yZA=="));
-	}
+        Assert.assertNotNull(response);
+        Assert.assertTrue(response.contains("Authorization: Basic cHVubmFkaTpwYXNzd29yZA=="));
+    }
 
-	@Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.2")
-	public void testContentTypeSoap12() throws Exception {
-		try {
-			axis2Client.sendSimpleStockQuoteRequest(
-					getProxyServiceURLHttp("SimpleStockQuote"), null,
-					"transport_header_test");
-		} catch (Exception e) {
+    @Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.2") public void testContentTypeSoap12()
+            throws Exception {
+        try {
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SimpleStockQuote"), null,
+                    "transport_header_test");
+        } catch (Exception e) {
             log.warn("Error sending SimpleStockQuoteRequest ", e);
-		}
-		String response = wireServer.getCapturedMessage();
-		Assert.assertNotNull(response);
-		Assert.assertTrue(response
-				.contains("Authorization: Basic cHVubmFkaTpwYXNzd29yZA=="));
-	}
+        }
+        String response = wireServer.getCapturedMessage();
+        Assert.assertNotNull(response);
+        Assert.assertTrue(response.contains("Authorization: Basic cHVubmFkaTpwYXNzd29yZA=="));
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void stop() throws Exception {
-		super.cleanup();
-	}
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+        super.cleanup();
+    }
 }

@@ -17,10 +17,7 @@
  */
 package org.wso2.carbon.esb.jms.transport.test;
 
-import java.rmi.RemoteException;
-
 import junit.framework.Assert;
-
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -36,67 +33,64 @@ import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
+import java.rmi.RemoteException;
+
 /**
  * This test case is written to track the issue reported in
  * soap fault when doing a JMS transport
- * */
+ */
 public class JMSAccessSOAPFaultDataTestCase extends ESBIntegrationTest {
-	private LogViewerClient logViewerClient = null;
-	private SampleAxis2Server axisServer = null;
+    private LogViewerClient logViewerClient = null;
+    private SampleAxis2Server axisServer = null;
 
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-	@BeforeClass(alwaysRun = true)
-	protected void init() throws Exception {
-		super.init();
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+        super.init();
 
-		axisServer = new SampleAxis2Server("test_axis2_server_9017.xml");
-		axisServer.start();
-		axisServer.deployService(ESBTestConstant.ECHO_SERVICE);
+        axisServer = new SampleAxis2Server("test_axis2_server_9017.xml");
+        axisServer.start();
+        axisServer.deployService(ESBTestConstant.ECHO_SERVICE);
 
-		OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/JMSAXISFault.xml");
-		updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
-		logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/JMSAXISFault.xml");
+        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
+        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
-	}
+    }
 
-	@Test(groups = { "wso2.esb" }, description = "Test whether the fault data can be retrieved by properties such as ERROR_CODE,ERROR_MESSAGE,ERROR_DETAIL  when soap fault received from backend" ,
-			   enabled = false
-	)
-	public void readSOAPFaultDetails() {
-		int beforeLogCount = 0;
-		try {
-			beforeLogCount = logViewerClient.getAllSystemLogs().length;
-			AxisServiceClient client = new AxisServiceClient();
+    @Test(groups = {
+            "wso2.esb" }, description = "Test whether the fault data can be retrieved by properties such as ERROR_CODE,ERROR_MESSAGE,ERROR_DETAIL  when soap fault received from backend", enabled = false) public void readSOAPFaultDetails() {
+        int beforeLogCount = 0;
+        try {
+            beforeLogCount = logViewerClient.getAllSystemLogs().length;
+            AxisServiceClient client = new AxisServiceClient();
 
-			client.fireAndForget(Utils.getIncorrectRequest("Invalid"),
-					getProxyServiceURLHttp("FaultTestProxy"), "echoInt");
-		} catch (Exception e) {
-		} finally {
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-			}
-			String allLogs = "";
-			LogEvent[] logs;
-			try {
-				logs = logViewerClient.getAllSystemLogs();
+            client.fireAndForget(Utils.getIncorrectRequest("Invalid"), getProxyServiceURLHttp("FaultTestProxy"),
+                    "echoInt");
+        } catch (Exception e) {
+        } finally {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+            }
+            String allLogs = "";
+            LogEvent[] logs;
+            try {
+                logs = logViewerClient.getAllSystemLogs();
 
-				for (int i = 0; i < logs.length - beforeLogCount; i++) {
-					allLogs += logs[i].getMessage();
-				}
-			} catch (RemoteException e) {
-			}
-			Assert.assertTrue(allLogs
-					.contains("ERROR_MESSAGE = Invalid value \"Invalid\" for element in"));
-			Assert.assertTrue(allLogs.contains("ERROR_CODE = Client"));
+                for (int i = 0; i < logs.length - beforeLogCount; i++) {
+                    allLogs += logs[i].getMessage();
+                }
+            } catch (RemoteException e) {
+            }
+            Assert.assertTrue(allLogs.contains("ERROR_MESSAGE = Invalid value \"Invalid\" for element in"));
+            Assert.assertTrue(allLogs.contains("ERROR_CODE = Client"));
 
-		}
+        }
 
-	}
+    }
 
-	@AfterClass(alwaysRun = true)
-	protected void cleanup() throws Exception {
-		super.cleanup();
+    @AfterClass(alwaysRun = true) protected void cleanup() throws Exception {
+        super.cleanup();
 
-	}
+    }
 }

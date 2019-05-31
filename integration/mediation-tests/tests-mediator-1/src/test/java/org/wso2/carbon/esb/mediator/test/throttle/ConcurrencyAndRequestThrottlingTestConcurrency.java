@@ -1,28 +1,28 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.throttle;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.carbon.esb.mediator.test.throttle.utils.ConcurrencyAndRequestThrottleTestClient;
 import org.wso2.carbon.esb.mediator.test.throttle.utils.ThrottleTestCounter;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,7 +30,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 public class ConcurrencyAndRequestThrottlingTestConcurrency extends ESBIntegrationTest {
     private final int CONCURRENT_CLIENTS = 10;
@@ -46,12 +45,11 @@ public class ConcurrencyAndRequestThrottlingTestConcurrency extends ESBIntegrati
     private int deniedRequests;
     private ThrottleTestCounter requestThrottledClients;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/throttle/ConcurrencyAndRequestBasedThrottlingConcurrency.xml");
-
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/synapseconfig/throttle/ConcurrencyAndRequestBasedThrottlingConcurrency.xml");
 
         list = Collections.synchronizedList(new ArrayList());
         clients = new Thread[CONCURRENT_CLIENTS];
@@ -62,10 +60,8 @@ public class ConcurrencyAndRequestThrottlingTestConcurrency extends ESBIntegrati
         initClients();         //initialising Axis2Clients
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Use of both concurrency throttling and request rate based throttling -Throttle Concurrent Access",
-          timeOut = 1000 * 60 * 2)
-    public void testConcurrencyAndRequestBasedPolicyThrottlingConcurrency()
+    @Test(groups = "wso2.esb", description = "Use of both concurrency throttling and request rate based throttling -Throttle Concurrent Access", timeOut =
+            1000 * 60 * 2) public void testConcurrencyAndRequestBasedPolicyThrottlingConcurrency()
             throws InterruptedException {
         startClients();
         while (clientsDone.getCount() < CONCURRENT_CLIENTS) {
@@ -85,9 +81,7 @@ public class ConcurrencyAndRequestThrottlingTestConcurrency extends ESBIntegrati
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         clients = null;
         clientsDone = null;
         requestThrottledClients = null;
@@ -95,14 +89,12 @@ public class ConcurrencyAndRequestThrottlingTestConcurrency extends ESBIntegrati
         super.cleanup();
     }
 
-
     private void initClients() {
         for (int i = 0; i < CONCURRENT_CLIENTS; i++) {
-            clients[i] = new Thread(new ConcurrencyAndRequestThrottleTestClient(
-                    getMainSequenceURL(), list, clientsDone, requestThrottledClients, THROTTLE_MAX_MSG_COUNT));
+            clients[i] = new Thread(new ConcurrencyAndRequestThrottleTestClient(getMainSequenceURL(), list, clientsDone,
+                    requestThrottledClients, THROTTLE_MAX_MSG_COUNT));
         }
     }
-
 
     private void startClients() {
         for (int i = 0; i < CONCURRENT_CLIENTS; i++) {

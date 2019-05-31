@@ -23,10 +23,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.esb.integration.common.utils.clients.GreenMailClient;
-import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.esb.integration.common.utils.clients.GreenMailClient;
+import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 
 import java.io.File;
 import java.sql.Timestamp;
@@ -44,13 +44,12 @@ public class MailToTransportActionAfterFailureDELETETestCase extends ESBIntegrat
     private static GreenMailClient greenMailClient;
     private static GreenMailUser greenMailUser;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport" +
-                File.separator + "mailTransportReceiver" + File.separator +
-                "mail_transport_actionafter_failure_delete.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
+                        + File.separator + "mailTransportReceiver" + File.separator
+                        + "mail_transport_actionafter_failure_delete.xml");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
@@ -61,8 +60,9 @@ public class MailToTransportActionAfterFailureDELETETestCase extends ESBIntegrat
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test email transport received action after failure delete")
-    public void testEmailTransportActionAfterFailureDELETE() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test email transport received action after failure delete") public void testEmailTransportActionAfterFailureDELETE()
+            throws Exception {
         logViewerClient.clearLogs();
         Date date = new Date();
         emailSubject = "Failure Delete : " + new Timestamp(date.getTime());
@@ -74,8 +74,7 @@ public class MailToTransportActionAfterFailureDELETETestCase extends ESBIntegrat
         assertTrue(GreenMailServer.checkEmailDeleted(emailSubject, "imap"), "Mail has not been deleted successfully");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
 
     }

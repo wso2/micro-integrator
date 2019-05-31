@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -35,39 +35,35 @@ import java.io.FileInputStream;
  */
 public class TenantCachableDurationTestCase extends ESBIntegrationTest {
 
-	Logger logger = Logger.getLogger(TenantCachableDurationTestCase.class);
-	private String registryContents;
+    Logger logger = Logger.getLogger(TenantCachableDurationTestCase.class);
+    private String registryContents;
 
-	@BeforeClass(alwaysRun = true)
-	protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
 
-		super.init(userMode.TENANT_USER);
+        super.init(userMode.TENANT_USER);
 
-		String sourceFile = System.getProperty("carbon.home") + File.separator +
-		                    "repository/tenants/" +
-		                    "1" +
-		                    "/synapse-configs/default/registry.xml";
+        String sourceFile = System.getProperty("carbon.home") + File.separator + "repository/tenants/" + "1"
+                + "/synapse-configs/default/registry.xml";
 
-		FileInputStream inputStream = new FileInputStream(sourceFile);
-		try {
-			registryContents = IOUtils.toString(inputStream);
-		} finally {
-			IOUtils.closeQuietly(inputStream);
-		}
-	}
+        FileInputStream inputStream = new FileInputStream(sourceFile);
+        try {
+            registryContents = IOUtils.toString(inputStream);
+        } finally {
+            IOUtils.closeQuietly(inputStream);
+        }
+    }
 
-	@Test(groups = "wso2.esb", description = "cachableDuration property test for tenants")
-	public void testSynapseConfig() throws Exception {
-		boolean status = false;
-		if (registryContents.contains("cachableDuration")) {
-			status = true;
-		}
-		Assert.assertTrue(status);
-	}
+    @Test(groups = "wso2.esb", description = "cachableDuration property test for tenants") public void testSynapseConfig()
+            throws Exception {
+        boolean status = false;
+        if (registryContents.contains("cachableDuration")) {
+            status = true;
+        }
+        Assert.assertTrue(status);
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void unDeployService() throws Exception {
-		//un deploying deployed artifact
-		super.cleanup();
-	}
+    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+        //un deploying deployed artifact
+        super.cleanup();
+    }
 }

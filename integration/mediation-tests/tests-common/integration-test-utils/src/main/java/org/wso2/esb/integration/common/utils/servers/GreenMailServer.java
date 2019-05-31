@@ -157,7 +157,7 @@ public class GreenMailServer {
      * @param emailSubject Email subject
      * @param protocol     protocol used to connect to the server
      * @return
-     * @throws MessagingException if we're unable to connect to the store
+     * @throws MessagingException   if we're unable to connect to the store
      * @throws InterruptedException if thread sleep fails
      */
     public static boolean checkEmailDeleted(String emailSubject, String protocol, GreenMailUser user)
@@ -178,8 +178,9 @@ public class GreenMailServer {
 
     /**
      * Overloaded method to check deletion of mail in the primary user's store
+     *
      * @param emailSubject Email subject
-     * @param protocol protocol used to connect to the server
+     * @param protocol     protocol used to connect to the server
      * @return
      * @throws MessagingException
      * @throws InterruptedException
@@ -195,7 +196,7 @@ public class GreenMailServer {
      * @param emailSubject Email subject
      * @param protocol     protocol used to connect to the server
      * @return
-     * @throws MessagingException if we're unable to connect to the store
+     * @throws MessagingException   if we're unable to connect to the store
      * @throws InterruptedException if thread sleep fails
      */
     public static boolean checkEmailMoved(String emailSubject, String protocol, GreenMailUser user)
@@ -215,6 +216,7 @@ public class GreenMailServer {
 
     /**
      * Overloaded method to check moving of mail in the primary user's store
+     *
      * @param emailSubject Email subject
      * @param protocol     protocol used to connect to the server
      * @return
@@ -256,6 +258,7 @@ public class GreenMailServer {
 
     /**
      * Overloaded method to delete all the mails in the primary user's store
+     *
      * @param protocol
      * @throws MessagingException
      */
@@ -267,8 +270,8 @@ public class GreenMailServer {
      * Check whether email received by reading the emails.
      *
      * @param protocol to connect to the store
-     * @param user whose mail store should be connected
-     * @param subject the subject of the mail to search
+     * @param user     whose mail store should be connected
+     * @param subject  the subject of the mail to search
      * @return
      * @throws MessagingException when unable to connect to the store
      */

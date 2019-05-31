@@ -42,29 +42,26 @@ import static org.testng.Assert.assertNotNull;
 
 public class ClassMediationWithLoadOfPropertiesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/class/class_mediation_with_twenty_properties.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb","localOnly"}, description = "Class Mediator " +
-                                  " -Class mediator which has a load of properties to be passed and mediation")
-    public void testMediationWithLoadOfProperties()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Class Mediator "
+            + " -Class mediator which has a load of properties to be passed and mediation") public void testMediationWithLoadOfProperties()
             throws IOException, PropertiesAdminServiceRegistryExceptionException,
-                   ResourceAdminServiceExceptionException, XMLStreamException,
-                   InterruptedException {
+            ResourceAdminServiceExceptionException, XMLStreamException, InterruptedException {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
-        String lastPrice=response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd","last")).getText();
+        String lastPrice = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-        String symbol=response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd","symbol")).getText();
+        String symbol = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
         //TODO Log Assertion
@@ -85,9 +82,7 @@ public class ClassMediationWithLoadOfPropertiesTestCase extends ESBIntegrationTe
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception{
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

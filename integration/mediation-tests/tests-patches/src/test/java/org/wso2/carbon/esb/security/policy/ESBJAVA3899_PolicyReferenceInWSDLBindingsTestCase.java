@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -35,49 +35,45 @@ import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 public class ESBJAVA3899_PolicyReferenceInWSDLBindingsTestCase extends ESBIntegrationTest {
-	private String carFileName = "SecurityPolicyWSDLBindingCapp_1.0.0.car";
+    private String carFileName = "SecurityPolicyWSDLBindingCapp_1.0.0.car";
 
-	@BeforeClass
-	protected void init() throws Exception {
-		super.init();
-		uploadResourcesToConfigRegistry();
+    @BeforeClass protected void init() throws Exception {
+        super.init();
+        uploadResourcesToConfigRegistry();
 
-		String cappPath = Paths.get(getESBResourceLocation(), "car", carFileName).toString();
-		uploadCapp(carFileName, new DataHandler(new FileDataSource(new File(cappPath))));
-		TimeUnit.SECONDS.sleep(5);
-		log.info(carFileName + " uploaded successfully");
-	}
+        String cappPath = Paths.get(getESBResourceLocation(), "car", carFileName).toString();
+        uploadCapp(carFileName, new DataHandler(new FileDataSource(new File(cappPath))));
+        TimeUnit.SECONDS.sleep(5);
+        log.info(carFileName + " uploaded successfully");
+    }
 
-	@Test(groups = "wso2.esb", description = "Verify whether the WSDL Bindings contain Policyreference element when security policy is added via capp.")
-	public void testPolicyReferenceInWSDLBindings() throws IOException, InterruptedException {
-		String epr = "http://localhost:8280/services/SecpolicyCappTest?wsdl";
-		final SimpleHttpClient httpClient = new SimpleHttpClient();
-		HttpResponse response = httpClient.doGet(epr, null);
-		Thread.sleep(4000);
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-		response.getEntity().writeTo(bos);
-		String wsdlResponse = new String(bos.toByteArray());
+    @Test(groups = "wso2.esb", description = "Verify whether the WSDL Bindings contain Policyreference element when security policy is added via capp.") public void testPolicyReferenceInWSDLBindings()
+            throws IOException, InterruptedException {
+        String epr = "http://localhost:8280/services/SecpolicyCappTest?wsdl";
+        final SimpleHttpClient httpClient = new SimpleHttpClient();
+        HttpResponse response = httpClient.doGet(epr, null);
+        Thread.sleep(4000);
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        response.getEntity().writeTo(bos);
+        String wsdlResponse = new String(bos.toByteArray());
 
-		CharSequence expectedTag = "PolicyReference";
-		Assert.assertTrue(wsdlResponse.contains(expectedTag));
-	}
+        CharSequence expectedTag = "PolicyReference";
+        Assert.assertTrue(wsdlResponse.contains(expectedTag));
+    }
 
-	private void uploadResourcesToConfigRegistry() throws Exception {
-		ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-		                                                                                     contextUrls.getBackEndUrl(),
-		                                                                                     getSessionCookie());
+    private void uploadResourcesToConfigRegistry() throws Exception {
+        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), getSessionCookie());
 
-		String resourcePath =
-				Paths.get(getESBResourceLocation(), "security", "ESBJAVA3899", "server-policy.xml").toString();
-		resourceAdminServiceStub.addResource("/_system/config/repository/server-policy.xml",
-		                                     "application/xml",
-		                                     "policy file",
-											new DataHandler(new FileDataSource(new File(resourcePath))));
-		Thread.sleep(4000);
-	}
+        String resourcePath = Paths.get(getESBResourceLocation(), "security", "ESBJAVA3899", "server-policy.xml")
+                .toString();
+        resourceAdminServiceStub
+                .addResource("/_system/config/repository/server-policy.xml", "application/xml", "policy file",
+                        new DataHandler(new FileDataSource(new File(resourcePath))));
+        Thread.sleep(4000);
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void destroy() throws Exception {
-		super.cleanup();
-	}
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+        super.cleanup();
+    }
 }

@@ -28,8 +28,7 @@ import static org.testng.Assert.assertTrue;
 
 public class SourceXpathTargetXpath extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CallOutMediatorXPathProxy");
@@ -48,8 +47,7 @@ public class SourceXpathTargetXpath extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -31,95 +31,90 @@ import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClie
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.File;
-import java.net.URL;
 import java.rmi.RemoteException;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
 /**
  * Related to https://wso2.org/jira/browse/ESBJAVA-3291
- * This class tests whether the SpringMediator throws proper error while the 
- * custom java class having any problem. 
+ * This class tests whether the SpringMediator throws proper error while the
+ * custom java class having any problem.
  */
 public class SpringMediationBeansTestCase extends ESBIntegrationTest {
 
-	private final String SPRING_XML_LOCATION =  "/artifacts/ESB/mediatorconfig/spring";
- 
-	private LogViewerClient logViewerClient;
+    private final String SPRING_XML_LOCATION = "/artifacts/ESB/mediatorconfig/spring";
 
-	@BeforeClass(alwaysRun = true)
-	public void setEnvironment() throws Exception {
+    private LogViewerClient logViewerClient;
 
-		super.init();
-		clearUploadedResource();
-		uploadResourcesToConfigRegistry();
-		loadESBConfigurationFromClasspath(SPRING_XML_LOCATION + "/spring_mediation_error.xml");
-		logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
-	}
+        super.init();
+        clearUploadedResource();
+        uploadResourcesToConfigRegistry();
+        loadESBConfigurationFromClasspath(SPRING_XML_LOCATION + "/spring_mediation_error.xml");
+        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
-	@AfterClass(alwaysRun = true)
-	public void destroy() throws Exception {
-		try {
-			clearUploadedResource();
-		} finally {
+    }
+
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+        try {
+            clearUploadedResource();
+        } finally {
             super.cleanup();
-		}
-	}
+        }
+    }
 
-	@SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-	@Test(groups = { "wso2.esb", "localOnly" }, description = "Spring Mediator - Provide proper error message when problem in the custom java class")
-	public void testBeanSpringMediation() throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator - Provide proper error message when problem in the custom java class") public void testBeanSpringMediation()
+            throws AxisFault {
 
-		// To check whether the correct error message is getting printed 
-		boolean responseInLog = false;
+        // To check whether the correct error message is getting printed
+        boolean responseInLog = false;
 
-		try {
-			axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null,
-					"IBM");
+        try {
+            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 
-		} catch (Exception axisFault) {
-			try {
-				LogEvent[] logs = logViewerClient.getAllSystemLogs();
-				for (LogEvent logEvent : logs) {
-					String message = logEvent.getMessage();
-					if (message
-							.contains("Error in org.wso2.carbon.test.mediator.errorMediator.ErrorMediator")) {
-						responseInLog = true;
-						break;
-					}
-				}
+        } catch (Exception axisFault) {
+            try {
+                LogEvent[] logs = logViewerClient.getAllSystemLogs();
+                for (LogEvent logEvent : logs) {
+                    String message = logEvent.getMessage();
+                    if (message.contains("Error in org.wso2.carbon.test.mediator.errorMediator.ErrorMediator")) {
+                        responseInLog = true;
+                        break;
+                    }
+                }
 
-				Assert.assertTrue(
-						responseInLog,
-						" Fault: Error message mismatched, expected 'Error in org.wso2.carbon.test.mediator.errorMediator.ErrorMediator'");
+                Assert.assertTrue(responseInLog,
+                        " Fault: Error message mismatched, expected 'Error in org.wso2.carbon.test.mediator.errorMediator.ErrorMediator'");
 
-			} catch (RemoteException e) {}
-		}
+            } catch (RemoteException e) {
+            }
+        }
 
-	}
+    }
 
-	private void uploadResourcesToConfigRegistry() throws Exception {
+    private void uploadResourcesToConfigRegistry() throws Exception {
 
-		ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-				contextUrls.getBackEndUrl(), getSessionCookie());
+        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), getSessionCookie());
 
-		resourceAdminServiceStub.deleteResource("/_system/config/spring");
-		resourceAdminServiceStub.addCollection("/_system/config/", "spring",
-				"", "Contains spring bean config files");
-		
-		resourceAdminServiceStub.addResource(
-				"/_system/config/spring/spring_bean_for_error_client.xml","application/xml", "spring bean config files",
-                new DataHandler(new FileDataSource( new File(getClass().getResource(
-                				SPRING_XML_LOCATION +  "/utils/spring_bean_for_error_client.xml").getPath()))));
-	}
+        resourceAdminServiceStub.deleteResource("/_system/config/spring");
+        resourceAdminServiceStub.addCollection("/_system/config/", "spring", "", "Contains spring bean config files");
 
-	private void clearUploadedResource() throws InterruptedException,
-			ResourceAdminServiceExceptionException, RemoteException {
+        resourceAdminServiceStub
+                .addResource("/_system/config/spring/spring_bean_for_error_client.xml", "application/xml",
+                        "spring bean config files", new DataHandler(new FileDataSource(new File(
+                                getClass().getResource(SPRING_XML_LOCATION + "/utils/spring_bean_for_error_client.xml")
+                                        .getPath()))));
+    }
 
-		ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-				contextUrls.getBackEndUrl(), getSessionCookie());
+    private void clearUploadedResource()
+            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException {
 
-		resourceAdminServiceStub.deleteResource("/_system/config/spring");
-	}
+        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), getSessionCookie());
+
+        resourceAdminServiceStub.deleteResource("/_system/config/spring");
+    }
 }

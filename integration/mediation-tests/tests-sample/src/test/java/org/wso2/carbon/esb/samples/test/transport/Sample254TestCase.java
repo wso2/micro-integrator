@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.samples.test.transport;
 
 import org.apache.commons.io.FileUtils;
@@ -50,8 +50,7 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
 
     private File outfile;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         // Create folders
         pathToVfsDir = getESBResourceLocation() + File.separator + "sample_254" + File.separator;
@@ -80,12 +79,11 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
 
         AutomationContext context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         serverManager = new ServerConfigurationManager(context);
-        serverManager.applyConfiguration(new File(getESBResourceLocation() + File.separator +
-                                                  "sample_254" + File.separator + "axis2.xml"));
+        serverManager.applyConfiguration(
+                new File(getESBResourceLocation() + File.separator + "sample_254" + File.separator + "axis2.xml"));
 
         super.init();
-        synapseConfigAdminClient =
-            new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         oldSynapseConfig = synapseConfigAdminClient.getConfiguration();
 
         File newSynapseFile = Paths.get(getESBResourceLocation(), "samples", "synapse_sample_254.xml").toFile();
@@ -94,19 +92,14 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
 
         // Update synapse config
         synapseConfig = synapseConfig.replace("/home/user/test/in", inFolder.getAbsolutePath())
-                                     .replace("/home/user/test/original",
-                                              originalFolder.getAbsolutePath())
-                                     .replace("/home/user/test/out",
-                                              outFolder.getAbsolutePath() + File.separator +
-                                              "out.xml"
-                                     );
+                .replace("/home/user/test/original", originalFolder.getAbsolutePath())
+                .replace("/home/user/test/out", outFolder.getAbsolutePath() + File.separator + "out.xml");
 
         synapseConfigAdminClient.updateConfiguration(synapseConfig);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" }, description = "Testing VFS transport")
-    public void testVfsTransport() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Testing VFS transport") public void testVfsTransport() throws Exception {
         File sourceFile = new File(pathToVfsDir + "test.xml");
         File targetFile = new File(inFolder.getAbsolutePath() + File.separator + "test.xml");
         outfile = new File(outFolder.getAbsolutePath() + File.separator + "out.xml");
@@ -122,16 +115,14 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
 
         FileUtils.deleteDirectory(outFolder);
         FileUtils.deleteDirectory(inFolder);
         FileUtils.deleteDirectory(originalFolder);
 
-        synapseConfigAdminClient =
-            new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         synapseConfigAdminClient.updateConfiguration(oldSynapseConfig);
 
         serverManager.restoreToLastConfiguration();

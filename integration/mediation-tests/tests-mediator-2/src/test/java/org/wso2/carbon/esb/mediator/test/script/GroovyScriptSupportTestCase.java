@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.script;
 
 import org.apache.axiom.om.OMElement;
@@ -34,35 +34,30 @@ import static org.testng.Assert.assertNotNull;
 public class GroovyScriptSupportTestCase extends ESBIntegrationTest {
     private JSONClient jsonclient;
 
-    @BeforeClass(alwaysRun = true)
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Script Mediator -Run a Groovy script with the mediator",enabled =false)
-    public void testGroovyScriptMediation() throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
-                getProxyServiceURLHttp("scriptMediatorGroovyBasicTestProxy"), null,
-                "IBM");
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Script Mediator -Run a Groovy script with the mediator", enabled = false) public void testGroovyScriptMediation()
+            throws Exception {
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("scriptMediatorGroovyBasicTestProxy"), null, "IBM");
 
-        String lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
-                .getText();
+        String lastPrice = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-        String symbol = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
-                .getText();
+        String symbol = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "IBM", "Fault: value 'symbol' mismatched");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Script Mediator -Run a Groovy script with setPayloadJson",enabled =false)
-    public void testGroovySetPayloadJson() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Script Mediator -Run a Groovy script with setPayloadJson", enabled = false) public void testGroovySetPayloadJson()
+            throws Exception {
 
         String query = "{\"key\":\"value\"}";
         String addUrl = getProxyServiceURLHttps("scriptMediatorGroovySetJsonPayloadTestProxy");
@@ -73,10 +68,8 @@ public class GroovyScriptSupportTestCase extends ESBIntegrationTest {
         assertEquals(actualResult, expectedResult, "Fault: value 'symbol' mismatched");
     }
 
-    @AfterClass(alwaysRun = true)
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void destroy() throws Exception {
         super.cleanup();
     }
 

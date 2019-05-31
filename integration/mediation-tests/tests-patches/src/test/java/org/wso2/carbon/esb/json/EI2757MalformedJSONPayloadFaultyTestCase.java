@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package org.wso2.carbon.esb.json;
+
 import org.apache.http.HttpResponse;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -22,30 +23,35 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
+
 import java.io.File;
+
 import static org.testng.Assert.assertEquals;
+
 /*
 This testcase is to test the fix done for https://github.com/wso2/product-ei/issues/2757
 */
 public class EI2757MalformedJSONPayloadFaultyTestCase extends ESBIntegrationTest {
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" +
-                File.separator + "json" + File.separator + "malformedJsonFaulty.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "json" + File.separator
+                        + "malformedJsonFaulty.xml");
     }
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.esb", description = "test malformed json in faulty sequence",  enabled = true)
-    public void testMalformedJSONPayloadInFaultySequence() throws Exception {
+
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description = "test malformed json in faulty sequence", enabled = true) public void testMalformedJSONPayloadInFaultySequence()
+            throws Exception {
         String payload = "{\"Symbol\": \"IBM}";
-        HttpResponse response = httpClient.doPost(getApiInvocationURL("malformedJson")
-                , null, payload, "application/json");
+        HttpResponse response = httpClient
+                .doPost(getApiInvocationURL("malformedJson"), null, payload, "application/json");
         assertEquals(response.getStatusLine().getStatusCode(), 500,
                 "The status code set in the faulty sequence is not received");
     }
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

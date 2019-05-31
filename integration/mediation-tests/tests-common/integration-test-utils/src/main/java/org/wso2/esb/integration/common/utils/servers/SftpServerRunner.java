@@ -33,8 +33,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * SSHD based SFTP server implementation for EI testing.
@@ -52,7 +50,7 @@ public class SftpServerRunner {
         thread.start();
     }
 
-    public void stop(){
+    public void stop() {
         sftpServer.stop();
     }
 
@@ -72,16 +70,15 @@ public class SftpServerRunner {
             this.ftpPassword = ftpPassword;
         }
 
-        @Override
-        public void run() {
+        @Override public void run() {
             sshd.setPort(port);
             sshd.setSubsystemFactories(Arrays.<NamedFactory<Command>>asList(new SftpSubsystem.Factory()));
             sshd.setCommandFactory(new ScpCommandFactory());
             sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
             sshd.setFileSystemFactory(new VirtualFileSystemFactory(path));
             sshd.setPasswordAuthenticator(new PasswordAuthenticator() {
-                @Override
-                public boolean authenticate(final String username, final String password, final ServerSession session) {
+                @Override public boolean authenticate(final String username, final String password,
+                        final ServerSession session) {
                     return StringUtils.equals(username, ftpUser) && StringUtils.equals(password, ftpPassword);
                 }
             });

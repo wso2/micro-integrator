@@ -16,16 +16,15 @@
 
 package org.wso2.esb.integration.services.jaxrs.coffeesample.bean;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Order")
-public class Order {
+@XmlRootElement(name = "Order") public class Order {
 
     private String orderId;
 
@@ -50,6 +49,7 @@ public class Order {
     public String getOrderId() {
         return orderId;
     }
+
     public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
@@ -60,7 +60,7 @@ public class Order {
 
     public void setDrinkName(String drinkName) {
         this.drinkName = drinkName;
-//        this.setCost(calculateCost());
+        //        this.setCost(calculateCost());
         this.timestamp = System.currentTimeMillis();
     }
 
@@ -70,7 +70,7 @@ public class Order {
 
     public void setAdditions(String additions) {
         this.additions = additions;
-//        this.setCost(calculateCost());
+        //        this.setCost(calculateCost());
         this.timestamp = System.currentTimeMillis();
     }
 

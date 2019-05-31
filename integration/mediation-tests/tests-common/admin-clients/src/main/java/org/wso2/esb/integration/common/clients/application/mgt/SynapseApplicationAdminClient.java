@@ -31,7 +31,6 @@ public class SynapseApplicationAdminClient {
     private SynapseApplicationAdminStub applicationAdminStub;
     private String serviceName = "SynapseApplicationAdmin";
 
-
     public SynapseApplicationAdminClient(String backendUrl, String sessionCookie) throws AxisFault {
         String endpoint = backendUrl + serviceName;
         try {
@@ -43,7 +42,6 @@ public class SynapseApplicationAdminClient {
             throw new AxisFault(msg, axisFault);
         }
     }
-
 
     public SynapseApplicationMetadata getSynapseAppData(String appName) throws RemoteException, ExceptionException {
         try {

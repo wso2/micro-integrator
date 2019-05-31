@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.endpoint.test;
 
@@ -54,16 +54,16 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private SampleAxis2Server axis2Server1;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator + "defaultEndpointConfig" + File.separator + "synapse.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
+                        + "defaultEndpointConfig" + File.separator + "synapse.xml");
 
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
 
-        resourceAdminServiceClient = new ResourceAdminServiceClient
-                (context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        resourceAdminServiceClient = new ResourceAdminServiceClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
         uploadResourcesToConfigRegistry();
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
@@ -72,8 +72,7 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         resourceAdminServiceClient.deleteResource("/_system/config/test_ep_config");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -84,9 +83,8 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"})
-    public void testDefaultEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }) public void testDefaultEndpoint() throws Exception {
 
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
@@ -95,41 +93,38 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         endpointDeletionScenario();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message to a Default endpoint")
-    public void testSendingToDefaultEndpoint()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message to a Default endpoint") public void testSendingToDefaultEndpoint()
             throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPoint")
-                , getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPoint"),
+                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message to a Default endpoint in Config Reg")
-    public void testSendingToDefaultEndpoint_ConfigReg()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message to a Default endpoint in Config Reg") public void testSendingToDefaultEndpoint_ConfigReg()
             throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPoint_Config_Reg")
-                , getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPoint_Config_Reg"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
 
     //Related to Patch Automation https://wso2.org/jira/browse/CARBON-10551
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message to a Default endpoint which have Suspension")
-    public void testSendingToDefaultEndpointWithSuspension()
-            throws IOException, EndpointAdminEndpointAdminException,
-                   LoginAuthenticationExceptionException,
-                   XMLStreamException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message to a Default endpoint which have Suspension") public void testSendingToDefaultEndpointWithSuspension()
+            throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
+            XMLStreamException, InterruptedException {
 
         axis2Server1.stop();
         OMElement response = null;
         OMElement response1 = null;
         OMElement response2 = null;
         try {
-             response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPointWithSuspension"),
-                                                               "http://localhost:9001/services/SimpleStockQuoteService", "WSO2");
+            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPointWithSuspension"),
+                    "http://localhost:9001/services/SimpleStockQuoteService", "WSO2");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof org.apache.axis2.AxisFault);
         }
@@ -137,7 +132,7 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         axis2Server1.start();
         try {
             response1 = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPointWithSuspension"),
-                                                               "http://localhost:9001/services/SimpleStockQuoteService", "WSO2");
+                    "http://localhost:9001/services/SimpleStockQuoteService", "WSO2");
         } catch (Exception e) {
             Assert.assertTrue(e instanceof org.apache.axis2.AxisFault);
         }
@@ -145,13 +140,12 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         //Increasing wait time than suspendDuration value
         Thread.sleep(15000);
         response2 = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPoint_Config_Reg"),
-                                                           "http://localhost:9001/services/SimpleStockQuoteService", "WSO2");
+                "http://localhost:9001/services/SimpleStockQuoteService", "WSO2");
         Assert.assertNotNull(response2);
         Assert.assertTrue(response2.toString().contains("WSO2 Company"), "Received response:" + response2.toString());
     }
 
-    private void cleanupEndpoints()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void cleanupEndpoints() throws RemoteException, EndpointAdminEndpointAdminException {
         String[] endpointNames = endPointAdminClient.getEndpointNames();
         List endpointList;
         if (endpointNames != null && endpointNames.length > 0 && endpointNames[0] != null) {
@@ -162,14 +156,12 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    private void endpointAdditionScenario()
-            throws Exception {
+    private void endpointAdditionScenario() throws Exception {
         int beforeCount = endPointAdminClient.getEndpointCount();
 
-        addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                         "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + ENDPOINT_NAME + "\">\n" +
-                                         "    <default/>\n" +
-                                         "</endpoint>"));
+        addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + ENDPOINT_NAME + "\">\n"
+                + "    <default/>\n" + "</endpoint>"));
         int afterCount = endPointAdminClient.getEndpointCount();
         assertEquals(1, afterCount - beforeCount);
 
@@ -182,15 +174,13 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    private void endpointStatisticsScenario()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void endpointStatisticsScenario() throws RemoteException, EndpointAdminEndpointAdminException {
         endPointAdminClient.enableEndpointStatistics(ENDPOINT_NAME);
         String endpoint = endPointAdminClient.getEndpointConfiguration(ENDPOINT_NAME);
         assertTrue(endpoint.contains("statistics=\"enable"));
     }
 
-    private void endpointDeletionScenario()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void endpointDeletionScenario() throws RemoteException, EndpointAdminEndpointAdminException {
         int beforeCount = endPointAdminClient.getEndpointCount();
         endPointAdminClient.deleteEndpoint(ENDPOINT_NAME);
         int afterCount = endPointAdminClient.getEndpointCount();
@@ -199,12 +189,13 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
 
     private void uploadResourcesToConfigRegistry() throws Exception {
 
-        resourceAdminServiceClient.addCollection("/_system/config/", "test_ep_config", "",
-                                                 "Contains test Default EP files");
-        resourceAdminServiceClient.addResource(
-                "/_system/config/test_ep_config/defaultEP_Test.xml", "application/xml", "xml files",
-                new DataHandler(new URL("file:///" + getClass().getResource(
-                        "/artifacts/ESB/endpoint/defaultEndpointConfig/defaultEP_Test.xml").getPath())));
+        resourceAdminServiceClient
+                .addCollection("/_system/config/", "test_ep_config", "", "Contains test Default EP files");
+        resourceAdminServiceClient
+                .addResource("/_system/config/test_ep_config/defaultEP_Test.xml", "application/xml", "xml files",
+                        new DataHandler(new URL("file:///" + getClass()
+                                .getResource("/artifacts/ESB/endpoint/defaultEndpointConfig/defaultEP_Test.xml")
+                                .getPath())));
         Thread.sleep(1000);
 
     }

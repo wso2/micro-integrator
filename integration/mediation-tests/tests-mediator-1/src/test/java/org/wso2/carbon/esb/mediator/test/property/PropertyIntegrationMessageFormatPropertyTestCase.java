@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -39,44 +39,37 @@ public class PropertyIntegrationMessageFormatPropertyTestCase extends ESBIntegra
     private HttpClientUtil clientUtil;
     private String proxyName = "MESSAGE_FORMAT_TestProxy";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("MESSAGE_FORMAT_TestProxy");
         clientUtil = new HttpClientUtil();
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing with POX message format")
-    public void testMessageFormatPOXTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with POX message format") public void testMessageFormatPOXTest()
+            throws Exception {
 
         for (int x = 0; x < 4; x++) {
             OMElement response = clientUtil.get(getProxyServiceURLHttp(proxyName));
-            assertEquals(response.toString(),"<messageformat>pox</messageformat>",
-                         "Response should be in pox message format but received " +
-                         response.getText());
+            assertEquals(response.toString(), "<messageformat>pox</messageformat>",
+                    "Response should be in pox message format but received " + response.getText());
         }
 
     }
 
-    @Test(groups = "wso2.esb", description = "Testing with SOAP 1.1 message format",
-          dependsOnMethods = "testMessageFormatPOXTest")
-    public void testMessageFormatSOAP11Test() throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with SOAP 1.1 message format", dependsOnMethods = "testMessageFormatPOXTest") public void testMessageFormatSOAP11Test()
+            throws Exception {
 
         AxisServiceClient axisServiceClient = new AxisServiceClient();
 
         for (int x = 0; x < 4; x++) {
-            OMElement response = axisServiceClient.sendReceive(
-                    createPayLoad(), getProxyServiceURLHttp(proxyName), "");
+            OMElement response = axisServiceClient.sendReceive(createPayLoad(), getProxyServiceURLHttp(proxyName), "");
 
-            assertEquals(response.toString(),"<messageformat>soap11</messageformat>",
-                         "Response should be in SOAP 1.1 message format but received "
-                         + response.getText());
+            assertEquals(response.toString(), "<messageformat>soap11</messageformat>",
+                    "Response should be in SOAP 1.1 message format but received " + response.getText());
         }
     }
 

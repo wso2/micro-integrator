@@ -9,10 +9,10 @@ import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.util.HashMap;
@@ -26,12 +26,10 @@ public class ESBJAVA4318Testcase extends ESBIntegrationTest {
     private final DefaultHttpClient httpClient = new DefaultHttpClient();
     private final Map<String, String> headers = new HashMap<String, String>(1);
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
 
-        String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n"
-                + "       name=\"PF\"\n"
+        String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"PF\"\n"
                 + "       transports=\"https http\"\n" + "       startOnLoad=\"true\"\n" + "       trace=\"disable\">\n"
                 + "    <description/>\n" + "    <target>\n" + "        <inSequence>\n"
                 + "            <cache scope=\"per-host\"\n" + "                   collector=\"false\"\n"
@@ -59,21 +57,23 @@ public class ESBJAVA4318Testcase extends ESBIntegrationTest {
         addProxyService(omProxy);
         isProxyDeployed("PF");
     }
-    @Test(groups = "wso2.esb", description = "cache meditor with payloads including Processing Insturctions")
-    public void testCacheMediatorWithPIs() throws Exception {
 
-        String requestXml = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
-                + "   <soapenv:Header>\n"
-                + "      <m:Trans xmlns:m=\"http://www.w3schools.com/transaction/\">234</m:Trans>\n"
-                + "   </soapenv:Header>\n" + "   <soapenv:Body>\n" + "      <ser:getFullQuote>\n"
-                + "         <ser:request>\n" + "            <xsd:symbol>IBM</xsd:symbol>\n"
-                + "         </ser:request>\n" + "      </ser:getFullQuote>\n" + "   </soapenv:Body>\n"
-                + "</soapenv:Envelope>";
+    @Test(groups = "wso2.esb", description = "cache meditor with payloads including Processing Insturctions") public void testCacheMediatorWithPIs()
+            throws Exception {
 
-        final String expectedValue = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope " +
-                "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><b xmlns=\"http://ws" +
-                ".apache.org/ns/synapse\"><?xml-multiple  array?><xyz><a xmlns=\"\">after " +
-                "cache</a></xyz></b></soapenv:Body></soapenv:Envelope>";
+        String requestXml =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
+                        + "   <soapenv:Header>\n"
+                        + "      <m:Trans xmlns:m=\"http://www.w3schools.com/transaction/\">234</m:Trans>\n"
+                        + "   </soapenv:Header>\n" + "   <soapenv:Body>\n" + "      <ser:getFullQuote>\n"
+                        + "         <ser:request>\n" + "            <xsd:symbol>IBM</xsd:symbol>\n"
+                        + "         </ser:request>\n" + "      </ser:getFullQuote>\n" + "   </soapenv:Body>\n"
+                        + "</soapenv:Envelope>";
+
+        final String expectedValue = "<?xml version='1.0' encoding='UTF-8'?><soapenv:Envelope "
+                + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Body><b xmlns=\"http://ws"
+                + ".apache.org/ns/synapse\"><?xml-multiple  array?><xyz><a xmlns=\"\">after "
+                + "cache</a></xyz></b></soapenv:Body></soapenv:Envelope>";
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
 

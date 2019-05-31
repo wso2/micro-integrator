@@ -1,22 +1,21 @@
 /*
-* Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* WSO2 Inc. licenses this file to you under the Apache License,
-* Version 2.0 (the "License"); you may not use this file except
-* in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.passthru.transport.test;
-
 
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
@@ -38,16 +37,15 @@ import java.io.IOException;
 
 public class ESBJAVA5069AccessSwaggerTenantTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init(TestUserMode.TENANT_ADMIN);
-        String artifactPath = "artifacts" + File.separator + "ESB" + File.separator + "api" + File.separator
-                + "Tenant.xml";
+        String artifactPath =
+                "artifacts" + File.separator + "ESB" + File.separator + "api" + File.separator + "Tenant.xml";
         loadESBConfigurationFromClasspath(artifactPath);
     }
 
-    @Test(groups = "wso2.esb", description = "Passthru  test case for tenant" )
-    public void accessSwagerTest() throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Passthru  test case for tenant") public void accessSwagerTest()
+            throws AxisFault {
         try {
             String swaggerURL = getApiInvocationURL("testapi").replace("services/", "");
             HttpResponse response = HttpURLConnectionClient.
@@ -58,8 +56,7 @@ public class ESBJAVA5069AccessSwaggerTenantTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
@@ -41,29 +41,30 @@ public class PropertyIntegrationRESTURLPostFixTestCase extends ESBIntegrationTes
     private OMElement response;
     private HttpClientUtil client;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         OMElement config = esbUtils.loadResource("/artifacts/ESB/mediatorconfig/property/REST_URL_postfix.xml");
-        config = AXIOMUtil.stringToOM(config.toString().replace("http://localhost:8280/services/", getProxyServiceURLHttp("")));
+        config = AXIOMUtil
+                .stringToOM(config.toString().replace("http://localhost:8280/services/", getProxyServiceURLHttp("")));
         updateESBConfiguration(config);
-        client= new HttpClientUtil();
+        client = new HttpClientUtil();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Test-REST URL Postfix")
-    public void testRESTUrlPostFix() throws Exception {
-        response = client.getWithContentType(getProxyServiceURLHttp("REST_URL_POSTFIX_TestProxy") + "/echoString",
-                "in=WSO2", MediaType.APPLICATION_FORM_URLENCODED);
-        assertNotNull(response,"Response is null");
-        assertEquals(response.getQName().getLocalPart(),"echoStringResponse","Tag does not match");
-        assertEquals(response.getFirstElement().getLocalName(),"return","Tag does not match");
-        assertEquals(response.getFirstElement().getText(),"charitha","Text does not match");
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-REST URL Postfix") public void testRESTUrlPostFix()
+            throws Exception {
+        response = client
+                .getWithContentType(getProxyServiceURLHttp("REST_URL_POSTFIX_TestProxy") + "/echoString", "in=WSO2",
+                        MediaType.APPLICATION_FORM_URLENCODED);
+        assertNotNull(response, "Response is null");
+        assertEquals(response.getQName().getLocalPart(), "echoStringResponse", "Tag does not match");
+        assertEquals(response.getFirstElement().getLocalName(), "return", "Tag does not match");
+        assertEquals(response.getFirstElement().getText(), "charitha", "Text does not match");
         //TODO: Checking the following log message in ESB log."rest-url-value = /echoString?s=wso2"
 
     }
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         cleanup();
     }
 }

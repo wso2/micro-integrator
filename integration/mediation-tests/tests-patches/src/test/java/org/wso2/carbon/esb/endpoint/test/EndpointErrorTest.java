@@ -25,26 +25,22 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
-
 public class EndpointErrorTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("EndpointErrorTestProxy");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Introduction to Proxy Services")
-    public void testSequenceError() throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
-                getProxyServiceURLHttp("EndpointErrorTestProxy"), null, "WSO2");
+    @Test(groups = { "wso2.esb" }, description = "Introduction to Proxy Services") public void testSequenceError()
+            throws Exception {
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("EndpointErrorTestProxy"), null, "WSO2");
 
         Assert.assertTrue(response.toString().contains("RightErrorSequence Fault Handler Called"),
                 "Wrong fault sequence executed");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

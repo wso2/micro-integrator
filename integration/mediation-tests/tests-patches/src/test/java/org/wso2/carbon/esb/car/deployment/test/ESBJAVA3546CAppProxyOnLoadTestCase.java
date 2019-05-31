@@ -24,18 +24,18 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA3546CAppProxyOnLoadTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "proxy service with startOnLoad=true deployed from car file")
-    public void startOnLoadTrueProxyTest() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "proxy service with startOnLoad=true deployed from car file") public void startOnLoadTrueProxyTest()
+            throws Exception {
         boolean trueResponseReceived = false;
 
         try {
-            axis2Client.sendSimpleStockQuoteRequest(
-                    "http://127.0.0.1:8480/services/samplePassThroughProxy", null, "IBM");
+            axis2Client
+                    .sendSimpleStockQuoteRequest("http://127.0.0.1:8480/services/samplePassThroughProxy", null, "IBM");
 
             trueResponseReceived = true;
         } catch (AxisFault axisFault) {
@@ -45,16 +45,13 @@ public class ESBJAVA3546CAppProxyOnLoadTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = {"wso2.esb"},
-          description = "proxy service with startOnLoad=false deployed from car file but inactive",
-          expectedExceptions = AxisFault.class)
-    public void startOnLoadFalseProxyTest() throws Exception {
-            axis2Client.sendSimpleStockQuoteRequest("http://127.0.0.1:8480/services/InactiveProxy",
-                                                    null, "IBM");
+    @Test(groups = {
+            "wso2.esb" }, description = "proxy service with startOnLoad=false deployed from car file but inactive", expectedExceptions = AxisFault.class) public void startOnLoadFalseProxyTest()
+            throws Exception {
+        axis2Client.sendSimpleStockQuoteRequest("http://127.0.0.1:8480/services/InactiveProxy", null, "IBM");
     }
 
-    @AfterTest(alwaysRun = true)
-    public void cleanupEnvironment() throws Exception {
+    @AfterTest(alwaysRun = true) public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 }

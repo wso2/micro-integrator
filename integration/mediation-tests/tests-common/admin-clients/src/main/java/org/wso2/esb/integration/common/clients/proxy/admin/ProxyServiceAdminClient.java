@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.esb.integration.common.clients.proxy.admin;
 
 import junit.framework.Assert;
@@ -36,11 +36,6 @@ import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyServicePolicyInfo;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -49,6 +44,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * This class exposing internal command methods to invoke ProxyAdmin admin service
@@ -73,8 +73,7 @@ public class ProxyServiceAdminClient {
         AuthenticateStub.authenticateStub(sessionCookie, proxyServiceAdminStub);
     }
 
-    public ProxyServiceAdminClient(String backEndUrl, String userName, String password)
-            throws AxisFault {
+    public ProxyServiceAdminClient(String backEndUrl, String userName, String password) throws AxisFault {
 
         String endPoint = backEndUrl + serviceName;
         proxyServiceAdminStub = new ProxyServiceAdminStub(endPoint);
@@ -87,23 +86,20 @@ public class ProxyServiceAdminClient {
      * @param proxyName       Name of the proxy service
      * @param wsdlURI         WSDL URI
      * @param serviceEndPoint Service endpoint location
-     * @throws ProxyServiceAdminProxyAdminException
-     *                         proxyAdmin Service exception
-     * @throws java.rmi.RemoteException Remote Exception
+     * @throws ProxyServiceAdminProxyAdminException proxyAdmin Service exception
+     * @throws java.rmi.RemoteException             Remote Exception
      */
-    public void addProxyService(String proxyName, String wsdlURI,
-                                String serviceEndPoint)
-            throws Exception {
+    public void addProxyService(String proxyName, String wsdlURI, String serviceEndPoint) throws Exception {
 
-
-        String[] transport = {"http", "https"};
+        String[] transport = { "http", "https" };
         ProxyData data = new ProxyData();
         data.setName(proxyName);
         data.setWsdlURI(wsdlURI);
         data.setTransports(transport);
         data.setStartOnLoad(true);
         //data.setEndpointKey("http://localhost:9000/services/SimpleStockQuoteService");
-        data.setEndpointXML("<endpoint xmlns=\"http://ws.apache.org/ns/synapse\"><address uri=\"" + serviceEndPoint + "\" /></endpoint>");
+        data.setEndpointXML("<endpoint xmlns=\"http://ws.apache.org/ns/synapse\"><address uri=\"" + serviceEndPoint
+                + "\" /></endpoint>");
         data.setEnableSecurity(true);
         try {
             proxyServiceAdminStub.addProxy(data);
@@ -117,11 +113,9 @@ public class ProxyServiceAdminClient {
      * Adding proxy service
      *
      * @param dh Data Handler
-     * @throws ProxyServiceAdminProxyAdminException
-     *                         Proxy service admin exception
-     * @throws java.rmi.RemoteException Remote exception
-     * @throws javax.xml.stream.XMLStreamException
-     *                         Exception
+     * @throws ProxyServiceAdminProxyAdminException Proxy service admin exception
+     * @throws java.rmi.RemoteException             Remote exception
+     * @throws javax.xml.stream.XMLStreamException  Exception
      */
     public void addProxyService(DataHandler dh)
             throws ProxyServiceAdminProxyAdminException, IOException, XMLStreamException {
@@ -140,12 +134,10 @@ public class ProxyServiceAdminClient {
     /**
      * @param data
      * @throws ProxyServiceAdminProxyAdminException
-     *
      * @throws java.io.IOException
      * @throws javax.xml.stream.XMLStreamException
      */
-    public void addProxyService(OMElement data)
-            throws Exception {
+    public void addProxyService(OMElement data) throws Exception {
 
         ProxyData proxyData = getProxyData(data.toString());
         try {
@@ -160,12 +152,10 @@ public class ProxyServiceAdminClient {
      * Delete proxy service
      *
      * @param proxyName Name of the proxy service to be deleted
-     * @throws ProxyServiceAdminProxyAdminException
-     *                         proxy admin exception
-     * @throws java.rmi.RemoteException remote exception
+     * @throws ProxyServiceAdminProxyAdminException proxy admin exception
+     * @throws java.rmi.RemoteException             remote exception
      */
-    public void deleteProxy(String proxyName)
-            throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public void deleteProxy(String proxyName) throws ProxyServiceAdminProxyAdminException, RemoteException {
         AuthenticateStub auth = new AuthenticateStub();
 
         proxyServiceAdminStub.deleteProxyService(proxyName);
@@ -176,12 +166,10 @@ public class ProxyServiceAdminClient {
      * Stop proxy service
      *
      * @param proxyName name of the proxy
-     * @throws ProxyServiceAdminProxyAdminException
-     *                         proxy admin exception
-     * @throws java.rmi.RemoteException remote exception
+     * @throws ProxyServiceAdminProxyAdminException proxy admin exception
+     * @throws java.rmi.RemoteException             remote exception
      */
-    public void stopProxyService(String proxyName)
-            throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public void stopProxyService(String proxyName) throws ProxyServiceAdminProxyAdminException, RemoteException {
 
         proxyServiceAdminStub.stopProxyService(proxyName);
         log.info("Proxy Deactivated");
@@ -191,12 +179,10 @@ public class ProxyServiceAdminClient {
      * Start proxy service
      *
      * @param proxyName name of the proxy
-     * @throws ProxyServiceAdminProxyAdminException
-     *                         proxy admin exception
-     * @throws java.rmi.RemoteException remote exception
+     * @throws ProxyServiceAdminProxyAdminException proxy admin exception
+     * @throws java.rmi.RemoteException             remote exception
      */
-    public void startProxyService(String proxyName)
-            throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public void startProxyService(String proxyName) throws ProxyServiceAdminProxyAdminException, RemoteException {
 
         proxyServiceAdminStub.startProxyService(proxyName);
         log.info("Proxy activated");
@@ -206,28 +192,23 @@ public class ProxyServiceAdminClient {
      * Redeploy proxy service
      *
      * @param proxyName name of the proxy
-     * @throws ProxyServiceAdminProxyAdminException
-     *                         proxy admin exception
-     * @throws java.rmi.RemoteException Remote Exception
+     * @throws ProxyServiceAdminProxyAdminException proxy admin exception
+     * @throws java.rmi.RemoteException             Remote Exception
      */
-    public void reloadProxyService(String proxyName)
-            throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public void reloadProxyService(String proxyName) throws ProxyServiceAdminProxyAdminException, RemoteException {
         proxyServiceAdminStub.redeployProxyService(proxyName);
         log.info("Proxy Redeployed");
     }
-
 
     /**
      * Get proxy service details
      *
      * @param proxyName proxy service name
      * @return proxy data
-     * @throws ProxyServiceAdminProxyAdminException
-     *                         Admin stub exception
-     * @throws java.rmi.RemoteException Remote Exception
+     * @throws ProxyServiceAdminProxyAdminException Admin stub exception
+     * @throws java.rmi.RemoteException             Remote Exception
      */
-    public ProxyData getProxyDetails(String proxyName)
-            throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public ProxyData getProxyDetails(String proxyName) throws ProxyServiceAdminProxyAdminException, RemoteException {
         return proxyServiceAdminStub.getProxy(proxyName);
     }
 
@@ -247,12 +228,11 @@ public class ProxyServiceAdminClient {
             try {
                 bytes = proxyString.getBytes("UTF8");
             } catch (UnsupportedEncodingException e) {
-                log.error("Unable to extract bytes in UTF-8 encoding. " +
-                          "Extracting bytes in the system default encoding" + e.getMessage());
+                log.error("Unable to extract bytes in UTF-8 encoding. "
+                        + "Extracting bytes in the system default encoding" + e.getMessage());
                 bytes = proxyString.getBytes();
             }
-            OMElement elem = new StAXOMBuilder(
-                    new ByteArrayInputStream(bytes)).getDocumentElement();
+            OMElement elem = new StAXOMBuilder(new ByteArrayInputStream(bytes)).getDocumentElement();
 
             // check whether synapse namespace is present in the configuration.
             Iterator itr = elem.getAllDeclaredNamespaces();
@@ -332,15 +312,14 @@ public class ProxyServiceAdminClient {
             // read definition of the target of this proxy service. The target could be an 'endpoint'
             // or a named sequence. If none of these are specified, the messages would be mediated
             // by the Synapse main mediator
-            OMElement target = elem.getFirstChildWithName(
-                    new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "target"));
+            OMElement target = elem.getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "target"));
             if (target != null) {
                 OMAttribute inSequence = target.getAttribute(new QName("inSequence"));
                 if (inSequence != null) {
                     pd.setInSeqKey(inSequence.getAttributeValue());
                 } else {
-                    OMElement inSequenceElement = target.getFirstChildWithName(
-                            new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "inSequence"));
+                    OMElement inSequenceElement = target
+                            .getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "inSequence"));
                     if (inSequenceElement != null) {
                         pd.setInSeqXML(inSequenceElement.toString());
                     }
@@ -349,8 +328,8 @@ public class ProxyServiceAdminClient {
                 if (outSequence != null) {
                     pd.setOutSeqKey(outSequence.getAttributeValue());
                 } else {
-                    OMElement outSequenceElement = target.getFirstChildWithName(
-                            new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "outSequence"));
+                    OMElement outSequenceElement = target
+                            .getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "outSequence"));
                     if (outSequenceElement != null) {
                         pd.setOutSeqXML(outSequenceElement.toString());
                     }
@@ -359,8 +338,8 @@ public class ProxyServiceAdminClient {
                 if (faultSequence != null) {
                     pd.setFaultSeqKey(faultSequence.getAttributeValue());
                 } else {
-                    OMElement faultSequenceElement = target.getFirstChildWithName(
-                            new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "faultSequence"));
+                    OMElement faultSequenceElement = target
+                            .getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "faultSequence"));
                     if (faultSequenceElement != null) {
                         pd.setFaultSeqXML(faultSequenceElement.toString());
                     }
@@ -369,16 +348,15 @@ public class ProxyServiceAdminClient {
                 if (tgtEndpt != null) {
                     pd.setEndpointKey(tgtEndpt.getAttributeValue());
                 } else {
-                    OMElement endpointElement = target.getFirstChildWithName(
-                            new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "endpoint"));
+                    OMElement endpointElement = target
+                            .getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "endpoint"));
                     if (endpointElement != null) {
                         pd.setEndpointXML(endpointElement.toString());
                     }
                 }
             }
 
-            Iterator props = elem.getChildrenWithName(
-                    new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "parameter"));
+            Iterator props = elem.getChildrenWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "parameter"));
             ArrayList<Entry> params = new ArrayList<Entry>();
             Entry entry = null;
             while (props.hasNext()) {
@@ -404,35 +382,30 @@ public class ProxyServiceAdminClient {
             }
             pd.setServiceParams(params.toArray(new Entry[params.size()]));
 
-
-            OMElement wsdl = elem.getFirstChildWithName(
-                    new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "publishWSDL"));
+            OMElement wsdl = elem.getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "publishWSDL"));
             if (wsdl != null) {
-                OMAttribute wsdlkey = wsdl.getAttribute(
-                        new QName(XMLConfigConstants.NULL_NAMESPACE, "key"));
-                OMAttribute wsdlEP = wsdl.getAttribute(
-                        new QName(XMLConfigConstants.NULL_NAMESPACE, "endpoint"));
+                OMAttribute wsdlkey = wsdl.getAttribute(new QName(XMLConfigConstants.NULL_NAMESPACE, "key"));
+                OMAttribute wsdlEP = wsdl.getAttribute(new QName(XMLConfigConstants.NULL_NAMESPACE, "endpoint"));
                 if (wsdlEP != null) {
                     //Commenting out this line because of the possible API change in stub
-                   // pd.setPublishWSDLEndpoint(wsdlEP.getAttributeValue());
+                    // pd.setPublishWSDLEndpoint(wsdlEP.getAttributeValue());
                 } else if (wsdlkey != null) {
                     pd.setWsdlKey(wsdlkey.getAttributeValue());
                 } else {
-                    OMAttribute wsdlURI = wsdl.getAttribute(
-                            new QName(XMLConfigConstants.NULL_NAMESPACE, "uri"));
+                    OMAttribute wsdlURI = wsdl.getAttribute(new QName(XMLConfigConstants.NULL_NAMESPACE, "uri"));
                     if (wsdlURI != null) {
                         pd.setWsdlURI(wsdlURI.getAttributeValue());
                     } else {
-                        OMElement wsdl11 = wsdl.getFirstChildWithName(
-                                new QName(WSDLConstants.WSDL1_1_NAMESPACE, "definitions"));
+                        OMElement wsdl11 = wsdl
+                                .getFirstChildWithName(new QName(WSDLConstants.WSDL1_1_NAMESPACE, "definitions"));
                         String wsdlDef;
                         if (wsdl11 != null) {
                             wsdlDef = wsdl11.toString().replaceAll("\n|\\r|\\f|\\t", "");
                             wsdlDef = wsdlDef.replaceAll("> +<", "><");
                             pd.setWsdlDef(wsdlDef);
                         } else {
-                            OMElement wsdl20 = wsdl.getFirstChildWithName(
-                                    new QName(WSDL2Constants.WSDL_NAMESPACE, "description"));
+                            OMElement wsdl20 = wsdl
+                                    .getFirstChildWithName(new QName(WSDL2Constants.WSDL_NAMESPACE, "description"));
                             if (wsdl20 != null) {
                                 wsdlDef = wsdl20.toString().replaceAll("\n|\\r|\\f|\\t", "");
                                 wsdlDef = wsdlDef.replaceAll("> +<", "><");
@@ -442,19 +415,17 @@ public class ProxyServiceAdminClient {
                     }
                 }
 
-                Iterator it = wsdl.getChildrenWithName(
-                        new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "resource"));
+                Iterator it = wsdl.getChildrenWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "resource"));
                 ArrayList<Entry> resources = new ArrayList<Entry>();
                 Entry resource = null;
                 while (it.hasNext()) {
                     OMElement resourceElem = (OMElement) it.next();
-                    OMAttribute location = resourceElem.getAttribute
-                            (new QName(XMLConfigConstants.NULL_NAMESPACE, "location"));
+                    OMAttribute location = resourceElem
+                            .getAttribute(new QName(XMLConfigConstants.NULL_NAMESPACE, "location"));
                     if (location == null) {
                         throw new XMLStreamException("location element not found in xml file");
                     }
-                    OMAttribute key = resourceElem.getAttribute(
-                            new QName(XMLConfigConstants.NULL_NAMESPACE, "key"));
+                    OMAttribute key = resourceElem.getAttribute(new QName(XMLConfigConstants.NULL_NAMESPACE, "key"));
                     if (key == null) {
                         throw new XMLStreamException("key element not found in xml file");
                     }
@@ -466,14 +437,14 @@ public class ProxyServiceAdminClient {
                 pd.setWsdlResources(resources.toArray(new Entry[resources.size()]));
             }
 
-            OMElement enableSec = elem.getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE,
-                                                                       "enableSec"));
+            OMElement enableSec = elem
+                    .getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "enableSec"));
             if (enableSec != null) {
                 pd.setEnableSecurity(true);
             }
 
-            OMElement description = elem.getFirstChildWithName(
-                    new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "description"));
+            OMElement description = elem
+                    .getFirstChildWithName(new QName(XMLConfigConstants.SYNAPSE_NAMESPACE, "description"));
             if (description != null) {
                 pd.setDescription(description.getText());
             }
@@ -498,11 +469,9 @@ public class ProxyServiceAdminClient {
     /**
      * @param data - Proxy Configuration element
      * @throws ProxyServiceAdminProxyAdminException
-     *
      * @throws java.rmi.RemoteException
      */
-    public void updateProxy(OMElement data)
-            throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public void updateProxy(OMElement data) throws ProxyServiceAdminProxyAdminException, RemoteException {
         ProxyData proxyData = getProxyData(data.toString());
         proxyServiceAdminStub.modifyProxy(proxyData);
         log.info("Proxy Updated");
@@ -511,11 +480,9 @@ public class ProxyServiceAdminClient {
     /**
      * @param proxyData
      * @throws ProxyServiceAdminProxyAdminException
-     *
      * @throws java.rmi.RemoteException
      */
-    public void updateProxy(ProxyData proxyData)
-            throws ProxyServiceAdminProxyAdminException, RemoteException {
+    public void updateProxy(ProxyData proxyData) throws ProxyServiceAdminProxyAdminException, RemoteException {
         proxyServiceAdminStub.modifyProxy(proxyData);
         log.info("Proxy Updated");
     }

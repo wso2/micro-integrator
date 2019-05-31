@@ -23,52 +23,48 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.Utils;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
+
 /**
- *
  * This class checks whether in memory massages are cleaned after restarting the esb
- *
  */
 public class MessageStoreMessageCleaningTestCase extends ESBIntegrationTest {
 
-	private MessageStoreAdminClient messageStoreAdminClient;
-	private final String MESSAGE_STORE_NAME = "automationMessageStore1";
-	private boolean isMessageStoreCreated = false;
-	private String[] messageStores = null;
+    private MessageStoreAdminClient messageStoreAdminClient;
+    private final String MESSAGE_STORE_NAME = "automationMessageStore1";
+    private boolean isMessageStoreCreated = false;
+    private String[] messageStores = null;
     private ServerConfigurationManager serverConfigurationManager;
 
-	@BeforeClass(alwaysRun = true)
-	public void setEnvironment() throws Exception {
-		init();
-	    initVariables();
-	}
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+        init();
+        initVariables();
+    }
 
     private void initVariables() throws Exception {
-        messageStoreAdminClient =
-                new MessageStoreAdminClient(contextUrls.getBackEndUrl(),
-                        getSessionCookie());
+        messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         serverConfigurationManager = new ServerConfigurationManager(context);
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-	@Test(groups = { "wso2.esb" }, description = "Test whether FIX messages are stored from store mediator")
-	public void messageStoreFIXStoringTest() throws Exception {
-		// The count should be 0 as soon as the message store is created
-		Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
-		                  "Message store should be initially empty");
-		// refer within a sequence through a store mediator, mediate messages
-		// and verify the messages are stored correctly in the store.
-		loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/messageStore/inmemory_message_store.xml");
-		for (int i = 0; i < 5; i++) {
-			axis2Client.sendSimpleQuoteRequest(getMainSequenceURL(), null, "WSO2");
-		}
-		Assert.assertTrue(Utils.waitForMessageCount(messageStoreAdminClient, MESSAGE_STORE_NAME, 5, 30000),
-				"Messages are missing or repeated");
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Test whether FIX messages are stored from store mediator") public void messageStoreFIXStoringTest()
+            throws Exception {
+        // The count should be 0 as soon as the message store is created
+        Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
+                "Message store should be initially empty");
+        // refer within a sequence through a store mediator, mediate messages
+        // and verify the messages are stored correctly in the store.
+        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/messageStore/inmemory_message_store.xml");
+        for (int i = 0; i < 5; i++) {
+            axis2Client.sendSimpleQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        }
+        Assert.assertTrue(Utils.waitForMessageCount(messageStoreAdminClient, MESSAGE_STORE_NAME, 5, 30000),
+                "Messages are missing or repeated");
         serverConfigurationManager.restartGracefully();
         super.init();
         initVariables();
@@ -78,57 +74,53 @@ public class MessageStoreMessageCleaningTestCase extends ESBIntegrationTest {
             Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
                     "Messages have not cleaned");
         }
-	}
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void close() throws Exception {
-		clear();
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
+        clear();
         cleanup();
-		messageStoreAdminClient = null;
+        messageStoreAdminClient = null;
         context = null;
         serverConfigurationManager = null;
-	}
+    }
 
-	// creates a message store
-	public void initialize() throws Exception {
-		OMElement messageStore =
-		                         AXIOMUtil.stringToOM("<messageStore xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" +
-		                                              MESSAGE_STORE_NAME +
-		                                              "\">" +
-		                                              "<parameter name=\"abc\">10</parameter>" +
-		                                              "</messageStore>");
-		addMessageStore(messageStore);
-		messageStores = messageStoreAdminClient.getMessageStores();
-		// addEndpoint is a a asynchronous call, it will take some time to write
-		// to a registry
-		int i = 0;
-		boolean found = false;
-		for (i = 0; i < 50; i++) {
-			Thread.sleep(1000);
-			if (messageStores != null) {
-				for (int j = 0; j < messageStores.length; j++) {
-					String string = messageStores[j];
-					if (string.equalsIgnoreCase(MESSAGE_STORE_NAME)) {
-						found = true;
-						isMessageStoreCreated = true;
-						break;
-					}
-				}
-			}
-			if (found) {
-				break;
-			}
-			messageStores = messageStoreAdminClient.getMessageStores();
-		}
-		if (i == 50) {
-			Assert.fail("message store creation failed");
-		}
-	}
+    // creates a message store
+    public void initialize() throws Exception {
+        OMElement messageStore = AXIOMUtil.stringToOM(
+                "<messageStore xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + MESSAGE_STORE_NAME + "\">"
+                        + "<parameter name=\"abc\">10</parameter>" + "</messageStore>");
+        addMessageStore(messageStore);
+        messageStores = messageStoreAdminClient.getMessageStores();
+        // addEndpoint is a a asynchronous call, it will take some time to write
+        // to a registry
+        int i = 0;
+        boolean found = false;
+        for (i = 0; i < 50; i++) {
+            Thread.sleep(1000);
+            if (messageStores != null) {
+                for (int j = 0; j < messageStores.length; j++) {
+                    String string = messageStores[j];
+                    if (string.equalsIgnoreCase(MESSAGE_STORE_NAME)) {
+                        found = true;
+                        isMessageStoreCreated = true;
+                        break;
+                    }
+                }
+            }
+            if (found) {
+                break;
+            }
+            messageStores = messageStoreAdminClient.getMessageStores();
+        }
+        if (i == 50) {
+            Assert.fail("message store creation failed");
+        }
+    }
 
-	// delete the message store
-	public void clear() throws Exception {
-		if (isMessageStoreCreated) {
-			esbUtils.deleteMessageStore(contextUrls.getBackEndUrl(), getSessionCookie(), MESSAGE_STORE_NAME);
-		}
-	}
+    // delete the message store
+    public void clear() throws Exception {
+        if (isMessageStoreCreated) {
+            esbUtils.deleteMessageStore(contextUrls.getBackEndUrl(), getSessionCookie(), MESSAGE_STORE_NAME);
+        }
+    }
 }

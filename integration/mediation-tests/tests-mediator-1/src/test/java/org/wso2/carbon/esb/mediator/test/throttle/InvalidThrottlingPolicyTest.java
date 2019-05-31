@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.throttle;
 
 import org.apache.axiom.om.OMElement;
@@ -30,21 +30,21 @@ public class InvalidThrottlingPolicyTest extends ESBIntegrationTest {
 
     private static final int THROTTLE_MAX_MSG_COUNT = 4;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("invalidThrottlingPolicyTestProxy");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Invalid throttling policy test")
-    public void testInvalidPolicy() throws Exception {
+    @Test(groups = "wso2.esb", description = "Invalid throttling policy test") public void testInvalidPolicy()
+            throws Exception {
 
         OMElement response;
 
         try {
             for (int i = 0; i <= THROTTLE_MAX_MSG_COUNT; i++) {
-                response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("invalidThrottlingPolicyTestProxy"), null, "WSO2");
+                response = axis2Client
+                        .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("invalidThrottlingPolicyTestProxy"), null,
+                                "WSO2");
                 assertTrue(response.toString().contains("WSO2"), "Fault: Required response not found.");
             }
 
@@ -55,8 +55,7 @@ public class InvalidThrottlingPolicyTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

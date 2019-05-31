@@ -18,8 +18,7 @@ package org.wso2.esb.integration.services.jaxrs.customersample.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Customer")
-public class Customer {
+@XmlRootElement(name = "Customer") public class Customer {
     private long id;
     private String name;
 

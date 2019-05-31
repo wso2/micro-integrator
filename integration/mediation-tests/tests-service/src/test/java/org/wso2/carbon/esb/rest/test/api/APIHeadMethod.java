@@ -17,14 +17,14 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -35,21 +35,20 @@ import static org.testng.Assert.assertTrue;
 public class APIHeadMethod extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
 
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB"
-                + File.separator + "synapseconfig" + File.separator + "rest"
-                + File.separator + "headTest.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "rest" + File.separator + "headTest.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "API HTTP HEAD Method" )
-    public void apiHTTPHeadMethodTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "API HTTP HEAD Method") public void apiHTTPHeadMethodTest()
+            throws Exception {
         String restURL = "http://localhost:8480/headTest";
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpHead httpHead = new HttpHead(restURL);
@@ -63,8 +62,7 @@ public class APIHeadMethod extends ESBIntegrationTest {
         assertTrue(response.getEntity() == null);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

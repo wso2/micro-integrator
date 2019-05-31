@@ -170,8 +170,7 @@ public class GetQuoteResponse {
 
     private static double getRandom(double base, double varience, boolean onlypositive) {
         double rand = Math.random();
-        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand))
-            * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
+        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand)) * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
     }
 
 }

@@ -28,7 +28,7 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 /**
  * Test case for https://wso2.org/jira/browse/ESBJAVA-3675
  * Test whether a property set inside iterate mediator(sequential=true) can be retrieved inside fault sequence.
- *
+ * <p>
  * Class mediator jar : ClassMediatorDemo-1.0.0.jar
  * Class mediator name : com.wso2.example.CsvValidatorMediator
  * Class mediator throws a org.apache.synapse.SynapseException so that the fault sequence will be triggered.
@@ -36,25 +36,23 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class IterateSequentialFaultSequenceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("iterateMediatorSequentialFaultSequenceTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests property retrieval in fault sequence")
-    public void testPropertyRetrievalInFaultSequence() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests property retrieval in fault sequence") public void testPropertyRetrievalInFaultSequence()
+            throws Exception {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
-                    "iterateMediatorSequentialFaultSequenceTestProxy"), null, "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(
+                    getProxyServiceURLHttp("iterateMediatorSequentialFaultSequenceTestProxy"), null, "WSO2");
             Assert.fail("Request must throw a AxisFault");
         } catch (AxisFault axisFault) {
             Assert.assertEquals(axisFault.getFaultCode().getLocalPart(), "AB005", "Fault code mismatched");
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         super.cleanup();
     }
 }

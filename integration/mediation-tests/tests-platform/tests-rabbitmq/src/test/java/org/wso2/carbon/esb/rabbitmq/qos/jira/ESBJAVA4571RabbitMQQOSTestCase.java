@@ -39,23 +39,22 @@ public class ESBJAVA4571RabbitMQQOSTestCase extends ESBIntegrationTest {
     private RabbitMQProducerClient sender;
     private ProxyServiceAdminClient proxyServiceAdminClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         sender = RabbitMQServerInstance.createProducerWithDeclaration("qosExchange", "qosQueue");
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator
-                                          + "ESB" + File.separator + "qos" + File.separator + "rabbitMQ"
-                                          + File.separator
-                                          + "RabbitMQQOSProxy.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "qos" + File.separator
+                        + "rabbitMQ" + File.separator + "RabbitMQQOSProxy.xml");
         proxyServiceAdminClient = new ProxyServiceAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test ESB as a RabbitMQ consumer QOS applied")
-    public void testRabbitMQQOSConsumer() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test ESB as a RabbitMQ consumer QOS applied") public void testRabbitMQQOSConsumer()
+            throws Exception {
 
         proxyServiceAdminClient.stopProxyService("RabbitMQQOSProxy");
-        RabbitMQConsumerClient consumer = RabbitMQServerInstance.createConsumerWithDeclaration("qosExchange",
-                                                                                               "qosQueue");
+        RabbitMQConsumerClient consumer = RabbitMQServerInstance
+                .createConsumerWithDeclaration("qosExchange", "qosQueue");
 
         //remove already existing messages
         consumer.popAllMessages();
@@ -92,8 +91,7 @@ public class ESBJAVA4571RabbitMQQOSTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void end() throws Exception {
+    @AfterClass(alwaysRun = true) public void end() throws Exception {
         super.cleanup();
     }
 }

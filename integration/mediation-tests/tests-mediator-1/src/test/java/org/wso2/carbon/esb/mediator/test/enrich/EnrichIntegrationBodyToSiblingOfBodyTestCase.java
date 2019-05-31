@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.enrich;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -29,32 +29,29 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisOperationClient;
 
-import javax.xml.namespace.QName;
 import java.io.IOException;
+import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationBodyToSiblingOfBodyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichBodyToSiblingOfBodyTest");
     }
 
     //get the body of request and add it as a sibling of response.
-    @Test(groups = "wso2.esb", description = "Add custom content as a child to the part of message" +
-                                             " specified by xpath expression ")
-    public void testEnrichMediator() throws Exception {
+    @Test(groups = "wso2.esb", description = "Add custom content as a child to the part of message"
+            + " specified by xpath expression ") public void testEnrichMediator() throws Exception {
         String soapResponse = getResponse();
 
         assertNotNull(soapResponse, "Response message null");
         OMElement response = AXIOMUtil.stringToOM(soapResponse);
 
         OMElement soapBody = response.getFirstElement();
-        OMElement getQuoteElement = soapBody.getFirstChildWithName(
-                new QName("http://services.samples", "getQuote"));
+        OMElement getQuoteElement = soapBody.getFirstChildWithName(new QName("http://services.samples", "getQuote"));
 
         assertNotNull(getQuoteElement, "sibling null");
         OMElement requestElement = getQuoteElement.getFirstElement();
@@ -64,11 +61,9 @@ public class EnrichIntegrationBodyToSiblingOfBodyTestCase extends ESBIntegration
         assertEquals(symbolTagInsideRequestSibling.getLocalName(), "symbol", "Fault, child");
         assertEquals(symbolTagInsideRequestSibling.getText(), "WSO2", "Fault, child");
 
-
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 
@@ -78,8 +73,9 @@ public class EnrichIntegrationBodyToSiblingOfBodyTestCase extends ESBIntegration
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
-            response = operationClient.send(getProxyServiceURLHttp("enrichBodyToSiblingOfBodyTest"), null,
-                                            createQuoteRequestBody("WSO2"), "urn:getQuote");
+            response = operationClient
+                    .send(getProxyServiceURLHttp("enrichBodyToSiblingOfBodyTest"), null, createQuoteRequestBody("WSO2"),
+                            "urn:getQuote");
         } finally {
             operationClient.destroy();
         }
@@ -94,7 +90,6 @@ public class EnrichIntegrationBodyToSiblingOfBodyTestCase extends ESBIntegration
         SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
         OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
         OMElement method = fac.createOMElement("getQuote", omNs);
-
 
         OMElement value1 = fac.createOMElement("request", omNs);
         OMElement value2 = fac.createOMElement("symbol", omNs);

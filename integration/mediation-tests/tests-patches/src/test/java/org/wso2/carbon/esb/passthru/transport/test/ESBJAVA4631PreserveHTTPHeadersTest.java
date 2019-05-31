@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License, 
- * Version 2.0 (the "License"); you may not use this file except 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -26,8 +26,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
 
 import java.io.File;
@@ -40,24 +40,25 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private WireMonitorServer wireServer;
 
-    @BeforeClass
-    public void init() throws Exception {
+    @BeforeClass public void init() throws Exception {
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         /*
-           * If test run in external distributed deployment you need to copy
-           * following configFiles/preserveContentType/passthru-http.properties resource
-           */
+         * If test run in external distributed deployment you need to copy
+         * following configFiles/preserveContentType/passthru-http.properties resource
+         */
 
-        serverConfigurationManager.applyConfiguration(new File(getESBResourceLocation() + File.separator + "passthru" +
-                File.separator + "transport" + File.separator + "preserveheaders" + File.separator + "passthru-http.properties"));
+        serverConfigurationManager.applyConfiguration(new File(
+                getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
+                        + "preserveheaders" + File.separator + "passthru-http.properties"));
         super.init();
         wireServer = new WireMonitorServer(8992);
         verifyAPIExistence("ContentTypePreserveAPI");
     }
 
-    @Test(groups = "wso2.esb", description = "Preserve Content-Type header test", enabled = true)
-    public void testPreserveContentTypeHeader() throws Exception {
+    @Test(groups = "wso2.esb", description = "Preserve Content-Type header test", enabled = true) public void testPreserveContentTypeHeader()
+            throws Exception {
         wireServer.start();
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -72,7 +73,6 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
         } finally {
             httpclient.clearRequestInterceptors();
         }
-
 
         String wireResponse = wireServer.getCapturedMessage();
         String[] wireResponseLines = wireResponse.split(System.lineSeparator());
@@ -89,8 +89,7 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
         Assert.assertTrue(isContentTypePresent, "Content-Type header is not present in the ESB request");
     }
 
-    @AfterClass
-    public void cleanUp() throws Exception {
+    @AfterClass public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

@@ -22,25 +22,24 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 
 import java.io.File;
 
 import static org.testng.Assert.assertTrue;
 
-
 public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
 
     private static LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport" +
-                File.separator + "mailTransportReceiver" + File.separator + "mail_transport_invalid_folder.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
+                        + File.separator + "mailTransportReceiver" + File.separator
+                        + "mail_transport_invalid_folder.xml");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
         // Since ESB reads all unread emails one by one, we have to delete
@@ -48,15 +47,15 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test email transport with invalid folder")
-    public void testEmailTransportInvalidFolder() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test email transport with invalid folder") public void testEmailTransportInvalidFolder()
+            throws Exception {
         logViewerClient.clearLogs();
         assertTrue(Utils.checkForLog(logViewerClient, "FolderABC not found", 1000),
                 "Couldn't find the error message in log");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
     }
 

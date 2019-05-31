@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
@@ -25,7 +25,6 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import javax.xml.namespace.QName;
-import java.io.File;
 
 /**
  * This test case tests whether the setting of properties
@@ -34,14 +33,12 @@ import java.io.File;
 
 public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Set action as \"value\" and type Double (defaultscope)")
-    public void testDoubleVal() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (defaultscope)") public void testDoubleVal()
+            throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyDoubleDefaultTestProxy"), null,
                         "123123.123123");
@@ -51,9 +48,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Set action as \"value\" and type Integer (defaultscope)")
-    public void testIntVal() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (defaultscope)") public void testIntVal()
+            throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntDefaultTestProxy"), null, "123");
         Assert.assertTrue(
@@ -62,9 +58,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Set action as \"value\" and type String (defaultscope)")
-    public void testStringVal() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (defaultscope)") public void testStringVal()
+            throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringDefaultTestProxy"), null, "WSO2");
         Assert.assertTrue(
@@ -73,9 +68,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Set action as \"value\" and type Boolean (defaultscope)")
-    public void testBooleanVal() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (defaultscope)") public void testBooleanVal()
+            throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyBooleanDefaultTestProxy"), null, "TRUE");
         Assert.assertTrue(
@@ -84,9 +78,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Set action as \"value\" and type Float (defaultscope)")
-    public void testFloatVal() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (defaultscope)") public void testFloatVal()
+            throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatDefaultTestProxy"), null, "123.123");
         Assert.assertTrue(
@@ -95,9 +88,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Set action as \"value\" and type Short (defaultscope)")
-    public void testShortVal() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (defaultscope)") public void testShortVal()
+            throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortDefaultTestProxy"), null, "12");
         Assert.assertTrue(
@@ -106,8 +98,7 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         cleanup();
     }
 }

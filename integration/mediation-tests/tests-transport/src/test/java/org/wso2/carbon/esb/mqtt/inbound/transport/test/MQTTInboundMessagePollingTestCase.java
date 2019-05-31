@@ -45,23 +45,23 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
     private JMSBroker activeMQServer;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         ActiveMQServerExtension.stopMQServer();
-        activeMQServer = new JMSBroker("MQTTBroker", JMSBrokerConfigurationProvider.getInstance()
-                .getTransportConnectors());
+        activeMQServer = new JMSBroker("MQTTBroker",
+                JMSBrokerConfigurationProvider.getInstance().getTransportConnectors());
         activeMQServer.start();
         super.init();
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mqtt"
-                        + File.separator + "inbound" + File.separator + "transport" + File.separator
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mqtt" + File.separator
+                        + "inbound" + File.separator + "transport" + File.separator
                         + "simple_mqtt_inboud_transport_config.xml");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Check if Inbound MQTT Transport receives messages without issue")
-    public void testMQTTInboundEndpointMessagePolling() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Check if Inbound MQTT Transport receives messages without issue") public void testMQTTInboundEndpointMessagePolling()
+            throws Exception {
         //connect to broker and publish a message
         String brokerURL = "tcp://localhost:1883";
         String userName = "admin";
@@ -85,8 +85,7 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         Assert.assertTrue(result, "Message is not found in log. Expected : " + messageToSend);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         activeMQServer.stop();
         ActiveMQServerExtension.startMQServer();

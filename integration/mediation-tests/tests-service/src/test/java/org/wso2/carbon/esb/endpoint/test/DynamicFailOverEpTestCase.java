@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -27,31 +27,27 @@ import org.wso2.carbon.esb.endpoint.test.util.EndpointTestUtils;
 import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import javax.xml.stream.XMLStreamException;
 
 public class DynamicFailOverEpTestCase extends ESBIntegrationTest {
     private EndPointAdminClient endPointAdminClient;
     private final String ENDPOINT_PATH_1 = "conf:/DynamicFOEndpointConf";
     private final String ENDPOINT_PATH_2 = "gov:/DynamicFOEndpointGov";
-    private final String ENDPOINT_XML = "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"anonymous\">\n" +
-                                               "   <failover>\n" +
-                                               "      <endpoint name=\"endpoint_urn_uuid_9582E686A7E285451E20649893138844-540148289\">\n" +
-                                               "         <address uri=\"http://webservices.amazon.com/AWSECommerceService/UK/AWSECommerceService.wsdl\"/>\n" +
-                                               "      </endpoint>\n" +
-                                               "   </failover>\n" +
-                                               "</endpoint>";
+    private final String ENDPOINT_XML =
+            "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"anonymous\">\n" + "   <failover>\n"
+                    + "      <endpoint name=\"endpoint_urn_uuid_9582E686A7E285451E20649893138844-540148289\">\n"
+                    + "         <address uri=\"http://webservices.amazon.com/AWSECommerceService/UK/AWSECommerceService.wsdl\"/>\n"
+                    + "      </endpoint>\n" + "   </failover>\n" + "</endpoint>";
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void testDynamicFailOverEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" }) public void testDynamicFailOverEndpoint() throws Exception {
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_1);
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_2);
 
@@ -59,14 +55,12 @@ public class DynamicFailOverEpTestCase extends ESBIntegrationTest {
         dynamicEndpointDeletionScenario(ENDPOINT_PATH_2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }
 
-    private void cleanupEndpoints()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void cleanupEndpoints() throws RemoteException, EndpointAdminEndpointAdminException {
         EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_1, endPointAdminClient);
         EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_2, endPointAdminClient);
     }
@@ -85,6 +79,5 @@ public class DynamicFailOverEpTestCase extends ESBIntegrationTest {
         endPointAdminClient.deleteDynamicEndpoint(path);
         EndpointTestUtils.assertDynamicEndpointDeletion(beforeCount, endPointAdminClient);
     }
-
 
 }

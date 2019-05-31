@@ -23,10 +23,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.esb.integration.common.utils.clients.GreenMailClient;
-import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.esb.integration.common.utils.clients.GreenMailClient;
+import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 
 import java.io.File;
 import java.sql.Timestamp;
@@ -43,13 +43,12 @@ public class MailToTransportRemoveHeaderTestCase extends ESBIntegrationTest {
     private static GreenMailClient greenMailClient;
     private static GreenMailUser greenMailUser;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport" +
-                        File.separator + "mailTransportReceiver" + File.separator + "mail_transport_remove_header.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
+                        + File.separator + "mailTransportReceiver" + File.separator
+                        + "mail_transport_remove_header.xml");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
@@ -59,9 +58,9 @@ public class MailToTransportRemoveHeaderTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Test email transport remove header parameter")
-    public void testEmailRemoveHeaderTransport() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test email transport remove header parameter") public void testEmailRemoveHeaderTransport()
+            throws Exception {
         logViewerClient.clearLogs();
         Date date = new Date();
         String emailSubject = "Remove Headers Test : " + new Timestamp(date.getTime());
@@ -71,8 +70,7 @@ public class MailToTransportRemoveHeaderTestCase extends ESBIntegrationTest {
                 "Mail is not Received by ESB with Delete Header Successfully");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
 
     }

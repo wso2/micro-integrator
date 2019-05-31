@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.carbon.esb.header.preserve;
 
@@ -39,8 +39,7 @@ public class ESBJAVA4631PreserveContentTypeHeaderTestCase extends ESBIntegration
 
     WireMonitorServer wireMonitorServer;
 
-    @BeforeTest(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeTest(alwaysRun = true) public void init() throws Exception {
         super.init();
 
         wireMonitorServer = new WireMonitorServer(6770);
@@ -49,15 +48,14 @@ public class ESBJAVA4631PreserveContentTypeHeaderTestCase extends ESBIntegration
         verifyProxyServiceExistence("PreserveContentTypeHeaderTest");
     }
 
-    @Test(groups = "wso2.esb", description = "Test to check whether the Content-Type header is preserved when sending " +
-                                             "requests to back end")
-    public void testPreserveContentTypeHeader() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test to check whether the Content-Type header is preserved when sending "
+            + "requests to back end") public void testPreserveContentTypeHeader() throws Exception {
 
         String proxyServiceUrl = getProxyServiceURLHttp("PreserveContentTypeHeaderTest");
 
-        String requestPayload = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' >"
-                                + "<soapenv:Body>"
-                                + "</soapenv:Body></soapenv:Envelope> ";
+        String requestPayload =
+                "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' >" + "<soapenv:Body>"
+                        + "</soapenv:Body></soapenv:Envelope> ";
 
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Soapaction", "urn:mediate");
@@ -80,8 +78,7 @@ public class ESBJAVA4631PreserveContentTypeHeaderTestCase extends ESBIntegration
         Assert.assertTrue(true);
     }
 
-    @AfterTest(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterTest(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

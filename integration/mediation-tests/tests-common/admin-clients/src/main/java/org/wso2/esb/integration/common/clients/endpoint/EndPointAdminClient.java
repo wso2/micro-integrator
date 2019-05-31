@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.esb.integration.common.clients.endpoint;
 
 import org.apache.axiom.om.OMElement;
@@ -27,12 +27,12 @@ import org.wso2.carbon.endpoint.stub.types.EndpointAdminStub;
 import org.wso2.carbon.endpoint.stub.types.service.EndpointMetaData;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 
+import java.io.IOException;
+import java.rmi.RemoteException;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
-import java.rmi.RemoteException;
 
 public class EndPointAdminClient {
     private static final Log log = LogFactory.getLog(EndPointAdminClient.class);
@@ -46,8 +46,7 @@ public class EndPointAdminClient {
         AuthenticateStub.authenticateStub(sessionCookie, endpointAdminStub);
     }
 
-    public EndPointAdminClient(String backEndURL, String userName, String password)
-            throws AxisFault {
+    public EndPointAdminClient(String backEndURL, String userName, String password) throws AxisFault {
         String endPoint = backEndURL + serviceName;
         endpointAdminStub = new EndpointAdminStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, endpointAdminStub);
@@ -89,18 +88,15 @@ public class EndPointAdminClient {
         return endpointAdminStub.getEndPointsNames();
     }
 
-    public int getDynamicEndpointCount()
-            throws EndpointAdminEndpointAdminException, RemoteException {
+    public int getDynamicEndpointCount() throws EndpointAdminEndpointAdminException, RemoteException {
         return endpointAdminStub.getDynamicEndpointCount();
     }
 
-    public String getDynamicEndpoint(String key)
-            throws EndpointAdminEndpointAdminException, RemoteException {
+    public String getDynamicEndpoint(String key) throws EndpointAdminEndpointAdminException, RemoteException {
         return endpointAdminStub.getDynamicEndpoint(key);
     }
 
-    public String[] getDynamicEndpoints()
-            throws EndpointAdminEndpointAdminException, RemoteException {
+    public String[] getDynamicEndpoints() throws EndpointAdminEndpointAdminException, RemoteException {
         return endpointAdminStub.getDynamicEndpoints();
     }
 
@@ -111,13 +107,11 @@ public class EndPointAdminClient {
         assert (endpoint.contains("statistics=\"enable"));
     }
 
-    public boolean deleteEndpoint(String endpointName)
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    public boolean deleteEndpoint(String endpointName) throws RemoteException, EndpointAdminEndpointAdminException {
         return endpointAdminStub.deleteEndpoint(endpointName);
     }
 
-    public boolean deleteDynamicEndpoint(String key)
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    public boolean deleteDynamicEndpoint(String key) throws RemoteException, EndpointAdminEndpointAdminException {
         return endpointAdminStub.deleteDynamicEndpoint(key);
     }
 

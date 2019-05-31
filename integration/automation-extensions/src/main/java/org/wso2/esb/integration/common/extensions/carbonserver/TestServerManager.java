@@ -57,8 +57,7 @@ public class TestServerManager {
         commandMap.put(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND, String.valueOf(portOffset));
     }
 
-    public TestServerManager(AutomationContext context, String carbonZip,
-                             Map<String, String> commandMap) {
+    public TestServerManager(AutomationContext context, String carbonZip, Map<String, String> commandMap) {
         carbonServer = new CarbonServerManager(context);
         this.carbonZip = carbonZip;
         if (commandMap.get(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND) != null) {
@@ -93,12 +92,12 @@ public class TestServerManager {
         log.info("Updating " + destinationPath + " for product EI");
         String catalinaResourcePath = Paths.get(FrameworkPathUtil.getSystemResourceLocation(), sourcePath).toString();
         try {
-            FileManager.copyFile(Paths.get(catalinaResourcePath).toFile(), Paths.get(carbonHome, destinationPath).toString());
+            FileManager.copyFile(Paths.get(catalinaResourcePath).toFile(),
+                    Paths.get(carbonHome, destinationPath).toString());
         } catch (IOException e) {
             log.warn("IOException while replacing " + destinationPath);
         }
     }
-
 
     public Map<String, String> getCommands() {
         return commandMap;
@@ -114,8 +113,7 @@ public class TestServerManager {
      * @throws IOException If an error occurs while copying the deployment artifacts into the
      *                     Carbon server
      */
-    public String startServer()
-            throws AutomationFrameworkException, IOException, XPathExpressionException {
+    public String startServer() throws AutomationFrameworkException, IOException, XPathExpressionException {
         if (carbonHome == null) {
             if (carbonZip == null) {
                 carbonZip = System.getProperty(FrameworkConstants.SYSTEM_PROPERTY_CARBON_ZIP_LOCATION);
@@ -147,8 +145,8 @@ public class TestServerManager {
      */
     public void restartGracefully() throws AutomationFrameworkException {
         if (carbonHome == null) {
-            throw new AutomationFrameworkException("No Running Server found to restart. " +
-                    "Please make sure whether server is started");
+            throw new AutomationFrameworkException(
+                    "No Running Server found to restart. " + "Please make sure whether server is started");
         }
         carbonServer.restartGracefully();
     }
@@ -163,6 +161,5 @@ public class TestServerManager {
     public void stopServer() throws AutomationFrameworkException {
         carbonServer.serverShutdown(portOffset);
     }
-
 
 }

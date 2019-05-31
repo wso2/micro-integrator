@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License, 
- * Version 2.0 (the "License"); you may not use this file except 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -21,50 +21,44 @@ import junit.framework.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.SimpleSocketServer;
 
 import java.io.IOException;
 
 /**
  * A response with a custom status description should not be replaced by default description.
-
  */
 public class ESBJAVA4423CustomStatusDescriptionTest extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
     private SimpleSocketServer simpleSocketServer;
 
-    @BeforeClass
-    public void init() throws Exception {
+    @BeforeClass public void init() throws Exception {
         super.init();
         verifyProxyServiceExistence("ESBJAVA4423HttpCustomProxyTest");
     }
 
-    @Test(groups = "wso2.esb", description = "Test custom status description", enabled = true)
-    public void testCustomStatusDescription() {
-        String expectedResponse = "HTTP/1.1 417 Custom response\r\nServer: testServer\r\n" +
-                "Content-Type: text/xml; charset=UTF-8\r\n" +
-                "Transfer-Encoding: chunked\r\n" +
-                "\r\n" + "\"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
-                "<test></test>";
+    @Test(groups = "wso2.esb", description = "Test custom status description", enabled = true) public void testCustomStatusDescription() {
+        String expectedResponse =
+                "HTTP/1.1 417 Custom response\r\nServer: testServer\r\n" + "Content-Type: text/xml; charset=UTF-8\r\n"
+                        + "Transfer-Encoding: chunked\r\n" + "\r\n" + "\"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+                        + "<test></test>";
         //start socket server
         simpleSocketServer = new SimpleSocketServer(5389, expectedResponse);
         simpleSocketServer.start();
 
         try {
             //this will spawn an exception with the custom response included
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ESBJAVA4423HttpCustomProxyTest"), "", "IBM");
+            axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ESBJAVA4423HttpCustomProxyTest"), "", "IBM");
         } catch (IOException e) {
             Assert.assertTrue(e.getMessage().contains("Custom response"));
         }
     }
 
-    @AfterClass
-    public void cleanUp() throws Exception {
+    @AfterClass public void cleanUp() throws Exception {
         if (simpleSocketServer != null) {
             simpleSocketServer.shutdown();
         }

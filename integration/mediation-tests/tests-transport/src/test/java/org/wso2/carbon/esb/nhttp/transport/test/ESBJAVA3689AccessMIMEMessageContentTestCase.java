@@ -44,26 +44,26 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
     private LogViewerClient logViewer;
     private final String API_NAME = "MimeAttachmentAPI";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(new File(getESBResourceLocation() + File.separator
-                + "nhttp" + File.separator + "transport" + File.separator + "axis2.xml"));
+        serverConfigurationManager.applyConfiguration(new File(
+                getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
+                        + "axis2.xml"));
         super.init();
         verifyAPIExistence(API_NAME);
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Access content of MIME in NHTTP transport")
-    public void accessMIMEMessages() throws Exception {
+    @Test(groups = "wso2.esb", description = "Access content of MIME in NHTTP transport") public void accessMIMEMessages()
+            throws Exception {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(getApiInvocationURL(API_NAME));
 
-        File fileToUse = new File(getESBResourceLocation() + File.separator
-                + "nhttp" + File.separator + "transport" + File.separator + "mime" + File.separator
-                + "attachment.xml");
+        File fileToUse = new File(
+                getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
+                        + "mime" + File.separator + "attachment.xml");
         FileBody data = new FileBody(fileToUse);
 
         String file_type = "xml";
@@ -78,12 +78,11 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
         httppost.setEntity(reqEntity);
         httpclient.execute(httppost);
 
-       
-        String expectedMessage = "<soapenv:Body><mediate><file_type>xml</file_type><description>Simple HTTP POST " +
-                "request with an attachment.</description><file_name>attachment.xml</file_name><data " +
-                "filename=\"attachment" + ""
-                + ".xml\">PG1pbWU+CiAgICA8aWQ+MDAwMTwvaWQ+CiAgICA8bmFtZT5NaW1lIGNvbnRlbnQgYWNjZXNzIHRlc3Q8L25hbWU" +
-                "+CiAgICA8dG9rZW4" + "+d3NvMl9hY2Nlc3NfMDAxPC90b2tlbj4KPC9taW1lPg==</data></mediate></soapenv:Body"
+        String expectedMessage = "<soapenv:Body><mediate><file_type>xml</file_type><description>Simple HTTP POST "
+                + "request with an attachment.</description><file_name>attachment.xml</file_name><data "
+                + "filename=\"attachment" + ""
+                + ".xml\">PG1pbWU+CiAgICA8aWQ+MDAwMTwvaWQ+CiAgICA8bmFtZT5NaW1lIGNvbnRlbnQgYWNjZXNzIHRlc3Q8L25hbWU"
+                + "+CiAgICA8dG9rZW4" + "+d3NvMl9hY2Nlc3NfMDAxPC90b2tlbj4KPC9taW1lPg==</data></mediate></soapenv:Body"
                 + "></soapenv:Envelope>";
 
         LogEvent[] logs = logViewer.getAllSystemLogs();
@@ -97,8 +96,7 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
         assertTrue(LogFound, "MIME message build was not successful.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

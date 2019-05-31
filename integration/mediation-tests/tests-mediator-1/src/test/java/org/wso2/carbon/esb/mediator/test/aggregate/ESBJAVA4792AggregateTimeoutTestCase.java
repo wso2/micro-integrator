@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*  http://www.apache.org/licenses/LICENSE-2.0
-*
-*  Unless required by applicable law or agreed to in writing,
-*  software distributed under the License is distributed on an
-*  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*  KIND, either express or implied.  See the License for the
-*  specific language governing permissions and limitations
-*  under the License.
-*/
+ *  Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.aggregate;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -43,8 +43,7 @@ import javax.xml.stream.XMLStreamException;
 public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server1;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server1.deployService("LBServiceWithSleep");
@@ -52,14 +51,14 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/aggregate/aggregateConfig.xml");
     }
 
-
-    @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after " +
-                                             "aggregator timeout when iterator is used")
-    public void checkOnCompleteExecutionInIterator() throws Exception {
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(),getSessionCookie());
+    @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
+            + "aggregator timeout when iterator is used") public void checkOnCompleteExecutionInIterator()
+            throws Exception {
+        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         OMElement payload = getSleepOperationRequestForIterator();
-        OMElement response = axis2Client.send(getProxyServiceURLHttp("timeoutIterator"), null, "sleepOperation", payload);
+        OMElement response = axis2Client
+                .send(getProxyServiceURLHttp("timeoutIterator"), null, "sleepOperation", payload);
         Assert.assertEquals(countLoadElement(response), 2, "Response must have two aggregated responses");
         //wait a last response to come to aggregator
         boolean logFound = Utils.checkForLog(logViewerClient,
@@ -67,26 +66,24 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         Assert.assertTrue(logFound, "OnComplete has been triggered more than expecting");
     }
 
-    @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after " +
-                                             "aggregator timeout when clone is used")
-    public void checkOnCompleteExecutionInClone() throws Exception {
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(),getSessionCookie());
+    @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
+            + "aggregator timeout when clone is used") public void checkOnCompleteExecutionInClone() throws Exception {
+        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         OMElement payload = getSleepOperationRequest();
         OMElement response = axis2Client.send(getProxyServiceURLHttps("timeoutClone"), null, "sleepOperation", payload);
         Assert.assertEquals(countLoadElement(response), 2, "Response must have two aggregated responses");
         //wait a last response to come to aggregator
-        boolean logFound = Utils.checkForLog(logViewerClient,
-                "On Complete Triggered in Clone for ESBJAVA4792AggregateTimeoutTestCase", 10);
+        boolean logFound = Utils
+                .checkForLog(logViewerClient, "On Complete Triggered in Clone for ESBJAVA4792AggregateTimeoutTestCase",
+                        10);
         Assert.assertTrue(logFound, "OnComplete has been triggered more than expecting");
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         try {
             super.cleanup();
-        }finally {
+        } finally {
             axis2Server1.stop();
         }
     }
@@ -106,7 +103,6 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         omeLoad3.setText("8000");
         omeSleep.addChild(omeLoad3);
 
-
         return omeSleep;
 
     }
@@ -118,7 +114,6 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         OMElement omeLoad = fac.createOMElement("load", null);
         omeLoad.setText("8000");
         omeSleep.addChild(omeLoad);
-
 
         return omeSleep;
 

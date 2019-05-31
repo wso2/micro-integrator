@@ -23,13 +23,13 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.esb.integration.common.utils.exception.RabbitMQTransportException;
 import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import javax.xml.xpath.XPathExpressionException;
 
 public class RabbitMQTestUtils {
 
@@ -39,7 +39,8 @@ public class RabbitMQTestUtils {
 
     private static final String RABBITMQ_HOME_XPATH = "//rabbitmq/rabbitmqhome";
 
-    public static RabbitMQServer getRabbitMQServerInstance() throws XPathExpressionException, RabbitMQTransportException {
+    public static RabbitMQServer getRabbitMQServerInstance()
+            throws XPathExpressionException, RabbitMQTransportException {
         AutomationContext automationContext = new AutomationContext();
         String rabbitMQHome = automationContext.getConfigurationValue(RABBITMQ_HOME_XPATH);
         return new RabbitMQServer(rabbitMQHome);
@@ -77,7 +78,8 @@ public class RabbitMQTestUtils {
         }
         inStream.close();
         outStream.close();
-        log.info("Original config file backed up (backupName - " + destination.getPath() + ".backup) and new file copied successfully");
+        log.info("Original config file backed up (backupName - " + destination.getPath()
+                + ".backup) and new file copied successfully");
     }
 
     /**
@@ -86,7 +88,7 @@ public class RabbitMQTestUtils {
      * @param configFile
      * @throws IOException
      */
-    public static void restoreConfigs(File configFile) throws IOException{
+    public static void restoreConfigs(File configFile) throws IOException {
         log.info("Restoring config file to the original, config file - " + configFile.getPath());
         File backupFile = new File(configFile.getPath() + ".backup");
 

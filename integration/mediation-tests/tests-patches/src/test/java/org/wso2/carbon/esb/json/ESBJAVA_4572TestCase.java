@@ -22,45 +22,36 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
-
-import java.io.File;
-
 
 public class ESBJAVA_4572TestCase extends ESBIntegrationTest {
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("ESBJAVA4572TestAPI");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.esb", description = "disabling auto primitive option in synapse properties ", enabled = false)
-    public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter() throws Exception {
-        String payload =
-                   "{\"state\":[{\"path\":\"user_programs_progress\",\"entry\":" +
-                   "[{\"value\":\"false\",\"key\":\"testJson14\"}]}]}";
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description = "disabling auto primitive option in synapse properties ", enabled = false) public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter()
+            throws Exception {
+        String payload = "{\"state\":[{\"path\":\"user_programs_progress\",\"entry\":"
+                + "[{\"value\":\"false\",\"key\":\"testJson14\"}]}]}";
 
-        HttpResponse response = httpClient.doPost("http://localhost:8280/ESBJAVA4572abc/dd",
-                                                  null, payload, "application/json");
+        HttpResponse response = httpClient
+                .doPost("http://localhost:8280/ESBJAVA4572abc/dd", null, payload, "application/json");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         response.getEntity().writeTo(bos);
         String exPayload = new String(bos.toByteArray());
-        String val = "{\"state\":[{\"path\":\"user_programs_progress\",\"entry\":" +
-                     "[{\"value\":\"false\",\"key\":\"testJson14\"}]}]}";
+        String val = "{\"state\":[{\"path\":\"user_programs_progress\",\"entry\":"
+                + "[{\"value\":\"false\",\"key\":\"testJson14\"}]}]}";
         Assert.assertEquals(val, exPayload);
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -3,13 +3,17 @@ package org.wso2.carbon.esb.jms.transport.test;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.management.*;
-import javax.management.remote.JMXConnector;
-import javax.management.remote.JMXConnectorFactory;
-import javax.management.remote.JMXServiceURL;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Hashtable;
+import javax.management.InstanceNotFoundException;
+import javax.management.ListenerNotFoundException;
+import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.remote.JMXConnector;
+import javax.management.remote.JMXConnectorFactory;
+import javax.management.remote.JMXServiceURL;
 
 public class JMXClient {
     private MBeanServerConnection mbsc = null;
@@ -30,7 +34,7 @@ public class JMXClient {
      */
     public JMXClient(String type, String serviceName, String hostName, String userName, String password)
             throws MalformedObjectNameException {
-        String connectionName = "org.apache.synapse:Type="+type+",Name=" + serviceName;
+        String connectionName = "org.apache.synapse:Type=" + type + ",Name=" + serviceName;
         this.objectName = new ObjectName(connectionName);
         this.userName = userName;
         this.password = password;
@@ -41,20 +45,18 @@ public class JMXClient {
      * connect to org.wso2.carbon for JMX monitoring
      *
      * @return - return MBeanServerConnection
-     * @throws java.io.IOException - error in making connection
-     * @throws javax.management.MalformedObjectNameException
-     *                             - error in making connection
+     * @throws java.io.IOException                           - error in making connection
+     * @throws javax.management.MalformedObjectNameException - error in making connection
      */
-    public MBeanServerConnection connect()
-            throws IOException, MalformedObjectNameException {
+    public MBeanServerConnection connect() throws IOException, MalformedObjectNameException {
         try {
             //need to read rmi ports from environment config
             //default ports (11111 & 9999) have been offset by 200 due to the overall port offset
-            JMXServiceURL url =
-                    new JMXServiceURL("service:jmx:rmi://localhost:11311/jndi/rmi://" + hostName + ":10199/jmxrmi");
+            JMXServiceURL url = new JMXServiceURL(
+                    "service:jmx:rmi://localhost:11311/jndi/rmi://" + hostName + ":10199/jmxrmi");
 
             Hashtable<String, String[]> hashT = new Hashtable<String, String[]>();
-            String[] credentials = new String[]{userName, password};
+            String[] credentials = new String[] { userName, password };
             hashT.put("jmx.remote.credentials", credentials);
 
             jmxc = JMXConnectorFactory.connect(url, hashT);
@@ -74,9 +76,7 @@ public class JMXClient {
         return null;
     }
 
-
-    public void disconnect()
-            throws ListenerNotFoundException, InstanceNotFoundException, IOException {
+    public void disconnect() throws ListenerNotFoundException, InstanceNotFoundException, IOException {
 
         if (jmxc != null) {
             log.info("Closing jmx client connection...............");

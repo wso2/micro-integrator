@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.esb.integration.common.utils.clients;
 
@@ -41,12 +41,17 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import javax.xml.namespace.QName;
 
 /**
  * Load balance failover client with session affinity
@@ -71,17 +76,16 @@ public class LoadBalanceSessionFullClient {
 
     private void init() throws IOException {
         String repositoryPath =
-            System.getProperty(ESBTestConstant.CARBON_HOME) + File.separator + "samples" + File.separator +
-            "axis2Client" + File.separator + DEFAULT_CLIENT_REPO;
+                System.getProperty(ESBTestConstant.CARBON_HOME) + File.separator + "samples" + File.separator
+                        + "axis2Client" + File.separator + DEFAULT_CLIENT_REPO;
 
         File repository = new File(repositoryPath);
         if (log.isDebugEnabled()) {
             log.debug("Axis2 repository path: " + repository.getAbsolutePath());
         }
 
-        ConfigurationContext configurationContext =
-            ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-                repository.getCanonicalPath(), null);
+        ConfigurationContext configurationContext = ConfigurationContextFactory
+                .createConfigurationContextFromFileSystem(repository.getCanonicalPath(), null);
         serviceClient = new ServiceClient(configurationContext, null);
         log.info("LoadBalanceSessionFullClient initialized successfully...");
     }
@@ -106,7 +110,7 @@ public class LoadBalanceSessionFullClient {
      * @throws org.apache.axis2.AxisFault if error occurs when sending request
      */
     public List<ResponseData> sendLoadBalanceRequest(String trpUrl, String addUrl, String prxUrl, int iterations)
-        throws AxisFault {
+            throws AxisFault {
         updateServiceClientOptions(trpUrl, addUrl, prxUrl);
         return makeRequest(null, iterations, sleepTime, envelopes, serviceClient);
     }
@@ -123,7 +127,7 @@ public class LoadBalanceSessionFullClient {
      * @throws org.apache.axis2.AxisFault if error occurs when sending request
      */
     public List<ResponseData> sendLoadBalanceRequest(String trpUrl, String addUrl, String prxUrl, String session,
-                                                     int iterations) throws AxisFault {
+            int iterations) throws AxisFault {
         updateServiceClientOptions(trpUrl, addUrl, prxUrl);
         return makeRequest(session, iterations, sleepTime, envelopes, serviceClient);
     }
@@ -141,7 +145,7 @@ public class LoadBalanceSessionFullClient {
      * @throws org.apache.axis2.AxisFault if error occurs when sending request
      */
     public List<ResponseData> sendLoadBalanceRequest(String trpUrl, String addUrl, String prxUrl, String session,
-                                                     int iterations, long sleepTime) throws AxisFault {
+            int iterations, long sleepTime) throws AxisFault {
         updateServiceClientOptions(trpUrl, addUrl, prxUrl);
         return makeRequest(session, iterations, sleepTime, envelopes, serviceClient);
     }
@@ -164,8 +168,7 @@ public class LoadBalanceSessionFullClient {
         }
         serviceClient.engageModule("addressing");
         if (prxUrl != null && !"null".equals(prxUrl)) {
-            HttpTransportProperties.ProxyProperties proxyProperties =
-                new HttpTransportProperties.ProxyProperties();
+            HttpTransportProperties.ProxyProperties proxyProperties = new HttpTransportProperties.ProxyProperties();
             try {
                 URL url = new URL(prxUrl);
                 proxyProperties.setProxyName(url.getHost());
@@ -184,7 +187,7 @@ public class LoadBalanceSessionFullClient {
     }
 
     private List<ResponseData> makeRequest(String session, int iterations, long sleepTime, SOAPEnvelope[] envelopes,
-                                           ServiceClient client) throws AxisFault {
+            ServiceClient client) throws AxisFault {
         List<ResponseData> responseList = new ArrayList<ResponseData>();
 
         int i = 0;
@@ -217,8 +220,7 @@ public class LoadBalanceSessionFullClient {
                 op.addMessageContext(messageContext);
                 op.execute(true);
 
-                MessageContext responseContext =
-                    op.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
+                MessageContext responseContext = op.getMessageContext(WSDLConstants.MESSAGE_LABEL_IN_VALUE);
                 String receivedCookie = extractSessionID(responseContext);
                 String receivedSetCookie = getSetCookieHeader(responseContext);
                 if (httpSession) {
@@ -230,26 +232,24 @@ public class LoadBalanceSessionFullClient {
 
                 SOAPEnvelope responseEnvelope = responseContext.getEnvelope();
 
-                OMElement vElement =
-                    responseEnvelope.getBody().getFirstChildWithName(new QName("Value"));
+                OMElement vElement = responseEnvelope.getBody().getFirstChildWithName(new QName("Value"));
                 if (log.isDebugEnabled()) {
-                    log.debug(
-                        "Request: " + i + " with Session ID: " + (httpSession ? cookie : sessionNumber) + " ---- " +
-                        "Response : with  " + (httpSession && receivedCookie != null ?
-                                               (receivedSetCookie != null ? receivedSetCookie : receivedCookie) :
-                                               " ") + " " + vElement.getText());
+                    log.debug("Request: " + i + " with Session ID: " + (httpSession ? cookie : sessionNumber) + " ---- "
+                            + "Response : with  " + (httpSession && receivedCookie != null ?
+                            (receivedSetCookie != null ? receivedSetCookie : receivedCookie) :
+                            " ") + " " + vElement.getText());
                 }
 
                 responseList
-                    .add(new ResponseData(true, "" + (httpSession ? cookie : sessionNumber), vElement.getText()));
+                        .add(new ResponseData(true, "" + (httpSession ? cookie : sessionNumber), vElement.getText()));
 
             } catch (AxisFault axisFault) {
                 if (log.isDebugEnabled()) {
                     log.debug("Request with session id " + (httpSession ? cookie : sessionNumber), axisFault);
                 }
 
-                responseList.add(
-                    new ResponseData(false, "" + (httpSession ? cookie : sessionNumber), axisFault.getMessage()));
+                responseList.add(new ResponseData(false, "" + (httpSession ? cookie : sessionNumber),
+                        axisFault.getMessage()));
             }
         }
 
@@ -310,8 +310,7 @@ public class LoadBalanceSessionFullClient {
         SOAPHeader header = soapFactory.createSOAPHeader();
         envelope.addChild(header);
 
-        OMNamespace synNamespace = soapFactory.createOMNamespace(
-            "http://ws.apache.org/ns/synapse", "syn");
+        OMNamespace synNamespace = soapFactory.createOMNamespace("http://ws.apache.org/ns/synapse", "syn");
         OMElement clientIDElement = soapFactory.createOMElement("ClientID", synNamespace);
         clientIDElement.setText(clientID);
         header.addChild(clientIDElement);

@@ -39,23 +39,21 @@ public class ESBJAVA4973BindAddressFeatureTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         File file = new File(
-                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator +
-                        "passthru" + File.separator + "transport" + File.separator + "ESBJAVA4973" + File.separator +
-                        "axis2.xml");
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
+                        + "passthru" + File.separator + "transport" + File.separator + "ESBJAVA4973" + File.separator
+                        + "axis2.xml");
         serverConfigurationManager.applyConfiguration(file);
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test the bind-addresses for http/https pass-through listeners")
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    public void bindAddressTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test the bind-addresses for http/https pass-through listeners") @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void bindAddressTest() throws Exception {
         boolean httpListenerAssert = false;
         boolean httpsListenerAssert = false;
 
@@ -78,9 +76,8 @@ public class ESBJAVA4973BindAddressFeatureTestCase extends ESBIntegrationTest {
         Assert.assertTrue(httpsListenerAssert, "Incorrect bind-address for PassThroughHttpSSLListener");
     }
 
-    @AfterClass(alwaysRun = true)
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void destroy() throws Exception {
         try {
             super.cleanup();
         } finally {

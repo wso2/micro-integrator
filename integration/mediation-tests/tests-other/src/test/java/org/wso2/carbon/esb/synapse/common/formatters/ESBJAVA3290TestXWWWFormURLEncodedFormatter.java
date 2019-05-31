@@ -7,7 +7,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
-import org.wso2.carbon.base.CarbonBaseUtils;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
 
@@ -26,21 +25,20 @@ public class ESBJAVA3290TestXWWWFormURLEncodedFormatter extends ESBIntegrationTe
     private static final String synapseConfig = "x_www_form_url_encoded_formatter_test.xml";
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         wireServer = new WireMonitorServer(8991);
         wireServer.start();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" +
-                                          File.separator + "xwwwformurlencodedformatter"
-                                          + File.separator + synapseConfig);
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "xwwwformurlencodedformatter"
+                        + File.separator + synapseConfig);
         Thread.sleep(5000);
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "POST request against REST endpoint where " +
-                                             "body parameter name starts with digit")
-    public void testPostRequest() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description =
+            "POST request against REST endpoint where "
+                    + "body parameter name starts with digit") public void testPostRequest() throws Exception {
 
         URL endpoint = new URL(getProxyServiceURLHttp("RestProxy"));
         try {
@@ -48,24 +46,20 @@ public class ESBJAVA3290TestXWWWFormURLEncodedFormatter extends ESBIntegrationTe
             header.put("Content-Type", "application/x-www-form-urlencoded");
             HttpRequestUtil.doPost(endpoint, "paramName=abc&2paramName=def&$paramName=ghi", header);
 
-        } catch (Exception e){
+        } catch (Exception e) {
             //ignore
         }
 
         String response = wireServer.getCapturedMessage();
         Assert.assertNotNull(response);
-        Assert.assertTrue(response.contains("2paramName"), "POST request does not contain the " +
-                                                           "body " +
-                                                           "parameter name starts with digit " +
-                                                           "specified");
-        Assert.assertTrue(response.contains("$paramName"), "POST request does not contain the " +
-                                                           "body " +
-                                                           "parameter name starts with $ character " +
-                                                           "specified");
+        Assert.assertTrue(response.contains("2paramName"),
+                "POST request does not contain the " + "body " + "parameter name starts with digit " + "specified");
+        Assert.assertTrue(response.contains("$paramName"),
+                "POST request does not contain the " + "body " + "parameter name starts with $ character "
+                        + "specified");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         cleanup();
         Thread.sleep(3000);
     }

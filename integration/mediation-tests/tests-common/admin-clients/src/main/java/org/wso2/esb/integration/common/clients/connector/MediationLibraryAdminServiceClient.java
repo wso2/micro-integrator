@@ -24,15 +24,14 @@ import org.wso2.carbon.mediation.library.stub.MediationLibraryAdminServiceStub;
 import org.wso2.carbon.mediation.library.stub.types.carbon.LibraryInfo;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 
-import javax.activation.DataHandler;
 import java.rmi.RemoteException;
+import javax.activation.DataHandler;
 
 public class MediationLibraryAdminServiceClient {
 
     private final String serviceName = "MediationLibraryAdminService";
 
     private MediationLibraryAdminServiceStub mediationLibraryAdminServiceStub;
-
 
     public MediationLibraryAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;

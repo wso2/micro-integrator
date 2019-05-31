@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,7 +20,10 @@ package org.wso2.carbon.esb.endpoint.test;
 
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
@@ -37,9 +40,7 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server3;
     private LogViewerClient logViewer;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server3 = new SampleAxis2Server("test_axis2_server_9003.xml");
@@ -59,16 +60,13 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
             log.error("SimpleStockQuoteService not available on port 9003");
         }
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts"
-                + File.separator + "ESB"
-                + File.separator + "endpoint"
-                + File.separator + "failoverEndpointConfig" + File.separator + "failOverWithDisabledErrors.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
+                        + "failoverEndpointConfig" + File.separator + "failOverWithDisabledErrors.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         Thread.sleep(1000);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         log.info("Tests Are Completed");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -92,8 +90,7 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
         Thread.sleep(1000);
     }*/
 
-    @BeforeMethod(groups = "wso2.esb")
-    public void startServersB() throws InterruptedException, IOException {
+    @BeforeMethod(groups = "wso2.esb") public void startServersB() throws InterruptedException, IOException {
         if (!axis2Server1.isStarted()) {
             axis2Server1.start();
         }
@@ -103,7 +100,7 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    private static final String[] logPatterns = new String[]{
+    private static final String[] logPatterns = new String[] {
             "primary_0 is marked as TIMEOUT and will be retried : 1 more time/s after",
             "primary_0 is marked as TIMEOUT and will be retried : 0 more time/s after",
             "primary_0 has been marked for SUSPENSION, but no further retries remain. Thus it will be SUSPENDED.",
@@ -114,20 +111,19 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
             "Suspending endpoint : primary_0 - last suspend duration was : 6400ms and current suspend duration is : 6400ms - Next retry after",
             "[Test_Failover_0] Detect a Failure in a child endpoint : Endpoint [primary_0]",
             "Test_Failover_0 - one of the child endpoints encounterd a non-retry error, not sending message to another endpoint",
-            "primary_0 currently TIMEOUT will now be marked active since it processed its last message"
-    };
+            "primary_0 currently TIMEOUT will now be marked active since it processed its last message" };
 
     //Disabled this test case since there is an actual issue to be fixed when dealing with endpoint timeouts
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint", enabled = false)
-    public void testFailOverWithTimingOutPrimaryEp() throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint", enabled = false) public void testFailOverWithTimingOutPrimaryEp()
+            throws IOException, InterruptedException {
         request(1);  // send request 7 times and observe the carbon log.
         LogEvent[] logs = logViewer.getAllSystemLogs();
         int[] occurrences = new int[10];
-        int[] expected = new int[]{1, 1, 5, 1, 1, 1, 1, 1, 7, 7};
+        int[] expected = new int[] { 1, 1, 5, 1, 1, 1, 1, 1, 7, 7 };
         for (LogEvent log : logs) {
             //skipping the logs before this test case execution. Then it will only go through the logs only made by this test case
-            if(log.getMessage().contains("Successfully created the Axis2 service for Proxy service : failover")) {
+            if (log.getMessage().contains("Successfully created the Axis2 service for Proxy service : failover")) {
                 break;
             }
             for (int i = 0; i < logPatterns.length - 1; ++i) {
@@ -141,8 +137,8 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
         }
         for (int i = 0; i < occurrences.length; ++i) {
             if (occurrences[i] != expected[i]) {
-                log.error("Assertion Failed: [index=" + i + ", expected="
-                          + expected[i] + ", found=" + occurrences[i] + "]");
+                log.error("Assertion Failed: [index=" + i + ", expected=" + expected[i] + ", found=" + occurrences[i]
+                        + "]");
                 Assert.assertTrue(false);
             }
         }

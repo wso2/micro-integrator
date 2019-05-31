@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.esb.integration.common.clients.registry;
 
@@ -24,7 +24,11 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.registry.info.stub.InfoAdminServiceStub;
 import org.wso2.carbon.registry.info.stub.RegistryExceptionException;
-import org.wso2.carbon.registry.info.stub.beans.xsd.*;
+import org.wso2.carbon.registry.info.stub.beans.xsd.CommentBean;
+import org.wso2.carbon.registry.info.stub.beans.xsd.EventTypeBean;
+import org.wso2.carbon.registry.info.stub.beans.xsd.RatingBean;
+import org.wso2.carbon.registry.info.stub.beans.xsd.SubscriptionBean;
+import org.wso2.carbon.registry.info.stub.beans.xsd.TagBean;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 
 import java.rmi.RemoteException;
@@ -35,8 +39,7 @@ public class InfoServiceAdminClient {
 
     private InfoAdminServiceStub infoAdminServiceStub;
 
-    public InfoServiceAdminClient(String backEndUrl, String sessionCookie)
-            throws RegistryException, AxisFault {
+    public InfoServiceAdminClient(String backEndUrl, String sessionCookie) throws RegistryException, AxisFault {
         String serviceName = "InfoAdminService";
         String endPoint = backEndUrl + serviceName;
         try {
@@ -63,8 +66,8 @@ public class InfoServiceAdminClient {
 
     }
 
-    public SubscriptionBean subscribe(String path, String endpoint, String eventName,
-                                      String sessionId) throws RemoteException {
+    public SubscriptionBean subscribe(String path, String endpoint, String eventName, String sessionId)
+            throws RemoteException {
         SubscriptionBean bean = null;
         try {
             bean = infoAdminServiceStub.subscribe(path, endpoint, eventName, sessionId);
@@ -80,8 +83,7 @@ public class InfoServiceAdminClient {
         return bean;
     }
 
-    public void addComment(String comment, String path, String sessionId)
-            throws RegistryException, AxisFault {
+    public void addComment(String comment, String path, String sessionId) throws RegistryException, AxisFault {
         try {
             infoAdminServiceStub.addComment(comment, path, sessionId);
         } catch (RemoteException e) {
@@ -95,8 +97,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public void addTag(String tag, String path, String sessionId)
-            throws RegistryException, AxisFault {
+    public void addTag(String tag, String path, String sessionId) throws RegistryException, AxisFault {
         try {
             infoAdminServiceStub.addTag(tag, path, sessionId);
         } catch (RemoteException e) {
@@ -126,8 +127,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public CommentBean getComments(String path, String sessionId)
-            throws RegistryException, RegistryExceptionException {
+    public CommentBean getComments(String path, String sessionId) throws RegistryException, RegistryExceptionException {
         try {
             return infoAdminServiceStub.getComments(path, sessionId);
         } catch (RemoteException e) {
@@ -141,8 +141,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public RatingBean getRatings(String path, String sessionId)
-            throws RegistryException, RegistryExceptionException {
+    public RatingBean getRatings(String path, String sessionId) throws RegistryException, RegistryExceptionException {
         try {
             return infoAdminServiceStub.getRatings(path, sessionId);
         } catch (RemoteException e) {
@@ -156,8 +155,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public TagBean getTags(String path, String sessionId)
-            throws RegistryException, RegistryExceptionException {
+    public TagBean getTags(String path, String sessionId) throws RegistryException, RegistryExceptionException {
         try {
             return infoAdminServiceStub.getTags(path, sessionId);
         } catch (RemoteException e) {
@@ -186,8 +184,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public String getRemoteURL(String path, String sessionId)
-            throws RegistryException, RegistryExceptionException {
+    public String getRemoteURL(String path, String sessionId) throws RegistryException, RegistryExceptionException {
         try {
             return infoAdminServiceStub.getRemoteURL(path, sessionId);
         } catch (RemoteException e) {
@@ -231,8 +228,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public boolean isResource(String path, String sessionId)
-            throws RegistryException, RegistryExceptionException {
+    public boolean isResource(String path, String sessionId) throws RegistryException, RegistryExceptionException {
         try {
             return infoAdminServiceStub.isResource(path, sessionId);
         } catch (RemoteException e) {
@@ -261,8 +257,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public boolean isRoleValid(String role, String sessionId)
-            throws RegistryException, RegistryExceptionException {
+    public boolean isRoleValid(String role, String sessionId) throws RegistryException, RegistryExceptionException {
         try {
             return infoAdminServiceStub.isRoleValid(role, sessionId);
         } catch (RemoteException e) {
@@ -276,8 +271,7 @@ public class InfoServiceAdminClient {
         }
     }
 
-    public boolean isUserValid(String userName, String sessionId)
-            throws RegistryException, RegistryExceptionException {
+    public boolean isUserValid(String userName, String sessionId) throws RegistryException, RegistryExceptionException {
         try {
             return infoAdminServiceStub.isUserValid(userName, sessionId);
         } catch (RemoteException e) {

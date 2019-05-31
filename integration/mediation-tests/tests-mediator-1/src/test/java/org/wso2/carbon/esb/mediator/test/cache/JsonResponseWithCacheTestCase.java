@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.mediator.test.cache;
 
@@ -44,17 +44,16 @@ public class JsonResponseWithCacheTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(new File(getESBResourceLocation() + "/mediatorconfig/cache/" +
-                "axis2.xml"));
+        serverConfigurationManager
+                .applyConfiguration(new File(getESBResourceLocation() + "/mediatorconfig/cache/" + "axis2.xml"));
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test cache mediator with  Json response having a single element array", enabled = false)
-    public void testJsonResponseWithCacheMediator() throws IOException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Test cache mediator with  Json response having a single element array", enabled = false) public void testJsonResponseWithCacheMediator()
+            throws IOException, AutomationFrameworkException {
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/json");
@@ -67,12 +66,11 @@ public class JsonResponseWithCacheTestCase extends ESBIntegrationTest {
                 doGet((getApiInvocationURL("cachingEnabledApi") + "/singleElementArrayBackend"), requestHeader);
 
         //check if [] are preserved in response
-        Assert.assertTrue(response.getData().contains("[ \"water\" ]"), "Expected response was not"
-                + " received. Got " + response.getData());
+        Assert.assertTrue(response.getData().contains("[ \"water\" ]"),
+                "Expected response was not" + " received. Got " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         try {
             super.cleanup();
         } finally {

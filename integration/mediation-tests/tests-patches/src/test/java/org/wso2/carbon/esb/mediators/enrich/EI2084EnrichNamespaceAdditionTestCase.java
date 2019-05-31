@@ -39,42 +39,28 @@ import java.io.InputStreamReader;
 public class EI2084EnrichNamespaceAdditionTestCase extends ESBIntegrationTest {
     private static final String API_NAME = "EI2084";
 
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        String api = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + API_NAME + "\" context=\"/" + API_NAME + "\">\n" +
-                "   <resource methods=\"POST\" uri-template=\"/test_with_pf\">\n" +
-                "      <inSequence>\n" +
-                "         <enrich>\n" +
-                "            <source type=\"body\" clone=\"true\"/>\n" +
-                "            <target type=\"property\" property=\"INPUT_MESSAGE\"/>\n" +
-                "         </enrich>\n" +
-                "         <payloadFactory media-type=\"xml\">\n" +
-                "            <format>\n" +
-                "               <inline xmlns=\"\">\n" +
-                "                  <payload>$1</payload>\n" +
-                "               </inline>\n" +
-                "            </format>\n" +
-                "            <args>\n" +
-                "               <arg evaluator=\"xml\" expression=\"get-property('INPUT_MESSAGE')\"/>\n" +
-                "            </args>\n" +
-                "         </payloadFactory>\n" +
-                "         <property name=\"messageType\" value=\"text/xml\" scope=\"axis2\"/>\n" +
-                "         <respond/>\n" +
-                "      </inSequence>\n" +
-                "      <outSequence/>\n" +
-                "      <faultSequence/>\n" +
-                "   </resource>\n" +
-                "</api>\n";
+        String api = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + API_NAME + "\" context=\"/" + API_NAME
+                + "\">\n" + "   <resource methods=\"POST\" uri-template=\"/test_with_pf\">\n" + "      <inSequence>\n"
+                + "         <enrich>\n" + "            <source type=\"body\" clone=\"true\"/>\n"
+                + "            <target type=\"property\" property=\"INPUT_MESSAGE\"/>\n" + "         </enrich>\n"
+                + "         <payloadFactory media-type=\"xml\">\n" + "            <format>\n"
+                + "               <inline xmlns=\"\">\n" + "                  <payload>$1</payload>\n"
+                + "               </inline>\n" + "            </format>\n" + "            <args>\n"
+                + "               <arg evaluator=\"xml\" expression=\"get-property('INPUT_MESSAGE')\"/>\n"
+                + "            </args>\n" + "         </payloadFactory>\n"
+                + "         <property name=\"messageType\" value=\"text/xml\" scope=\"axis2\"/>\n"
+                + "         <respond/>\n" + "      </inSequence>\n" + "      <outSequence/>\n"
+                + "      <faultSequence/>\n" + "   </resource>\n" + "</api>\n";
 
         OMElement omAPI = AXIOMUtil.stringToOM(api);
         addApi(omAPI);
         Assert.assertTrue(esbUtils.isApiDeployed(contextUrls.getBackEndUrl(), sessionCookie, API_NAME));
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich / Payload Factory mediators,soap namespace is added when soap is not in use")
-    public void testEnrichNamespaceAdditionTestCase() throws Exception {
+    @Test(groups = "wso2.esb", description = "Enrich / Payload Factory mediators,soap namespace is added when soap is not in use") public void testEnrichNamespaceAdditionTestCase()
+            throws Exception {
 
         String endpoint = getApiInvocationURL(API_NAME) + "/test_with_pf";
         String requestXml = "<MetaData><DateTimeSent/></MetaData>";
@@ -92,11 +78,11 @@ public class EI2084EnrichNamespaceAdditionTestCase extends ESBIntegrationTest {
         while ((line = rd.readLine()) != null) {
             result += line;
         }
-        Assert.assertTrue(!result.contains("http://schemas.xmlsoap.org/soap/envelope/") , "unnessary namespaces present in message");
+        Assert.assertTrue(!result.contains("http://schemas.xmlsoap.org/soap/envelope/"),
+                "unnessary namespaces present in message");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 }

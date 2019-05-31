@@ -1,37 +1,37 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.conditionalRouter;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.lang.ArrayUtils;
+import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.sequences.SequenceAdminServiceClient;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.esb.integration.common.clients.sequences.SequenceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ArtifactReaderUtil;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.clients.stockquoteclient.StockQuoteClient;
-import org.awaitility.Awaitility;
 
 import java.io.File;
 import java.util.concurrent.Callable;
@@ -40,13 +40,12 @@ import java.util.concurrent.TimeUnit;
 public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
 
     public static final String CONF_FILTERS_DYNAMIC_SEQ_1 = "conf:/filters/dynamic_seq1";
-    
+
     private String toUrl = null;
     private String mainSeqUrl;
     private SequenceAdminServiceClient sequenceAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         mainSeqUrl = getMainSequenceURL();
         sequenceAdminServiceClient = new SequenceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -60,9 +59,8 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-   /* https://wso2.org/jira/browse/STRATOS-2239*/
-    @Test(groups = { "wso2.esb" })
-    public void conditionalRouterMediatorWithContinueAfterTrueTest() throws Exception {
+    /* https://wso2.org/jira/browse/STRATOS-2239*/
+    @Test(groups = { "wso2.esb" }) public void conditionalRouterMediatorWithContinueAfterTrueTest() throws Exception {
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie,
                 "ConRoutingWithContinueAfterTrueProxy");
         esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, "cnd_seq4");
@@ -82,9 +80,8 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-     /* https://wso2.org/jira/browse/STRATOS-2239*/
-    @Test(groups = { "wso2.esb" })
-    public void conditionalRouterMediatorWithContinueAfterFalseTest() throws Exception {
+    /* https://wso2.org/jira/browse/STRATOS-2239*/
+    @Test(groups = { "wso2.esb" }) public void conditionalRouterMediatorWithContinueAfterFalseTest() throws Exception {
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie,
                 "ConRoutingWithContinueAfterFalseProxy");
         esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, "cnd_seq5");
@@ -117,9 +114,9 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.PLATFORM, ExecutionEnvironment.PLATFORM })
-    @Test(groups = { "wso2.esb" })
-    public void conditionalRouterMediatorWithMultiRoutesTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.PLATFORM,
+            ExecutionEnvironment.PLATFORM }) @Test(groups = {
+            "wso2.esb" }) public void conditionalRouterMediatorWithMultiRoutesTest() throws Exception {
         loadSampleESBConfiguration(157);
         StockQuoteClient client1 = new StockQuoteClient();
         StockQuoteClient client2 = new StockQuoteClient();
@@ -158,8 +155,7 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" })
-    public void conditionalRouterMediatorWithBreakRouteTrueTest() throws Exception {
+    @Test(groups = { "wso2.esb" }) public void conditionalRouterMediatorWithBreakRouteTrueTest() throws Exception {
 
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/conditional_router/synapse3.xml");
         esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, "cnd1_seq");
@@ -186,9 +182,8 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" },
-          enabled = false)
-    public void conditionalRouterMediatorWithBreakRouteFalseTest() throws Exception {
+    @Test(groups = { "wso2.esb" }, enabled = false) public void conditionalRouterMediatorWithBreakRouteFalseTest()
+            throws Exception {
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "cnd1_seq");
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "cnd2_seq");
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/conditional_router/synapse3.xml");
@@ -210,8 +205,7 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" })
-    public void conditionalRouterMediatorWithDynamicSequenceTest() throws Exception {
+    @Test(groups = { "wso2.esb" }) public void conditionalRouterMediatorWithDynamicSequenceTest() throws Exception {
 
         ArtifactReaderUtil artifactReaderUtil = new ArtifactReaderUtil();
 
@@ -224,9 +218,9 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
         if (ArrayUtils.contains(sequenceAdminServiceClient.getDynamicSequences(), "conf:/filters/dynamic_seq1")) {
             sequenceAdminServiceClient.deleteDynamicSequence("conf:/filters/dynamic_seq1");
 
-            Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(
-                    60, TimeUnit.SECONDS).until(dynamicSequenceExists(sequenceAdminServiceClient.
-                    getDynamicSequences(), CONF_FILTERS_DYNAMIC_SEQ_1));
+            Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                    .until(dynamicSequenceExists(sequenceAdminServiceClient.
+                            getDynamicSequences(), CONF_FILTERS_DYNAMIC_SEQ_1));
         }
         sequenceAdminServiceClient.addDynamicSequence("conf:filters/dynamic_seq1", setEndpoints(omElement));
         //load it to esb
@@ -248,8 +242,7 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" })
-    public void conditionalRouterMediatorWithManyRoutesTest() throws Exception {
+    @Test(groups = { "wso2.esb" }) public void conditionalRouterMediatorWithManyRoutesTest() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/conditional_router/synapse5.xml");
         StockQuoteClient client = new StockQuoteClient();
         // Note: toUrl is set to null -
@@ -268,9 +261,8 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      * @throws Exception
      */
     //disabled since it is negative
-    @Test(groups = { "wso2.esb" },
-          enabled = false)
-    public void conditionalRouterMediatorWithEqualUrlTest() throws Exception {
+    @Test(groups = { "wso2.esb" }, enabled = false) public void conditionalRouterMediatorWithEqualUrlTest()
+            throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/conditional_router/synapse6.xml");
         StockQuoteClient client = new StockQuoteClient();
 
@@ -294,9 +286,8 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      * @throws Exception
      */
     //disabled since it is negative
-    @Test(groups = { "wso2.esb" },
-          enabled = false)
-    public void conditionalRouterMediatorWithEqualHeaderTest() throws Exception {
+    @Test(groups = { "wso2.esb" }, enabled = false) public void conditionalRouterMediatorWithEqualHeaderTest()
+            throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/conditional_router/synapse6.xml");
         StockQuoteClient client = new StockQuoteClient();
 
@@ -320,19 +311,17 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
      *
      * @param seqArr    Sequence array.
      * @param strToFind Sequence to be checked.
-     * @return  True if exists, False otherwise.
+     * @return True if exists, False otherwise.
      */
-    private Callable<Boolean> dynamicSequenceExists (final String[] seqArr, final String strToFind) {
+    private Callable<Boolean> dynamicSequenceExists(final String[] seqArr, final String strToFind) {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
+            @Override public Boolean call() {
                 return !ArrayUtils.contains(seqArr, strToFind);
             }
         };
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         sequenceAdminServiceClient = null;
         mainSeqUrl = null;
         toUrl = null;

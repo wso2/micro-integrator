@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,10 +25,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.test.utils.dbutils.MySqlDatabaseManager;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 import java.sql.ResultSet;
@@ -48,8 +48,7 @@ public class JDBCMessageProcessorTestCase extends ESBIntegrationTest {
     private String DATASOURCE_NAME;
     private String JDBC_DRIVER;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
         DATASOURCE_NAME = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_NAME);
@@ -66,49 +65,42 @@ public class JDBCMessageProcessorTestCase extends ESBIntegrationTest {
 
     }
 
-    @BeforeMethod(alwaysRun = true)
-    public void createDatabase() throws SQLException {
+    @BeforeMethod(alwaysRun = true) public void createDatabase() throws SQLException {
         mySqlDatabaseManager.executeUpdate("DROP DATABASE IF EXISTS WSO2SampleDBForAutomation");
         mySqlDatabaseManager.executeUpdate("Create DATABASE WSO2SampleDBForAutomation");
         mySqlDatabaseManager.executeUpdate("USE WSO2SampleDBForAutomation");
-        mySqlDatabaseManager.executeUpdate("CREATE TABLE IF NOT EXISTS jdbc_store_table(\n" +
-                                           "indexId BIGINT( 20 ) NOT NULL auto_increment ,\n" +
-                                           "msg_id VARCHAR( 200 ) NOT NULL ,\n" +
-                                           "message BLOB NOT NULL, \n" +
-                                           "PRIMARY KEY ( indexId )\n" +
-                                           ")");
-
+        mySqlDatabaseManager.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS jdbc_store_table(\n" + "indexId BIGINT( 20 ) NOT NULL auto_increment ,\n"
+                        + "msg_id VARCHAR( 200 ) NOT NULL ,\n" + "message BLOB NOT NULL, \n"
+                        + "PRIMARY KEY ( indexId )\n" + ")");
 
     }
 
-
-
-    @Test(groups = {"wso2.esb"}, description = "Test proxy service with jdbc message store")
-    public void testJDBCMessageStoreAndProcessor() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test proxy service with jdbc message store") public void testJDBCMessageStoreAndProcessor()
+            throws Exception {
 
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jdbc/jdbc_message_store_and_processor_service.xml");
         updateESBConfiguration(synapse);
 
         AxisServiceClient client = new AxisServiceClient();
         for (int i = 0; i < 5; i++) {
-            client.sendRobust(Utils.getStockQuoteRequest("JDBC"), getProxyServiceURLHttp("JDBCStoreAndProcessorTestCaseProxy"), "getQuote");
+            client.sendRobust(Utils.getStockQuoteRequest("JDBC"),
+                    getProxyServiceURLHttp("JDBCStoreAndProcessorTestCaseProxy"), "getQuote");
         }
-
 
         ResultSet rs = mySqlDatabaseManager.executeQuery("SELECT * FROM jdbc_store_table");
 
         int count = 0;
-        while (rs.next()){
-            count ++;
+        while (rs.next()) {
+            count++;
         }
 
         assertEquals(5, count, "All messages are not stored");
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         try {
             mySqlDatabaseManager.executeUpdate("DROP DATABASE WSO2SampleDBForAutomation");
         } finally {

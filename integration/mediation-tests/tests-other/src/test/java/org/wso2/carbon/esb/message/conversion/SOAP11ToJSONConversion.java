@@ -40,8 +40,7 @@ import java.util.Map;
  */
 public class SOAP11ToJSONConversion extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("soapToJson");
         verifyProxyServiceExistence("jsonBE");
@@ -50,8 +49,8 @@ public class SOAP11ToJSONConversion extends ESBIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "SOAP11 to JSON Conversion")
-    public void testSOAP11ToJson() throws Exception {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "SOAP11 to JSON Conversion") public void testSOAP11ToJson()
+            throws Exception {
 
         URL endpoint = new URL(getProxyServiceURLHttp("soapToJson"));
 
@@ -65,8 +64,8 @@ public class SOAP11ToJSONConversion extends ESBIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "JSon to SOAP11 Conversion")
-    public void testJsonToSOAP11() throws Exception {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "JSon to SOAP11 Conversion") public void testJsonToSOAP11()
+            throws Exception {
 
         URL endpoint = new URL(getProxyServiceURLHttp("jsonToSoap11"));
 
@@ -78,8 +77,7 @@ public class SOAP11ToJSONConversion extends ESBIntegrationTest {
         Assert.assertEquals(inputPayload, response.getData(), "Expected payload not received.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

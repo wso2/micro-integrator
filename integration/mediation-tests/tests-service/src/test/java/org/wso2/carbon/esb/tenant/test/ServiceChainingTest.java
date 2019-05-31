@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.tenant.test;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -40,25 +40,25 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  * Created by shameera on 7/8/14.
  */
 public class ServiceChainingTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true)
-    public void createTenant() throws Exception {
+    @BeforeClass(alwaysRun = true) public void createTenant() throws Exception {
         super.init();
 
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void testTenantIDInTenantResponsePath() throws Exception {
+    @Test(groups = { "wso2.esb" }) public void testTenantIDInTenantResponsePath() throws Exception {
         // create a tenant
-        TenantManagementServiceClient tenantMgtAdminServiceClient = new TenantManagementServiceClient(contextUrls.getBackEndUrl(), sessionCookie);
+        TenantManagementServiceClient tenantMgtAdminServiceClient = new TenantManagementServiceClient(
+                contextUrls.getBackEndUrl(), sessionCookie);
         tenantMgtAdminServiceClient.addTenant("t5.com", "jhonporter", "jhon", "demo");
         // log as tenant
         AuthenticatorClient authClient = new AuthenticatorClient(contextUrls.getBackEndUrl());
         String session = authClient.login("jhon@t5.com", "jhonporter", "localhost");
         // load configuration in tenant space
-        esbUtils.loadESBConfigurationFrom("artifacts/ESB/ServiceChainingConfig.xml", contextUrls.getBackEndUrl(), session);
+        esbUtils.loadESBConfigurationFrom("artifacts/ESB/ServiceChainingConfig.xml", contextUrls.getBackEndUrl(),
+                session);
         // Create service client
         ServiceClient sc = getServiceClient("http://localhost:8480/services/t/t5.com/ServiceChainingProxy", null,
-                                            "wso2");
+                "wso2");
         sc.fireAndForget(createStandardSimpleRequest("wso2"));
         // Get logs by tenant name
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), sessionCookie);
@@ -70,11 +70,10 @@ public class ServiceChainingTest extends ESBIntegrationTest {
         Assert.assertNotNull(receiveSeqLog_2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         super.cleanup();
     }
-    
+
     private LogEvent getLogEventByMessage(LogEvent[] logs, String msg) {
         for (LogEvent evt : logs) {
             if (evt.getMessage().equals(msg)) {
@@ -83,19 +82,16 @@ public class ServiceChainingTest extends ESBIntegrationTest {
         }
         return null;
     }
-    private ServiceClient getServiceClient(String trpUrl, String addUrl, String operation)
-            throws AxisFault
-    {
+
+    private ServiceClient getServiceClient(String trpUrl, String addUrl, String operation) throws AxisFault {
         Options options = new Options();
         ServiceClient serviceClient;
-        if ((addUrl != null) && (!"null".equals(addUrl)))
-        {
-            serviceClient = new ServiceClient(ConfigurationContextProvider.getInstance().getConfigurationContext(), null);
+        if ((addUrl != null) && (!"null".equals(addUrl))) {
+            serviceClient = new ServiceClient(ConfigurationContextProvider.getInstance().getConfigurationContext(),
+                    null);
             serviceClient.engageModule("addressing");
             options.setTo(new EndpointReference(addUrl));
-        }
-        else
-        {
+        } else {
             serviceClient = new ServiceClient();
         }
         if ((trpUrl != null) && (!"null".equals(trpUrl))) {
@@ -106,8 +102,8 @@ public class ServiceChainingTest extends ESBIntegrationTest {
 
         return serviceClient;
     }
-    private OMElement createStandardSimpleRequest(String symbol)
-    {
+
+    private OMElement createStandardSimpleRequest(String symbol) {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
         OMElement method = fac.createOMElement("getSimpleQuote", omNs);

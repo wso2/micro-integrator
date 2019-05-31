@@ -27,17 +27,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.clients.inbound.endpoint.InboundAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 import java.rmi.RemoteException;
 import javax.xml.stream.XMLStreamException;
 
 /**
- * Test whether JMS properties are propagated through inbound endpoints. 
+ * Test whether JMS properties are propagated through inbound endpoints.
  * https://wso2.org/jira/browse/ESBJAVA-4702
  */
 public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
@@ -49,8 +47,7 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
      *
      * @throws Exception if error occurs in super.init call
      */
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
 
         verifyProxyServiceExistence("jmsHeaderInboundEpTestProxy");
@@ -63,23 +60,23 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
     /**
      * This tests whether the JMS headers are set when reading the headers using an inbound endpoint
      *
-     * @throws RemoteException if error occurs in sending the request or reading the logs
-     * @throws XMLStreamException if error occurs in reading the payload
+     * @throws RemoteException             if error occurs in sending the request or reading the logs
+     * @throws XMLStreamException          if error occurs in reading the payload
      * @throws LogViewerLogViewerException if logviewer is not initialized properly
-     * @throws InterruptedException if thread.sleep call is interrupted
+     * @throws InterruptedException        if thread.sleep call is interrupted
      */
-    @Test(groups = {"wso2.esb" }, description = "Test JMS Headers : ESBJAVA-4702")
-    public void JMSInboundEndpointHeaderTest()
+    @Test(groups = {
+            "wso2.esb" }, description = "Test JMS Headers : ESBJAVA-4702") public void JMSInboundEndpointHeaderTest()
             throws RemoteException, XMLStreamException, LogViewerLogViewerException, InterruptedException {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
-        axis2Client.sendRobust(getProxyServiceURLHttp("jmsHeaderInboundEpTestProxy"), null, null, AXIOMUtil.stringToOM("<body/>"));
+        axis2Client.sendRobust(getProxyServiceURLHttp("jmsHeaderInboundEpTestProxy"), null, null,
+                AXIOMUtil.stringToOM("<body/>"));
         boolean isHeaderSet = Utils.checkForLog(logViewerClient, "Producer_Log = MDM", 5);
         Assert.assertTrue(isHeaderSet, "Log for transport header is not present in carbon log");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
@@ -91,26 +88,22 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
      */
     private OMElement addEndpoint() throws XMLStreamException {
         OMElement synapseConfig = null;
-        synapseConfig = AXIOMUtil.stringToOM("<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" +
-                "                 name=\"JMSIE\"\n" +
-                "                 sequence=\"jmsHeaderInboundEpTestLogSequence\"\n" +
-                "                 onError=\"inFault\"\n" +
-                "                 protocol=\"jms\"\n" +
-                "                 suspend=\"false\">\n" +
-                "    <parameters>\n" +
-                "        <parameter name=\"interval\">1000</parameter>\n" +
-                "        <parameter name=\"transport.jms.Destination\">testqueue</parameter>\n" +
-                "        <parameter name=\"transport.jms.CacheLevel\">0</parameter>\n" +
-                "        <parameter name=\"transport.jms" +
-                ".ConnectionFactoryJNDIName\">QueueConnectionFactory</parameter>\n" +
-                "        <parameter name=\"java.naming.factory.initial\">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>\n"
-                +
-                "        <parameter name=\"java.naming.provider.url\">tcp://localhost:61616</parameter>\n" +
-                "        <parameter name=\"transport.jms.SessionAcknowledgement\">AUTO_ACKNOWLEDGE</parameter>\n" +
-                "        <parameter name=\"transport.jms.SessionTransacted\">false</parameter>\n" +
-                "        <parameter name=\"transport.jms.ConnectionFactoryType\">queue</parameter>\n" +
-                "    </parameters>\n" +
-                "</inboundEndpoint>");
+        synapseConfig = AXIOMUtil.stringToOM(
+                "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\"JMSIE\"\n"
+                        + "                 sequence=\"jmsHeaderInboundEpTestLogSequence\"\n"
+                        + "                 onError=\"inFault\"\n" + "                 protocol=\"jms\"\n"
+                        + "                 suspend=\"false\">\n" + "    <parameters>\n"
+                        + "        <parameter name=\"interval\">1000</parameter>\n"
+                        + "        <parameter name=\"transport.jms.Destination\">testqueue</parameter>\n"
+                        + "        <parameter name=\"transport.jms.CacheLevel\">0</parameter>\n"
+                        + "        <parameter name=\"transport.jms"
+                        + ".ConnectionFactoryJNDIName\">QueueConnectionFactory</parameter>\n"
+                        + "        <parameter name=\"java.naming.factory.initial\">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>\n"
+                        + "        <parameter name=\"java.naming.provider.url\">tcp://localhost:61616</parameter>\n"
+                        + "        <parameter name=\"transport.jms.SessionAcknowledgement\">AUTO_ACKNOWLEDGE</parameter>\n"
+                        + "        <parameter name=\"transport.jms.SessionTransacted\">false</parameter>\n"
+                        + "        <parameter name=\"transport.jms.ConnectionFactoryType\">queue</parameter>\n"
+                        + "    </parameters>\n" + "</inboundEndpoint>");
 
         return synapseConfig;
     }

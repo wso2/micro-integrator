@@ -16,9 +16,7 @@ import static org.testng.Assert.fail;
  */
 public class CloneArtifactErrorTestCase extends ESBIntegrationTest {
 
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/patch_automation/CloneArtifactTestCase.xml");
     }
@@ -27,8 +25,9 @@ public class CloneArtifactErrorTestCase extends ESBIntegrationTest {
      * First send a error request using clone mediator and with the AxisFault response,
      * sending another correct request to esb and checking if esb working without stopping mediation.
      */
-    @Test(groups = {"wso2.esb"}, description = "This test case to varify if esb continue working without hang up with an error request")
-    public void TesPatchAutomation1() throws AxisFault {
+    @Test(groups = {
+            "wso2.esb" }, description = "This test case to varify if esb continue working without hang up with an error request") public void TesPatchAutomation1()
+            throws AxisFault {
         OMElement response1 = null;
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneProxyFault1"), null, "WSO2");
@@ -36,14 +35,12 @@ public class CloneArtifactErrorTestCase extends ESBIntegrationTest {
         } catch (AxisFault axisFault) {
             //For the first fault request it should return an Axis Fault as response.
         }
-            //Checking if the esb running after giving an AxisFault error response
-        response1 = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneProxyFault2"),null, "WSO2");
+        //Checking if the esb running after giving an AxisFault error response
+        response1 = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneProxyFault2"), null, "WSO2");
         assertTrue(response1.toString().contains("WSO2"), "Fails to return a correct response. ESB stopped mediation");
     }
 
-
-    @AfterClass(groups = "wso2.esb")
-    public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
         super.cleanup();
     }
 }

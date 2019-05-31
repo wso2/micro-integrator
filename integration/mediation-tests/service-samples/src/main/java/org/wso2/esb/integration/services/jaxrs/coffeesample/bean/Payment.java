@@ -1,11 +1,10 @@
 package org.wso2.esb.integration.services.jaxrs.coffeesample.bean;
 
-import javax.xml.bind.annotation.XmlRootElement;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement (name = "Payment")
-public class Payment {
+@XmlRootElement(name = "Payment") public class Payment {
 
     private static final NumberFormat currencyFormat = new DecimalFormat("#.##");
 

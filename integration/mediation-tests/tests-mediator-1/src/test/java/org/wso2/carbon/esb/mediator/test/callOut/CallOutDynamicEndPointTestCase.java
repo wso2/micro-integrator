@@ -14,23 +14,22 @@ import javax.xml.xpath.XPathExpressionException;
 import static org.testng.Assert.assertTrue;
 
 /*
-*This  test needs ESB to be up with system parameters as follows
+ *This  test needs ESB to be up with system parameters as follows
  * -Dwso2.stock.host=localhost -Dwso2.stock.port=9000
-*/
+ */
 
 public class CallOutDynamicEndPointTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void setEnvironment() throws Exception {
 
         super.init();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), getSessionCookie(), "callOutDynamicEndPointProxy");
     }
 
-    @Test(groups = { "wso2.esb" })
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    public void TestDynamicEndPoints() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }) @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void TestDynamicEndPoints()
+            throws AxisFault, XPathExpressionException {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callOutDynamicEndPointProxy"), "",
@@ -41,9 +40,8 @@ public class CallOutDynamicEndPointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void destroy() throws Exception {
         super.cleanup();
     }
 

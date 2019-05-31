@@ -33,37 +33,29 @@ import org.wso2.esb.integration.common.utils.servers.SimpleSocketServer;
  * Tests if an error is thrown when a payload is received with empty content type when building. Also asserts that
  * the property 'message.builder.invoked' is set to true.
  */
-public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extends
-        ESBIntegrationTest {
-    private static final String EXPECTED_ERROR_MESSAGE =
-            "Could not save JSON payload. Invalid input stream found";
+public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extends ESBIntegrationTest {
+    private static final String EXPECTED_ERROR_MESSAGE = "Could not save JSON payload. Invalid input stream found";
     private JSONClient jsonclient;
     private LogViewerClient logViewerClient;
     private SimpleSocketServer simpleSocketServer;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test whether the msg builder invoked property is set when the content"
-                                               + " type is empty")
-    public void testMsgBuilderInvokedPropertyWhenContentTypeisEmpty() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test whether the msg builder invoked property is set when the content"
+            + " type is empty") public void testMsgBuilderInvokedPropertyWhenContentTypeisEmpty() throws Exception {
         boolean isErrorFound = false;
 
         int port = 8090;
         String expectedResponse =
-                "HTTP/1.0 200 OK\r\n" +
-                "Server: CERN/3.0 libwww/2.17\r\n" +
-                "Date: Tue, 16 Nov 1994 08:12:31 GMT\r\n" +
-                "\r\n" + "<HTML>\n" + "<!DOCTYPE HTML PUBLIC " +
-                "\"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" +
-                "<HEAD>\n" + " <TITLE>Test Server Results</TITLE>\n" +
-                "</HEAD>\n" + "\n" + "<BODY BGCOLOR=\"#FDF5E6\">\n" +
-                "<H1 ALIGN=\"CENTER\"> Results</H1>\n" +
-                "Here is the request line and request headers\n" +
-                "sent by your browser:\n" + "<PRE>";
+                "HTTP/1.0 200 OK\r\n" + "Server: CERN/3.0 libwww/2.17\r\n" + "Date: Tue, 16 Nov 1994 08:12:31 GMT\r\n"
+                        + "\r\n" + "<HTML>\n" + "<!DOCTYPE HTML PUBLIC "
+                        + "\"-//W3C//DTD HTML 4.0 Transitional//EN\">\n" + "<HEAD>\n"
+                        + " <TITLE>Test Server Results</TITLE>\n" + "</HEAD>\n" + "\n" + "<BODY BGCOLOR=\"#FDF5E6\">\n"
+                        + "<H1 ALIGN=\"CENTER\"> Results</H1>\n" + "Here is the request line and request headers\n"
+                        + "sent by your browser:\n" + "<PRE>";
         simpleSocketServer = new SimpleSocketServer(port, expectedResponse);
         simpleSocketServer.start();
 
@@ -84,8 +76,7 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
         Assert.assertFalse(isErrorFound);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -44,47 +44,38 @@ public class JSONDisableAutoPrimitiveNumericTestCase extends ESBIntegrationTest 
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
     ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         //Need to apply the configuration here since this changes default synapse properties which could affect other
         // test cases
         serverConfigurationManager.applyConfiguration(new File(
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
-                + File.separator + "json" + File.separator + "disableAutoPrimitiveNumeric" + File.separator
-                + "synapse.properties"));
+                        + File.separator + "json" + File.separator + "disableAutoPrimitiveNumeric" + File.separator
+                        + "synapse.properties"));
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.esb", description = "disabling auto primitive option with a given regex pattern in synapse "
-                                             + "properties  ")
-    public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter() throws Exception {
-        String payload = "<coordinates>\n"
-                         + "   <location>\n"
-                         + "       <name>Bermuda Triangle</name>\n"
-                         + "       <n>25e1</n>\n"
-                         + "       <w>7.1e1</w>\n"
-                         + "   </location>\n"
-                         + "   <location>\n"
-                         + "       <name>Eiffel Tower</name>\n"
-                         + "       <n>4.8e3</n>\n"
-                         + "       <e>1.8e2</e>\n"
-                         + "   </location>\n"
-                         + "</coordinates>";
-        HttpResponse response = httpClient.doPost(getProxyServiceURLHttp("JSONDisableAutoPrimitiveNumericTestProxy"),
-                null, payload, "application/xml");
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description =
+            "disabling auto primitive option with a given regex pattern in synapse "
+                    + "properties  ") public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter()
+            throws Exception {
+        String payload = "<coordinates>\n" + "   <location>\n" + "       <name>Bermuda Triangle</name>\n"
+                + "       <n>25e1</n>\n" + "       <w>7.1e1</w>\n" + "   </location>\n" + "   <location>\n"
+                + "       <name>Eiffel Tower</name>\n" + "       <n>4.8e3</n>\n" + "       <e>1.8e2</e>\n"
+                + "   </location>\n" + "</coordinates>";
+        HttpResponse response = httpClient
+                .doPost(getProxyServiceURLHttp("JSONDisableAutoPrimitiveNumericTestProxy"), null, payload,
+                        "application/xml");
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         response.getEntity().writeTo(bos);
         String actualResult = new String(bos.toByteArray());
         String expectedPayload = "{\"coordinates\":{\"location\":[{\"name\":\"Bermuda Triangle\",\"n\":\"25e1\""
-                                 + ",\"w\":\"7.1e1\"},{\"name\":\"Eiffel Tower\",\"n\":\"4.8e3\",\"e\":\"1.8e2\"}]}}";
+                + ",\"w\":\"7.1e1\"},{\"name\":\"Eiffel Tower\",\"n\":\"4.8e3\",\"e\":\"1.8e2\"}]}}";
         Assert.assertEquals(actualResult, expectedPayload);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

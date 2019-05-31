@@ -34,40 +34,37 @@ import static org.testng.Assert.assertTrue;
  */
 public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test successful deployment of scheduled task with large interval value")
-    public void testDeployWithLargeIntervalValue() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test successful deployment of scheduled task with large interval value") public void testDeployWithLargeIntervalValue()
+            throws Exception {
 
-        OMElement task = AXIOMUtil.stringToOM("<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n" +
-                "           name=\"ESBJAVA5234TestTask\"\n" +
-                "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n" +
-                "    <task:trigger count=\"1\" interval=\"25920000\"/>\n" +
-                "    <task:property name=\"message\">\n" +
-                "        <m0:placeOrder xmlns:m0=\"http://services.samples\">\n" +
-                "            <m0:order>\n" +
-                "                <m0:price>100</m0:price>\n" +
-                "                <m0:quantity>200</m0:quantity>\n" +
-                "                <m0:symbol>IBM</m0:symbol>\n" +
-                "            </m0:order>\n" +
-                "        </m0:placeOrder>\n" +
-                "    </task:property>\n" +
-                "</task:task>");
+        OMElement task = AXIOMUtil.stringToOM(
+                "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n"
+                        + "           name=\"ESBJAVA5234TestTask\"\n"
+                        + "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n"
+                        + "    <task:trigger count=\"1\" interval=\"25920000\"/>\n"
+                        + "    <task:property name=\"message\">\n"
+                        + "        <m0:placeOrder xmlns:m0=\"http://services.samples\">\n" + "            <m0:order>\n"
+                        + "                <m0:price>100</m0:price>\n"
+                        + "                <m0:quantity>200</m0:quantity>\n"
+                        + "                <m0:symbol>IBM</m0:symbol>\n" + "            </m0:order>\n"
+                        + "        </m0:placeOrder>\n" + "    </task:property>\n" + "</task:task>");
 
         addScheduledTask(task);
 
-        LogViewerClient logViewerClient = new LogViewerClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
-        boolean assertValue = Utils.checkForLog(logViewerClient,
-                "ESBJAVA5234TestTask was added to the Synapse configuration successfully",
-                5);
+        LogViewerClient logViewerClient = new LogViewerClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
+        boolean assertValue = Utils
+                .checkForLog(logViewerClient, "ESBJAVA5234TestTask was added to the Synapse configuration successfully",
+                        5);
         assertTrue(assertValue, "Scheduled task with large interval value has not deployed.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

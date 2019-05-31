@@ -45,39 +45,33 @@ public class SendMailWithBCCThroughESBTestCase extends ESBIntegrationTest {
 
     private GreenMailUser bccUser;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         super.reloadSessionCookie();
 
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport" +
-                File.separator + "mailTransportSender" + File.separator + "smtpBcc" + File.separator +
-                "mail_sender_bcc.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
+                        + File.separator + "mailTransportSender" + File.separator + "smtpBcc" + File.separator
+                        + "mail_sender_bcc.xml");
         bccUser = GreenMailServer.addUser("wso2bcc@localhost", "wso2bcc", "wso2bcc");
         // Since ESB reads all unread emails one by one, we have to delete the all unread emails to run the test
         GreenMailServer.deleteAllEmails("imap", bccUser);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test email sender with BCC ")
-    public void testEmailTransport()
+    @Test(groups = { "wso2.esb" }, description = "Test email sender with BCC ") public void testEmailTransport()
             throws ESBMailTransportIntegrationTestException, XMLStreamException, AxisFault, MessagingException {
         Date date = new Date();
         String message = "Send Mail With BCC" + new Timestamp(date.getTime());
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement request = AXIOMUtil.stringToOM(
-                " <soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                "   <soapenv:Header/>\n" +
-                "   <soapenv:Body>\n" +
-                " <emailSubject> Subject :" + message + "</emailSubject>\n" +
-                "   </soapenv:Body>\n" +
-                " </soapenv:Envelope>");
+                " <soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                        + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + " <emailSubject> Subject :" + message
+                        + "</emailSubject>\n" + "   </soapenv:Body>\n" + " </soapenv:Envelope>");
         axisServiceClient.sendReceive(request, getProxyServiceURLHttp("MailToTransportSenderBCC"), "mediate");
         assertTrue(GreenMailServer.isMailReceived("imap", bccUser, message), "Mail not received");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
     }
 

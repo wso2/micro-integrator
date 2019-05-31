@@ -44,8 +44,8 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
     private final String FULL_RESOURCE_PATH = getESBResourceLocation() + File.separator + "clustering" + File.separator;
     private final String RELATIVE_RESOURCE_PATH = "/artifacts/ESB/" + "clustering" + File.separator;
-    private final String INBOUND_EP_MESSAGE_FOR_MANAGER = "InboundRunner Inbound EP will not run in manager node. " +
-            "Same will run on worker(s)";
+    private final String INBOUND_EP_MESSAGE_FOR_MANAGER =
+            "InboundRunner Inbound EP will not run in manager node. " + "Same will run on worker(s)";
     private final String HAWTBUF = "hawtbuf-1.9.jar";
     private final String ACTIVEMQ_CLIENT = "activemq-client-5.9.1.jar";
     private final String ACTIVEMQ_BROKER = "activemq-broker-5.9.1.jar";
@@ -53,37 +53,35 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
     private final String GERONIMO_JMS = "geronimo-jms_1.1_spec-1.1.1.jar";
     private final String JAR_LOCATION = "/artifacts/ESB/jar";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        serverConfigurationManager =
-                new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager.applyConfigurationWithoutRestart(new File(FULL_RESOURCE_PATH + "axis2.xml"));
-        serverConfigurationManager.copyToComponentLib
-                (new File(getClass().getResource(JAR_LOCATION + File.separator + HAWTBUF).toURI()));
-        serverConfigurationManager.copyToComponentLib
-                (new File(getClass().getResource(JAR_LOCATION + File.separator + ACTIVEMQ_BROKER).toURI()));
-        serverConfigurationManager.copyToComponentLib
-                (new File(getClass().getResource(JAR_LOCATION + File.separator + ACTIVEMQ_CLIENT).toURI()));
-        serverConfigurationManager.copyToComponentLib
-                (new File(getClass().getResource(JAR_LOCATION + File.separator + GERONIMO_J2EE_MANAGEMENT).toURI()));
-        serverConfigurationManager.copyToComponentLib
-                (new File(getClass().getResource(JAR_LOCATION + File.separator + GERONIMO_JMS).toURI()));
+        serverConfigurationManager
+                .copyToComponentLib(new File(getClass().getResource(JAR_LOCATION + File.separator + HAWTBUF).toURI()));
+        serverConfigurationManager.copyToComponentLib(
+                new File(getClass().getResource(JAR_LOCATION + File.separator + ACTIVEMQ_BROKER).toURI()));
+        serverConfigurationManager.copyToComponentLib(
+                new File(getClass().getResource(JAR_LOCATION + File.separator + ACTIVEMQ_CLIENT).toURI()));
+        serverConfigurationManager.copyToComponentLib(
+                new File(getClass().getResource(JAR_LOCATION + File.separator + GERONIMO_J2EE_MANAGEMENT).toURI()));
+        serverConfigurationManager.copyToComponentLib(
+                new File(getClass().getResource(JAR_LOCATION + File.separator + GERONIMO_JMS).toURI()));
         serverConfigurationManager.restartGracefully();
         super.init();
         addInboundEndpoint(esbUtils.loadResource(RELATIVE_RESOURCE_PATH + "JMSEndpoint.xml"));
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test Inbound EP in clustered environment " +
-            "when the clustering pattern is nonWorkerManager")
-    public void testInboundEPWithNonWorkerManager() throws Exception {
-        Assert.assertFalse("Check whether the node is considered as manager or not when the clustering pattern" +
-                " is nonWorkerManager", this.stringExistsInLog(INBOUND_EP_MESSAGE_FOR_MANAGER));
+    @Test(groups = "wso2.esb", description = "Test Inbound EP in clustered environment "
+            + "when the clustering pattern is nonWorkerManager") public void testInboundEPWithNonWorkerManager()
+            throws Exception {
+        Assert.assertFalse("Check whether the node is considered as manager or not when the clustering pattern"
+                + " is nonWorkerManager", this.stringExistsInLog(INBOUND_EP_MESSAGE_FOR_MANAGER));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
         serverConfigurationManager = null;

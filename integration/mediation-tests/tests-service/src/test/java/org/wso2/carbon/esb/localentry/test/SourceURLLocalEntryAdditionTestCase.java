@@ -35,14 +35,13 @@ public class SourceURLLocalEntryAdditionTestCase extends ESBIntegrationTest {
 
     private LocalEntriesAdminClient localEntryAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
-        localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test adding a Source url Local Entry")
-    public void testSourceURLLocalEntryAddition()
+    @Test(groups = "wso2.esb", description = "Test adding a Source url Local Entry") public void testSourceURLLocalEntryAddition()
             throws Exception {
 
         String entryNames = localEntryAdminServiceClient.getEntryNamesString();
@@ -53,9 +52,9 @@ public class SourceURLLocalEntryAdditionTestCase extends ESBIntegrationTest {
         }
 
         int before = localEntryAdminServiceClient.getEntryDataCount();
-        addLocalEntry(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                      "<localEntry xmlns=\"http://ws.apache.org/ns/synapse\" key=\"" + ENTRY_NAME +
-                                                      "\" src=\"file:samples/service-bus/resources/transform/transform.xslt\"/>"));
+        addLocalEntry(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<localEntry xmlns=\"http://ws.apache.org/ns/synapse\" key=\"" + ENTRY_NAME
+                + "\" src=\"file:samples/service-bus/resources/transform/transform.xslt\"/>"));
         int after = localEntryAdminServiceClient.getEntryDataCount();
         assertEquals(1, after - before);
 
@@ -64,9 +63,7 @@ public class SourceURLLocalEntryAdditionTestCase extends ESBIntegrationTest {
         assertTrue(entryNames.contains(ENTRY_NAME));
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
         localEntryAdminServiceClient = null;
         super.cleanup();
     }

@@ -1,6 +1,5 @@
 package org.wso2.carbon.esb.registry.caching;
 
-
 import org.apache.log4j.Logger;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -8,8 +7,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.esb.integration.common.clients.registry.PropertiesAdminServiceClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.clients.registry.PropertiesAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
@@ -37,23 +36,23 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
 
     private String trpUrl;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
 
         super.init();
 
         trpUrl = contextUrls.getServiceUrl();
 
-        propertyPropertiesAdminServiceClient = new PropertiesAdminServiceClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        propertyPropertiesAdminServiceClient = new PropertiesAdminServiceClient(contextUrls.getBackEndUrl(),
+                getSessionCookie());
 
-        cli = new LogViewerClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        cli = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
         uploadResourcesToConfigRegistry();
-        loadESBConfigurationFromClasspath( "artifacts/ESB/synapseconfig/registry/caching/synapse.xml");
+        loadESBConfigurationFromClasspath("artifacts/ESB/synapseconfig/registry/caching/synapse.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "ESBRegistry cachableDuration 0 property test")
-    public void testCachableDuration() throws Exception {
+    @Test(groups = "wso2.esb", description = "ESBRegistry cachableDuration 0 property test") public void testCachableDuration()
+            throws Exception {
 
         //invoking the service
         SendRequest(ADD_URL, trpUrl);
@@ -65,7 +64,8 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         //Update the registry value
         updateResourcesInConfigRegistry();
 
-        Assert.assertTrue(propertyPropertiesAdminServiceClient.getProperty(PATH, NAME).getProperties()[0].getValue().equals(NEW_VALUE));
+        Assert.assertTrue(propertyPropertiesAdminServiceClient.getProperty(PATH, NAME).getProperties()[0].getValue()
+                .equals(NEW_VALUE));
 
         SendRequest(ADD_URL, trpUrl);
 
@@ -76,8 +76,8 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
 
     }
 
-
-    private boolean validateLogMessage(String value) throws RemoteException, LogViewerLogViewerException, InterruptedException {
+    private boolean validateLogMessage(String value)
+            throws RemoteException, LogViewerLogViewerException, InterruptedException {
 
         LogEvent[] logs = cli.getAllSystemLogs();
         Assert.assertNotNull(logs, "No logs found");
@@ -86,10 +86,10 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
     }
 
     private void SendRequest(String addurl, String trpurl) {
-        try{
+        try {
             cli.clearLogs();
-            axis2Client.sendSimpleStockQuoteRequest(trpurl, addurl ,"IBM");
-        }catch (Exception e){
+            axis2Client.sendSimpleStockQuoteRequest(trpurl, addurl, "IBM");
+        } catch (Exception e) {
             logger.debug(e.getMessage());
         }
     }
@@ -100,7 +100,7 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
 
     private void updateResourcesInConfigRegistry() throws Exception {
 
-        try{
+        try {
 
             Thread.sleep(5000);
 
@@ -112,14 +112,13 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
 
             Thread.sleep(5000);
 
-        }catch (Exception e){
-            logger.error("Error while updating the registry property",e);
+        } catch (Exception e) {
+            logger.error("Error while updating the registry property", e);
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void unDeployService() throws Exception {
-     /* un deploying deployed artifact */
+    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+        /* un deploying deployed artifact */
         propertyPropertiesAdminServiceClient.removeProperty(PATH, NAME);
         super.cleanup();
     }

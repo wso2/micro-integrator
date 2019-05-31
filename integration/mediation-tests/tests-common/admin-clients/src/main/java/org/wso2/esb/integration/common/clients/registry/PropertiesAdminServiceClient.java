@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.esb.integration.common.clients.registry;
 
@@ -43,8 +43,7 @@ public class PropertiesAdminServiceClient {
         AuthenticateStub.authenticateStub(sessionCookie, propertiesAdminServiceStub);
     }
 
-    public PropertiesAdminServiceClient(String backendURL, String userName, String password)
-            throws AxisFault {
+    public PropertiesAdminServiceClient(String backendURL, String userName, String password) throws AxisFault {
 
         String endPoint = backendURL + serviceName;
         propertiesAdminServiceStub = new PropertiesAdminServiceStub(endPoint);
@@ -90,13 +89,13 @@ public class PropertiesAdminServiceClient {
         try {
             propertiesAdminServiceStub.setProperty(path, name, value);
         } catch (RemoteException e) {
-            String errMsg="Adding property fails";
+            String errMsg = "Adding property fails";
             log.error(errMsg);
-            throw new RemoteException(errMsg,e);
+            throw new RemoteException(errMsg, e);
         } catch (PropertiesAdminServiceRegistryExceptionException e) {
-            String errMsg="Adding property fails";
+            String errMsg = "Adding property fails";
             log.error(errMsg);
-            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg, e);
         }
     }
 
@@ -105,13 +104,13 @@ public class PropertiesAdminServiceClient {
         try {
             return propertiesAdminServiceStub.getProperties(path, viewProps);
         } catch (RemoteException e) {
-            String errMsg="Getting property fails";
+            String errMsg = "Getting property fails";
             log.error(errMsg);
-            throw new RemoteException(errMsg,e);
+            throw new RemoteException(errMsg, e);
         } catch (PropertiesAdminServiceRegistryExceptionException e) {
-            String errMsg="Getting property fails";
+            String errMsg = "Getting property fails";
             log.error(errMsg);
-            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg, e);
         }
     }
 
@@ -120,13 +119,13 @@ public class PropertiesAdminServiceClient {
         try {
             return propertiesAdminServiceStub.getProperties(path, viewProps);
         } catch (RemoteException e) {
-            String errMsg="Getting properties fails";
+            String errMsg = "Getting properties fails";
             log.error(errMsg);
-            throw new RemoteException(errMsg,e);
+            throw new RemoteException(errMsg, e);
         } catch (PropertiesAdminServiceRegistryExceptionException e) {
-            String errMsg="Getting properties fails";
+            String errMsg = "Getting properties fails";
             log.error(errMsg);
-            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg, e);
         }
     }
 
@@ -135,13 +134,13 @@ public class PropertiesAdminServiceClient {
         try {
             propertiesAdminServiceStub.updateProperty(path, name, value, oldValue);
         } catch (RemoteException e) {
-            String errMsg="Update properties fails";
+            String errMsg = "Update properties fails";
             log.error(errMsg);
-            throw new RemoteException(errMsg,e);
+            throw new RemoteException(errMsg, e);
         } catch (PropertiesAdminServiceRegistryExceptionException e) {
-            String errMsg="Update properties fails";
+            String errMsg = "Update properties fails";
             log.error(errMsg);
-            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg, e);
         }
     }
 
@@ -150,13 +149,13 @@ public class PropertiesAdminServiceClient {
         try {
             propertiesAdminServiceStub.removeProperty(path, viewProps);
         } catch (RemoteException e) {
-            String errMsg="Removing property fails";
+            String errMsg = "Removing property fails";
             log.error(errMsg);
-            throw new RemoteException(errMsg,e);
+            throw new RemoteException(errMsg, e);
         } catch (PropertiesAdminServiceRegistryExceptionException e) {
-            String errMsg="Removing property fails";
+            String errMsg = "Removing property fails";
             log.error(errMsg);
-            throw new PropertiesAdminServiceRegistryExceptionException(errMsg,e);
+            throw new PropertiesAdminServiceRegistryExceptionException(errMsg, e);
         }
     }
 

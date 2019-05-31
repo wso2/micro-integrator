@@ -47,7 +47,8 @@ public class Util {
             try {
                 urlConnection.setRequestMethod("GET");
             } catch (ProtocolException e) {
-                throw new AutomationFrameworkException("Shouldn't happen: HttpURLConnection doesn't support GET ?? " + e);
+                throw new AutomationFrameworkException(
+                        "Shouldn't happen: HttpURLConnection doesn't support GET ?? " + e);
             }
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
@@ -62,7 +63,8 @@ public class Util {
             BufferedReader rd = null;
 
             try {
-                rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.defaultCharset()));
+                rd = new BufferedReader(
+                        new InputStreamReader(urlConnection.getInputStream(), Charset.defaultCharset()));
 
                 String line;
                 while ((line = rd.readLine()) != null) {
@@ -79,7 +81,7 @@ public class Util {
             while (itr.hasNext()) {
                 key = itr.next();
                 if (key != null) {
-                    ((Map)responseHeaders).put(key, urlConnection.getHeaderField(key));
+                    ((Map) responseHeaders).put(key, urlConnection.getHeaderField(key));
                 }
             }
             return new HttpResponse(sb.toString(), urlConnection.getResponseCode());
@@ -101,15 +103,14 @@ public class Util {
         }
     }
 
-    public static void executeAndAssert(URL endpoint, int statusCode, String statusMessage)
-            throws Exception{
+    public static void executeAndAssert(URL endpoint, int statusCode, String statusMessage) throws Exception {
         Map<String, String> header = new HashMap<String, String>();
         header.put("Content-Type", "text/plain");
 
         HttpResponse httpResponse = sendRequest(endpoint, header);
 
-        assertEquals(httpResponse.getResponseCode(), statusCode, "Expected " +
-                statusCode + ", found " + httpResponse.getResponseCode() + " http status code");
+        assertEquals(httpResponse.getResponseCode(), statusCode,
+                "Expected " + statusCode + ", found " + httpResponse.getResponseCode() + " http status code");
         assertTrue(httpResponse.getData().equalsIgnoreCase("Received:" + statusCode + "," + statusMessage),
                 "Required payload not found");
     }

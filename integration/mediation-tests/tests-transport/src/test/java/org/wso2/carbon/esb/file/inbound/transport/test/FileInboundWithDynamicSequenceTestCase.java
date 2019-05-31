@@ -32,9 +32,9 @@ import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClie
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
-import javax.activation.DataHandler;
 import java.io.File;
 import java.net.URL;
+import javax.activation.DataHandler;
 
 /**
  * Tests the invocation of a proxy service via a dynamic sequence registered in the registry upon the receipt of a
@@ -47,10 +47,9 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
     private String pathToDir;
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         pathToDir = getESBResourceLocation() + File.separator + "file" + File.separator + "inbound" + File.separator
-                                           + "transport";
+                + "transport";
 
         InboundFileFolder = new File(pathToDir + File.separator + "InboundInFileFolder");
 
@@ -62,16 +61,16 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
         }
 
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), context
-                .getContextTenant().getContextUser().getUserName()
-                , context.getContextTenant().getContextUser().getPassword());
+        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
+                context.getContextTenant().getContextUser().getUserName(),
+                context.getContextTenant().getContextUser().getPassword());
         uploadResourcesToGovernanceRegistry();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Tests sequences from  the governance registry with inbound endpoint")
-    public void testSequence() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests sequences from  the governance registry with inbound endpoint") public void testSequence()
+            throws Exception {
 
         logViewerClient.clearLogs();
 
@@ -87,13 +86,12 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
         //And file inbound endpoint
         addInboundEndpoint(createInboundEP());
 
-        Assert.assertTrue(Utils.checkForLog(logViewerClient, "Proxy invoked by dynamic sequence in file inbound",
-                10), "The XML file is not getting read");
+        Assert.assertTrue(Utils.checkForLog(logViewerClient, "Proxy invoked by dynamic sequence in file inbound", 10),
+                "The XML file is not getting read");
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         try {
             FileUtils.deleteDirectory(InboundFileFolder);
         } finally {
@@ -104,18 +102,16 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
     private OMElement createInboundEP() throws Exception {
         OMElement synapseConfig = AXIOMUtil.stringToOM(
                 "<inboundEndpoint name=\"testFile1\" onError=\"inFault\" " + "protocol=\"file\"\n"
-                + " sequence=\"gov:/fileInboundDynamicSequence\" suspend=\"false\" xmlns=\"http://ws.apache"
-                + ".org/ns/synapse\">\"\n"
-                + " <parameters>\n"
-                + " <parameter name=\"interval\">1000</parameter>\n"
-                + " <parameter name=\"transport.vfs.ActionAfterErrors\">DELETE</parameter>\n"
-                + " <parameter name=\"transport.vfs.Locking\">enable</parameter>\n"
-                + " <parameter name=\"transport.vfs.ContentType\">application/xml</parameter>\n"
-                + " <parameter name=\"transport.vfs.ActionAfterFailure\">DELETE</parameter>\n"
-                + " <parameter name=\"transport.vfs.ActionAfterProcess\">DELETE</parameter>\n"
-                + " <parameter name=\"transport.vfs.FileURI\">file://" + InboundFileFolder + "</parameter>\n"
-                + " </parameters>\n"
-                + "</inboundEndpoint>\n");
+                        + " sequence=\"gov:/fileInboundDynamicSequence\" suspend=\"false\" xmlns=\"http://ws.apache"
+                        + ".org/ns/synapse\">\"\n" + " <parameters>\n"
+                        + " <parameter name=\"interval\">1000</parameter>\n"
+                        + " <parameter name=\"transport.vfs.ActionAfterErrors\">DELETE</parameter>\n"
+                        + " <parameter name=\"transport.vfs.Locking\">enable</parameter>\n"
+                        + " <parameter name=\"transport.vfs.ContentType\">application/xml</parameter>\n"
+                        + " <parameter name=\"transport.vfs.ActionAfterFailure\">DELETE</parameter>\n"
+                        + " <parameter name=\"transport.vfs.ActionAfterProcess\">DELETE</parameter>\n"
+                        + " <parameter name=\"transport.vfs.FileURI\">file://" + InboundFileFolder + "</parameter>\n"
+                        + " </parameters>\n" + "</inboundEndpoint>\n");
 
         return synapseConfig;
     }
@@ -126,11 +122,11 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
      * @throws Exception if the URL representing th e resource file is invalid
      */
     private void uploadResourcesToGovernanceRegistry() throws Exception {
-        resourceAdminServiceStub.addResource("/_system/governance/fileInboundDynamicSequence",
-                "application/xml", "xml files",
-                new DataHandler(new URL("file:///" + getClass().getResource(
-                        "/artifacts/ESB/file/inbound/transport/fileInboundDynamicSequence.xml").getPath())));
+        resourceAdminServiceStub
+                .addResource("/_system/governance/fileInboundDynamicSequence", "application/xml", "xml files",
+                        new DataHandler(new URL("file:///" + getClass()
+                                .getResource("/artifacts/ESB/file/inbound/transport/fileInboundDynamicSequence.xml")
+                                .getPath())));
     }
-
 
 }

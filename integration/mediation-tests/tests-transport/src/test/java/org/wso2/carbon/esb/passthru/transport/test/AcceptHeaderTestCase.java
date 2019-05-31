@@ -31,9 +31,9 @@ import java.util.Map;
 /**
  * Test case tests for building the message when Content-Type transport header is different from Accept header.
  * In this case, Content-Type is application/x-www-form-urlencoded and the Accept header is application/json.
- *
+ * <p>
  * Related issues: https://github.com/wso2/product-ei/issues/2842
- *                 https://github.com/wso2/product-ei/issues/2835
+ * https://github.com/wso2/product-ei/issues/2835
  */
 public class AcceptHeaderTestCase extends ESBIntegrationTest {
 
@@ -42,8 +42,8 @@ public class AcceptHeaderTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for response when the Accept header is different from request "
-            + "Content-Type, and build the message within the inflow.")
-    public void testAcceptHeader() throws Exception {
+            + "Content-Type, and build the message within the inflow.") public void testAcceptHeader()
+            throws Exception {
 
         verifyAPIExistence("AcceptHeaderTestAPI");
 
@@ -61,11 +61,11 @@ public class AcceptHeaderTestCase extends ESBIntegrationTest {
         headers.put("Content-Type", contentType);
         headers.put("Accept", accept);
 
-        HttpResponse response = httpClient.doPost(getApiInvocationURL("acceptHeaderTest"), headers, payload,
-                contentType);
+        HttpResponse response = httpClient
+                .doPost(getApiInvocationURL("acceptHeaderTest"), headers, payload, contentType);
 
-        Assert.assertTrue(httpClient.getResponsePayload(response).contains(expectedOutput), "Error while building the "
-                + "message when the Content-Type is different from Accept header type.");
+        Assert.assertTrue(httpClient.getResponsePayload(response).contains(expectedOutput),
+                "Error while building the " + "message when the Content-Type is different from Accept header type.");
     }
 
     @AfterClass public void cleanUp() throws Exception {

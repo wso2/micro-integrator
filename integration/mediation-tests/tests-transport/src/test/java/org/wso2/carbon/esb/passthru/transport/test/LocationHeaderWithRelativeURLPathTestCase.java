@@ -38,25 +38,18 @@ public class LocationHeaderWithRelativeURLPathTestCase extends ESBIntegrationTes
     private final String LOCATION_HEADER_NAME = "Location";
     private final String EXPECTED_LOCATION_HEADER = "http://127.0.0.1:8480/services";
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Test to check whether location header value persists in the http response")
-    public void testForLocationHeaderInResponse() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test to check whether location header value persists in the http response") public void testForLocationHeaderInResponse()
+            throws Exception {
 
         String proxyServiceUrl = getProxyServiceURLHttp("LocationHeaderTestProxy");
 
         String requestPayload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                + "   <soapenv:Header/>\n"
-                + "   <soapenv:Body>\n"
-                + "      <testBody>\n"
-                + "      <foo/>\n"
-                + "      </testBody>\n"
-                + "   </soapenv:Body>\n"
-                + "</soapenv:Envelope>\n";
+                + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <testBody>\n" + "      <foo/>\n"
+                + "      </testBody>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>\n";
 
         Map<String, String> headers = new HashMap<>();
         headers.put("SOAPAction", "urn:getQuote");
@@ -69,8 +62,7 @@ public class LocationHeaderWithRelativeURLPathTestCase extends ESBIntegrationTes
         assertEquals(locationHeaderValue, EXPECTED_LOCATION_HEADER, "Incorrect location header!");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.esb.integration.common.clients.mediation;
 
@@ -26,12 +26,12 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.message.processor.stub.MessageProcessorAdminServiceStub;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 
+import java.io.IOException;
+import java.rmi.RemoteException;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
-import java.rmi.RemoteException;
 
 public class MessageProcessorClient {
 
@@ -46,17 +46,14 @@ public class MessageProcessorClient {
         AuthenticateStub.authenticateStub(sessionCookie, messageProcessorAdminServiceStub);
     }
 
-    public MessageProcessorClient(String backEndUrl, String userName, String password)
-            throws AxisFault {
+    public MessageProcessorClient(String backEndUrl, String userName, String password) throws AxisFault {
         String endPoint = backEndUrl + serviceName;
         messageProcessorAdminServiceStub = new MessageProcessorAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, messageProcessorAdminServiceStub);
     }
 
-
     public void addMessageProcessor(DataHandler dh) throws IOException, XMLStreamException {
-        XMLStreamReader parser =
-                XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
+        XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         StAXOMBuilder builder = new StAXOMBuilder(parser);
         OMElement messageProcessorElem = builder.getDocumentElement();
         messageProcessorAdminServiceStub.addMessageProcessor(messageProcessorElem.toString());
@@ -76,6 +73,7 @@ public class MessageProcessorClient {
 
     /**
      * Update existing message processor configurations.
+     *
      * @param xml new configuration
      * @throws RemoteException
      */
@@ -85,6 +83,7 @@ public class MessageProcessorClient {
 
     /**
      * Get message processor by name.
+     *
      * @param processorName processor name
      * @return XML configuration of message processor
      * @throws RemoteException
@@ -95,6 +94,7 @@ public class MessageProcessorClient {
 
     /**
      * Activate given message processor to resume processing of messages.
+     *
      * @param processorName name of Processor
      * @throws RemoteException
      */
@@ -104,6 +104,7 @@ public class MessageProcessorClient {
 
     /**
      * Pause processing of messages from given processor and deactivate.
+     *
      * @param processorName name of Processor
      * @throws RemoteException
      */
@@ -113,6 +114,7 @@ public class MessageProcessorClient {
 
     /**
      * Check if message processor is active and handling messages.
+     *
      * @param processorName name of Processor
      * @return true if processor is active
      * @throws RemoteException
@@ -123,6 +125,7 @@ public class MessageProcessorClient {
 
     /**
      * Check the functionality of the browseMessage function
+     *
      * @param processorName name of Processor
      * @return message stored in the subscribed queue
      * @throws RemoteException
@@ -133,6 +136,7 @@ public class MessageProcessorClient {
 
     /**
      * Check the functionality of the popMessage function
+     *
      * @param processorName name of the Processor
      * @return <code>true</code> if popMessage is successful, else <code>false</code>
      * @throws RemoteException
@@ -143,13 +147,14 @@ public class MessageProcessorClient {
 
     /**
      * Check the functionality of the popAndEnqueueFunction
+     *
      * @param processorName name of the Processor
-     * @param storeName name of the destination store
+     * @param storeName     name of the destination store
      * @return <code>true</code> if popMessage is successful, else <code>false</code>
      * @throws RemoteException
      */
     public boolean popAndRedirectMessage(String processorName, String storeName) throws RemoteException {
-        return messageProcessorAdminServiceStub.popAndRedirectMessage(processorName,storeName);
+        return messageProcessorAdminServiceStub.popAndRedirectMessage(processorName, storeName);
     }
 
 }

@@ -22,43 +22,39 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpsResponse;
 import org.wso2.carbon.automation.test.utils.http.client.HttpsURLConnectionClient;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class FaviconTest extends ESBIntegrationTest {
 
-        @BeforeClass(alwaysRun = true)
-        protected void init() throws Exception {
-            super.init();
-        }
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+        super.init();
+    }
 
-        @Test(groups = {"wso2.esb"}, description = "Test for ClosedChannel Exception")
-        public void faviconTest() throws Exception {
-            HttpsResponse response = HttpsURLConnectionClient.
-                    getRequest("https://localhost:8443/" + "favicon.ico", null);
-            Assert.assertEquals(response.getResponseCode(), 301, "Response code mismatch");
+    @Test(groups = { "wso2.esb" }, description = "Test for ClosedChannel Exception") public void faviconTest()
+            throws Exception {
+        HttpsResponse response = HttpsURLConnectionClient.
+                getRequest("https://localhost:8443/" + "favicon.ico", null);
+        Assert.assertEquals(response.getResponseCode(), 301, "Response code mismatch");
 
-            LogViewerClient logViewerClient =
-                    new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
-
-            LogEvent[] logs = logViewerClient.getAllSystemLogs();
-            boolean exceptionFound = false;
-            for (LogEvent item : logs) {
-                String message = item.getMessage();
-                if (message.contains("ClosedChannelException")) {
-                    exceptionFound = true;
-                    break;
-                }
+        LogEvent[] logs = logViewerClient.getAllSystemLogs();
+        boolean exceptionFound = false;
+        for (LogEvent item : logs) {
+            String message = item.getMessage();
+            if (message.contains("ClosedChannelException")) {
+                exceptionFound = true;
+                break;
             }
-            Assert.assertTrue(!exceptionFound, "ClosedChannelException occurred while retrieving favicon.ico");
         }
+        Assert.assertTrue(!exceptionFound, "ClosedChannelException occurred while retrieving favicon.ico");
+    }
 
-        @AfterClass(alwaysRun = true)
-        public void destroy() throws Exception {
-            super.cleanup();
-        }
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+        super.cleanup();
+    }
 }
 
 

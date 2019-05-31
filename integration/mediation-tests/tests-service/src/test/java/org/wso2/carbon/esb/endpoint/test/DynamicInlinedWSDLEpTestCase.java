@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -26,18 +26,16 @@ import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import javax.xml.stream.XMLStreamException;
 
 public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTest {
     private EndPointAdminClient endPointAdminClient;
     private final String ENDPOINT_PATH_1 = "conf:/DynamicInlineWSDLEndpointConf";
     private final String ENDPOINT_PATH_2 = "gov:/DynamicInlineWSDLEndpointGov";
 
-
-    @Test(groups = {"wso2.esb"}, enabled = false)
-    public void testDynamicInlineWSDLEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" }, enabled = false) public void testDynamicInlineWSDLEndpoint() throws Exception {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         OMElement endpoint_xml = new ESBTestCaseUtils().loadResource("/artifacts/ESB/endpoint/wsdlTestEp.xml");
         cleanupEndpoints();
@@ -52,8 +50,7 @@ public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTest {
 
     }
 
-    private void cleanupEndpoints()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void cleanupEndpoints() throws RemoteException, EndpointAdminEndpointAdminException {
         EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_1, endPointAdminClient);
         EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_2, endPointAdminClient);
 
@@ -72,7 +69,6 @@ public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTest {
         endPointAdminClient.deleteDynamicEndpoint(path);
         EndpointTestUtils.assertDynamicEndpointDeletion(beforeCount, endPointAdminClient);
     }
-
 
 }
 

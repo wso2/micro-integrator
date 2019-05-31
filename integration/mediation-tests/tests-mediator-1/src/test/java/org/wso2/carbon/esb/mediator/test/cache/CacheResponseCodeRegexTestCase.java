@@ -39,15 +39,13 @@ import static org.testng.Assert.assertNotNull;
  */
 public class CacheResponseCodeRegexTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb",
-          description = "Verify caching works for the defined response code regex")
-    public void testCachingResponseCodeRegex() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Verify caching works for the defined response code regex") public void testCachingResponseCodeRegex()
+            throws Exception {
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("CODE", "202");
@@ -119,8 +117,7 @@ public class CacheResponseCodeRegexTestCase extends ESBIntegrationTest {
         assertNotEquals(change5, change6, "Response caching works for the undefined response code");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 }

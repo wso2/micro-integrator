@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License, 
- * Version 2.0 (the "License"); you may not use this file except 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -34,6 +34,11 @@ import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -41,11 +46,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathExpressionException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Server startup shouldn't throw any FATAL errors when registry is mounted
@@ -58,19 +58,22 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
     private TestServerManager testServerManager;
     private AutomationContext regTestContext;
     private LogViewerClient logViewerClient;
-    private final String COMMON_FILE_LOCATION = File.separator + "artifacts" + File.separator + "ESB" + File.separator + "registry" + File.separator;
+    private final String COMMON_FILE_LOCATION =
+            File.separator + "artifacts" + File.separator + "ESB" + File.separator + "registry" + File.separator;
 
-    @BeforeClass
-    public void init() throws Exception {
+    @BeforeClass public void init() throws Exception {
         super.init();
         regTestContext = new AutomationContext("ESB", "esbsRegTest", TestUserMode.SUPER_TENANT_ADMIN);
 
         startupParameterMap = new HashMap<String, String>();
         startupParameterMap.put("-DportOffset", "230");
 
-        String backEndRegUrl = "https://" + context.getInstance().getHosts().get("default") + ":" + context.getInstance().getPorts().get("https") + "/registry";
+        String backEndRegUrl =
+                "https://" + context.getInstance().getHosts().get("default") + ":" + context.getInstance().getPorts()
+                        .get("https") + "/registry";
 
-        changeRegistryFile(getClass().getResource(COMMON_FILE_LOCATION + "registry-template.xml").getPath(), backEndRegUrl);
+        changeRegistryFile(getClass().getResource(COMMON_FILE_LOCATION + "registry-template.xml").getPath(),
+                backEndRegUrl);
 
         testServerManager = new TestServerManager(regTestContext, null, startupParameterMap) {
 
@@ -80,7 +83,9 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
                     File sourceFile = new File(getClass().getResource(COMMON_FILE_LOCATION + "registry.xml").getPath());
 
                     //copying registry.xml file to conf folder
-                    FileManager.copyFile(sourceFile, this.getCarbonHome() + File.separator + "repository" + File.separator + "conf" + File.separator + "registry.xml");
+                    FileManager.copyFile(sourceFile,
+                            this.getCarbonHome() + File.separator + "repository" + File.separator + "conf"
+                                    + File.separator + "registry.xml");
                 } catch (IOException e) {
                     throw new AutomationFrameworkException(e.getMessage(), e);
                 }
@@ -92,12 +97,12 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
     /**
      * Starting up the server and check the logs for error.
      */
-    @Test(groups = "wso2.esb", description = "Test startup logs to see whether ntask FATAL exception occurred", enabled = true)
-    public void testStartupNtaskErrorTest() {
+    @Test(groups = "wso2.esb", description = "Test startup logs to see whether ntask FATAL exception occurred", enabled = true) public void testStartupNtaskErrorTest() {
 
         try {
             testServerManager.startServer();
-            logViewerClient = new LogViewerClient(regTestContext.getContextUrls().getBackEndUrl(), userInfo.getUserName(), userInfo.getPassword());
+            logViewerClient = new LogViewerClient(regTestContext.getContextUrls().getBackEndUrl(),
+                    userInfo.getUserName(), userInfo.getPassword());
             LogEvent[] events = logViewerClient.getAllRemoteSystemLogs();
             for (LogEvent event : events) {
                 if (event.getPriority().equals(ERROR_TYPE) && event.getMessage().contains(ERROR_MESSAGE)) {
@@ -115,8 +120,7 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass
-    public void cleanUp() throws Exception {
+    @AfterClass public void cleanUp() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -133,10 +137,8 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
     private void changeRegistryFile(String path, String url) {
         try {
             File inputFile = new File(path);
-            DocumentBuilderFactory docFactory =
-                    DocumentBuilderFactory.newInstance();
-            DocumentBuilder docBuilder =
-                    docFactory.newDocumentBuilder();
+            DocumentBuilderFactory docFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document doc = docBuilder.parse(inputFile);
             Node remoteInstance = doc.getElementsByTagName("remoteInstance").item(0);
             // update remoteInstance attribute
@@ -144,13 +146,12 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
             Node nodeAttr = attr.getNamedItem("url");
             nodeAttr.setTextContent(url);
 
-
             // write the content on registry.xml file
-            TransformerFactory transformerFactory =
-                    TransformerFactory.newInstance();
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
             Transformer transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
-            StreamResult consoleResult = new StreamResult(new FileOutputStream(path.substring(0, path.length() - 21) + "registry.xml"));
+            StreamResult consoleResult = new StreamResult(
+                    new FileOutputStream(path.substring(0, path.length() - 21) + "registry.xml"));
             transformer.transform(source, consoleResult);
         } catch (Exception e) {
             System.out.println("Error in changing the registry.xml file");

@@ -26,6 +26,7 @@ import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
@@ -37,11 +38,9 @@ import java.util.Map;
  */
 public class ESBJAVA5135ResponseBodyWith202TestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/" +
-                "transport/ESBJAVA-5135.xml");
+        loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/" + "transport/ESBJAVA-5135.xml");
     }
 
     /**
@@ -52,26 +51,22 @@ public class ESBJAVA5135ResponseBodyWith202TestCase extends ESBIntegrationTest {
      * @throws AutomationFrameworkException in case of any other test suite level issue
      */
     @Test(groups = "wso2.esb", description = "Test response with 202 and body is built by ESB and responds client "
-            + "properly")
-    public void testResponseWith202() throws AxisFault, MalformedURLException, AutomationFrameworkException {
+            + "properly") public void testResponseWith202()
+            throws AxisFault, MalformedURLException, AutomationFrameworkException {
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "text/xml");
         requestHeader.put("SOAPAction", "urn:mediate");
-        String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap"
-                + ".org/soap/envelope/\">\n"
-                + "   <soapenv:Header/>\n"
-                + "   <soapenv:Body/>\n"
-                + "</soapenv:Envelope>";
+        String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap" + ".org/soap/envelope/\">\n"
+                + "   <soapenv:Header/>\n" + "   <soapenv:Body/>\n" + "</soapenv:Envelope>";
 
         HttpResponse response = HttpRequestUtil.
                 doPost(new URL(getProxyServiceURLHttp("mockProxy")), message, requestHeader);
 
-        Assert.assertTrue(response.getData().contains("Hello World"), "Expected response was not"
-                + " received. Got " + response.getData());
+        Assert.assertTrue(response.getData().contains("Hello World"),
+                "Expected response was not" + " received. Got " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

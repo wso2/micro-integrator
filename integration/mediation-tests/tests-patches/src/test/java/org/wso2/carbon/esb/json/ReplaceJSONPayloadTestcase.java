@@ -29,39 +29,30 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-
 public class ReplaceJSONPayloadTestcase extends ESBIntegrationTest {
 
     private final String proxyServiceName = "replaceJSONPayload";
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         verifyProxyServiceExistence(proxyServiceName);
     }
 
-    @Test(groups = "wso2.esb")
-    public void replaceJSONPlayloadTest() throws Exception {
+    @Test(groups = "wso2.esb") public void replaceJSONPlayloadTest() throws Exception {
         String expectedResponse = "SUCCESS";
         String requestMessageBody = createRequest();
         String response = httpClient(getProxyServiceURLHttp(proxyServiceName), requestMessageBody);
         Assert.assertTrue(response.contains(expectedResponse), "The expected response is not received");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void clear() throws Exception {
+    @AfterClass(alwaysRun = true) public void clear() throws Exception {
         super.cleanup();
     }
 
     private String createRequest() {
         return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-                + "xmlns:typ=\"http://www.wso2.org/types\">"
-                + "<soapenv:Header/><soapenv:Body>"
-                + " <typ:greet>"
-                + "<!--Optional:-->"
-                + "<name>hello</name>"
-                + "</typ:greet>"
-                + "</soapenv:Body>"
+                + "xmlns:typ=\"http://www.wso2.org/types\">" + "<soapenv:Header/><soapenv:Body>" + " <typ:greet>"
+                + "<!--Optional:-->" + "<name>hello</name>" + "</typ:greet>" + "</soapenv:Body>"
                 + "</soapenv:Envelope>";
     }
 
@@ -90,6 +81,5 @@ public class ReplaceJSONPayloadTestcase extends ESBIntegrationTest {
             throw new RuntimeException(e);
         }
     }
-
 
 }

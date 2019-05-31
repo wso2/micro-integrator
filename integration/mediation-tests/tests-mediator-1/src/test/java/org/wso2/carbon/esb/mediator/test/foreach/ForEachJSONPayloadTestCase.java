@@ -39,18 +39,16 @@ import static org.testng.Assert.assertTrue;
  */
 public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("foreachJSONTestProxy");
     }
 
-    @Test(groups = {"wso2.esb"},
-            description = "Test ForEach mediator with JSON payload")
-    public void testForEachMediatorWithJSONPayload() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test ForEach mediator with JSON payload") public void testForEachMediatorWithJSONPayload()
+            throws Exception {
 
-        LogViewerClient logViewer =
-                new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer.clearLogs();
 
         String request = "{\"getQuote\":{\"request\":[{\"symbol\":\"IBM\"},{\"symbol\":\"WSO2\"},{\"symbol\":\"MSFT\"}]}}";
@@ -76,32 +74,29 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
                 String quote = payload.substring(start, end);
 
                 assertTrue(quote.contains(
-                                "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>IBM</code></checkPriceRequest>"),
+                        "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>IBM</code></checkPriceRequest>"),
                         "IBM Element not found");
                 assertTrue(quote.contains(
-                                "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>WSO2</code></checkPriceRequest>"),
+                        "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>WSO2</code></checkPriceRequest>"),
                         "WSO2 Element not found");
                 assertTrue(quote.contains(
-                                "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>MSFT</code></checkPriceRequest>"),
+                        "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>MSFT</code></checkPriceRequest>"),
                         "MSTF Element not found");
             }
         }
         assertTrue(reachedEnd, "Transformed json payload");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    private void sendRequest(String addUrl, String query)
-            throws IOException {
+    private void sendRequest(String addUrl, String query) throws IOException {
         String charset = "UTF-8";
         URLConnection connection = new URL(addUrl).openConnection();
         connection.setDoOutput(true);
         connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type",
-                "application/json;charset=" + charset);
+        connection.setRequestProperty("Content-Type", "application/json;charset=" + charset);
         OutputStream output = null;
         try {
             output = connection.getOutputStream();

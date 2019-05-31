@@ -21,64 +21,64 @@ package org.wso2.carbon.esb.mediator.test.classMediator;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.awaitility.Awaitility;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import javax.xml.namespace.QName;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
+
 import java.io.File;
 import java.nio.file.Paths;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.Callable;
-import org.awaitility.Awaitility;
+import java.util.concurrent.TimeUnit;
+import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationTest {
     private static final Log log = LogFactory.getLog(PropertyPersistenceDeletingAndAddingTstCase.class);
-    private static final String CLASS_JAR_FIVE_PROPERTIES="org.wso2.carbon.test.mediator.stockmediator-v1.0.jar";
-    private static final String CLASS_JAR_FOUR_PROPERTIES="org.wso2.carbon.test.mediator.stockmediator-v1.0.2.jar";
-    private static final String JAR_LOCATION= "/artifacts/ESB/jar";
+    private static final String CLASS_JAR_FIVE_PROPERTIES = "org.wso2.carbon.test.mediator.stockmediator-v1.0.jar";
+    private static final String CLASS_JAR_FOUR_PROPERTIES = "org.wso2.carbon.test.mediator.stockmediator-v1.0.2.jar";
+    private static final String JAR_LOCATION = "/artifacts/ESB/jar";
 
     private static final String osname = System.getProperty("os.name").toLowerCase().toString();
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         if (!(osname.contains("windows"))) {
 
             super.init();
             serverConfigurationManager = new ServerConfigurationManager(context);
-            serverConfigurationManager.copyToComponentLib
-                    (new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FIVE_PROPERTIES).toURI()));
+            serverConfigurationManager.copyToComponentLib(new File(
+                    getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FIVE_PROPERTIES).toURI()));
             serverConfigurationManager.restartGracefully();
 
             super.init();
-            loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/class/class_property_persistence_five_properties.xml");
+            loadESBConfigurationFromClasspath(
+                    "/artifacts/ESB/mediatorconfig/class/class_property_persistence_five_properties.xml");
         } else {
             log.info("Skip the test execution in Windows. [Unable to delete dropins in Winodws]");
         }
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb","localOnly"}, description = "Class Mediator " +
-                                                           " -Class mediator property persistence -deleting and adding different properties")
-    public void testMediationPersistenceDeletingAndAdding() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Class Mediator "
+            + " -Class mediator property persistence -deleting and adding different properties") public void testMediationPersistenceDeletingAndAdding()
+            throws Exception {
         if (!(osname.contains("windows"))) {
             OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
-            String lastPrice=response.getFirstElement()
-                                     .getFirstChildWithName(new QName("http://services.samples/xsd","last")).getText();
+            String lastPrice = response.getFirstElement()
+                    .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
             assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-            String symbol=response.getFirstElement()
-                                  .getFirstChildWithName(new QName("http://services.samples/xsd","symbol")).getText();
+            String symbol = response.getFirstElement()
+                    .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
             assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
             /*
@@ -95,33 +95,32 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
             */
 
             serverConfigurationManager.removeFromComponentLib(CLASS_JAR_FIVE_PROPERTIES);
-            serverConfigurationManager.copyToComponentLib
-                    (new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FOUR_PROPERTIES).toURI()));
+            serverConfigurationManager.copyToComponentLib(new File(
+                    getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FOUR_PROPERTIES).toURI()));
             loadSampleESBConfiguration(0);
 
             String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
             String filePath = Paths.get(carbonHome, "lib", CLASS_JAR_FOUR_PROPERTIES).toString();
             File jarFile = new File(filePath);
 
-            Awaitility.await()
-                    .pollInterval(50, TimeUnit.MILLISECONDS)
-                    .atMost(10000, TimeUnit.MILLISECONDS)
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(10000, TimeUnit.MILLISECONDS)
                     .until(isFileWrittenInDisk(jarFile));
 
             /* waiting for the new config file to be written to the disk */
             serverConfigurationManager.restartGracefully();
 
             super.init();
-            loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/class/class_property_persistence_four_properties.xml");
+            loadESBConfigurationFromClasspath(
+                    "/artifacts/ESB/mediatorconfig/class/class_property_persistence_four_properties.xml");
 
-            response=axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),null, "IBM");
+            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 
-            lastPrice=response.getFirstElement()
-                              .getFirstChildWithName(new QName("http://services.samples/xsd","last")).getText();
+            lastPrice = response.getFirstElement()
+                    .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
             assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-            symbol=response.getFirstElement()
-                           .getFirstChildWithName(new QName("http://services.samples/xsd","symbol")).getText();
+            symbol = response.getFirstElement()
+                    .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
             assertEquals(symbol, "IBM", "Fault: value 'symbol' mismatched");
 
             /*
@@ -143,8 +142,7 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
 
     private Callable<Boolean> isFileWrittenInDisk(final File jar) {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
                 if (jar.exists()) {
                     return true;
                 } else {
@@ -154,8 +152,7 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
         };
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         if (!(osname.contains("windows"))) {
             super.cleanup();
             serverConfigurationManager.removeFromComponentLib(CLASS_JAR_FOUR_PROPERTIES);

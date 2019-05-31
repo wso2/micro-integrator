@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.testng.annotations.AfterClass;
@@ -26,9 +26,9 @@ import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+import javax.xml.stream.XMLStreamException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -40,22 +40,20 @@ public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationT
 
     private static LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath
-                ("/artifacts/ESB/mediatorconfig/property/XPATH_URL_PROPERTY.xml");
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATH_URL_PROPERTY.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test getting the  URI element of a request URL")
-    public void testXpathURLProperty() throws IOException, XMLStreamException, LogViewerLogViewerException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test getting the  URI element of a request URL") public void testXpathURLProperty()
+            throws IOException, XMLStreamException, LogViewerLogViewerException {
         boolean isUri = false;
         logViewer.clearLogs();
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("editing") + "/edit?a=wso2&b=2.4", null);

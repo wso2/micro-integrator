@@ -22,22 +22,12 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.UnknownHostException;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import static org.testng.Assert.assertEquals;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
@@ -46,6 +36,14 @@ import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.UnknownHostException;
+
+import static org.testng.Assert.assertEquals;
+
 public class ContentTypeTestCase extends ESBIntegrationTest {
 
     private Log log = LogFactory.getLog(ContentTypeTestCase.class);
@@ -53,8 +51,7 @@ public class ContentTypeTestCase extends ESBIntegrationTest {
     private static final int HTTP_STATUS_OK = 200;
     private static final int PORT = 8089;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
 
         super.init();
         String relativePath = "/artifacts/ESB/synapseconfig/esbjava2283/api.xml";
@@ -64,8 +61,9 @@ public class ContentTypeTestCase extends ESBIntegrationTest {
         addApi(apiConfig);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test different content types", dataProvider = "contentTypeProvider")
-    public void testReturnContentType(String dataProviderContentType) throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test different content types", dataProvider = "contentTypeProvider") public void testReturnContentType(
+            String dataProviderContentType) throws Exception {
 
         contentType = dataProviderContentType;
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -79,12 +77,13 @@ public class ContentTypeTestCase extends ESBIntegrationTest {
         try {
             response = httpclient.execute(httpGet);
         } catch (IOException e) {
-            log.error("Error Occurred while sending http get request. " , e);
+            log.error("Error Occurred while sending http get request. ", e);
         }
         log.info(response.getEntity().getContentType());
         log.info(response.getStatusLine().getStatusCode());
 
-        assertEquals(response.getFirstHeader("Content-Type").getValue(), contentType, "Expected content type doesn't match");
+        assertEquals(response.getFirstHeader("Content-Type").getValue(), contentType,
+                "Expected content type doesn't match");
         assertEquals(response.getStatusLine().getStatusCode(), HTTP_STATUS_OK, "response code doesn't match");
 
         server.stop(5);
@@ -104,24 +103,15 @@ public class ContentTypeTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
 
         super.cleanup();
     }
 
-    @DataProvider(name = "contentTypeProvider")
-    public Object[][] getContentTypes() {
+    @DataProvider(name = "contentTypeProvider") public Object[][] getContentTypes() {
 
-        return new Object[][]{
-                {"application/xml"},
-                {"text/plain"},
-                {"application/json"},
-                {"text/xml"},
-                {"application/x-www-form-urlencoded"},
-                {"multipart/form-data"},
-                {"text/xml"},
-        };
+        return new Object[][] { { "application/xml" }, { "text/plain" }, { "application/json" }, { "text/xml" },
+                { "application/x-www-form-urlencoded" }, { "multipart/form-data" }, { "text/xml" }, };
     }
 
     public boolean waitForPortCloser(int port) throws UnknownHostException {

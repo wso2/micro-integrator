@@ -44,15 +44,15 @@ public class AggregatedRequestClient {
         this.symbol = symbol;
     }
 
-
     public String getResponse() throws IOException {
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
 
             System.out.println(" Proxy service URL in Aggregated Response client ======== " + proxyServiceUrl);
-            response = operationClient.send(proxyServiceUrl, null,
-                                            createMultipleQuoteRequestBody(symbol, no_of_iterations), "urn:getQuote");
+            response = operationClient
+                    .send(proxyServiceUrl, null, createMultipleQuoteRequestBody(symbol, no_of_iterations),
+                            "urn:getQuote");
         } finally {
             operationClient.destroy();
         }
@@ -65,8 +65,9 @@ public class AggregatedRequestClient {
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
-            response = operationClient.send(proxyServiceUrl, null,
-                                            createMultipleQuoteRequestBodynew(symbol, no_of_iterations), "urn:getQuote");
+            response = operationClient
+                    .send(proxyServiceUrl, null, createMultipleQuoteRequestBodynew(symbol, no_of_iterations),
+                            "urn:getQuote");
         } finally {
             operationClient.destroy();
         }
@@ -79,8 +80,7 @@ public class AggregatedRequestClient {
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
-            response = operationClient.send(proxyServiceUrl, null,
-                                            payload, "urn:getQuote");
+            response = operationClient.send(proxyServiceUrl, null, payload, "urn:getQuote");
         } finally {
             operationClient.destroy();
         }
@@ -88,7 +88,6 @@ public class AggregatedRequestClient {
         return response.toString();
 
     }
-
 
     private OMElement createMultipleQuoteRequestBody(String symbol, int iterations) {
         SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();

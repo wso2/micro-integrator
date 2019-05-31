@@ -26,7 +26,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.namespace.QName;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
@@ -37,6 +36,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertNotNull;
 
@@ -45,14 +45,12 @@ import static org.testng.Assert.assertNotNull;
  */
 public class MultipartFormDataFormatTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Test the order of elements in the response received from the esb in multipart form data")
-    public void elementOrderTestCase() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test the order of elements in the response received from the esb in multipart form data") public void elementOrderTestCase()
+            throws Exception {
         String serviceURL = getProxyServiceURLHttp("MultipartFormDataTestProxy");
         String payload = "<body/>";
         Reader data = new StringReader(payload);
@@ -79,8 +77,7 @@ public class MultipartFormDataFormatTestCase extends ESBIntegrationTest {
                 "Incorrect order of elements in the response!");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -10,7 +10,7 @@ public class ProtocolViolationServer implements Runnable {
 
     private int port = 8989;
     private static boolean stopFlag = false;
-    
+
     public ProtocolViolationServer(int p) {
         this.port = p;
     }
@@ -39,11 +39,9 @@ public class ProtocolViolationServer implements Runnable {
             this.theRequest = theRequest;
         }
 
-        @Override
-        public void run() {
+        @Override public void run() {
             try {
-                BufferedReader br =  new BufferedReader(new InputStreamReader(
-                                               this.theRequest.getInputStream()));
+                BufferedReader br = new BufferedReader(new InputStreamReader(this.theRequest.getInputStream()));
 
                 int num = this.theRequest.getInputStream().available();
                 System.out.println("length is " + num);
@@ -53,8 +51,7 @@ public class ProtocolViolationServer implements Runnable {
                 System.out.println(new String(buf));
 
                 System.out.println("complete reading and now writing back......");
-                this.theRequest.getOutputStream()
-                               .write(new String("response from simple server").getBytes());
+                this.theRequest.getOutputStream().write(new String("response from simple server").getBytes());
 
                 this.theRequest.close();
             } catch (IOException ioe) {
@@ -64,9 +61,8 @@ public class ProtocolViolationServer implements Runnable {
         }
     }
 
-    @Override
-    public void run() {
-        try{
+    @Override public void run() {
+        try {
             ServerSocket ss = new ServerSocket(this.port);
             while (true) {
                 Socket incoming = ss.accept();
@@ -75,11 +71,11 @@ public class ProtocolViolationServer implements Runnable {
                 if (stopFlag) {
                     ss.close();
                 }
-            }            
-        }catch (Exception ex) {
-            
+            }
+        } catch (Exception ex) {
+
         }
-        
+
     }
 
 }

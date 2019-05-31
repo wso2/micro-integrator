@@ -31,14 +31,11 @@ import java.io.File;
 
 public class CloneIntegrationEndpointsTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironmentHTTP() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironmentHTTP() throws Exception {
         init();
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Tests http address")
-    public void testHTTP() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests http address") public void testHTTP() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_http.xml");
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneIntegrationEndpointsTestProxy1"), null,
@@ -47,9 +44,7 @@ public class CloneIntegrationEndpointsTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Tests https address")
-    public void testHTTPS() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests https address") public void testHTTPS() throws Exception {
         String sqn = FileManager.readFile(
                 getESBResourceLocation() + File.separator + "mediatorconfig" + File.separator + "clone" + File.separator
                         + "clone_https_sequence.xml");
@@ -64,8 +59,7 @@ public class CloneIntegrationEndpointsTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 

@@ -18,12 +18,12 @@
 
 package org.wso2.carbon.esb.message.processor.test.failover;
 
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
@@ -39,17 +39,15 @@ public class FailoverForwardingProcessorTestCase extends ESBIntegrationTest {
     private AxisServiceClient client = new AxisServiceClient();
     private ActiveMQServer activeMQServer = new ActiveMQServer();
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         activeMQServer.startJMSBroker();
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/failover/failoverTest.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Testing guaranteed delivery scenario")
-    public void testFailover() throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing guaranteed delivery scenario") public void testFailover()
+            throws Exception {
         logViewer.clearLogs();
         client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("failoverTestProxy"), "getQuote");
         assertTrue(isMatchFound("RMQ Company"), "Message not dispatched from the store and sent to the backend!");
@@ -85,8 +83,7 @@ public class FailoverForwardingProcessorTestCase extends ESBIntegrationTest {
         return logFound;
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         try {
             activeMQServer.stopJMSBroker();
         } finally {

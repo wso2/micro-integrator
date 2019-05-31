@@ -25,17 +25,17 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
 
 import static java.io.File.separator;
@@ -49,19 +49,19 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private String httpLogDir;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        String nhttpFile = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator +
-                "passthru" + separator + "transport" + separator + "httpaccesslogs" + separator + "nhttp.properties";
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        String nhttpFile =
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator + "passthru"
+                        + separator + "transport" + separator + "httpaccesslogs" + separator + "nhttp.properties";
 
         File srcFile = new File(nhttpFile);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         httpLogDir = carbonHome + File.separator + "repository" + File.separator + "logs" + File.separator + "httpLogs";
-        File log4jProperties = new File(carbonHome + File.separator + "conf" +
-                File.separator + "log4j.properties");
+        File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j.properties");
 
         String propertyName = "nhttp.log.directory";
         createNewDir(httpLogDir);
@@ -72,9 +72,9 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
         verifyProxyServiceExistence("HttpAccessLogsTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.esb")
-    public void testHttpAccessLogGeneration() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testHttpAccessLogGeneration()
+            throws Exception {
         BufferedReader bf = null;
         boolean found = false;
         String line;
@@ -157,8 +157,7 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
         try {
             super.cleanup();
         } finally {

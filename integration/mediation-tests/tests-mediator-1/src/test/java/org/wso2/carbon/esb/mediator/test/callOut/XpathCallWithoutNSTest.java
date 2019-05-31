@@ -25,31 +25,28 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-
 public class XpathCallWithoutNSTest extends ESBIntegrationTest {
 
     private String proxyServiceName = "SplitAggregateProxy";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config10/synapse.xml");
     }
 
-    @Test(expectedExceptions = AxisFault.class, groups = {"wso2.esb"}, description = "Sample 750 Call Template Test")
-    public void test() throws AxisFault {
+    @Test(expectedExceptions = AxisFault.class, groups = {
+            "wso2.esb" }, description = "Sample 750 Call Template Test") public void test() throws AxisFault {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "IBM");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "IBM");
         Assert.assertNotNull(response, "Response message is null");
         Assert.assertTrue(response.toString().contains("CheckPriceResponse"));
         Assert.assertTrue(response.toString().contains("Price"));
         Assert.assertTrue(response.toString().contains("Code"));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void closeTestArtifacts() throws Exception {
+    @AfterClass(alwaysRun = true) public void closeTestArtifacts() throws Exception {
         super.cleanup();
     }
-
 
 }

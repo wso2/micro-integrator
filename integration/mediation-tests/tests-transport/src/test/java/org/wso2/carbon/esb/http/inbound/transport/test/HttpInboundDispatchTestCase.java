@@ -11,24 +11,24 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -40,8 +40,7 @@ import java.util.concurrent.TimeUnit;
 public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
 
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -60,15 +59,15 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch" )
-    public void inboundHttpSuperSequenceTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch") public void inboundHttpSuperSequenceTest()
+            throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/", null, "WSO2");
         //this case matches with the regex but there is no api or proxy so dispatch to  super tenant main sequence
         Assert.assertTrue(stringExistsInLog("SUPER_MAIN"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch" )
-    public void inboundHttpSuperAPITest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch") public void inboundHttpSuperAPITest()
+            throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/foo", null, "WSO2");
         Assert.assertTrue(stringExistsInLog("FOO"));
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/boo", null, "WSO2");
@@ -83,21 +82,21 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
         Assert.assertTrue(stringExistsInLog("SUPER_MAIN"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch" )
-    public void inboundHttpSuperDefaultMainTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch") public void inboundHttpSuperDefaultMainTest()
+            throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9091/", null, "WSO2");
         Assert.assertTrue(stringExistsInLog("SUPER_MAIN"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch" )
-    public void inboundHttpSuperProxyDispatchTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch") public void inboundHttpSuperProxyDispatchTest()
+            throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/services/TestProxy", null, "WSO2");
         Assert.assertTrue(stringExistsInLog("PROXY_HIT"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Tenant Dispatch " +
-            "(Shared Port between super tenant and regular tenant)" )
-    public void inboundHttpTenantDispatchTests() throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Tenant Dispatch "
+            + "(Shared Port between super tenant and regular tenant)") public void inboundHttpTenantDispatchTests()
+            throws Exception {
         super.init(TestUserMode.TENANT_ADMIN);
 
         List<OMElement> seqList = new ArrayList<>();
@@ -120,10 +119,8 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
         inboundList.add(getArtifactConfig("tenant/inbound-endpoints", "ie1.xml"));
         addInboundEndpoint(inboundList.get(0));
 
-        Awaitility.await()
-                  .pollInterval(50, TimeUnit.MILLISECONDS)
-                  .atMost(300, TimeUnit.SECONDS)
-                  .until(isServiceDeployed(seqList, inboundList, proxyList));
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(300, TimeUnit.SECONDS)
+                .until(isServiceDeployed(seqList, inboundList, proxyList));
         logViewerClient.clearLogs();
 
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/t/wso2.com/tenantAPI", null, "WSO2");
@@ -148,17 +145,14 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
                 "Dispatch to http://localhost:9090/t/idoexistassupertenantapi");
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
     private OMElement getArtifactConfig(String directory, String fileName) throws Exception {
         OMElement synapseConfig = null;
-        String path = "artifacts" + File.separator + "ESB" + File.separator
-                + "http.inbound.transport" + File.separator + "dispatch" + File.separator + directory + File.separator +
-                fileName;
+        String path = "artifacts" + File.separator + "ESB" + File.separator + "http.inbound.transport" + File.separator
+                + "dispatch" + File.separator + directory + File.separator + fileName;
         try {
             synapseConfig = esbUtils.loadResource(path);
         } catch (FileNotFoundException e) {
@@ -186,24 +180,23 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     }
 
     private Callable<Boolean> isServiceDeployed(final List<OMElement> omSeqList, final List<OMElement> omInboundList,
-                                                final List<OMElement> omproxyList) {
+            final List<OMElement> omproxyList) {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
                 boolean isServicesDeployed;
-                for(OMElement seqElement : omSeqList) {
+                for (OMElement seqElement : omSeqList) {
                     isServicesDeployed = isSequenceDeployed(seqElement);
                     if (!isServicesDeployed) {
                         return false;
                     }
                 }
-                for(OMElement inElement : omInboundList) {
+                for (OMElement inElement : omInboundList) {
                     isServicesDeployed = isInboundEndpointDeployed(inElement);
                     if (!isServicesDeployed) {
                         return false;
                     }
                 }
-                for(OMElement proxyElement : omproxyList) {
+                for (OMElement proxyElement : omproxyList) {
                     isServicesDeployed = isProxyDeployed(proxyElement);
                     if (!isServicesDeployed) {
                         return false;

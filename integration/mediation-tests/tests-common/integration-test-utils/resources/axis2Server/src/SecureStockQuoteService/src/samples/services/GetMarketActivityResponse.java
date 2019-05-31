@@ -28,7 +28,7 @@ public class GetMarketActivityResponse {
 
     public GetMarketActivityResponse(String[] symbols) {
         quotes = new GetQuoteResponse[symbols.length];
-        for (int i=0; i<symbols.length; i++) {
+        for (int i = 0; i < symbols.length; i++) {
             quotes[i] = new GetQuoteResponse(symbols[i]);
         }
     }

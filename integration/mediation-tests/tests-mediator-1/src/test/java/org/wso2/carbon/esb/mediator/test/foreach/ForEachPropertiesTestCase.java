@@ -40,31 +40,25 @@ import static org.testng.Assert.assertTrue;
  */
 public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass
-    public void setEnvironment() throws Exception {
+    @BeforeClass public void setEnvironment() throws Exception {
         init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct")
-    public void testSingleForEachProperties() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct") public void testSingleForEachProperties()
+            throws Exception {
         verifyProxyServiceExistence("foreachSinglePropertyTestProxy");
 
-        LogViewerClient logViewer =
-                new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n" +
-                        "    <soap:Header/>\n" +
-                        "    <soap:Body>\n" +
-                        "        <m0:getQuote>\n" +
-                        "            <m0:group>Group1</m0:group>\n" +
-                        "            <m0:request><m0:code>IBM</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" +
-                        "        </m0:getQuote>\n" +
-                        "    </soap:Body>\n" +
-                        "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
+                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
+                        + "            <m0:group>Group1</m0:group>\n"
+                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
+                        + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
         sendRequest(getProxyServiceURLHttp("foreachSinglePropertyTestProxy"), request);
 
@@ -79,7 +73,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         for (int i = (afterLogSize - beforeLogSize - 1); i >= 0; i--) {
             String message = logs[i].getMessage();
 
-            if (message.contains("fe_originalpayload") || message.contains("in_originalpayload") || message.contains("out_originalpayload")) {
+            if (message.contains("fe_originalpayload") || message.contains("in_originalpayload") || message
+                    .contains("out_originalpayload")) {
                 //fe : original payload while in foreach
                 //in : original payload outside foreach
                 String payload = message;
@@ -94,18 +89,18 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertEquals(quote, "<m0:getQuote>\n" +
-                            "            <m0:group>Group1</m0:group>\n" +
-                            "            <m0:request><m0:code>IBM</m0:code></m0:request>\n" +
-                            "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n" +
-                            "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" +
-                            "        </m0:getQuote>", "original payload is incorrect");
+                    assertEquals(quote, "<m0:getQuote>\n" + "            <m0:group>Group1</m0:group>\n"
+                            + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
+                            + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
+                            + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n"
+                            + "        </m0:getQuote>", "original payload is incorrect");
                 }
             }
 
             if (message.contains("fe_count")) {
                 //counter in foreach sequence
-                assertTrue(message.contains("fe_count = " + msgCounter), "Counter mismatch, expected " + msgCounter + " found = " + message);
+                assertTrue(message.contains("fe_count = " + msgCounter),
+                        "Counter mismatch, expected " + msgCounter + " found = " + message);
                 msgCounter++;
             }
 
@@ -116,7 +111,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
             if (message.contains("in_count")) {
                 //counter at the end of foreach in insequence
-                assertTrue(message.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + message);
+                assertTrue(message.contains("in_count = " + 3),
+                        "Final counter mismatch, expected 3 found = " + message);
                 msgCounter++;
             }
 
@@ -134,43 +130,30 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertTrue(quote.contains(
-                                    "<m0:group>Group1</m0:group>"),
-                            "Group Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_IBM</m0:symbol>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_WSO2</m0:symbol>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_MSFT</m0:symbol>"),
-                            "MSTF Element not found");
+                    assertTrue(quote.contains("<m0:group>Group1</m0:group>"), "Group Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_IBM</m0:symbol>"), "IBM Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_WSO2</m0:symbol>"), "WSO2 Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_MSFT</m0:symbol>"), "MSTF Element not found");
                 }
             }
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified")
-    public void testMultipleForEachPropertiesWithoutID() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified") public void testMultipleForEachPropertiesWithoutID()
+            throws Exception {
         verifyProxyServiceExistence("foreachMultiplePropertyWithoutIDTestProxy");
 
-        LogViewerClient logViewer =
-                new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n" +
-                        "    <soap:Header/>\n" +
-                        "    <soap:Body>\n" +
-                        "        <m0:getQuote>\n" +
-                        "            <m0:group>Group1</m0:group>\n" +
-                        "            <m0:request><m0:code>IBM</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" +
-                        "        </m0:getQuote>\n" +
-                        "    </soap:Body>\n" +
-                        "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
+                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
+                        + "            <m0:group>Group1</m0:group>\n"
+                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
+                        + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
         sendRequest(getProxyServiceURLHttp("foreachMultiplePropertyWithoutIDTestProxy"), request);
 
@@ -202,18 +185,18 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertEquals(quote, "<m0:getQuote>\n" +
-                            "            <m0:group>Group1</m0:group>\n" +
-                            "            <m0:request><m0:code>IBM</m0:code></m0:request>\n" +
-                            "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n" +
-                            "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" +
-                            "        </m0:getQuote>", "original payload is incorrect");
+                    assertEquals(quote, "<m0:getQuote>\n" + "            <m0:group>Group1</m0:group>\n"
+                            + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
+                            + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
+                            + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n"
+                            + "        </m0:getQuote>", "original payload is incorrect");
                 }
             }
 
             if (message.contains("1_fe_count")) {
                 //counter in foreach sequence
-                assertTrue(message.contains("1_fe_count = " + msgCounter1), "Counter mismatch, expected " + msgCounter1 + " found = " + message);
+                assertTrue(message.contains("1_fe_count = " + msgCounter1),
+                        "Counter mismatch, expected " + msgCounter1 + " found = " + message);
                 msgCounter1++;
             }
 
@@ -224,7 +207,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
             if (message.contains("1_in_count")) {
                 //counter at the end of foreach in insequence
-                assertTrue(message.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + message);
+                assertTrue(message.contains("in_count = " + 3),
+                        "Final counter mismatch, expected 3 found = " + message);
                 msgCounter1++;
             }
 
@@ -242,18 +226,10 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertTrue(quote.contains(
-                                    "<m0:group>Group1</m0:group>"),
-                            "Group Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_IBM</m0:symbol>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_WSO2</m0:symbol>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_MSFT</m0:symbol>"),
-                            "MSTF Element not found");
+                    assertTrue(quote.contains("<m0:group>Group1</m0:group>"), "Group Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_IBM</m0:symbol>"), "IBM Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_WSO2</m0:symbol>"), "WSO2 Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_MSFT</m0:symbol>"), "MSTF Element not found");
                 }
             }
 
@@ -275,27 +251,18 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertTrue(quote.contains(
-                                    "<m0:group>Group2</m0:group>"),
-                            "Group Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>IBM</m0:code>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>WSO2</m0:code>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>MSFT</m0:code>"),
-                            "MSTF Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>SUN</m0:code>"),
-                            "SUN Element not found");
+                    assertTrue(quote.contains("<m0:group>Group2</m0:group>"), "Group Element not found");
+                    assertTrue(quote.contains("<m0:code>IBM</m0:code>"), "IBM Element not found");
+                    assertTrue(quote.contains("<m0:code>WSO2</m0:code>"), "WSO2 Element not found");
+                    assertTrue(quote.contains("<m0:code>MSFT</m0:code>"), "MSTF Element not found");
+                    assertTrue(quote.contains("<m0:code>SUN</m0:code>"), "SUN Element not found");
                 }
             }
 
             if (message.contains("2_fe_count")) {
                 //counter in foreach sequence
-                assertTrue(message.contains("2_fe_count = " + msgCounter2), "Counter mismatch, expected " + msgCounter2 + " found = " + message);
+                assertTrue(message.contains("2_fe_count = " + msgCounter2),
+                        "Counter mismatch, expected " + msgCounter2 + " found = " + message);
                 msgCounter2++;
             }
 
@@ -306,7 +273,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
             if (message.contains("2_in_count")) {
                 //counter at the end of foreach in insequence
-                assertTrue(message.contains("in_count = " + 4), "Final counter mismatch, expected 4 found = " + message);
+                assertTrue(message.contains("in_count = " + 4),
+                        "Final counter mismatch, expected 4 found = " + message);
                 msgCounter2++;
             }
 
@@ -325,46 +293,31 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertTrue(quote.contains(
-                                    "<m0:group>Group2</m0:group>"),
-                            "Group Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group2_IBM</m0:symbol>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group2_WSO2</m0:symbol>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group2_MSFT</m0:symbol>"),
-                            "MSTF Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group2_SUN</m0:symbol>"),
-                            "SUN Element not found");
+                    assertTrue(quote.contains("<m0:group>Group2</m0:group>"), "Group Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group2_IBM</m0:symbol>"), "IBM Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group2_WSO2</m0:symbol>"), "WSO2 Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group2_MSFT</m0:symbol>"), "MSTF Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group2_SUN</m0:symbol>"), "SUN Element not found");
                 }
             }
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs with id specified")
-    public void testMultipleForEachPropertiesWithID() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs with id specified") public void testMultipleForEachPropertiesWithID()
+            throws Exception {
         verifyProxyServiceExistence("foreachMultiplePropertyWithIDTestProxy");
 
-        LogViewerClient logViewer =
-                new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n" +
-                        "    <soap:Header/>\n" +
-                        "    <soap:Body>\n" +
-                        "        <m0:getQuote>\n" +
-                        "            <m0:group>Group1</m0:group>\n" +
-                        "            <m0:request><m0:code>IBM</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n" +
-                        "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" +
-                        "        </m0:getQuote>\n" +
-                        "    </soap:Body>\n" +
-                        "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
+                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
+                        + "            <m0:group>Group1</m0:group>\n"
+                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
+                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
+                        + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
         sendRequest(getProxyServiceURLHttp("foreachMultiplePropertyWithIDTestProxy"), request);
 
@@ -395,18 +348,18 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertEquals(quote, "<m0:getQuote>\n" +
-                            "            <m0:group>Group1</m0:group>\n" +
-                            "            <m0:request><m0:code>IBM</m0:code></m0:request>\n" +
-                            "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n" +
-                            "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" +
-                            "        </m0:getQuote>", "original payload is incorrect");
+                    assertEquals(quote, "<m0:getQuote>\n" + "            <m0:group>Group1</m0:group>\n"
+                            + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
+                            + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
+                            + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n"
+                            + "        </m0:getQuote>", "original payload is incorrect");
                 }
             }
 
             if (message.contains("1_fe_count")) {
                 //counter in foreach sequence
-                assertTrue(message.contains("1_fe_count = " + msgCounter1), "Counter mismatch, expected " + msgCounter1 + " found = " + message);
+                assertTrue(message.contains("1_fe_count = " + msgCounter1),
+                        "Counter mismatch, expected " + msgCounter1 + " found = " + message);
                 msgCounter1++;
             }
 
@@ -417,7 +370,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
             if (message.contains("1_in_count")) {
                 //counter at the end of foreach in insequence
-                assertTrue(message.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + message);
+                assertTrue(message.contains("in_count = " + 3),
+                        "Final counter mismatch, expected 3 found = " + message);
                 msgCounter1++;
             }
 
@@ -435,18 +389,10 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertTrue(quote.contains(
-                                    "<m0:group>Group1</m0:group>"),
-                            "Group Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_IBM</m0:symbol>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_WSO2</m0:symbol>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_MSFT</m0:symbol>"),
-                            "MSTF Element not found");
+                    assertTrue(quote.contains("<m0:group>Group1</m0:group>"), "Group Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_IBM</m0:symbol>"), "IBM Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_WSO2</m0:symbol>"), "WSO2 Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_MSFT</m0:symbol>"), "MSTF Element not found");
                 }
             }
 
@@ -468,27 +414,18 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertTrue(quote.contains(
-                                    "<m0:group>Group2</m0:group>"),
-                            "Group Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>IBM</m0:code>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>WSO2</m0:code>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>MSFT</m0:code>"),
-                            "MSTF Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:code>SUN</m0:code>"),
-                            "SUN Element not found");
+                    assertTrue(quote.contains("<m0:group>Group2</m0:group>"), "Group Element not found");
+                    assertTrue(quote.contains("<m0:code>IBM</m0:code>"), "IBM Element not found");
+                    assertTrue(quote.contains("<m0:code>WSO2</m0:code>"), "WSO2 Element not found");
+                    assertTrue(quote.contains("<m0:code>MSFT</m0:code>"), "MSTF Element not found");
+                    assertTrue(quote.contains("<m0:code>SUN</m0:code>"), "SUN Element not found");
                 }
             }
 
             if (message.contains("2_fe_count")) {
                 //counter in foreach sequence
-                assertTrue(message.contains("2_fe_count = " + msgCounter2), "Counter mismatch, expected " + msgCounter2 + " found = " + message);
+                assertTrue(message.contains("2_fe_count = " + msgCounter2),
+                        "Counter mismatch, expected " + msgCounter2 + " found = " + message);
                 msgCounter2++;
             }
 
@@ -499,7 +436,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
             if (message.contains("2_in_count")) {
                 //counter at the end of foreach in insequence
-                assertTrue(message.contains("in_count = " + 4), "Final counter mismatch, expected 4 found = " + message);
+                assertTrue(message.contains("in_count = " + 4),
+                        "Final counter mismatch, expected 4 found = " + message);
                 msgCounter2++;
             }
 
@@ -518,39 +456,26 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     int end = matcher.end();
                     String quote = payload.substring(start, end);
 
-                    assertTrue(quote.contains(
-                                    "<m0:group>Group2</m0:group>"),
-                            "Group Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_Group2_IBM</m0:symbol>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_Group2_WSO2</m0:symbol>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_Group2_MSFT</m0:symbol>"),
-                            "MSTF Element not found");
-                    assertTrue(quote.contains(
-                                    "<m0:symbol>Group1_Group2_SUN</m0:symbol>"),
-                            "SUN Element not found");
+                    assertTrue(quote.contains("<m0:group>Group2</m0:group>"), "Group Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_Group2_IBM</m0:symbol>"), "IBM Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_Group2_WSO2</m0:symbol>"), "WSO2 Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_Group2_MSFT</m0:symbol>"), "MSTF Element not found");
+                    assertTrue(quote.contains("<m0:symbol>Group1_Group2_SUN</m0:symbol>"), "SUN Element not found");
                 }
             }
         }
     }
 
-    @AfterClass
-    public void close() throws Exception {
+    @AfterClass public void close() throws Exception {
         super.cleanup();
     }
 
-    private void sendRequest(String addUrl, String query)
-            throws IOException {
+    private void sendRequest(String addUrl, String query) throws IOException {
         String charset = "UTF-8";
         URLConnection connection = new URL(addUrl).openConnection();
         connection.setDoOutput(true);
         connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type",
-                "application/xml;charset=" + charset);
+        connection.setRequestProperty("Content-Type", "application/xml;charset=" + charset);
         OutputStream output = null;
         try {
             output = connection.getOutputStream();

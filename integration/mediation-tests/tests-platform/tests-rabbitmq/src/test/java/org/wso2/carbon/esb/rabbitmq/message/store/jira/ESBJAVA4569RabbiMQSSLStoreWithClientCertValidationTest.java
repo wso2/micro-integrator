@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -36,14 +36,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.Map;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
 
 import static org.testng.Assert.assertTrue;
 
@@ -60,24 +60,18 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
 
     private final Map<String, String> headers = new HashMap<String, String>(1);
 
-    private final String payload =  "{\n" +
-                                    "  \"email\" : \"jms@yomail.com\",\n" +
-                                    "  \"firstName\" : \"Jms\",\n" +
-                                    "  \"lastName\" : \"Broker\",\n" +
-                                    "  \"id\" : 10\n" +
-                                    "}";
+    private final String payload = "{\n" + "  \"email\" : \"jms@yomail.com\",\n" + "  \"firstName\" : \"Jms\",\n"
+            + "  \"lastName\" : \"Broker\",\n" + "  \"id\" : 10\n" + "}";
 
     private LogViewerClient logViewer;
 
-    private static final String logLine0 =
-            "MESSAGE = ************rabbitMQRestWithClientCert IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
+    private static final String logLine0 = "MESSAGE = ************rabbitMQRestWithClientCert IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
 
     private RabbitMQServer rabbitMQServer;
 
     private File destinationConfig = null;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
@@ -90,12 +84,13 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
 
         modifyAndUpdateSynapseConfigs();
 
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         url = getApiInvocationURL("rabbitMQRestWithClientCert") + "/store";
     }
 
-    @Test(groups = {"wso2.esb"}, description = "RabbitMQ message store support for SSL(with client certificate validation)" )
-    public void testRabbitMQMessageStore() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "RabbitMQ message store support for SSL(with client certificate validation)") public void testRabbitMQMessageStore()
+            throws Exception {
 
         HttpResponse response = httpClient.doPost(url, headers, payload, "application/json");
         if (response.getStatusLine().getStatusCode() == 200 || response.getStatusLine().getStatusCode() == 202) {
@@ -119,8 +114,7 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         super.init();
         rabbitMQServer.stop();
@@ -170,7 +164,7 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
         Channel channel = conn.createChannel();
 
         GetResponse chResponse = channel.basicGet("WithClientCertQueue", true);
-        if(chResponse != null) {
+        if (chResponse != null) {
             byte[] body = chResponse.getBody();
             result = new String(body);
         }
@@ -206,7 +200,6 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
         }
     }
 
-
     /**
      * Helper method to modify synapse configs to ESB server
      *
@@ -226,7 +219,8 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
         File tempFile = new File(basePath + "RabbitMQMsgStoreSSLWithClientCertValidationTestTMP.xml");
         try {
             FileUtils.writeStringToFile(tempFile, content, "UTF-8");
-            OMElement synapse = esbUtils.loadResource("/artifacts/ESB/messageStore/rabbitMQ/SSL/RabbitMQMsgStoreSSLWithClientCertValidationTestTMP.xml");
+            OMElement synapse = esbUtils.loadResource(
+                    "/artifacts/ESB/messageStore/rabbitMQ/SSL/RabbitMQMsgStoreSSLWithClientCertValidationTestTMP.xml");
             updateESBConfiguration(synapse);
         } finally {
             tempFile.delete();

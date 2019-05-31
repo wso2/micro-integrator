@@ -24,11 +24,11 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQConsumerClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
 
 import java.io.File;
@@ -40,16 +40,15 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
     private RabbitMQServer rabbitMQServer;
     private ServerConfigurationManager configurationManagerAxis2;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
 
-        configurationManagerAxis2 =
-                new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        File customAxisConfigAxis2 = new File(getESBResourceLocation() + File.separator +
-                "axis2config" + File.separator + "axis2.xml");
+        configurationManagerAxis2 = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        File customAxisConfigAxis2 = new File(
+                getESBResourceLocation() + File.separator + "axis2config" + File.separator + "axis2.xml");
         configurationManagerAxis2.applyConfiguration(customAxisConfigAxis2);
         super.init();
 
@@ -57,8 +56,9 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test ESB as a RabbitMQ sender with connection recovery")
-    public void testRabbitMQSenderRecoverySuccess() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test ESB as a RabbitMQ sender with connection recovery") public void testRabbitMQSenderRecoverySuccess()
+            throws Exception {
 
         rabbitMQServer.start();
         rabbitMQServer.initialize();
@@ -76,7 +76,8 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
         int beforeMessageCount = messages.size();
 
         for (int i = 0; i < 5; i++) {
-            client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("RabbitMQProducerProxy"), "getQuote");
+            client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("RabbitMQProducerProxy"),
+                    "getQuote");
         }
 
         messages = consumer.popAllMessages();
@@ -85,12 +86,13 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
         if (messages.size() == 0) {
             Assert.fail("Messages not received at RabbitMQ Broker");
         } else {
-            Assert.assertEquals(afterMessagesCount - beforeMessageCount, 5, "New messages not received at RabbitMQBroker");
+            Assert.assertEquals(afterMessagesCount - beforeMessageCount, 5,
+                    "New messages not received at RabbitMQBroker");
             for (int i = beforeMessageCount; i < afterMessagesCount; i++) {
-                Assert.assertNotNull(messages.get(i), "Message not found. message sent by proxy service not reached to the destination Queue");
-                Assert.assertTrue(messages.get(i).contains("<ns:getQuote xmlns:ns=\"http://services.samples\"><" +
-                        "ns:request><ns:symbol>RMQ</ns:symbol></ns:request></ns:getQuote>")
-                        , "Message mismatched");
+                Assert.assertNotNull(messages.get(i),
+                        "Message not found. message sent by proxy service not reached to the destination Queue");
+                Assert.assertTrue(messages.get(i).contains("<ns:getQuote xmlns:ns=\"http://services.samples\"><"
+                        + "ns:request><ns:symbol>RMQ</ns:symbol></ns:request></ns:getQuote>"), "Message mismatched");
             }
         }
 
@@ -113,7 +115,8 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
         beforeMessageCount = messages.size();
 
         for (int i = 0; i < 5; i++) {
-            client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("RabbitMQProducerProxy"), "getQuote");
+            client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("RabbitMQProducerProxy"),
+                    "getQuote");
         }
         Thread.sleep(10000);
 
@@ -123,12 +126,13 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
         if (messages.size() == 0) {
             Assert.fail("Messages not received at RabbitMQ Broker");
         } else {
-            Assert.assertEquals(afterMessagesCount - beforeMessageCount, 5, "New messages not received at RabbitMQBroker");
+            Assert.assertEquals(afterMessagesCount - beforeMessageCount, 5,
+                    "New messages not received at RabbitMQBroker");
             for (int i = beforeMessageCount; i < afterMessagesCount; i++) {
-                Assert.assertNotNull(messages.get(i), "Message not found. message sent by proxy service not reached to the destination Queue");
-                Assert.assertTrue(messages.get(i).contains("<ns:getQuote xmlns:ns=\"http://services.samples\"><" +
-                        "ns:request><ns:symbol>RMQ</ns:symbol></ns:request></ns:getQuote>")
-                        , "Message mismatched");
+                Assert.assertNotNull(messages.get(i),
+                        "Message not found. message sent by proxy service not reached to the destination Queue");
+                Assert.assertTrue(messages.get(i).contains("<ns:getQuote xmlns:ns=\"http://services.samples\"><"
+                        + "ns:request><ns:symbol>RMQ</ns:symbol></ns:request></ns:getQuote>"), "Message mismatched");
             }
         }
 
@@ -136,9 +140,7 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
         rabbitMQServer.stop();
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void end() throws Exception {
+    @AfterClass(alwaysRun = true) public void end() throws Exception {
         super.cleanup();
         rabbitMQServer.stop();
         rabbitMQServer = null;

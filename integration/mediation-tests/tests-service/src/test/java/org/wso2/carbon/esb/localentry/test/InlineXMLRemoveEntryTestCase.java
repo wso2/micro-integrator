@@ -26,7 +26,9 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.clients.localentry.LocalEntriesAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 public class InlineXMLRemoveEntryTestCase extends ESBIntegrationTest {
 
@@ -34,34 +36,29 @@ public class InlineXMLRemoveEntryTestCase extends ESBIntegrationTest {
 
     private LocalEntriesAdminClient localEntryAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
-        localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests the Removal of an Inline XML Local Entry")
-    public void testInlineXMLLocalEntryRemoval()
+    @Test(groups = "wso2.esb", description = "Tests the Removal of an Inline XML Local Entry") public void testInlineXMLLocalEntryRemoval()
             throws Exception {
 
         String entryNames = localEntryAdminServiceClient.getEntryNamesString();
         //If an Entry by the name ENTRY_NAME does not exist
         if (entryNames == null || !entryNames.contains(ENTRY_NAME)) {
             //Add an Entry
-            addLocalEntry(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                                          "<localEntry xmlns=\"http://ws.apache.org/ns/synapse\" key=\"" + ENTRY_NAME + "\">\n" +
-                                                          "    <endpoint name=\"SimpleStockQuoteService\">\n" +
-                                                          "        <address uri=\"http://localhost:9000/services/SimpleStockQuoteService\">\n" +
-                                                          "            <suspendOnFailure>\n" +
-                                                          "                <progressionFactor>1.0</progressionFactor>\n" +
-                                                          "            </suspendOnFailure>\n" +
-                                                          "            <markForSuspension>\n" +
-                                                          "                <retriesBeforeSuspension>0</retriesBeforeSuspension>\n" +
-                                                          "                <retryDelay>0</retryDelay>\n" +
-                                                          "            </markForSuspension>\n" +
-                                                          "        </address>\n" +
-                                                          "    </endpoint>\n" +
-                                                          "</localEntry>"));
+            addLocalEntry(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                    + "<localEntry xmlns=\"http://ws.apache.org/ns/synapse\" key=\"" + ENTRY_NAME + "\">\n"
+                    + "    <endpoint name=\"SimpleStockQuoteService\">\n"
+                    + "        <address uri=\"http://localhost:9000/services/SimpleStockQuoteService\">\n"
+                    + "            <suspendOnFailure>\n"
+                    + "                <progressionFactor>1.0</progressionFactor>\n"
+                    + "            </suspendOnFailure>\n" + "            <markForSuspension>\n"
+                    + "                <retriesBeforeSuspension>0</retriesBeforeSuspension>\n"
+                    + "                <retryDelay>0</retryDelay>\n" + "            </markForSuspension>\n"
+                    + "        </address>\n" + "    </endpoint>\n" + "</localEntry>"));
         }
 
         int before = localEntryAdminServiceClient.getEntryDataCount();
@@ -74,9 +71,7 @@ public class InlineXMLRemoveEntryTestCase extends ESBIntegrationTest {
         assertFalse(entryNames.contains(ENTRY_NAME));
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
         localEntryAdminServiceClient = null;
         super.cleanup();
     }

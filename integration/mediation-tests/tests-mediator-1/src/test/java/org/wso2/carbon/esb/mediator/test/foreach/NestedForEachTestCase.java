@@ -33,7 +33,6 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.regex.Matcher;
@@ -49,31 +48,26 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
     private IterateClient client;
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
         client = new IterateClient();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {"wso2.esb"},
-            description = "Transforming a Message Using a Nested ForEach Construct")
-    public void testNestedForEach() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Transforming a Message Using a Nested ForEach Construct") public void testNestedForEach()
+            throws Exception {
         verifyProxyServiceExistence("foreachNestedTestProxy");
 
         logViewer.clearLogs();
 
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n" +
-                        "    <soap:Header/>\n" +
-                        "    <soap:Body>\n" +
-                        "        <m0:getQuote>\n" +
-                        "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>\n" +
-                        "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n" +
-                        "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n" +
-                        "        </m0:getQuote>\n" +
-                        "    </soap:Body>\n" +
-                        "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
+                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
+                        + "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>\n"
+                        + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
+                        + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
+                        + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
         sendRequest(getProxyServiceURLHttp("foreachNestedTestProxy"), request);
 
@@ -95,27 +89,25 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
                 String quote = message.substring(start, end);
 
                 assertTrue(quote.contains(
-                                "<m0:checkPriceRequest><m0:symbol>IBM-1</m0:symbol><m0:symbol>IBM-2</m0:symbol></m0:checkPriceRequest>"),
+                        "<m0:checkPriceRequest><m0:symbol>IBM-1</m0:symbol><m0:symbol>IBM-2</m0:symbol></m0:checkPriceRequest>"),
                         "IBM Element not found");
                 assertTrue(quote.contains(
-                                "<m0:checkPriceRequest><m0:symbol>WSO2-1</m0:symbol><m0:symbol>WSO2-2</m0:symbol></m0:checkPriceRequest>"),
+                        "<m0:checkPriceRequest><m0:symbol>WSO2-1</m0:symbol><m0:symbol>WSO2-2</m0:symbol></m0:checkPriceRequest>"),
                         "WSO2 Element not found");
                 assertTrue(quote.contains(
-                                "<m0:checkPriceRequest><m0:symbol>MSFT-1</m0:symbol><m0:symbol>MSFT-2</m0:symbol></m0:checkPriceRequest>"),
+                        "<m0:checkPriceRequest><m0:symbol>MSFT-1</m0:symbol><m0:symbol>MSFT-2</m0:symbol></m0:checkPriceRequest>"),
                         "MSFT Element not found");
 
             }
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
-    public void testNestedForEachMediatorWithIterate() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/foreach/nested_foreach_iterate.xml");
+    @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend") public void testNestedForEachMediatorWithIterate()
+            throws Exception {
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/nested_foreach_iterate.xml");
         logViewer.clearLogs();
 
-        String response = client.send(getMainSequenceURL(), createMultipleSymbolPayLoad(10),
-                "urn:getQuote");
+        String response = client.send(getMainSequenceURL(), createMultipleSymbolPayLoad(10), "urn:getQuote");
         Assert.assertNotNull(response);
 
         LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
@@ -124,16 +116,18 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
 
         // Verify logs to check that the order of symbols is same as in the payload. The symbols should be as SYM[1-10]
         // as in payload. Since loop iterates from the last log onwards, verifying whether the symbols are in SYM[10-1] order
-        for (int i = logs.length-1; i>=0; i--) {
+        for (int i = logs.length - 1; i >= 0; i--) {
             String message = logs[i].getMessage();
             if (message.contains("foreach = outer")) {
                 if (!message.contains("SYM" + forEachOuterCount)) {
-                    Assert.fail("Incorrect message entered outer ForEach scope. Could not find symbol SYM" + forEachOuterCount + " Found : " + message);
+                    Assert.fail("Incorrect message entered outer ForEach scope. Could not find symbol SYM"
+                            + forEachOuterCount + " Found : " + message);
                 }
                 forEachOuterCount++;
             } else if (message.contains("foreach = inner")) {
                 if (!message.contains("SYM" + forEachInnerCount)) {
-                    Assert.fail("Incorrect message entered inner ForEach scope. Could not find symbol SYM" + forEachInnerCount + " Found : " + message);
+                    Assert.fail("Incorrect message entered inner ForEach scope. Could not find symbol SYM"
+                            + forEachInnerCount + " Found : " + message);
                 }
                 forEachInnerCount++;
             }
@@ -158,14 +152,12 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         return method;
     }
 
-    private void sendRequest(String addUrl, String query)
-            throws IOException {
+    private void sendRequest(String addUrl, String query) throws IOException {
         String charset = "UTF-8";
         URLConnection connection = new URL(addUrl).openConnection();
         connection.setDoOutput(true);
         connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type",
-                "application/xml;charset=" + charset);
+        connection.setRequestProperty("Content-Type", "application/xml;charset=" + charset);
         OutputStream output = null;
         try {
             output = connection.getOutputStream();
@@ -187,8 +179,7 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         client = null;
         super.cleanup();
     }

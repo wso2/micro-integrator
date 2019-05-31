@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -34,16 +34,18 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.LoadbalanceFailoverClient;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import javax.activation.DataHandler;
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
+import javax.activation.DataHandler;
+import javax.xml.stream.XMLStreamException;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
 
@@ -55,11 +57,11 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server3;
     private LoadbalanceFailoverClient lbClient;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator + "loadbalancingEndpointConfig" + File.separator + "synapse.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
+                        + "loadbalancingEndpointConfig" + File.separator + "synapse.xml");
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
@@ -77,15 +79,14 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
 
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         lbClient = new LoadbalanceFailoverClient();
-        resourceAdminServiceClient = new ResourceAdminServiceClient
-                (context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        resourceAdminServiceClient = new ResourceAdminServiceClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
 
         uploadResourcesToConfigRegistry();
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         log.info("Tests Are Completed");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -106,9 +107,8 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"})
-    public void testLoadBalanceEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }) public void testLoadBalanceEndpoint() throws Exception {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
 
         cleanupEndpoints();
@@ -117,49 +117,40 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
         endpointDeletionScenario();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message to a loadbalancing endpoint")
-    public void testSendingToLoaBalancingEndpoint()
-            throws IOException, EndpointAdminEndpointAdminException,
-                   LoginAuthenticationExceptionException,
-                   XMLStreamException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message to a loadbalancing endpoint") public void testSendingToLoaBalancingEndpoint()
+            throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
+            XMLStreamException {
 
-        String response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint"),
-                                                          null);
+        String response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_1"));
 
-        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint"),
-                                                   null);
+        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_2"));
 
-        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint"),
-                                                   null);
+        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_3"));
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message to a loadbalancing endpoint in Config Reg")
-    public void testSendingToLoaBalancingEndpoint_ConfigReg()
-            throws IOException, EndpointAdminEndpointAdminException,
-                   LoginAuthenticationExceptionException,
-                   XMLStreamException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message to a loadbalancing endpoint in Config Reg") public void testSendingToLoaBalancingEndpoint_ConfigReg()
+            throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
+            XMLStreamException {
 
-        String response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint_Config_Reg"),
-                                                          null);
+        String response = lbClient
+                .sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint_Config_Reg"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_1"));
 
-        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint_Config_Reg"),
-                                                   null);
+        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint_Config_Reg"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_2"));
 
-        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint_Config_Reg"),
-                                                   null);
+        response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalancingEndPoint_Config_Reg"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_3"));
 
@@ -169,18 +160,15 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
         EndpointTestUtils.cleanupDefaultEndpoint(ENDPOINT_NAME, endPointAdminClient);
     }
 
-    private void endpointAdditionScenario()
-            throws Exception {
+    private void endpointAdditionScenario() throws Exception {
         int beforeCount = endPointAdminClient.getEndpointCount();
 
-        addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                         "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + ENDPOINT_NAME + "\">\n" +
-                                         "    <loadbalance algorithm=\"org.apache.synapse.endpoints.algorithms.RoundRobin\">\n" +
-                                         "        <endpoint name=\"endpoint_urn_uuid_7E71CCD625D839E55A25548428059450-1123062013\">\n" +
-                                         "            <address uri=\"http://webservices.amazon.com/AWSECommerceService/UK/AWSECommerceService.wsdl\"/>\n" +
-                                         "        </endpoint>\n" +
-                                         "    </loadbalance>\n" +
-                                         "</endpoint>"));
+        addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + ENDPOINT_NAME + "\">\n"
+                + "    <loadbalance algorithm=\"org.apache.synapse.endpoints.algorithms.RoundRobin\">\n"
+                + "        <endpoint name=\"endpoint_urn_uuid_7E71CCD625D839E55A25548428059450-1123062013\">\n"
+                + "            <address uri=\"http://webservices.amazon.com/AWSECommerceService/UK/AWSECommerceService.wsdl\"/>\n"
+                + "        </endpoint>\n" + "    </loadbalance>\n" + "</endpoint>"));
 
         int afterCount = endPointAdminClient.getEndpointCount();
         assertEquals(1, afterCount - beforeCount);
@@ -205,8 +193,7 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
         fail("Enabling statistics on a load-balance endpoint did not cause an error");
     }
 
-    private void endpointDeletionScenario()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void endpointDeletionScenario() throws RemoteException, EndpointAdminEndpointAdminException {
         int beforeCount = endPointAdminClient.getEndpointCount();
         endPointAdminClient.deleteEndpoint(ENDPOINT_NAME);
         EndpointTestUtils.assertDefaultEndpointDeletion(beforeCount, endPointAdminClient);
@@ -215,12 +202,13 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
 
     private void uploadResourcesToConfigRegistry() throws Exception {
 
-        resourceAdminServiceClient.addCollection("/_system/config/", "test_ep_config", "",
-                                                 "Contains test Default EP files");
-        resourceAdminServiceClient.addResource(
-                "/_system/config/test_ep_config/loadbalancingEP_Test.xml", "application/xml", "xml files",
-                new DataHandler(new URL("file:///" + getClass().getResource(
-                        "/artifacts/ESB/endpoint/loadbalancingEndpointConfig/loadbalancingEP_Test.xml").getPath())));
+        resourceAdminServiceClient
+                .addCollection("/_system/config/", "test_ep_config", "", "Contains test Default EP files");
+        resourceAdminServiceClient
+                .addResource("/_system/config/test_ep_config/loadbalancingEP_Test.xml", "application/xml", "xml files",
+                        new DataHandler(new URL("file:///" + getClass().getResource(
+                                "/artifacts/ESB/endpoint/loadbalancingEndpointConfig/loadbalancingEP_Test.xml")
+                                .getPath())));
         Thread.sleep(1000);
 
     }

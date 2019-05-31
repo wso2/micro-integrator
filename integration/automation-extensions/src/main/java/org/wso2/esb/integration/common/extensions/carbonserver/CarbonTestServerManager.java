@@ -27,7 +27,7 @@ import java.util.HashMap;
 
 public class CarbonTestServerManager extends TestServerManager {
     public CarbonTestServerManager(AutomationContext autoCtx, String carbonZip,
-                                   HashMap<String, String> startupParameterMap) {
+            HashMap<String, String> startupParameterMap) {
         super(autoCtx, carbonZip, startupParameterMap);
     }
 

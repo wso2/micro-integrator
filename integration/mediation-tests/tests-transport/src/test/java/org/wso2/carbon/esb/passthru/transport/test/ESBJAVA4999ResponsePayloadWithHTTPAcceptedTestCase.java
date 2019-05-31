@@ -18,11 +18,6 @@
 
 package org.wso2.carbon.esb.passthru.transport.test;
 
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -31,8 +26,11 @@ import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- *
  * Test for an API with a back end service responding with HTTP 202 status code and a json payload.
  */
 public class ESBJAVA4999ResponsePayloadWithHTTPAcceptedTestCase extends ESBIntegrationTest {
@@ -42,8 +40,7 @@ public class ESBJAVA4999ResponsePayloadWithHTTPAcceptedTestCase extends ESBInteg
      *
      * @throws Exception throws when initialisation process failed
      */
-    @BeforeClass(alwaysRun = true)
-    public void deployAPI() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployAPI() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/ESBJAVA-4999.xml");
@@ -55,20 +52,20 @@ public class ESBJAVA4999ResponsePayloadWithHTTPAcceptedTestCase extends ESBInteg
      *
      * @throws Exception throws on test failure
      */
-    @Test(groups = {"wso2.esb"}, description = "test for the respond for 202 status code and payload")
-    public void testPayloadWithHTTP202Response() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "test for the respond for 202 status code and payload") public void testPayloadWithHTTP202Response()
+            throws Exception {
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/json");
 
-        HttpResponse response = HttpRequestUtil.doPost(
-                new URL(getApiInvocationURL("payload-with-202/frontend/")), "{}", requestHeader);
+        HttpResponse response = HttpRequestUtil
+                .doPost(new URL(getApiInvocationURL("payload-with-202/frontend/")), "{}", requestHeader);
 
         Assert.assertEquals(response.getResponseCode(), 202);
         Assert.assertFalse(response.getData().isEmpty());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanupSynapseConfig() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanupSynapseConfig() throws Exception {
         super.cleanup();
     }
 }

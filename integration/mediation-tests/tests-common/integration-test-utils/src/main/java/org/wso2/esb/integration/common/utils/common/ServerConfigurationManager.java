@@ -28,7 +28,6 @@ import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilExcepti
 import org.wso2.carbon.server.admin.stub.ServerAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -47,6 +46,7 @@ import java.nio.file.StandardCopyOption;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This class can be used to replace configuration files at carbon server
@@ -94,7 +94,6 @@ public class ServerConfigurationManager {
         this.hostname = new URL(backEndUrl).getHost();
     }
 
-
     /**
      * backup the current server configuration file
      *
@@ -104,19 +103,19 @@ public class ServerConfigurationManager {
     private void backupConfiguration(String fileName) throws IOException {
         //restore backup configuration
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        String confDir = Paths.get(carbonHome,"conf").toString();
+        String confDir = Paths.get(carbonHome, "conf").toString();
         String AXIS2_XML = "axis2";
         if (fileName.contains(AXIS2_XML)) {
             confDir = Paths.get(confDir, "axis2").toString();
         }
-        originalConfig = Paths.get(confDir,fileName).toFile();
-        backUpConfig = Paths.get(confDir , fileName + ".backup").toFile();
+        originalConfig = Paths.get(confDir, fileName).toFile();
+        backUpConfig = Paths.get(confDir, fileName + ".backup").toFile();
 
         Files.move(originalConfig.toPath(), backUpConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         if (originalConfig.exists()) {
-            throw new IOException("Failed to rename file from " + originalConfig.getName() + "to" +
-                    backUpConfig.getName());
+            throw new IOException(
+                    "Failed to rename file from " + originalConfig.getName() + "to" + backUpConfig.getName());
         }
 
         configDatas.add(new ConfigData(backUpConfig, originalConfig));
@@ -136,8 +135,8 @@ public class ServerConfigurationManager {
         Files.move(originalConfig.toPath(), backUpConfig.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         if (originalConfig.exists()) {
-            throw new IOException("Failed to rename file from " + originalConfig.getName() + "to" +
-                    backUpConfig.getName());
+            throw new IOException(
+                    "Failed to rename file from " + originalConfig.getName() + "to" + backUpConfig.getName());
         }
 
         configDatas.add(new ConfigData(backUpConfig, originalConfig));
@@ -158,8 +157,7 @@ public class ServerConfigurationManager {
      * @param backup     boolean value, set this to true if you want to backup the original file.
      * @throws IOException - throws if apply configuration fails
      */
-    public void applyConfigurationWithoutRestart(File sourceFile, File targetFile, boolean backup)
-            throws IOException {
+    public void applyConfigurationWithoutRestart(File sourceFile, File targetFile, boolean backup) throws IOException {
         // Using InputStreams to copy bytes instead of Readers that copy chars.
         // Otherwise things like JKS files get corrupted during copy.
         FileChannel source = null;
@@ -193,8 +191,7 @@ public class ServerConfigurationManager {
      * @param backupConfigFile require to back the existing file
      * @param restartServer    require to restart the server after replacing the config file
      */
-    public void applyConfiguration(File sourceFile, File targetFile, boolean backupConfigFile,
-                                   boolean restartServer)
+    public void applyConfiguration(File sourceFile, File targetFile, boolean backupConfigFile, boolean restartServer)
             throws AutomationUtilException, IOException {
 
         // Using InputStreams to copy bytes instead of Readers that copy chars.
@@ -250,15 +247,14 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if restore to last configuration fails
      * @throws IOException             - throws if restore to last configuration fails
      */
-    public void restoreToLastConfiguration(boolean isRestartRequired) throws AutomationUtilException,
-                                                                      IOException {
+    public void restoreToLastConfiguration(boolean isRestartRequired) throws AutomationUtilException, IOException {
         for (ConfigData data : configDatas) {
             Files.move(data.getBackupConfig().toPath(), data.getOriginalConfig().toPath(),
-                       StandardCopyOption.REPLACE_EXISTING);
+                    StandardCopyOption.REPLACE_EXISTING);
 
             if (data.getBackupConfig().exists()) {
-                throw new IOException("File rename from " + data.getBackupConfig() + "to " +
-                                      data.getOriginalConfig() + "fails");
+                throw new IOException(
+                        "File rename from " + data.getBackupConfig() + "to " + data.getOriginalConfig() + "fails");
             }
         }
         if (isRestartRequired) {
@@ -344,8 +340,7 @@ public class ServerConfigurationManager {
      * @param sourceFile - configuration file to be copied for your local machine or carbon server it self.
      * @param targetFile - configuration file in carbon server. e.g - path to axis2.xml in config directory
      */
-    public void applyConfiguration(File sourceFile, File targetFile) throws AutomationUtilException,
-                                                                     IOException {
+    public void applyConfiguration(File sourceFile, File targetFile) throws AutomationUtilException, IOException {
         //to backup existing configuration
         backupConfiguration(targetFile.getName());
         InputStreamReader in = new InputStreamReader(new FileInputStream(sourceFile), StandardCharsets.UTF_8);
@@ -405,7 +400,7 @@ public class ServerConfigurationManager {
             }
             ClientConnectionUtil.waitForLogin(autoCtx);
 
-        } catch (RemoteException|ServerAdminException|MalformedURLException|LoginAuthenticationExceptionException e) {
+        } catch (RemoteException | ServerAdminException | MalformedURLException | LoginAuthenticationExceptionException e) {
             throw new AutomationUtilException("Error while gracefully restarting the server ", e);
         }
     }
@@ -488,9 +483,9 @@ public class ServerConfigurationManager {
      */
     public void removeFromComponentLib(String fileName) throws IOException, URISyntaxException {
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        String filePath = Paths.get(carbonHome ,"lib" , fileName).toString();
+        String filePath = Paths.get(carbonHome, "lib", fileName).toString();
         FileManager.deleteFile(filePath);
-//      removing osgi bundle from dropins; OSGI bundle versioning starts with _1.0.0
+        //      removing osgi bundle from dropins; OSGI bundle versioning starts with _1.0.0
         fileName = fileName.replace("-", "_");
         fileName = fileName.replace(".jar", "_1.0.0.jar");
         removeFromComponentDropins(fileName);

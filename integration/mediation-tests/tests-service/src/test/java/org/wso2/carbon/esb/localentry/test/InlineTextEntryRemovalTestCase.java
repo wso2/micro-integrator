@@ -26,7 +26,9 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.clients.localentry.LocalEntriesAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 public class InlineTextEntryRemovalTestCase extends ESBIntegrationTest {
 
@@ -34,23 +36,22 @@ public class InlineTextEntryRemovalTestCase extends ESBIntegrationTest {
 
     private LocalEntriesAdminClient localEntryAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
-        localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests the Removal of a Local Entry")
-    public void testInlineTextLocalEntryRemoval()
+    @Test(groups = "wso2.esb", description = "Tests the Removal of a Local Entry") public void testInlineTextLocalEntryRemoval()
             throws Exception {
 
         String entryNames = localEntryAdminServiceClient.getEntryNamesString();
         //If an Entry by the name ENTRY_NAME does not exist
         if (entryNames == null || !entryNames.contains(ENTRY_NAME)) {
             //Add an Entry
-            addLocalEntry(AXIOMUtil.stringToOM("<localEntry xmlns=\"http://ws.apache.org/ns/synapse\" " +
-                                                          "key=\"" + ENTRY_NAME + "\">This is test entry for checking Inline Text admin " +
-                                                          "service</localEntry>"));
+            addLocalEntry(AXIOMUtil.stringToOM(
+                    "<localEntry xmlns=\"http://ws.apache.org/ns/synapse\" " + "key=\"" + ENTRY_NAME
+                            + "\">This is test entry for checking Inline Text admin " + "service</localEntry>"));
         }
 
         int before = localEntryAdminServiceClient.getEntryDataCount();
@@ -63,8 +64,7 @@ public class InlineTextEntryRemovalTestCase extends ESBIntegrationTest {
         assertFalse(entryNames.contains(ENTRY_NAME));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
         localEntryAdminServiceClient = null;
         super.cleanup();
     }

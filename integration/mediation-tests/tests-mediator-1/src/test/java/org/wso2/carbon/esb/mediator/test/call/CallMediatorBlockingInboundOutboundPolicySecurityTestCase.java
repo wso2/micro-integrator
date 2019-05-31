@@ -19,15 +19,12 @@ package org.wso2.carbon.esb.mediator.test.call;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import javax.xml.xpath.XPathExpressionException;
-
-import java.io.File;
 
 import static org.testng.Assert.assertTrue;
 
@@ -36,16 +33,15 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingInboundOutboundPolicySecurityTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("callMediatorBlockingInboundPolicyProxy");
         verifyLocalEntryExistence("sec_policy_3");
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Call the inbound & outbound security endpoint with blocking external calls")
-    public void CallMediatorBlockingInboundOutboundPolicySecurityTest() throws AxisFault, XPathExpressionException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Call the inbound & outbound security endpoint with blocking external calls") public void CallMediatorBlockingInboundOutboundPolicySecurityTest()
+            throws AxisFault, XPathExpressionException {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callMediatorBlockingInboundPolicyProxy"), "",
                         "WSO2");
@@ -53,8 +49,7 @@ public class CallMediatorBlockingInboundOutboundPolicySecurityTestCase extends E
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

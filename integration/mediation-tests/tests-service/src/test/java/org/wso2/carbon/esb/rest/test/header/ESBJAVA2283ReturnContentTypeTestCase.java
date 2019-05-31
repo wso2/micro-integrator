@@ -22,26 +22,23 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-
-import static org.testng.Assert.assertEquals;
-
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+
+import static org.testng.Assert.assertEquals;
 
 public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
 
@@ -49,8 +46,7 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
     private static final int HTTP_STATUS_OK = 200;
     private static final int PORT = 8089;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
 
         super.init();
         String relativePath = "/artifacts/ESB/synapseconfig/esbjava2283/api.xml";
@@ -60,8 +56,8 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
         addApi(apiConfig);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "test return content type")
-    public void testReturnContentType() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test return content type") public void testReturnContentType()
+            throws Exception {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
         String contentType = "text/xml";
@@ -75,7 +71,7 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
         try {
             response = httpclient.execute(httpGet);
         } catch (IOException e) {
-            log.error("Error Occurred while sending http get request. " , e);
+            log.error("Error Occurred while sending http get request. ", e);
         }
         log.info(response.getEntity().getContentType());
         log.info(response.getStatusLine().getStatusCode());
@@ -101,8 +97,7 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
 
         super.cleanup();
     }

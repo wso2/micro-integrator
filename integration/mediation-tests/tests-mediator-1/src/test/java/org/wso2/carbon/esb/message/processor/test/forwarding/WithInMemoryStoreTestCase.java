@@ -11,19 +11,17 @@ import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
 
 import static java.io.File.separator;
 
-
 /**
  * This test case test a test related to Forwarding Message Processor and In-Memory Message Store
  */
 public class WithInMemoryStoreTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init();
-        loadESBConfigurationFromClasspath(separator + "artifacts" + separator + "ESB" + separator
-                                          + "synapseconfig" + separator + "processor" + separator +
-                                          "forwarding" + separator + "InMemoryStoreSynapse1.xml");
+        loadESBConfigurationFromClasspath(
+                separator + "artifacts" + separator + "ESB" + separator + "synapseconfig" + separator + "processor"
+                        + separator + "forwarding" + separator + "InMemoryStoreSynapse1.xml");
 
     }
 
@@ -33,9 +31,9 @@ public class WithInMemoryStoreTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb")
-    public void testForwardingWithInMemoryStore() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb") public void testForwardingWithInMemoryStore()
+            throws Exception {
 
         //Setting up Wire Monitor Server
         WireMonitorServer wireServer = new WireMonitorServer(9500);
@@ -50,17 +48,15 @@ public class WithInMemoryStoreTestCase extends ESBIntegrationTest {
 
         String serverResponse = wireServer.getCapturedMessage();
 
-        Assert.assertTrue(serverResponse.contains("WSO2"), "'WSO2 Company' String not found at backend port listener! ");
-        Assert.assertTrue(serverResponse.contains("request"), "'getQuoteResponse' String not found at backend port listener !");
-
+        Assert.assertTrue(serverResponse.contains("WSO2"),
+                "'WSO2 Company' String not found at backend port listener! ");
+        Assert.assertTrue(serverResponse.contains("request"),
+                "'getQuoteResponse' String not found at backend port listener !");
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
-
 
 }

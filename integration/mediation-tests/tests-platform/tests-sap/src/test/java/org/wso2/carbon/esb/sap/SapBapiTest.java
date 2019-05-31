@@ -39,8 +39,7 @@ public class SapBapiTest extends ESBIntegrationTest {
     public static final String MEDIA_TYPE_TEXT_XML = "text/xml";
     public static final int HTTP_SC_OK = 200;
 
-    @BeforeClass()
-    public void init() throws Exception {
+    @BeforeClass() public void init() throws Exception {
         super.init();
 
     }
@@ -51,17 +50,14 @@ public class SapBapiTest extends ESBIntegrationTest {
      *
      * @throws Exception if an error occurs while sending the BAPI request
      */
-    @Test(groups = {"wso2.esb"}, description = "Test ESB as an BAPI Sender")
-    public void testSendBapiRequest() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as an BAPI Sender") public void testSendBapiRequest()
+            throws Exception {
         SimpleHttpClient soapClient = new SimpleHttpClient();
-        String payload = "<bapirfc name=\"BAPI_SALESORDER_GETLIST\">\n"
-                         + "   \t<import>\n"
-                         + "\t\t<field name=\"CUSTOMER_NUMBER\">PCS-C301</field>\n"
-                         + "\t\t<field name=\"SALES_ORGANIZATION\">10000</field>\n"
-                         + "\t</import>\n"
-                         + "</bapirfc>\n";
-        HttpResponse response = soapClient.doPost(getProxyServiceURLHttp("sapBapiProxy"),
-                                                  null, payload, MEDIA_TYPE_TEXT_XML);
+        String payload = "<bapirfc name=\"BAPI_SALESORDER_GETLIST\">\n" + "   \t<import>\n"
+                + "\t\t<field name=\"CUSTOMER_NUMBER\">PCS-C301</field>\n"
+                + "\t\t<field name=\"SALES_ORGANIZATION\">10000</field>\n" + "\t</import>\n" + "</bapirfc>\n";
+        HttpResponse response = soapClient
+                .doPost(getProxyServiceURLHttp("sapBapiProxy"), null, payload, MEDIA_TYPE_TEXT_XML);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), HTTP_SC_OK, "incorrect response code received");
         String responseString = Util.getResponsePayload(response);
         OMElement responseElement = AXIOMUtil.stringToOM(responseString);
@@ -76,8 +72,7 @@ public class SapBapiTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void end() throws Exception {
+    @AfterClass(alwaysRun = true) public void end() throws Exception {
         super.cleanup();
     }
 }

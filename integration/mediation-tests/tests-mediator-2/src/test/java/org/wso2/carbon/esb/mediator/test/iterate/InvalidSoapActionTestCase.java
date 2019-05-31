@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
@@ -27,7 +27,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
@@ -43,8 +42,7 @@ import static org.testng.Assert.assertTrue;
 public class InvalidSoapActionTestCase extends ESBIntegrationTest {
     private AxisServiceClient axisServiceClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         axisServiceClient = new AxisServiceClient();
     }
@@ -55,20 +53,20 @@ public class InvalidSoapActionTestCase extends ESBIntegrationTest {
      * not get mediated due to the inaccessibility of the endpoint reference.
      */
 
-    @Test(groups = {"wso2.esb"}, description = "Tests an invalid 'soapAction' in the iterate mediator")
-    public void testInvalidSoapActionInvalidPayloadFirstElement() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Tests an invalid 'soapAction' in the iterate mediator") public void testInvalidSoapActionInvalidPayloadFirstElement()
+            throws Exception {
         try {
             axisServiceClient.sendReceive(createCustomQuoteRequest("WSO2"),
-                    getProxyServiceURLHttp("iterateInvalidSoapActionInvalidPayloadTestProxy"),
-                    "");
-            Assert.fail("This Request must throw AxisFault"); // This will execute when the exception is not thrown as expected
+                    getProxyServiceURLHttp("iterateInvalidSoapActionInvalidPayloadTestProxy"), "");
+            Assert.fail(
+                    "This Request must throw AxisFault"); // This will execute when the exception is not thrown as expected
         } catch (AxisFault message) {
             assertTrue(message.getReason().contains("AxisFault while getting response"),
-                       "Iterator mediator worked even with a invalid 'SoapAction' in the clone target");
+                    "Iterator mediator worked even with a invalid 'SoapAction' in the clone target");
         }
 
     }
-
 
     /**
      * It will specify an invalid Soap Action and a payload first element which matches the WSDL contract operations
@@ -79,15 +77,15 @@ public class InvalidSoapActionTestCase extends ESBIntegrationTest {
      * to check the given attribute name is available as operation in WSDL if this gets satisfied then the invocation
      * works properly . Therefore in this test case we get the mediated message.
      */
-    @Test(groups = {"wso2.esb"}, description = "Tests an invalid 'soapAction' in the iterate mediator")
-    public void testInvalidSoapActionValidPayloadFirstElement() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Tests an invalid 'soapAction' in the iterate mediator") public void testInvalidSoapActionValidPayloadFirstElement()
+            throws Exception {
         OMElement response;
-        response = axis2Client.sendSimpleStockQuoteRequest(
-                getProxyServiceURLHttp("iterateInvalidSoapActionValidPayloadTestProxy"), null,
-                "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("iterateInvalidSoapActionValidPayloadTestProxy"),
+                        null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
-
 
     private OMElement createCustomQuoteRequest(String symbol) {
         OMFactory factory = OMAbstractFactory.getOMFactory();
@@ -99,8 +97,7 @@ public class InvalidSoapActionTestCase extends ESBIntegrationTest {
         return chkPrice;
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         axisServiceClient = null;
         super.cleanup();
     }

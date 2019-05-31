@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
- 
+
 package org.wso2.carbon.esb.mediators.callout;
 
 import org.apache.commons.httpclient.HttpClient;
@@ -35,25 +35,24 @@ import static org.testng.Assert.assertFalse;
 public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
-    @BeforeClass(alwaysRun = true)
-    public void deployService () throws Exception {
+
+    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
         super.init();
         verifyProxyServiceExistence("TestCalloutSoapHeader");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test whether the callout mediator successfully handle SOAP messages " +
-            "Having SOAP header")
-    public void testSOAPHeaderHandling () throws Exception{
+    @Test(groups = "wso2.esb", description = "Test whether the callout mediator successfully handle SOAP messages "
+            + "Having SOAP header") public void testSOAPHeaderHandling() throws Exception {
         String endpoint = "http://localhost:8480/services/TestCalloutSoapHeader";
-        String soapRequest = TestConfigurationProvider.getResourceLocation() + "artifacts" + File.separator +
-                "ESB" + File.separator + "mediatorconfig" + File.separator + "callout" +
-                File.separator + "SOAPRequestWithHeader.xml";
+        String soapRequest =
+                TestConfigurationProvider.getResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
+                        + "mediatorconfig" + File.separator + "callout" + File.separator + "SOAPRequestWithHeader.xml";
         File input = new File(soapRequest);
         PostMethod post = new PostMethod(endpoint);
         RequestEntity entity = new FileRequestEntity(input, "text/xml");
         post.setRequestEntity(entity);
-        post.setRequestHeader("SOAPAction","getQuote");
+        post.setRequestHeader("SOAPAction", "getQuote");
         HttpClient httpClient = new HttpClient();
         boolean errorLog = false;
 
@@ -61,7 +60,7 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
             int result = httpClient.executeMethod(post);
             String responseBody = post.getResponseBodyAsString();
             log.info("Response Status: " + result);
-            log.info("Response Body: "+ responseBody);
+            log.info("Response Body: " + responseBody);
 
             LogEvent[] logs = logViewerClient.getAllSystemLogs();
             for (LogEvent logEvent : logs) {
@@ -79,8 +78,7 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
         assertFalse(errorLog, "Mediator Hasn't invoked successfully.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close () throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 }

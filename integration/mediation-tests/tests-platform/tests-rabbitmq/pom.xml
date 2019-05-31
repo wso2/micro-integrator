@@ -17,7 +17,8 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
         <groupId>org.wso2.ei</groupId>
@@ -200,39 +201,39 @@
                                     <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
                                 </configuration>
                             </execution>
-                                <!--<execution>
-                                    <id>copy-secVerifier</id>
-                                    <phase>compile</phase>
-                                    <goals>
-                                        <goal>copy-dependencies</goal>
-                                    </goals>
-                                    <configuration>
-                                        <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
-                                        <includeTypes>aar</includeTypes>
-                                        <includeArtifactIds>SecVerifier</includeArtifactIds>
-                                        <stripVersion>true</stripVersion>
-                                    </configuration>
-                                </execution>
-                                <execution>
-                                    <id>unpack-mar-jks</id>
-                                    <phase>compile</phase>
-                                    <goals>
-                                        <goal>unpack</goal>
-                                    </goals>
-                                    <configuration>
-                                        <artifactItems>
-                                            <artifactItem>
-                                                <groupId>org.wso2.ei</groupId>
-                                                <artifactId>wso2ei</artifactId>
-                                                <version>${product.mi.version}</version>
-                                                <type>zip</type>
-                                                <overWrite>true</overWrite>
-                                                <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
-                                                <includes>**/*.jks,**/*.mar,**/synapse_sample*.xml</includes>
-                                            </artifactItem>
-                                        </artifactItems>
-                                    </configuration>
-                                </execution>-->
+                            <!--<execution>
+                                <id>copy-secVerifier</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                                    <includeTypes>aar</includeTypes>
+                                    <includeArtifactIds>SecVerifier</includeArtifactIds>
+                                    <stripVersion>true</stripVersion>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>unpack-mar-jks</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wso2.ei</groupId>
+                                            <artifactId>wso2ei</artifactId>
+                                            <version>${product.mi.version}</version>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
+                                            <includes>**/*.jks,**/*.mar,**/synapse_sample*.xml</includes>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>-->
 
                         </executions>
                     </plugin>

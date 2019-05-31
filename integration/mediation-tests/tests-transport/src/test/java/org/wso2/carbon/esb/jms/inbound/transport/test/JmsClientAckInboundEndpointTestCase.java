@@ -30,7 +30,6 @@ import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 import java.io.File;
 
@@ -41,16 +40,16 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "jmsQueueClientAckInboundEndpointTestCase";
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
 
         verifySequenceExistence("jmsClientAckInboundEPSendInSequence");
 
         //Add inbound endpoint configuration
         OMElement inboundEpConfig = esbUtils.loadResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator +
-                        "inbound" + File.separator + "transport" + File.separator + "jmsClientAckInboundEndpoint.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator
+                        + "inbound" + File.separator + "transport" + File.separator
+                        + "jmsClientAckInboundEndpoint.xml");
         addInboundEndpoint(inboundEpConfig);
     }
 
@@ -59,9 +58,9 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
      *
      * @throws Exception if any error occurred while running tests
      */
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Test JMS client ack mode with inbound endpoint")
-    public void testJmsQueueToHttpWithInboundEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Test JMS client ack mode with inbound endpoint") public void testJmsQueueToHttpWithInboundEndpoint()
+            throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
 
@@ -69,16 +68,14 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
         sendMessage();
 
         //check for the log
-        boolean assertValue = Utils.checkForLog(logViewerClient,
-                                                "** jmsClientAckInboundEPSendInSequence was called **",
-                                                5);
+        boolean assertValue = Utils
+                .checkForLog(logViewerClient, "** jmsClientAckInboundEPSendInSequence was called **", 5);
 
         Assert.assertTrue(assertValue, "Message was not received to the inbound EP in client ack mode.");
-        Assert.assertTrue(Utils.isQueueEmpty(QUEUE_NAME),"Queue should be empty if ack was properly sent");
+        Assert.assertTrue(Utils.isQueueEmpty(QUEUE_NAME), "Queue should be empty if ack was properly sent");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
     }
 
@@ -90,18 +87,12 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
     private void sendMessage() throws Exception {
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
-        String message = "<?xml version='1.0' encoding='UTF-8'?>" +
-                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
-                " xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">" +
-                "  <soapenv:Header/>" +
-                "  <soapenv:Body>" +
-                "    <ser:getQuote> " +
-                "      <ser:request>" +
-                "        <xsd:symbol>IBM</xsd:symbol>" +
-                "      </ser:request>" +
-                "    </ser:getQuote>" +
-                "  </soapenv:Body>" +
-                "</soapenv:Envelope>";
+        String message = "<?xml version='1.0' encoding='UTF-8'?>"
+                + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\""
+                + " xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
+                + "  <soapenv:Header/>" + "  <soapenv:Body>" + "    <ser:getQuote> " + "      <ser:request>"
+                + "        <xsd:symbol>IBM</xsd:symbol>" + "      </ser:request>" + "    </ser:getQuote>"
+                + "  </soapenv:Body>" + "</soapenv:Envelope>";
         try {
             sender.connect(QUEUE_NAME);
             sender.pushMessage(message);

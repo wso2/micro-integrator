@@ -40,21 +40,20 @@ public class RabbitMQJSONConsumerTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewer;
     private RabbitMQProducerClient sender;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange2", "consumer_json");
         //The consumer proxy cannot be pre-deployed since the queue declaration(which is done in 'initRabbitMQBroker')
         // must happen before deployment.
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator
-                                          + "ESB" + File.separator + "rabbitmq" + File.separator +
-                                          "transport" + File.separator + "rabbitmq_consumer_json.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "rabbitmq" + File.separator
+                        + "transport" + File.separator + "rabbitmq_consumer_json.xml");
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Test ESB as a RabbitMQ consumer for JSON messages ")
-    public void testRabbitMQJSONConsumer() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test ESB as a RabbitMQ consumer for JSON messages ") public void testRabbitMQJSONConsumer()
+            throws Exception {
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         try {
@@ -81,8 +80,7 @@ public class RabbitMQJSONConsumerTestCase extends ESBIntegrationTest {
         Assert.assertEquals(count, 1, "All messages are not received from queue");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void end() throws Exception {
+    @AfterClass(alwaysRun = true) public void end() throws Exception {
         super.cleanup();
         sender.disconnect();
         sender = null;

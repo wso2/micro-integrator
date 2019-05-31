@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License, 
- * Version 2.0 (the "License"); you may not use this file except 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -38,8 +38,7 @@ public class ESBJAVA4721PIWithCacheTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         serverConfigurationManager.applyConfiguration(new File(
@@ -48,9 +47,8 @@ public class ESBJAVA4721PIWithCacheTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Test cache mediator with  Json response having a single element array with PI enabled")
-    public void testJsonResponseWithCacheMediator() throws IOException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Test cache mediator with  Json response having a single element array with PI enabled") public void testJsonResponseWithCacheMediator()
+            throws IOException, AutomationFrameworkException {
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/json");
@@ -67,8 +65,7 @@ public class ESBJAVA4721PIWithCacheTestCase extends ESBIntegrationTest {
                 "Expected response was not" + " received. Got " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         try {
             super.cleanup();
         } finally {

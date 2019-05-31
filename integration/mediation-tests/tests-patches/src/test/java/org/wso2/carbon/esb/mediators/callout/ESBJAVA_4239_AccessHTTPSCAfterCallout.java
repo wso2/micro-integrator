@@ -1,7 +1,5 @@
 package org.wso2.carbon.esb.mediators.callout;
 
-import java.rmi.RemoteException;
-
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -13,25 +11,25 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
+
+import java.rmi.RemoteException;
 
 public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
     private static final String PROXY_SERVICE_NAME = "HTTPSCProxy";
-    private static final String EXPECTED_LOG_MESSAGE = "Status Code inSequence = 500"; 
+    private static final String EXPECTED_LOG_MESSAGE = "Status Code inSequence = 500";
 
-    @BeforeClass(alwaysRun = true)
-    public void deployeService() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployeService() throws Exception {
         super.init();
         verifyProxyServiceExistence("HTTPSCProxy");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test whether an HTTP SC can be retrieved after the callout mediator.")
-    public void testFetchHTTP_SC_After_Callout_Mediator() throws RemoteException,
-            InterruptedException, LogViewerLogViewerException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test whether an HTTP SC can be retrieved after the callout mediator.") public void testFetchHTTP_SC_After_Callout_Mediator()
+            throws RemoteException, InterruptedException, LogViewerLogViewerException {
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         AxisServiceClient client = new AxisServiceClient();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");
@@ -62,8 +60,7 @@ public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
         return placeOrder;
     }
 
-    @AfterClass(alwaysRun = true)
-    public void UndeployeService() throws Exception {
+    @AfterClass(alwaysRun = true) public void UndeployeService() throws Exception {
         super.cleanup();
     }
 

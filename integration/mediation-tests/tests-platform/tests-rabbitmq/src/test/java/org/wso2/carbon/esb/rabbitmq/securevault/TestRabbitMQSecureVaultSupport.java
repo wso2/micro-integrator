@@ -26,11 +26,10 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.base.CarbonBaseUtils;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQServerInstance;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQConsumerClient;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
-import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,15 +55,16 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
     private static final String RABBITMQ_RESULT_QUEUE = "resultQueueSecureVault";
     private static RabbitMQProducerClient sender;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        String secureVaultConfDir = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                                    + "ESB" + File.separator + "securevault" + File.separator;
-        String carbonSecurityDir = CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator
-                                   + "security" + File.separator;
+        String secureVaultConfDir =
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
+                        + "securevault" + File.separator;
+        String carbonSecurityDir =
+                CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator + "security"
+                        + File.separator;
 
         //copy cipher-tool.properties
         String srcCipherTool = secureVaultConfDir + CIPHER_TOOL_PROP_FILE;
@@ -92,8 +92,9 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
 
         //copy axis2.xml
         String srcAxis2Xml = secureVaultConfDir + AXIS2_XML_FILE;
-        String targetAxis2Xml = CarbonBaseUtils.getCarbonHome() + File.separator + "conf"+ File.separator
-                                + "axis2" + File.separator + AXIS2_XML_FILE;
+        String targetAxis2Xml =
+                CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator + "axis2" + File.separator
+                        + AXIS2_XML_FILE;
 
         File srcAxis2XmlFile = new File(srcAxis2Xml);
         File targetAxis2XmlFile = new File(targetAxis2Xml);
@@ -105,8 +106,7 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
 
         File srcPasswordTempFile = new File(srcPasswordTemp);
         File targetPasswordTempFile = new File(targetPasswordTemp);
-        serverConfigurationManager.applyConfigurationWithoutRestart(srcPasswordTempFile, targetPasswordTempFile,
-                                                                    false);
+        serverConfigurationManager.applyConfigurationWithoutRestart(srcPasswordTempFile, targetPasswordTempFile, false);
 
         //start server with new configs
         serverConfigurationManager.restartGracefully();
@@ -115,8 +115,9 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
         sender = RabbitMQServerInstance.createProducerWithDeclaration(RABBITMQ_EXCHANGE, RABBITMQ_RX_QUEUE);
         //The consumer proxy cannot be pre-deployed since the queue declaration(which is done in 'initRabbitMQBroker')
         // must happen before deployment.
-        loadESBConfigurationFromClasspath("artifacts" + File.separator + "ESB" + File.separator
-                                          + "securevault" + File.separator + SYNAPSE_CONFIG_FILE);
+        loadESBConfigurationFromClasspath(
+                "artifacts" + File.separator + "ESB" + File.separator + "securevault" + File.separator
+                        + SYNAPSE_CONFIG_FILE);
     }
 
     /**
@@ -124,26 +125,20 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
      * Send message to queueRx in rabbitMQ, which ESB proxy (RabbitMQProxy.xml) listens to it.
      * Then the ESB proxy will put the received message (from exchangeRx) to queueResult in same RabbitMQ
      */
-    @Test(groups = "wso2.esb",
-          description = "Test RabbitMQ listener and sender by securing password parameters secured using secure vault")
-    public void testRabbitMQWithSecureVault() throws InterruptedException, IOException {
+    @Test(groups = "wso2.esb", description = "Test RabbitMQ listener and sender by securing password parameters secured using secure vault") public void testRabbitMQWithSecureVault()
+            throws InterruptedException, IOException {
 
         //Put message to rabbitMQ receiver queue (queueRx)
-        String message =
-                "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" +
-                        "<ser:order>\n" +
-                        "<ser:price>100</ser:price>\n" +
-                        "<ser:quantity>2000</ser:quantity>\n" +
-                        "<ser:symbol>RMQ</ser:symbol>\n" +
-                        "</ser:order>\n" +
-                        "</ser:placeOrder>";
+        String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
+                + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
+                + "<ser:symbol>RMQ</ser:symbol>\n" + "</ser:order>\n" + "</ser:placeOrder>";
         sender.sendMessage(message, "text/plain");
 
         RabbitMQTestUtils.waitForMssagesToGetPublished();
 
         //Read from result queue (queueResult)
-        RabbitMQConsumerClient consumer = RabbitMQServerInstance.createConsumerWithDeclaration(RABBITMQ_EXCHANGE,
-                                                                                               RABBITMQ_RESULT_QUEUE);
+        RabbitMQConsumerClient consumer = RabbitMQServerInstance
+                .createConsumerWithDeclaration(RABBITMQ_EXCHANGE, RABBITMQ_RESULT_QUEUE);
 
         List<String> messages = null;
         try {
@@ -154,15 +149,16 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
 
         Assert.assertNotNull(messages, "No messages retrieved from the queue : " + RABBITMQ_RESULT_QUEUE);
 
-        Assert.assertEquals(messages.size(), 1, "Message put to " + RABBITMQ_RX_QUEUE
-                            + " queue, was not published to " + RABBITMQ_RESULT_QUEUE + " by the proxy");
+        Assert.assertEquals(messages.size(), 1,
+                "Message put to " + RABBITMQ_RX_QUEUE + " queue, was not published to " + RABBITMQ_RESULT_QUEUE
+                        + " by the proxy");
 
-        Assert.assertEquals(messages.get(0), message, "Popped message from " + RABBITMQ_RESULT_QUEUE
-                            + " differs from the original message");
+        Assert.assertEquals(messages.get(0), message,
+                "Popped message from " + RABBITMQ_RESULT_QUEUE + " differs from the original message");
 
     }
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         try {
             super.cleanup();
         } finally {

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2013, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -31,44 +31,42 @@ import java.io.IOException;
 
 public class HL7Sender {
 
-	public String send(String host, int port) throws HL7Exception {
-		System.out.println("[ Executing HL7Sender : HOST:" + host + "  ;port :" + port + " ]");
-		// The connection hub connects to listening servers
-		ConnectionHub connectionHub = ConnectionHub.getInstance();
-		// A connection object represents a socket attached to an HL7 server
-		Connection connection =
-		                        connectionHub.attach(host, port, new PipeParser(),
-		                                             MinLowerLayerProtocol.class);
+    public String send(String host, int port) throws HL7Exception {
+        System.out.println("[ Executing HL7Sender : HOST:" + host + "  ;port :" + port + " ]");
+        // The connection hub connects to listening servers
+        ConnectionHub connectionHub = ConnectionHub.getInstance();
+        // A connection object represents a socket attached to an HL7 server
+        Connection connection = connectionHub.attach(host, port, new PipeParser(), MinLowerLayerProtocol.class);
 
-		// The initiator is used to transmit unsolicited messages
-		Initiator initiator = connection.getInitiator();
-		ADT_A01 adt = new ADT_A01();
-		try {
-	        adt.initQuickstart("ADT", "A01", "T");
+        // The initiator is used to transmit unsolicited messages
+        Initiator initiator = connection.getInitiator();
+        ADT_A01 adt = new ADT_A01();
+        try {
+            adt.initQuickstart("ADT", "A01", "T");
         } catch (IOException e1) {
-	        // TODO Auto-generated catch block
-	        e1.printStackTrace();
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
         }
-	
-		String responseString = null;
 
-		// send
-		Message response = null;
-		try {
-			response = initiator.sendAndReceive(adt);
-			PipeParser parser = new PipeParser();
-			responseString = parser.encode(response);
-			System.out.println("Received response:\n" + responseString);
-		} catch (LLPException e) {
-			System.out.println("Error : " + e);
-		} catch (IOException e) {
-			System.out.println("Error : " + e);
-		}
+        String responseString = null;
 
-		// Close the connection and server
-		connectionHub.discard(connection);
+        // send
+        Message response = null;
+        try {
+            response = initiator.sendAndReceive(adt);
+            PipeParser parser = new PipeParser();
+            responseString = parser.encode(response);
+            System.out.println("Received response:\n" + responseString);
+        } catch (LLPException e) {
+            System.out.println("Error : " + e);
+        } catch (IOException e) {
+            System.out.println("Error : " + e);
+        }
 
-		return responseString;
-	}
+        // Close the connection and server
+        connectionHub.discard(connection);
+
+        return responseString;
+    }
 
 }

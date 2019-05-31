@@ -22,82 +22,72 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
-
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
+import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.activation.DataHandler;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.net.URL;
 import java.rmi.RemoteException;
+import javax.activation.DataHandler;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class ProvidingDifferentBeanNamesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation_different_bean.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Spring Mediator " +
-                                                            "-Added Simple bean into lib " +
-                                                            "-Different bean ids in spring xml")
-    public void testUsingAddedBeanSpringMediation() throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator " + "-Added Simple bean into lib "
+            + "-Different bean ids in spring xml") public void testUsingAddedBeanSpringMediation() throws AxisFault {
 
         try {
-            axis2Client.sendSimpleStockQuoteRequest
-                    (getMainSequenceURL(), null, "IBM");
+            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
             fail("This request must failed since it use non existing bean");
         } catch (AxisFault axisFault) {
-            assertEquals(axisFault.getMessage(), "No bean named 'springinvadidbeantest' is defined", "Fault: Error message mismatched");
+            assertEquals(axisFault.getMessage(), "No bean named 'springinvadidbeantest' is defined",
+                    "Fault: Error message mismatched");
         }
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }
 
-
     private void uploadResourcesToConfigRegistry() throws Exception {
 
-        ResourceAdminServiceClient resourceAdminServiceStub =
-                new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName()
-, context.getContextTenant().getContextUser().getPassword());
+        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
+                context.getContextTenant().getContextUser().getPassword());
 
         resourceAdminServiceStub.deleteResource("/_system/config/spring");
-        resourceAdminServiceStub.addCollection("/_system/config/", "spring", "",
-                                               "Contains spring bean config files");
+        resourceAdminServiceStub.addCollection("/_system/config/", "spring", "", "Contains spring bean config files");
 
-        resourceAdminServiceStub.addResource(
-                "/_system/config/spring/springbeandifferent.xml", "application/xml", "spring bean config files",
-                new DataHandler(new URL("file:///" + getESBResourceLocation() + File.separator +
-                                        "mediatorconfig" + File.separator + "spring" + File.separator
-                                        + "utils" + File.separator + "different_bean_names.xml")));
-
+        resourceAdminServiceStub.addResource("/_system/config/spring/springbeandifferent.xml", "application/xml",
+                "spring bean config files", new DataHandler(
+                        new URL("file:///" + getESBResourceLocation() + File.separator + "mediatorconfig"
+                                + File.separator + "spring" + File.separator + "utils" + File.separator
+                                + "different_bean_names.xml")));
 
     }
 
-
     private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException, XPathExpressionException {
+            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
+            XPathExpressionException {
 
-        ResourceAdminServiceClient resourceAdminServiceStub =
-                new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName()
-, context.getContextTenant().getContextUser().getPassword());
+        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
+                context.getContextTenant().getContextUser().getPassword());
 
         resourceAdminServiceStub.deleteResource("/_system/config/spring");
 

@@ -1,20 +1,20 @@
 /*
-* Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-* WSO2 Inc. licenses this file to you under the Apache License,
-* Version 2.0 (the "License"); you may not use this file except
-* in compliance with the License.
-* You may obtain a copy of the License at
-*
-* http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.aggregate;
 
 import org.apache.axiom.om.OMElement;
@@ -25,18 +25,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.Iterator;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 public class LargeAggregationWithoutTimeoutValueTestCase extends ESBIntegrationTest {
 
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 300;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorWithoutTimeoutTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -46,8 +45,9 @@ public class LargeAggregationWithoutTimeoutValueTestCase extends ESBIntegrationT
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sending large request for aggregation")
-    public void AggregateLargeMessage() throws IOException, XMLStreamException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Sending large request for aggregation") public void AggregateLargeMessage()
+            throws IOException, XMLStreamException {
         int responseCount = 0;
 
         String Response = aggregatedRequestClient.getResponse();
@@ -55,8 +55,7 @@ public class LargeAggregationWithoutTimeoutValueTestCase extends ESBIntegrationT
 
         OMElement Response2 = AXIOMUtil.stringToOM(Response);
         OMElement soapBody = Response2.getFirstElement();
-        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples",
-                                                                   "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
 
         while (iterator.hasNext()) {
             responseCount++;
@@ -68,12 +67,9 @@ public class LargeAggregationWithoutTimeoutValueTestCase extends ESBIntegrationT
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }
-
 
 }

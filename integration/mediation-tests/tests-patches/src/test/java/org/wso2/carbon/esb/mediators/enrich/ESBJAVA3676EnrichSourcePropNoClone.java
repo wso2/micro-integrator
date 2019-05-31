@@ -1,7 +1,5 @@
 package org.wso2.carbon.esb.mediators.enrich;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -16,19 +14,18 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.InputStreamReader;
 
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -39,29 +36,20 @@ import java.io.InputStreamReader;
 public class ESBJAVA3676EnrichSourcePropNoClone extends ESBIntegrationTest {
     private static final String PROXY_NAME = "ESBJAVA3676TestProxy";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence(PROXY_NAME);
     }
 
-    @Test(groups = "wso2.esb", description = "Tests Enrich Source OM Property without clone")
-    public void testEnrichSourceTypePropertyAndCloneFalse() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests Enrich Source OM Property without clone") public void testEnrichSourceTypePropertyAndCloneFalse()
+            throws Exception {
 
         String endpoint = getProxyServiceURLHttp(PROXY_NAME);
 
-        String requestXml = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                "   <soapenv:Header/>\n" +
-                "   <soapenv:Body>\n" +
-                "      <payload>\n" +
-                "         <content>\n" +
-                "            <abc>\n" +
-                "               <def>123</def>\n" +
-                "            </abc>\n" +
-                "         </content>\n" +
-                "      </payload>\n" +
-                "   </soapenv:Body>\n" +
-                "</soapenv:Envelope>";
+        String requestXml = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <payload>\n" + "         <content>\n"
+                + "            <abc>\n" + "               <def>123</def>\n" + "            </abc>\n"
+                + "         </content>\n" + "      </payload>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
 
@@ -82,8 +70,7 @@ public class ESBJAVA3676EnrichSourcePropNoClone extends ESBIntegrationTest {
         Assert.assertTrue(!result.contains("payload"));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 }

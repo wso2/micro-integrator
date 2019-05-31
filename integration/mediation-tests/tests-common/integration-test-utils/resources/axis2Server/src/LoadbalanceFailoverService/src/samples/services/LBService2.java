@@ -20,7 +20,6 @@
 package samples.services;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axis2.context.OperationContext;
 import org.apache.axis2.context.ServiceContext;
 
 import javax.xml.namespace.QName;

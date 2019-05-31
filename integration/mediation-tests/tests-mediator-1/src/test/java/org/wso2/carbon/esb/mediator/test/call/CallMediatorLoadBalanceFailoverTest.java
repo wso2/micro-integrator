@@ -36,8 +36,7 @@ public class CallMediatorLoadBalanceFailoverTest extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server1;
     private SampleAxis2Server axis2Server2;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
@@ -54,19 +53,19 @@ public class CallMediatorLoadBalanceFailoverTest extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("artifacts/ESB/mediatorconfig/call/loadbalancecalltestproxy.xml");
 
         //Test weather all the axis2 servers are up and running
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest
-                (getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), null,
+                        "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
-        response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:9001/services/SimpleStockQuoteService",
-                null, "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest("http://localhost:9001/services/SimpleStockQuoteService", null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
-        response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:9002/services/SimpleStockQuoteService",
-                null, "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest("http://localhost:9002/services/SimpleStockQuoteService", null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         log.info("Tests Are Completed");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -79,12 +78,12 @@ public class CallMediatorLoadBalanceFailoverTest extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Test sending request to Load balanced Endpoint")
-    public void testCallForLoadBalanceFailover() throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Load balanced Endpoint") public void testCallForLoadBalanceFailover()
+            throws IOException, InterruptedException {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CallLoadBalance"),
-                null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CallLoadBalance"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
 
         response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CallLoadBalance"), null, "WSO2");

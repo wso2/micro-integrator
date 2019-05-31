@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.esb.car.deployment.test;
 
-
 import org.awaitility.Awaitility;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
@@ -37,31 +36,25 @@ public class ESBJAVA3611EndpointTestCase extends ESBIntegrationTest {
 
     String carFileName = "ESBCApp-3.2.2.car";
 
-    @BeforeClass(alwaysRun = true)
-    protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
         super.init(TestUserMode.TENANT_ADMIN);
-        uploadCapp(carFileName
-                   , new DataHandler(new FileDataSource(new File(getESBResourceLocation() +
-                                                                File.separator + "car" + File.separator +
-                                                                carFileName))));
+        uploadCapp(carFileName, new DataHandler(new FileDataSource(
+                new File(getESBResourceLocation() + File.separator + "car" + File.separator + carFileName))));
         log.info(carFileName + " uploaded successfully");
     }
 
-    @Test(groups = "wso2.esb", enabled = true, description = "Test whether Endpoint get deployed in tenant through  capp")
-    public void testEndpointDeployed() throws Exception {
+    @Test(groups = "wso2.esb", enabled = true, description = "Test whether Endpoint get deployed in tenant through  capp") public void testEndpointDeployed()
+            throws Exception {
         Awaitility.await().atMost(60, TimeUnit.SECONDS).until(checkEndpointExistence());
     }
 
-
-    @AfterTest(alwaysRun = true)
-    public void cleanupEnvironment() throws Exception {
+    @AfterTest(alwaysRun = true) public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 
     private Callable<Boolean> checkEndpointExistence() {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
+            @Override public Boolean call() {
                 EndpointMetadata[] endpointMetadatas;
                 try {
                     endpointMetadatas = getSynapseAppData("ESBCApp_3.2.2").getEndpoints();

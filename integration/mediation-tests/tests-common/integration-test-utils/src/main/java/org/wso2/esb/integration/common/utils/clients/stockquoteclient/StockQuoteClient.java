@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -61,11 +61,10 @@ public class StockQuoteClient {
         httpHeaders.clear();
     }
 
-    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, String symbol) throws AxisFault {
 
         ServiceClient sc;
-        sc=getServiceClient(trpUrl, addUrl);
+        sc = getServiceClient(trpUrl, addUrl);
 
         try {
             return buildResponse(sc.sendReceive(createStandardRequest(symbol)));
@@ -74,8 +73,7 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendSimpleStockQuoteRequestREST(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendSimpleStockQuoteRequestREST(String trpUrl, String addUrl, String symbol) throws AxisFault {
         ServiceClient sc = getRESTEnabledServiceClient(trpUrl, addUrl);
         try {
             return buildResponse(sc.sendReceive(createStandardRequest(symbol)));
@@ -85,8 +83,7 @@ public class StockQuoteClient {
 
     }
 
-    public OMElement sendSimpleQuoteRequest(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendSimpleQuoteRequest(String trpUrl, String addUrl, String symbol) throws AxisFault {
 
         ServiceClient sc = getServiceClient(trpUrl, addUrl, "getSimpleQuote");
         try {
@@ -96,8 +93,7 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendSimpleQuoteRequestREST(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendSimpleQuoteRequestREST(String trpUrl, String addUrl, String symbol) throws AxisFault {
 
         ServiceClient serviceClient = getRESTEnabledServiceClient(trpUrl, addUrl, "getSimpleQuote");
         try {
@@ -107,12 +103,10 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendSimpleStockQuoteSoap11(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendSimpleStockQuoteSoap11(String trpUrl, String addUrl, String symbol) throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl);
-        serviceClient.getOptions()
-                .setSoapVersionURI(org.apache.axiom.soap.SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+        serviceClient.getOptions().setSoapVersionURI(org.apache.axiom.soap.SOAP11Constants.SOAP_ENVELOPE_NAMESPACE_URI);
         try {
             return buildResponse(serviceClient.sendReceive(createStandardRequest(symbol)));
         } finally {
@@ -120,13 +114,10 @@ public class StockQuoteClient {
         }
     }
 
-
-    public OMElement sendSimpleStockQuoteSoap12(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendSimpleStockQuoteSoap12(String trpUrl, String addUrl, String symbol) throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl);
-        serviceClient.getOptions()
-                .setSoapVersionURI(org.apache.axiom.soap.SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
+        serviceClient.getOptions().setSoapVersionURI(org.apache.axiom.soap.SOAP12Constants.SOAP_ENVELOPE_NAMESPACE_URI);
         try {
             return buildResponse(serviceClient.sendReceive(createStandardRequest(symbol)));
         } finally {
@@ -134,8 +125,7 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, OMElement payload)
-            throws AxisFault {
+    public OMElement sendSimpleStockQuoteRequest(String trpUrl, String addUrl, OMElement payload) throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl);
         try {
@@ -145,9 +135,7 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendSimpleStockQuoteRequestREST(String trpUrl, String addUrl,
-                                                      OMElement payload)
-            throws AxisFault {
+    public OMElement sendSimpleStockQuoteRequestREST(String trpUrl, String addUrl, OMElement payload) throws AxisFault {
 
         ServiceClient serviceClient = getRESTEnabledServiceClient(trpUrl, addUrl);
         try {
@@ -157,9 +145,7 @@ public class StockQuoteClient {
         }
     }
 
-
-    public OMElement sendCustomQuoteRequest(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendCustomQuoteRequest(String trpUrl, String addUrl, String symbol) throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl);
         try {
@@ -169,8 +155,7 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement send(String trpUrl, String addUrl, String action, OMElement payload)
-            throws AxisFault {
+    public OMElement send(String trpUrl, String addUrl, String action, OMElement payload) throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl, action);
         try {
@@ -183,9 +168,9 @@ public class StockQuoteClient {
     /**
      * This method utilises serviceClient's sendRobust() method
      *
-     * @param trpUrl transport url
-     * @param addUrl address url
-     * @param action action
+     * @param trpUrl  transport url
+     * @param addUrl  address url
+     * @param action  action
      * @param payload payload
      * @throws AxisFault if error occurs in sending the request
      */
@@ -199,8 +184,7 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendCustomQuoteRequestREST(String trpUrl, String addUrl, String symbol)
-            throws AxisFault {
+    public OMElement sendCustomQuoteRequestREST(String trpUrl, String addUrl, String symbol) throws AxisFault {
 
         ServiceClient serviceClient = getRESTEnabledServiceClient(trpUrl, addUrl);
         try {
@@ -210,20 +194,18 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendMultipleCustomQuoteRequest(String trpUrl, String addUrl, String symbol,
-                                                    int n) throws AxisFault {
+    public OMElement sendMultipleCustomQuoteRequest(String trpUrl, String addUrl, String symbol, int n)
+            throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl);
         try {
-            return buildResponse(
-                    serviceClient.sendReceive(createMultipleCustomQuoteRequest(symbol, n)));
+            return buildResponse(serviceClient.sendReceive(createMultipleCustomQuoteRequest(symbol, n)));
         } finally {
             serviceClient.cleanupTransport();
         }
     }
 
-    public OMElement sendMultipleQuoteRequest(String trpUrl, String addUrl, String symbol, int n)
-            throws AxisFault {
+    public OMElement sendMultipleQuoteRequest(String trpUrl, String addUrl, String symbol, int n) throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl);
         try {
@@ -233,9 +215,7 @@ public class StockQuoteClient {
         }
     }
 
-    public OMElement sendMultipleQuoteRequestREST(String trpUrl, String addUrl, String symbol,
-                                                   int n)
-            throws AxisFault {
+    public OMElement sendMultipleQuoteRequestREST(String trpUrl, String addUrl, String symbol, int n) throws AxisFault {
 
         ServiceClient serviceClient = getRESTEnabledServiceClient(trpUrl, addUrl);
         try {
@@ -250,22 +230,21 @@ public class StockQuoteClient {
         return getServiceClient(trpUrl, addUrl, "getQuote");
     }
 
-    private ServiceClient getRESTEnabledServiceClient(String trpUrl, String addUrl)
-            throws AxisFault {
+    private ServiceClient getRESTEnabledServiceClient(String trpUrl, String addUrl) throws AxisFault {
 
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl);
         serviceClient.getOptions().setProperty("enableREST", "true");
         return serviceClient;
     }
 
-    private ServiceClient getServiceClient(String trpUrl, String addUrl, String operation)
-            throws AxisFault {
+    private ServiceClient getServiceClient(String trpUrl, String addUrl, String operation) throws AxisFault {
 
         ServiceClient serviceClient;
         Options options = new Options();
 
         if (addUrl != null && !"null".equals(addUrl)) {
-            serviceClient = new ServiceClient(ConfigurationContextProvider.getInstance().getConfigurationContext(), null);
+            serviceClient = new ServiceClient(ConfigurationContextProvider.getInstance().getConfigurationContext(),
+                    null);
             serviceClient.engageModule("addressing");
             options.setTo(new EndpointReference(addUrl));
         } else {
@@ -290,9 +269,7 @@ public class StockQuoteClient {
         return serviceClient;
     }
 
-    private ServiceClient getRESTEnabledServiceClient(String trpUrl, String addUrl,
-                                                      String operation)
-            throws AxisFault {
+    private ServiceClient getRESTEnabledServiceClient(String trpUrl, String addUrl, String operation) throws AxisFault {
         ServiceClient serviceClient = getServiceClient(trpUrl, addUrl, operation);
         serviceClient.getOptions().setProperty("enableREST", "true");
 
@@ -396,8 +373,7 @@ public class StockQuoteClient {
 
     private static double getRandom(double base, double varience, boolean onlypositive) {
         double rand = Math.random();
-        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand))
-               * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
+        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand)) * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
     }
 
     /**
@@ -440,23 +416,19 @@ public class StockQuoteClient {
 
         try {
             serviceClient.sendReceiveNonBlocking(createStandardRequest(symbol), new AxisCallback() {
-                @Override
-                public void onMessage(MessageContext messageContext) {
+                @Override public void onMessage(MessageContext messageContext) {
                     log.info("Response received to the callback");
                 }
 
-                @Override
-                public void onFault(MessageContext messageContext) {
+                @Override public void onFault(MessageContext messageContext) {
                     log.info("Fault received to the callback : " + messageContext.getEnvelope().getBody().getFault());
                 }
 
-                @Override
-                public void onError(Exception e) {
+                @Override public void onError(Exception e) {
                     log.error("Error inside callback", e);
                 }
 
-                @Override
-                public void onComplete() {
+                @Override public void onComplete() {
                     log.info("OnComplete called....");
                 }
             });

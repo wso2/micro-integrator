@@ -1,13 +1,15 @@
 package org.wso2.carbon.esb.json;
 
 import org.json.JSONException;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.JSONClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,16 +21,17 @@ public class CARBON14965TenantJsonFormatter extends ESBIntegrationTest {
     private JSONClient jsonClient;
     private String serviceUrl;
 
-    @BeforeTest(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeTest(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init(TestUserMode.TENANT_ADMIN);
         serverManager = new ServerConfigurationManager(context);
-        File sourceFile = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator +
-                                    "ESB" + File.separator + "json" + File.separator + "tenant-axis2.xml");
+        File sourceFile = new File(
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
+                        + "json" + File.separator + "tenant-axis2.xml");
 
-        File targetFile = new File(CarbonUtils.getCarbonHome() + File.separator + "conf"
-                + File.separator + "axis2" + File.separator + "tenant-axis2.xml");
+        File targetFile = new File(
+                CarbonUtils.getCarbonHome() + File.separator + "conf" + File.separator + "axis2" + File.separator
+                        + "tenant-axis2.xml");
 
         serverManager.applyConfigurationWithoutRestart(sourceFile, targetFile, true);
 
@@ -39,15 +42,13 @@ public class CARBON14965TenantJsonFormatter extends ESBIntegrationTest {
         jsonClient = new JSONClient();
     }
 
-    @Test
-    public void testTest() throws IOException, JSONException {
+    @Test public void testTest() throws IOException, JSONException {
         String payload = "{\"test\":\"\"}";
         String expectedResult = "{\"test\":\"\"}";
         String actualResult = jsonClient.sendUserDefineRequest(serviceUrl, payload).toString();
         assertEquals(actualResult, expectedResult, "Tenant Returned incorrectly formatted JSON response.");
     }
 
-    @AfterTest(alwaysRun = true)
-    public void cleanupEnvironment() throws Exception {
+    @AfterTest(alwaysRun = true) public void cleanupEnvironment() throws Exception {
     }
 }

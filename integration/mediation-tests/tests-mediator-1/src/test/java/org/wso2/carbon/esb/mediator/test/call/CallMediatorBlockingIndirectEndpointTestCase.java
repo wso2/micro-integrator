@@ -24,8 +24,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -33,24 +31,23 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingIndirectEndpointTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("callMediatorBlockingDirectEndpointProxy");
         verifyEndpointExistence("StockQuote_9000_EP");
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Call the indirect endpoint with blocking external calls")
-    public void callMediatorBlockingIndirectEndpointTest() throws AxisFault {
+    @Test(groups = {
+            "wso2.esb" }, description = "Call the indirect endpoint with blocking external calls") public void callMediatorBlockingIndirectEndpointTest()
+            throws AxisFault {
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callMediatorBlockingDirectEndpointProxy"), null, "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callMediatorBlockingDirectEndpointProxy"), null,
+                        "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

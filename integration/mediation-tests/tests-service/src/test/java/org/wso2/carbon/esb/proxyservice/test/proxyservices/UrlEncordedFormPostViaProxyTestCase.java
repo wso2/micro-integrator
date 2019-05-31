@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -33,7 +33,6 @@ import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
 import java.io.IOException;
 import java.net.URLEncoder;
 
-
 /**
  * Test class for issue
  * https://wso2.org/jira/browse/ESBJAVA-1696
@@ -42,22 +41,18 @@ public class UrlEncordedFormPostViaProxyTestCase extends ESBIntegrationTest {
 
     private WireMonitorServer wireMonitorServer;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         init();
         uploadSynapseConfig();
         wireMonitorServer = new WireMonitorServer(8991);
         wireMonitorServer.start();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Patch : ESBJAVA-1696 : Encoded Special characters in the URL is decoded at the Gateway and not re-encoded", enabled = true)
-    public void testEncodingSpecialCharacterViaHttpProxy() throws IOException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Patch : ESBJAVA-1696 : Encoded Special characters in the URL is decoded at the Gateway and not re-encoded", enabled = true) public void testEncodingSpecialCharacterViaHttpProxy()
+            throws IOException {
         HttpClient client = new HttpClient();
-        client.getParams().setParameter(
-                HttpMethodParams.RETRY_HANDLER,
-                new DefaultHttpMethodRetryHandler(0, false));
+        client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(0, false));
         client.getParams().setSoTimeout(5000);
         client.getParams().setConnectionManagerTimeout(5000);
 
@@ -71,7 +66,6 @@ public class UrlEncordedFormPostViaProxyTestCase extends ESBIntegrationTest {
         method.setParameter("test1", value1);
         method.addParameter("test2", value2);
         method.addParameter("test3", value3);
-
 
         // Execute and print response
         try {
@@ -99,14 +93,13 @@ public class UrlEncordedFormPostViaProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
         cleanup();
     }
 
     private void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/patchAutomation/url_encoded_form_post_proxy.xml");
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/synapseconfig/patchAutomation/url_encoded_form_post_proxy.xml");
     }
-
 
 }

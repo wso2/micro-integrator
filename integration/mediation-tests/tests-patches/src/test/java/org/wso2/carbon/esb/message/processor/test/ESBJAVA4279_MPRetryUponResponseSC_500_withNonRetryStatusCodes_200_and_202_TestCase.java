@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,8 +16,6 @@
  * under the License.
  */
 package org.wso2.carbon.esb.message.processor.test;
-
-import java.rmi.RemoteException;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -33,34 +31,33 @@ import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
+import java.rmi.RemoteException;
+
 /**
  * The Message processor is configured with 200,202 as non retry status codes.
  * If the back end returns 500 SC, then the MP keeps on retrying till the max
  * delivery attempt is reached. This test case is used to verify that behavior.
  */
 public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_and_202_TestCase
-                                                                                               extends
-                                                                                               ESBIntegrationTest {
+        extends ESBIntegrationTest {
     private static final String PROXY_SERVICE_NAME = "NonRetrySCProxy";
     private static final String EXPECTED_ERROR_MESSAGE = "Message forwarding failed";
-    private static final String EXPECTED_MP_DEACTIVATION_MSG =
-                                                               "Successfully deactivated the message processor [Processor1]";
+    private static final String EXPECTED_MP_DEACTIVATION_MSG = "Successfully deactivated the message processor [Processor1]";
     private static final int RETRY_COUNT = 4;
     private LogViewerClient logViewerClient;
     private ActiveMQServer activeMQServer = new ActiveMQServer();
 
-    @BeforeClass(alwaysRun = true)
-    public void deployeService() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployeService() throws Exception {
         super.init();
         activeMQServer.startJMSBroker();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/messageProcessorConfig/MessageProcessorRetryUpon_500_ResponseWith_200And_202As_Non_retry_SC.xml");
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/messageProcessorConfig/MessageProcessorRetryUpon_500_ResponseWith_200And_202As_Non_retry_SC.xml");
         isProxyDeployed(PROXY_SERVICE_NAME);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test whether a Message Processor retries sending the message to the EP when the response status code is 500 and MP is configured with 200,202 as non-retry status codes.")
-    public void testMPRetryUponHTTP_SC_500_response_with_200_And_202_AsNonRetrySCs()
-                                                                                    throws RemoteException,
-                                                                                    InterruptedException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test whether a Message Processor retries sending the message to the EP when the response status code is 500 and MP is configured with 200,202 as non-retry status codes.") public void testMPRetryUponHTTP_SC_500_response_with_200_And_202_AsNonRetrySCs()
+            throws RemoteException, InterruptedException {
         boolean isRetriedUpon_500_response = false;
         boolean isRetryCompleted = false;
         boolean isMpDeactivated = false;
@@ -69,8 +66,7 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
         AxisServiceClient client = new AxisServiceClient();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");
 
-        logViewerClient =
-                          new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
         // Wait till the log appears
         Thread.sleep(20000);
@@ -90,11 +86,10 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
             isRetryCompleted = true;
         }
         Assert.assertTrue(isRetriedUpon_500_response && isRetryCompleted && isMpDeactivated,
-                          "MP does not retry sending the request upon receiving HTTP SC 500 response");
+                "MP does not retry sending the request upon receiving HTTP SC 500 response");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void UndeployeService() throws Exception {
+    @AfterClass(alwaysRun = true) public void UndeployeService() throws Exception {
         super.cleanup();
         activeMQServer.stopJMSBroker();
     }

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.esb.integration.common.clients.localentry;
 
@@ -27,12 +27,12 @@ import org.wso2.carbon.localentry.stub.types.LocalEntryAdminException;
 import org.wso2.carbon.localentry.stub.types.LocalEntryAdminServiceStub;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 
+import java.io.IOException;
+import java.rmi.RemoteException;
 import javax.activation.DataHandler;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import java.io.IOException;
-import java.rmi.RemoteException;
 
 public class LocalEntriesAdminClient {
 
@@ -63,8 +63,7 @@ public class LocalEntriesAdminClient {
      * @throws AxisFault
      */
 
-    public LocalEntriesAdminClient(String backendUrl, String userName, String password)
-            throws AxisFault {
+    public LocalEntriesAdminClient(String backendUrl, String userName, String password) throws AxisFault {
         String endPoint = backendUrl + serviceName;
         localEntryAdminServiceStub = new LocalEntryAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, localEntryAdminServiceStub);
@@ -79,10 +78,8 @@ public class LocalEntriesAdminClient {
      * @throws LocalEntryAdminException
      * @throws javax.xml.stream.XMLStreamException
      */
-    public boolean addLocalEntery(DataHandler dh)
-            throws IOException, LocalEntryAdminException, XMLStreamException {
-        XMLStreamReader parser =
-                XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
+    public boolean addLocalEntery(DataHandler dh) throws IOException, LocalEntryAdminException, XMLStreamException {
+        XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         StAXOMBuilder builder = new StAXOMBuilder(parser);
         OMElement localEntryElem = builder.getDocumentElement();
         return (localEntryAdminServiceStub.addEntry(localEntryElem.toString()));
@@ -96,8 +93,7 @@ public class LocalEntriesAdminClient {
      * @throws LocalEntryAdminException
      * @throws java.rmi.RemoteException
      */
-    public boolean addLocalEntry(OMElement localEntry)
-            throws LocalEntryAdminException, RemoteException {
+    public boolean addLocalEntry(OMElement localEntry) throws LocalEntryAdminException, RemoteException {
         return (localEntryAdminServiceStub.addEntry(localEntry.toString()));
     }
 
@@ -109,8 +105,7 @@ public class LocalEntriesAdminClient {
      * @throws LocalEntryAdminException
      * @throws java.rmi.RemoteException
      */
-    public boolean deleteLocalEntry(String localEntryKey)
-            throws LocalEntryAdminException, RemoteException {
+    public boolean deleteLocalEntry(String localEntryKey) throws LocalEntryAdminException, RemoteException {
         return (localEntryAdminServiceStub.deleteEntry(localEntryKey));
     }
 
@@ -119,8 +114,7 @@ public class LocalEntriesAdminClient {
      * @throws LocalEntryAdminException
      * @throws java.rmi.RemoteException
      */
-    public String getEntryNamesString()
-            throws LocalEntryAdminException, RemoteException {
+    public String getEntryNamesString() throws LocalEntryAdminException, RemoteException {
         return localEntryAdminServiceStub.getEntryNamesString();
     }
 
@@ -129,13 +123,11 @@ public class LocalEntriesAdminClient {
      * @throws LocalEntryAdminException
      * @throws java.rmi.RemoteException
      */
-    public int getEntryDataCount()
-            throws LocalEntryAdminException, RemoteException {
+    public int getEntryDataCount() throws LocalEntryAdminException, RemoteException {
         return localEntryAdminServiceStub.getEntryDataCount();
     }
 
     /**
-     *
      * @return
      * @throws LocalEntryAdminException
      * @throws java.rmi.RemoteException

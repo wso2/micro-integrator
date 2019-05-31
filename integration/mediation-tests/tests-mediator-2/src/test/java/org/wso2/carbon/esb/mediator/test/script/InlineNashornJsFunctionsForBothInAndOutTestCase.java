@@ -22,7 +22,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 import javax.xml.namespace.QName;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -31,16 +33,14 @@ import static org.testng.Assert.assertNotNull;
  */
 public class InlineNashornJsFunctionsForBothInAndOutTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
     @Test(groups = "wso2.esb", description = "Invoke a sequence which has inlined Nashornjs functions for both 'in' "
-            + "and outMediator' flows")
-    public void testInvokeSequence() throws Exception {
-        OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp
-                ("nashornJsInAndOutTestProxy"), null, "inlineTest");
+            + "and outMediator' flows") public void testInvokeSequence() throws Exception {
+        OMElement response = axis2Client
+                .sendCustomQuoteRequest(getProxyServiceURLHttp("nashornJsInAndOutTestProxy"), null, "inlineTest");
         assertNotNull(response, "Fault response message null");
         assertNotNull(response.getQName().getLocalPart(), "Fault response null localpart");
         assertEquals(response.getQName().getLocalPart(), "CheckPriceResponse", "Fault localpart mismatched");
@@ -51,8 +51,7 @@ public class InlineNashornJsFunctionsForBothInAndOutTestCase extends ESBIntegrat
                 "Fault response null localpart");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

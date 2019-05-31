@@ -29,32 +29,25 @@ import static org.testng.Assert.assertTrue;
 
 public class CallMediatorInAPITestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/synapse3.xml");
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void callMediatorInAPITestCase() throws IOException {
+    @Test(groups = { "wso2.esb" }) public void callMediatorInAPITestCase() throws IOException {
 
-        OMElement response =
-                axis2Client.sendSimpleStockQuoteRequest(getApiInvocationURL("testCallApi"), null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getApiInvocationURL("testCallApi"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
 
-        response =
-                axis2Client.sendSimpleStockQuoteRequest(
-                        getApiInvocationURL("testCallApi")+ "/resource2",
-                        null,
-                        "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest(getApiInvocationURL("testCallApi") + "/resource2", null, "WSO2");
         responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

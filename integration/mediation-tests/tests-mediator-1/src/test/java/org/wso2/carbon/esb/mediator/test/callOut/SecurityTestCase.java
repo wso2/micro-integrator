@@ -30,21 +30,18 @@ import static org.testng.Assert.assertTrue;
 
 public class SecurityTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/callout/SecurityTest.xml");
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void securityTest() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }) public void securityTest() throws AxisFault, XPathExpressionException {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(""), "", "IBM");
         boolean ResponseContainsIBM = response.getFirstElement().toString().contains("IBM");
         assertTrue(ResponseContainsIBM);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

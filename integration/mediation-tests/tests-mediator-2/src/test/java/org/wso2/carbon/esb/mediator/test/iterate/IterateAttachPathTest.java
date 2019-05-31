@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -25,51 +25,45 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.Iterator;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Tests a path that is already in the original request as the attachPath and
  * verify whether iterated messages are appended properly
- * 
  */
 
 public class IterateAttachPathTest extends ESBIntegrationTest {
 
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+        super.init();
+    }
 
-	@BeforeClass(alwaysRun = true)
-	public void setEnvironment() throws Exception {
-		super.init();
-	}
-
-	@Test(groups = "wso2.esb", description = "Tests attach path property ")
-	public void testAttachPath() throws IOException, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests attach path property ") public void testAttachPath()
+            throws IOException, XMLStreamException {
 
         IterateClient client = new IterateClient();
-        String response = client.getMultipleResponse(
-                getProxyServiceURLHttp("iterateWithAttachPathTestProxy"), "WSO2", 2);
+        String response = client
+                .getMultipleResponse(getProxyServiceURLHttp("iterateWithAttachPathTestProxy"), "WSO2", 2);
         //TODO has to check the line message and assert attach path has executed properly using logs
         //Since that is still not available it is tested using below method
         Assert.assertNotNull(response);
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                        "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
             OMElement getQuote = (OMElement) iterator.next();
             Assert.assertTrue(getQuote.toString().contains("WSO2"));
         }
-        Assert.assertEquals(i ,2, "Response count mismatched");
-	}
+        Assert.assertEquals(i, 2, "Response count mismatched");
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void close() throws Exception {
-		super.cleanup();
-	}
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
+        super.cleanup();
+    }
 
 }

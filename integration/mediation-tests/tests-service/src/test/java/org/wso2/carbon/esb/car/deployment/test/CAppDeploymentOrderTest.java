@@ -1,22 +1,21 @@
 /*
-*Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.car.deployment.test;
-
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -33,13 +32,12 @@ import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
-import javax.activation.DataHandler;
 import java.io.File;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.Stack;
-import java.util.concurrent.TimeUnit;
+import javax.activation.DataHandler;
 
 /**
  * This class tests whether the artifacts in deployed and un deployed in the correct artifacts dependency order.
@@ -58,22 +56,22 @@ public class CAppDeploymentOrderTest extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
     private String pathToFtpDir;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         runFTPServerForInboundTest();
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service get deployed,unDeploy "
-            + "through capp in order")
-    protected void carFileDeploymentOrderTest() throws Exception {
+            + "through capp in order") protected void carFileDeploymentOrderTest() throws Exception {
         logViewerClient.clearLogs();
-        carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
-        carbonAppUploaderClient.uploadCarbonAppArtifact(CAR_FILE_NAME + ".car"
-                , new DataHandler(new URL("file:" + File.separator + File.separator + getESBResourceLocation()
-                        + File.separator + "car" + File.separator + CAR_FILE_NAME + ".car")));
-        applicationAdminClient = new ApplicationAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
+        carbonAppUploaderClient.uploadCarbonAppArtifact(CAR_FILE_NAME + ".car", new DataHandler(
+                new URL("file:" + File.separator + File.separator + getESBResourceLocation() + File.separator + "car"
+                        + File.separator + CAR_FILE_NAME + ".car")));
+        applicationAdminClient = new ApplicationAdminClient(context.getContextUrls().getBackEndUrl(),
+                getSessionCookie());
         Assert.assertTrue(isCarFileDeployed(CAR_FILE_NAME), "Car file deployment failed");
         boolean deploymentOrdered = checkLogOrder(logViewerClient);
         Assert.assertTrue(deploymentOrdered, "Deployment order isn't correct");
@@ -100,7 +98,7 @@ public class CAppDeploymentOrderTest extends ESBIntegrationTest {
                 if (logEvent == null) {
                     continue;
                 }
-                if (logStack.size() != 0 && logEvent.getMessage().contains(logStack.peek())){
+                if (logStack.size() != 0 && logEvent.getMessage().contains(logStack.peek())) {
                     logStack.pop();
                 }
             }
@@ -122,7 +120,7 @@ public class CAppDeploymentOrderTest extends ESBIntegrationTest {
                 if (logEvent == null) {
                     continue;
                 }
-                if(logStack.size() != 0 && logEvent.getMessage().contains(logStack.peek())){
+                if (logStack.size() != 0 && logEvent.getMessage().contains(logStack.peek())) {
                     logStack.pop();
                 }
             }
@@ -190,9 +188,8 @@ public class CAppDeploymentOrderTest extends ESBIntegrationTest {
         int FTPPort = 9653;
 
         pathToFtpDir = getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB"
-                        + File.separator + "synapseconfig" + File.separator
-                        + "vfsTransport" + File.separator).getPath();
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "vfsTransport" + File.separator).getPath();
 
         // Local folder of the FTP server root
         FTPFolder = new File(pathToFtpDir + "FTP_Location" + File.separator);
@@ -204,27 +201,24 @@ public class CAppDeploymentOrderTest extends ESBIntegrationTest {
         Assert.assertTrue(FTPFolder.mkdir(), "FTP root file folder not created");
 
         // create 'in' directory under FTP server root
-        inputFolder = new File(FTPFolder.getAbsolutePath() + File.separator
-                + inputFolderName);
+        inputFolder = new File(FTPFolder.getAbsolutePath() + File.separator + inputFolderName);
 
         if (inputFolder.exists()) {
             FileUtils.deleteDirectory(inputFolder);
         }
         Assert.assertTrue(inputFolder.mkdir(), "FTP data /in folder not created");
 
-		/* Make the port available */
+        /* Make the port available */
         Utils.shutdownFailsafe(FTPPort);
 
         // start-up FTP server
-        ftpServerManager = new FTPServerManager(FTPPort,
-                FTPFolder.getAbsolutePath(), FTPUsername, FTPPassword);
+        ftpServerManager = new FTPServerManager(FTPPort, FTPFolder.getAbsolutePath(), FTPUsername, FTPPassword);
         ftpServerManager.startFtpServer();
 
         log.info("FTP Server startup completed successfully");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
         try {
             super.cleanup();
         } finally {

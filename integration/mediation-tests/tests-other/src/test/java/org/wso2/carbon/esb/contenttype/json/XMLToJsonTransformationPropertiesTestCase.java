@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.contenttype.json;
 
@@ -41,12 +41,13 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(getESBResourceLocation() + File.separator + "json" +
-                File.separator + "jsonTransformationConfig" + File.separator + "synapse.properties"));
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        serverConfigurationManager.applyConfiguration(new File(
+                getESBResourceLocation() + File.separator + "json" + File.separator + "jsonTransformationConfig"
+                        + File.separator + "synapse.properties"));
         super.init();
         verifyProxyServiceExistence("xmlToJsonTestProxy");
     }
@@ -57,34 +58,38 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
      * synapse.commons.json.output.enableNSDeclarations=true
      * Preserve namespaces in XML payload
      * Add XML namespace declarations in the JSON
+     *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test XML to JSON preserve namespace")
-    public void testXmlToJsonPreserveNamespace() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test XML to JSON preserve namespace") public void testXmlToJsonPreserveNamespace()
+            throws Exception {
 
-        String xmlPayload = "<ns:stock xmlns:ns='http://services.samples'>\n" +
-                "               <ns:name>WSO2</ns:name>\n" +
-                "            </ns:stock>";
+        String xmlPayload =
+                "<ns:stock xmlns:ns='http://services.samples'>\n" + "               <ns:name>WSO2</ns:name>\n"
+                        + "            </ns:stock>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
                 doPost(new URL(getProxyServiceURLHttp("xmlToJsonTestProxy")), xmlPayload, requestHeader);
 
-        Assert.assertEquals(response.getData(), "{\"ns_stock\":{\"@xmlns_ns\":\"http://services.samples\",\"ns_name\":\"WSO2\"}}",
+        Assert.assertEquals(response.getData(),
+                "{\"ns_stock\":{\"@xmlns_ns\":\"http://services.samples\",\"ns_name\":\"WSO2\"}}",
                 "Invalid XML to JSON conversion. " + response.getData());
     }
 
     /**
      * Test the property synapse.commons.json.buildValidNCNames=true
      * Replace "_JsonReader_32_" in XML payload with spaces in Json
+     *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test XML to JSON build Valid NC Names")
-    public void testXmlToJsonBuildValidNCNames() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test XML to JSON build Valid NC Names") public void testXmlToJsonBuildValidNCNames()
+            throws Exception {
 
-        String xmlPayload = "<stock_JsonReader_32_quote>\n" +
-                "               <name>WSO2</name>\n" +
-                "            </stock_JsonReader_32_quote>";
+        String xmlPayload = "<stock_JsonReader_32_quote>\n" + "               <name>WSO2</name>\n"
+                + "            </stock_JsonReader_32_quote>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
@@ -97,15 +102,15 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
     /**
      * Test the property synapse.commons.json.output.autoPrimitive=false
      * Add double quotes around the primitive values
+     *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test XML to JSON auto primitive")
-    public void testXmlToJsonAutoPrimitive() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test XML to JSON auto primitive") public void testXmlToJsonAutoPrimitive()
+            throws Exception {
 
-        String xmlPayload = "<stock>\n" +
-                "               <name>WSO2</name>\n" +
-                "               <price>10</price>\n" +
-                "            </stock>";
+        String xmlPayload = "<stock>\n" + "               <name>WSO2</name>\n" + "               <price>10</price>\n"
+                + "            </stock>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
@@ -117,21 +122,16 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
 
     /**
      * Test the property synapse.commons.json.output.jsonoutAutoArray=false
+     *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test XML to JSON Array conversion")
-    public void testXmlToJsonArray() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON Array conversion") public void testXmlToJsonArray()
+            throws Exception {
 
-        String xmlPayload = "<stocks>" +
-                "               <stock>\n" +
-                "                   <name>WSO2</name>\n" +
-                "                   <price>10</price>\n" +
-                "               </stock>\n"             +
-                "               <stock>\n"              +
-                "                   <name>IBM</name>\n" +
-                "                   <price>15</price>\n" +
-                "               </stock>" +
-                "            </stocks>";
+        String xmlPayload = "<stocks>" + "               <stock>\n" + "                   <name>WSO2</name>\n"
+                + "                   <price>10</price>\n" + "               </stock>\n" + "               <stock>\n"
+                + "                   <name>IBM</name>\n" + "                   <price>15</price>\n"
+                + "               </stock>" + "            </stocks>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
@@ -142,8 +142,7 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
                 "Invalid XML to JSON array conversion. " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
         serverConfigurationManager = null;

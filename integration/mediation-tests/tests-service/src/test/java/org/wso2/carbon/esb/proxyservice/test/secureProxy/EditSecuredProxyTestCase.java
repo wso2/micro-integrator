@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.proxyservice.test.secureProxy;
 
@@ -31,19 +31,18 @@ public class EditSecuredProxyTestCase extends ESBIntegrationTest {
 
     private ProxyServiceAdminClient proxyServiceAdminClient;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         proxyServiceAdminClient = new ProxyServiceAdminClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
         addProxy();
     }
 
     //Related to Patch Automation https://wso2.org/jira/browse/CARBON-5551
-    @Test(groups = {"wso2.esb"}, description = "Adding a WSDL to a Proxy Service with Security")
-    public void testEditSecuredProxy() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Adding a WSDL to a Proxy Service with Security") public void testEditSecuredProxy()
+            throws Exception {
 
-        applySecurity("EditSecuredProxy", 1, new String[]{"admin"});
+        applySecurity("EditSecuredProxy", 1, new String[] { "admin" });
         Thread.sleep(5000);
         ProxyData prxy = proxyServiceAdminClient.getProxyDetails("EditSecuredProxy");
         prxy.setWsdlURI("file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl");
@@ -55,8 +54,7 @@ public class EditSecuredProxyTestCase extends ESBIntegrationTest {
         Assert.assertEquals(prxy.getWsdlURI(), "file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void clear() throws Exception {
+    @AfterClass(alwaysRun = true) public void clear() throws Exception {
         super.cleanup();
         proxyServiceAdminClient = null;
 
@@ -64,17 +62,12 @@ public class EditSecuredProxyTestCase extends ESBIntegrationTest {
 
     private void addProxy() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                             "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"EditSecuredProxy\">\n" +
-                                             "        <target>\n" +
-                                             "            <endpoint>\n" +
-                                             "                <address uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n" +
-                                             "            </endpoint>\n" +
-                                             "            <outSequence>\n" +
-                                             "                <send/>\n" +
-                                             "            </outSequence>\n" +
-                                             "        </target>\n" +
-                                             "    </proxy>"));
+        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"EditSecuredProxy\">\n" + "        <target>\n"
+                + "            <endpoint>\n"
+                + "                <address uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n"
+                + "            </endpoint>\n" + "            <outSequence>\n" + "                <send/>\n"
+                + "            </outSequence>\n" + "        </target>\n" + "    </proxy>"));
     }
 }
 

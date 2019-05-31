@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -40,7 +40,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 //import java.io.File;
@@ -56,25 +55,18 @@ public class ESBJAVA4569RabbiMQSSLStoreWithoutClientCertValidationTest extends E
 
     private final Map<String, String> headers = new HashMap<String, String>(1);
 
-    private final String payload =  "{\n" +
-                                    "  \"email\" : \"jms@yomail.com\",\n" +
-                                    "  \"firstName\" : \"Jms\",\n" +
-                                    "  \"lastName\" : \"Broker\",\n" +
-                                    "  \"id\" : 10\n" +
-                                    "}";
+    private final String payload = "{\n" + "  \"email\" : \"jms@yomail.com\",\n" + "  \"firstName\" : \"Jms\",\n"
+            + "  \"lastName\" : \"Broker\",\n" + "  \"id\" : 10\n" + "}";
 
     private LogViewerClient logViewer;
 
-    private static final String logLine0 =
-            "MESSAGE = ************rabbitMQRestWithoutClientCert IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
+    private static final String logLine0 = "MESSAGE = ************rabbitMQRestWithoutClientCert IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
 
     private RabbitMQServer rabbitMQServer;
 
-
     private File destinationConfig = null;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
@@ -83,18 +75,19 @@ public class ESBJAVA4569RabbiMQSSLStoreWithoutClientCertValidationTest extends E
         modifyAndAddRabbitMQConfigs();
         rabbitMQServer.start();
 
-
         headers.put("Test-Header-Field", "TestHeaderValue");
 
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/messageStore/rabbitMQ/SSL/RabbitMQMsgStoreSSLWithoutClientCertValidationTest.xml");
+        OMElement synapse = esbUtils.loadResource(
+                "/artifacts/ESB/messageStore/rabbitMQ/SSL/RabbitMQMsgStoreSSLWithoutClientCertValidationTest.xml");
         updateESBConfiguration(synapse);
 
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         url = getApiInvocationURL("rabbitMQRestWithoutClientCert") + "/store";
     }
 
-    @Test(groups = {"wso2.esb"}, description = "RabbitMQ message store support for SSL(without client certificate validation)" )
-    public void testRabbitMQMessageStore() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "RabbitMQ message store support for SSL(without client certificate validation)") public void testRabbitMQMessageStore()
+            throws Exception {
 
         HttpResponse response = httpClient.doPost(url, headers, payload, "application/json");
         if (response.getStatusLine().getStatusCode() == 200 || response.getStatusLine().getStatusCode() == 202) {
@@ -119,8 +112,7 @@ public class ESBJAVA4569RabbiMQSSLStoreWithoutClientCertValidationTest extends E
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         super.init();
         rabbitMQServer.stop();
@@ -147,7 +139,7 @@ public class ESBJAVA4569RabbiMQSSLStoreWithoutClientCertValidationTest extends E
         Channel channel = conn.createChannel();
 
         GetResponse chResponse = channel.basicGet("WithoutClientCertQueue", true);
-        if(chResponse != null) {
+        if (chResponse != null) {
             byte[] body = chResponse.getBody();
             result = new String(body);
         }

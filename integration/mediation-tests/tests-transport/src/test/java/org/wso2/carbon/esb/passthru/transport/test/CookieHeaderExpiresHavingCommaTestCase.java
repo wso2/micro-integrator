@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.carbon.esb.passthru.transport.test;
 
@@ -34,14 +34,12 @@ import java.io.IOException;
  */
 public class CookieHeaderExpiresHavingCommaTestCase extends ESBIntegrationTest {
 
-    @BeforeClass
-    public void init() throws Exception {
+    @BeforeClass public void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Test SetCookieHeader With Expires having a comma")
-    public void testSetCookieHeaderWithExpires() throws IOException {
+    @Test(groups = "wso2.esb", description = "Test SetCookieHeader With Expires having a comma") public void testSetCookieHeaderWithExpires()
+            throws IOException {
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(getApiInvocationURL("cookieHeaderTestAPI"));
         HttpResponse httpResponse = httpclient.execute(httpGet);
@@ -49,8 +47,7 @@ public class CookieHeaderExpiresHavingCommaTestCase extends ESBIntegrationTest {
                 "Request failed. Response received is : " + httpResponse.toString());
     }
 
-    @AfterClass
-    public void cleanUp() throws Exception {
+    @AfterClass public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

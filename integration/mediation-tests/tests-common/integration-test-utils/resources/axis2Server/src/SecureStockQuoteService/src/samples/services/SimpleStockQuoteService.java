@@ -17,21 +17,22 @@
  *  under the License.
  */
 package samples.services;
+
 import java.util.Date;
 
 public class SimpleStockQuoteService {
 
     // in-out
     public GetQuoteResponse getQuote(GetQuote request) {
-        System.out.println(new Date() + " " + "SecureStockQuoteService" +
-            " :: Generating quote for : " + request.getSymbol());
+        System.out.println(
+                new Date() + " " + "SecureStockQuoteService" + " :: Generating quote for : " + request.getSymbol());
         return new GetQuoteResponse(request.getSymbol());
     }
 
     // in-out large response
     public GetFullQuoteResponse getFullQuote(GetFullQuote request) {
-        System.out.println(new Date() + " " + "SecureStockQuoteService" +
-            " :: Full quote for : " + request.getSymbol());
+        System.out
+                .println(new Date() + " " + "SecureStockQuoteService" + " :: Full quote for : " + request.getSymbol());
         return new GetFullQuoteResponse(request.getSymbol());
     }
 
@@ -40,22 +41,23 @@ public class SimpleStockQuoteService {
         StringBuffer sb = new StringBuffer();
         String[] symbols = request.getSymbols();
         sb.append("[");
-        for (int i=0; i<symbols.length; i++) {
+        for (int i = 0; i < symbols.length; i++) {
             sb.append(symbols[i]);
-            if (i < symbols.length-1) {
+            if (i < symbols.length - 1) {
                 sb.append(", ");
             }
         }
         sb.append("]");
-        System.out.println(new Date() + " " + "SecureStockQuoteService" +
-            " :: Generating Market activity report for : "  + sb.toString());
+        System.out.println(
+                new Date() + " " + "SecureStockQuoteService" + " :: Generating Market activity report for : " + sb
+                        .toString());
         return new GetMarketActivityResponse(request.getSymbols());
     }
 
     // in only
     public void placeOrder(PlaceOrder order) {
-        System.out.println(new Date() + " " + "SecureStockQuoteService" +
-            "  :: Accepted order for : " + order.getQuantity() +
-            " stocks of " + order.getSymbol() + " at $ " + order.getPrice());
+        System.out.println(
+                new Date() + " " + "SecureStockQuoteService" + "  :: Accepted order for : " + order.getQuantity()
+                        + " stocks of " + order.getSymbol() + " at $ " + order.getPrice());
     }
 }

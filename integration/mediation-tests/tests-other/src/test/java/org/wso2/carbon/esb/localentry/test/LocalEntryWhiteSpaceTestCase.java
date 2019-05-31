@@ -17,13 +17,11 @@
 
 package org.wso2.carbon.esb.localentry.test;
 
-
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 import javax.xml.namespace.QName;
 
@@ -34,23 +32,21 @@ import static org.testng.Assert.assertNotNull;
  */
 public class LocalEntryWhiteSpaceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath
-                ("artifacts/ESB/proxyconfig/proxy/proxyservice/localentry_url_proxy.xml");
+        loadESBConfigurationFromClasspath("artifacts/ESB/proxyconfig/proxy/proxyservice/localentry_url_proxy.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Test local entry value retrieval for endpoint url")
-    public void testLocalEntryProxy() throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:8480/services/LocalEntryTestProxy", null, "IBM");
+    @Test(groups = "wso2.esb", description = "Test local entry value retrieval for endpoint url") public void testLocalEntryProxy()
+            throws Exception {
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest("http://localhost:8480/services/LocalEntryTestProxy", null, "IBM");
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
         super.cleanup();
     }
 }

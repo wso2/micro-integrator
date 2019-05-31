@@ -27,6 +27,8 @@ import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.exception.ESBMailTransportIntegrationTestException;
 
+import java.rmi.RemoteException;
+import java.util.Properties;
 import javax.mail.Authenticator;
 import javax.mail.Flags;
 import javax.mail.Folder;
@@ -41,8 +43,6 @@ import javax.mail.search.FlagTerm;
 import javax.mail.search.SearchTerm;
 import javax.mail.search.SubjectTerm;
 import javax.xml.xpath.XPathExpressionException;
-import java.rmi.RemoteException;
-import java.util.Properties;
 
 /**
  * This Provides utility methods to sending, receiving and verifying emails by reading logs
@@ -90,14 +90,14 @@ public class MailToTransportUtil {
     public static boolean sendMailAndCheckReceived(String emailSubject) throws Exception {
         Properties props = getSMTPProperties();
         boolean isEmailReceived = false;
-        EmailSender emailSender =
-                new EmailSender(props, sender, String.valueOf(senderPassword), domain, receiver + "@" + domain);
+        EmailSender emailSender = new EmailSender(props, sender, String.valueOf(senderPassword), domain,
+                receiver + "@" + domain);
         if (emailSender.createSession()) {
             emailSender.setSubject(emailSubject);
             emailSender.setBody("Body : " + emailSubject);
             emailSender.sendEmail();
             log.info("Email send by Mail API successfully : " + emailSubject);
-            isEmailReceived = waitToCheckEmailReceived(emailSubject,EMAIL_INBOX);
+            isEmailReceived = waitToCheckEmailReceived(emailSubject, EMAIL_INBOX);
         }
         return isEmailReceived;
     }
@@ -146,8 +146,7 @@ public class MailToTransportUtil {
      * @return - Email has deleted successfully or not
      * @throws ESBMailTransportIntegrationTestException - Is thrown if an error occurred when reading the emails
      */
-    public static boolean checkDeletedEmail(String emailSubject)
-            throws ESBMailTransportIntegrationTestException {
+    public static boolean checkDeletedEmail(String emailSubject) throws ESBMailTransportIntegrationTestException {
         boolean isEmailDeleted = false;
         long startTime = System.currentTimeMillis();
 
@@ -185,8 +184,7 @@ public class MailToTransportUtil {
 
         session = Session.getInstance(properties, new Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(receiver + "@" + domain,
-                                                  String.valueOf(receiverPassword));
+                return new PasswordAuthentication(receiver + "@" + domain, String.valueOf(receiverPassword));
             }
         });
         try {
@@ -204,8 +202,7 @@ public class MailToTransportUtil {
      *
      * @throws ESBMailTransportIntegrationTestException - Is thrown if an error when deleting the emails
      */
-    public static void deleteAllUnreadEmailsFromGmail()
-            throws ESBMailTransportIntegrationTestException {
+    public static void deleteAllUnreadEmailsFromGmail() throws ESBMailTransportIntegrationTestException {
         Folder inbox = null;
         Store store = getConnection();
         try {
@@ -315,17 +312,18 @@ public class MailToTransportUtil {
     /**
      * Read automation.xml to set email credentials to relevant variables.
      */
-    public static void readXMLforEmailCredentials()
-            throws ESBMailTransportIntegrationTestException {
+    public static void readXMLforEmailCredentials() throws ESBMailTransportIntegrationTestException {
         try {
 
             AutomationContext automationContext = new AutomationContext();
             automationContext.getConfigurationNodeList(EMAIL_CREDENTIAL_PARENT_XPATH);
 
             sender = automationContext.getConfigurationValue(EMAIL_CREDENTIAL_SENDER_XPATH);
-            senderPassword = automationContext.getConfigurationValue(EMAIL_CREDENTIAL_SENDER_PASSWORD_XPATH).toCharArray();
+            senderPassword = automationContext.getConfigurationValue(EMAIL_CREDENTIAL_SENDER_PASSWORD_XPATH)
+                    .toCharArray();
             receiver = automationContext.getConfigurationValue(EMAIL_CREDENTIAL_RECEIVER_XPATH);
-            receiverPassword = automationContext.getConfigurationValue(EMAIL_CREDENTIAL_RECEIVER_PASSWORD_XPATH).toCharArray();
+            receiverPassword = automationContext.getConfigurationValue(EMAIL_CREDENTIAL_RECEIVER_PASSWORD_XPATH)
+                    .toCharArray();
             domain = automationContext.getConfigurationValue(EMAIL_CREDENTIAL_DOMAIN_XPATH);
 
         } catch (XPathExpressionException e) {

@@ -19,13 +19,19 @@ package org.wso2.esb.integration.services.jaxrs.customersample;
 import org.wso2.esb.integration.services.jaxrs.customersample.bean.Customer;
 import org.wso2.esb.integration.services.jaxrs.customersample.bean.Order;
 
-import javax.ws.rs.*;
-import javax.ws.rs.core.Response;
 import java.util.HashMap;
 import java.util.Map;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.Response;
 
-@Path("/customerservice/")
-public class CustomerService {
+@Path("/customerservice/") public class CustomerService {
     long currentId = 123;
     Map<Long, Customer> customers = new HashMap<Long, Customer>();
     Map<Long, Order> orders = new HashMap<Long, Order>();
@@ -34,18 +40,14 @@ public class CustomerService {
         init();
     }
 
-    @GET
-    @Path("/customers/{id}/")
-    public Customer getCustomer(@PathParam("id") String id) {
+    @GET @Path("/customers/{id}/") public Customer getCustomer(@PathParam("id") String id) {
         System.out.println("----invoking getCustomer, Customer id is: " + id);
         long idNumber = Long.parseLong(id);
         Customer c = customers.get(idNumber);
         return c;
     }
 
-    @PUT
-    @Path("/customers/")
-    public Response updateCustomer(Customer customer) {
+    @PUT @Path("/customers/") public Response updateCustomer(Customer customer) {
         System.out.println("----invoking updateCustomer, Customer name is: " + customer.getName());
         Customer c = customers.get(customer.getId());
         Response r;
@@ -59,9 +61,7 @@ public class CustomerService {
         return r;
     }
 
-    @POST
-    @Path("/customers/")
-    public Response addCustomer(Customer customer) {
+    @POST @Path("/customers/") public Response addCustomer(Customer customer) {
         System.out.println("----invoking addCustomer, Customer name is: " + customer.getName());
         customer.setId(++currentId);
 
@@ -72,18 +72,13 @@ public class CustomerService {
 
     // Adding a new method to demonstrate Consuming and Producing text/plain
 
-    @POST
-    @Path("/customers/name/")
-    @Consumes("text/plain")
-    @Produces("text/plain")
-    public String getCustomerName(String id) {
+    @POST @Path("/customers/name/") @Consumes("text/plain") @Produces("text/plain") public String getCustomerName(
+            String id) {
         System.out.println("----invoking getCustomerName, Customer id is: " + id);
         return "Isuru Suriarachchi";
     }
 
-    @DELETE
-    @Path("/customers/{id}/")
-    public Response deleteCustomer(@PathParam("id") String id) {
+    @DELETE @Path("/customers/{id}/") public Response deleteCustomer(@PathParam("id") String id) {
         System.out.println("----invoking deleteCustomer, Customer id is: " + id);
         long idNumber = Long.parseLong(id);
         Customer c = customers.get(idNumber);
@@ -99,8 +94,7 @@ public class CustomerService {
         return r;
     }
 
-    @Path("/orders/{orderId}/")
-    public Order getOrder(@PathParam("orderId") String orderId) {
+    @Path("/orders/{orderId}/") public Order getOrder(@PathParam("orderId") String orderId) {
         System.out.println("----invoking getOrder, Order id is: " + orderId);
         long idNumber = Long.parseLong(orderId);
         Order c = orders.get(idNumber);

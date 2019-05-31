@@ -43,35 +43,32 @@ import static org.testng.Assert.assertTrue;
  * as XML.
  */
 public class JSONPayloadXMLSpecialCharEscapeTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                + "synapseconfig" + File.separator + "payloadmediatype" + File.separator
-                + "JSONPayloadXMLSpecialCharEscapeTest.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "payloadmediatype" + File.separator
+                        + "JSONPayloadXMLSpecialCharEscapeTest.xml");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "JSONPayload with XMLSpecialChar Escape Test")
-    public void JSONPayloadWithXMLSpecialCharEscapeTest()
+    @Test(groups = "wso2.esb", description = "JSONPayload with XMLSpecialChar Escape Test") public void JSONPayloadWithXMLSpecialCharEscapeTest()
             throws AxisFault, MalformedURLException, AutomationFrameworkException {
 
         //json request payload.
-        String payload = "<text>{\"chars\" : \"266/W, Simple Text &#60; &#62; &#38;,&#xd;\n" +
-                "line2,&#xd;\n" +
-                "line 3\"}</text>";
+        String payload = "<text>{\"chars\" : \"266/W, Simple Text &#60; &#62; &#38;,&#xd;\n" + "line2,&#xd;\n"
+                + "line 3\"}</text>";
 
         Reader data = new StringReader(payload);
         Writer writer = new StringWriter();
 
         String serviceURL = this.getApiInvocationURL("testEnterAPI");
 
-        String response = HttpURLConnectionClient.sendPostRequestAndReadResponse(data,
-                new URL(serviceURL), writer, "application/xml");
+        String response = HttpURLConnectionClient
+                .sendPostRequestAndReadResponse(data, new URL(serviceURL), writer, "application/xml");
         assertNotNull(response, "Response is null");
         //should return the response without throwing any errors.
         assertTrue(response.contains("{\"chars\" : \"266/W, Simple Text < > &,\\r\\nline2,\\r\\nline 3\"}"));

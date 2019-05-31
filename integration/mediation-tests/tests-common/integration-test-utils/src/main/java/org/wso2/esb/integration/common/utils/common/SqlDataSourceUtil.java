@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.esb.integration.common.utils.common;
 
 import org.apache.axiom.attachments.ByteArrayDataSource;
@@ -31,10 +31,6 @@ import org.wso2.carbon.automation.test.utils.dbutils.DatabaseFactory;
 import org.wso2.carbon.automation.test.utils.dbutils.DatabaseManager;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
@@ -42,6 +38,10 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.xpath.XPathExpressionException;
 
 public class SqlDataSourceUtil {
 
@@ -89,7 +89,7 @@ public class SqlDataSourceUtil {
         return this.jdbcUrl;
     }
 
-    public String getJdbcUrlForProxy () throws XPathExpressionException {
+    public String getJdbcUrlForProxy() throws XPathExpressionException {
 
         String url = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
 
@@ -155,7 +155,6 @@ public class SqlDataSourceUtil {
         }
     }
 
-
     private void createDataBase(String driver, String jdbc, String user, String password)
             throws ClassNotFoundException, SQLException, XPathExpressionException {
 
@@ -185,7 +184,7 @@ public class SqlDataSourceUtil {
             init();
         }
 
-//        databaseName = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_NAME);
+        //        databaseName = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_NAME);
         databaseName = "testdb";
         databasePassword = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
         jdbcUrl = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
@@ -194,7 +193,8 @@ public class SqlDataSourceUtil {
 
         if (jdbcUrl.contains("h2") && jdbcDriver.contains("h2")) {
             //Random number appends to a database name to create new database for H2*//*
-            databaseName = System.getProperty("basedir")+ File.separator + "target" + File.separator+ databaseName + new Random().nextInt();
+            databaseName = System.getProperty("basedir") + File.separator + "target" + File.separator + databaseName
+                    + new Random().nextInt();
             jdbcUrl = "jdbc:h2:" + databaseName;
             //create database on in-memory
             H2DataBaseManager h2 = null;
@@ -217,7 +217,7 @@ public class SqlDataSourceUtil {
             init();
         }
 
-//        databaseName = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_NAME);
+        //        databaseName = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_NAME);
         databaseName = dbName + "_" + new Date().getTime();
         databasePassword = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
         jdbcUrl = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
@@ -226,7 +226,7 @@ public class SqlDataSourceUtil {
 
         if (jdbcUrl.contains("h2") && jdbcDriver.contains("h2")) {
             //Random number appends to a database name to create new database for H2*//*
-            databaseName = System.getProperty("basedir") + File.separator + "target" + File.separator+ databaseName ;
+            databaseName = System.getProperty("basedir") + File.separator + "target" + File.separator + databaseName;
             jdbcUrl = "jdbc:h2:" + databaseName;
             //create database on in-memory
             H2DataBaseManager h2 = null;
@@ -243,8 +243,6 @@ public class SqlDataSourceUtil {
         }
         executeUpdate(sqlFileList);
     }
-
-
 
     private void executeUpdate(List<File> sqlFileList)
             throws IOException, ClassNotFoundException, SQLException, XPathExpressionException {

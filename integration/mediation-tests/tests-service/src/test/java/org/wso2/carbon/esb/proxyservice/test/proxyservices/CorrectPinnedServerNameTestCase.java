@@ -18,10 +18,10 @@
 
 package org.wso2.carbon.esb.proxyservice.test.proxyservices;
 
+import org.apache.http.HttpResponse;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.apache.http.HttpResponse;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
@@ -36,25 +36,19 @@ import static org.testng.Assert.assertEquals;
  */
 public class CorrectPinnedServerNameTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Testing if the proxy is getting deployed when the correct value is given for the pinned server")
-    public void testDeployedProxy() throws IOException {
+    @Test(groups = {
+            "wso2.esb" }, description = "Testing if the proxy is getting deployed when the correct value is given for the pinned server") public void testDeployedProxy()
+            throws IOException {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/xml");
 
         String payload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                + "   <soapenv:Header/>\n"
-                + "   <soapenv:Body>\n"
-                + "      <testBody>\n"
-                + "      <foo/>\n"
-                + "      </testBody>\n"
-                + "   </soapenv:Body>\n"
-                + "</soapenv:Envelope>\n";
+                + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <testBody>\n" + "      <foo/>\n"
+                + "      </testBody>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>\n";
 
         String testResponse = "<testResponse xmlns=\"http://ws.apache.org/ns/synapse\"><foo/></testResponse>";
         SimpleHttpClient simpleHttpClient = new SimpleHttpClient();
@@ -65,8 +59,7 @@ public class CorrectPinnedServerNameTestCase extends ESBIntegrationTest {
         assertEquals(responsePayload, testResponse, "Proxy not deployed successfully!");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void clean() throws Exception {
+    @AfterClass(alwaysRun = true) public void clean() throws Exception {
         super.cleanup();
     }
 }

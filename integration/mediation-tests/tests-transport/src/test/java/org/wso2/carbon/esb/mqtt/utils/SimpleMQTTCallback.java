@@ -30,15 +30,16 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 public class SimpleMQTTCallback implements MqttCallback {
 
     private static final Log log = LogFactory.getLog(SimpleMQTTCallback.class);
+
     /**
      * Inform when connection with server is lost.
      *
      * @param throwable Connection lost cause
      */
-    @Override
-    public void connectionLost(Throwable throwable) {
+    @Override public void connectionLost(Throwable throwable) {
         log.error("Mqtt client lost connection with the server", throwable);
     }
+
     /**
      * Inform when a message is received through a subscribed topic.
      *
@@ -46,17 +47,16 @@ public class SimpleMQTTCallback implements MqttCallback {
      * @param mqttMessage The message received
      * @throws Exception
      */
-    @Override
-    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+    @Override public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
         log.info("Message arrived on topic : \"" + topic + "\" Message : \"" + mqttMessage.toString() + "\"");
     }
+
     /**
      * Inform when message delivery is complete for a published message.
      *
      * @param iMqttDeliveryToken The message complete token
      */
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+    @Override public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
         for (String topic : iMqttDeliveryToken.getTopics()) {
             log.info("Message delivered successfully to topic : \"" + topic + "\".");
         }

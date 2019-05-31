@@ -12,14 +12,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 /**
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -31,14 +31,13 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class HL7InboundPreprocessorTest extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(priority=3, groups = { "wso2.esb" }, description = "Test HL7 PreProcessor")
-    public void testHL7InboundAutoAck() throws Exception {
+    @Test(priority = 3, groups = {
+            "wso2.esb" }, description = "Test HL7 PreProcessor") public void testHL7InboundAutoAck() throws Exception {
         int beforeLogCount = logViewerClient.getAllRemoteSystemLogs().length;
         addInboundEndpoint(addEndpoint0());
         HL7InboundTestSender sender = new HL7InboundTestSender();
@@ -55,29 +54,23 @@ public class HL7InboundPreprocessorTest extends ESBIntegrationTest {
         Assert.assertTrue(found, "Can we see the log added by custom HL7MessagePreprocessor?");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
     private OMElement addEndpoint0() throws Exception {
-        return AXIOMUtil
-                .stringToOM("<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" +
-                        "                 name=\"hl7_inbound\"\n" +
-                        "                 sequence=\"main\"\n" +
-                        "                 onError=\"fault\"\n" +
-                        "                 protocol=\"hl7\"\n" +
-                        "                 suspend=\"false\">\n" +
-                        "   <parameters>\n" +
-                        "      <parameter name=\"inbound.hl7.ValidateMessage\">true</parameter>\n" +
-                        "      <parameter name=\"inbound.hl7.Port\">20003</parameter>\n" +
-                        "      <parameter name=\"inbound.hl7.TimeOut\">3000</parameter>\n" +
-                        "      <parameter name=\"inbound.hl7.MessagePreProcessor\">org.wso2.sample.MessageFilter</parameter>\n" +
-                        "      <parameter name=\"inbound.hl7.AutoAck\">true</parameter>\n" +
-                        "      <parameter name=\"inbound.hl7.BuildInvalidMessages\">true</parameter>\n" +
-                        "      <parameter name=\"inbound.hl7.PassThroughInvalidMessages\">true</parameter>\n" +
-                        "      <parameter name=\"inbound.hl7.CharSet\">UTF-8</parameter>\n" +
-                        "   </parameters>\n" +
-                        "</inboundEndpoint>");
+        return AXIOMUtil.stringToOM("<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n"
+                + "                 name=\"hl7_inbound\"\n" + "                 sequence=\"main\"\n"
+                + "                 onError=\"fault\"\n" + "                 protocol=\"hl7\"\n"
+                + "                 suspend=\"false\">\n" + "   <parameters>\n"
+                + "      <parameter name=\"inbound.hl7.ValidateMessage\">true</parameter>\n"
+                + "      <parameter name=\"inbound.hl7.Port\">20003</parameter>\n"
+                + "      <parameter name=\"inbound.hl7.TimeOut\">3000</parameter>\n"
+                + "      <parameter name=\"inbound.hl7.MessagePreProcessor\">org.wso2.sample.MessageFilter</parameter>\n"
+                + "      <parameter name=\"inbound.hl7.AutoAck\">true</parameter>\n"
+                + "      <parameter name=\"inbound.hl7.BuildInvalidMessages\">true</parameter>\n"
+                + "      <parameter name=\"inbound.hl7.PassThroughInvalidMessages\">true</parameter>\n"
+                + "      <parameter name=\"inbound.hl7.CharSet\">UTF-8</parameter>\n" + "   </parameters>\n"
+                + "</inboundEndpoint>");
     }
 }

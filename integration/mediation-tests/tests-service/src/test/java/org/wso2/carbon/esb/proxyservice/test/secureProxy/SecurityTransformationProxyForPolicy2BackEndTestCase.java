@@ -1,63 +1,56 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.proxyservice.test.secureProxy;
 
-import org.apache.axiom.om.OMElement;
-import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
 import org.wso2.carbon.esb.proxyservice.test.secureProxy.util.SecureEndpointSetter;
-import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
 import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.ServiceTransportUtil;
-import org.wso2.esb.integration.common.utils.clients.SecureServiceClient;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
 import java.io.File;
 import java.net.URL;
-import java.rmi.RemoteException;
+import javax.activation.DataHandler;
 
 public class SecurityTransformationProxyForPolicy2BackEndTestCase extends ESBIntegrationTest {
     private final String serviceName = "StockQuoteSecurityTransformProxy";
-    private final String policyPath = TestConfigurationProvider.getSecurityPolicyLocation() + File.separator + "custom" + File.separator;
+    private final String policyPath =
+            TestConfigurationProvider.getSecurityPolicyLocation() + File.separator + "custom" + File.separator;
     private final String symbol = "Secured";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
 
-        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), sessionCookie);
+        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
+                sessionCookie);
         resourceAdmin.addCollection("/_system/config/", "securityTransform", "collection", "policy files");
-        resourceAdmin.addResource("/_system/config/securityTransform/scenario2-policy.xml", "application/xml", "dss"
-                , new DataHandler(new URL("file:///" + policyPath + "scenario2-policy.xml")));
+        resourceAdmin.addResource("/_system/config/securityTransform/scenario2-policy.xml", "application/xml", "dss",
+                new DataHandler(new URL("file:///" + policyPath + "scenario2-policy.xml")));
 
         updateESBConfiguration(SecureEndpointSetter.setEndpoint(
                 "/artifacts/ESB/proxyconfig/proxy/secureProxy/security_transformation_proxy_for_policy2_backEnd.xml"));
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), sessionCookie);
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
+                sessionCookie);
         try {
             resourceAdmin.deleteResource("/_system/config/securityTransform");
         } finally {

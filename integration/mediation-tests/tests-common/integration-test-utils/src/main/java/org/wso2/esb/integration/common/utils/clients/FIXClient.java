@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,7 +17,6 @@
  */
 
 package org.wso2.esb.integration.common.utils.clients;
-
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -36,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Date;
-
 
 public class FIXClient {
 
@@ -63,8 +61,8 @@ public class FIXClient {
     }
 
     //send the request and get the response as a string
-    public String send(String symbol, String mode, String qty, String addUrl, String trpUrl,
-                       String prxUrl) throws Exception {
+    public String send(String symbol, String mode, String qty, String addUrl, String trpUrl, String prxUrl)
+            throws Exception {
 
         setSymbol(symbol);
         setMode(mode);
@@ -79,9 +77,8 @@ public class FIXClient {
         }
 
         if (pathToRepo != null && !"null".equals(pathToRepo)) {
-            configContext =
-                    ConfigurationContextFactory.
-                            createConfigurationContextFromFileSystem(pathToRepo, null);
+            configContext = ConfigurationContextFactory.
+                    createConfigurationContextFromFileSystem(pathToRepo, null);
             serviceClient = new ServiceClient(configContext, null);
         } else {
             serviceClient = new ServiceClient();
@@ -102,8 +99,7 @@ public class FIXClient {
             options.setProperty(Constants.Configuration.TRANSPORT_URL, getTrpUrl());
         }
         if (getPrxyUrl() != null && !"null".equals(getPrxyUrl())) {
-            HttpTransportProperties.ProxyProperties proxyProperties =
-                    new HttpTransportProperties.ProxyProperties();
+            HttpTransportProperties.ProxyProperties proxyProperties = new HttpTransportProperties.ProxyProperties();
             URL url = new URL(getPrxyUrl());
             proxyProperties.setProxyName(url.getHost());
             proxyProperties.setProxyPort(url.getPort());
@@ -124,7 +120,6 @@ public class FIXClient {
             }
         } catch (Exception ignore) {
         }
-
 
         return response.toString();
     }
@@ -185,7 +180,6 @@ public class FIXClient {
 
         return body;
     }
-
 
     public String getAddUrl() {
         return addUrl;

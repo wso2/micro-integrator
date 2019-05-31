@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.mediator.test.enrich;
 
-
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -27,24 +26,20 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-
 public class EnrichJSONPayload extends ESBIntegrationTest {
 
     private Client client = Client.create();
-    private String JSON_Payload
-            = "{ \"resourceId\": \"f4d3c43d-0c10-42c5-854a-5335469cf3d0\", \"assetCode\": \"000002\" }";
-    private String Expected_Response
-            = "{\"resourceId\":\"f4d3c43d-0c10-42c5-854a-5335469cf3d0\",\"assetCode\":[{}]}";
+    private String JSON_Payload = "{ \"resourceId\": \"f4d3c43d-0c10-42c5-854a-5335469cf3d0\", \"assetCode\": \"000002\" }";
+    private String Expected_Response = "{\"resourceId\":\"f4d3c43d-0c10-42c5-854a-5335469cf3d0\",\"assetCode\":[{}]}";
 
     //Creates the API
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("artifacts/ESB/jaxrs/EnrichJSONPayload_API.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Testing json requests with enrich mediator in API")
-    public void testJSONWithEnrichMediator() throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing json requests with enrich mediator in API") public void testJSONWithEnrichMediator()
+            throws Exception {
         WebResource webResource = client.resource(getApiInvocationURL("addMusic") + "/music");
         ClientResponse getResponse = webResource.type("application/json").post(ClientResponse.class, JSON_Payload);
         String response = getResponse.getEntity(String.class);

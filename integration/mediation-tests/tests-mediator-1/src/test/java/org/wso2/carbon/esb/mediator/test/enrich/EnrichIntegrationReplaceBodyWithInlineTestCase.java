@@ -1,20 +1,20 @@
 package org.wso2.carbon.esb.mediator.test.enrich;/*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -31,15 +31,13 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationReplaceBodyWithInlineTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichReplaceBodyWithInlineTestProxy");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Replace body with inline")
-    public void testEnrichMediator() throws Exception {
+    @Test(groups = "wso2.esb", description = "Replace body with inline") public void testEnrichMediator()
+            throws Exception {
         OMElement response1, response2;
 
         response1 = axis2Client
@@ -51,7 +49,9 @@ public class EnrichIntegrationReplaceBodyWithInlineTestCase extends ESBIntegrati
         assertNotNull(response1, "Response message null");
         assertEquals(response1SymbolValue, "ABC", "Content not changed");
 
-        response2 = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichReplaceBodyWithInlineTestProxy"), null, "WSO2");
+        response2 = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichReplaceBodyWithInlineTestProxy"), null,
+                        "WSO2");
         String response2SymbolValue = response1.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertNotNull(response2, "Response message null");
@@ -75,8 +75,7 @@ public class EnrichIntegrationReplaceBodyWithInlineTestCase extends ESBIntegrati
         return method;
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 }

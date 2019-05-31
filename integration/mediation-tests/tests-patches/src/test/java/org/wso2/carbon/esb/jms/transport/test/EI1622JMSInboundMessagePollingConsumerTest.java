@@ -1,33 +1,30 @@
 /*
-*  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied. See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2018, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
@@ -43,8 +40,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
     private LogViewerClient logViewerClient = null;
     private static final String ENDPOINT_NAME = "jms_inbound";
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator
@@ -53,9 +49,9 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Check whether polling is suspended.")
-    public void testPollingWithSuspensionLimit() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Check whether polling is suspended.") public void testPollingWithSuspensionLimit()
+            throws Exception {
 
         pushMessageToQue(addEndpoint());
 
@@ -65,9 +61,9 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         deleteInboundEndpointFromName(ENDPOINT_NAME);
     }
 
-    @Test(groups = { "wso2.esb" },
-          description = "Check whether polling is permanently suspended when limit is zero.")
-    public void testPollingWithSuspensionLimitAsZero() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Check whether polling is permanently suspended when limit is zero.") public void testPollingWithSuspensionLimitAsZero()
+            throws Exception {
 
         pushMessageToQue(addEndpointWithSuspensionLimitZero());
 
@@ -104,8 +100,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -23,7 +23,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 import javax.xml.namespace.QName;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
@@ -31,33 +33,29 @@ import static org.testng.Assert.assertNotNull;
  * This test case verifies that, mediation with invoking NashornJs script as local entry happens correctly.
  */
 public class LocalEntryFunctionTestForNashornTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests changing payload with script referred by local entry")
-    public void testInlineFunction() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests changing payload with script referred by local entry") public void testInlineFunction()
+            throws Exception {
         OMElement response;
-        response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp
-                ("scriptMediatorNashornJsLocalEntryTestProxy"), null, "nashornLocalEntry");
+        response = axis2Client
+                .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorNashornJsLocalEntryTestProxy"), null,
+                        "nashornLocalEntry");
         assertNotNull(response, "Response message null");
-        assertEquals(response.getFirstElement().getLocalName().toString(),
-                "Code", "Local Name does not match");
-        assertEquals(response.getQName().getLocalPart().toString(), "CheckPriceResponse", "Local Part does not "
-                + "match");
-        assertEquals(response.getFirstChildWithName
-                        (new QName("http://services.samples/xsd", "Code")).getText(),
+        assertEquals(response.getFirstElement().getLocalName().toString(), "Code", "Local Name does not match");
+        assertEquals(response.getQName().getLocalPart().toString(), "CheckPriceResponse",
+                "Local Part does not " + "match");
+        assertEquals(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Code")).getText(),
                 "nashornLocalEntry", "Text does not match");
-        assertEquals(response.getFirstChildWithName
-                        (new QName("http://services.samples/xsd", "Price")).getLocalName(),
+        assertEquals(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")).getLocalName(),
                 "Price", "Local Name does not match");
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")).getText(),
                 "Text does not exist");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

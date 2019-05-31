@@ -19,12 +19,18 @@ package org.wso2.carbon.esb.samples.test.messaging.utils;
  *  under the License.
  */
 
-
-import javax.jms.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.util.Properties;
+import javax.jms.BytesMessage;
+import javax.jms.Queue;
+import javax.jms.QueueConnection;
+import javax.jms.QueueConnectionFactory;
+import javax.jms.QueueSender;
+import javax.jms.QueueSession;
+import javax.jms.Session;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.Properties;
-import java.io.*;
 
 public class MDDProducer {
 
@@ -32,17 +38,17 @@ public class MDDProducer {
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(bos);
-        dos.writeDouble(getRandom(1,1,true));
+        dos.writeDouble(getRandom(1, 1, true));
         dos.writeUTF(symbol);
         dos.writeDouble(Double.valueOf("100.20"));
         dos.writeUTF("NYSE");
         dos.flush();
-        sendBytesMessage( destination ,bos.toByteArray());
+        sendBytesMessage(destination, bos.toByteArray());
         dos.close();
         bos.close();
     }
 
-    private void sendBytesMessage(String destName,byte[] buffer) throws Exception {
+    private void sendBytesMessage(String destName, byte[] buffer) throws Exception {
 
         InitialContext ic = getInitialContext();
         QueueConnectionFactory queueConnectionFactory = (QueueConnectionFactory) ic.lookup("ConnectionFactory");
@@ -50,13 +56,12 @@ public class MDDProducer {
         QueueSession session = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
         BytesMessage bm = session.createBytesMessage();
         bm.writeBytes(buffer);
-        QueueSender sender = session.createSender((Queue)ic.lookup(destName));
+        QueueSender sender = session.createSender((Queue) ic.lookup(destName));
         sender.send(bm);
         sender.close();
         session.close();
         connection.close();
     }
-
 
     private InitialContext getInitialContext() throws NamingException {
         Properties env = new Properties();
@@ -64,22 +69,17 @@ public class MDDProducer {
             env.put("java.naming.provider.url", "tcp://localhost:61616");
         }
         if (System.getProperty("java.naming.factory.initial") == null) {
-            env.put("java.naming.factory.initial",
-                    "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
+            env.put("java.naming.factory.initial", "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
         }
         return new InitialContext(env);
     }
 
     private static double getRandom(double base, double varience, boolean onlypositive) {
         double rand = Math.random();
-        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand))
-                * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
+        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand)) * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
     }
+
     private static byte[] intToByteArray(int value) {
-        return new byte[] {
-                (byte)(value >>> 24),
-                (byte)(value >>> 16),
-                (byte)(value >>> 8),
-                (byte)value};
+        return new byte[] { (byte) (value >>> 24), (byte) (value >>> 16), (byte) (value >>> 8), (byte) value };
     }
 }

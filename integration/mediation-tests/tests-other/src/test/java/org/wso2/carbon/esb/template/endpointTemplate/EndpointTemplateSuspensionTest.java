@@ -48,44 +48,39 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
     private ApplicationAdminClient applicationAdminClient;
     private static String cAppName = "templateEndpointInRegistryTestCapp_1.0.0";
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         //Deploy CAPP
         carbonAppUploaderClient = new CarbonAppUploaderClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        applicationAdminClient = new ApplicationAdminClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        applicationAdminClient = new ApplicationAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
-        carbonAppUploaderClient.uploadCarbonAppArtifact("templateEndpointInRegistryTestCapp_1.0.0.car",
-                new DataHandler(new URL("file:" + File.separator + File.separator + getESBResourceLocation() +
-                        File.separator + "car" + File.separator + "templateEndpointInRegistryTestCapp_1.0.0.car")));
+        carbonAppUploaderClient.uploadCarbonAppArtifact("templateEndpointInRegistryTestCapp_1.0.0.car", new DataHandler(
+                new URL("file:" + File.separator + File.separator + getESBResourceLocation() + File.separator + "car"
+                        + File.separator + "templateEndpointInRegistryTestCapp_1.0.0.car")));
 
         boolean cAppDeployed = Utils.isCarFileDeployed(cAppName, applicationAdminClient, 120000);
         Assert.assertTrue(cAppDeployed, "CApp templateEndpointInRegistryTestCapp_1.0.0.car deployment failed");
     }
 
-
     @Test(groups = "wso2.esb", description = "Test invoking EP which cause timeout and verify whether Endpoint "
-            + "template has been marked for suspension")
-    public void testTemplateEndpointSuspension () throws IOException, LogViewerLogViewerException,
-            InterruptedException {
+            + "template has been marked for suspension") public void testTemplateEndpointSuspension()
+            throws IOException, LogViewerLogViewerException, InterruptedException {
 
         String contentType = "text/xml";//Content-Type
         Map<String, String> headers = new HashMap<String, String>();//For HTTP Headers
         headers.put("Content-Type", contentType);
         headers.put("SOAPAction", "urn:mediate");
-        String payload =    "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                            "   <soapenv:Header/>\n" +
-                            "   <soapenv:Body>\n" +
-                            "       <test>test payload</test>\n" +
-                            "   </soapenv:Body>\n" +
-                            "</soapenv:Envelope>";
+        String payload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "       <test>test payload</test>\n"
+                + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
 
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
 
         log.info("Invoke testEndpointTemplateProxy attempt 1");
         SimpleHttpClient httpClient1 = new SimpleHttpClient();
-        HttpResponse response1 = httpClient1.doPost(getProxyServiceURLHttp("testEndpointTemplateProxy"), headers, payload, contentType);
+        HttpResponse response1 = httpClient1
+                .doPost(getProxyServiceURLHttp("testEndpointTemplateProxy"), headers, payload, contentType);
 
         //Wait for timeout markForSuspension retry delay get pass
         try {
@@ -96,7 +91,8 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
 
         log.info("Invoke testEndpointTemplateProxy attempt 2");
         SimpleHttpClient httpClient2 = new SimpleHttpClient();
-        HttpResponse response2 = httpClient2.doPost(getProxyServiceURLHttp("testEndpointTemplateProxy"), headers, payload, contentType);
+        HttpResponse response2 = httpClient2
+                .doPost(getProxyServiceURLHttp("testEndpointTemplateProxy"), headers, payload, contentType);
 
         //Wait for timeout markForSuspension retry delay get pass
         try {
@@ -107,7 +103,8 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
 
         log.info("Invoke testEndpointTemplateProxy attempt 3");
         SimpleHttpClient httpClient3 = new SimpleHttpClient();
-        HttpResponse response3 = httpClient3.doPost(getProxyServiceURLHttp("testEndpointTemplateProxy"), headers, payload, contentType);
+        HttpResponse response3 = httpClient3
+                .doPost(getProxyServiceURLHttp("testEndpointTemplateProxy"), headers, payload, contentType);
 
         //Check logs to verify endpoint suspension
         boolean epSuspended = Utils.checkForLog(logViewerClient,
@@ -117,8 +114,7 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
         applicationAdminClient.deleteApplication(cAppName);
         super.cleanup();
     }

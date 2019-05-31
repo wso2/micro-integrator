@@ -18,18 +18,17 @@
  */
 package samples.services;
 
-import org.apache.axiom.om.OMText;
+import org.apache.axiom.attachments.Attachments;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.attachments.Attachments;
+import org.apache.axiom.om.OMText;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.wsdl.WSDLConstants;
 
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
-import java.io.*;
 
 public class MTOMSwASampleService {
 
@@ -38,9 +37,9 @@ public class MTOMSwASampleService {
     public OMElement uploadFileUsingMTOM(OMElement request) throws Exception {
 
         OMText binaryNode = (OMText) request.
-            getFirstChildWithName(new QName("http://services.samples", "request")).
-            getFirstChildWithName(new QName("http://services.samples", "image")).
-            getFirstOMChild();
+                getFirstChildWithName(new QName("http://services.samples", "request")).
+                getFirstChildWithName(new QName("http://services.samples", "image")).
+                getFirstOMChild();
         DataHandler dataHandler = (DataHandler) binaryNode.getDataHandler();
         InputStream is = dataHandler.getInputStream();
 
@@ -60,9 +59,9 @@ public class MTOMSwASampleService {
 
         OMFactory factory = request.getOMFactory();
         OMNamespace ns = factory.createOMNamespace("http://services.samples", "m0");
-        OMElement payload  = factory.createOMElement("uploadFileUsingMTOMResponse", ns);
+        OMElement payload = factory.createOMElement("uploadFileUsingMTOMResponse", ns);
         OMElement response = factory.createOMElement("response", ns);
-        OMElement image    = factory.createOMElement("image", ns);
+        OMElement image = factory.createOMElement("image", ns);
 
         FileDataSource fileDataSource = new FileDataSource(tempFile);
         dataHandler = new DataHandler(fileDataSource);
@@ -71,11 +70,10 @@ public class MTOMSwASampleService {
         response.addChild(image);
         payload.addChild(response);
 
-        MessageContext outMsgCtx = MessageContext.getCurrentMessageContext()
-            .getOperationContext().getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
-        outMsgCtx.setProperty(
-            org.apache.axis2.Constants.Configuration.ENABLE_MTOM,
-            org.apache.axis2.Constants.VALUE_TRUE);
+        MessageContext outMsgCtx = MessageContext.getCurrentMessageContext().getOperationContext()
+                .getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
+        outMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.ENABLE_MTOM,
+                org.apache.axis2.Constants.VALUE_TRUE);
 
         return payload;
     }
@@ -83,31 +81,30 @@ public class MTOMSwASampleService {
     public OMElement uploadFileUsingSwA(OMElement request) throws Exception {
 
         String imageContentId = request.
-            getFirstChildWithName(new QName("http://services.samples", "request")).
-            getFirstChildWithName(new QName("http://services.samples", "imageId")).
-            getText();
+                getFirstChildWithName(new QName("http://services.samples", "request")).
+                getFirstChildWithName(new QName("http://services.samples", "imageId")).
+                getText();
 
-        MessageContext msgCtx   = MessageContext.getCurrentMessageContext();
-        Attachments attachment  = msgCtx.getAttachmentMap();
+        MessageContext msgCtx = MessageContext.getCurrentMessageContext();
+        Attachments attachment = msgCtx.getAttachmentMap();
         DataHandler dataHandler = attachment.getDataHandler(imageContentId);
         File tempFile = File.createTempFile("swa-", ".gif");
         FileOutputStream fos = new FileOutputStream(tempFile);
         dataHandler.writeTo(fos);
-		fos.flush();
-		fos.close();
+        fos.flush();
+        fos.close();
         System.out.println("Wrote SwA attachment to temp file : " + tempFile.getAbsolutePath());
 
         MessageContext outMsgCtx = msgCtx.getOperationContext().
-            getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
-        outMsgCtx.setProperty(
-            org.apache.axis2.Constants.Configuration.ENABLE_SWA,
-            org.apache.axis2.Constants.VALUE_TRUE);
+                getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
+        outMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.ENABLE_SWA,
+                org.apache.axis2.Constants.VALUE_TRUE);
 
         OMFactory factory = request.getOMFactory();
         OMNamespace ns = factory.createOMNamespace("http://services.samples", "m0");
-        OMElement payload  = factory.createOMElement("uploadFileUsingSwAResponse", ns);
+        OMElement payload = factory.createOMElement("uploadFileUsingSwAResponse", ns);
         OMElement response = factory.createOMElement("response", ns);
-        OMElement imageId  = factory.createOMElement("imageId", ns);
+        OMElement imageId = factory.createOMElement("imageId", ns);
 
         FileDataSource fileDataSource = new FileDataSource(tempFile);
         dataHandler = new DataHandler(fileDataSource);

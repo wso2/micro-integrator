@@ -5,23 +5,23 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.clients.JSONClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.JSONClient;
 
 import static org.testng.Assert.assertEquals;
 
 public class HttpRelativeLocationHeaderTestCase extends ESBIntegrationTest {
     private JSONClient jsonclient;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
         verifyProxyServiceExistence("HTTPRelativeLocationService0Proxy");
     }
 
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Http Location header")
-    public void testRelativeLocationHeader() throws Exception {
+    @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Http Location header") public void testRelativeLocationHeader()
+            throws Exception {
         String addUrl = getProxyServiceURLHttp("HTTPRelativeLocationService0Proxy");
         String query = "{\"employees\": [{\"id\": 0,\"name\": \"Carlene Pope\"},{\"id\": 1,\"name\": \"Jewell Richard\"}]}";
         String expectedResult = "{\"employees\":[{\"id\":0,\"name\":\"Carlene Pope\"},{\"id\":1,\"name\":\"Jewell Richard\"}]}";
@@ -32,8 +32,7 @@ public class HttpRelativeLocationHeaderTestCase extends ESBIntegrationTest {
         assertEquals(actualJsonObject, expectedJsonObject, "Could not process relative Location header.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -41,31 +41,34 @@ import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+
 import static org.testng.Assert.assertTrue;
 
 /**
  * Test case for Jira ESBJAVA-4891.
  */
-public class ESBJAVA4891ConsumeAndDiscardTest  extends ESBIntegrationTest {
+public class ESBJAVA4891ConsumeAndDiscardTest extends ESBIntegrationTest {
 
     public static final String EXPECTED_ERROR = "<Exception>DATA IS ENCODED IMPROPERLY</Exception>";
     private String input;
 
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
-        input = FileUtils.readFileToString(new File(getESBResourceLocation() + "/passthru/transport/inputESBJAVA4891.xml"), "ISO-8859-1");
+        input = FileUtils
+                .readFileToString(new File(getESBResourceLocation() + "/passthru/transport/inputESBJAVA4891.xml"),
+                        "ISO-8859-1");
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/ESBJAVA-4891.xml");
     }
 
     /**
-     *  There was an infinite read waiting in the pipe, when OMException happened in Payload mediator, because we do consume and discard, without checking the remaining elements in the buffer.
-     *  So In this test case, we create an exception in payload mediator and check the response.
-     *  The fix was done to check the buffer and do the consume and discard.
+     * There was an infinite read waiting in the pipe, when OMException happened in Payload mediator, because we do consume and discard, without checking the remaining elements in the buffer.
+     * So In this test case, we create an exception in payload mediator and check the response.
+     * The fix was done to check the buffer and do the consume and discard.
+     *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Testing with a Payload Mediator")
-    public void testPartialReadErrorWithPayloadMediator() throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with a Payload Mediator") public void testPartialReadErrorWithPayloadMediator()
+            throws Exception {
         URL endpoint = new URL(getProxyServiceURLHttp("TestProxy"));
         Map<String, String> header = new HashMap<>();
         header.put("Content-Type", "application/xml");
@@ -73,8 +76,7 @@ public class ESBJAVA4891ConsumeAndDiscardTest  extends ESBIntegrationTest {
         assertTrue(EXPECTED_ERROR.equals(httpResponse.getData()), "Expected error message not received");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 
@@ -86,8 +88,8 @@ public class ESBJAVA4891ConsumeAndDiscardTest  extends ESBIntegrationTest {
             try {
                 urlConnection.setRequestMethod("POST");
             } catch (ProtocolException e) {
-                throw new AutomationFrameworkException("Shouldn't happen: HttpURLConnection doesn't support POST?? " +
-                                                       e.getMessage(), e);
+                throw new AutomationFrameworkException(
+                        "Shouldn't happen: HttpURLConnection doesn't support POST?? " + e.getMessage(), e);
             }
             urlConnection.setDoOutput(true);
             urlConnection.setDoInput(true);
@@ -108,7 +110,8 @@ public class ESBJAVA4891ConsumeAndDiscardTest  extends ESBIntegrationTest {
             StringBuilder sb = new StringBuilder();
             BufferedReader rd;
             try {
-                rd = new BufferedReader(new InputStreamReader(urlConnection.getInputStream(), Charset.defaultCharset()));
+                rd = new BufferedReader(
+                        new InputStreamReader(urlConnection.getInputStream(), Charset.defaultCharset()));
                 String line;
                 while ((line = rd.readLine()) != null) {
                     sb.append(line);
@@ -124,7 +127,7 @@ public class ESBJAVA4891ConsumeAndDiscardTest  extends ESBIntegrationTest {
                     responseHeaders.put(key, urlConnection.getHeaderField(key));
                 }
             }
-            return new HttpResponse(sb.toString(), urlConnection.getResponseCode(),  responseHeaders);
+            return new HttpResponse(sb.toString(), urlConnection.getResponseCode(), responseHeaders);
         } catch (IOException e) {
             StringBuilder sb = new StringBuilder();
             BufferedReader rd = null;

@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -23,14 +23,13 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
 import java.net.URL;
 import java.util.Iterator;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
 
 /**
  * Tests iterate mediator that calls endpoints in Governors
@@ -42,27 +41,22 @@ public class IterateWithRegistriesAsTargetEndpointsTestCase extends ESBIntegrati
     private IterateClient client;
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         client = new IterateClient();
         endPointAdminClient = new EndPointAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for sequence from governors registry ")
-    public void testGovernanceEndPoint() throws Exception {
-        URL url =
-                new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateEndpoint.xml");
+    @Test(groups = "wso2.esb", description = "Tests for sequence from governors registry ") public void testGovernanceEndPoint()
+            throws Exception {
+        URL url = new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateEndpoint.xml");
         endPointAdminClient.addDynamicEndPoint("gov:/myEndpoint/iterateEndpoint", setEndpoints(new DataHandler(url)));
-        String response = client.getMultipleResponse(
-                getProxyServiceURLHttp("iterateWithGovernanceEndPointTestProxy"), "WSO2",
-                2);
+        String response = client
+                .getMultipleResponse(getProxyServiceURLHttp("iterateWithGovernanceEndPointTestProxy"), "WSO2", 2);
         Assert.assertNotNull(response);
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                                                       "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
@@ -73,19 +67,16 @@ public class IterateWithRegistriesAsTargetEndpointsTestCase extends ESBIntegrati
         endPointAdminClient.deleteDynamicEndpoint("gov:/myEndpoint/iterateEndpoint");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for sequence from configuration registry")
-    public void testConfigurationEndPoint() throws Exception {
-        URL url =
-                new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateEndpoint.xml");
+    @Test(groups = "wso2.esb", description = "Tests for sequence from configuration registry") public void testConfigurationEndPoint()
+            throws Exception {
+        URL url = new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateEndpoint.xml");
         endPointAdminClient.addDynamicEndPoint("conf:/myEndpoint/iterateEndpoint", setEndpoints(new DataHandler(url)));
-        String response = client.getMultipleResponse(
-                getProxyServiceURLHttp("iterateWithConfigurationEndpoint"), "WSO2", 2);
+        String response = client
+                .getMultipleResponse(getProxyServiceURLHttp("iterateWithConfigurationEndpoint"), "WSO2", 2);
         Assert.assertNotNull(response);
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                                                       "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
@@ -96,8 +87,7 @@ public class IterateWithRegistriesAsTargetEndpointsTestCase extends ESBIntegrati
         endPointAdminClient.deleteDynamicEndpoint("conf:/myEndpoint/iterateEndpoint");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         client = null;
         endPointAdminClient = null;
         super.cleanup();

@@ -32,23 +32,21 @@ import static org.testng.Assert.assertTrue;
  */
 public class DynamicMessageRoutingTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("storeDynamicRoutingTestProxy");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Derive the store name from the request and route it dynamically")
-    public void testDynamicRouting() throws Exception {
+    @Test(groups = "wso2.esb", description = "Derive the store name from the request and route it dynamically") public void testDynamicRouting()
+            throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("storeDynamicRoutingTestProxy"), null,
                         "dynamicRoutingMessageStore");
-        assertTrue(response.toString().contains("dynamicRoutingMessageStore"), "Cannot derive store name from the request!");
+        assertTrue(response.toString().contains("dynamicRoutingMessageStore"),
+                "Cannot derive store name from the request!");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         cleanup();
     }
 }

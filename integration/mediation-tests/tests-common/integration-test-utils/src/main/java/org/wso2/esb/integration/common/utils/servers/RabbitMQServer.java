@@ -34,7 +34,8 @@ import java.io.Writer;
  * RabbitMQ server management class
  */
 public class RabbitMQServer {
-    private static final Log log = LogFactory.getLog(org.wso2.esb.integration.common.utils.servers.RabbitMQServer.class);
+    private static final Log log = LogFactory
+            .getLog(org.wso2.esb.integration.common.utils.servers.RabbitMQServer.class);
     private boolean started;
     private File rabbitMQHome;
 

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.contenttype.json;
 
@@ -35,44 +35,34 @@ import java.util.Map;
  */
 public class XMLToJsonTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         verifyProxyServiceExistence("xmlToJsonTestProxy");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test XML to JSON conversion")
-    public void testXmlToJson() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON conversion") public void testXmlToJson()
+            throws Exception {
 
-        String xmlPayload = "<location>\n" +
-                "               <name>Bermuda Triangle</name>\n" +
-                "               <n>25.0000</n>\n" +
-                "               <w>71.0000</w>\n" +
-                "            </location>";
+        String xmlPayload =
+                "<location>\n" + "               <name>Bermuda Triangle</name>\n" + "               <n>25.0000</n>\n"
+                        + "               <w>71.0000</w>\n" + "            </location>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
                 doPost(new URL(getProxyServiceURLHttp("xmlToJsonTestProxy")), xmlPayload, requestHeader);
 
-        Assert.assertEquals(response.getData(), "{\"location\":{\"name\":\"Bermuda Triangle\",\"n\":25.0000,\"w\":71.0000}}",
+        Assert.assertEquals(response.getData(),
+                "{\"location\":{\"name\":\"Bermuda Triangle\",\"n\":25.0000,\"w\":71.0000}}",
                 "Invalid XML to JSON conversion. " + response.getData());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test XML to JSON Array conversion")
-    public void testXmlToJsonArray() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON Array conversion") public void testXmlToJsonArray()
+            throws Exception {
 
-        String xmlPayload = "<coordinates>\n" +
-                "    <location>\n" +
-                "        <name>Bermuda Triangle</name>\n" +
-                "        <n>25.0000</n>\n" +
-                "        <w>71.0000</w>\n" +
-                "    </location>\n" +
-                "    <location>\n" +
-                "        <name>Eiffel Tower</name>\n" +
-                "        <n>48.8582</n>\n" +
-                "        <e>2.2945</e>\n" +
-                "    </location>\n" +
-                " </coordinates>";
+        String xmlPayload = "<coordinates>\n" + "    <location>\n" + "        <name>Bermuda Triangle</name>\n"
+                + "        <n>25.0000</n>\n" + "        <w>71.0000</w>\n" + "    </location>\n" + "    <location>\n"
+                + "        <name>Eiffel Tower</name>\n" + "        <n>48.8582</n>\n" + "        <e>2.2945</e>\n"
+                + "    </location>\n" + " </coordinates>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
@@ -82,25 +72,25 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid XML to JSON array conversion . " + response.getData());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test XML with attributes to JSON conversion")
-    public void testXmlAttributesToJson() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test XML with attributes to JSON conversion") public void testXmlAttributesToJson()
+            throws Exception {
 
-        String xmlPayload = "<location id=\"1\">\n" +
-                "               <name>Bermuda Triangle</name>\n" +
-                "               <n>25.0000</n>\n" +
-                "               <w>71.0000</w>\n" +
-                "            </location>";
+        String xmlPayload = "<location id=\"1\">\n" + "               <name>Bermuda Triangle</name>\n"
+                + "               <n>25.0000</n>\n" + "               <w>71.0000</w>\n" + "            </location>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
                 doPost(new URL(getProxyServiceURLHttp("xmlToJsonTestProxy")), xmlPayload, requestHeader);
 
-        Assert.assertEquals(response.getData(), "{\"location\":{\"@id\":\"1\",\"name\":\"Bermuda Triangle\",\"n\":25.0000,\"w\":71.0000}}",
+        Assert.assertEquals(response.getData(),
+                "{\"location\":{\"@id\":\"1\",\"name\":\"Bermuda Triangle\",\"n\":25.0000,\"w\":71.0000}}",
                 "Invalid XML to JSON attribute conversion . " + response.getData());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test XML text nodes with attributes to JSON conversion")
-    public void testXmlTextNodesWithAttributesToJson() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test XML text nodes with attributes to JSON conversion") public void testXmlTextNodesWithAttributesToJson()
+            throws Exception {
 
         String xmlPayload = "<location id=\"1\">Bermuda Triangle</location>";
         Map<String, String> requestHeader = new HashMap<>();
@@ -112,13 +102,12 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid XML to JSON attribute conversion . " + response.getData());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test empty XML node to JSON conversion")
-    public void testEmptyXmlNodeToJson() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test empty XML node to JSON conversion") public void testEmptyXmlNodeToJson()
+            throws Exception {
 
-        String xmlPayload = "<location>\n" +
-                "<name>Bermuda Triangle</name>\n" +
-                "<description></description>\n" +
-                "</location>";
+        String xmlPayload =
+                "<location>\n" + "<name>Bermuda Triangle</name>\n" + "<description></description>\n" + "</location>";
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
         HttpResponse response = HttpRequestUtil.
@@ -128,8 +117,7 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid empty XML to JSON conversion . " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

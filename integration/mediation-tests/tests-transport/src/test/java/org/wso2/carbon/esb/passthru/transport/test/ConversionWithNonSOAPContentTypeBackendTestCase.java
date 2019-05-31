@@ -40,7 +40,7 @@ import java.util.concurrent.TimeUnit;
  * SOAP backend which sends a content type that is not in SOAP1.1/SOAP1.2 content type format. Even through client has
  * sent a SOAP1.1 request, it is not expected to convert the response back to SOAP1.1 format when the backend responses
  * as non REST.
- *
+ * <p>
  * Related issue: https://github.com/wso2/product-ei/issues/1798
  */
 public class ConversionWithNonSOAPContentTypeBackendTestCase extends ESBIntegrationTest {
@@ -59,8 +59,8 @@ public class ConversionWithNonSOAPContentTypeBackendTestCase extends ESBIntegrat
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for response Content-Type when the client invokes as a SOAP11 "
-            + "request and the SOAP backend responses with content type that is not in SOAP11/SOAP12 format")
-    public void testResponseContentType() throws Exception {
+            + "request and the SOAP backend responses with content type that is not in SOAP11/SOAP12 format") public void testResponseContentType()
+            throws Exception {
 
         String payload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                 + "   <soapenv:Header/>\n   <soapenv:Body/>\n</soapenv:Envelope>";
@@ -88,11 +88,9 @@ public class ConversionWithNonSOAPContentTypeBackendTestCase extends ESBIntegrat
         try {
             cleanup();
         } finally {
-            Awaitility.await()
-                              .pollInterval(500, TimeUnit.MILLISECONDS)
-                              .atMost(120000, TimeUnit.MILLISECONDS)
-                              .until(AvailabilityPollingUtils.isProxyNotAvailable("SOAP11ProxyService",
-                                      contextUrls.getBackEndUrl(), sessionCookie));
+            Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(120000, TimeUnit.MILLISECONDS)
+                    .until(AvailabilityPollingUtils
+                            .isProxyNotAvailable("SOAP11ProxyService", contextUrls.getBackEndUrl(), sessionCookie));
             serverManager.restoreToLastConfiguration();
             serverManager = null;
         }

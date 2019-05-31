@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.esb.integration.common.utils;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -79,16 +79,15 @@ public class Utils {
         return method;
     }
 
-	public static OMElement getIncorrectRequest(String stringValue) {
-		OMFactory fac = OMAbstractFactory.getOMFactory();
-		OMNamespace omNs = fac.createOMNamespace(
-				"http://echo.services.core.carbon.wso2.org", "echo");
-		OMElement method = fac.createOMElement("echoInt", omNs);
-		OMElement value1 = fac.createOMElement("in", omNs);
-		value1.setText(stringValue);
-		method.addChild(value1);
-		return method;
-	}
+    public static OMElement getIncorrectRequest(String stringValue) {
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://echo.services.core.carbon.wso2.org", "echo");
+        OMElement method = fac.createOMElement("echoInt", omNs);
+        OMElement value1 = fac.createOMElement("in", omNs);
+        value1.setText(stringValue);
+        method.addChild(value1);
+        return method;
+    }
 
     public static OMElement getCustomPayload(String symbol) {
         OMFactory fac = OMAbstractFactory.getOMFactory();
@@ -200,8 +199,8 @@ public class Utils {
      * @throws RemoteException
      * @throws LogViewerLogViewerException
      */
-    private static boolean assertIfLogExistsWithGivenPriority(LogViewerClient logViewerClient, String priority, String expected)
-            throws RemoteException, LogViewerLogViewerException {
+    private static boolean assertIfLogExistsWithGivenPriority(LogViewerClient logViewerClient, String priority,
+            String expected) throws RemoteException, LogViewerLogViewerException {
 
         LogEvent[] systemLogs;
         systemLogs = logViewerClient.getAllRemoteSystemLogs();
@@ -231,8 +230,8 @@ public class Utils {
      * @throws RemoteException             due to a logviewer error
      * @throws LogViewerLogViewerException due to a logviewer error
      */
-    public static boolean checkForLog(LogViewerClient logViewerClient, String expected, int timeout) throws
-            InterruptedException, RemoteException, LogViewerLogViewerException {
+    public static boolean checkForLog(LogViewerClient logViewerClient, String expected, int timeout)
+            throws InterruptedException, RemoteException, LogViewerLogViewerException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
@@ -256,8 +255,8 @@ public class Utils {
      * @throws LogViewerLogViewerException
      * @throws RemoteException
      */
-    public static boolean checkForLogsWithPriority(LogViewerClient logViewerClient, String priority,  String expected, int timeout)
-            throws InterruptedException, LogViewerLogViewerException, RemoteException {
+    public static boolean checkForLogsWithPriority(LogViewerClient logViewerClient, String priority, String expected,
+            int timeout) throws InterruptedException, LogViewerLogViewerException, RemoteException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
@@ -271,15 +270,17 @@ public class Utils {
 
     /**
      * Wait for expected message count found in the message store until a defined timeout
+     *
      * @param messageStoreName Message store name
      * @param expectedCount    Expected message count
      * @param timeout          Timeout to wait in Milliseconds
      * @return true if the expected message count found, false otherwise
      */
-    public static boolean waitForMessageCount(MessageStoreAdminClient messageStoreAdminClient, String messageStoreName, int expectedCount, long timeout) throws InterruptedException, RemoteException {
+    public static boolean waitForMessageCount(MessageStoreAdminClient messageStoreAdminClient, String messageStoreName,
+            int expectedCount, long timeout) throws InterruptedException, RemoteException {
         long elapsedTime = 0;
         boolean messageCountFound = false;
-        while(elapsedTime < timeout && !messageCountFound) {
+        while (elapsedTime < timeout && !messageCountFound) {
             Thread.sleep(500);
             messageCountFound = messageStoreAdminClient.getMessageCount(messageStoreName) == expectedCount;
             elapsedTime += 500;
@@ -290,9 +291,9 @@ public class Utils {
     /**
      * Util function to check whether specified car file is deployed
      *
-     * @param carFileName - Name of the car file to deploy
+     * @param carFileName            - Name of the car file to deploy
      * @param applicationAdminClient - Application admin client
-     * @param timeout - timeout for car deployment
+     * @param timeout                - timeout for car deployment
      * @return true if the car file deployed successfully else, false
      */
     public static boolean isCarFileDeployed(String carFileName, ApplicationAdminClient applicationAdminClient,

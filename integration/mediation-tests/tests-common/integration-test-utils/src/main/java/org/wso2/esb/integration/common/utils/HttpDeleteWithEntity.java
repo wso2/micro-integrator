@@ -26,7 +26,7 @@ import java.net.URI;
  * Since org.apache.http.client.methods.HttpDelete does not support entity, we have to extend HttpPost capabilities
  * to act as Http DELETE
  */
-public class HttpDeleteWithEntity extends HttpPost{
+public class HttpDeleteWithEntity extends HttpPost {
 
     public static final String METHOD_NAME = "DELETE";
 

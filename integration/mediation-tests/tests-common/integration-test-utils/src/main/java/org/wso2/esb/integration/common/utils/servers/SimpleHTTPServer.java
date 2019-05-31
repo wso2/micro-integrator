@@ -49,8 +49,8 @@ public class SimpleHTTPServer {
      * Creates a HttpContext. A HttpContext represents a mapping from a URI path to a exchange handler on wrapped
      * {@link HttpServer}. This will create handler that respond with provided HTTP headers and HTTP payload
      *
-     * @param context context path
-     * @param httpHeaders HTTP response headers
+     * @param context         context path
+     * @param httpHeaders     HTTP response headers
      * @param responsePayload HTTP response payload
      * @return creted {@link HttpContext}
      */
@@ -91,6 +91,7 @@ public class SimpleHTTPServer {
 
     /**
      * Unwrap underlying HttpServer instance
+     *
      * @return HttpServer instance
      */
     public HttpServer unwrap() {
@@ -110,8 +111,7 @@ public class SimpleHTTPServer {
             this.responsePayload = responsePayload;
         }
 
-        @Override
-        public void handle(HttpExchange httpExchange) throws IOException {
+        @Override public void handle(HttpExchange httpExchange) throws IOException {
 
             //Add headers to response message
             if (responseHeaders != null) {

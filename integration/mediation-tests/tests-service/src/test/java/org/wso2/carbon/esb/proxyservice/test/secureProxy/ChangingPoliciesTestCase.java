@@ -27,34 +27,31 @@ import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConf
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SecureServiceClient;
 
+import java.rmi.RemoteException;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathExpressionException;
-import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class ChangingPoliciesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/secureProxy/stockquote_proxy_unsecured.xml");
 
-
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy" +
-                                             "- Change the policy and checking whether messages are processed accordingly" +
-                                             "- used scenario1-policy(UsernameToken) and scenario5-policy(Sign and encrypt - X509 Authentication)")
-    public void testPolicyChanges() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy"
+            + "- Change the policy and checking whether messages are processed accordingly"
+            + "- used scenario1-policy(UsernameToken) and scenario5-policy(Sign and encrypt - X509 Authentication)") public void testPolicyChanges()
+            throws Exception {
 
         OMElement response;
         String lastPrice;
@@ -63,7 +60,8 @@ public class ChangingPoliciesTestCase extends ESBIntegrationTest {
         applySecurity(1); //only https available
 
         secureAxisServiceClient = new SecureServiceClient();
-        response = secureAxisServiceClient.sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy"), 1, "WSO2");
+        response = secureAxisServiceClient
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy"), 1, "WSO2");
 
         lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
                 .getText();
@@ -75,7 +73,8 @@ public class ChangingPoliciesTestCase extends ESBIntegrationTest {
         disableSecurity();
 
         applySecurity(5);  //uses http
-        response = secureAxisServiceClient.sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy"), 5, "IBM");
+        response = secureAxisServiceClient
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy"), 5, "IBM");
 
         lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
                 .getText();
@@ -87,21 +86,17 @@ public class ChangingPoliciesTestCase extends ESBIntegrationTest {
         disableSecurity();
     }
 
-
     private void applySecurity(int scenarioNumber)
-            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException,
-                   InterruptedException {
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException, InterruptedException {
         //todo - getting user group from config
-        applySecurity("StockQuoteProxy", scenarioNumber, new String[]{"admin"});
+        applySecurity("StockQuoteProxy", scenarioNumber, new String[] { "admin" });
     }
 
     private void disableSecurity()
-            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException,
-                   XPathExpressionException {
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException, XPathExpressionException {
         SecurityAdminServiceClient securityAdminServiceClient = new SecurityAdminServiceClient(
                 context.getContextUrls().getBackEndUrl(), sessionCookie);
         securityAdminServiceClient.disableSecurity("StockQuoteProxy");
     }
-
 
 }

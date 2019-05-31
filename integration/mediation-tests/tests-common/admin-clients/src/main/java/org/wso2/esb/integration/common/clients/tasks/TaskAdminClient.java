@@ -26,16 +26,16 @@ import org.wso2.carbon.task.stub.TaskAdminStub;
 import org.wso2.carbon.task.stub.TaskManagementException;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 public class TaskAdminClient {
     private static final Log log = LogFactory.getLog(TaskAdminClient.class);
@@ -55,8 +55,7 @@ public class TaskAdminClient {
         AuthenticateStub.authenticateStub(userName, password, taskAdminStub);
     }
 
-    public void addTask(DataHandler dh)
-            throws TaskManagementException, IOException, XMLStreamException {
+    public void addTask(DataHandler dh) throws TaskManagementException, IOException, XMLStreamException {
 
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
@@ -66,13 +65,11 @@ public class TaskAdminClient {
         taskAdminStub.addTaskDescription(scheduleTaskElem);
     }
 
-    public void addTask(OMElement scheduleTaskElem)
-            throws TaskManagementException, RemoteException {
+    public void addTask(OMElement scheduleTaskElem) throws TaskManagementException, RemoteException {
         taskAdminStub.addTaskDescription(scheduleTaskElem);
     }
 
-    public void deleteTask(String name, String group)
-            throws TaskManagementException, RemoteException {
+    public void deleteTask(String name, String group) throws TaskManagementException, RemoteException {
         taskAdminStub.deleteTaskDescription(name, group);
 
     }
@@ -81,8 +78,7 @@ public class TaskAdminClient {
         taskAdminStub.editTaskDescription(omElement);
     }
 
-    public OMElement getScheduleTask(String name, String group)
-            throws TaskManagementException, RemoteException {
+    public OMElement getScheduleTask(String name, String group) throws TaskManagementException, RemoteException {
         return (OMElement) taskAdminStub.getTaskDescription(name, group);
 
     }

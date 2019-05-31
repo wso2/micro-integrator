@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License, 
- * Version 2.0 (the "License"); you may not use this file except 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -24,9 +24,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 
@@ -36,30 +36,32 @@ import java.io.File;
 public class ESBJAVA4883SynapseHandlerBlockingCallTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
-    private  LogViewerClient logViewerClient;
+    private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(getESBResourceLocation() + File.separator + "passthru" +
-                File.separator + "transport" + File.separator + "ESBJAVA4883" + File.separator + "synapse-handlers.xml"));
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        serverConfigurationManager.applyConfiguration(new File(
+                getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
+                        + "ESBJAVA4883" + File.separator + "synapse-handlers.xml"));
         super.init();
         verifyProxyServiceExistence("SynapseHandlerTestProxy");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
     }
 
-    @Test(groups = "wso2.esb", description = "Invoking Synapse handlers in blocking calls test")
-    public void testSynapseHandlerBlockingCall() throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoking Synapse handlers in blocking calls test") public void testSynapseHandlerBlockingCall()
+            throws Exception {
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SynapseHandlerTestProxy"), null, "WSO2");
         LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
-        Assert.assertTrue(stringExistsInLog("Request Out Flow", logs), "Synapse Handler not executed in the request out path");
-        Assert.assertTrue(stringExistsInLog("Response In Flow", logs), "Synapse Handler not executed in the response in path");
+        Assert.assertTrue(stringExistsInLog("Request Out Flow", logs),
+                "Synapse Handler not executed in the request out path");
+        Assert.assertTrue(stringExistsInLog("Response In Flow", logs),
+                "Synapse Handler not executed in the response in path");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
         super.cleanup();
     }
 

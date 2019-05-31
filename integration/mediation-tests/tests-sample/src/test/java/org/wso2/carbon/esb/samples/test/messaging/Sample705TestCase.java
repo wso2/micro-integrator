@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.samples.test.messaging;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -31,10 +31,7 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfiguration;
-import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 public class Sample705TestCase extends ESBSampleIntegrationTest {
@@ -43,9 +40,7 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
     private SampleAxis2Server axis2Server2 = null;
     private SampleAxis2Server axis2Server3 = null;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void startJMSBrokerAndConfigureESB() throws Exception {
+    @BeforeClass(alwaysRun = true) public void startJMSBrokerAndConfigureESB() throws Exception {
         super.init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         super.init();
@@ -66,8 +61,7 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
 
         try {
             //reverting the changes done to esb sever
@@ -77,16 +71,15 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
             axis2Server2.stop();
             axis2Server3.stop();
 
-
         } finally {
             super.cleanup();
         }
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = { "wso2.esb" }, description = "Test forwarding with load balancing")
-    public void loadBalancingTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Test forwarding with load balancing") public void loadBalancingTest()
+            throws Exception {
 
         ServiceClient serviceClient = new ServiceClient();
         Options options = new Options();
@@ -94,12 +87,11 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
         options.setAction("urn:placeOrder");
         serviceClient.setOptions(options);
 
-        for (int i = 0; i < 100; i++ ) {
+        for (int i = 0; i < 100; i++) {
             serviceClient.sendRobust(createPayload());
         }
 
     }
-
 
     private OMElement createPayload() {   // creation of payload for placeOrder
 
@@ -122,6 +114,5 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
         payload.addChild(order);
         return payload;
     }
-
 
 }

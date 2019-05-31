@@ -22,9 +22,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 
 import java.io.File;
 
@@ -37,12 +37,12 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
 
     private static LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport" +
-                File.separator + "mailTransportReceiver" + File.separator + "mail_transport_invalid_address.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
+                        + File.separator + "mailTransportReceiver" + File.separator
+                        + "mail_transport_invalid_address.xml");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
         // Since ESB reads all unread emails one by one, we have to delete
@@ -50,16 +50,15 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("pop3");
     }
 
-
-    @Test(groups = {"wso2.esb"}, description = "Test email transport with invalid address parameter and pop3 protocol")
-    public void testEmailTransportInvalidAddress() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test email transport with invalid address parameter and pop3 protocol") public void testEmailTransportInvalidAddress()
+            throws Exception {
         logViewerClient.clearLogs();
         assertTrue(Utils.checkForLog(logViewerClient, "Error connecting to mail server for address", 10000),
                 "Couldn't find the error message in log");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
 
     }

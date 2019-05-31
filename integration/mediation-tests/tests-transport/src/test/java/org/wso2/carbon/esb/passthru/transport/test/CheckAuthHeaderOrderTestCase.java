@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.esb.passthru.transport.test;
 
-import java.io.File;
-
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -29,6 +27,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
+
+import java.io.File;
 
 /**
  * This test case is written to track the issue reported in
@@ -40,18 +40,18 @@ public class CheckAuthHeaderOrderTestCase extends ESBIntegrationTest {
 
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         init();
         wireServer = new WireMonitorServer(8991);
         wireServer.start();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                                          + "nhttp" + File.separator + "transport" + File.separator
-                                          + "auth-headers.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "nhttp" + File.separator
+                        + "transport" + File.separator + "auth-headers.xml");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message Via REST to check the order of the auth headers")
-    public void testAuthHeaderOrder() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message Via REST to check the order of the auth headers") public void testAuthHeaderOrder()
+            throws Exception {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
@@ -71,8 +71,7 @@ public class CheckAuthHeaderOrderTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

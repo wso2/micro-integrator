@@ -37,10 +37,10 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
 import org.wso2.esb.integration.common.utils.ServiceDeploymentUtil;
 
-import javax.xml.namespace.QName;
 import java.io.File;
 import java.util.Iterator;
 import java.util.regex.Matcher;
+import javax.xml.namespace.QName;
 
 /**
  * The ESBSampleIntegrationTest class provides a way to update synapse with provided a configuration file or a sample.
@@ -81,13 +81,13 @@ public class ESBSampleIntegrationTest extends ESBIntegrationTest {
         MessageProcessorClient messageProcessorClient = new MessageProcessorClient(backendURL, sessionCookie);
         MessageStoreAdminClient messageStoreAdminClient = new MessageStoreAdminClient(backendURL, sessionCookie);
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backendURL, sessionCookie);
-        EndpointTemplateAdminServiceClient endpointTemplateAdminServiceClient
-                = new EndpointTemplateAdminServiceClient(backendURL, sessionCookie);
-        SequenceTemplateAdminServiceClient sequenceTemplateAdminServiceClient
-                = new SequenceTemplateAdminServiceClient(backendURL, sessionCookie);
+        EndpointTemplateAdminServiceClient endpointTemplateAdminServiceClient = new EndpointTemplateAdminServiceClient(
+                backendURL, sessionCookie);
+        SequenceTemplateAdminServiceClient sequenceTemplateAdminServiceClient = new SequenceTemplateAdminServiceClient(
+                backendURL, sessionCookie);
         RestApiAdminClient apiAdminClient = new RestApiAdminClient(backendURL, sessionCookie);
-        PriorityMediationAdminClient priorityMediationAdminClient
-                = new PriorityMediationAdminClient(backendURL, sessionCookie);
+        PriorityMediationAdminClient priorityMediationAdminClient = new PriorityMediationAdminClient(backendURL,
+                sessionCookie);
         TaskAdminClient taskAdminClient = new TaskAdminClient(backendURL, sessionCookie);
         Iterator<OMElement> localEntries = synapseConfig.getChildrenWithLocalName(LOCAL_ENTRY);
         while (localEntries.hasNext()) {
@@ -185,13 +185,12 @@ public class ESBSampleIntegrationTest extends ESBIntegrationTest {
             log.info(mProcessor + " Message Processor Uploaded");
         }
 
-
         Iterator<OMElement> templates = synapseConfig.getChildrenWithLocalName(TEMPLATE);
         while (templates.hasNext()) {
             OMElement template = templates.next();
             String templateName = template.getAttributeValue(new QName(NAME));
             if (template.getFirstChildWithName(new QName(template.getNamespace().getNamespaceURI(), SEQUENCE))
-                != null) {
+                    != null) {
                 if (ArrayUtils.contains(sequenceTemplateAdminServiceClient.getSequenceTemplates(), templateName)) {
                     sequenceTemplateAdminServiceClient.deleteTemplate(templateName);
                     Assert.assertTrue(esbUtils.isSequenceTemplateUnDeployed(backendURL, sessionCookie, templateName),
@@ -234,8 +233,8 @@ public class ESBSampleIntegrationTest extends ESBIntegrationTest {
             String executorName = executor.getAttributeValue(new QName(NAME));
             if (ArrayUtils.contains(priorityMediationAdminClient.getExecutorList(), executorName)) {
                 priorityMediationAdminClient.remove(executorName);
-                Assert.assertTrue(esbUtils.isPriorityExecutorUnDeployed(backendURL, sessionCookie, executorName)
-                        , executorName + " Priority Executor undeployment failed");
+                Assert.assertTrue(esbUtils.isPriorityExecutorUnDeployed(backendURL, sessionCookie, executorName),
+                        executorName + " Priority Executor undeployment failed");
             }
             priorityMediationAdminClient.addPriorityMediator(executorName, executor);
             Assert.assertTrue(esbUtils.isPriorityExecutorDeployed(backendURL, sessionCookie, executorName),
@@ -327,8 +326,7 @@ public class ESBSampleIntegrationTest extends ESBIntegrationTest {
      * @return true if the wsdl is located
      * @throws Exception if an error occurs during checking availability
      */
-    private boolean isProxyWSDlExist(String serviceUrl, long synchronizingDelay)
-            throws Exception {
+    private boolean isProxyWSDlExist(String serviceUrl, long synchronizingDelay) throws Exception {
         return new ServiceDeploymentUtil().isServiceWSDlExist(serviceUrl, synchronizingDelay);
 
     }

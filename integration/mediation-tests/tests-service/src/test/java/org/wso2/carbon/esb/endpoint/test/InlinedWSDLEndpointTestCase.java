@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -32,40 +32,37 @@ import java.rmi.RemoteException;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 public class InlinedWSDLEndpointTestCase extends ESBIntegrationTest {
 
     private final String ENDPOINT_NAME = "wsdlEpTest";
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void testInlineWSDLEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" }) public void testInlineWSDLEndpoint() throws Exception {
         endpointAdditionScenario();
         endpointStatisticsScenario();
         endpointDeletionScenario();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }
 
-    private void cleanupEndpoints()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void cleanupEndpoints() throws RemoteException, EndpointAdminEndpointAdminException {
         EndpointTestUtils.cleanupDefaultEndpoint(ENDPOINT_NAME, endPointAdminClient);
     }
 
-    private void endpointAdditionScenario()
-            throws Exception {
+    private void endpointAdditionScenario() throws Exception {
         int beforeCount = endPointAdminClient.getEndpointCount();
 
         OMElement wsdlTestEp = new ESBTestCaseUtils().loadResource("/artifacts/ESB/endpoint/wsdlTestEp.xml");
@@ -84,13 +81,11 @@ public class InlinedWSDLEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    private void endpointStatisticsScenario()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void endpointStatisticsScenario() throws RemoteException, EndpointAdminEndpointAdminException {
         EndpointTestUtils.enableEndpointStatistics(ENDPOINT_NAME, endPointAdminClient);
     }
 
-    private void endpointDeletionScenario()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void endpointDeletionScenario() throws RemoteException, EndpointAdminEndpointAdminException {
         int beforeCount = endPointAdminClient.getEndpointCount();
         endPointAdminClient.deleteEndpoint(ENDPOINT_NAME);
         EndpointTestUtils.assertDefaultEndpointDeletion(beforeCount, endPointAdminClient);

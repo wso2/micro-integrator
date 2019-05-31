@@ -2,14 +2,14 @@ package org.wso2.carbon.esb.vfs.transport.test;
 
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -54,7 +54,6 @@ import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
-
 /**
  * Test case for https://wso2.org/jira/browse/ESBJAVA-3470
  * VFS SFTP using passphrase protected keys
@@ -78,12 +77,12 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
+        serverConfigurationManager.applyConfiguration(
+                new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
         super.init();
 
         carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
@@ -93,9 +92,9 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         Thread.sleep(15000);
     }
 
-    @Test(groups = "wso2.esb", description = "VFS absolute path test for sftp")
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
-    public void test() throws XMLStreamException, ProxyServiceAdminProxyAdminException, IOException, InterruptedException {
+    @Test(groups = "wso2.esb", description = "VFS absolute path test for sftp") @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.ALL }) public void test()
+            throws XMLStreamException, ProxyServiceAdminProxyAdminException, IOException, InterruptedException {
 
         String baseDir;
         ClassLoader classLoader = getClass().getClassLoader();
@@ -105,36 +104,26 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         File destinationMessage = new File(inputFolder + File.separator + sentMessageFile);
         copyFile(sourceMessage, destinationMessage);
 
-        String proxy =  "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" +
-                "       name=\"SFTPTestCaseProxy\"\n" +
-                "       transports=\"vfs\"\n" +
-                "       statistics=\"disable\"\n" +
-                "       trace=\"disable\"\n" +
-                "       startOnLoad=\"true\">\n" +
-                "   <target>\n" +
-                "      <inSequence>\n" +
-                "           <send>\n" +
-                "               <endpoint>\n" +
-                "                   <address uri=\"" + STOCK_QUOTE + "\"/>\n" +
-                "               </endpoint>\n" +
-                "           </send>" +
-                "      </inSequence>\n" +
-                "      <outSequence/>\n" +
-                "   </target>\n" +
-                "   <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n" +
-                "   <parameter name=\"transport.PollInterval\">5</parameter>\n" +
-                "   <parameter name=\"transport.vfs.MoveAfterProcess\">vfs:sftp://" + SFTP_USER_NAME +
-                "@localhost:" + FTP_PORT + "/" + OUTPUT_FOLDER_NAME + "?transport.vfs.AvoidPermissionCheck=true</parameter>\n" +
-                "   <parameter name=\"transport.vfs.FileURI\">vfs:sftp://" + SFTP_USER_NAME + "@localhost:" + FTP_PORT + "/" + INPUT_FOLDER_NAME + "?transport.vfs.AvoidPermissionCheck=true</parameter>\n" +
-                "   <parameter name=\"transport.vfs.MoveAfterFailure\">vfs:sftp://" + SFTP_USER_NAME + "@localhost:" + FTP_PORT + "/" + MOVE_FOLDER_NAME + "?transport.vfs.AvoidPermissionCheck=true</parameter>\n" +
-                "   <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n" +
-                "   <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n" +
-                "   <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>\n" +
-                "   <parameter name=\"transport.vfs.SFTPIdentityPassPhrase\">" + IDENTITY_PASSPHRASE + "</parameter>\n" +
-                "   <parameter name=\"transport.vfs.SFTPIdentities\">" + identityFile + "</parameter>\n" +
-                "   <description/>\n" +
-                "</proxy>\n" +
-                "                                ";
+        String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"SFTPTestCaseProxy\"\n"
+                + "       transports=\"vfs\"\n" + "       statistics=\"disable\"\n" + "       trace=\"disable\"\n"
+                + "       startOnLoad=\"true\">\n" + "   <target>\n" + "      <inSequence>\n" + "           <send>\n"
+                + "               <endpoint>\n" + "                   <address uri=\"" + STOCK_QUOTE + "\"/>\n"
+                + "               </endpoint>\n" + "           </send>" + "      </inSequence>\n"
+                + "      <outSequence/>\n" + "   </target>\n"
+                + "   <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n"
+                + "   <parameter name=\"transport.PollInterval\">5</parameter>\n"
+                + "   <parameter name=\"transport.vfs.MoveAfterProcess\">vfs:sftp://" + SFTP_USER_NAME + "@localhost:"
+                + FTP_PORT + "/" + OUTPUT_FOLDER_NAME + "?transport.vfs.AvoidPermissionCheck=true</parameter>\n"
+                + "   <parameter name=\"transport.vfs.FileURI\">vfs:sftp://" + SFTP_USER_NAME + "@localhost:" + FTP_PORT
+                + "/" + INPUT_FOLDER_NAME + "?transport.vfs.AvoidPermissionCheck=true</parameter>\n"
+                + "   <parameter name=\"transport.vfs.MoveAfterFailure\">vfs:sftp://" + SFTP_USER_NAME + "@localhost:"
+                + FTP_PORT + "/" + MOVE_FOLDER_NAME + "?transport.vfs.AvoidPermissionCheck=true</parameter>\n"
+                + "   <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
+                + "   <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
+                + "   <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>\n"
+                + "   <parameter name=\"transport.vfs.SFTPIdentityPassPhrase\">" + IDENTITY_PASSPHRASE
+                + "</parameter>\n" + "   <parameter name=\"transport.vfs.SFTPIdentities\">" + identityFile
+                + "</parameter>\n" + "   <description/>\n" + "</proxy>\n" + "                                ";
         OMElement proxyOM = AXIOMUtil.stringToOM(proxy);
 
         //create VFS transport listener proxy
@@ -152,8 +141,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         Assert.assertTrue(files.length > 0);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stopSFTPServer() throws Exception {
+    @AfterClass(alwaysRun = true) public void stopSFTPServer() throws Exception {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();

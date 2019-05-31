@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -27,37 +27,29 @@ import org.wso2.carbon.esb.endpoint.test.util.EndpointTestUtils;
 import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.rmi.RemoteException;
+import javax.xml.stream.XMLStreamException;
 
 public class DynamicDefaultEpTestCase extends ESBIntegrationTest {
     private EndPointAdminClient endPointAdminClient;
     private final String ENDPOINT_PATH_1 = "conf:/DynamicDefaultEndpointConf";
     private final String ENDPOINT_PATH_2 = "gov:/DynamicDefaultEndpointGov";
 
-    private final String ENDPOINT_XML = "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\">\n" +
-                                               "   <default >\n" +
-                                               "      <suspendOnFailure>\n" +
-                                               "         <progressionFactor>1.0</progressionFactor>\n" +
-                                               "      </suspendOnFailure>\n" +
-                                               "      <markForSuspension>\n" +
-                                               "         <retriesBeforeSuspension>0</retriesBeforeSuspension>\n" +
-                                               "         <retryDelay>0</retryDelay>\n" +
-                                               "      </markForSuspension>\n" +
-                                               "   </default>\n" +
-                                               "</endpoint>";
+    private final String ENDPOINT_XML =
+            "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\">\n" + "   <default >\n" + "      <suspendOnFailure>\n"
+                    + "         <progressionFactor>1.0</progressionFactor>\n" + "      </suspendOnFailure>\n"
+                    + "      <markForSuspension>\n" + "         <retriesBeforeSuspension>0</retriesBeforeSuspension>\n"
+                    + "         <retryDelay>0</retryDelay>\n" + "      </markForSuspension>\n" + "   </default>\n"
+                    + "</endpoint>";
 
-
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void testDynamicDefaultEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" }) public void testDynamicDefaultEndpoint() throws Exception {
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_1);
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_2);
         Thread.sleep(1000);
@@ -65,14 +57,12 @@ public class DynamicDefaultEpTestCase extends ESBIntegrationTest {
         dynamicEndpointDeletionScenario(ENDPOINT_PATH_2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }
 
-    private void cleanupEndpoints()
-            throws RemoteException, EndpointAdminEndpointAdminException {
+    private void cleanupEndpoints() throws RemoteException, EndpointAdminEndpointAdminException {
 
         EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_1, endPointAdminClient);
         EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_2, endPointAdminClient);

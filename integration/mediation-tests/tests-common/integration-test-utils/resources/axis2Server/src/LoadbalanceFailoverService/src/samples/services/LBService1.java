@@ -39,7 +39,7 @@ public class LBService1 {
     public OMElement sampleOperation(OMElement param) {
         param.build();
         param.detach();
-        
+
         String sName = "";
         if (System.getProperty("test_mode") != null) {
             sName = org.apache.axis2.context.MessageContext.getCurrentMessageContext().getTo().getAddress();

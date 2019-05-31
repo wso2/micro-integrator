@@ -26,7 +26,9 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 import java.rmi.RemoteException;
+
 import static org.testng.Assert.assertNotNull;
 
 /**
@@ -36,25 +38,24 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator")
-    public void testSetPropertyWithAxis2ScopeInScript() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator") public void testSetPropertyWithAxis2ScopeInScript()
+            throws Exception {
 
         boolean propertySet;
         boolean propertyRemoved;
         logViewerClient.clearLogs();
-        OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp
-                ("setRemovePropertiesWithNashornJsTestProxy"), null, "inlineTest");
+        OMElement response = axis2Client
+                .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
+                        "inlineTest");
         assertNotNull(response, "Response message null");
         propertySet = isPropertyContainedInLog("Axis2_Property = AXIS2_PROPERTY");
         Assert.assertTrue(propertySet, " The property with axis2 scope is not set ");
@@ -62,14 +63,15 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         Assert.assertTrue(propertyRemoved, " The property with axis2 scope is not removed ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator")
-    public void testSetPropertyWithTransportScopeInScript() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator") public void testSetPropertyWithTransportScopeInScript()
+            throws Exception {
 
         boolean propertySet;
         boolean propertyRemoved;
         logViewerClient.clearLogs();
-        OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp
-                ("setRemovePropertiesWithNashornJsTestProxy"), null, "inlineTest");
+        OMElement response = axis2Client
+                .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
+                        "inlineTest");
         assertNotNull(response, "Response message null");
         propertySet = isPropertyContainedInLog("Transport_Property = TRANSPORT_PROPERTY");
         Assert.assertTrue(propertySet, " The property with transport scope is not set ");
@@ -77,14 +79,15 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         Assert.assertTrue(propertyRemoved, " The property with transport scope is not removed ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator")
-    public void testSetPropertyWithOperationScopeInScript() throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator") public void testSetPropertyWithOperationScopeInScript()
+            throws Exception {
 
         boolean propertySet;
         boolean propertyRemoved;
         logViewerClient.clearLogs();
-        OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp
-                ("setRemovePropertiesWithNashornJsTestProxy"), null, "inlineTest");
+        OMElement response = axis2Client
+                .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
+                        "inlineTest");
         assertNotNull(response, "Response message null");
         propertySet = isPropertyContainedInLog("Operation_Property = OPERATION_PROPERTY");
         Assert.assertTrue(propertySet, " The property with operation scope is not set ");
@@ -94,6 +97,7 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
     /**
      * This method check whether given property contains in the logs.
+     *
      * @param property required property which needs to be validate if exists or not.
      * @return A Boolean
      */

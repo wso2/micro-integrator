@@ -1,22 +1,22 @@
 /**
- *  Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *        http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Copyright (c) 2009, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 /*
-*ConfigServiceAdmin methods will be called using its returned stub
-*/
+ *ConfigServiceAdmin methods will be called using its returned stub
+ */
 
 package org.wso2.esb.integration.common.clients.mediation;
 
@@ -32,6 +32,11 @@ import org.wso2.carbon.mediation.configadmin.stub.types.carbon.ValidationError;
 import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 import org.xml.sax.SAXException;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.rmi.RemoteException;
 import javax.servlet.ServletException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,11 +49,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.rmi.RemoteException;
 
 /**
  * This class exposing ConfigServiceAdmin operations to the test cases.
@@ -67,8 +67,7 @@ public class SynapseConfigAdminClient {
         AuthenticateStub.authenticateStub(sessionCookie, configServiceAdminStub);
     }
 
-    public SynapseConfigAdminClient(String backEndUrl, String userName, String password)
-            throws AxisFault {
+    public SynapseConfigAdminClient(String backEndUrl, String userName, String password) throws AxisFault {
 
         String endPoint = backEndUrl + serviceName;
         configServiceAdminStub = new ConfigServiceAdminStub(endPoint);
@@ -163,8 +162,8 @@ public class SynapseConfigAdminClient {
      * @return
      */
     public boolean updateConfiguration(File file)
-            throws IOException, SAXException, ParserConfigurationException, TransformerException,
-                   XMLStreamException, ServletException {
+            throws IOException, SAXException, ParserConfigurationException, TransformerException, XMLStreamException,
+            ServletException {
         boolean success = false;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = factory.newDocumentBuilder();
@@ -202,14 +201,12 @@ public class SynapseConfigAdminClient {
         return configServiceAdminStub.validateConfiguration(configuration);
     }
 
-    private static OMElement createOMElement(String xml)
-            throws ServletException, XMLStreamException {
+    private static OMElement createOMElement(String xml) throws ServletException, XMLStreamException {
         XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xml));
         StAXOMBuilder builder = new StAXOMBuilder(reader);
         return builder.getDocumentElement();
 
     }
-
 
     private String getStringFromDocument(Document doc) throws TransformerException {
         DOMSource domSource = new DOMSource(doc);
@@ -220,6 +217,5 @@ public class SynapseConfigAdminClient {
         transformer.transform(domSource, result);
         return writer.toString();
     }
-
 
 }

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.esb.integration.common.utils.servers.axis2;
 
@@ -31,7 +31,11 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.utils.ServerConstants;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class SampleAxis2Server implements BackendServer {
 
@@ -54,13 +58,13 @@ public class SampleAxis2Server implements BackendServer {
 
     public SampleAxis2Server() {
         this("test_axis2_server_9000.xml");
-        repositoryPath = System.getProperty(ServerConstants.CARBON_HOME) + File.separator +
-                         "samples" + File.separator + "axis2Server" + File.separator + "repository";
+        repositoryPath = System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "samples" + File.separator
+                + "axis2Server" + File.separator + "repository";
     }
 
     public SampleAxis2Server(String axis2xmlFile) {
-        repositoryPath = System.getProperty(ServerConstants.CARBON_HOME) + File.separator +
-                         "samples" + File.separator + "axis2Server" + File.separator + "repository";
+        repositoryPath = System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "samples" + File.separator
+                + "axis2Server" + File.separator + "repository";
         File repository = new File(repositoryPath);
         log.info("Using the Axis2 repository path: " + repository.getAbsolutePath());
 
@@ -71,8 +75,8 @@ public class SampleAxis2Server implements BackendServer {
                 return;
             }
             log.info("Loading axis2.xml from: " + axis2xml.getAbsolutePath());
-            cfgCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-                    repository.getAbsolutePath(), axis2xml.getAbsolutePath());
+            cfgCtx = ConfigurationContextFactory
+                    .createConfigurationContextFromFileSystem(repository.getAbsolutePath(), axis2xml.getAbsolutePath());
         } catch (Exception e) {
             log.error("Error while initializing the configuration context", e);
         }
@@ -121,7 +125,6 @@ public class SampleAxis2Server implements BackendServer {
     InputStream in = new FileInputStream("location of service.xml");
     AxisService service = DeploymentEngine..buildService(in, clsLoader,cfgCtx);*/
 
-
     }
 
     public void hotUndeployArtifact(String artifact) {
@@ -138,8 +141,7 @@ public class SampleAxis2Server implements BackendServer {
     }
 
     private File copyResourceToFileSystem(String resourceName, String fileName) throws IOException {
-        File file = new File(System.getProperty("basedir") + File.separator + "target" +
-                             File.separator + fileName);
+        File file = new File(System.getProperty("basedir") + File.separator + "target" + File.separator + fileName);
         if (file.exists()) {
             FileUtils.deleteQuietly(file);
         }
@@ -148,13 +150,13 @@ public class SampleAxis2Server implements BackendServer {
         OutputStream os = FileUtils.openOutputStream(file);
         InputStream is;
         if (resourceName.contains(".aar")) {
-            is = new FileInputStream(FrameworkPathUtil.getSystemResourceLocation() +
-                                     File.separator + "artifacts" + File.separator + "AXIS2" + File.separator + "aar" +
-                                     File.separator + resourceName);
+            is = new FileInputStream(
+                    FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator
+                            + "AXIS2" + File.separator + "aar" + File.separator + resourceName);
         } else {
-            is = new FileInputStream(FrameworkPathUtil.getSystemResourceLocation() +
-                                     File.separator + "artifacts" + File.separator + "AXIS2" + File.separator + "config" +
-                                     File.separator + resourceName);
+            is = new FileInputStream(
+                    FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator
+                            + "AXIS2" + File.separator + "config" + File.separator + resourceName);
         }
 
         if (is != null) {
@@ -171,8 +173,7 @@ public class SampleAxis2Server implements BackendServer {
     }
 
     private File copyServiceToFileSystem(String resourceName, String fileName) throws IOException {
-        File file = new File(System.getProperty("basedir") + File.separator + "target" +
-                             File.separator + fileName);
+        File file = new File(System.getProperty("basedir") + File.separator + "target" + File.separator + fileName);
         if (file.exists()) {
             FileUtils.deleteQuietly(file);
         }
@@ -180,9 +181,9 @@ public class SampleAxis2Server implements BackendServer {
         FileUtils.touch(file);
         OutputStream os = FileUtils.openOutputStream(file);
 
-        InputStream is = new FileInputStream(FrameworkPathUtil.getSystemResourceLocation() +
-                                             File.separator + "artifacts" + File.separator + "AXIS2" + File.separator + "config" +
-                                             File.separator + resourceName);
+        InputStream is = new FileInputStream(
+                FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator + "AXIS2"
+                        + File.separator + "config" + File.separator + resourceName);
         if (is != null) {
             byte[] data = new byte[1024];
             int len;

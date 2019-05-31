@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.mediator.test.factory;
 
@@ -34,21 +34,19 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertFalse;
 
 public class FormatPayloadWithOMTypeArgsExpressionTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/payload/factory/om_arg_payload_factory_synapse.xml");
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/mediatorconfig/payload/factory/om_arg_payload_factory_synapse.xml");
     }
 
-
-    @Test(groups = {"wso2.esb"}, description = "Do transformation with a Payload Format that has OM type arguments")
-    public void transformPayloadByArgsValue() throws AxisFault {
+    @Test(groups = {
+            "wso2.esb" }, description = "Do transformation with a Payload Format that has OM type arguments") public void transformPayloadByArgsValue()
+            throws AxisFault {
         sendRobust(getMainSequenceURL(), "IBM");
     }
 
-
-    private void sendRobust(String trpUrl, String symbol)
-            throws AxisFault {
+    private void sendRobust(String trpUrl, String symbol) throws AxisFault {
         ServiceClient sender;
         Options options;
 
@@ -81,8 +79,7 @@ public class FormatPayloadWithOMTypeArgsExpressionTestCase extends ESBIntegratio
         return method;
     }
 
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
         super.cleanup();
     }
 }

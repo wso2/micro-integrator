@@ -1,24 +1,21 @@
 /*
-*  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.file.inbound.transport.test;
-
-import java.io.File;
-import java.io.IOException;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
@@ -29,11 +26,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
+
+import java.io.File;
+import java.io.IOException;
 
 public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
 
@@ -41,10 +39,9 @@ public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
     private File InboundFileFolder;
     private String pathToFtpDir;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
-	    pathToFtpDir = getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "vfsTransport";
+        pathToFtpDir = getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "vfsTransport";
 
         InboundFileFolder = new File(pathToFtpDir + File.separator + "InboundFileFolder");
 
@@ -54,23 +51,19 @@ public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
         }
         Assert.assertTrue(InboundFileFolder.mkdir(), "InboundFileFolder not created");
 
-
         super.init();
 
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(),
-                getSessionCookie());
+        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Inbound endpoint Reading file with Content type Plain Test Case")
-    public void testInboundEnpointReadFileContentTypePlain() throws Exception {
-
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Inbound endpoint Reading file with Content type Plain Test Case") public void testInboundEnpointReadFileContentTypePlain()
+            throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + "test.txt");
         File targetFolder = new File(InboundFileFolder + File.separator + "in");
@@ -89,23 +82,17 @@ public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
 
     private OMElement addEndpoint() throws Exception {
         OMElement synapseConfig = null;
-        synapseConfig = AXIOMUtil
-                .stringToOM("<inboundEndpoint name=\"testFile2\" onError=\"inFault\" protocol=\"file\"\n"
+        synapseConfig = AXIOMUtil.stringToOM(
+                "<inboundEndpoint name=\"testFile2\" onError=\"inFault\" protocol=\"file\"\n"
                         + " sequence=\"requestHandlerSeq\" suspend=\"false\" xmlns=\"http://ws.apache.org/ns/synapse\">\"\n"
-                        + " <parameters>\n"
-                        + " <parameter name=\"interval\">1000</parameter>\n"
+                        + " <parameters>\n" + " <parameter name=\"interval\">1000</parameter>\n"
                         + " <parameter name=\"transport.vfs.ActionAfterErrors\">NONE</parameter>\n"
                         + " <parameter name=\"transport.vfs.Locking\">enable</parameter>\n"
                         + " <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                         + " <parameter name=\"transport.vfs.ActionAfterFailure\">NONE</parameter>\n"
                         + " <parameter name=\"transport.vfs.ActionAfterProcess\">NONE</parameter>\n"
-                        + " <parameter name=\"transport.vfs.FileURI\">file://"
-                        + InboundFileFolder
-                        + File.separator
-                        + "in"
-                        + "</parameter>\n"
-                        + " </parameters>\n"
-                        + "</inboundEndpoint>\n");
+                        + " <parameter name=\"transport.vfs.FileURI\">file://" + InboundFileFolder + File.separator
+                        + "in" + "</parameter>\n" + " </parameters>\n" + "</inboundEndpoint>\n");
 
         return synapseConfig;
     }

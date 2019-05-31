@@ -45,15 +45,14 @@ public class SendMailWithMultipartThroughESBTestCase extends ESBIntegrationTest 
 
     private static GreenMailUser receiver;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         super.reloadSessionCookie();
 
         loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator +
-                "mailTransport" + File.separator + "mailTransportSender" + File.separator + "multipart" +
-                File.separator + "mail_sender_multipart.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
+                        + File.separator + "mailTransportSender" + File.separator + "multipart" + File.separator
+                        + "mail_sender_multipart.xml");
         receiver = GreenMailServer.addUser("receiver@localhost", "receiver", "receiver");
 
         //Since ESB reads all unread emails one by one,
@@ -61,26 +60,22 @@ public class SendMailWithMultipartThroughESBTestCase extends ESBIntegrationTest 
         GreenMailServer.deleteAllEmails("imap", receiver);
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test email transport with multipart email")
-    public void testEmailTransport()
+    @Test(groups = {
+            "wso2.esb" }, description = "Test email transport with multipart email") public void testEmailTransport()
             throws ESBMailTransportIntegrationTestException, AxisFault, XMLStreamException, MessagingException {
         Date date = new Date();
         String message = "Multipart Email : " + new Timestamp(date.getTime());
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement request = AXIOMUtil.stringToOM(
-                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n" +
-                "   <soapenv:Header/>\n" +
-                "   <soapenv:Body>\n" +
-                "<emailSubject> Subject :" + message + "</emailSubject>\n" +
-                "   </soapenv:Body>\n" +
-                "</soapenv:Envelope>");
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
+                        + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "<emailSubject> Subject :" + message
+                        + "</emailSubject>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>");
 
         axisServiceClient.sendReceive(request, getProxyServiceURLHttp("MailToTransportSenderMultipart"), "mediate");
         assertTrue(GreenMailServer.isMailReceived("imap", receiver, message), "Mail not received");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
     }
 }

@@ -49,37 +49,35 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
     private String DB_USER;
     private String DB_PASSWORD;
 
-    @BeforeClass
-    public void init() throws Exception {
+    @BeforeClass public void init() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
         DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
         JDBC_URL = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
         DB_USER = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_USER_NAME);
-        String databaseName = System.getProperty("basedir") + File.separator + "target" + File.separator +
-                "testdb_store" + new Random().nextInt();
+        String databaseName =
+                System.getProperty("basedir") + File.separator + "target" + File.separator + "testdb_store"
+                        + new Random().nextInt();
         JDBC_URL = JDBC_URL + databaseName + ";AUTO_SERVER=TRUE";
         h2DatabaseManager = new H2DataBaseManager(JDBC_URL, DB_USER, DB_PASSWORD);
-        h2DatabaseManager.executeUpdate("CREATE TABLE IF NOT EXISTS JDBC_MESSAGE_STORE(\n" +
-                "indexId BIGINT(20) NOT NULL AUTO_INCREMENT,\n" +
-                "msg_id VARCHAR(200) NOT NULL ,\n" +
-                "message BLOB NOT NULL,\n" +
-                "PRIMARY KEY ( indexId )\n" +
-                ")");
+        h2DatabaseManager.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS JDBC_MESSAGE_STORE(\n" + "indexId BIGINT(20) NOT NULL AUTO_INCREMENT,\n"
+                        + "msg_id VARCHAR(200) NOT NULL ,\n" + "message BLOB NOT NULL,\n" + "PRIMARY KEY ( indexId )\n"
+                        + ")");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
         super.init();
     }
 
-    @Test
-    public void testWithEmptyMessage() throws Exception {
+    @Test public void testWithEmptyMessage() throws Exception {
         logViewer.clearLogs();
-        String location = getESBResourceLocation() + File.separator + "messageProcessorConfig" + File.separator +
-                "EmptyMsgBodyMessageStoreTest.xml";
+        String location = getESBResourceLocation() + File.separator + "messageProcessorConfig" + File.separator
+                + "EmptyMsgBodyMessageStoreTest.xml";
         String proxyContent = FileUtils.readFileToString(new File(location));
         proxyContent = this.updateDatabaseInfo(proxyContent);
         addMessageStore(AXIOMUtil.stringToOM(proxyContent));
-        loadESBConfigurationFromClasspath("artifacts" + File.separator + "ESB" + File.separator +
-                "messageProcessorConfig" + File.separator + "EmptyMsgBodyTest.xml");
+        loadESBConfigurationFromClasspath(
+                "artifacts" + File.separator + "ESB" + File.separator + "messageProcessorConfig" + File.separator
+                        + "EmptyMsgBodyTest.xml");
         String proxyServiceUrl = getProxyServiceURLHttp("EmptyMsgBodyTestProxy");
         AxisServiceClient client = new AxisServiceClient();
         client.fireAndForget(null, proxyServiceUrl, "");
@@ -87,8 +85,7 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
                 "Message with empty body not processed!");
     }
 
-    @AfterClass
-    public void cleanup() throws Exception {
+    @AfterClass public void cleanup() throws Exception {
         h2DatabaseManager.disconnect();
         h2DatabaseManager = null;
         super.cleanup();

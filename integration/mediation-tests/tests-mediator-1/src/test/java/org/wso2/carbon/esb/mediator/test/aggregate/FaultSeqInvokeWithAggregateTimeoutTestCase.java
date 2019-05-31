@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.mediator.test.aggregate;
 
-
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -42,55 +41,35 @@ import java.util.Map;
  */
 public class FaultSeqInvokeWithAggregateTimeoutTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB"
-                + File.separator + "mediatorconfig" + File.separator + "aggregate" + File.separator
-                + "OnCompleteWithTimeoutTest.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
+                        + File.separator + "aggregate" + File.separator + "OnCompleteWithTimeoutTest.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Add a non-existing mediator and check if fault sequence is hit upon " +
-            "onComplete of aggregate mediator with timeout condition")
-    public void testFaultResponseIsReceived() throws AxisFault, MalformedURLException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Add a non-existing mediator and check if fault sequence is hit upon "
+            + "onComplete of aggregate mediator with timeout condition") public void testFaultResponseIsReceived()
+            throws AxisFault, MalformedURLException, AutomationFrameworkException {
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/xml");
-        String message = "<marketDetail>\n" +
-                "    <market>\n" +
-                "        <id>100</id>\n" +
-                "        <openTime>10.00AM</openTime>\n" +
-                "        <closeTime>4.00PM</closeTime>\n" +
-                "        <name>New York</name>\n" +
-                "    </market>\n" +
-                "    <market>\n" +
-                "        <id>200</id>\n" +
-                "        <openTime>9.00AM</openTime>\n" +
-                "        <closeTime>5.00PM</closeTime>\n" +
-                "        <name>London</name>\n" +
-                "    </market>\n" +
-                "    <market>\n" +
-                "        <id>300</id>\n" +
-                "        <openTime>8.00AM</openTime>\n" +
-                "        <closeTime>3.00PM</closeTime>\n" +
-                "        <name>Colombo</name>\n" +
-                "    </market>\n" +
-                "    <market>\n" +
-                "        <id>250</id>\n" +
-                "        <openTime>8.00AM</openTime>\n" +
-                "        <closeTime>8.00PM</closeTime>\n" +
-                "        <name>London</name>\n" +
-                "    </market>\n" +
-                "</marketDetail>";
+        String message = "<marketDetail>\n" + "    <market>\n" + "        <id>100</id>\n"
+                + "        <openTime>10.00AM</openTime>\n" + "        <closeTime>4.00PM</closeTime>\n"
+                + "        <name>New York</name>\n" + "    </market>\n" + "    <market>\n" + "        <id>200</id>\n"
+                + "        <openTime>9.00AM</openTime>\n" + "        <closeTime>5.00PM</closeTime>\n"
+                + "        <name>London</name>\n" + "    </market>\n" + "    <market>\n" + "        <id>300</id>\n"
+                + "        <openTime>8.00AM</openTime>\n" + "        <closeTime>3.00PM</closeTime>\n"
+                + "        <name>Colombo</name>\n" + "    </market>\n" + "    <market>\n" + "        <id>250</id>\n"
+                + "        <openTime>8.00AM</openTime>\n" + "        <closeTime>8.00PM</closeTime>\n"
+                + "        <name>London</name>\n" + "    </market>\n" + "</marketDetail>";
         HttpResponse response = HttpRequestUtil.
                 doPost(new URL(getApiInvocationURL("testApiAggregate")), message, requestHeader);
 
-        Assert.assertTrue(response.getData().contains("SEQUENCE_ERROR_HANDLER"), "Expected response was not"
-                + " received. Got " + response.getData());
+        Assert.assertTrue(response.getData().contains("SEQUENCE_ERROR_HANDLER"),
+                "Expected response was not" + " received. Got " + response.getData());
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-
 public class ViewPopTest extends ESBIntegrationTest {
     private final String STORE_NAME = "VPE_Store";
     private final String PROCESSOR_NAME = "VPE_Processor";
@@ -44,8 +43,8 @@ public class ViewPopTest extends ESBIntegrationTest {
     /**
      * Initializing environment variables
      */
-    @BeforeClass(alwaysRun = true, description = "Test Message processor View and Pop service")
-    protected void setup() throws Exception {
+    @BeforeClass(alwaysRun = true, description = "Test Message processor View and Pop service") protected void setup()
+            throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("artifacts/ESB/messageProcessorConfig/ViewPopTest.xml");
 
@@ -57,8 +56,7 @@ public class ViewPopTest extends ESBIntegrationTest {
         isProxySuccesfullyDeployed(PROXY_NAME);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 
@@ -68,32 +66,21 @@ public class ViewPopTest extends ESBIntegrationTest {
      * 3. Call browseMessage function and verify that the queue is sending the expected message
      * 4. Call popMessage function and verify that browseMessage function is returning null
      */
-    @Test(groups = {"wso2.esb"}, description = "Test View and Pop and service for Message processor")
-    public void testViewInMessageStore() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test View and Pop and service for Message processor") public void testViewInMessageStore()
+            throws Exception {
 
         //Initializing Payload
         String inputPayload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                + "<soapenv:Header/>\n"
-                + "<soapenv:Body>\n"
-                + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
-                + " <m0:request>IBM\n"
-                + " </m0:request>\n"
-                + "   <m0:request>WSO2\n"
-                + " </m0:request>\n"
-                + "</m0:getQuote>\n"
-                + "</soapenv:Body>\n"
-                + "</soapenv:Envelope>";
+                + "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
+                + " <m0:request>IBM\n" + " </m0:request>\n" + "   <m0:request>WSO2\n" + " </m0:request>\n"
+                + "</m0:getQuote>\n" + "</soapenv:Body>\n" + "</soapenv:Envelope>";
 
-        String expectedMessage = "<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-                + "<soapenv:Body>"
-                + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
-                + " <m0:request>IBM\n"
-                + " </m0:request>\n"
-                + "   <m0:request>WSO2\n"
-                + " </m0:request>\n"
-                + "</m0:getQuote>"
-                + "</soapenv:Body>"
-                + "</soapenv:Envelope>";
+        String expectedMessage =
+                "<?xml version='1.0' encoding='utf-8'?><soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                        + "<soapenv:Body>" + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
+                        + " <m0:request>IBM\n" + " </m0:request>\n" + "   <m0:request>WSO2\n" + " </m0:request>\n"
+                        + "</m0:getQuote>" + "</soapenv:Body>" + "</soapenv:Envelope>";
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "text/xml");
@@ -103,22 +90,19 @@ public class ViewPopTest extends ESBIntegrationTest {
         HttpRequestUtil.doPost(new URL(getProxyServiceURLHttp(PROXY_NAME)), inputPayload, requestHeader);
 
         //Check if the processor has deactivated
-        Awaitility.await()
-                .pollInterval(3, TimeUnit.SECONDS)
-                .atMost(120, TimeUnit.SECONDS)
+        Awaitility.await().pollInterval(3, TimeUnit.SECONDS).atMost(120, TimeUnit.SECONDS)
                 .until(isProcessorDeactivated(PROCESSOR_NAME));
-        Assert.assertFalse(messageProcessorClient.isActive(PROCESSOR_NAME), "Message processor should not be active, " +
-                "but it is active.");
+        Assert.assertFalse(messageProcessorClient.isActive(PROCESSOR_NAME),
+                "Message processor should not be active, " + "but it is active.");
 
         //Check if browseMessage returns the expected message
-        Awaitility.await()
-                .pollInterval(3, TimeUnit.SECONDS)
-                .atMost(120, TimeUnit.SECONDS)
+        Awaitility.await().pollInterval(3, TimeUnit.SECONDS).atMost(120, TimeUnit.SECONDS)
                 .until(hasMessage(PROCESSOR_NAME));
         Assert.assertEquals(returnedMessage, expectedMessage, "Returned message is not the same as expected message.");
 
         //Check if message is successfully popped from the queue
-        Assert.assertTrue(messageProcessorClient.popMessage(PROCESSOR_NAME), "Message processor failed to pop the message");
+        Assert.assertTrue(messageProcessorClient.popMessage(PROCESSOR_NAME),
+                "Message processor failed to pop the message");
 
         //Check if the returned message is null
         returnedMessage = messageProcessorClient.browseMessage(PROCESSOR_NAME);
@@ -127,8 +111,7 @@ public class ViewPopTest extends ESBIntegrationTest {
 
     private Callable<Boolean> hasMessage(final String PROCESSOR_NAME) throws Exception {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
                 returnedMessage = messageProcessorClient.browseMessage(PROCESSOR_NAME);
                 if (returnedMessage == null) {
                     return false;
@@ -140,8 +123,7 @@ public class ViewPopTest extends ESBIntegrationTest {
 
     private Callable<Boolean> isProcessorDeactivated(final String PROCESSOR_NAME) throws Exception {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
                 if (messageProcessorClient.isActive(PROCESSOR_NAME)) {
                     return false;
                 }

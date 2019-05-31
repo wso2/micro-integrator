@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.proxyservice.test.passThroughProxy;
 
 import org.apache.axiom.om.OMElement;
@@ -34,17 +34,16 @@ import static org.testng.Assert.assertNotNull;
 public class EditPassThroughProxyServiceTestCase extends ESBIntegrationTest {
     private final String proxyName = "EditStockQuotePassThroughProxy";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/passThroughProxy/EditPassThroughProxy.xml");
+        loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/passThroughProxy/EditPassThroughProxy.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Edit Pass through proxy ")
-    public void editProxyService() throws Exception {
-        ProxyServiceAdminClient proxyServiceAdminClient = new ProxyServiceAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
+    @Test(groups = "wso2.esb", description = "Edit Pass through proxy ") public void editProxyService()
+            throws Exception {
+        ProxyServiceAdminClient proxyServiceAdminClient = new ProxyServiceAdminClient(
+                context.getContextUrls().getBackEndUrl(), getSessionCookie());
         ProxyData prxy = proxyServiceAdminClient.getProxyDetails(proxyName);
         prxy.setWsdlURI("file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl");
         proxyServiceAdminClient.updateProxy(prxy);
@@ -52,47 +51,41 @@ public class EditPassThroughProxyServiceTestCase extends ESBIntegrationTest {
         isProxyDeployed(proxyName);
         prxy = proxyServiceAdminClient.getProxyDetails(proxyName);
         Assert.assertNotNull(prxy);
-        Assert.assertEquals(prxy.getWsdlURI(), "file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl", "WSDl Url invalid");
+        Assert.assertEquals(prxy.getWsdlURI(), "file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl",
+                "WSDl Url invalid");
     }
 
-    @Test(groups = "wso2.esb", description = "Invoking Pass through proxy http", dependsOnMethods = {"editProxyService"})
-    public void testHttpPassThroughProxyAfterEditing() throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoking Pass through proxy http", dependsOnMethods = {
+            "editProxyService" }) public void testHttpPassThroughProxyAfterEditing() throws Exception {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName),
-                                                                     null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName), null, "WSO2");
 
-        String lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
-                .getText();
+        String lastPrice = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-        String symbol = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
-                .getText();
+        String symbol = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
-
 
     }
 
+    @Test(groups = "wso2.esb", description = "Invoking Pass through proxy https", dependsOnMethods = {
+            "editProxyService" }) public void testHttpsPassThroughProxyAfterEditing() throws Exception {
 
-    @Test(groups = "wso2.esb", description = "Invoking Pass through proxy https", dependsOnMethods = {"editProxyService"})
-    public void testHttpsPassThroughProxyAfterEditing() throws Exception {
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttps(proxyName), null, "WSO2");
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttps(proxyName),
-                                                                     null, "WSO2");
-
-        String lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
-                .getText();
+        String lastPrice = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-        String symbol = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
-                .getText();
+        String symbol = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
-
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

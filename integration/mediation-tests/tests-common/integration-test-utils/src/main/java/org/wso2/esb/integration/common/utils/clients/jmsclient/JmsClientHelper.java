@@ -37,8 +37,7 @@ public class JmsClientHelper {
     /**
      * Initial context factory JNDI name of ActiveMQ
      */
-    private static final String ACTIVE_MQ_INITIAL_CONTEXT_FACTORY
-            = "org.apache.activemq.jndi.ActiveMQInitialContextFactory";
+    private static final String ACTIVE_MQ_INITIAL_CONTEXT_FACTORY = "org.apache.activemq.jndi.ActiveMQInitialContextFactory";
 
     /**
      * Get a Initial context with ActiveMQ defaults

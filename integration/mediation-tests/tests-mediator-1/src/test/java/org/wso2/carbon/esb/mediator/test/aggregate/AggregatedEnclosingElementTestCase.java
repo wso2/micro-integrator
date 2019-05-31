@@ -25,17 +25,15 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-
+import javax.xml.stream.XMLStreamException;
 
 public class AggregatedEnclosingElementTestCase extends ESBIntegrationTest {
 
     private AggregatedRequestClient aggregatedRequestClient;
     private int no_of_requests = 0;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -43,9 +41,9 @@ public class AggregatedEnclosingElementTestCase extends ESBIntegrationTest {
         aggregatedRequestClient.setSymbol("WSO2");
     }
 
-
-    @Test(groups = {"wso2.esb"}, description = "enclose the element to response aggregator")
-    public void testEncloseElementToResponseAggregatorCheck() throws IOException, XMLStreamException {
+    @Test(groups = {
+            "wso2.esb" }, description = "enclose the element to response aggregator") public void testEncloseElementToResponseAggregatorCheck()
+            throws IOException, XMLStreamException {
         no_of_requests = 1;
         aggregatedRequestClient.setNoOfIterations(no_of_requests);
         OMElement response = aggregatedRequestClient.getResponsenew();
@@ -56,8 +54,7 @@ public class AggregatedEnclosingElementTestCase extends ESBIntegrationTest {
         Assert.assertTrue(responseStr.contains("www.wso2esb.com"));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }

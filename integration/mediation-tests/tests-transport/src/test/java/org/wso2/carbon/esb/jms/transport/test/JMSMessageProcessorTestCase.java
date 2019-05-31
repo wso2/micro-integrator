@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -25,10 +25,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
-import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -37,11 +37,12 @@ public class JMSMessageProcessorTestCase extends ESBIntegrationTest {
 
     private int NUM_OF_MESSAGES = 5;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_message_store_and_processor_service.xml");
-        JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
+        OMElement synapse = esbUtils
+                .loadResource("/artifacts/ESB/jms/transport/jms_message_store_and_processor_service.xml");
+        JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
+                JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         try {
             //to create a subscription for WSO2 MB. then JMSEndPoint queue is created in MB
             consumer.connect("JMSProcessorEndPoint");
@@ -51,21 +52,22 @@ public class JMSMessageProcessorTestCase extends ESBIntegrationTest {
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test proxy service with jms transport")
-    public void testJMSMessageStoreAndProcessor() throws Exception {
-        JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
+    @Test(groups = {
+            "wso2.esb" }, description = "Test proxy service with jms transport") public void testJMSMessageStoreAndProcessor()
+            throws Exception {
+        JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
+                JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
 
         AxisServiceClient client = new AxisServiceClient();
         for (int i = 0; i < NUM_OF_MESSAGES; i++) {
-            client.sendRobust(Utils.getStockQuoteRequest("JMS"), getProxyServiceURLHttp("JMSStoreAndProcessorTestCaseProxy"), "getQuote");
+            client.sendRobust(Utils.getStockQuoteRequest("JMS"),
+                    getProxyServiceURLHttp("JMSStoreAndProcessorTestCaseProxy"), "getQuote");
         }
 
         try {
             consumer.connect("JMSProcessorEndPoint");
-            Awaitility.await()
-                      .pollInterval(50, TimeUnit.MILLISECONDS)
-                      .atMost(60, TimeUnit.SECONDS)
-                      .until(isMessagesConsumed(consumer));
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                    .until(isMessagesConsumed(consumer));
             for (int i = 0; i < 10; i++) {
                 if (i < NUM_OF_MESSAGES) {
                     //first 5 messages should be in the queue
@@ -73,7 +75,8 @@ public class JMSMessageProcessorTestCase extends ESBIntegrationTest {
 
                 } else {
                     //after 5 no messages should be in the queue
-                    Assert.assertNull(consumer.popMessage(), "JMS Message Processor sends same message more than once ");
+                    Assert.assertNull(consumer.popMessage(),
+                            "JMS Message Processor sends same message more than once ");
                 }
             }
         } finally {
@@ -81,16 +84,13 @@ public class JMSMessageProcessorTestCase extends ESBIntegrationTest {
         }
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
                 return consumer.getMessages().size() == NUM_OF_MESSAGES;
             }
         };

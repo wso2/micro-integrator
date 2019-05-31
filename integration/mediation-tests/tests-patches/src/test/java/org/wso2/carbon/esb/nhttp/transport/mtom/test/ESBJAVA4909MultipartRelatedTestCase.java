@@ -33,17 +33,14 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import java.io.File;
 import java.io.IOException;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 
 /**
  * Test case check whether attachment is received by the client
@@ -52,9 +49,9 @@ public class ESBJAVA4909MultipartRelatedTestCase extends ESBIntegrationTest {
     private final String MTOM_SERVICE = "MTOMSwASampleService";
     private SampleAxis2Server axis2Server;
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) public void setEnvironment()
+            throws Exception {
         super.init();
         axis2Server = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server.start();
@@ -62,17 +59,16 @@ public class ESBJAVA4909MultipartRelatedTestCase extends ESBIntegrationTest {
         verifyProxyServiceExistence("MTOMChecker");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "ESBJAVA4909MultipartTest")
-    public void callOutMediatorWithMTOMTest() throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "ESBJAVA4909MultipartTest") public void callOutMediatorWithMTOMTest()
+            throws IOException {
         String targetEPR = getProxyServiceURLHttp("MTOMChecker");
-        String fileName = FrameworkPathUtil.getSystemResourceLocation() +
-                "artifacts" + File.separator + "ESB"
-                + File.separator + "mtom" + File.separator + "content.xml";
+        String fileName =
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
+                        + "mtom" + File.separator + "content.xml";
         sendUsingMTOM(fileName, targetEPR);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
 
         if (axis2Server != null && axis2Server.isStarted()) {
             axis2Server.stop();
@@ -81,8 +77,8 @@ public class ESBJAVA4909MultipartRelatedTestCase extends ESBIntegrationTest {
     }
 
     public void sendUsingMTOM(String fileName, String targetEPR) throws IOException {
-        final String EXPECTED = "<m0:uploadFileUsingMTOMResponse xmlns:m0=\"http://services.samples\"><m0:response>" +
-                "<m0:image>PHByb3h5PkFCQzwvcHJveHk+</m0:image></m0:response></m0:uploadFileUsingMTOMResponse>";
+        final String EXPECTED = "<m0:uploadFileUsingMTOMResponse xmlns:m0=\"http://services.samples\"><m0:response>"
+                + "<m0:image>PHByb3h5PkFCQzwvcHJveHk+</m0:image></m0:response></m0:uploadFileUsingMTOMResponse>";
         OMFactory factory = OMAbstractFactory.getOMFactory();
         OMNamespace ns = factory.createOMNamespace("http://services.samples", "m0");
         OMElement payload = factory.createOMElement("uploadFileUsingMTOM", ns);

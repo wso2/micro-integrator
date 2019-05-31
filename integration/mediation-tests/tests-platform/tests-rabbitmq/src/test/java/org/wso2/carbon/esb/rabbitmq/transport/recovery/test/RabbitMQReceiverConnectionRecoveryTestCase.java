@@ -25,11 +25,11 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQConsumerClient;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
 
 import java.io.File;
@@ -43,18 +43,17 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
     private LogViewerClient logViewer;
     private ServerConfigurationManager configurationManagerAxis2;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
         sender = new RabbitMQProducerClient("localhost", 5672, "guest", "guest");
         consumer = new RabbitMQConsumerClient("localhost");
 
-        configurationManagerAxis2 =
-                new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        File customAxisConfigAxis2 = new File(getESBResourceLocation() + File.separator +
-                "axis2config" + File.separator + "axis2.xml");
+        configurationManagerAxis2 = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        File customAxisConfigAxis2 = new File(
+                getESBResourceLocation() + File.separator + "axis2config" + File.separator + "axis2.xml");
         configurationManagerAxis2.applyConfiguration(customAxisConfigAxis2);
         super.init();
 
@@ -63,8 +62,9 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
         loadESBConfigurationFromClasspath("/artifacts/ESB/rabbitmq/transport/rabbitmq_consumer_proxy.xml");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test ESB as a RabbitMQ Consumer with connection recovery - success case")
-    public void testRabbitMQConsumerRecoverySuccess() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with connection recovery - success case") public void testRabbitMQConsumerRecoverySuccess()
+            throws Exception {
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         rabbitMQServer.start();
@@ -117,14 +117,9 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
         try {
             sender.declareAndConnect("exchange2", "queue2");
             for (int i = 0; i < messageCount; i++) {
-                String message =
-                        "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" +
-                                "<ser:order>\n" +
-                                "<ser:price>100</ser:price>\n" +
-                                "<ser:quantity>2000</ser:quantity>\n" +
-                                "<ser:symbol>RMQ</ser:symbol>\n" +
-                                "</ser:order>\n" +
-                                "</ser:placeOrder>";
+                String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
+                        + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
+                        + "<ser:symbol>RMQ</ser:symbol>\n" + "</ser:order>\n" + "</ser:placeOrder>";
                 sender.sendMessage(message, "text/plain");
             }
         } catch (IOException e) {
@@ -134,8 +129,7 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void end() throws Exception {
+    @AfterClass(alwaysRun = true) public void end() throws Exception {
         super.cleanup();
         logViewer = null;
         rabbitMQServer.stop();

@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.esb.nhttp.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -36,7 +35,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
@@ -48,21 +46,20 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
     private ServerConfigurationManager serverConfigurationManager;
     private String nhttpLogDir;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-	    String nhttpFile = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator +
-	                       "synapseconfig" + separator + "nhttp_transport" + separator + "nhttp.properties";
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        String nhttpFile = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator
+                + "synapseconfig" + separator + "nhttp_transport" + separator + "nhttp.properties";
 
         File srcFile = new File(nhttpFile);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        nhttpLogDir = carbonHome + File.separator + "repository" + File.separator + "logs"
-                + File.separator + "nhttpLogs";
+        nhttpLogDir =
+                carbonHome + File.separator + "repository" + File.separator + "logs" + File.separator + "nhttpLogs";
 
-        File log4jProperties = new File(carbonHome + File.separator + "conf" +
-                File.separator + "log4j.properties");
+        File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j.properties");
 
         String propertyName = "nhttp.log.directory";
 
@@ -70,18 +67,16 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
 
         applyProperty(srcFile, propertyName, nhttpLogDir);
         applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.access", "INFO");
-	    serverConfigurationManager.applyConfigurationWithoutRestart(
-			    new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator +
-			             "ESB" + separator + "nhttp" + separator + "transport" + separator + "axis2.xml"));
+        serverConfigurationManager.applyConfigurationWithoutRestart(new File(
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator + "nhttp"
+                        + separator + "transport" + separator + "axis2.xml"));
 
         serverConfigurationManager.restartGracefully();
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/nhttp_transport/nhttp_test_synapse.xml");
-        Awaitility.await()
-                  .pollInterval(50, TimeUnit.MILLISECONDS)
-                  .atMost(300, TimeUnit.SECONDS)
-                  .until(isServiceDeployed("NhttpLogsTestProxy"));
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(300, TimeUnit.SECONDS)
+                .until(isServiceDeployed("NhttpLogsTestProxy"));
     }
 
     /**
@@ -91,9 +86,9 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.esb")
-    public void testNhttpAccessLogLocation() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testNhttpAccessLogLocation()
+            throws Exception {
 
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("NhttpLogsTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
@@ -135,8 +130,7 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -150,8 +144,7 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
     private Callable<Boolean> isServiceDeployed(final String proxyName) {
 
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
 
                 return isProxySuccesfullyDeployed(proxyName);
             }

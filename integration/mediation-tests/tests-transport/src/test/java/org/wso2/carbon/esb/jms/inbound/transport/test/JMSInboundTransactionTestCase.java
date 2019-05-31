@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -28,7 +28,6 @@ import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -42,8 +41,7 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
     String message;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
 
         super.init();
 
@@ -61,13 +59,13 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
      *
      * @throws Exception for any unexpected exception
      */
-    @Test(groups = { "wso2.esb" },
-          description = "Successfully committing the message", enabled = false)
-    public void testTransactionCommit() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Successfully committing the message", enabled = false) public void testTransactionCommit()
+            throws Exception {
 
         String queueName = "testTransactionCommitQueue";
-        JMSQueueMessageProducer sender = new JMSQueueMessageProducer(JMSBrokerConfigurationProvider.getInstance()
-                                                                                                   .getBrokerConfiguration());
+        JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
+                JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
 
         logViewerClient.clearLogs();
 
@@ -90,17 +88,17 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
 
     /**
      * Tests whether rolling back a transaction does not removes the message from the queue.
-     *  Disabling until find a proper fix to https://github.com/wso2/product-ei/issues/1389
+     * Disabling until find a proper fix to https://github.com/wso2/product-ei/issues/1389
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" },
-          description = "Rolling back the failed message to the queue", enabled = false)
-    public void testTransactionRollBack() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Rolling back the failed message to the queue", enabled = false) public void testTransactionRollBack()
+            throws Exception {
 
         String queueName = "testTransactionRollBackQueue";
-        JMSQueueMessageProducer sender = new JMSQueueMessageProducer(JMSBrokerConfigurationProvider.getInstance()
-                                                                                                   .getBrokerConfiguration());
+        JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
+                JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         logViewerClient.clearLogs();
 
         try {
@@ -133,8 +131,7 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
         return poppedMessage == null;
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
 
     }

@@ -26,7 +26,6 @@ import java.util.Map;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -47,7 +46,7 @@ public class GreenMailClient {
      *
      * @param subject Email subject
      * @throws MessagingException if the properties set to the message are not valid
-     * @throws UserException when no such user or user is null
+     * @throws UserException      when no such user or user is null
      */
     public void sendMail(String subject) throws MessagingException, UserException {
         MimeMessage message = createBasicMessage(subject);
@@ -59,10 +58,9 @@ public class GreenMailClient {
      *
      * @param subject Email subject
      * @throws MessagingException if the properties set to the message are not valid
-     * @throws UserException when no such user or user is null
+     * @throws UserException      when no such user or user is null
      */
-    public void sendMail(String subject, Map<String, String> headers)
-            throws MessagingException, UserException {
+    public void sendMail(String subject, Map<String, String> headers) throws MessagingException, UserException {
         MimeMessage message = createBasicMessage(subject);
         for (Map.Entry<String, String> entry : headers.entrySet()) {
             message.addHeader(entry.getKey(), entry.getValue());

@@ -24,22 +24,22 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import static org.wso2.esb.integration.common.utils.Utils.assertIfSystemLogContains;
 
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.wso2.esb.integration.common.utils.Utils.assertIfSystemLogContains;
+
 /**
  * Test for aggregating no content json responses at aggregate mediator
  */
 public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
-    
+
     private static final String PROXY_NAME = "aggregateEmptyJsonPayloadTestProxy";
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         isProxyDeployed(PROXY_NAME);
@@ -51,24 +51,17 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ")
-    public void testAggregateEmptyJsonPayload() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ") public void testAggregateEmptyJsonPayload()
+            throws Exception {
 
         String inputPayload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
-                + "<soapenv:Header/>\n"
-                + "<soapenv:Body>\n"
-                + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
-                + " <m0:request>IBM\n"
-                + " </m0:request>\n"
-                + "   <m0:request>WSO2\n"
-                + " </m0:request>\n"
-                + "</m0:getQuote>\n"
-                + "</soapenv:Body>\n"
-                + "</soapenv:Envelope>";
+                + "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
+                + " <m0:request>IBM\n" + " </m0:request>\n" + "   <m0:request>WSO2\n" + " </m0:request>\n"
+                + "</m0:getQuote>\n" + "</soapenv:Body>\n" + "</soapenv:Envelope>";
 
-        String expectedOutput = "<OverallResponse "
-                + "xmlns=\"http://ws.apache.org/ns/synapse\"><jsonObject xmlns=\"\"/><jsonObject "
-                + "xmlns=\"\"/></OverallResponse>";
+        String expectedOutput =
+                "<OverallResponse " + "xmlns=\"http://ws.apache.org/ns/synapse\"><jsonObject xmlns=\"\"/><jsonObject "
+                        + "xmlns=\"\"/></OverallResponse>";
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "text/xml");
@@ -77,11 +70,10 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
         HttpRequestUtil.doPost(new URL(getProxyServiceURLHttp(PROXY_NAME)), inputPayload, requestHeader);
 
         Assert.assertTrue(assertIfSystemLogContains(logViewerClient, expectedOutput),
-                          "No content 204 responses are not properly aggregated at the aggregate mediator.");
+                "No content 204 responses are not properly aggregated at the aggregate mediator.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

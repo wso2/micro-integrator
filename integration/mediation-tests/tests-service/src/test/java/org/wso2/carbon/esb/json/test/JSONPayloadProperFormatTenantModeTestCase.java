@@ -1,27 +1,26 @@
 /*
-*Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.json.test;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
@@ -41,14 +40,12 @@ import static org.testng.Assert.assertTrue;
  */
 public class JSONPayloadProperFormatTenantModeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
         super.init(TestUserMode.TENANT_ADMIN);
     }
 
-    @Test(groups = "wso2.esb",
-          description = "Check whether JSON message formatting works properly in tenant mode")
-    public void testJSONFormattingInTenantMode() throws MalformedURLException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Check whether JSON message formatting works properly in tenant mode") public void testJSONFormattingInTenantMode()
+            throws MalformedURLException, AutomationFrameworkException {
         String JSON_PAYLOAD = "{\"emails\": [{\"value\": \"test@wso2.com\"}]}";
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -64,8 +61,7 @@ public class JSONPayloadProperFormatTenantModeTestCase extends ESBIntegrationTes
                 "Expected format not received!");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
         super.cleanup();
     }
 

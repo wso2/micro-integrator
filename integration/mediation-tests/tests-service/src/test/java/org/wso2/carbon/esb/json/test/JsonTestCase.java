@@ -28,8 +28,8 @@ import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
 
 import static org.testng.Assert.assertEquals;
 
@@ -37,30 +37,27 @@ public class JsonTestCase extends ESBIntegrationTest {
 
     private SimpleHttpClient httpClient;
 
-    String epr ;
+    String epr;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
-        epr = this.getProxyServiceURLHttp("Version") ;
+        epr = this.getProxyServiceURLHttp("Version");
         httpClient = new SimpleHttpClient();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message Via REST with empty payload")
-    public void testEmptyPayloadJson() throws IOException, EndpointAdminEndpointAdminException,
-            LoginAuthenticationExceptionException,
+    @Test(groups = {
+            "wso2.esb" }, description = "Sending a Message Via REST with empty payload") public void testEmptyPayloadJson()
+            throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
         String payload = "";
-        HttpResponse response = httpClient.doPost(epr,
-                null, payload, "application/json");
+        HttpResponse response = httpClient.doPost(epr, null, payload, "application/json");
 
         assertEquals(response.getStatusLine().getStatusCode(), 200);
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -25,25 +25,20 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA4597TestCase extends ESBIntegrationTest {
 
-
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("ESBJAVA4597TestProxy");
     }
 
-    @Test(groups = "wso2.esb",
-          description = " Checking response for HEAD request contains a body")
-    public void testResponseBodyOfHEADRequest() throws Exception {
+    @Test(groups = "wso2.esb", description = " Checking response for HEAD request contains a body") public void testResponseBodyOfHEADRequest()
+            throws Exception {
         OMElement response = axis2Client.
                 sendSimpleStockQuoteRequest("http://localhost:8280/services/ESBJAVA4597TestProxy", null, "IBM");
         Assert.assertNotNull(response);
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

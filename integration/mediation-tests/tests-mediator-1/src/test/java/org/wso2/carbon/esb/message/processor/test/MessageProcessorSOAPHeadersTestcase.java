@@ -23,35 +23,24 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
 
 import java.io.IOException;
-import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.activation.DataHandler;
-import javax.xml.xpath.XPathExpressionException;
-
-import static java.io.File.separator;
 
 /**
  * Testcase to test to verify SOAP headers kept intact when message is picked from the message store
- *
+ * <p>
  * Git Issue: https://github.com/wso2/product-ei/issues/1031
  */
 public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
 
     private WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init();
         //create wireMonitor server and start it
@@ -60,14 +49,13 @@ public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Testcase to check preservation of SOAP headers during MSMP scenario")
-    public void testPreservationOfSoapHeadersMSMPScennario()
+    @Test(groups = "wso2.esb", description = "Testcase to check preservation of SOAP headers during MSMP scenario") public void testPreservationOfSoapHeadersMSMPScennario()
             throws IOException, LogViewerLogViewerException, InterruptedException {
-        String payload ="<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header/>"
-                + "<soapenv:Body/></soapenv:Envelope>";
+        String payload =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header/>"
+                        + "<soapenv:Body/></soapenv:Envelope>";
 
-        String expectedSOAPHeaderSnippetAtMP =
-                "<wsa:To xmlns:wsa=\"http://www.w3.org/2005/08/addressing\">http://localhost:8991/test</wsa:To>";
+        String expectedSOAPHeaderSnippetAtMP = "<wsa:To xmlns:wsa=\"http://www.w3.org/2005/08/addressing\">http://localhost:8991/test</wsa:To>";
 
         boolean expectedHeaderFound = false;
         Map<String, String> headers = new HashMap<String, String>();
@@ -80,7 +68,8 @@ public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
 
         //Create HTTP client and invoke the proxy
         SimpleHttpClient httpClient = new SimpleHttpClient();
-        httpClient.doPost(getProxyServiceURLHttps("messageProcessorSoapHeaderTestProxy"), headers, payload, "application/xml");
+        httpClient.doPost(getProxyServiceURLHttps("messageProcessorSoapHeaderTestProxy"), headers, payload,
+                "application/xml");
 
         String response = wireServer.getCapturedMessage();
         log.info("Response from Wire monitor:" + response);
@@ -91,9 +80,7 @@ public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
         Assert.assertTrue(expectedHeaderFound, "Expected SOAP Header not available at Message Processor sequence");
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

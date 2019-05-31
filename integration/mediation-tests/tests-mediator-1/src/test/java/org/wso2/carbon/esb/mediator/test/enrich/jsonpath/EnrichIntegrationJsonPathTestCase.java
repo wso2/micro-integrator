@@ -52,244 +52,157 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
     private String input;
     private JsonParser parser;
 
-    @BeforeClass(alwaysRun = true)
-    public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
         super.init();
         setJsonPathConfiguration();
-        input = FileUtils.readFileToString(new File(getESBResourceLocation() + File.separator + "json" +
-                File.separator + "enrichSampleInput.json"));
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" +
-                File.separator + "mediatorconfig" + File.separator + "enrich" + File.separator + "api" +
-                File.separator + "enrich_json_api_configurations.xml");
+        input = FileUtils.readFileToString(new File(
+                getESBResourceLocation() + File.separator + "json" + File.separator + "enrichSampleInput.json"));
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
+                        + File.separator + "enrich" + File.separator + "api" + File.separator
+                        + "enrich_json_api_configurations.xml");
         parser = new JsonParser();
 
     }
 
-    @Test(groups = "wso2.esb", description = "Take the response json and add it as a child to the same json " +
-            "specified by the json path")
-    public void testAddBodyToChildJsonpath() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"patient\": {\n" +
-                "        \"name\": \"John Doe\",\n" +
-                "        \"address\": null,\n" +
-                "        \"phone\": [\n" +
-                "            8770586755,\n" +
-                "            35352399,\n" +
-                "            null\n" +
-                "        ],\n" +
-                "        \"email\": \"johndoe@gmail.com\"\n" +
-                "    },\n" +
-                "    \"doctor\": \"thomas collins\",\n" +
-                "    \"hospital\": {\n" +
-                "        \"patient\": {\n" +
-                "            \"name\": \"John Doe\",\n" +
-                "            \"address\": null,\n" +
-                "            \"phone\": [\n" +
-                "                8770586755,\n" +
-                "                35352399,\n" +
-                "                null\n" +
-                "            ],\n" +
-                "            \"email\": \"johndoe@gmail.com\"\n" +
-                "        },\n" +
-                "        \"doctor\": \"thomas collins\",\n" +
-                "        \"hospital\": \"grand oak community hospital\",\n" +
-                "        \"appointment_date\": \"2017-04-02\"\n" +
-                "    },\n" +
-                "    \"appointment_date\": \"2017-04-02\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Take the response json and add it as a child to the same json "
+            + "specified by the json path") public void testAddBodyToChildJsonpath() throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"patient\": {\n" + "        \"name\": \"John Doe\",\n" + "        \"address\": null,\n"
+                        + "        \"phone\": [\n" + "            8770586755,\n" + "            35352399,\n"
+                        + "            null\n" + "        ],\n" + "        \"email\": \"johndoe@gmail.com\"\n"
+                        + "    },\n" + "    \"doctor\": \"thomas collins\",\n" + "    \"hospital\": {\n"
+                        + "        \"patient\": {\n" + "            \"name\": \"John Doe\",\n"
+                        + "            \"address\": null,\n" + "            \"phone\": [\n"
+                        + "                8770586755,\n" + "                35352399,\n" + "                null\n"
+                        + "            ],\n" + "            \"email\": \"johndoe@gmail.com\"\n" + "        },\n"
+                        + "        \"doctor\": \"thomas collins\",\n"
+                        + "        \"hospital\": \"grand oak community hospital\",\n"
+                        + "        \"appointment_date\": \"2017-04-02\"\n" + "    },\n"
+                        + "    \"appointment_date\": \"2017-04-02\"\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich1", expectedOutput,
                 "Setting json message body as a child to the original json payload failed");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Add a child json object to the source payload")
-    public void testAddChildUsingJsonPath() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"name\": \"John Doe\",\n" +
-                "    \"address\": null,\n" +
-                "    \"phone\": [\n" +
-                "        8770586755,\n" +
-                "        35352399,\n" +
-                "        null\n" +
-                "    ],\n" +
-                "    \"email\": \"johndoe@gmail.com\",\n" +
-                "    \"doctor\": {\n" +
-                "        \"name\": \"thomas collins\",\n" +
-                "        \"doctorid\": \"76DA-856\"\n" +
-                "    },\n" +
-                "    \"hospital\": \"grand oak community hospital\",\n" +
-                "    \"appointment_date\": \"2017-04-02\",\n" +
-                "    \"appointment_id\": \"1\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Add a child json object to the source payload") public void testAddChildUsingJsonPath()
+            throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
+                        + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
+                        + "    \"email\": \"johndoe@gmail.com\",\n" + "    \"doctor\": {\n"
+                        + "        \"name\": \"thomas collins\",\n" + "        \"doctorid\": \"76DA-856\"\n"
+                        + "    },\n" + "    \"hospital\": \"grand oak community hospital\",\n"
+                        + "    \"appointment_date\": \"2017-04-02\",\n" + "    \"appointment_id\": \"1\"\n" + "}";
 
-        executeSequenceAndAssertResponse("testenrich2", expectedOutput,
-                "Adding a child json object failed");
+        executeSequenceAndAssertResponse("testenrich2", expectedOutput, "Adding a child json object failed");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Add json objects as a child to a json array and json object")
-    public void testAddChildJsonpath() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"name\": \"John Doe\",\n" +
-                "    \"address\": null,\n" +
-                "    \"phone\": [\n" +
-                "        8770586755,\n" +
-                "        35352399,\n" +
-                "        null,\n" +
-                "        {\n" +
-                "            \"countryCode\": 94\n" +
-                "        }\n" +
-                "    ],\n" +
-                "    \"email\": \"johndoe@gmail.com\",\n" +
-                "    \"doctor\": {\n" +
-                "        \"name\": \"thomas collins\",\n" +
-                "        \"doctorid\": \"76DA-856\",\n" +
-                "        \"active\": true\n" +
-                "    },\n" +
-                "    \"hospital\": \"grand oak community hospital\",\n" +
-                "    \"appointment_date\": \"2017-04-02\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Add json objects as a child to a json array and json object") public void testAddChildJsonpath()
+            throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
+                        + "        8770586755,\n" + "        35352399,\n" + "        null,\n" + "        {\n"
+                        + "            \"countryCode\": 94\n" + "        }\n" + "    ],\n"
+                        + "    \"email\": \"johndoe@gmail.com\",\n" + "    \"doctor\": {\n"
+                        + "        \"name\": \"thomas collins\",\n" + "        \"doctorid\": \"76DA-856\",\n"
+                        + "        \"active\": true\n" + "    },\n"
+                        + "    \"hospital\": \"grand oak community hospital\",\n"
+                        + "    \"appointment_date\": \"2017-04-02\"\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich3", expectedOutput,
                 "Adding a json object child to json object and json array failed");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich value to property, enrich inline json object to body " +
-            "and swap the former property")
-    public void testEnrichToPropertyReplaceBodyandEnrichPropertyBack() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"person\": {\n" +
-                "        \"name\": \"Alice\",\n" +
-                "        \"email\": \"johndoe@gmail.com\"\n" +
-                "    }\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Enrich value to property, enrich inline json object to body "
+            + "and swap the former property") public void testEnrichToPropertyReplaceBodyandEnrichPropertyBack()
+            throws Exception {
+        String expectedOutput = "{\n" + "    \"person\": {\n" + "        \"name\": \"Alice\",\n"
+                + "        \"email\": \"johndoe@gmail.com\"\n" + "    }\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich7", expectedOutput,
                 "Enrich property back and forth from the message body failed");
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich json body to property and enrich property to body bacck")
-    public void testEnrichToPropertyandEnrichBodyBack() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"name\": \"John Doe\",\n" +
-                "    \"address\": null,\n" +
-                "    \"phone\": [\n" +
-                "        8770586755,\n" +
-                "        35352399,\n" +
-                "        null\n" +
-                "    ],\n" +
-                "    \"email\": \"johndoe@gmail.com\",\n" +
-                "    \"doctor\": {\n" +
-                "        \"name\": \"thomas collins\",\n" +
-                "        \"doctorid\": \"76DA-856\"\n" +
-                "    },\n" +
-                "    \"hospital\": \"grand oak community hospital\",\n" +
-                "    \"appointment_date\": \"2017-04-02\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Enrich json body to property and enrich property to body bacck") public void testEnrichToPropertyandEnrichBodyBack()
+            throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
+                        + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
+                        + "    \"email\": \"johndoe@gmail.com\",\n" + "    \"doctor\": {\n"
+                        + "        \"name\": \"thomas collins\",\n" + "        \"doctorid\": \"76DA-856\"\n"
+                        + "    },\n" + "    \"hospital\": \"grand oak community hospital\",\n"
+                        + "    \"appointment_date\": \"2017-04-02\"\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich8", expectedOutput,
                 "Enriching json body to property and vice versa failed");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich Json body to Property, replace body " +
-            "and enrich the property back to body")
-    public void testEnrichBodyToPropertyReplaceBodyandEnrichPropertyBack() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"name\": \"John Doe\",\n" +
-                "    \"address\": null,\n" +
-                "    \"phone\": [\n" +
-                "        8770586755,\n" +
-                "        35352399,\n" +
-                "        null\n" +
-                "    ],\n" +
-                "    \"email\": \"johndoe@gmail.com\",\n" +
-                "    \"doctor\": {\n" +
-                "        \"name\": \"thomas collins\",\n" +
-                "        \"doctorid\": \"76DA-856\"\n" +
-                "    },\n" +
-                "    \"hospital\": \"grand oak community hospital\",\n" +
-                "    \"appointment_date\": \"2017-04-02\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Enrich Json body to Property, replace body "
+            + "and enrich the property back to body") public void testEnrichBodyToPropertyReplaceBodyandEnrichPropertyBack()
+            throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
+                        + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
+                        + "    \"email\": \"johndoe@gmail.com\",\n" + "    \"doctor\": {\n"
+                        + "        \"name\": \"thomas collins\",\n" + "        \"doctorid\": \"76DA-856\"\n"
+                        + "    },\n" + "    \"hospital\": \"grand oak community hospital\",\n"
+                        + "    \"appointment_date\": \"2017-04-02\"\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich9", expectedOutput,
                 "Enriching json body to property, replacing body and enriching property back to body failed");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich a child value to its parent and replace")
-    public void testEnrichChildPropertyToParent() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"name\": \"John Doe\",\n" +
-                "    \"address\": null,\n" +
-                "    \"phone\": [\n" +
-                "        8770586755,\n" +
-                "        35352399,\n" +
-                "        null\n" +
-                "    ],\n" +
-                "    \"email\": \"johndoe@gmail.com\",\n" +
-                "    \"doctor\": \"thomas collins\",\n" +
-                "    \"hospital\": \"grand oak community hospital\",\n" +
-                "    \"appointment_date\": \"2017-04-02\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Enrich a child value to its parent and replace") public void testEnrichChildPropertyToParent()
+            throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
+                        + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
+                        + "    \"email\": \"johndoe@gmail.com\",\n" + "    \"doctor\": \"thomas collins\",\n"
+                        + "    \"hospital\": \"grand oak community hospital\",\n"
+                        + "    \"appointment_date\": \"2017-04-02\"\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich11", expectedOutput,
                 "Enriching the child value to the parent failed");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich a json payload to property, receive a xml body " +
-            "from backend and enrich the json property back to body")
-    public void testEnrichJsonToPropertyAndReplaceXmlBody() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"name\": \"John Doe\",\n" +
-                "    \"address\": null,\n" +
-                "    \"phone\": [\n" +
-                "        8770586755,\n" +
-                "        35352399,\n" +
-                "        null\n" +
-                "    ],\n" +
-                "    \"email\": \"johndoe@gmail.com\",\n" +
-                "    \"doctor\": {\n" +
-                "        \"name\": \"thomas collins\",\n" +
-                "        \"doctorid\": \"76DA-856\"\n" +
-                "    },\n" +
-                "    \"hospital\": \"grand oak community hospital\",\n" +
-                "    \"appointment_date\": \"2017-04-02\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Enrich a json payload to property, receive a xml body "
+            + "from backend and enrich the json property back to body") public void testEnrichJsonToPropertyAndReplaceXmlBody()
+            throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
+                        + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
+                        + "    \"email\": \"johndoe@gmail.com\",\n" + "    \"doctor\": {\n"
+                        + "        \"name\": \"thomas collins\",\n" + "        \"doctorid\": \"76DA-856\"\n"
+                        + "    },\n" + "    \"hospital\": \"grand oak community hospital\",\n"
+                        + "    \"appointment_date\": \"2017-04-02\"\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich12", expectedOutput,
                 "Enriching a json property to a xml payload failed");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich several inline objects to properties and enrich them to body")
-    public void testEnrichInlineToPropertyAndBody() throws Exception {
-        String expectedOutput = "{\n" +
-                "    \"name\": \"John Doe\",\n" +
-                "    \"address\": null,\n" +
-                "    \"phone\": [\n" +
-                "        32535235,\n" +
-                "        35353897,\n" +
-                "        null\n" +
-                "    ],\n" +
-                "    \"email\": \"alice@integrator.net\",\n" +
-                "    \"doctor\": {\n" +
-                "        \"name\": \"adam eve\",\n" +
-                "        \"doctorid\": \"934T-76A\"\n" +
-                "    },\n" +
-                "    \"hospital\": \"grand oak community hospital\",\n" +
-                "    \"appointment_date\": \"2017-04-02\"\n" +
-                "}";
+    @Test(groups = "wso2.esb", description = "Enrich several inline objects to properties and enrich them to body") public void testEnrichInlineToPropertyAndBody()
+            throws Exception {
+        String expectedOutput =
+                "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
+                        + "        32535235,\n" + "        35353897,\n" + "        null\n" + "    ],\n"
+                        + "    \"email\": \"alice@integrator.net\",\n" + "    \"doctor\": {\n"
+                        + "        \"name\": \"adam eve\",\n" + "        \"doctorid\": \"934T-76A\"\n" + "    },\n"
+                        + "    \"hospital\": \"grand oak community hospital\",\n"
+                        + "    \"appointment_date\": \"2017-04-02\"\n" + "}";
 
         executeSequenceAndAssertResponse("testenrich14", expectedOutput,
                 "Enriching several inline objects to properties and enrich them to body failed");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 

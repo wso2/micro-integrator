@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.template;
 
@@ -41,18 +41,17 @@ public class TestFunctionStackDeepClone extends ESBIntegrationTest {
 
     private final int iterations = 10;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/template/functionStackDeepCloneTestSynapse.xml");
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = {"wso2.esb"}, priority = 1, description = "Test function stack is properly deep cloned")
-    public void testFunctionStackDeepClone() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @Test(groups = {
+            "wso2.esb" }, priority = 1, description = "Test function stack is properly deep cloned") public void testFunctionStackDeepClone()
+            throws Exception {
 
-        for (int i = 0 ; i < iterations ; i++) {
+        for (int i = 0; i < iterations; i++) {
             SimpleHttpClient httpClient = new SimpleHttpClient();
             // have to create SimpleHttpClient instance for each request as it doesn't handle concurrent requests properly
 
@@ -75,14 +74,13 @@ public class TestFunctionStackDeepClone extends ESBIntegrationTest {
             }
         }
         // Within the template configuration same log statement is printed 3 times
-        boolean isCallCountCorrect = (call1Count == 3 * iterations) &&
-                (call2Count == 3 * iterations) && (call3Count == 3 * iterations);
+        boolean isCallCountCorrect =
+                (call1Count == 3 * iterations) && (call2Count == 3 * iterations) && (call3Count == 3 * iterations);
         assertTrue(isCallCountCorrect, "Function Stack is not properly deep cloned");
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         super.cleanup();
     }
 }

@@ -19,7 +19,6 @@
 package org.wso2.carbon.esb.samples.test.streamingxpath;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.synapse.util.streaming_xpath.exception.StreamingXPATHException;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,9 +27,9 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 
@@ -39,34 +38,33 @@ public class StreamingXpathExceptionTestCase extends ESBSampleIntegrationTest {
     private ServerConfigurationManager serverManager;
     private boolean exceptionCaught;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        File sourceFile = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator +
-                "ESB" + File.separator + "streamingxpath" + File.separator + "synapse.properties");
+        File sourceFile = new File(
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
+                        + "streamingxpath" + File.separator + "synapse.properties");
         serverManager.applyConfiguration(sourceFile);
         super.init();
-        String relativePath = "artifacts" + File.separator + "ESB" + File.separator + "streamingxpath" +
-                File.separator + "StreamingException.xml";
+        String relativePath = "artifacts" + File.separator + "ESB" + File.separator + "streamingxpath" + File.separator
+                + "StreamingException.xml";
         ESBTestCaseUtils util = new ESBTestCaseUtils();
         OMElement proxyConfig = util.loadResource(relativePath);
 
         try {
             addProxyService(proxyConfig);
         } catch (Exception ignore) {
-           exceptionCaught=true;
+            exceptionCaught = true;
         }
 
     }
 
-    @Test(groups = "wso2.esb", description = " Streaming XPath Running", enabled = true)
-    public void streamingXpathTestCase() throws Exception {
+    @Test(groups = "wso2.esb", description = " Streaming XPath Running", enabled = true) public void streamingXpathTestCase()
+            throws Exception {
         Assert.assertTrue(exceptionCaught);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         serverManager.restoreToLastConfiguration();
     }

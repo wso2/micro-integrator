@@ -38,31 +38,31 @@ public class Server {
 
         final Tomcat tomcat = new Tomcat();
         tomcat.setPort(8080);
-        tomcat.setBaseDir( base.getAbsolutePath() );
+        tomcat.setBaseDir(base.getAbsolutePath());
 
-        Context context = tomcat.addContext( "/", base.getAbsolutePath() );
-        Tomcat.addServlet( context, "CXFServlet", new CXFServlet() );
+        Context context = tomcat.addContext("/", base.getAbsolutePath());
+        Tomcat.addServlet(context, "CXFServlet", new CXFServlet());
 
-        context.addServletMapping( "/rest/*", "CXFServlet" );
-        context.addApplicationListener( ContextLoaderListener.class.getName() );
-        context.setLoader( new WebappLoader( Thread.currentThread().getContextClassLoader() ) );
+        context.addServletMapping("/rest/*", "CXFServlet");
+        context.addApplicationListener(ContextLoaderListener.class.getName());
+        context.setLoader(new WebappLoader(Thread.currentThread().getContextClassLoader()));
 
-        context.addParameter( "contextClass", AnnotationConfigWebApplicationContext.class.getName() );
-        context.addParameter( "contextConfigLocation", MusicConfig.class.getName() );
+        context.addParameter("contextClass", AnnotationConfigWebApplicationContext.class.getName());
+        context.addParameter("contextConfigLocation", MusicConfig.class.getName());
 
         tomcat.start();
         tomcat.getServer().await();
     }
 
     private static File createBaseDirectory() throws IOException {
-        final File base = File.createTempFile( "tmp-", "", new File("/home/dimuthu/Desktop/JMS"));
+        final File base = File.createTempFile("tmp-", "", new File("/home/dimuthu/Desktop/JMS"));
 
-        if( !base.delete() ) {
-            throw new IOException( "Cannot (re)create base folder: " + base.getAbsolutePath()  );
+        if (!base.delete()) {
+            throw new IOException("Cannot (re)create base folder: " + base.getAbsolutePath());
         }
 
-        if( !base.mkdir() ) {
-            throw new IOException( "Cannot create base folder: " + base.getAbsolutePath()  );
+        if (!base.mkdir()) {
+            throw new IOException("Cannot create base folder: " + base.getAbsolutePath());
         }
         return base;
     }

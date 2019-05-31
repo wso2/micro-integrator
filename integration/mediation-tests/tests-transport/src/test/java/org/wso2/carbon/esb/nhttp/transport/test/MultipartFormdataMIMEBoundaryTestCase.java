@@ -1,13 +1,13 @@
 /**
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
+ * <p>
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -17,7 +17,6 @@
  */
 
 package org.wso2.carbon.esb.nhttp.transport.test;
-
 
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.http.HttpResponse;
@@ -37,22 +36,24 @@ import java.io.File;
  */
 public class MultipartFormdataMIMEBoundaryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("artifacts" + File.separator + "ESB" + File.separator
-                + "nhttp" + File.separator + "transport" + File.separator + "MultipartFormdataMIMEBoundaryTest.xml");
+        loadESBConfigurationFromClasspath(
+                "artifacts" + File.separator + "ESB" + File.separator + "nhttp" + File.separator + "transport"
+                        + File.separator + "MultipartFormdataMIMEBoundaryTest.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test for MIMEBoundary value in Content-Type header for multipart/form-data")
-    public void testReturnContentType() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test for MIMEBoundary value in Content-Type header for multipart/form-data") public void testReturnContentType()
+            throws Exception {
 
         String boundary = "boundary";
         String jsonPayload = "{\"action\":\"ping\"}";
 
         SimpleHttpClient httpClient = new SimpleHttpClient();
 
-        HttpResponse response = httpClient.doPost(getApiInvocationURL("testMIMEBoundary"), null, jsonPayload, HTTPConstants.MEDIA_TYPE_APPLICATION_JSON);
+        HttpResponse response = httpClient.doPost(getApiInvocationURL("testMIMEBoundary"), null, jsonPayload,
+                HTTPConstants.MEDIA_TYPE_APPLICATION_JSON);
         String contentTypeData = response.getEntity().getContentType().getValue();
 
         if (contentTypeData.contains(boundary)) {
@@ -60,14 +61,14 @@ public class MultipartFormdataMIMEBoundaryTestCase extends ESBIntegrationTest {
             for (String pair : pairs) {
                 if (pair.contains(boundary)) {
                     String[] boundaryDetails = pair.split("=");
-                    Assert.assertTrue(boundaryDetails[1].contains("MIMEBoundary_"), "MIMEBoundary is not set in Content-Type header");
+                    Assert.assertTrue(boundaryDetails[1].contains("MIMEBoundary_"),
+                            "MIMEBoundary is not set in Content-Type header");
                 }
             }
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 }

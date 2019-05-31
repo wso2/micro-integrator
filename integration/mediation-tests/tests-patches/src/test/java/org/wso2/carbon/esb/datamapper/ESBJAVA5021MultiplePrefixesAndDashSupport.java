@@ -22,41 +22,33 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.datamapper.common.DataMapperIntegrationTest;
 
-import java.io.File;
-
-public class ESBJAVA5021MultiplePrefixesAndDashSupport extends DataMapperIntegrationTest{
+public class ESBJAVA5021MultiplePrefixesAndDashSupport extends DataMapperIntegrationTest {
 
     private final String DM_ARTIFACT_ROOT_PATH = "/artifacts/ESB/mediatorconfig/datamapper/multiplePrefix/";
     private final String DM_REGISTRY_ROOT_PATH = "datamapper/";
 
-
-    @Test(groups = { "wso2.esb" }, description = "Datamapper : test support for multiple prefixes for same namespace")
-    public void testMultiplePrefixesToSameNamespace() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Datamapper : test support for multiple prefixes for same namespace") public void testMultiplePrefixesToSameNamespace()
+            throws Exception {
         verifyAPIExistence("simpleDataAPI_XMLtoXML2_withDash");
         uploadResourcesToGovernanceRegistry(DM_REGISTRY_ROOT_PATH + "multiplePrefix/", DM_ARTIFACT_ROOT_PATH,
-                                "simpleDataAPI_XMLtoXML2_withDash_regConf.dmc",
-                                "simpleDataAPI_XMLtoXML2_withDash_regConf_inputSchema.json",
-                                "simpleDataAPI_XMLtoXML2_withDash_regConf_outputSchema.json");
-
+                "simpleDataAPI_XMLtoXML2_withDash_regConf.dmc",
+                "simpleDataAPI_XMLtoXML2_withDash_regConf_inputSchema.json",
+                "simpleDataAPI_XMLtoXML2_withDash_regConf_outputSchema.json");
 
         String requestMsg = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
                 + "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" "
                 + "         xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsd2=\"http://www.w3.org/2001/XMLSchema\" "
-                + "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n"
-                + " <SOAP-ENV:Header/>\n"
+                + "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + " <SOAP-ENV:Header/>\n"
                 + " <SOAP-ENV:Body>\n"
                 + "     <data xmlns:test1=\"http://test.com/schema\" xmlns:test2=\"http://test.com/schema\">\n"
-                + "         <test1:aaa-aaa>testA</test1:aaa-aaa>\n"
-                + "         <test2:b>testB</test2:b>\n"
+                + "         <test1:aaa-aaa>testA</test1:aaa-aaa>\n" + "         <test2:b>testB</test2:b>\n"
                 + "         <item>\n"
                 + "             <test2:name test1:nameType=\"productID\" xsi:type=\"xsd2:string\">car</test2:name>\n"
                 + "             <new_price xsi:type=\"xsd:float\">100</new_price>\n"
                 + "             <DiscountedPrice xsi2:type=\"xsd2:float\" xmlns:xsi2=\"http://www.w3.org/2001/XMLSchema-instance\" "
                 + "                                 test1:discountReason=\"bulk\">100</DiscountedPrice>\n"
-                + "         </item>\n"
-                + "     </data>\n"
-                + " </SOAP-ENV:Body>\n"
-                + "</SOAP-ENV:Envelope>";
+                + "         </item>\n" + "     </data>\n" + " </SOAP-ENV:Body>\n" + "</SOAP-ENV:Envelope>";
 
         String response = sendRequest(getApiInvocationURL("simpleDataAPI_XMLtoXML2_withDash"), requestMsg, "text/xml");
         Assert.assertEquals(response, "<data2><test1:a2 xmlns:test1=\"http://test.com/schema\">testA</test1:a2>"
@@ -72,6 +64,5 @@ public class ESBJAVA5021MultiplePrefixesAndDashSupport extends DataMapperIntegra
                 + "test1:discountReason=\"bulk\" xsi:type=\"xsd2:float\">100.0</Discounted_Price2></item2></data2>");
 
     }
-
 
 }

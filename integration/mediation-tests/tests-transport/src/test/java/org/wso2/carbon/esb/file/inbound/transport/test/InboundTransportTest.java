@@ -17,11 +17,6 @@
  */
 package org.wso2.carbon.esb.file.inbound.transport.test;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
@@ -33,9 +28,13 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 public class InboundTransportTest extends ESBIntegrationTest {
 
@@ -57,10 +56,9 @@ public class InboundTransportTest extends ESBIntegrationTest {
     private File inboundFileListeningFolder;
     private String pathToFtpDir;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        pathToFtpDir = getESBResourceLocation() + File.separator + SYNAPSE_CONFIG
-                       + File.separator + VFS_TRANSPORT + File.separator;
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+        pathToFtpDir = getESBResourceLocation() + File.separator + SYNAPSE_CONFIG + File.separator + VFS_TRANSPORT
+                + File.separator;
 
         inboundFileListeningFolder = new File(pathToFtpDir + File.separator + INBOUND_FILE_LISTENING_FOLDER);
 
@@ -75,15 +73,13 @@ public class InboundTransportTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb",
-          description = "Inbound endpoint Reading file with Contect type XML Test Case")
-    public void testInboundEnpointReadFile_ContentType_XML() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Inbound endpoint Reading file with Contect type XML Test Case") public void testInboundEnpointReadFile_ContentType_XML()
+            throws Exception {
         logViewerClient.clearLogs();
 
         File sourceFile = new File(pathToFtpDir + File.separator + TEST_XML_FILE_NAME);
@@ -97,35 +93,27 @@ public class InboundTransportTest extends ESBIntegrationTest {
         Assert.assertTrue(isFileRead, "The XML file is not getting read");
     }
 
-    @Test(groups = "wso2.esb",
-          dependsOnMethods = "testInboundEnpointReadFile_ContentType_XML",
-          description = "Inbound endpoint Delete file after reading Test Case")
-    public void testInboundEnpointDeleteFileAfterProcess() throws Exception {
+    @Test(groups = "wso2.esb", dependsOnMethods = "testInboundEnpointReadFile_ContentType_XML", description = "Inbound endpoint Delete file after reading Test Case") public void testInboundEnpointDeleteFileAfterProcess()
+            throws Exception {
 
         File sourceFile = new File(
                 inboundFileListeningFolder + File.separator + CONTENT_TYPE + File.separator + TEST_XML_FILE_NAME);
         Assert.assertFalse(sourceFile.exists(), "The file is not deleted after the read");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          dependsOnMethods = "testInboundEnpointDeleteFileAfterProcess",
-          description = "Inbound Endpoint invalid interval Test case")
-    public void testInboundEndpointPollInterval_NonInteger() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, dependsOnMethods = "testInboundEnpointDeleteFileAfterProcess", description = "Inbound Endpoint invalid interval Test case") public void testInboundEndpointPollInterval_NonInteger()
+            throws Exception {
         logViewerClient.clearLogs();
         addInboundEndpoint(addEndpoint3());
 
-        boolean errorMessageFound = Utils.checkForLog(logViewerClient,
-                "Invalid numeric value for interval", 10);
+        boolean errorMessageFound = Utils.checkForLog(logViewerClient, "Invalid numeric value for interval", 10);
         Assert.assertTrue(errorMessageFound, "The Error message not found in the log");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          dependsOnMethods = "testInboundEndpointPollInterval_NonInteger",
-          description = "Inbound Endpoint invalid File URI Test case")
-    public void testInboundEndpointInvalidFileUri() throws Exception {
-
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, dependsOnMethods = "testInboundEndpointPollInterval_NonInteger", description = "Inbound Endpoint invalid File URI Test case") public void testInboundEndpointInvalidFileUri()
+            throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + TEST_XML_FILE_NAME);
         File targetFolder = new File(inboundFileListeningFolder + File.separator + URI);
@@ -133,10 +121,8 @@ public class InboundTransportTest extends ESBIntegrationTest {
         try {
             FileUtils.copyFile(sourceFile, targetFile);
             addInboundEndpoint(addEndpoint4());
-            Awaitility.await()
-                      .pollInterval(50, TimeUnit.MILLISECONDS)
-                      .atMost(60, TimeUnit.SECONDS)
-                      .until(isFileExist(targetFile));
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                    .until(isFileExist(targetFile));
 
             Assert.assertTrue(targetFile.exists(), "Invalid file processed");
         } finally {
@@ -145,11 +131,9 @@ public class InboundTransportTest extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          dependsOnMethods = "testInboundEndpointInvalidFileUri",
-          description = "Inbound Endpoint File name with special chars URI Test case")
-    public void testInboundEndpointFileName_SpecialChars() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, dependsOnMethods = "testInboundEndpointInvalidFileUri", description = "Inbound Endpoint File name with special chars URI Test case") public void testInboundEndpointFileName_SpecialChars()
+            throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + TEST_XML_FILE_NAME);
         File targetFolder = new File(inboundFileListeningFolder + File.separator + SPC_CHAR);
@@ -157,10 +141,8 @@ public class InboundTransportTest extends ESBIntegrationTest {
         try {
             FileUtils.copyFile(sourceFile, targetFile);
             addInboundEndpoint(addEndpoint5());
-            Awaitility.await()
-                      .pollInterval(50, TimeUnit.MILLISECONDS)
-                      .atMost(60, TimeUnit.SECONDS)
-                      .until(isFileNotExist(targetFile));
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                    .until(isFileNotExist(targetFile));
 
             Assert.assertTrue(!targetFile.exists(), "File not processed");
         } finally {
@@ -169,11 +151,9 @@ public class InboundTransportTest extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          dependsOnMethods = "testInboundEndpointFileName_SpecialChars",
-          description = "Inbound Endpoint Content type invalid Test case")
-    public void testInboundEndpointContentTypeInvalid() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, dependsOnMethods = "testInboundEndpointFileName_SpecialChars", description = "Inbound Endpoint Content type invalid Test case") public void testInboundEndpointContentTypeInvalid()
+            throws Exception {
         logViewerClient.clearLogs();
 
         File sourceFile = new File(pathToFtpDir + File.separator + TEST_XML_FILE_NAME);
@@ -191,11 +171,9 @@ public class InboundTransportTest extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          dependsOnMethods = "testInboundEndpointContentTypeInvalid",
-          description = "Inbound Endpoint Content type not specified Test case")
-    public void testInboundEndpointContentTypeNotSpecified() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, dependsOnMethods = "testInboundEndpointContentTypeInvalid", description = "Inbound Endpoint Content type not specified Test case") public void testInboundEndpointContentTypeNotSpecified()
+            throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + TEST_XML_FILE_NAME);
         File targetFolder = new File(inboundFileListeningFolder + File.separator + "in");
@@ -203,21 +181,17 @@ public class InboundTransportTest extends ESBIntegrationTest {
         try {
             FileUtils.copyFile(sourceFile, targetFile);
             addInboundEndpoint(addEndpoint7());
-            Awaitility.await()
-                      .pollInterval(50, TimeUnit.MILLISECONDS)
-                      .atMost(60, TimeUnit.SECONDS)
-                      .until(isFileNotExist(targetFile));
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                    .until(isFileNotExist(targetFile));
             Assert.assertTrue(!targetFile.exists(), "File not processed");
         } finally {
             deleteFile(targetFile);
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          dependsOnMethods = "testInboundEndpointContentTypeNotSpecified",
-          description = "Inbound Endpoint move after process Test case")
-    public void testInboundEndpointMoveAfterProcess() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, dependsOnMethods = "testInboundEndpointContentTypeNotSpecified", description = "Inbound Endpoint move after process Test case") public void testInboundEndpointMoveAfterProcess()
+            throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + TEST_XML_FILE_NAME);
         File targetFolder = new File(inboundFileListeningFolder + File.separator + MOVE);
@@ -234,10 +208,8 @@ public class InboundTransportTest extends ESBIntegrationTest {
         try {
             FileUtils.copyFile(sourceFile, targetFile);
             addInboundEndpoint(addEndpoint8());
-            Awaitility.await()
-                      .pollInterval(50, TimeUnit.MILLISECONDS)
-                      .atMost(60, TimeUnit.SECONDS)
-                      .until(isFileNotExist(targetFile));
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                    .until(isFileNotExist(targetFile));
             // input file should be moved to processed directory after
             // processing the input file
             Assert.assertTrue(processedFile.exists(), "Input file is not moved after processing the file");
@@ -377,13 +349,12 @@ public class InboundTransportTest extends ESBIntegrationTest {
     /**
      * Checks if a file exists.
      *
-     * @param file  File to be found.
-     * @return  True if exists, False otherwise.
+     * @param file File to be found.
+     * @return True if exists, False otherwise.
      */
     private Callable<Boolean> isFileExist(final File file) {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
                 return file.exists();
             }
         };
@@ -392,13 +363,12 @@ public class InboundTransportTest extends ESBIntegrationTest {
     /**
      * Checks if a file does not exist.
      *
-     * @param file  File to be found.
-     * @return  True if does not exist, False otherwise.
+     * @param file File to be found.
+     * @return True if does not exist, False otherwise.
      */
     private Callable<Boolean> isFileNotExist(final File file) {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
+            @Override public Boolean call() throws Exception {
                 return !file.exists();
             }
         };

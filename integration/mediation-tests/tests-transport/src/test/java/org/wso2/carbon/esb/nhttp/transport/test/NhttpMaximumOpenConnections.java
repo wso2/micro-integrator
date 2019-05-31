@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2013, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2013, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -47,24 +47,24 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
     private Thread[] clients;
     private List list;
 
-
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
 
-	serverConfigurationManagerProp = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        String nhttpFile = /*ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)*/FrameworkPathUtil.getSystemResourceLocation()  + "artifacts" + separator +
-                "ESB" +separator + "synapseconfig" + separator + "MaxOpenConnections" + separator
-                + "nhttp.properties";
+        serverConfigurationManagerProp = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        String nhttpFile = /*ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)*/
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator
+                        + "synapseconfig" + separator + "MaxOpenConnections" + separator + "nhttp.properties";
         File srcFile = new File(nhttpFile);
-
 
         serverConfigurationManagerProp.applyConfigurationWithoutRestart(srcFile);
 
-        serverConfigurationManagerAxis2 = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        String nhttpAxis2xml = /*ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)*/FrameworkPathUtil.getSystemResourceLocation()  + "artifacts" + separator +
-                "ESB" +separator +separator + "synapseconfig" + separator + "MaxOpenConnections" + separator + "nhttp"
-                + separator + "axis2.xml";
+        serverConfigurationManagerAxis2 = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        String nhttpAxis2xml = /*ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)*/
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator + separator
+                        + "synapseconfig" + separator + "MaxOpenConnections" + separator + "nhttp" + separator
+                        + "axis2.xml";
         File axis2File = new File(nhttpAxis2xml);
         serverConfigurationManagerAxis2.applyConfiguration(axis2File);
 
@@ -75,40 +75,42 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
         clients = new Thread[CONCURRENT_CLIENTS];
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
-    @Test(groups = "wso2.esb", description = "NHTTP Test Maximum Open Connections")
-    public void testMaximumConnections() throws InterruptedException {
-	initClients();         //initialising Axis2Clients
-	startClients();
-	int aliveCount = 0;
-	Calendar startTime = Calendar.getInstance();
-	while (aliveCount < CONCURRENT_CLIENTS) {
-	    if ((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()) > 120000) {
-		break;
-	    }
-	    if (clients[aliveCount].isAlive()) {
-		aliveCount = 0;
-		continue;
-	    }
-	    aliveCount++;
-	}
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description = "NHTTP Test Maximum Open Connections") public void testMaximumConnections()
+            throws InterruptedException {
+        initClients();         //initialising Axis2Clients
+        startClients();
+        int aliveCount = 0;
+        Calendar startTime = Calendar.getInstance();
+        while (aliveCount < CONCURRENT_CLIENTS) {
+            if ((Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()) > 120000) {
+                break;
+            }
+            if (clients[aliveCount].isAlive()) {
+                aliveCount = 0;
+                continue;
+            }
+            aliveCount++;
+        }
 
-//    int refusedCount = 0;
-//    for(MaximumOpenConnectionsClient client: maxOpenConnectionClients) {
-//        if(client.getConnectionRefused()) {
-//            refusedCount += 1;
-//        }
-//    }
-//        System.out.println("Refused count is: " + refusedCount);
-//	  System.out.println("COUNT: " + MaximumOpenConnectionsClient.getDeniedRequests());
-    	assertTrue(MaximumOpenConnectionsClient.getDeniedRequests() >= 1, "(NHTTP) No Connections Rejected by max_open_connection limit - max_open_connections limit will not be exact.");
+        //    int refusedCount = 0;
+        //    for(MaximumOpenConnectionsClient client: maxOpenConnectionClients) {
+        //        if(client.getConnectionRefused()) {
+        //            refusedCount += 1;
+        //        }
+        //    }
+        //        System.out.println("Refused count is: " + refusedCount);
+        //	  System.out.println("COUNT: " + MaximumOpenConnectionsClient.getDeniedRequests());
+        assertTrue(MaximumOpenConnectionsClient.getDeniedRequests() >= 1,
+                "(NHTTP) No Connections Rejected by max_open_connection limit - max_open_connections limit will not be exact.");
         //assertTrue(refusedCount >= 1, "(NHTTP) No Connections Rejected by max_open_connection limit - max_open_connections limit will not be exact.");
 
     }
 
     private void initClients() {
         for (int i = 0; i < CONCURRENT_CLIENTS; i++) {
-            maxOpenConnectionClients[i] = new MaximumOpenConnectionsClient(getProxyServiceURLHttp("MaxOpenConnectionsTest"));
+            maxOpenConnectionClients[i] = new MaximumOpenConnectionsClient(
+                    getProxyServiceURLHttp("MaxOpenConnectionsTest"));
         }
         for (int i = 0; i < CONCURRENT_CLIENTS; i++) {
             clients[i] = new Thread(maxOpenConnectionClients[i]);
@@ -120,7 +122,8 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
             clients[i].start();
             try {
                 Thread.sleep(1000);
-            } catch (Exception e) {}
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -129,10 +132,9 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true)
-    public void atEnd() throws Exception {
-	maxOpenConnectionClients = null;
-	clients = null;
+    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+        maxOpenConnectionClients = null;
+        clients = null;
         try {
             super.cleanup();
         } finally {

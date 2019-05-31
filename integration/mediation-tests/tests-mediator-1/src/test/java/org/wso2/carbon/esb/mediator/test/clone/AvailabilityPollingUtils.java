@@ -26,7 +26,6 @@ import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import java.rmi.RemoteException;
 import java.util.concurrent.Callable;
 
-
 public class AvailabilityPollingUtils {
 
     private static Log log = LogFactory.getLog(AvailabilityPollingUtils.class);
@@ -40,8 +39,7 @@ public class AvailabilityPollingUtils {
     public static Callable<Boolean> isMessageRecived(LogViewerClient logViewerClient) {
         final LogViewerClient logViewer = logViewerClient;
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
+            @Override public Boolean call() {
                 LogEvent[] getLogsInfo;
                 boolean assertValue = false;
                 try {

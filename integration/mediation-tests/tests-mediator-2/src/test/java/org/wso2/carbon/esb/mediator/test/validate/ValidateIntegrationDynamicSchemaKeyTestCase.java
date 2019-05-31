@@ -10,16 +10,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.File;
 
-public class ValidateIntegrationDynamicSchemaKeyTestCase extends
-        ESBIntegrationTest {
+public class ValidateIntegrationDynamicSchemaKeyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts"
-                + File.separator + "ESB" + File.separator + "synapseconfig"
-                + File.separator + "filters" + File.separator + "validate"
-                + File.separator + "synapse_config.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "filters" + File.separator + "validate" + File.separator
+                        + "synapse_config.xml");
     }
 
     /**
@@ -35,27 +33,23 @@ public class ValidateIntegrationDynamicSchemaKeyTestCase extends
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb")
-    public void validateMediatorDynamicSchemaChangeTest() throws Exception {
+    @Test(groups = "wso2.esb") public void validateMediatorDynamicSchemaChangeTest() throws Exception {
         String requestPayload1 = "<level1><a><b>222</b></a></level1>";
         String requestPayload2 = "<level1><c><d>333</d></c></level1>";
 
         OMElement payload1 = AXIOMUtil.stringToOM(requestPayload1);
         OMElement payload2 = AXIOMUtil.stringToOM(requestPayload2);
 
-        OMElement response1 = axis2Client.send(getProxyServiceURLHttps("validateSchemaATestProxy"),
-                null, "mediate", payload1);
-        Assert.assertTrue(response1.toString().contains("ValidateSuccess"),
-                "Validate failed with schema a.");
+        OMElement response1 = axis2Client
+                .send(getProxyServiceURLHttps("validateSchemaATestProxy"), null, "mediate", payload1);
+        Assert.assertTrue(response1.toString().contains("ValidateSuccess"), "Validate failed with schema a.");
 
-        OMElement response2 = axis2Client.send(
-                getProxyServiceURLHttps("validateSchemaBTestProxy"), null, "mediate", payload2);
-        Assert.assertTrue(response2.toString().contains("ValidateSuccess"),
-                "Validate failed with schema b.");
+        OMElement response2 = axis2Client
+                .send(getProxyServiceURLHttps("validateSchemaBTestProxy"), null, "mediate", payload2);
+        Assert.assertTrue(response2.toString().contains("ValidateSuccess"), "Validate failed with schema b.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void clear() throws Exception {
+    @AfterClass(alwaysRun = true) public void clear() throws Exception {
         super.cleanup();
     }
 }

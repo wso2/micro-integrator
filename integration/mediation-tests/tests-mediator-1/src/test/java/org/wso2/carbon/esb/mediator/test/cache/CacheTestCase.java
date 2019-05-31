@@ -38,8 +38,7 @@ import static org.testng.Assert.assertNotEquals;
  */
 public class CacheTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
@@ -47,9 +46,9 @@ public class CacheTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Test maxMessageSize value is smaller than the message size")
-    public void testSmallMessageSize() throws AxisFault, XPathExpressionException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Test maxMessageSize value is smaller than the message size") public void testSmallMessageSize()
+            throws AxisFault, XPathExpressionException, InterruptedException {
         String apiName = "maxMessage";
         OMElement response;
 
@@ -59,17 +58,16 @@ public class CacheTestCase extends ESBIntegrationTest {
         response = axis2Client.sendSimpleStockQuoteRequest(getApiInvocationURL(apiName), "", "IBM");
 
         assertNotEquals(firstResponse, response.getFirstElement().toString(),
-                        "The size of messages received is greater than 1000");
+                "The size of messages received is greater than 1000");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Tests whether maxSize value evicts the older messages")
-    public void testMaxSize() throws AxisFault, XPathExpressionException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Tests whether maxSize value evicts the older messages") public void testMaxSize()
+            throws AxisFault, XPathExpressionException, InterruptedException {
         String apiName = "maxSize";
         OMElement response;
 

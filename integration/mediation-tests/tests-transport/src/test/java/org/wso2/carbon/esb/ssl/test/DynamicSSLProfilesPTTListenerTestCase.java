@@ -17,7 +17,6 @@
 package org.wso2.carbon.esb.ssl.test;
 
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -28,11 +27,11 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.JMXClient;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
-import javax.management.MalformedObjectNameException;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.management.MalformedObjectNameException;
 
 import static org.testng.AssertJUnit.assertTrue;
 
@@ -54,9 +53,9 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
             getESBResourceLocation() + File.separator + "dynamicsslprofiles" + File.separator + "pttlistener"
                     + File.separator;
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) public void initialize()
+            throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(context);
         serverManager.applyConfigurationWithoutRestart(new File(
@@ -66,19 +65,13 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          description = "Testing Mutual SSL Connection with dynamically loaded SSL configuration")
-    public void testMutualSSLConnectionWithUpdatedProfile() throws Exception {
-        String soapMessage = "<soapenv:Envelope "
-                + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-                + "xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">\n"
-                + "   <soapenv:Header/>\n"
-                + "   <soapenv:Body>\n"
-                + "      <echo:echoString>\n"
-                + "         <in>WSO2 Stock</in>\n"
-                + "      </echo:echoString>\n"
-                + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Testing Mutual SSL Connection with dynamically loaded SSL configuration") public void testMutualSSLConnectionWithUpdatedProfile()
+            throws Exception {
+        String soapMessage = "<soapenv:Envelope " + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
+                + "xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">\n" + "   <soapenv:Header/>\n"
+                + "   <soapenv:Body>\n" + "      <echo:echoString>\n" + "         <in>WSO2 Stock</in>\n"
+                + "      </echo:echoString>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
 
         //load key store file
         MutualSSLClient.loadKeyStore(configLocation + keyStoreName, keyStorePassword);
@@ -132,9 +125,8 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.reloadSessionCookie();
         deleteProxyService(proxyService);
         super.cleanup();

@@ -17,6 +17,7 @@
  *  under the License.
  */
 package samples.services;
+
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -29,22 +30,21 @@ public class SimpleStockQuoteService {
         if ("ERR".equals(request.getSymbol())) {
             throw new Exception("Invalid stock symbol : ERR");
         }
-        System.out.println(new Date() + " " + this.getClass().getName() +
-            " :: Generating quote for : " + request.getSymbol());
+        System.out.println(
+                new Date() + " " + this.getClass().getName() + " :: Generating quote for : " + request.getSymbol());
         return new GetQuoteResponse(request.getSymbol());
     }
 
     // for REST style invocation
     public GetQuoteResponse getSimpleQuote(String symbol) {
-        System.out.println(new Date() + " " + this.getClass().getName() +
-            " :: Generating quote for : " + symbol);
+        System.out.println(new Date() + " " + this.getClass().getName() + " :: Generating quote for : " + symbol);
         return new GetQuoteResponse(symbol);
     }
 
     // in-out large response
     public GetFullQuoteResponse getFullQuote(GetFullQuote request) {
-        System.out.println(new Date() + " " + this.getClass().getName() +
-            " :: Full quote for : " + request.getSymbol());
+        System.out
+                .println(new Date() + " " + this.getClass().getName() + " :: Full quote for : " + request.getSymbol());
         return new GetFullQuoteResponse(request.getSymbol());
     }
 
@@ -53,23 +53,24 @@ public class SimpleStockQuoteService {
         StringBuffer sb = new StringBuffer();
         String[] symbols = request.getSymbols();
         sb.append("[");
-        for (int i=0; i<symbols.length; i++) {
+        for (int i = 0; i < symbols.length; i++) {
             sb.append(symbols[i]);
-            if (i < symbols.length-1) {
+            if (i < symbols.length - 1) {
                 sb.append(", ");
             }
         }
         sb.append("]");
-        System.out.println(new Date() + " " + this.getClass().getName() +
-            " :: Generating Market activity report for : "  + sb.toString());
+        System.out.println(
+                new Date() + " " + this.getClass().getName() + " :: Generating Market activity report for : " + sb
+                        .toString());
         return new GetMarketActivityResponse(request.getSymbols());
     }
 
     // in only
     public void placeOrder(PlaceOrder order) {
-        System.out.println(new Date() + " " + this.getClass().getName() +
-            "  :: Accepted order #" + orderCount.incrementAndGet() + " for : " +
-            order.getQuantity() + " stocks of " + order.getSymbol() + " at $ " +
-            order.getPrice());
+        System.out.println(
+                new Date() + " " + this.getClass().getName() + "  :: Accepted order #" + orderCount.incrementAndGet()
+                        + " for : " + order.getQuantity() + " stocks of " + order.getSymbol() + " at $ " + order
+                        .getPrice());
     }
 }

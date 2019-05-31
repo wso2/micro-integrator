@@ -12,10 +12,10 @@ import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClie
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
-import javax.activation.DataHandler;
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.net.URL;
+import javax.activation.DataHandler;
+import javax.xml.stream.XMLStreamException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -23,40 +23,37 @@ public class HealthCareScenarioTestCase extends ESBIntegrationTest {
     ResourceAdminServiceClient resourceAdminServiceStub;
     AxisServiceClient a2Client = new AxisServiceClient();
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
 
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
-        resourceAdminServiceStub.addResource(
-                "/_system/governance/service_integration/wsdls/HCCService.wsdl", "application/wsdl+xml", "wsdl+xml files",
-                new DataHandler(new URL("file:///" + getESBResourceLocation() +
-                                        "/synapseconfig/healthcarescenario/HCCService.wsdl")));
+        resourceAdminServiceStub
+                .addResource("/_system/governance/service_integration/wsdls/HCCService.wsdl", "application/wsdl+xml",
+                        "wsdl+xml files", new DataHandler(new URL("file:///" + getESBResourceLocation()
+                                + "/synapseconfig/healthcarescenario/HCCService.wsdl")));
 
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/healthcarescenario/synapse.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Health Care Scenario Test Case")
-    public void testScenario() throws IOException, XMLStreamException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Health Care Scenario Test Case") public void testScenario()
+            throws IOException, XMLStreamException {
 
-        OMElement requestXML = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n" +
-                                                    "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n" +
-                                                    "                          xmlns:heal=\"http://healthcare.wso2\">\n" +
-                                                    "            <soapenv:Body>\n" +
-                                                    "                <heal:getHealthcareCenterInfo>\n" +
-                                                    "                    <heal:longitude>34.3</heal:longitude>\n" +
-                                                    "                    <heal:latitude>-43.2</heal:latitude>\n" +
-                                                    "                </heal:getHealthcareCenterInfo>\n" +
-                                                    "            </soapenv:Body>\n" +
-                                                    "</soapenv:Envelope>");
+        OMElement requestXML = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"
+                + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
+                + "                          xmlns:heal=\"http://healthcare.wso2\">\n" + "            <soapenv:Body>\n"
+                + "                <heal:getHealthcareCenterInfo>\n"
+                + "                    <heal:longitude>34.3</heal:longitude>\n"
+                + "                    <heal:latitude>-43.2</heal:latitude>\n"
+                + "                </heal:getHealthcareCenterInfo>\n" + "            </soapenv:Body>\n"
+                + "</soapenv:Envelope>");
 
         String proxyServiceEP = getProxyServiceURLHttp("HCCProxyService");
         OMElement response = a2Client.sendReceive(requestXML, proxyServiceEP, "getHealthcareCenterInfo");
-        assertTrue(response.getLocalName() == "getHCCenterInfoResponse" ? this.countSiblings(response, 1) == 5 : false, "Received 5 aggregated HCCenterInfoResponse elements in response.");
+        assertTrue(response.getLocalName() == "getHCCenterInfoResponse" ? this.countSiblings(response, 1) == 5 : false,
+                "Received 5 aggregated HCCenterInfoResponse elements in response.");
         //System.out.println("==== Response: " + response.toString());
-
 
     }
 
@@ -81,8 +78,7 @@ public class HealthCareScenarioTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/governance/service_integration");
         resourceAdminServiceStub = null;
         a2Client = null;

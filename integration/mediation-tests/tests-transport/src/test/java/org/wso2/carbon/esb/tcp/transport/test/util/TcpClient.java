@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.tcp.transport.test.util;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -43,23 +43,23 @@ public class TcpClient {
     public final String CONTENT_TYPE_APPLICATIONS_SOAP_XML = "application/soap+xml";
 
     public TcpClient() {
-        String repositoryPath = /*ProductConstant.getModuleClientPath()*/FrameworkPathUtil.getSystemResourceLocation()+File.separator+"client";
-
+        String repositoryPath = /*ProductConstant.getModuleClientPath()*/
+                FrameworkPathUtil.getSystemResourceLocation() + File.separator + "client";
 
         File repository = new File(repositoryPath);
         try {
-            cfgCtx =
-                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(repository.getCanonicalPath(),
-                                                                                         /*ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)*/FrameworkPathUtil.getSystemResourceLocation()+File.separator + "artifacts"+File.separator + "ESB"
-                                                                                         + File.separator + "tcp" + File.separator + "transport" + File.separator + "client_axis2.xml");
+            cfgCtx = ConfigurationContextFactory.createConfigurationContextFromFileSystem(repository.getCanonicalPath(),
+                    /*ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)*/
+                    FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator
+                            + "ESB" + File.separator + "tcp" + File.separator + "transport" + File.separator
+                            + "client_axis2.xml");
             serviceClient = new ServiceClient(cfgCtx, null);
         } catch (Exception e) {
             log.error(e);
         }
     }
 
-    public OMElement send12(String trpUrl, String action, OMElement payload, String contentType)
-            throws AxisFault {
+    public OMElement send12(String trpUrl, String action, OMElement payload, String contentType) throws AxisFault {
 
         Options options = new Options();
         options.setTo(new EndpointReference(trpUrl));
@@ -79,8 +79,7 @@ public class TcpClient {
 
     }
 
-    public OMElement sendSimpleStockQuote12(String trpUrl, String symbol, String contentType)
-            throws AxisFault {
+    public OMElement sendSimpleStockQuote12(String trpUrl, String symbol, String contentType) throws AxisFault {
         return send12(trpUrl, "getQuote", createStandardRequest(symbol), contentType);
     }
 

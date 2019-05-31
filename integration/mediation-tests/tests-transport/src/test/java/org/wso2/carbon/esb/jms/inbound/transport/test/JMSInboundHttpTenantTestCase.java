@@ -31,7 +31,6 @@ import org.wso2.esb.integration.common.clients.inbound.endpoint.InboundAdminClie
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 /**
  * Test tenant users with inbound endpoints.
@@ -48,8 +47,7 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
     private final String TENANT1_INBOUND_EP = "JMSTenant1InboundEp";
     private final String TENANT2_INBOUND_EP = "JMSTenant2InboundEp";
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
 
         OMElement synapse;
         super.init(TENANT1, "user1");
@@ -64,11 +62,12 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Tenants Sending Messages to the Same Backend")
-    public void testTenantTestCase() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Tenants Sending Messages to the Same Backend") public void testTenantTestCase()
+            throws Exception {
 
-        JMSQueueMessageProducer sender =
-                new JMSQueueMessageProducer(JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
+        JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
+                JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         try {
             sender.connect(TENANT1_QUEUE);
             sender.pushMessage(createMessage(TENANT1_SYMBOL));
@@ -85,14 +84,13 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
         inboundAdminClient1.addInboundEndpoint(createJMSInboundEndpoint(TENANT1_INBOUND_EP, TENANT1_QUEUE).toString());
         inboundAdminClient2.addInboundEndpoint(createJMSInboundEndpoint(TENANT2_INBOUND_EP, TENANT2_QUEUE).toString());
         Assert.assertTrue(Utils.checkForLog(logViewerClient, TENANT1_SYMBOL, 10),
-                          "Message is not received by tenant: " + TENANT1);
+                "Message is not received by tenant: " + TENANT1);
         Assert.assertTrue(Utils.checkForLog(logViewerClient, TENANT2_SYMBOL, 10),
-                          "Message is not received by tenant: " + TENANT2);
+                "Message is not received by tenant: " + TENANT2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        try{
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+        try {
             super.cleanup();
             inboundAdminClient1.removeInboundEndpoint(TENANT1_INBOUND_EP);
             inboundAdminClient2.removeInboundEndpoint(TENANT2_INBOUND_EP);
@@ -124,18 +122,12 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
      */
     private String createMessage(String symbol) {
         return "<?xml version='1.0' encoding='UTF-8'?>"
-               + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
-               + "                   xmlns:ns= \"http://services.samples\"\n"
-               + "                   xmlns:xsd=\"http://services.samples/xsd\">\n"
-               + "      <soapenv:Header/>\n"
-               + "       <soapenv:Body>\n"
-               + "           <ns:getQuote >\n"
-               + "               <ns:request>\n"
-               + "                   <ns:symbol>" + symbol + "</ns:symbol>\n"
-               + "               </ns:request>\n"
-               + "           </ns:getQuote>\n"
-               + "       </soapenv:Body>\n"
-               + "</soapenv:Envelope>";
+                + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
+                + "                   xmlns:ns= \"http://services.samples\"\n"
+                + "                   xmlns:xsd=\"http://services.samples/xsd\">\n" + "      <soapenv:Header/>\n"
+                + "       <soapenv:Body>\n" + "           <ns:getQuote >\n" + "               <ns:request>\n"
+                + "                   <ns:symbol>" + symbol + "</ns:symbol>\n" + "               </ns:request>\n"
+                + "           </ns:getQuote>\n" + "       </soapenv:Body>\n" + "</soapenv:Envelope>";
     }
 
     /**
@@ -147,23 +139,19 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
      * @return the string representation of inbound endpoint configuration
      */
     private String createInboundEndpointString(String inboundEPName, String queueName) {
-        return "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n"
-               + "                 name=\"" + inboundEPName + "\"\n"
-               + "                 sequence=\"jmsInboundTenantRequestHandlerSeq\"\n"
-               + "                 onError=\"inFault\"\n"
-               + "                 protocol=\"jms\"\n"
-               + "                 suspend=\"false\">\n"
-               + "    <parameters>\n"
-               + "        <parameter name=\"interval\">1000</parameter>\n"
-               + "        <parameter name=\"transport.jms.Destination\">" + queueName + "</parameter>\n"
-               + "        <parameter name=\"transport.jms.CacheLevel\">0</parameter>\n"
-               + "        <parameter name=\"transport.jms.ConnectionFactoryJNDIName\">QueueConnectionFactory</parameter>\n"
-               + "        <parameter name=\"java.naming.factory.initial\">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>\n"
-               + "        <parameter name=\"java.naming.provider.url\">tcp://localhost:61616</parameter>\n"
-               + "        <parameter name=\"transport.jms.SessionAcknowledgement\">AUTO_ACKNOWLEDGE</parameter>\n"
-               + "        <parameter name=\"transport.jms.SessionTransacted\">false</parameter>\n"
-               + "        <parameter name=\"transport.jms.ConnectionFactoryType\">queue</parameter>\n"
-               + "    </parameters>\n"
-               + "</inboundEndpoint>";
+        return "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\""
+                + inboundEPName + "\"\n" + "                 sequence=\"jmsInboundTenantRequestHandlerSeq\"\n"
+                + "                 onError=\"inFault\"\n" + "                 protocol=\"jms\"\n"
+                + "                 suspend=\"false\">\n" + "    <parameters>\n"
+                + "        <parameter name=\"interval\">1000</parameter>\n"
+                + "        <parameter name=\"transport.jms.Destination\">" + queueName + "</parameter>\n"
+                + "        <parameter name=\"transport.jms.CacheLevel\">0</parameter>\n"
+                + "        <parameter name=\"transport.jms.ConnectionFactoryJNDIName\">QueueConnectionFactory</parameter>\n"
+                + "        <parameter name=\"java.naming.factory.initial\">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>\n"
+                + "        <parameter name=\"java.naming.provider.url\">tcp://localhost:61616</parameter>\n"
+                + "        <parameter name=\"transport.jms.SessionAcknowledgement\">AUTO_ACKNOWLEDGE</parameter>\n"
+                + "        <parameter name=\"transport.jms.SessionTransacted\">false</parameter>\n"
+                + "        <parameter name=\"transport.jms.ConnectionFactoryType\">queue</parameter>\n"
+                + "    </parameters>\n" + "</inboundEndpoint>";
     }
 }

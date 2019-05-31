@@ -25,9 +25,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.ThriftServer;
 
 import java.io.File;
@@ -41,28 +41,22 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
     public static final int MEDIATOR_ID_INDEX = 4;
     String url = "http://127.0.0.1:8480/stockquote/view/IBM";
     String postUrl = "http://127.0.0.1:8480/stockquote/order/";
-    String payload = "<placeOrder xmlns=\"http://services.samples\">\n" +
-            "  <order>\n" +
-            "     <price>50</price>\n" +
-            "     <quantity>10</quantity>\n" +
-            "     <symbol>IBM</symbol>\n" +
-            "  </order>\n" +
-            "</placeOrder>";
+    String payload = "<placeOrder xmlns=\"http://services.samples\">\n" + "  <order>\n" + "     <price>50</price>\n"
+            + "     <quantity>10</quantity>\n" + "     <symbol>IBM</symbol>\n" + "  </order>\n" + "</placeOrder>";
     String contentType = "application/xml";
 
-    @BeforeClass(alwaysRun = true)
-    protected void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void initialize() throws Exception {
         //Starting the thrift port to listen to statistics events
         thriftServer = new ThriftServer("Wso2EventTestCase", 7612, true);
         thriftServer.start(7612);
         log.info("Thrift Server is Started on port 8462");
 
         //Changing synapse configuration to enable statistics and tracing
-        serverConfigurationManager =
-                new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(
-                new File(getESBResourceLocation() + File.separator + "StatisticTestResources" + File.separator +
-                        "synapse.properties"));
+        serverConfigurationManager = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        serverConfigurationManager.applyConfiguration(new File(
+                getESBResourceLocation() + File.separator + "StatisticTestResources" + File.separator
+                        + "synapse.properties"));
         super.init();
 
         thriftServer.resetMsgCount();
@@ -75,8 +69,9 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         Assert.assertEquals("Three configuration events are required", 3, thriftServer.getMsgCount());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "API statistics message count check.")
-    public void statisticsCollectionCountTest() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "API statistics message count check.") public void statisticsCollectionCountTest()
+            throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
 
@@ -91,8 +86,9 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
                 thriftServer.getMsgCount());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "API statistics message count check for post requests")
-    public void statisticsCollectionCountTestForPostRequests() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "API statistics message count check for post requests") public void statisticsCollectionCountTestForPostRequests()
+            throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
         for (int i = 0; i < 100; i++) {
@@ -105,16 +101,17 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
                 thriftServer.getMsgCount());
     }
 
-    @Test(groups = {"wso2.esb"}, description = "API statistics statistics event data check")
-    public void statisticsEventDataTest() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "API statistics statistics event data check") public void statisticsEventDataTest()
+            throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
         SimpleHttpClient httpClient = new SimpleHttpClient();
         httpClient.doGet(url, null);
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
         Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
-        Map<String, Object> aggregatedEvent =
-                ESBTestCaseUtils.decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
+        Map<String, Object> aggregatedEvent = ESBTestCaseUtils
+                .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
         HashSet<String> allMediatorEventIds = new HashSet<>();
         for (Object list : eventList) {
@@ -154,9 +151,9 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
 
     }
 
-
-    @Test(groups = {"wso2.esb"}, description = "API statistics statistics event data check for post requests")
-    public void statisticsEventDataTestForPostRequest() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "API statistics statistics event data check for post requests") public void statisticsEventDataTestForPostRequest()
+            throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
 
@@ -165,8 +162,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
         // to the backend
         Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
-        Map<String, Object> aggregatedEvent =
-                ESBTestCaseUtils.decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
+        Map<String, Object> aggregatedEvent = ESBTestCaseUtils
+                .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
         HashSet<String> allMediatorEventIds = new HashSet<>();
         for (Object list : eventList) {
@@ -202,8 +199,7 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanupArtifactsIfExist() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanupArtifactsIfExist() throws Exception {
         thriftServer.stop();
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();

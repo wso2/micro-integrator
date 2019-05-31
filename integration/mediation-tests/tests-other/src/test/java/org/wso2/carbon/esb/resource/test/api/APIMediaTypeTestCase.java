@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.resource.test.api;
 
@@ -31,8 +31,7 @@ import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClie
 import org.wso2.esb.integration.common.clients.rest.api.RestApiAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-
-public class APIMediaTypeTestCase extends ESBIntegrationTest{
+public class APIMediaTypeTestCase extends ESBIntegrationTest {
     private Log log = LogFactory.getLog(APIMediaTypeTestCase.class);
 
     private RestApiAdminClient restApiAdminClient;
@@ -40,22 +39,21 @@ public class APIMediaTypeTestCase extends ESBIntegrationTest{
     private final String API_NAME = "automationApi";
     private boolean isApiExist = false;
 
-    @BeforeClass
-    public void init() throws Exception {
+    @BeforeClass public void init() throws Exception {
         super.init();
-        restApiAdminClient = new RestApiAdminClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        restApiAdminClient = new RestApiAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
-    //since Registry persistence is no longer available
-    @Test(groups = {"wso2.esb"}, description = "Test API media type - text/xml", enabled = false)
-    public void apiMediaTypeTest() throws Exception {
 
-        OMElement api = AXIOMUtil.stringToOM("<api xmlns=\"http://ws.apache.org/ns/synapse\" " +
-                                             "name=\"" + API_NAME + "\" context=\"/automation\">" +
-                                             "<resource methods=\"GET\" " +
-                                             "inSequence=\"main\" " +
-                                             "faultSequence=\"fault\" />" +
-                                             "</api>");
+    //since Registry persistence is no longer available
+    @Test(groups = {
+            "wso2.esb" }, description = "Test API media type - text/xml", enabled = false) public void apiMediaTypeTest()
+            throws Exception {
+
+        OMElement api = AXIOMUtil.stringToOM(
+                "<api xmlns=\"http://ws.apache.org/ns/synapse\" " + "name=\"" + API_NAME + "\" context=\"/automation\">"
+                        + "<resource methods=\"GET\" " + "inSequence=\"main\" " + "faultSequence=\"fault\" />"
+                        + "</api>");
         isApiExist = restApiAdminClient.add(api);
         Assert.assertTrue(isApiExist, "API Addition failed");
         //addEndpoint is a a asynchronous call, it will take some time to write to a registry
@@ -65,8 +63,7 @@ public class APIMediaTypeTestCase extends ESBIntegrationTest{
 
     }
 
-    @AfterClass
-    public void destroy() throws Exception {
+    @AfterClass public void destroy() throws Exception {
         if (isApiExist) {
             Assert.assertTrue(restApiAdminClient.deleteApi(API_NAME), "Api Deletion Failed");
         }

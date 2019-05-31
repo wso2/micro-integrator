@@ -36,24 +36,22 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
     private String symbol;
     private LogViewerClient logViewer;
 
-    @BeforeClass
-    public void setEnvironment() throws Exception {
+    @BeforeClass public void setEnvironment() throws Exception {
         init();
         verifyProxyServiceExistence("foreachSmallMessageTestProxy");
         symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
-        logViewer =
-                new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
-    public void testSmallNumbers() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20") public void testSmallNumbers()
+            throws Exception {
         logViewer.clearLogs();
 
         OMElement response = null;
         for (int i = 0; i < 20; i++) {
-            response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachSmallMessageTestProxy"),
-                    null, "IBM" + symbol);
+            response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachSmallMessageTestProxy"), null,
+                    "IBM" + symbol);
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("IBM"), "Incorrect symbol in response");
             response = null;
@@ -73,21 +71,20 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
             }
         }
 
-        Assert.assertEquals(forEachCount, 20,
-                "Count of messages entered ForEach scope is incorrect");
+        Assert.assertEquals(forEachCount, 20, "Count of messages entered ForEach scope is incorrect");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
-    public void testLargeNumbers() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100") public void testLargeNumbers()
+            throws Exception {
         logViewer.clearLogs();
 
         OMElement response = null;
         for (int i = 0; i < 100; i++) {
-            response =
-                    axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachSmallMessageTestProxy"),
-                            null, "MSFT" + symbol);
+            response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachSmallMessageTestProxy"), null,
+                    "MSFT" + symbol);
             Assert.assertNotNull(response);
-            Assert.assertTrue(response.toString().contains("MSFT"), "Incorrect symbol in response. Could not find symbol MSFT ..");
+            Assert.assertTrue(response.toString().contains("MSFT"),
+                    "Incorrect symbol in response. Could not find symbol MSFT ..");
             response = null;
         }
 
@@ -105,12 +102,10 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
             }
         }
 
-        Assert.assertEquals(forEachCount, 100,
-                "Count of messages entered ForEach scope is incorrect");
+        Assert.assertEquals(forEachCount, 100, "Count of messages entered ForEach scope is incorrect");
     }
 
-    @AfterClass
-    public void close() throws Exception {
+    @AfterClass public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

@@ -25,9 +25,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQServerInstance;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 
 import java.io.File;
 
@@ -40,12 +40,12 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewer;
     private RabbitMQProducerClient sender;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         //The inbound endpoint cannot be pre-deployed because it will cause unnecessary message polling.
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                                          + "inbound" + File.separator + "rabbitmq_inbound_endpoint.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "inbound" + File.separator
+                        + "rabbitmq_inbound_endpoint.xml");
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
@@ -55,16 +55,17 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
      *
      * @throws Exception if an error occurs while accessing the logViewer client or while publishing messages.
      */
-    @Test(groups = {"wso2.esb"}, description = "Test ESB as a RabbitMQ inbound endpoint ")
-    public void testRabbitMQInboundEndpoint() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test ESB as a RabbitMQ inbound endpoint ") public void testRabbitMQInboundEndpoint()
+            throws Exception {
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange", "simple_inbound_endpoint_test");
 
         logViewer.clearLogs();
         int messageCount = 2;
 
         String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
-                         + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
-                         + "<ser:symbol>RMQ</ser:symbol>\n" + "</ser:order>\n" + "</ser:placeOrder>";
+                + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
+                + "<ser:symbol>RMQ</ser:symbol>\n" + "</ser:order>\n" + "</ser:placeOrder>";
         for (int i = 0; i < messageCount; i++) {
             sender.sendMessage(message, "text/plain");
         }
@@ -93,12 +94,12 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
      * @throws Exception if an error occurs while accessing the logViewer client or while deploying the inbound
      *                   endpoint.
      */
-    @Test(groups = {"wso2.esb"}, description = "Test ESB RabbitMQ inbound endpoint deployment with incorrect server "
-                                               + "port")
-    public void testRabbitMQInboundEndpointDeploymentWithInvalidServerConfigs() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB RabbitMQ inbound endpoint deployment with incorrect server "
+            + "port") public void testRabbitMQInboundEndpointDeploymentWithInvalidServerConfigs() throws Exception {
         logViewer.clearLogs();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                                          + "inbound" + File.separator + "rabbitmq_inbound_endpoint_invalid.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "inbound" + File.separator
+                        + "rabbitmq_inbound_endpoint_invalid.xml");
 
         RabbitMQTestUtils.waitForLogToGetUpdated();
         LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
@@ -120,8 +121,7 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
         Assert.assertEquals(retryCount, 3, "The connection retry count is incorrect");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void end() throws Exception {
+    @AfterClass(alwaysRun = true) public void end() throws Exception {
         super.cleanup();
         sender.disconnect();
         sender = null;

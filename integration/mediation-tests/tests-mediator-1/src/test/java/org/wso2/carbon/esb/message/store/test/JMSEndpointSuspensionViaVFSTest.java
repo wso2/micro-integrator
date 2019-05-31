@@ -45,8 +45,7 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
     private SimpleHttpServer httpServerFault;
     private BrokerService broker;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         startBroker();
         /* Make the port available */
         Utils.shutdownFailsafe(PORT);
@@ -64,21 +63,21 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
         super.init();
 
         File outfolder = new File(getClass().
-                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                            + "synapseconfig" + File.separator + "messageStore" + File.separator).getPath()
-                                  + "test" + File.separator + "out" + File.separator);
+                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "out"
+                + File.separator);
         File infolder = new File(getClass().
-                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                            + "synapseconfig" + File.separator + "messageStore" + File.separator).getPath()
-                                 + "test" + File.separator + "in" + File.separator);
+                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "in"
+                + File.separator);
         File originalfolder = new File(getClass().
-                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                            + "synapseconfig" + File.separator + "messageStore" + File.separator).getPath()
-                                       + "test" + File.separator + "done" + File.separator);
+                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "done"
+                + File.separator);
         File failurelfolder = new File(getClass().
-                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator
-                            + "synapseconfig" + File.separator + "messageStore" + File.separator).getPath()
-                                       + "test" + File.separator + "failure" + File.separator);
+                getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator
+                + "failure" + File.separator);
         outfolder.mkdirs();
         infolder.mkdirs();
         originalfolder.mkdirs();
@@ -86,34 +85,33 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
         log.info("Before Class method completed successfully");
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Sending a file through VFS Transport to JMS endpoint" +
-                                               " and test whether its getting suspended")
-    public void testJMSEndpointSuspensionViaVFSTest()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Sending a file through VFS Transport to JMS endpoint"
+            + " and test whether its getting suspended") public void testJMSEndpointSuspensionViaVFSTest()
             throws Exception {
 
         addVFSJMSProxy1();
-        File outfile = new File(getClass().getResource(File.separator + "artifacts" + File.separator
-                                                       + "ESB" + File.separator + "synapseconfig" + File.separator
-                                                       + "messageStore" + File.separator).getPath() + "test"
-                                + File.separator + "done" + File.separator + "test.xml");
+        File outfile = new File(getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "done"
+                + File.separator + "test.xml");
         if (outfile.exists()) {
             outfile.delete();
         }
 
-        File afile = new File(getClass().getResource(File.separator + "artifacts" + File.separator
-                                                     + "ESB" + File.separator + "synapseconfig" + File.separator
-                                                     + "messageStore" + File.separator + "test.xml").getPath());
-        File bfile = new File(getClass().getResource(File.separator + "artifacts" + File.separator + "ESB"
-                                                     + File.separator + "synapseconfig" + File.separator
-                                                     + "messageStore" + File.separator).getPath() + "test"
-                              + File.separator + "in" + File.separator + "test.xml");
+        File afile = new File(getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator + "test.xml").getPath());
+        File bfile = new File(getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "in"
+                + File.separator + "test.xml");
 
         sendFile(outfile, afile, bfile);
 
         Assert.assertTrue(interceptorOut.getPayload().contains("<address>Disney Land</address>"));
-//        String vfsOut = FileUtils.readFileToString(outfile);
-//        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
+        //        String vfsOut = FileUtils.readFileToString(outfile);
+        //        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
 
         interceptorFault = new TestRequestInterceptor();
         httpServerFault.getRequestHandler().setInterceptor(interceptorFault);
@@ -127,8 +125,7 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
         deleteProxyService("VFSJMSProxy1");
     }
 
-    private void sendFile(File outfile, File afile, File bfile)
-            throws IOException, InterruptedException {
+    private void sendFile(File outfile, File afile, File bfile) throws IOException, InterruptedException {
         FileUtils.copyFile(afile, bfile);
         Thread.sleep(2000);
 
@@ -159,8 +156,7 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -182,54 +178,49 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
         }
     }
 
-    private void addVFSJMSProxy1()
-            throws Exception {
+    private void addVFSJMSProxy1() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-                                             "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSJMSProxy1\" transports=\"vfs\">\n" +
-                                             "                <parameter name=\"transport.vfs.FileURI\">file://" + getClass().getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n" +
-                                             "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n" +
-                                             "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n" +
-                                             "                <parameter name=\"transport.PollInterval\">1</parameter>\n" +
-                                             "                <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n" +
-                                             "                <parameter name=\"transport.vfs.MoveAfterProcess\">file://" + getClass().getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "done" + File.separator + "</parameter>" +
-                                             "                <parameter name=\"transport.vfs.MoveAfterFailure\">file://" + getClass().getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "invalid" + File.separator + "</parameter>\n" +
-                                             "                <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>" +
-                                             "                <target>\n" +
-                                             "                  <inSequence>\n" +
-                                             "                     <property name=\"OUT_ONLY\" value=\"true\" scope=\"default\" type=\"STRING\"/>\n" +
-                                             "                     <log level=\"full\"/>\n" +
-                                             "                     <send>\n" +
-                                             "                          <endpoint>\n" +
-                                             "                              <recipientlist>\n" +
-                                             "                                  <endpoint>\n" +
-                                             "                                      <address uri=\"jms:/Addresses?transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;java.naming.provider.url=tcp://localhost:61816\"/>" +
-                                             "                                  </endpoint>" +
-                                             "                                  <endpoint>\n" +
-                                             "                                      <address uri=\"http://localhost:9654/services/SimpleStockQuoteService\"/>" +
-                                             "                                  </endpoint>" +
-                                             "                              </recipientlist>\n" +
-                                             "                          </endpoint>\n" +
-                                             "                      </send>\n" +
-                                             "                  </inSequence>\n" +
-                                             "                  <faultSequence>\n" +
-                                             "                     <log level=\"full\">\n" +
-                                             "                        <property name=\"ERROR\" value=\"Endpoint Down!\"/>\n" +
-                                             "                     </log>\n" +
-                                             "                     <makefault>\n" +
-                                             "                         <code value=\"tns:Sender\" xmlns:tns=\"http://www.w3.org/2003/05/soap-envelope\"/>\n" +
-                                             "                         <reason value=\"Endpoint Down!\"/>\n" +
-                                             "                     </makefault>\n" +
-                                             "                     <send>\n" +
-                                             "                          <endpoint>\n" +
-                                             "                               <address uri=\"http://localhost:9655/services/SimpleStockQuoteService\"/>" +
-                                             "                          </endpoint>" +
-                                             "                     </send>\n" +
-                                             "                  </faultSequence>" +
-                                             "                </target>\n" +
-                                             "        </proxy>"));
+        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+                + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSJMSProxy1\" transports=\"vfs\">\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">file://" + getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "in"
+                + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
+                + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
+                + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
+                + "                <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n"
+                + "                <parameter name=\"transport.vfs.MoveAfterProcess\">file://" + getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator + "done"
+                + File.separator + "</parameter>"
+                + "                <parameter name=\"transport.vfs.MoveAfterFailure\">file://" + getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "messageStore" + File.separator).getPath() + "test" + File.separator
+                + "invalid" + File.separator + "</parameter>\n"
+                + "                <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>"
+                + "                <target>\n" + "                  <inSequence>\n"
+                + "                     <property name=\"OUT_ONLY\" value=\"true\" scope=\"default\" type=\"STRING\"/>\n"
+                + "                     <log level=\"full\"/>\n" + "                     <send>\n"
+                + "                          <endpoint>\n" + "                              <recipientlist>\n"
+                + "                                  <endpoint>\n"
+                + "                                      <address uri=\"jms:/Addresses?transport.jms.ConnectionFactoryJNDIName=QueueConnectionFactory&amp;java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory&amp;java.naming.provider.url=tcp://localhost:61816\"/>"
+                + "                                  </endpoint>" + "                                  <endpoint>\n"
+                + "                                      <address uri=\"http://localhost:9654/services/SimpleStockQuoteService\"/>"
+                + "                                  </endpoint>" + "                              </recipientlist>\n"
+                + "                          </endpoint>\n" + "                      </send>\n"
+                + "                  </inSequence>\n" + "                  <faultSequence>\n"
+                + "                     <log level=\"full\">\n"
+                + "                        <property name=\"ERROR\" value=\"Endpoint Down!\"/>\n"
+                + "                     </log>\n" + "                     <makefault>\n"
+                + "                         <code value=\"tns:Sender\" xmlns:tns=\"http://www.w3.org/2003/05/soap-envelope\"/>\n"
+                + "                         <reason value=\"Endpoint Down!\"/>\n"
+                + "                     </makefault>\n" + "                     <send>\n"
+                + "                          <endpoint>\n"
+                + "                               <address uri=\"http://localhost:9655/services/SimpleStockQuoteService\"/>"
+                + "                          </endpoint>" + "                     </send>\n"
+                + "                  </faultSequence>" + "                </target>\n" + "        </proxy>"));
     }
-
 
     private List<TransportConnector> getTCPConnectors() {
         //setting the tcp transport configurations
@@ -247,14 +238,14 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
 
     private boolean startBroker() {
         try {
-            log.info("JMSServerController: Preparing to start JMS Broker: " );
+            log.info("JMSServerController: Preparing to start JMS Broker: ");
             broker = new BrokerService();
             // configure the broker
 
             broker.setBrokerName("myBroker1");
             log.info(broker.getBrokerDataDirectory());
-            broker.setDataDirectory(System.getProperty(FrameworkConstants.CARBON_HOME) +
-                    File.separator + broker.getBrokerDataDirectory());
+            broker.setDataDirectory(System.getProperty(FrameworkConstants.CARBON_HOME) + File.separator + broker
+                    .getBrokerDataDirectory());
             broker.setTransportConnectors(getTCPConnectors());
             broker.setPersistent(true);
 
@@ -262,8 +253,7 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
             log.info("JMSServerController: Broker is Successfully started. continuing tests");
             return true;
         } catch (Exception e) {
-            log.error(
-                    "JMSServerController: There was an error starting JMS broker: ", e);
+            log.error("JMSServerController: There was an error starting JMS broker: ", e);
             return false;
         }
     }
@@ -273,7 +263,7 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
             log.info(" ************* Stopping **************");
             if (broker.isStarted()) {
                 broker.stop();
-                for(TransportConnector transportConnector : getTCPConnectors()) {
+                for (TransportConnector transportConnector : getTCPConnectors()) {
                     transportConnector.stop();
                 }
             }

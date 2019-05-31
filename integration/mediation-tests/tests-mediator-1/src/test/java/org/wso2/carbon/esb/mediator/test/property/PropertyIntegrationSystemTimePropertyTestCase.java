@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.carbon.esb.mediator.test.property;
 
@@ -38,24 +38,21 @@ import static org.testng.Assert.assertNotNull;
 
 public class PropertyIntegrationSystemTimePropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("SYSTEM_TIME_TestProxy");
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
+    @AfterClass(alwaysRun = true) public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Test return of the current time in milliseconds")
-    public void testSystemTime() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test return of the current time in milliseconds") public void testSystemTime()
+            throws Exception {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
-                getProxyServiceURLHttp("SYSTEM_TIME_TestProxy"), null
-                , "Wso2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SYSTEM_TIME_TestProxy"), null, "Wso2");
 
         assertNotNull(response, "Time returned is Null");
 
@@ -65,13 +62,10 @@ public class PropertyIntegrationSystemTimePropertyTestCase extends ESBIntegratio
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(Long.parseLong(response.getText()));
-        String serverTime =
-                new SimpleDateFormat("HH:mm").format(cal.getTime());
+        String serverTime = new SimpleDateFormat("HH:mm").format(cal.getTime());
 
-        assertEquals(serverTime, dateFormat.format(date),
-                     "Time returned from the property and actual time mismatch");
+        assertEquals(serverTime, dateFormat.format(date), "Time returned from the property and actual time mismatch");
 
     }
-
 
 }

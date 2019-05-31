@@ -33,31 +33,25 @@ public class InjectToSequenceTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/scheduledTask/InjectToSequenceTestConfig.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void injectToSequenceTest() throws Exception {
-       OMElement task = AXIOMUtil.stringToOM("<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n" +
-                                              "           name=\"SampleInjectToSequenceTask\"\n" +
-                                              "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n" +
-                                              "    <task:trigger count=\"1\" interval=\"1\"/>\n" +
-                                              "    <task:property name=\"message\">\n" +
-                                              "        <m0:placeOrder xmlns:m0=\"http://services.samples\">\n" +
-                                              "            <m0:order>\n" +
-                                              "                <m0:price>100</m0:price>\n" +
-                                              "                <m0:quantity>200</m0:quantity>\n" +
-                                              "                <m0:symbol>IBM</m0:symbol>\n" +
-                                              "            </m0:order>\n" +
-                                              "        </m0:placeOrder>\n" +
-                                              "    </task:property>\n" +
-                                              "    <task:property name=\"sequenceName\" value=\"SampleSequence\"/>\n" +
-                                              "    <task:property name=\"injectTo\" value=\"sequence\"/>\n" +
-                                              "</task:task>");
+    @Test(groups = { "wso2.esb" }) public void injectToSequenceTest() throws Exception {
+        OMElement task = AXIOMUtil.stringToOM(
+                "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n"
+                        + "           name=\"SampleInjectToSequenceTask\"\n"
+                        + "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n"
+                        + "    <task:trigger count=\"1\" interval=\"1\"/>\n" + "    <task:property name=\"message\">\n"
+                        + "        <m0:placeOrder xmlns:m0=\"http://services.samples\">\n" + "            <m0:order>\n"
+                        + "                <m0:price>100</m0:price>\n"
+                        + "                <m0:quantity>200</m0:quantity>\n"
+                        + "                <m0:symbol>IBM</m0:symbol>\n" + "            </m0:order>\n"
+                        + "        </m0:placeOrder>\n" + "    </task:property>\n"
+                        + "    <task:property name=\"sequenceName\" value=\"SampleSequence\"/>\n"
+                        + "    <task:property name=\"injectTo\" value=\"sequence\"/>\n" + "</task:task>");
 
         int beforeLogSize = logViewer.getAllSystemLogs().length;
         addScheduledTask(task);
@@ -75,8 +69,7 @@ public class InjectToSequenceTestCase extends ESBIntegrationTest {
         assertTrue(invokedLogFound);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

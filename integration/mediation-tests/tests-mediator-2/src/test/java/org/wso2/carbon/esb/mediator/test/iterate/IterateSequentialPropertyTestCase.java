@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -22,26 +22,16 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axis2.addressing.EndpointReference;
-import org.apache.axis2.client.OperationClient;
-import org.apache.axis2.client.Options;
-import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.context.ConfigurationContextFactory;
-import org.apache.axis2.context.MessageContext;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.clients.axis2client.AxisOperationClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.axis2client.AxisOperationClient;
 
-import javax.xml.namespace.QName;
-import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
+import javax.xml.namespace.QName;
 
 /**
  * Tests sequential true property of iterate mediator
@@ -59,39 +49,32 @@ import java.util.Iterator;
 
 public class IterateSequentialPropertyTestCase extends ESBIntegrationTest {
 
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests sequential='true' property")
-    public void testSequentialProperty() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests sequential='true' property") public void testSequentialProperty()
+            throws Exception {
         AxisOperationClient operationClient = new AxisOperationClient();
-        String response = operationClient.send(getProxyServiceURLHttp("iterateSequentialTestProxy"),
-                null, createMultipleQuoteRequestBody("WSO2", 10),
-                "urn:getQuote").toString();
+        String response = operationClient.send(getProxyServiceURLHttp("iterateSequentialTestProxy"), null,
+                createMultipleQuoteRequestBody("WSO2", 10), "urn:getQuote").toString();
         operationClient.destroy();
         Assert.assertNotNull(response);
         OMElement envelope = AXIOMUtil.stringToOM(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                                                       "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
             OMElement getQuote = (OMElement) iterator.next();
             Assert.assertTrue(getQuote.toString().contains("WSO2"));
         }
-        Assert.assertEquals(i , 10, "Chile Element mismatched");
+        Assert.assertEquals(i, 10, "Chile Element mismatched");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
-
 
     private OMElement createMultipleQuoteRequestBody(String symbol, int iterations) {
         SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
@@ -107,6 +90,5 @@ public class IterateSequentialPropertyTestCase extends ESBIntegrationTest {
         }
         return method;
     }
-
 
 }

@@ -41,8 +41,8 @@ public class MessageStoreAdminTestCase extends ESBIntegrationTest {
     private final String PROXY_NAME = "mspAdminTestProxy";
     private final String STORE_NAME = "mspAdminTestInMemoryMessageStore";
 
-    @BeforeClass(alwaysRun = true, description = "Test Message Store admin services ")
-    protected void setup() throws Exception {
+    @BeforeClass(alwaysRun = true, description = "Test Message Store admin services ") protected void setup()
+            throws Exception {
         super.init();
 
         loadESBConfigurationFromClasspath("artifacts/ESB/messageProcessorConfig/mspAdminTestConfig.xml");
@@ -62,8 +62,9 @@ public class MessageStoreAdminTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test pending message related operations on a message processor.")
-    public void testMessagesInMessageStore() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test pending message related operations on a message processor.") public void testMessagesInMessageStore()
+            throws Exception {
 
         int initialMessageCount = 5;
 
@@ -73,28 +74,29 @@ public class MessageStoreAdminTestCase extends ESBIntegrationTest {
 
         MessageInfo[] messages = messageStoreAdminClient.getPaginatedMessages(STORE_NAME, 0);
 
-        Assert.assertEquals(messages.length, initialMessageCount, "Pending message count from list for Message store : " +
-                STORE_NAME + " is not accurate.");
+        Assert.assertEquals(messages.length, initialMessageCount,
+                "Pending message count from list for Message store : " + STORE_NAME + " is not accurate.");
 
         String messageEnvelope = messageStoreAdminClient.getEnvelope(STORE_NAME, messages[0].getMessageId());
 
-        Assert.assertEquals(messageEnvelope, generateSampleStockQuoteRequest("IBM"), "Message content retrieved from " +
-                "the Message Store is not same as the published content.");
+        Assert.assertEquals(messageEnvelope, generateSampleStockQuoteRequest("IBM"),
+                "Message content retrieved from " + "the Message Store is not same as the published content.");
 
         messageStoreAdminClient.deleteFirstMessage(STORE_NAME);
 
-        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), initialMessageCount - 1, "Message was " +
-                "not deleted from message store : " + STORE_NAME);
+        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), initialMessageCount - 1,
+                "Message was " + "not deleted from message store : " + STORE_NAME);
 
         messageStoreAdminClient.deleteAllMessages(STORE_NAME);
 
-        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), 0, "Messages were " +
-                "not deleted from message store : " + STORE_NAME);
+        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), 0,
+                "Messages were " + "not deleted from message store : " + STORE_NAME);
 
     }
 
     /**
      * Generate a request payload similar to what is sent by the test-axis2-client for SimpleStockQuoteService.
+     *
      * @param symbol parameter used for payload
      * @return sample request payload
      */
@@ -119,9 +121,7 @@ public class MessageStoreAdminTestCase extends ESBIntegrationTest {
         return "<?xml version='1.0' encoding='utf-8'?>" + soapEnvelope.toString();
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void cleanState() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanState() throws Exception {
 
         super.cleanup();
     }

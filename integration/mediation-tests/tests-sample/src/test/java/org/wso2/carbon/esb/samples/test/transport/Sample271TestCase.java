@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.samples.test.transport;
 
 import org.apache.axiom.om.OMElement;
@@ -25,19 +25,23 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-import org.wso2.esb.integration.common.clients.mediation.SynapseConfigAdminClient;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
+import org.wso2.esb.integration.common.clients.mediation.SynapseConfigAdminClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.common.SqlDataSourceUtil;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -63,15 +67,12 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
     private static final String GMAIL_USER_NAME = "test.automation.dummy";
     private static final String GMAIL_PASSWORD = "automation.test";
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
 
-        path2ResourceSample271 =
-            getESBResourceLocation() + File.separator + "sample_271" + File.separator;
+        path2ResourceSample271 = getESBResourceLocation() + File.separator + "sample_271" + File.separator;
         path2CarbonSample271 =
-            ServerConfigurationManager.getCarbonHome() + File.separator + "sample_271" +
-            File.separator;
+                ServerConfigurationManager.getCarbonHome() + File.separator + "sample_271" + File.separator;
 
         FileUtils.deleteDirectory(new File(path2CarbonSample271));
 
@@ -91,30 +92,27 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
 
         // Copy synapse config folder to carbon_home/sample_271
         FileUtils.copyDirectory(new File(path2ResourceSample271 + "synapse-configs"),
-                                new File(path2CarbonSample271 + "synapse-configs"));
+                new File(path2CarbonSample271 + "synapse-configs"));
 
         // Copy smooks-config.xml
         FileUtils.copyFileToDirectory(new File(path2ResourceSample271 + "smooks-config.xml"),
-                                      new File(path2CarbonSample271));
+                new File(path2CarbonSample271));
 
         // Copy axis2.xml
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager
-            .applyConfigurationWithoutRestart(new File(path2ResourceSample271 + "axis2.xml"));
+        serverConfigurationManager.applyConfigurationWithoutRestart(new File(path2ResourceSample271 + "axis2.xml"));
 
         // copy jars
-        mysqlJar = new File(path2ResourceSample271 + "lib" + File.separator +
-                            "mysql-connector-java-5.1.10-bin.jar");
-        smooksCsvJar = new File(
-            path2ResourceSample271 + "lib" + File.separator + "milyn-smooks-csv-1.2.4.jar");
+        mysqlJar = new File(path2ResourceSample271 + "lib" + File.separator + "mysql-connector-java-5.1.10-bin.jar");
+        smooksCsvJar = new File(path2ResourceSample271 + "lib" + File.separator + "milyn-smooks-csv-1.2.4.jar");
         serverConfigurationManager.copyToComponentLib(mysqlJar);
         serverConfigurationManager.copyToComponentLib(smooksCsvJar);
 
         serverConfigurationManager.restartGracefully();
 
         super.init();
-        SynapseConfigAdminClient synapseConfigAdminClient =
-            new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        SynapseConfigAdminClient synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(),
+                getSessionCookie());
         String config = synapseConfigAdminClient.getConfiguration();
 
         // Set up the database
@@ -126,28 +124,24 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
         sqlDataSourceUtil.createDataSource("WSO2_CARBON_DB", sqlFileList);
 
         config = config.replace("<password>wso2carbon</password>",
-                                "<password>" + sqlDataSourceUtil.getDatabasePassword() +
-                                "</password>"
-        ).replace("<user>wso2carbon</user>",
-                  "<user>" + sqlDataSourceUtil.getDatabaseUser() +
-                  "</user>"
-        ).replace("<url>jdbc:mysql://localhost:3306/test</url>",
-                  "<url>" + sqlDataSourceUtil.getJdbcUrlForProxy() + "</url>")
-                       .replace("<driver>com.mysql.jdbc.Driver</driver>",
-                                "<driver>" + sqlDataSourceUtil.getDriver() + "</driver>");
+                "<password>" + sqlDataSourceUtil.getDatabasePassword() + "</password>")
+                .replace("<user>wso2carbon</user>", "<user>" + sqlDataSourceUtil.getDatabaseUser() + "</user>")
+                .replace("<url>jdbc:mysql://localhost:3306/test</url>",
+                        "<url>" + sqlDataSourceUtil.getJdbcUrlForProxy() + "</url>")
+                .replace("<driver>com.mysql.jdbc.Driver</driver>",
+                        "<driver>" + sqlDataSourceUtil.getDriver() + "</driver>");
 
         config = config.replace("/home/username/test/in", inFolder.getAbsolutePath())
-                       .replace("/home/username/test/original", originalFolder.getAbsolutePath())
-                       .replace("/home/username/test/failure", failureFolder.getAbsolutePath())
-                       .replace("/home/username/test/out",
-                                outFolder.getAbsolutePath() + File.separator + "out.txt");
+                .replace("/home/username/test/original", originalFolder.getAbsolutePath())
+                .replace("/home/username/test/failure", failureFolder.getAbsolutePath())
+                .replace("/home/username/test/out", outFolder.getAbsolutePath() + File.separator + "out.txt");
 
         synapseConfigAdminClient.updateConfiguration(config);
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "File Processing", enabled = false)
-    public void testFileProcessing() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "File Processing", enabled = false) public void testFileProcessing()
+            throws Exception {
         String feedURL = "https://mail.google.com/mail/feed/atom";
         int beforeMaiilCount = getMailCount(feedURL);
 
@@ -156,28 +150,24 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
 
         FileUtils.copyFileToDirectory(inputFile, inFolder);
 
-        boolean isInputFileNotExistInFolder =
-            isFileNotExist(inputFile.getAbsolutePath(), "input.txt");
+        boolean isInputFileNotExistInFolder = isFileNotExist(inputFile.getAbsolutePath(), "input.txt");
         Assert.assertFalse(isInputFileNotExistInFolder, "input.txt file is still exist");
 
-        boolean isInputFileExistInOriginalFolder = isFileExist(originalFolder.getAbsolutePath(),
-                                                               "input.txt");
+        boolean isInputFileExistInOriginalFolder = isFileExist(originalFolder.getAbsolutePath(), "input.txt");
         Assert.assertTrue(isInputFileExistInOriginalFolder, "out.txt file not found");
 
         boolean isOutFileExistInOutFolder = isFileExist(outFolder.getAbsolutePath(), "out.txt");
         Assert.assertTrue(isOutFileExistInOutFolder, "out.txt file not found");
 
         String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("Don") && vfsOut.contains("John"),
-                          "Don & John not found");
+        Assert.assertTrue(vfsOut.contains("Don") && vfsOut.contains("John"), "Don & John not found");
 
         Assert.assertEquals(getMailCount(feedURL), beforeMaiilCount + 1, "Mail count mismatch");
 
         // todo : database record insertion
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
 
         // Remove the database
@@ -239,8 +229,7 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
         return count;
     }
 
-    private static OMElement getAtomFeedContent(String atomURL) throws IOException,
-                                                                       XMLStreamException {
+    private static OMElement getAtomFeedContent(String atomURL) throws IOException, XMLStreamException {
         StringBuilder sb;
         InputStream inputStream = null;
         URL url = new URL(atomURL);
@@ -250,8 +239,7 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
             connection.setRequestMethod("GET");
             String userPassword = GMAIL_USER_NAME + ":" + GMAIL_PASSWORD;
             String encodedAuthorization = Base64Utils.encode(userPassword.getBytes());
-            connection.setRequestProperty("Authorization", "Basic " +
-                                                           encodedAuthorization);
+            connection.setRequestProperty("Authorization", "Basic " + encodedAuthorization);
             connection.connect();
 
             inputStream = connection.getInputStream();

@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.mqtt.inbound.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -39,16 +38,15 @@ public class MQTTInboundTempFileCreationTestCase extends ESBIntegrationTest {
     private static final String CARBON_HOME = "carbon.home";
     private static final String PAHO_TEMP_DIR = "paho";
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
         //The inbound endpoints are not pre-deployed since it will add a polling overhead throughout the time other
         // tests are run
         loadESBConfigurationFromClasspath("/artifacts/ESB/mqtt/inbound/transport/PublishToMqttTestSequence.xml");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Temp folder creation test case")
-    public void connectToMQTTBroker() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Temp folder creation test case") public void connectToMQTTBroker()
+            throws Exception {
 
         File file = new File(System.getProperty(CARBON_HOME));
         String[] listOfNames = file.list();
@@ -63,8 +61,7 @@ public class MQTTInboundTempFileCreationTestCase extends ESBIntegrationTest {
         Assert.assertFalse(tempFileFound, "Temp files created");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteInboundEndpointFromName("PublishToMqttTestEndpoint");
         super.cleanup();
     }

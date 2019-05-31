@@ -27,8 +27,8 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.namespace.QName;
 import java.util.Iterator;
+import javax.xml.namespace.QName;
 
 /**
  * Test a complete flow of modifying payload using a payloadfactorymediator within foreach mediator
@@ -39,20 +39,19 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
     private IterateClient client;
     private LogViewerClient logViewer;
 
-    @BeforeClass
-    public void setEnvironment() throws Exception {
+    @BeforeClass public void setEnvironment() throws Exception {
         init();
         client = new IterateClient();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators")
-    public void testForEachInlineSequenceWithIterateEndpoint() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/foreach/foreach_simple.xml");
+    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators") public void testForEachInlineSequenceWithIterateEndpoint()
+            throws Exception {
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple.xml");
         logViewer.clearLogs();
 
-        String response = client.getMultipleCustomResponse(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), "IBM", 2);
+        String response = client
+                .getMultipleCustomResponse(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), "IBM", 2);
         Assert.assertNotNull(response);
 
         LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
@@ -72,9 +71,7 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
 
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                        "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
@@ -85,10 +82,9 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and aggregate mediators")
-    public void testForEachSequenceRefWithIterateEndpoint() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/foreach/foreach_simple_sequenceref.xml");
+    @Test(groups = "wso2.esb", description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and aggregate mediators") public void testForEachSequenceRefWithIterateEndpoint()
+            throws Exception {
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple_sequenceref.xml");
         logViewer.clearLogs();
 
         String response = client.getMultipleCustomResponse(getMainSequenceURL(), "IBM", 2);
@@ -111,9 +107,7 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
 
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
-        Iterator iterator =
-                soapBody.getChildrenWithName(new QName("http://services.samples",
-                        "getQuoteResponse"));
+        Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
         int i = 0;
         while (iterator.hasNext()) {
             i++;
@@ -123,9 +117,7 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
         Assert.assertEquals(i, 2, "Message count mismatched in response");
     }
 
-
-    @AfterClass
-    public void close() throws Exception {
+    @AfterClass public void close() throws Exception {
         client = null;
         super.cleanup();
     }

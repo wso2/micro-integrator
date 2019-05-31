@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2005-2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2005-2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -18,12 +18,18 @@
 
 package org.wso2.esb.integration.common.utils.clients;
 
-
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.methods.*;
+import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpHead;
+import org.apache.http.client.methods.HttpOptions;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpPut;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.entity.ContentProducer;
 import org.apache.http.entity.EntityTemplate;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -84,8 +90,8 @@ public class SimpleHttpClient {
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
-    public HttpResponse doPost(String url, final Map<String, String> headers,
-                               final String payload, String contentType) throws IOException {
+    public HttpResponse doPost(String url, final Map<String, String> headers, final String payload, String contentType)
+            throws IOException {
         HttpUriRequest request = new HttpPost(url);
         setHeaders(headers, request);
         HttpEntityEnclosingRequest entityEncReq = (HttpEntityEnclosingRequest) request;
@@ -142,8 +148,8 @@ public class SimpleHttpClient {
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
-    public HttpResponse doPatch(String url, final Map<String, String> headers,
-                                final String payload, String contentType) throws IOException {
+    public HttpResponse doPatch(String url, final Map<String, String> headers, final String payload, String contentType)
+            throws IOException {
         HttpUriRequest request = new HttpPatch(url);
         setHeaders(headers, request);
         HttpEntityEnclosingRequest entityEncReq = (HttpEntityEnclosingRequest) request;
@@ -178,11 +184,11 @@ public class SimpleHttpClient {
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
-    public HttpResponse doOptions(String url, final Map<String, String> headers,
-                                  final String payload, String contentType) throws IOException {
+    public HttpResponse doOptions(String url, final Map<String, String> headers, final String payload,
+            String contentType) throws IOException {
         HttpUriRequest request = new HttpOptions(url);
         setHeaders(headers, request);
-        if(payload != null) {
+        if (payload != null) {
             HttpEntityEnclosingRequest entityEncReq = (HttpEntityEnclosingRequest) request;
             final boolean zip = headers != null && "gzip".equals(headers.get(HttpHeaders.CONTENT_ENCODING));
 
@@ -242,8 +248,8 @@ public class SimpleHttpClient {
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
-    public HttpResponse doDeleteWithPayload(String url, final Map<String, String> headers,
-            final String payload, String contentType) throws IOException {
+    public HttpResponse doDeleteWithPayload(String url, final Map<String, String> headers, final String payload,
+            String contentType) throws IOException {
 
         boolean zip = false;
         HttpUriRequest request = new HttpDeleteWithEntity(url);
@@ -275,8 +281,8 @@ public class SimpleHttpClient {
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
-    public HttpResponse doPut(String url, final Map<String, String> headers,
-                              final String payload, String contentType) throws IOException {
+    public HttpResponse doPut(String url, final Map<String, String> headers, final String payload, String contentType)
+            throws IOException {
         HttpUriRequest request = new HttpPut(url);
         setHeaders(headers, request);
         HttpEntityEnclosingRequest entityEncReq = (HttpEntityEnclosingRequest) request;
@@ -309,7 +315,8 @@ public class SimpleHttpClient {
      */
     public static String responseEntityBodyToString(HttpResponse response) throws IOException {
         if (response != null && response.getEntity() != null) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
             StringBuilder strBuilder = new StringBuilder();
             strBuilder.append("");
             String line;
@@ -320,7 +327,6 @@ public class SimpleHttpClient {
         }
         return null;
     }
-
 
     private void setHeaders(Map<String, String> headers, HttpUriRequest request) {
         if (headers != null && headers.size() > 0) {
@@ -343,8 +349,7 @@ public class SimpleHttpClient {
             this.payload = entityBody;
         }
 
-        @Override
-        public void writeTo(OutputStream outputStream) throws IOException {
+        @Override public void writeTo(OutputStream outputStream) throws IOException {
             OutputStream out = outputStream;
             if (zip) {
                 out = new GZIPOutputStream(outputStream);

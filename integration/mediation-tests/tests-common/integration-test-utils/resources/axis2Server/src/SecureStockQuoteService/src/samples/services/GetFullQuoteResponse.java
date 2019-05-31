@@ -28,7 +28,7 @@ public class GetFullQuoteResponse {
 
     public GetFullQuoteResponse(String symbol) {
         tradeHistory = new TradingDay[COUNT];
-        for (int i=0; i<COUNT; i++) {
+        for (int i = 0; i < COUNT; i++) {
             tradeHistory[i] = new TradingDay(i, new GetQuoteResponse(symbol));
         }
     }

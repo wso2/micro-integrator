@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.jms.securevault.test;
 
-import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.security.AuthenticationUser;
 import org.apache.activemq.security.SimpleAuthenticationPlugin;
 import org.apache.axiom.om.OMElement;
@@ -30,7 +29,6 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfiguration;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.carbon.base.CarbonBaseUtils;
-import org.wso2.carbon.esb.jms.utils.JMSBroker;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
@@ -59,14 +57,15 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
      */
     private SimpleAuthenticationPlugin simpleAuthenticationPlugin;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        String secureVaultConfDir = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator
-                + "ESB" + File.separator  + "jms" + File.separator + "securevault" + File.separator;
-        String carbonSecurityDir = CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator
-                + "security" + File.separator;
+        String secureVaultConfDir =
+                FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
+                        + "jms" + File.separator + "securevault" + File.separator;
+        String carbonSecurityDir =
+                CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator + "security"
+                        + File.separator;
 
         String srcFileLocation = secureVaultConfDir + CIPHER_TOOL_PROPERTIES_FILE;
         String targetFileLocation = carbonSecurityDir + CIPHER_TOOL_PROPERTIES_FILE;
@@ -87,8 +86,9 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
         serverConfigurationManager.applyConfigurationWithoutRestart(srcFile, targetFile, true);
 
         srcFileLocation = secureVaultConfDir + AXIS2_XML_FILE;
-        targetFileLocation = CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator + "axis2"
-                + File.separator + AXIS2_XML_FILE;
+        targetFileLocation =
+                CarbonBaseUtils.getCarbonHome() + File.separator + "conf" + File.separator + "axis2" + File.separator
+                        + AXIS2_XML_FILE;
         srcFile = new File(srcFileLocation);
         targetFile = new File(targetFileLocation);
         serverConfigurationManager.applyConfigurationWithoutRestart(srcFile, targetFile, true);
@@ -101,8 +101,9 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
 
         serverConfigurationManager.restartGracefully();
         super.init();
-        loadESBConfigurationFromClasspath("artifacts" + File.separator + "ESB" + File.separator +
-                "jms" + File.separator + "securevault" + File.separator + SYNAPSE_CONFIG_FILE);
+        loadESBConfigurationFromClasspath(
+                "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator + "securevault"
+                        + File.separator + SYNAPSE_CONFIG_FILE);
         isProxyDeployed(PROXY_NAME);
     }
 
@@ -116,8 +117,8 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
      * also includes this configuration, where the password ("manager") has been encrypted with SecureVault.
      * Thus an exception (SecurityException) thrown while connecting to send would indicate a decryption failure.
      */
-    @Test(groups = "wso2.esb", description = "Test JMS transport using parameters secured using SecureVault")
-    public void testJMSTransportWithSecureVault() throws InterruptedException {
+    @Test(groups = "wso2.esb", description = "Test JMS transport using parameters secured using SecureVault") public void testJMSTransportWithSecureVault()
+            throws InterruptedException {
         try {
             simpleAuthenticationPlugin = new SimpleAuthenticationPlugin();
             simpleAuthenticationPlugin.setAnonymousAccessAllowed(false);
@@ -133,8 +134,7 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
         try {
             super.cleanup();
         } finally {

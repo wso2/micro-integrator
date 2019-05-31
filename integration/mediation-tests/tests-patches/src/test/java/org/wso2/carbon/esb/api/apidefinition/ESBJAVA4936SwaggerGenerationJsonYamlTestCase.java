@@ -21,13 +21,8 @@ import org.apache.http.HttpResponse;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.io.File;
 
 /**
  * ESBJAVA4936SwaggerGenerationJsonYamlTestCase tests whether Swagger API definitions are correctly generated for
@@ -35,37 +30,35 @@ import java.io.File;
  */
 public class ESBJAVA4936SwaggerGenerationJsonYamlTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test API definition for JSON is generated correctly")
-    public void jsonDefinitionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test API definition for JSON is generated correctly") public void jsonDefinitionTest()
+            throws Exception {
         String restURL = getMainSequenceURL() + "swaggerGenerationTestApi?swagger.json";
         SimpleHttpClient httpClient = new SimpleHttpClient();
         HttpResponse response = httpClient.doGet(restURL, null);
         String payload = httpClient.getResponsePayload(response);
 
         log.info("JSON Definition Response : " + payload);
-        Assert.assertTrue("Swagger JSON definition did not contained in the response", payload
-                .contains("API Definition of swaggerGenerationTestApi"));
+        Assert.assertTrue("Swagger JSON definition did not contained in the response",
+                payload.contains("API Definition of swaggerGenerationTestApi"));
     }
 
-    @Test(groups = "wso2.esb", description = "Test API definition for Yaml is generated correctly")
-    public void yamlDefinitionTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test API definition for Yaml is generated correctly") public void yamlDefinitionTest()
+            throws Exception {
         String restURL = getMainSequenceURL() + "swaggerGenerationTestApi?swagger.json";
         SimpleHttpClient httpClient = new SimpleHttpClient();
         HttpResponse response = httpClient.doGet(restURL, null);
         String payload = httpClient.getResponsePayload(response);
 
         log.info("Yaml Definition Response : " + payload);
-        Assert.assertTrue("Swagger Yaml definition did not contained in the response", payload
-                .contains("API Definition of swaggerGenerationTestApi"));
+        Assert.assertTrue("Swagger Yaml definition did not contained in the response",
+                payload.contains("API Definition of swaggerGenerationTestApi"));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 }

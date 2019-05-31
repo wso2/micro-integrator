@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -30,38 +30,38 @@ import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 
 public class IterateSmallMessageTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
-    public void testSmallNumbers() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20") public void testSmallNumbers()
+            throws Exception {
 
         String symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
         OMElement response;
         for (int i = 0; i < 20; i++) {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null, symbol);
+            response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null,
+                            symbol);
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("WSO2"));
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
-    public void testLargeNumbers() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100") public void testLargeNumbers()
+            throws Exception {
         String symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
         OMElement response = null;
         for (int i = 0; i < 25; i++) {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null, symbol);
+            response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null,
+                            symbol);
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("WSO2"));
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 

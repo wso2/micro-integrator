@@ -29,7 +29,6 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.jmsclient.JmsClientHelper;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 import java.io.File;
 import javax.jms.QueueConnection;
@@ -47,16 +46,16 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "jmsTypeHeaderInboundEndpointTestCase";
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
 
         verifySequenceExistence("jmsTypeHeaderInboundEPSendInSequence");
 
         //Add inbound endpoint configuration
         OMElement inboundEpConfig = esbUtils.loadResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator +
-                        "inbound" + File.separator + "transport" + File.separator + "jmsTypeHeaderInboundEndpoint.xml");
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator
+                        + "inbound" + File.separator + "transport" + File.separator
+                        + "jmsTypeHeaderInboundEndpoint.xml");
         addInboundEndpoint(inboundEpConfig);
     }
 
@@ -65,9 +64,9 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
      *
      * @throws Exception if any error occurred while running tests
      */
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = {"wso2.esb"}, description = "Test JMSType header with inbound endpoint")
-    public void testJmsTypeHeaderWithInboundEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Test JMSType header with inbound endpoint") public void testJmsTypeHeaderWithInboundEndpoint()
+            throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
 
@@ -75,16 +74,14 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
         sendMessage();
 
         //check for the log
-        boolean assertValue = Utils.checkForLog(logViewerClient,
-                                                "** jmsTypeHeaderInboundEPSendInSequence was called **",
-                                                5);
+        boolean assertValue = Utils
+                .checkForLog(logViewerClient, "** jmsTypeHeaderInboundEPSendInSequence was called **", 5);
 
         Assert.assertTrue(assertValue, "Message was not received to the inbound EP when JMSType was set.");
-        Assert.assertTrue(Utils.isQueueEmpty(QUEUE_NAME),"Queue should be empty if message was properly received");
+        Assert.assertTrue(Utils.isQueueEmpty(QUEUE_NAME), "Queue should be empty if message was properly received");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         super.cleanup();
     }
 
@@ -95,18 +92,16 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
      */
     private void sendMessage() throws Exception {
         InitialContext initialContext = JmsClientHelper.getActiveMqInitialContext();
-        QueueConnectionFactory connectionFactory
-                = (QueueConnectionFactory) initialContext.lookup(JmsClientHelper.QUEUE_CONNECTION_FACTORY);
+        QueueConnectionFactory connectionFactory = (QueueConnectionFactory) initialContext
+                .lookup(JmsClientHelper.QUEUE_CONNECTION_FACTORY);
         QueueConnection queueConnection = connectionFactory.createQueueConnection();
         QueueSession queueSession = queueConnection.createQueueSession(false, QueueSession.AUTO_ACKNOWLEDGE);
         QueueSender sender = queueSession.createSender(queueSession.createQueue(QUEUE_NAME));
 
-        String message = "<?xml version='1.0' encoding='UTF-8'?>" +
-                "    <ser:getQuote xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\"> " +
-                "      <ser:request>" +
-                "        <xsd:symbol>IBM</xsd:symbol>" +
-                "      </ser:request>" +
-                "    </ser:getQuote>";
+        String message = "<?xml version='1.0' encoding='UTF-8'?>"
+                + "    <ser:getQuote xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\"> "
+                + "      <ser:request>" + "        <xsd:symbol>IBM</xsd:symbol>" + "      </ser:request>"
+                + "    </ser:getQuote>";
         try {
             TextMessage jmsMessage = queueSession.createTextMessage(message);
             jmsMessage.setJMSType("incorrecttype");

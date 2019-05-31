@@ -34,83 +34,83 @@ import java.io.File;
  */
 public class ESBJAVA4450TestCase extends ESBIntegrationTest {
 
-	private FTPServerManager ftpServerManager;
-	private File FTPFolder;
+    private FTPServerManager ftpServerManager;
+    private File FTPFolder;
 
-	@BeforeClass(alwaysRun = true) public void runFTPServer() throws Exception {
-		// Username password for the FTP server to be started
-		String FTPUsername = "admin";
-		String FTPPassword = "admin";
-		String inputFolderName = "in";
-		int FTPPort = 8086;
-		String pathToFtpDir = getClass()
-				.getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" +
-				             File.separator + "vfsTransport" + File.separator).getPath();
-		// Local folder of the FTP server root
-		FTPFolder = new File(pathToFtpDir + "FTP_Location" + File.separator);
-		// create FTP server root folder if not exists
-		if (FTPFolder.exists()) {
-			FileUtils.deleteDirectory(FTPFolder);
-		}
-		Assert.assertTrue(FTPFolder.mkdir(), "FTP root file folder not created");
-		// create a directory under FTP server root
-		File inputFolder = new File(FTPFolder.getAbsolutePath() + File.separator + inputFolderName);
+    @BeforeClass(alwaysRun = true) public void runFTPServer() throws Exception {
+        // Username password for the FTP server to be started
+        String FTPUsername = "admin";
+        String FTPPassword = "admin";
+        String inputFolderName = "in";
+        int FTPPort = 8086;
+        String pathToFtpDir = getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "vfsTransport" + File.separator).getPath();
+        // Local folder of the FTP server root
+        FTPFolder = new File(pathToFtpDir + "FTP_Location" + File.separator);
+        // create FTP server root folder if not exists
+        if (FTPFolder.exists()) {
+            FileUtils.deleteDirectory(FTPFolder);
+        }
+        Assert.assertTrue(FTPFolder.mkdir(), "FTP root file folder not created");
+        // create a directory under FTP server root
+        File inputFolder = new File(FTPFolder.getAbsolutePath() + File.separator + inputFolderName);
 
-		if (inputFolder.exists()) {
-			FileUtils.deleteDirectory(inputFolder);
-		}
-		Assert.assertTrue(inputFolder.mkdir(), "FTP data /in folder not created");
+        if (inputFolder.exists()) {
+            FileUtils.deleteDirectory(inputFolder);
+        }
+        Assert.assertTrue(inputFolder.mkdir(), "FTP data /in folder not created");
 
-		// start-up FTP server
-		ftpServerManager = new FTPServerManager(FTPPort, FTPFolder.getAbsolutePath(), FTPUsername, FTPPassword);
-		ftpServerManager.startFtpServer();
+        // start-up FTP server
+        ftpServerManager = new FTPServerManager(FTPPort, FTPFolder.getAbsolutePath(), FTPUsername, FTPPassword);
+        ftpServerManager.startFtpServer();
 
-		super.init();
-		loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator +
-		                                  "synapseconfig" + File.separator + "vfsTransport" + File.separator +
-		                                  "vfs_file_type.xml");
-	}
+        super.init();
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "vfsTransport" + File.separator + "vfs_file_type.xml");
+    }
 
-	@Test(groups = "wso2.esb", description = "VFS transfer file type if default") public void TestDefaultFileType()
-			throws Exception {
-		try {
-			axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyDefault"), null, "WSO2");
-		} catch (Exception axisFault) {
-			//We expect this as no response is sent to the backend
-		}
-		File file = new File(FTPFolder.getAbsolutePath() + File.separator + "in" + File.separator + "default.xml");
-		Assert.assertTrue(file.exists(), "Default file type transfer failed");
-	}
+    @Test(groups = "wso2.esb", description = "VFS transfer file type if default") public void TestDefaultFileType()
+            throws Exception {
+        try {
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyDefault"), null, "WSO2");
+        } catch (Exception axisFault) {
+            //We expect this as no response is sent to the backend
+        }
+        File file = new File(FTPFolder.getAbsolutePath() + File.separator + "in" + File.separator + "default.xml");
+        Assert.assertTrue(file.exists(), "Default file type transfer failed");
+    }
 
-	@Test(groups = "wso2.esb", description = "VFS transfer file type if Binary") public void TestBinaryFileType()
-			throws Exception {
-		try {
-			axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyBinary"), null, "WSO2");
-		} catch (Exception axisFault) {
-			//We expect this as no response is sent to the backend
-		}
-		File file = new File(FTPFolder.getAbsolutePath() + File.separator + "in" + File.separator + "binary.xml");
-		Assert.assertTrue(file.exists(), "Default file type transfer failed");
-	}
+    @Test(groups = "wso2.esb", description = "VFS transfer file type if Binary") public void TestBinaryFileType()
+            throws Exception {
+        try {
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyBinary"), null, "WSO2");
+        } catch (Exception axisFault) {
+            //We expect this as no response is sent to the backend
+        }
+        File file = new File(FTPFolder.getAbsolutePath() + File.separator + "in" + File.separator + "binary.xml");
+        Assert.assertTrue(file.exists(), "Default file type transfer failed");
+    }
 
-	@Test(groups = "wso2.esb", description = "VFS transfer file type if ascii") public void TestAsciiFileType()
-			throws Exception {
-		try {
-			axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyAscii"), null, "WSO2");
-		} catch (Exception axisFault) {
-			//We expect this as no response is sent to the backend
-		}
-		File file = new File(FTPFolder.getAbsolutePath() + File.separator + "in" + File.separator + "ascii.xml");
-		Assert.assertTrue(file.exists(), "Default file type transfer failed");
-	}
+    @Test(groups = "wso2.esb", description = "VFS transfer file type if ascii") public void TestAsciiFileType()
+            throws Exception {
+        try {
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyAscii"), null, "WSO2");
+        } catch (Exception axisFault) {
+            //We expect this as no response is sent to the backend
+        }
+        File file = new File(FTPFolder.getAbsolutePath() + File.separator + "in" + File.separator + "ascii.xml");
+        Assert.assertTrue(file.exists(), "Default file type transfer failed");
+    }
 
-	@AfterClass(alwaysRun = true) public void stopFTPServer() throws Exception {
-		try {
-			super.cleanup();
-		} finally {
-			ftpServerManager.stop();
-			log.info("FTP Server stopped successfully");
-		}
-	}
+    @AfterClass(alwaysRun = true) public void stopFTPServer() throws Exception {
+        try {
+            super.cleanup();
+        } finally {
+            ftpServerManager.stop();
+            log.info("FTP Server stopped successfully");
+        }
+    }
 
 }

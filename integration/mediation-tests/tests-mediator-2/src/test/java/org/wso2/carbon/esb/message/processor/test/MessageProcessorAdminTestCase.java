@@ -30,8 +30,8 @@ import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import javax.xml.namespace.QName;
 import java.util.Iterator;
+import javax.xml.namespace.QName;
 
 /**
  * Tests to verify service behaviour of both Message Processor Admin Service and Message Store Admin Service.
@@ -45,8 +45,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
     private final String PROXY_NAME = "mspAdminTestProxy";
     private final String STORE_NAME = "mspAdminTestInMemoryMessageStore";
 
-    @BeforeClass(alwaysRun = true, description = "Test Car with Mediator deployment")
-    protected void setup() throws Exception {
+    @BeforeClass(alwaysRun = true, description = "Test Car with Mediator deployment") protected void setup()
+            throws Exception {
         super.init();
 
         loadESBConfigurationFromClasspath("artifacts/ESB/messageProcessorConfig/mspAdminTestConfig.xml");
@@ -64,14 +64,15 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test modifying a message processor.")
-    public void modifyMessageProcessor() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test modifying a message processor.") public void modifyMessageProcessor()
+            throws Exception {
 
         String modifyingAttribute = "interval";
         String modifiedInterval = "6000";
 
-        OMElement processorConfig = esbUtils.loadResource("artifacts/ESB/messageProcessorConfig/" +
-                PROCESSOR_NAME + ".xml");
+        OMElement processorConfig = esbUtils
+                .loadResource("artifacts/ESB/messageProcessorConfig/" + PROCESSOR_NAME + ".xml");
 
         Iterator<OMElement> iterator = processorConfig.getChildElements();
 
@@ -105,8 +106,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
             }
         }
 
-        Assert.assertTrue(processorUpdated, "Message Processor was not updated with new interval value : " +
-                modifiedInterval);
+        Assert.assertTrue(processorUpdated,
+                "Message Processor was not updated with new interval value : " + modifiedInterval);
     }
 
     /**
@@ -114,18 +115,19 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test activating/deactivating a message processor.")
-    public void testActivateMessageProcessor() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test activating/deactivating a message processor.") public void testActivateMessageProcessor()
+            throws Exception {
 
         messageProcessorClient.deactivateProcessor(PROCESSOR_NAME);
 
-        Assert.assertFalse(messageProcessorClient.isActive(PROCESSOR_NAME), "Message processor should not be active, " +
-                "but it is active.");
+        Assert.assertFalse(messageProcessorClient.isActive(PROCESSOR_NAME),
+                "Message processor should not be active, " + "but it is active.");
 
         messageProcessorClient.activateMessageProcessor(PROCESSOR_NAME);
 
-        Assert.assertTrue(messageProcessorClient.isActive(PROCESSOR_NAME), "Message processor should be active, but " +
-                "it is not active.");
+        Assert.assertTrue(messageProcessorClient.isActive(PROCESSOR_NAME),
+                "Message processor should be active, but " + "it is not active.");
     }
 
     /**
@@ -135,8 +137,9 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Test pending message related operations on a message processor.")
-    public void testMessagesInMessageProcessor() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test pending message related operations on a message processor.") public void testMessagesInMessageProcessor()
+            throws Exception {
 
         int initialMessageCount = 5;
         long waitMilliseconds = 30000;
@@ -153,13 +156,13 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
             Thread.sleep(1000);
         }
 
-        Assert.assertFalse(messageProcessorClient.isActive(PROCESSOR_NAME), "Message Processor : " + PROCESSOR_NAME +
-                " did not de-activate after failed delivery attempts.");
+        Assert.assertFalse(messageProcessorClient.isActive(PROCESSOR_NAME),
+                "Message Processor : " + PROCESSOR_NAME + " did not de-activate after failed delivery attempts.");
 
         MessageInfo[] messages = messageStoreAdminClient.getPaginatedMessages(STORE_NAME, 0);
 
-        Assert.assertEquals(messages.length, initialMessageCount, "Pending message count from list for Message store : " +
-                STORE_NAME + " is not accurate.");
+        Assert.assertEquals(messages.length, initialMessageCount,
+                "Pending message count from list for Message store : " + STORE_NAME + " is not accurate.");
 
         int getSizeResult = messageStoreAdminClient.getMessageCount(STORE_NAME);
 
@@ -168,8 +171,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
 
         messageStoreAdminClient.deleteMessage(STORE_NAME, messages[0].getMessageId());
 
-        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), initialMessageCount - 1, "Message was " +
-                "not deleted from message store : " + STORE_NAME);
+        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), initialMessageCount - 1,
+                "Message was " + "not deleted from message store : " + STORE_NAME);
 
         SampleAxis2Server offsetAxis2Server = new SampleAxis2Server("test_axis2_server_9018.xml");
         offsetAxis2Server.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
@@ -190,14 +193,12 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
             offsetAxis2Server.stop();
         }
 
-        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), 0, "Messages were not sent after " +
-                "activating message processor : " + PROCESSOR_NAME);
+        Assert.assertEquals(messageStoreAdminClient.getMessageCount(STORE_NAME), 0,
+                "Messages were not sent after " + "activating message processor : " + PROCESSOR_NAME);
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void cleanState() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanState() throws Exception {
 
         super.cleanup();
     }

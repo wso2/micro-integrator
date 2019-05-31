@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.esb.integration.common.utils.clients.axis2client;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -49,16 +49,15 @@ public class AxisOperationClient {
 
     public AxisOperationClient() {
 
-
-        String repositoryPath = System.getProperty(ServerConstants.CARBON_HOME) + File.separator +
-                "samples" + File.separator + "axis2Server" + File.separator + "repository";
+        String repositoryPath =
+                System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "samples" + File.separator
+                        + "axis2Server" + File.separator + "repository";
         File repository = new File(repositoryPath);
         log.info("Using the Axis2 repository path: " + repository.getAbsolutePath());
 
         try {
-            cfgCtx =
-                    ConfigurationContextFactory.createConfigurationContextFromFileSystem(repository.getCanonicalPath(),
-                            null);
+            cfgCtx = ConfigurationContextFactory
+                    .createConfigurationContextFromFileSystem(repository.getCanonicalPath(), null);
             serviceClient = new ServiceClient(cfgCtx, null);
             log.info("Sample clients initialized successfully...");
         } catch (Exception e) {
@@ -74,19 +73,17 @@ public class AxisOperationClient {
      * @return
      * @throws java.io.IOException
      */
-    public OMElement sendMultipleQuoteRequest(String trpUrl, String addUrl, String symbol,
-                                              int iterations)
+    public OMElement sendMultipleQuoteRequest(String trpUrl, String addUrl, String symbol, int iterations)
             throws IOException {
         return createMultipleQuoteRequest(trpUrl, addUrl, symbol, iterations);
     }
 
     /**
-     *
      * @param trpUrl
      * @param addUrl
      * @param payload
      * @param action
-     * @return   soap envelop
+     * @return soap envelop
      * @throws org.apache.axis2.AxisFault
      */
 
@@ -132,8 +129,8 @@ public class AxisOperationClient {
      * @return
      * @throws java.io.IOException
      */
-    private OMElement createMultipleQuoteRequest(String trpUrl, String addUrl, String symbol,
-                                                 int iterations) throws IOException {
+    private OMElement createMultipleQuoteRequest(String trpUrl, String addUrl, String symbol, int iterations)
+            throws IOException {
         operationClient = serviceClient.createClient(ServiceClient.ANON_OUT_IN_OP);
         setMessageContext(addUrl, trpUrl, null);
         outMsgCtx.setEnvelope(createSOAPEnvelope(symbol, iterations));
@@ -150,7 +147,7 @@ public class AxisOperationClient {
      *
      * @param addUrl
      * @param trpUrl
-     *  @param action
+     * @param action
      */
     private void setMessageContext(String addUrl, String trpUrl, String action) {
         outMsgCtx = new MessageContext();
@@ -163,7 +160,7 @@ public class AxisOperationClient {
         if (addUrl != null && !"null".equals(addUrl)) {
             options.setTo(new EndpointReference(addUrl));
         }
-        if(action != null && !"null".equals(action)) {
+        if (action != null && !"null".equals(action)) {
             options.setAction(action);
         }
     }
@@ -195,7 +192,7 @@ public class AxisOperationClient {
     }
 
     /**
-     *   Destroy objects
+     * Destroy objects
      */
     public void destroy() {
         try {
@@ -211,6 +208,6 @@ public class AxisOperationClient {
         cfgCtx = null;
         envelope = null;
         fac = null;
-        
+
     }
 }

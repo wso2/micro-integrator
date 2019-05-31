@@ -21,9 +21,9 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import javax.xml.namespace.QName;
 
@@ -38,15 +38,13 @@ import static org.testng.Assert.assertNotNull;
  */
 public class ExcludeHeadersWithCacheTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb",
-          description = "Verify a header can be excluded when hasing")
-    public void testExcludingHeaders() throws AxisFault {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Verify a header can be excluded when hasing") public void testExcludingHeaders()
+            throws AxisFault {
         OMElement stockResponse;
 
         // Sending a request to SimpleStockQuote Service
@@ -78,8 +76,7 @@ public class ExcludeHeadersWithCacheTestCase extends ESBIntegrationTest {
         assertNotEquals(change, change2, "Response caching works with the undefined exclude header");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         super.cleanup();
     }
 

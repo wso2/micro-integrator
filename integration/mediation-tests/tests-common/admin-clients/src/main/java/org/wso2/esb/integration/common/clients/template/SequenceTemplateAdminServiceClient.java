@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.esb.integration.common.clients.template;
 
 import org.apache.axiom.om.OMElement;
@@ -39,15 +39,13 @@ public class SequenceTemplateAdminServiceClient {
     private final String serviceName = "TemplateAdminService";
     private TemplateAdminServiceStub templateAdminStub;
 
-    public SequenceTemplateAdminServiceClient(String backEndUrl, String sessionCookie)
-            throws AxisFault {
+    public SequenceTemplateAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;
         templateAdminStub = new TemplateAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, templateAdminStub);
     }
 
-    public SequenceTemplateAdminServiceClient(String backEndUrl, String userName, String password)
-            throws AxisFault {
+    public SequenceTemplateAdminServiceClient(String backEndUrl, String userName, String password) throws AxisFault {
         String endPoint = backEndUrl + serviceName;
         templateAdminStub = new TemplateAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, templateAdminStub);
@@ -69,8 +67,7 @@ public class SequenceTemplateAdminServiceClient {
         templateAdminStub.addDynamicTemplate(key, template);
     }
 
-    public void addDynamicSequenceTemplate(String key, DataHandler dh)
-            throws IOException, XMLStreamException {
+    public void addDynamicSequenceTemplate(String key, DataHandler dh) throws IOException, XMLStreamException {
         XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(dh.getInputStream());
         //create the builder
         StAXOMBuilder builder = new StAXOMBuilder(parser);
@@ -107,39 +104,43 @@ public class SequenceTemplateAdminServiceClient {
         return templates;
     }
 
-    public  OMElement getTemplate(String name) throws RemoteException{
+    public OMElement getTemplate(String name) throws RemoteException {
         return templateAdminStub.getTemplate(name);
     }
 
-    public  OMElement getDynamicTemplate(String key) throws RemoteException{
+    public OMElement getDynamicTemplate(String key) throws RemoteException {
         return templateAdminStub.getDynamicTemplate(key);
     }
 
-    public void updateDynamicTemplate(String key, OMElement elm) throws RemoteException{
-        templateAdminStub.updateDynamicTemplate(key,elm);
+    public void updateDynamicTemplate(String key, OMElement elm) throws RemoteException {
+        templateAdminStub.updateDynamicTemplate(key, elm);
     }
 
-    public void saveDynamicTemplate(String key, OMElement elm) throws RemoteException{
-        templateAdminStub.saveDynamicTemplate(key,elm);
+    public void saveDynamicTemplate(String key, OMElement elm) throws RemoteException {
+        templateAdminStub.saveDynamicTemplate(key, elm);
     }
-    public void saveTemplate(OMElement template) throws RemoteException{
+
+    public void saveTemplate(OMElement template) throws RemoteException {
         templateAdminStub.saveTemplate(template);
     }
 
-    public void updateDynamicTemplate(OMElement template, String name) throws RemoteException{
-        templateAdminStub.updateDynamicTemplate(name,template);
+    public void updateDynamicTemplate(OMElement template, String name) throws RemoteException {
+        templateAdminStub.updateDynamicTemplate(name, template);
     }
 
-    public String enableStatistics(String name) throws RemoteException{
-       return templateAdminStub.enableStatistics(name);
+    public String enableStatistics(String name) throws RemoteException {
+        return templateAdminStub.enableStatistics(name);
     }
-    public String disableStatistics(String name) throws RemoteException{
+
+    public String disableStatistics(String name) throws RemoteException {
         return templateAdminStub.disableStatistics(name);
     }
-    public String enableTracing(String name) throws RemoteException{
+
+    public String enableTracing(String name) throws RemoteException {
         return templateAdminStub.enableTracing(name);
     }
-    public String disableTracing(String name) throws RemoteException{
+
+    public String disableTracing(String name) throws RemoteException {
         return templateAdminStub.disableTracing(name);
     }
 }

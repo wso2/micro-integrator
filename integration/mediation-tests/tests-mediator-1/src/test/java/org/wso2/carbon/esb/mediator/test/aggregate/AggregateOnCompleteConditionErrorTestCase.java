@@ -7,8 +7,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This class responsible to test on complete condition of the aggregate mediator where xpath expression should return
@@ -23,8 +23,7 @@ public class AggregateOnCompleteConditionErrorTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
     }
 
@@ -34,32 +33,22 @@ public class AggregateOnCompleteConditionErrorTestCase extends ESBIntegrationTes
      * @throws IOException
      * @throws XMLStreamException
      */
-    @Test(groups = {"wso2.esb"}, description = "verify proxy service return exception evaluating the on complete",
-            expectedExceptions = org.apache.axis2.AxisFault.class,
-            expectedExceptionsMessageRegExp = ".*Error evaluating expression.*")
-    public void testAggregatorOnCompleteConditionError() throws IOException, XMLStreamException {
-        OMElement payload = AXIOMUtil.stringToOM("<soapenv:Envelope\n" +
-                "    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n" +
-                "    xmlns:ser=\"http://services.samples\"\n" +
-                "    xmlns:xsd=\"http://services.samples/xsd\">\n" +
-                "    <soapenv:Header/>\n" +
-                "    <soapenv:Body>\n" +
-                "        <ser:getQuotes>\n" +
-                "            <ser:getQuote>\n" +
-                "                <ser:request>\n" +
-                "                    <xsd:symbol>IBM</xsd:symbol>\n" +
-                "                </ser:request>\n" +
-                "            </ser:getQuote>\n" +
-                "            <ser:getQuote>\n" +
-                "                <ser:request>\n" +
-                "                    <xsd:symbol>WSO2</xsd:symbol>\n" +
-                "                </ser:request>\n" +
-                "            </ser:getQuote>\n" +
-                "        </ser:getQuotes>\n" +
-                "    </soapenv:Body>\n" +
-                "</soapenv:Envelope>");
-        axis2Client.send(getProxyServiceURLHttp("aggregateMediatorOnCompleteErrorTestProxy"), null,
-                "urn:getQuote", payload);
+    @Test(groups = {
+            "wso2.esb" }, description = "verify proxy service return exception evaluating the on complete", expectedExceptions = org.apache.axis2.AxisFault.class, expectedExceptionsMessageRegExp = ".*Error evaluating expression.*") public void testAggregatorOnCompleteConditionError()
+            throws IOException, XMLStreamException {
+        OMElement payload = AXIOMUtil.stringToOM(
+                "<soapenv:Envelope\n" + "    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
+                        + "    xmlns:ser=\"http://services.samples\"\n"
+                        + "    xmlns:xsd=\"http://services.samples/xsd\">\n" + "    <soapenv:Header/>\n"
+                        + "    <soapenv:Body>\n" + "        <ser:getQuotes>\n" + "            <ser:getQuote>\n"
+                        + "                <ser:request>\n" + "                    <xsd:symbol>IBM</xsd:symbol>\n"
+                        + "                </ser:request>\n" + "            </ser:getQuote>\n"
+                        + "            <ser:getQuote>\n" + "                <ser:request>\n"
+                        + "                    <xsd:symbol>WSO2</xsd:symbol>\n" + "                </ser:request>\n"
+                        + "            </ser:getQuote>\n" + "        </ser:getQuotes>\n" + "    </soapenv:Body>\n"
+                        + "</soapenv:Envelope>");
+        axis2Client.send(getProxyServiceURLHttp("aggregateMediatorOnCompleteErrorTestProxy"), null, "urn:getQuote",
+                payload);
     }
 
     /**
@@ -67,8 +56,7 @@ public class AggregateOnCompleteConditionErrorTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

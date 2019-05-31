@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.esb.integration.common.clients.service.mgt;
 
 import org.apache.axis2.AxisFault;
@@ -35,7 +35,6 @@ public class ServiceAdminClient {
     private final String serviceName = "ServiceAdmin";
     private ServiceAdminStub serviceAdminStub;
 
-
     public ServiceAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
 
         String endPoint = backEndUrl + serviceName;
@@ -43,8 +42,7 @@ public class ServiceAdminClient {
         AuthenticateStub.authenticateStub(sessionCookie, serviceAdminStub);
     }
 
-    public ServiceAdminClient(String backEndUrl, String userName, String password)
-            throws AxisFault {
+    public ServiceAdminClient(String backEndUrl, String userName, String password) throws AxisFault {
 
         String endPoint = backEndUrl + serviceName;
         serviceAdminStub = new ServiceAdminStub(endPoint);
@@ -81,16 +79,14 @@ public class ServiceAdminClient {
 
     }
 
-    public ServiceMetaDataWrapper listServices(String serviceName)
-            throws RemoteException {
+    public ServiceMetaDataWrapper listServices(String serviceName) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceName, 0);
         serviceAdminStub.getFaultyServiceArchives(0);
         return serviceMetaDataWrapper;
     }
 
-    public ServiceMetaDataWrapper listServices(String serviceName, String filerType)
-            throws RemoteException {
+    public ServiceMetaDataWrapper listServices(String serviceName, String filerType) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         serviceMetaDataWrapper = serviceAdminStub.listServices(filerType, serviceName, 0);
         serviceAdminStub.getFaultyServiceArchives(0);
@@ -108,7 +104,6 @@ public class ServiceAdminClient {
         return faultyServicesWrapper;
     }
 
-
     public FaultyServicesWrapper listFaultyServices() throws RemoteException {
         FaultyServicesWrapper faultyServicesWrapper;
 
@@ -117,9 +112,7 @@ public class ServiceAdminClient {
         return faultyServicesWrapper;
     }
 
-
-    public boolean isServiceExists(String serviceName)
-            throws RemoteException {
+    public boolean isServiceExists(String serviceName) throws RemoteException {
         boolean serviceState = false;
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         ServiceMetaData[] serviceMetaDataList;
@@ -137,11 +130,10 @@ public class ServiceAdminClient {
         return serviceState;
     }
 
-    public void deleteMatchingServiceByGroup(String serviceFileName)
-            throws RemoteException {
+    public void deleteMatchingServiceByGroup(String serviceFileName) throws RemoteException {
         String matchingServiceName = getMatchingServiceName(serviceFileName);
         if (matchingServiceName != null) {
-            String serviceGroup[] = {getServiceGroup(matchingServiceName)};
+            String serviceGroup[] = { getServiceGroup(matchingServiceName) };
             log.info("Service group name " + serviceGroup[0]);
 
             serviceAdminStub.deleteServiceGroups(serviceGroup);
@@ -151,8 +143,7 @@ public class ServiceAdminClient {
         }
     }
 
-    public String deleteAllServicesByType(String type)
-            throws RemoteException {
+    public String deleteAllServicesByType(String type) throws RemoteException {
         ServiceMetaDataWrapper serviceMetaDataWrapper;
 
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", null, 0);
@@ -166,7 +157,7 @@ public class ServiceAdminClient {
 
                 for (ServiceMetaData serviceData : serviceMetaDataList) {
                     if (serviceData.getServiceType().equalsIgnoreCase(type)) {
-                        serviceGroup = new String[]{serviceData.getServiceGroupName()};
+                        serviceGroup = new String[] { serviceData.getServiceGroupName() };
                         deleteService(serviceGroup);
                     }
                 }
@@ -176,12 +167,10 @@ public class ServiceAdminClient {
 
     }
 
-    public String getMatchingServiceName(String serviceFileName)
-            throws RemoteException {
+    public String getMatchingServiceName(String serviceFileName) throws RemoteException {
 
         ServiceMetaDataWrapper serviceMetaDataWrapper;
         serviceMetaDataWrapper = serviceAdminStub.listServices("ALL", serviceFileName, 0);
-
 
         ServiceMetaData[] serviceMetaDataList;
         if (serviceMetaDataWrapper != null) {
@@ -212,7 +201,6 @@ public class ServiceAdminClient {
         }
         return null;
     }
-
 
     public boolean isServiceFaulty(String serviceName) throws RemoteException {
         boolean serviceState = false;
@@ -257,8 +245,7 @@ public class ServiceAdminClient {
         return faultyService;
     }
 
-    public ServiceMetaData getServicesData(String serviceName)
-            throws ServiceAdminException, RemoteException {
+    public ServiceMetaData getServicesData(String serviceName) throws ServiceAdminException, RemoteException {
 
         return serviceAdminStub.getServiceData(serviceName);
 
@@ -279,14 +266,12 @@ public class ServiceAdminClient {
     }
 
     /**
-     *
      * @param serviceName
      * @return
      * @throws ServiceAdminException
      * @throws java.rmi.RemoteException
      */
-    public String[] getExposedTransports(String serviceName)
-            throws ServiceAdminException, RemoteException {
+    public String[] getExposedTransports(String serviceName) throws ServiceAdminException, RemoteException {
 
         return serviceAdminStub.getExposedTransports(serviceName);
 

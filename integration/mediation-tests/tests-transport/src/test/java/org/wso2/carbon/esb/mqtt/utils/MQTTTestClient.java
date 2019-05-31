@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.mqtt.utils;
 
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -40,14 +39,13 @@ public class MQTTTestClient {
     //Paho MQTT client
     MqttClient mqttClient;
 
-
     /**
      * Generate a MQTT client with given parameters
      *
      * @param brokerURL url of MQTT provider
-     * @param userName username to connect to MQTT provider
-     * @param password password to connect to MQTT provider
-     * @param clientId unique id for the publisher/subscriber client
+     * @param userName  username to connect to MQTT provider
+     * @param password  password to connect to MQTT provider
+     * @param clientId  unique id for the publisher/subscriber client
      * @throws MqttException in case of issue of connect/publish/consume
      */
     public MQTTTestClient(String brokerURL, String userName, char[] password, String clientId) throws MqttException {
@@ -67,7 +65,7 @@ public class MQTTTestClient {
     }
 
     public void publishMessage(String topic, byte[] payload, int qosLevel, boolean retained) throws MqttException {
-        mqttClient.publish(topic,payload, qosLevel, retained);
+        mqttClient.publish(topic, payload, qosLevel, retained);
     }
 
     public void subscribe(String topic, int qosLevel) throws MqttException {

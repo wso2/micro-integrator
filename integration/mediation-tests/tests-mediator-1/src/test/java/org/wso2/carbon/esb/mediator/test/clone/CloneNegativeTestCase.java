@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -35,8 +35,7 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server1;
     private SampleAxis2Server axis2Server2;
 
-    @BeforeClass
-    public void setEnvironment() throws Exception {
+    @BeforeClass public void setEnvironment() throws Exception {
         init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_unmaching_aggregate.xml");
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
@@ -48,38 +47,37 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Tests clone ID that does not match with the aggregate ID")
-    public void testAggregateID() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests clone ID that does not match with the aggregate ID") public void testAggregateID()
+            throws Exception {
 
         OMElement response = null;
         try {
-            response =
-                    axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
-            Assert.fail("This Request must throws AxisFault"); // This will not executed if the exception thrown as expected
+            Assert.fail(
+                    "This Request must throws AxisFault"); // This will not executed if the exception thrown as expected
         } catch (AxisFault e) {
             Assert.assertEquals(e.getMessage(), ESBTestConstant.READ_TIME_OUT);
         }
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress")
-    public void testSOAPAction() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress") public void testSOAPAction()
+            throws Exception {
         //TODO QA test has failed
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress")
-    public void testAddress() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress") public void testAddress()
+            throws Exception {
         //TODO not yet tested
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         axis2Server1 = null;

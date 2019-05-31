@@ -25,11 +25,11 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.clients.proxy.admin.ProxyServiceAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQConsumerClient;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.RabbitMQServer;
 
 import java.io.File;
@@ -47,13 +47,12 @@ public class ESBJAVA4630RabbitMQMultipleListenerTestCase extends ESBIntegrationT
     private RabbitMQServer rabbitMQServer;
     private ServerConfigurationManager configurationManagerAxis2;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
-        configurationManagerAxis2 =
-                new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        File customAxisConfigAxis2 = new File(getESBResourceLocation() + File.separator +
-                                              "axis2config" + File.separator + "axis2.xml");
+        configurationManagerAxis2 = new ServerConfigurationManager(
+                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        File customAxisConfigAxis2 = new File(
+                getESBResourceLocation() + File.separator + "axis2config" + File.separator + "axis2.xml");
         configurationManagerAxis2.applyConfiguration(customAxisConfigAxis2);
         super.init();
 
@@ -61,7 +60,8 @@ public class ESBJAVA4630RabbitMQMultipleListenerTestCase extends ESBIntegrationT
         //This is to stop existing rabbitMQ server instances
         rabbitMQServer.stop();
         rabbitMQServer.start();
-        Assert.assertTrue(rabbitMQServer.isRabbitMQStarted(90), "Failed to start rabbitMQ server properly within given timeout");
+        Assert.assertTrue(rabbitMQServer.isRabbitMQStarted(90),
+                "Failed to start rabbitMQ server properly within given timeout");
         initRabbitMQBroker();
         loadESBConfigurationFromClasspath("/artifacts/ESB/rabbitmq/multipleListner/RabbitMQMultipleListnerProxy.xml");
         proxyServiceAdminClient = new ProxyServiceAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -83,8 +83,9 @@ public class ESBJAVA4630RabbitMQMultipleListenerTestCase extends ESBIntegrationT
         Assert.fail("Could not connect to RabbitMQ broker");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test for multiple message listners per proxy")
-    public void testRabbitMQMultipleMessageListners() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "Test for multiple message listners per proxy") public void testRabbitMQMultipleMessageListners()
+            throws Exception {
 
         proxyServiceAdminClient.stopProxyService(RABBIT_MQ_MULTIPLE_LISTNER_PROXY);
         RabbitMQConsumerClient consumer = new RabbitMQConsumerClient("localhost");
@@ -133,8 +134,7 @@ public class ESBJAVA4630RabbitMQMultipleListenerTestCase extends ESBIntegrationT
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void end() throws Exception {
+    @AfterClass(alwaysRun = true) public void end() throws Exception {
         super.cleanup();
         try {
             rabbitMQServer.stop();

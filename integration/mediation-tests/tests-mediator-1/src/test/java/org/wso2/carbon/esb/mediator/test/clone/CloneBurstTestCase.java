@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -28,8 +28,8 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import javax.xml.namespace.QName;
 import java.util.Iterator;
+import javax.xml.namespace.QName;
 
 /*
  * Tests a message burst
@@ -49,8 +49,7 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
     private Trigger trigger;
     Thread[] threads;
 
-    @BeforeClass(groups = "wso2.esb")
-    public void setEnvironment() throws Exception {
+    @BeforeClass(groups = "wso2.esb") public void setEnvironment() throws Exception {
         init();
         trigger = new Trigger();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CloneAndAggregateTestProxy");
@@ -66,9 +65,9 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @Test(groups = "wso2.esb", description = "Tests message burst", enabled = false)
-    public void testBurstMessage() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests message burst", enabled = false) public void testBurstMessage()
+            throws Exception {
 
         MessageSender[] senders = new MessageSender[10];
         threads = new Thread[10];
@@ -94,13 +93,11 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
             // removed this
             threads[i].join();
 
-
         }
 
     }
 
-    @AfterClass(groups = "wso2.esb")
-    public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         trigger.setStopped(true);
@@ -119,9 +116,9 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
 
 
     /*
-      * Following inner class is used to trigger all threads to send requests to
-      * ESB at once
-      */
+     * Following inner class is used to trigger all threads to send requests to
+     * ESB at once
+     */
 
     class Trigger {
         private boolean isTriggered = false;
@@ -164,16 +161,12 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
                     String response = null;
                     Iterator iterator = null;
                     try {
-                        response =
-                                client.getResponse(getProxyServiceURLHttp("CloneAndAggregateTestProxy"),
-                                                   "WSO2");
+                        response = client.getResponse(getProxyServiceURLHttp("CloneAndAggregateTestProxy"), "WSO2");
                         Assert.assertNotNull(response);
                         OMElement envelope = client.toOMElement(response);
                         OMElement soapBody = envelope.getFirstElement();
-                        iterator =
-                                soapBody.getChildrenWithName(new QName(
-                                        "http://services.samples",
-                                        "getQuoteResponse"));
+                        iterator = soapBody
+                                .getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
                     } catch (Exception e) {
                         log.error(e);
                     } finally {

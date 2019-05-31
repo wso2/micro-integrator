@@ -16,13 +16,10 @@
 
 package org.wso2.appserver.sample.helloworld;
 
+import org.apache.axis2.clustering.ClusteringFault;
+import org.apache.axis2.clustering.state.Replicator;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.ServiceContext;
-import org.apache.axis2.clustering.state.Replicator;
-import org.apache.axis2.clustering.ClusteringFault;
-
-import java.util.Iterator;
-import java.util.Properties;
 
 /**
  * Helloworld service implementation
@@ -31,11 +28,10 @@ public class HelloService {
     private static final String HELLO_SERVICE_NAME = "HelloService.Name";
 
     public String greet(String name) {
-        ServiceContext serviceContext =
-                MessageContext.getCurrentMessageContext().getServiceContext();
+        ServiceContext serviceContext = MessageContext.getCurrentMessageContext().getServiceContext();
         serviceContext.setProperty(HELLO_SERVICE_NAME, name);
         try {
-            Replicator.replicate(serviceContext, new String[]{HELLO_SERVICE_NAME});
+            Replicator.replicate(serviceContext, new String[] { HELLO_SERVICE_NAME });
         } catch (ClusteringFault clusteringFault) {
             clusteringFault.printStackTrace();
         }

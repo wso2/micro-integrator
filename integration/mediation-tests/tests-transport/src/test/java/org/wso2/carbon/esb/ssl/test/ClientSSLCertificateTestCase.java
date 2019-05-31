@@ -41,9 +41,9 @@ public class ClientSSLCertificateTestCase extends ESBIntegrationTest {
     private final String CONFIG_LOCATION = getESBResourceLocation() + File.separator + "ssl" + File.separator;
     private ServerConfigurationManager serverManager;
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) public void initialize()
+            throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(context);
         serverManager.applyConfigurationWithoutRestart(new File(CONFIG_LOCATION + "axis2.xml"));
@@ -51,25 +51,18 @@ public class ClientSSLCertificateTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" },
-          description = "Send Soap Message to test client's SSL certificate")
-    public void testMutualSSLClientCertificate() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
+            "wso2.esb" }, description = "Send Soap Message to test client's SSL certificate") public void testMutualSSLClientCertificate()
+            throws Exception {
         String trustStoreName = "client-truststore.jks";
         String keyStoreName = "wso2carbon.jks";
         String keyStorePassword = "wso2carbon";
         String trustStorePassword = "wso2carbon";
 
-        String soapMessage = "<soapenv:Envelope "
-                + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
-                + "xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">\n"
-                + "   <soapenv:Header/>\n"
-                + "   <soapenv:Body>\n"
-                + "      <echo:echoString>\n"
-                + "         <in>WSO2 Stock</in>\n"
-                + "      </echo:echoString>\n"
-                + "   </soapenv:Body>\n"
-                + "</soapenv:Envelope>";
+        String soapMessage = "<soapenv:Envelope " + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
+                + "xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">\n" + "   <soapenv:Header/>\n"
+                + "   <soapenv:Body>\n" + "      <echo:echoString>\n" + "         <in>WSO2 Stock</in>\n"
+                + "      </echo:echoString>\n" + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
 
         //load key store file
         MutualSSLClient.loadKeyStore(CONFIG_LOCATION + keyStoreName, keyStorePassword);
@@ -93,8 +86,7 @@ public class ClientSSLCertificateTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.contains("certs-true"), "Client SSL certificate is not found!");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         if (serverManager != null) {
             serverManager.restoreToLastConfiguration();

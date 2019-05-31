@@ -35,29 +35,25 @@ public class RestApiAdminHttpsServerContextTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration
-                (new File(getESBResourceLocation() + File.separator + "restapi" + 
-                           File.separator + "axis2.xml"));
+        serverConfigurationManager.applyConfiguration(
+                new File(getESBResourceLocation() + File.separator + "restapi" + File.separator + "axis2.xml"));
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing RestApiAdmin getServerContext method " +
-                                             "when http transport is removed from axis2.xml.")
-    public void restApiAdminServerContext() throws Exception {
-        RestApiAdminClient restApiAdminClient = new RestApiAdminClient
-                (contextUrls.getBackEndUrl(),getSessionCookie());
+    @Test(groups = "wso2.esb", description = "Testing RestApiAdmin getServerContext method "
+            + "when http transport is removed from axis2.xml.") public void restApiAdminServerContext()
+            throws Exception {
+        RestApiAdminClient restApiAdminClient = new RestApiAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
         String serverContext = restApiAdminClient.getServerContext();
 
-        assertTrue(serverContext.startsWith("https://"),"  ");
+        assertTrue(serverContext.startsWith("https://"), "  ");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

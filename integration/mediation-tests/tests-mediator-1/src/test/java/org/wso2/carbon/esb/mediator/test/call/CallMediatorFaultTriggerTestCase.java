@@ -28,23 +28,20 @@ import static org.testng.Assert.assertTrue;
 
 public class CallMediatorFaultTriggerTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/synapse17.xml");
     }
 
-    @Test(groups = {"wso2.esb"})
-    public void callMediatorInFaultSeqTestCase() throws AxisFault {
+    @Test(groups = { "wso2.esb" }) public void callMediatorInFaultSeqTestCase() throws AxisFault {
 
-        OMElement response =
-                axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

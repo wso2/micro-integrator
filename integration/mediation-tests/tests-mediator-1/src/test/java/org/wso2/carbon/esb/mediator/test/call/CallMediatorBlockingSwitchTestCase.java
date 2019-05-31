@@ -33,32 +33,31 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingSwitchTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig" + File.separator + "call" + File.separator + "CallMediatorBlockingSwitchTest.xml");
+        loadESBConfigurationFromClasspath(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
+                        + File.separator + "call" + File.separator + "CallMediatorBlockingSwitchTest.xml");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Call the endpoint with blocking external calls according to the switch case")
-    public void callMediatorBlockingSwitchTest() throws AxisFault {
-        OMElement response =
-                axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "WSO2");
+    @Test(groups = {
+            "wso2.esb" }, description = "Call the endpoint with blocking external calls according to the switch case") public void callMediatorBlockingSwitchTest()
+            throws AxisFault {
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
 
-        response =
-                axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "IBM");
         boolean responseContainsIBM = response.getFirstElement().toString().contains("IBM");
         assertTrue(responseContainsIBM);
 
-        response =
-                axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "MSFT");
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "MSFT");
         boolean responseContainsMSFT = response.getFirstElement().toString().contains("MSFT");
         assertTrue(responseContainsMSFT);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 

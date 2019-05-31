@@ -14,11 +14,10 @@ import java.rmi.RemoteException;
 
 public class HealthCareScenarioServerStartupTestCase {
     private SampleAxis2Server axis2Server1 = null;
-    private String[] serviceNames = {"geows", "hcfacilitylocator", "hcinformationservice"};
+    private String[] serviceNames = { "geows", "hcfacilitylocator", "hcinformationservice" };
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @BeforeTest(alwaysRun = true)
-    public void deployServices()
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @BeforeTest(alwaysRun = true) public void deployServices()
             throws IOException, LoginAuthenticationExceptionException, ExceptionException {
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9009.xml");
@@ -27,14 +26,11 @@ public class HealthCareScenarioServerStartupTestCase {
         axis2Server1.deployService(serviceNames[1]);
         axis2Server1.deployService(serviceNames[2]);
 
-
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    @AfterTest(alwaysRun = true)
-    public void unDeployServices()
-            throws MalformedURLException, LoginAuthenticationExceptionException, ExceptionException,
-                   RemoteException {
+    @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) @AfterTest(alwaysRun = true) public void unDeployServices()
+            throws MalformedURLException, LoginAuthenticationExceptionException, ExceptionException, RemoteException {
         if (axis2Server1 != null && axis2Server1.isStarted()) {
             axis2Server1.stop();
         }

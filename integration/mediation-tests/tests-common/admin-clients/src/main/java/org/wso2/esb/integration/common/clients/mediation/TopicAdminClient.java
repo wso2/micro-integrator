@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.event.stub.internal.TopicManagerAdminServiceStub;
 import org.wso2.carbon.event.stub.internal.xsd.TopicNode;
 
-
 public class TopicAdminClient {
 
     private static final Log log = LogFactory.getLog(TopicAdminClient.class);
@@ -36,11 +35,9 @@ public class TopicAdminClient {
     String SessionCookie = null;
     ConfigurationContext configurationContext = null;
 
-    public TopicAdminClient(String backendUrl, String sessionCookie,
-                            ConfigurationContext configurationContext) {
+    public TopicAdminClient(String backendUrl, String sessionCookie, ConfigurationContext configurationContext) {
 
-        this.backendUrl = backendUrl
-                + "TopicManagerAdminService.TopicManagerAdminServiceHttpsSoap12Endpoint";
+        this.backendUrl = backendUrl + "TopicManagerAdminService.TopicManagerAdminServiceHttpsSoap12Endpoint";
         this.SessionCookie = sessionCookie;
         this.configurationContext = configurationContext;
 
@@ -48,36 +45,30 @@ public class TopicAdminClient {
 
     public void addTopic(String topic) throws Exception {
 
-        TopicManagerAdminServiceStub stub = new TopicManagerAdminServiceStub(configurationContext,
-                backendUrl);
+        TopicManagerAdminServiceStub stub = new TopicManagerAdminServiceStub(configurationContext, backendUrl);
         configureCookie(stub._getServiceClient());
         stub.addTopic(topic);
     }
 
     public TopicNode getAllTopics() throws Exception {
-        TopicManagerAdminServiceStub stub = new TopicManagerAdminServiceStub(configurationContext,
-                backendUrl);
+        TopicManagerAdminServiceStub stub = new TopicManagerAdminServiceStub(configurationContext, backendUrl);
         configureCookie(stub._getServiceClient());
         return stub.getAllTopics();
     }
 
     public void removeTopic(String topic) throws Exception {
 
-        TopicManagerAdminServiceStub stub = new TopicManagerAdminServiceStub(configurationContext,
-                backendUrl);
+        TopicManagerAdminServiceStub stub = new TopicManagerAdminServiceStub(configurationContext, backendUrl);
         configureCookie(stub._getServiceClient());
         stub.removeTopic(topic);
     }
 
     private void configureCookie(ServiceClient client) throws AxisFault {
-        if(SessionCookie != null){
+        if (SessionCookie != null) {
             Options option = client.getOptions();
             option.setManageSession(true);
-            option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING,
-                    SessionCookie);
+            option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, SessionCookie);
         }
     }
-
-
 
 }

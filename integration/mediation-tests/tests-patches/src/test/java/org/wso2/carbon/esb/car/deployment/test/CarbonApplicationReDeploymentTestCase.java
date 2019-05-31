@@ -23,25 +23,24 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 import java.io.File;
-import java.net.URL;
 import java.nio.file.Paths;
 import java.util.concurrent.TimeUnit;
+import javax.activation.DataHandler;
+import javax.activation.FileDataSource;
 
 /**
  * TestCase for CAR file re-deployment
  */
 public class CarbonApplicationReDeploymentTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "test proxy service re-deployment from car file")
-    public void carReDeploymentTest() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "test proxy service re-deployment from car file") public void carReDeploymentTest()
+            throws Exception {
         String proxyName = "samplePassThroughProxy";
         for (int i = 0; i < 3; i++) {
             log.info("######################  Iteration : " + (i + 1));
@@ -55,21 +54,20 @@ public class CarbonApplicationReDeploymentTestCase extends ESBIntegrationTest {
             isProxyDeployed(proxyName);
 
             //test proxy service invocation
-            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName), null,
-                                                                         "CARDeployment");
-            Assert.assertTrue(response.toString().contains("CARDeployment"), "Symbol not found on the response message");
+            OMElement response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName), null, "CARDeployment");
+            Assert.assertTrue(response.toString().contains("CARDeployment"),
+                    "Symbol not found on the response message");
         }
     }
 
     private void deployCar() throws Exception {
-        String cAppPath =
-                Paths.get(getESBResourceLocation(), "car", "sample-passthrough-proxy-car_1.0.0.car").toString();
-        uploadCapp("sample-passthrough-proxy-car_1.0.0.car",
-                   new DataHandler(new FileDataSource(new File( cAppPath))));
+        String cAppPath = Paths.get(getESBResourceLocation(), "car", "sample-passthrough-proxy-car_1.0.0.car")
+                .toString();
+        uploadCapp("sample-passthrough-proxy-car_1.0.0.car", new DataHandler(new FileDataSource(new File(cAppPath))));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanupEnvironment() throws Exception {
+    @AfterClass(alwaysRun = true) public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 }

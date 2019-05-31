@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -41,7 +41,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
-
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
@@ -54,51 +53,51 @@ import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 public class IterateLargeMessageTestCase extends ESBIntegrationTest {
     private String symbol;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         symbol = FixedSizeSymbolGenerator.generateMessageMB(1);
 
     }
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-, ExecutionEnvironment.PLATFORM})
-    @Test(groups = "wso2.esb", description = "Tests large message in small number 5")
-    public void testSmallNumbers() throws Exception {
+
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE,
+            ExecutionEnvironment.PLATFORM }) @Test(groups = "wso2.esb", description = "Tests large message in small number 5") public void testSmallNumbers()
+            throws Exception {
         OMElement response;
         for (int i = 0; i < 5; i++) {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null, symbol);
+            response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null,
+                            symbol);
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("WSO2"));
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Tests large message in large number 10", enabled = false)
-    public void testLargeNumbers() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests large message in large number 10", enabled = false) public void testLargeNumbers()
+            throws Exception {
         OMElement response;
         for (int i = 0; i < 10; i++) {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null, symbol);
+            response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null,
+                            symbol);
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("WSO2"));
         }
     }
-    
-    @Test(groups = "wso2.esb", description = "Tests large message 3MB")
-    public void testLargeMessage() throws Exception {
+
+    @Test(groups = "wso2.esb", description = "Tests large message 3MB") public void testLargeMessage()
+            throws Exception {
         String symbol2 = FixedSizeSymbolGenerator.generateMessageMB(3);
         OMElement response;
         for (int i = 0; i < 1; i++) {
-            response = axis2Client.sendSimpleStockQuoteRequest(
-                    getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null, symbol2);
+            response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), null,
+                            symbol2);
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("WSO2"));
         }
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
+    @AfterClass(alwaysRun = true) public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

@@ -17,21 +17,22 @@
  *  under the License.
  */
 package samples.services;
+
 import java.util.Date;
 
 public class ReliableStockQuoteService {
 
     // in-out
     public GetQuoteResponse getQuote(GetQuote request) {
-        System.out.println(new Date() + " " + this.getClass().getName() +
-            " :: Generating quote for : " + request.getSymbol());
+        System.out.println(
+                new Date() + " " + this.getClass().getName() + " :: Generating quote for : " + request.getSymbol());
         return new GetQuoteResponse(request.getSymbol());
     }
 
     // in only
     public void placeOrder(PlaceOrder order) {
-        System.out.println(new Date() + " " + this.getClass().getName() +
-            "  :: Accepted order for : " + order.getQuantity() +
-            " stocks of " + order.getSymbol() + " at $ " + order.getPrice());
+        System.out.println(
+                new Date() + " " + this.getClass().getName() + "  :: Accepted order for : " + order.getQuantity()
+                        + " stocks of " + order.getSymbol() + " at $ " + order.getPrice());
     }
 }

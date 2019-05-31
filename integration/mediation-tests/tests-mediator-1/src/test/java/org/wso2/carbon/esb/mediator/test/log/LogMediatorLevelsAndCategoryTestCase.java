@@ -38,24 +38,22 @@ public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
     private OMElement response;
     private LogEvent[] logs;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         logAdmin = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer.clearLogs();
         verifyProxyServiceExistence("LogMediatorLevelAndCategoryTestProxy");
-        logAdmin.updateLoggerData("org.apache.synapse.mediators.builtin",
-                LoggingAdminClient.LogLevel.TRACE.name(),true, false);
+        logAdmin.updateLoggerData("org.apache.synapse.mediators.builtin", LoggingAdminClient.LogLevel.TRACE.name(),
+                true, false);
         response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("LogMediatorLevelAndCategoryTestProxy"),
-                        null, "WSO2");
-        Assert.assertTrue(response.toString().contains("WSO2"),"Did not receive the expected response");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("LogMediatorLevelAndCategoryTestProxy"), null,
+                        "WSO2");
+        Assert.assertTrue(response.toString().contains("WSO2"), "Did not receive the expected response");
         logs = logViewer.getAllRemoteSystemLogs();
     }
 
-    @Test(groups = "wso2.esb", description = "Test debug level log")
-    public void testDebugLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test debug level log") public void testDebugLevelLogs() throws Exception {
         Boolean isDebugLogAvailable = isLogAvailable("*****LOGGING IN DEBUG CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isDebugLogAvailable, "DEBUG Log not found. Debug logs not working properly");
     }
@@ -64,64 +62,58 @@ public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
      * This test case disabled due to issue reported as "[EI 620][Integration Profile] Trace logs not going to
      * indicate via UI" (https://github.com/wso2/product-ei/issues/1071)
      */
-    @Test(groups = "wso2.esb", description = "Test trace level log", enabled = false)
-    public void testTraceLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test trace level log", enabled = false) public void testTraceLevelLogs()
+            throws Exception {
         Boolean isTraceLogAvailable = isLogAvailable("*****LOGGING IN TRACE CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isTraceLogAvailable, "TRACE Log not found. Trace logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test info level log")
-    public void testInfoLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test info level log") public void testInfoLevelLogs() throws Exception {
         Boolean isInfoLogAvailable = isLogAvailable("*****LOGGING IN INFO CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isInfoLogAvailable, "INFO Log not found. Info logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test warn level log")
-    public void testWarnLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test warn level log") public void testWarnLevelLogs() throws Exception {
         Boolean isWarnLogAvailable = isLogAvailable("*****LOGGING IN WARN CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isWarnLogAvailable, "Warn Log not found. Warn logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test error level log")
-    public void testErrorLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test error level log") public void testErrorLevelLogs() throws Exception {
         Boolean isErrorLogAvailable = isLogAvailable("*****LOGGING IN ERROR CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isErrorLogAvailable, "Error Log not found. Error logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test fatal level log")
-    public void testFatalLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test fatal level log") public void testFatalLevelLogs() throws Exception {
         Boolean isFatalLogAvailable = isLogAvailable("*****LOGGING IN FATAL CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isFatalLogAvailable, "Fatal Log not found. Fatal logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test full level log")
-    public void testFullLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test full level log") public void testFullLevelLogs() throws Exception {
         Boolean isFullLogAvailable = isLogAvailable("*****LOGGING AT FULL LEVEL*****");
         Assert.assertTrue(isFullLogAvailable, "Full level logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test Header level log")
-    public void testHeaderLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test Header level log") public void testHeaderLevelLogs()
+            throws Exception {
         Boolean isHeaderLogAvailable = isLogAvailable("*****LOGGING AT HEADER LEVEL*****");
         Assert.assertTrue(isHeaderLogAvailable, "Header level logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test simple level log")
-    public void testSimpleLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test simple level log") public void testSimpleLevelLogs()
+            throws Exception {
         Boolean isSimpleLogAvailable = isLogAvailable("*****LOGGING AT SIMPLE LEVEL*****");
         Assert.assertTrue(isSimpleLogAvailable, "Simple level logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test custom level log")
-    public void testCustomLevelLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test custom level log") public void testCustomLevelLogs()
+            throws Exception {
         Boolean isCustomLogAvailable = isLogAvailable("*****LOGGING AT CUSTOM LEVEL*****");
         Assert.assertTrue(isCustomLogAvailable, "Custom level logs not working properly");
     }
 
-    @AfterClass(groups = "wso2.esb")
-    public void close() throws Exception {
-        logAdmin.updateLoggerData("org.apache.synapse.mediators.builtin",
-                LoggingAdminClient.LogLevel.INFO.name(),true, false);
+    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+        logAdmin.updateLoggerData("org.apache.synapse.mediators.builtin", LoggingAdminClient.LogLevel.INFO.name(), true,
+                false);
         super.cleanup();
     }
 

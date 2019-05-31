@@ -1,13 +1,13 @@
 /*
  * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -44,26 +44,36 @@ public class ProxyServiceWithCustomServiceURITestCase extends ESBIntegrationTest
 
     */
 /**
-     * This definition will create a proxy service with 'ServiceURI' parameter
-     * and exposes it over https
-     *//*
+ * This definition will create a proxy service with 'ServiceURI' parameter
+ * and exposes it over https
+ * <p>
+ * This configuration contains CustomURIBasedDispatcher in Dispatch phase of
+ * "InFlow"
+ * <p>
+ * Custom URI Fragment defined in Proxy definition
+ * <p>
+ * This test case will deploy a proxy service with 'ServiceURI' parameter
+ * over https and see weather it can be invoked using the customized url
+ *
+ * @throws org.apache.axis2.AxisFault
+ *//*
 
     private final String PROXY_DEFINITION_HTTPS_CUSTOM_URI =
             "/artifacts/ESB/proxyconfig/proxy/passThroughProxy/customServiceURI/custom_service_uri_enabling_only_https.xml";
 
     */
 /**
-     * This configuration contains CustomURIBasedDispatcher in Dispatch phase of
-     * "InFlow"
-     *//*
+ * This configuration contains CustomURIBasedDispatcher in Dispatch phase of
+ * "InFlow"
+ *//*
 
     private final String AXIS2_CONFIG_URI_BASED_DISPATCH =
             "/proxyconfig/proxy/passThroughProxy/customServiceURI/axis2.xml";
 
     */
 /**
-     * Custom URI Fragment defined in Proxy definition
-     *//*
+ * Custom URI Fragment defined in Proxy definition
+ *//*
 
     private final String CUSTOM_URI_FRAGMENT = "/CustomURL/Part1/Part2";
     private ServerConfigurationManager configurationManager;
@@ -85,11 +95,11 @@ public class ProxyServiceWithCustomServiceURITestCase extends ESBIntegrationTest
 
     */
 /**
-     * This test case will deploy a proxy service with 'ServiceURI' parameter
-     * over https and see weather it can be invoked using the customized url
-     *
-     * @throws org.apache.axis2.AxisFault
-     *//*
+ * This test case will deploy a proxy service with 'ServiceURI' parameter
+ * over https and see weather it can be invoked using the customized url
+ *
+ * @throws org.apache.axis2.AxisFault
+ *//*
 
     @SetEnvironment(executionEnvironments = {ExecutionEnvironment.integration_all})
     @Test(groups = "wso2.esb", description = "- Pass through proxy with a custom service URI  over https")

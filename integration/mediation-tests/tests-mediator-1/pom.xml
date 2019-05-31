@@ -82,7 +82,7 @@
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                           ${basedir}/../../../distribution/target/wso2mi-${product.mi.version}.zip
+                            ${basedir}/../../../distribution/target/wso2mi-${product.mi.version}.zip
                         </carbon.zip>
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>

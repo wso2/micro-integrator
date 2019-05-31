@@ -16,26 +16,23 @@
 
 package org.wso2.esb.integration.services.jaxrs.coffeesample;
 
-
 import org.wso2.esb.integration.services.jaxrs.coffeesample.bean.Order;
 import org.wso2.esb.integration.services.jaxrs.coffeesample.bean.Payment;
 import org.wso2.esb.integration.services.jaxrs.coffeesample.bean.PaymentStatus;
 
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 /**
  *
  */
 
-public class StarbucksOutletServiceImpl implements StarbucksOutletService{
+public class StarbucksOutletServiceImpl implements StarbucksOutletService {
     private Map<String, Order> ordersList = new ConcurrentHashMap<String, Order>();
 
     private Map<String, Payment> paymentRegister = new ConcurrentHashMap<String, Payment>();
@@ -44,9 +41,9 @@ public class StarbucksOutletServiceImpl implements StarbucksOutletService{
 
     private static final Random rand = new Random();
 
-//    long currentId = 123;
-//    Map<Long, Customer> customers = new HashMap<Long, Customer>();
-//    Map<Long, Order> orders = new HashMap<Long, Order>();
+    //    long currentId = 123;
+    //    Map<Long, Customer> customers = new HashMap<Long, Customer>();
+    //    Map<Long, Order> orders = new HashMap<Long, Order>();
 
     public StarbucksOutletServiceImpl() {
         init();
@@ -84,7 +81,7 @@ public class StarbucksOutletServiceImpl implements StarbucksOutletService{
                 return Response.ok(order).type(MediaType.APPLICATION_JSON_TYPE).build();
             }
         }
-            return null;
+        return null;
     }
 
     public Response getPendingOrders() {  //todo write the client
@@ -120,7 +117,7 @@ public class StarbucksOutletServiceImpl implements StarbucksOutletService{
         String expiryDate = payment.getExpiryDate();
 
         PaymentStatus paymentStatus;
-        Payment registeredPayment = paymentRegister.get( id );
+        Payment registeredPayment = paymentRegister.get(id);
         if (registeredPayment != null) {
             paymentStatus = new PaymentStatus("Duplicate Payment", registeredPayment);
             return Response.notModified().entity(paymentStatus).type(MediaType.APPLICATION_JSON).build();
@@ -178,14 +175,14 @@ public class StarbucksOutletServiceImpl implements StarbucksOutletService{
         }
     }
 
-    private void init () {
+    private void init() {
         String drinkName = "Vanilla Flavored Coffee";
         String additions = "Milk";
         Order order = new Order();
         order.setOrderId("123");
         order.setDrinkName(drinkName);
         order.setAdditions(additions);
-        order.setCost( calculateCost(drinkName, additions) );
+        order.setCost(calculateCost(drinkName, additions));
 
         ordersList.put(order.getOrderId(), order);
 
@@ -194,7 +191,7 @@ public class StarbucksOutletServiceImpl implements StarbucksOutletService{
         order = new Order();
         order.setOrderId("444");
         order.setDrinkName(drinkName);
-        order.setCost( calculateCost(drinkName, null) );    //no additions
+        order.setCost(calculateCost(drinkName, null));    //no additions
 
         ordersList.put(order.getOrderId(), order);
     }

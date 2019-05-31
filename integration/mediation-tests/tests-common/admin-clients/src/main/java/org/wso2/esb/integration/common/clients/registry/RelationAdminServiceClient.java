@@ -20,15 +20,13 @@ public class RelationAdminServiceClient {
     private RelationAdminServiceStub relationAdminServiceStub;
     private final String serviceName = "RelationAdminService";
 
-    public RelationAdminServiceClient(String backendURL, String sessionCookie)
-            throws AxisFault {
+    public RelationAdminServiceClient(String backendURL, String sessionCookie) throws AxisFault {
         String endPoint = backendURL + serviceName;
         relationAdminServiceStub = new RelationAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(sessionCookie, relationAdminServiceStub);
     }
 
-    public RelationAdminServiceClient(String backendURL, String userName, String password)
-            throws AxisFault {
+    public RelationAdminServiceClient(String backendURL, String userName, String password) throws AxisFault {
         String endPoint = backendURL + serviceName;
         relationAdminServiceStub = new RelationAdminServiceStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, relationAdminServiceStub);
@@ -39,7 +37,7 @@ public class RelationAdminServiceClient {
         try {
             relationAdminServiceStub.addAssociation(path, type, associationPath, toDo);
         } catch (RemoteException e) {
-           log.error("Add association error ");
+            log.error("Add association error ");
             throw new RemoteException("Add association error ", e);
         } catch (AddAssociationRegistryExceptionException e) {
             log.error("Add association error ");
@@ -66,7 +64,7 @@ public class RelationAdminServiceClient {
     public AssociationTreeBean getAssociationTree(String path, String type)
             throws RemoteException, AddAssociationRegistryExceptionException {
         try {
-            return relationAdminServiceStub.getAssociationTree(path,type);
+            return relationAdminServiceStub.getAssociationTree(path, type);
         } catch (RemoteException e) {
             log.error("Get association tree error ");
             throw new RemoteException("Get association tree error ", e);

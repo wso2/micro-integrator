@@ -34,27 +34,24 @@ import static org.testng.Assert.assertTrue;
  */
 public class PayloadFormatWithArgumentsTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         // applying changes to esb - source view
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/payloadmediatype/" +
-                "value_argument.xml");
+        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/payloadmediatype/" + "value_argument.xml");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "invoke service - operation echoString")
-    public void invokeServiceFromXmlRequest() throws AxisFault {
+    @Test(groups = "wso2.esb", description = "invoke service - operation echoString") public void invokeServiceFromXmlRequest()
+            throws AxisFault {
 
         AxisServiceClient axisServiceClient = new AxisServiceClient();
-        OMElement response = axisServiceClient.sendReceive(createPayload(),
-                contextUrls.getServiceUrl() + "/ProxyPF", "echoString");
-        assertTrue(response.toString().contains("Wso2 Test Automation"),"Response mismatch. " +
-                "Actual Response "+response.toString());
+        OMElement response = axisServiceClient
+                .sendReceive(createPayload(), contextUrls.getServiceUrl() + "/ProxyPF", "echoString");
+        assertTrue(response.toString().contains("Wso2 Test Automation"),
+                "Response mismatch. " + "Actual Response " + response.toString());
     }
 
     private OMElement createPayload() {   // creation of payload for echoString

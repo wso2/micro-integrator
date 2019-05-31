@@ -27,8 +27,8 @@ import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConf
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SecureServiceClient;
 
-import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
+import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -37,8 +37,7 @@ public class SecuredProxySecuredBackEndTestCase extends ESBIntegrationTest {
 
     private SecureServiceClient secureAxisServiceClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -47,10 +46,9 @@ public class SecuredProxySecuredBackEndTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy" +
-                                             "- Secured service secured proxy" +
-                                             "- used scenario1-policy(UsernameToken) to secure proxy and scenario3-policy(Integrity) to secure backend")
-    public void testSecuredProxySecuredService() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Secured service secured proxy"
+            + "- used scenario1-policy(UsernameToken) to secure proxy and scenario3-policy(Integrity) to secure backend") public void testSecuredProxySecuredService()
+            throws Exception {
 
         OMElement response;
         String lastPrice;
@@ -58,7 +56,8 @@ public class SecuredProxySecuredBackEndTestCase extends ESBIntegrationTest {
 
         applySecurity(); //only https available
 
-        response = secureAxisServiceClient.sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy"), 1, "WSO2");
+        response = secureAxisServiceClient
+                .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy"), 1, "WSO2");
 
         lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
                 .getText();
@@ -71,21 +70,18 @@ public class SecuredProxySecuredBackEndTestCase extends ESBIntegrationTest {
 
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
 
     private void applySecurity()
-            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException,
-                   InterruptedException {
+            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException, InterruptedException {
         applySecurity("StockQuoteProxy", 1, getUserRole());
     }
 
-    private void disableSecurity()
-            throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
-        SecurityAdminServiceClient securityAdminServiceClient = new SecurityAdminServiceClient(contextUrls.getBackEndUrl(), sessionCookie);
+    private void disableSecurity() throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException {
+        SecurityAdminServiceClient securityAdminServiceClient = new SecurityAdminServiceClient(
+                contextUrls.getBackEndUrl(), sessionCookie);
         securityAdminServiceClient.disableSecurity("StockQuoteProxy");
     }
 

@@ -1,13 +1,13 @@
 /**
- *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
+ * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * <p>
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -29,9 +29,9 @@ import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.carbon.automation.test.utils.dbutils.MySqlDatabaseManager;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -40,25 +40,19 @@ import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 
-public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest{
+public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest {
     private static final String url = "http://localhost:8280/jdbc/store";
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
     private final Map<String, String> headers = new HashMap<String, String>(1);
 
-    private final String payload =  "{\n" +
-                                    "  \"email\" : \"jms@yomail.com\",\n" +
-                                    "  \"firstName\" : \"Jms\",\n" +
-                                    "  \"lastName\" : \"Broker\",\n" +
-                                    "  \"id\" : 10\n" +
-                                    "}";
+    private final String payload = "{\n" + "  \"email\" : \"jms@yomail.com\",\n" + "  \"firstName\" : \"Jms\",\n"
+            + "  \"lastName\" : \"Broker\",\n" + "  \"id\" : 10\n" + "}";
 
     private LogViewerClient logViewer;
 
-    private static final String logLine0 =
-            "MESSAGE = ************RESTProxy IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
-    private static final String logLine1 =
-            "MESSAGE = ************SamplingSeq IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
+    private static final String logLine0 = "MESSAGE = ************RESTProxy IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
+    private static final String logLine1 = "MESSAGE = ************SamplingSeq IN, IN-Content-Type = application/json, IN-Test-Header-Field = TestHeaderValue";
 
     private final String MYSQL_JAR = "mysql-connector-java-5.1.6.jar";
     private ServerConfigurationManager serverConfigurationManager;
@@ -70,8 +64,7 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest{
     private String DATASOURCE_NAME;
     private String JDBC_DRIVER;
 
-    @BeforeClass(alwaysRun = true)
-    protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
         DATASOURCE_NAME = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_NAME);
@@ -88,26 +81,23 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest{
 
         headers.put("Test-Header-Field", "TestHeaderValue");
 
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(),getSessionCookie());
+        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-
-    @BeforeMethod(alwaysRun = true)
-    public void createDatabase() throws SQLException {
+    @BeforeMethod(alwaysRun = true) public void createDatabase() throws SQLException {
         mySqlDatabaseManager.executeUpdate("DROP DATABASE IF EXISTS WSO2SampleDBForAutomation");
         mySqlDatabaseManager.executeUpdate("Create DATABASE WSO2SampleDBForAutomation");
         mySqlDatabaseManager.executeUpdate("USE WSO2SampleDBForAutomation");
-        mySqlDatabaseManager.executeUpdate("CREATE TABLE IF NOT EXISTS jdbc_store_table(\n" +
-                                           "indexId BIGINT( 20 ) NOT NULL auto_increment ,\n" +
-                                           "msg_id VARCHAR( 200 ) NOT NULL ,\n" +
-                                           "message BLOB NOT NULL, \n" +
-                                           "PRIMARY KEY ( indexId )\n" +
-                                           ")");
+        mySqlDatabaseManager.executeUpdate(
+                "CREATE TABLE IF NOT EXISTS jdbc_store_table(\n" + "indexId BIGINT( 20 ) NOT NULL auto_increment ,\n"
+                        + "msg_id VARCHAR( 200 ) NOT NULL ,\n" + "message BLOB NOT NULL, \n"
+                        + "PRIMARY KEY ( indexId )\n" + ")");
 
     }
 
-    @Test(groups = {"wso2.esb"}, description = "JDBC Message store support for RESTful services." )
-    public void testJMSMessageStoreAndProcessor() throws Exception {
+    @Test(groups = {
+            "wso2.esb" }, description = "JDBC Message store support for RESTful services.") public void testJMSMessageStoreAndProcessor()
+            throws Exception {
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jdbc/JDBCMessageStoreREST.xml");
         updateESBConfiguration(synapse);
 
@@ -132,8 +122,7 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest{
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         try {
             mySqlDatabaseManager.executeUpdate("DROP DATABASE WSO2SampleDBForAutomation");
         } finally {

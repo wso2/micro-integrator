@@ -1,8 +1,8 @@
 /*
  * Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- * WSO2 Inc. licenses this file to you under the Apache License, 
- * Version 2.0 (the "License"); you may not use this file except 
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
@@ -25,12 +25,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisOperationClient;
-import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 /**
  * Test the SOAP version conversion to client version after a format switching inside sequences.
@@ -38,16 +34,14 @@ import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 public class ESBJAVA1994SOAPFormatSwitchingTestcase extends ESBIntegrationTest {
     private AxisOperationClient operationClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/httpproxy/httpProxySwitchingSoap12.xml");
     }
 
-    @Test(groups = "wso2.esb",
-          description = "test to verify soap format of response converted properly "
-                  + "when the soap format switching occurred in sequences.")
-    public void testSendingSoap12AfterSoap11Request() throws Exception {
+    @Test(groups = "wso2.esb", description = "test to verify soap format of response converted properly "
+            + "when the soap format switching occurred in sequences.") public void testSendingSoap12AfterSoap11Request()
+            throws Exception {
         operationClient = new AxisOperationClient();
         OMElement response = operationClient
                 .send(getProxyServiceURLHttp("EchoTest"), null, createEchoRequestBody(), "urn:mediate");
@@ -58,6 +52,7 @@ public class ESBJAVA1994SOAPFormatSwitchingTestcase extends ESBIntegrationTest {
 
     /**
      * Create the echo request body.
+     *
      * @return Echo request OMElement
      */
     private OMElement createEchoRequestBody() {
@@ -71,8 +66,7 @@ public class ESBJAVA1994SOAPFormatSwitchingTestcase extends ESBIntegrationTest {
         return method;
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
         if (operationClient != null) {
             operationClient.destroy();

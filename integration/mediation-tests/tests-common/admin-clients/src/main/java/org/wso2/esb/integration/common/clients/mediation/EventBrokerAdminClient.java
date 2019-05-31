@@ -29,13 +29,18 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.databinding.types.URI;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.event.client.stub.generated.*;
+import org.wso2.carbon.event.client.stub.generated.DeliveryType;
+import org.wso2.carbon.event.client.stub.generated.EventBrokerServiceStub;
+import org.wso2.carbon.event.client.stub.generated.ExpirationType;
+import org.wso2.carbon.event.client.stub.generated.FilterType;
+import org.wso2.carbon.event.client.stub.generated.GetSubscriptionsResponse;
+import org.wso2.carbon.event.client.stub.generated.SubscribeResponse;
 import org.wso2.carbon.event.client.stub.generated.addressing.AttributedURI;
 import org.wso2.carbon.event.client.stub.generated.addressing.EndpointReferenceType;
 import org.wso2.carbon.event.client.stub.generated.addressing.ReferenceParametersType;
 
-import javax.xml.namespace.QName;
 import java.rmi.RemoteException;
+import javax.xml.namespace.QName;
 
 public class EventBrokerAdminClient {
 
@@ -53,8 +58,7 @@ public class EventBrokerAdminClient {
 
     private static OMFactory omFactory = OMAbstractFactory.getOMFactory();
 
-    public EventBrokerAdminClient(String backendUrl, String sessionCookie,
-                            ConfigurationContext configurationContext) {
+    public EventBrokerAdminClient(String backendUrl, String sessionCookie, ConfigurationContext configurationContext) {
 
         this.backendUrl = backendUrl + "EventBrokerService";
         this.SessionCookie = sessionCookie;
@@ -63,16 +67,15 @@ public class EventBrokerAdminClient {
     }
 
     public String subscribe(String topic, String eventSinkUrl) throws RemoteException {
-        log.debug("Subscribed to "+ topic + " in "+ eventSinkUrl);
+        log.debug("Subscribed to " + topic + " in " + eventSinkUrl);
 
         try {
             // append the topic name at the end of the broker URL
             // so that it seems there is a seperate uri each event source
-            if (!topic.startsWith("/")){
+            if (!topic.startsWith("/")) {
                 topic = "/" + topic;
             }
-            EventBrokerServiceStub stub = new EventBrokerServiceStub(configurationContext,
-                    backendUrl + topic);
+            EventBrokerServiceStub stub = new EventBrokerServiceStub(configurationContext, backendUrl + topic);
 
             ServiceClient client = stub._getServiceClient();
             configureCookie(client);
@@ -91,15 +94,14 @@ public class EventBrokerAdminClient {
             filterType.setDialect(new URI("urn:someurl"));
             filterType.setString(topic);
 
-            SubscribeResponse subscribeResponse = stub.subscribe(epr, deliveryType, expirationType,
-                    filterType, null);
-            ReferenceParametersType referenceParameters =
-                    subscribeResponse.getSubscriptionManager().getReferenceParameters();
+            SubscribeResponse subscribeResponse = stub.subscribe(epr, deliveryType, expirationType, filterType, null);
+            ReferenceParametersType referenceParameters = subscribeResponse.getSubscriptionManager()
+                    .getReferenceParameters();
             OMElement[] properties = referenceParameters.getExtraElement();
 
             String id = null;
-            for(OMElement property:properties){
-                if(property.getLocalName().equals("Identifier")){
+            for (OMElement property : properties) {
+                if (property.getLocalName().equals("Identifier")) {
                     id = property.getText();
                 }
             }
@@ -116,40 +118,41 @@ public class EventBrokerAdminClient {
     }
 
     public void publish(String topic, OMElement element) throws AxisFault {
-        log.debug("published element to "+ topic );
-        EventBrokerServiceStub service = new EventBrokerServiceStub(configurationContext, backendUrl
-                +"/publish/"+topic);
+        log.debug("published element to " + topic);
+        EventBrokerServiceStub service = new EventBrokerServiceStub(configurationContext,
+                backendUrl + "/publish/" + topic);
         configureCookie(service._getServiceClient());
         ServiceClient serviceClient = service._getServiceClient();
 
         OMElement header = omFactory.createOMElement(new QName(TOPIC_HEADER_NS, TOPIC_HEADER_NAME));
         header.setText(topic);
         serviceClient.addHeader(header);
-        serviceClient.getOptions().setTo(new EndpointReference(backendUrl+"/publish"));
+        serviceClient.getOptions().setTo(new EndpointReference(backendUrl + "/publish"));
         //serviceClient.getOptions().setTo(new EndpointReference(brokerUrl));
         serviceClient.getOptions().setAction("urn:publish");
         serviceClient.sendRobust(element);
     }
 
     public void unsubscribe(String subscriptionID) throws RemoteException {
-        log.debug("Unsubscribed to "+ subscriptionID);
+        log.debug("Unsubscribed to " + subscriptionID);
         EventBrokerServiceStub service = new EventBrokerServiceStub(configurationContext, backendUrl);
         configureCookie(service._getServiceClient());
         ServiceClient serviceClient = service._getServiceClient();
         OMElement header = omFactory.createOMElement(new QName(WSE_EVENTING_NS, WSE_EN_IDENTIFIER));
         header.setText(subscriptionID);
         serviceClient.addHeader(header);
-        service.unsubscribe(new OMElement[]{});
+        service.unsubscribe(new OMElement[] {});
     }
 
-    public GetSubscriptionsResponse getAllSubscriptions(int maxRequestCount, String resultFilter, int firstIndex) throws RemoteException {
+    public GetSubscriptionsResponse getAllSubscriptions(int maxRequestCount, String resultFilter, int firstIndex)
+            throws RemoteException {
         EventBrokerServiceStub service = new EventBrokerServiceStub(configurationContext, backendUrl);
         configureCookie(service._getServiceClient());
         return service.getSubscriptions(maxRequestCount, resultFilter, firstIndex);
     }
 
     private void configureCookie(ServiceClient client) throws AxisFault {
-        if(SessionCookie != null){
+        if (SessionCookie != null) {
             Options option = client.getOptions();
             option.setManageSession(true);
             option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, SessionCookie);

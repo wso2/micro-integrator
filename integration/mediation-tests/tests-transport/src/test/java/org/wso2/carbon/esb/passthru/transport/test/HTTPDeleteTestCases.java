@@ -1,11 +1,11 @@
 /*
  * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *  
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *  
+ *
  *     http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
@@ -32,17 +32,16 @@ import java.util.Map;
 /**
  * Testcase to test HTTP DELETE support
  */
-public class HTTPDeleteTestCases extends ESBIntegrationTest{
+public class HTTPDeleteTestCases extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/http_transport/HTTPDeleteSupportTestSynapseConfig.xml");
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/synapseconfig/http_transport/HTTPDeleteSupportTestSynapseConfig.xml");
     }
 
-
-    @Test(groups = "wso2.esb", description = "Test Invoking proxy with HTTP DELETE request")
-    public void testInvokeBasicProxy () throws Exception {
+    @Test(groups = "wso2.esb", description = "Test Invoking proxy with HTTP DELETE request") public void testInvokeBasicProxy()
+            throws Exception {
 
         String requestMessage = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<soapenv:Envelope xmlns:soapenv=\"http://www.w3.org/2003/05/soap-envelope\"><soapenv:Body>"
@@ -68,9 +67,8 @@ public class HTTPDeleteTestCases extends ESBIntegrationTest{
 
     }
 
-
-    @Test(groups = "wso2.esb", description = "Test Invoking api with HTTP DELETE request")
-    public void testInvokeBasicAPI () throws Exception {
+    @Test(groups = "wso2.esb", description = "Test Invoking api with HTTP DELETE request") public void testInvokeBasicAPI()
+            throws Exception {
 
         String requestMessage = "{\"Request\" : {\"Message\":\"This is request message to test HTTP DELETE\"}}";
 
@@ -90,10 +88,11 @@ public class HTTPDeleteTestCases extends ESBIntegrationTest{
     /**
      * This testcase tests making DELETE request to external service from ESB.
      * TEST Client -> testdeletecall API -> testbackend API
+     *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test Invoking api containing call mediator to test HTTP DELETE with Call Mediator")
-    public void testHttpDeleteWithCallMediator () throws Exception {
+    @Test(groups = "wso2.esb", description = "Test Invoking api containing call mediator to test HTTP DELETE with Call Mediator") public void testHttpDeleteWithCallMediator()
+            throws Exception {
 
         String requestMessage = "{\"Request\" : {\"Message\":\"Hello\"}}";
 
@@ -110,13 +109,8 @@ public class HTTPDeleteTestCases extends ESBIntegrationTest{
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         super.cleanup();
     }
-
-
-
-
 
 }

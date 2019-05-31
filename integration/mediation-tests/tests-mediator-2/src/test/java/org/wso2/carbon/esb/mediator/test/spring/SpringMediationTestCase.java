@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.carbon.esb.mediator.test.spring;
 
 import junit.framework.Assert;
@@ -43,14 +43,12 @@ import static org.testng.Assert.fail;
 
 public class SpringMediationTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         try {
             clearUploadedResource();
         } finally {
@@ -58,11 +56,10 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Spring Mediator " +
-                                                            "- Change the spring xml and see whether message context is changed")
-    public void changeSpringXmlAndCheckMessageContextTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator "
+            + "- Change the spring xml and see whether message context is changed") public void changeSpringXmlAndCheckMessageContextTest()
+            throws Exception {
 
         OMElement response;
         String lastPrice;
@@ -70,8 +67,7 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
 
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation.xml");
 
-        response = axis2Client.sendSimpleStockQuoteRequest
-                (getMainSequenceURL(), null, "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 
         lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
                 .getText();
@@ -92,9 +88,7 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
 
         updateSpringBeanXML();
 
-
-        response = axis2Client.sendSimpleStockQuoteRequest
-                (getMainSequenceURL(), null, "WSO2");
+        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
         lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
                 .getText();
@@ -112,74 +106,69 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Spring Mediator " +
-                                                            "-Added Simple bean into lib -referring to an invalid spring xml")
-    public void uploadSequenceHavingInvalidSpringXMLTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator "
+            + "-Added Simple bean into lib -referring to an invalid spring xml") public void uploadSequenceHavingInvalidSpringXMLTest()
+            throws Exception {
 
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation_invalid_spring_bean.xml");
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/mediatorconfig/spring/spring_mediation_invalid_spring_bean.xml");
         try {
-            axis2Client.sendSimpleStockQuoteRequest
-                    (getMainSequenceURL(), null, "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
             Assert.fail("Request must failed since it refers invalid spring bean");
         } catch (Exception expected) {
-            assertEquals(expected.getMessage(), "Cannot reference application context with key : conf:/spring/invalidSpringbeammmn.xml"
-                    , "Error Message Mismatched when referring invalid springbean in sequence");
+            assertEquals(expected.getMessage(),
+                    "Cannot reference application context with key : conf:/spring/invalidSpringbeammmn.xml",
+                    "Error Message Mismatched when referring invalid springbean in sequence");
 
         }
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Spring Mediator " +
-                                                            "- referring to an non existing spring xml")
-    public void uploadSequenceHavingNonExistingSpringXMLResourceTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator "
+            + "- referring to an non existing spring xml") public void uploadSequenceHavingNonExistingSpringXMLResourceTest()
+            throws Exception {
 
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation_springBean_resource_not_exist.xml");
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/mediatorconfig/spring/spring_mediation_springBean_resource_not_exist.xml");
         try {
-            axis2Client.sendSimpleStockQuoteRequest
-                    (getMainSequenceURL(), null, "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
             Assert.fail("Request must failed since it refers non existing spring bean");
         } catch (Exception expected) {
-            assertEquals(expected.getMessage(), "Cannot reference application context with key : conf:/spring/NonExistingSpringbean.xml"
-                    , "Error Message Mismatched when referring non existing springbean in sequence");
+            assertEquals(expected.getMessage(),
+                    "Cannot reference application context with key : conf:/spring/NonExistingSpringbean.xml",
+                    "Error Message Mismatched when referring non existing springbean in sequence");
 
         }
     }
 
-
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Spring Mediator " +
-                                                            "-Added Simple bean into lib " +
-                                                            "-Different bean ids in spring xml")
-    public void providingNonExistingBeanNamesTest() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation_different_bean_id.xml");
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator " + "-Added Simple bean into lib "
+            + "-Different bean ids in spring xml") public void providingNonExistingBeanNamesTest() throws Exception {
+        loadESBConfigurationFromClasspath(
+                "/artifacts/ESB/mediatorconfig/spring/spring_mediation_different_bean_id.xml");
         try {
-            axis2Client.sendSimpleStockQuoteRequest
-                    (getMainSequenceURL(), null, "IBM");
+            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
             fail("Request must throw a axisFault since sequence refers a non existing bean id");
         } catch (AxisFault axisFault) {
-            assertEquals(axisFault.getMessage(), "No bean named 'springtestNonExisting' is defined", "Fault: Error message mismatched");
+            assertEquals(axisFault.getMessage(), "No bean named 'springtestNonExisting' is defined",
+                    "Fault: Error message mismatched");
         }
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE
-})
-    @Test(groups = {"wso2.esb", "localOnly"}, description = "Spring Mediator -Added Simple bean into lib")
-    public void springBeanMediationTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator -Added Simple bean into lib") public void springBeanMediationTest()
+            throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation.xml");
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest
-                (getMainSequenceURL(), null, "IBM");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 
-        String lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
-                .getText();
+        String lastPrice = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
 
-        String symbol = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
-                .getText();
+        String symbol = response.getFirstElement()
+                .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "IBM", "Fault: value 'symbol' mismatched");
 
         //TODO Log Assertion
@@ -188,10 +177,10 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
     private void updateSpringBeanXML()
             throws ResourceAdminServiceExceptionException, IOException, InterruptedException {
 
-        ResourceAdminServiceClient resourceAdminServiceClient =
-                new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        String filePath = getESBResourceLocation() + File.separator + "mediatorconfig" + File.separator
-                          + "spring" + File.separator + "utils" + File.separator + "updating_spring.xml";
+        ResourceAdminServiceClient resourceAdminServiceClient = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), getSessionCookie());
+        String filePath = getESBResourceLocation() + File.separator + "mediatorconfig" + File.separator + "spring"
+                + File.separator + "utils" + File.separator + "updating_spring.xml";
 
         resourceAdminServiceClient
                 .updateTextContent("/_system/config/spring/springbean.xml", FileManager.readFile(filePath));
@@ -200,31 +189,28 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
 
     private void uploadResourcesToConfigRegistry() throws Exception {
 
-        ResourceAdminServiceClient resourceAdminServiceStub =
-                new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), getSessionCookie());
 
         resourceAdminServiceStub.deleteResource("/_system/config/spring");
-        resourceAdminServiceStub.addCollection("/_system/config/", "spring", "",
-                                               "Contains spring bean config files");
+        resourceAdminServiceStub.addCollection("/_system/config/", "spring", "", "Contains spring bean config files");
 
-        resourceAdminServiceStub.addResource(
-                "/_system/config/spring/springbean.xml", "application/xml", "spring bean config files",
-                new DataHandler(new URL("file:///" + getClass().getResource(
-                        "/artifacts/ESB/mediatorconfig/spring/utils/springbean.xml").getPath())));
+        resourceAdminServiceStub
+                .addResource("/_system/config/spring/springbean.xml", "application/xml", "spring bean config files",
+                        new DataHandler(new URL("file:///" + getClass()
+                                .getResource("/artifacts/ESB/mediatorconfig/spring/utils/springbean.xml").getPath())));
 
-        resourceAdminServiceStub.addResource(
-                "/_system/config/spring/invalidSpringbean.xml", "application/xml", "spring bean config files",
-                new DataHandler(new URL("file:///" + getClass().getResource(
-                        "/artifacts/ESB/mediatorconfig/spring/utils/invalid_spring_bean.xml").getPath())));
+        resourceAdminServiceStub.addResource("/_system/config/spring/invalidSpringbean.xml", "application/xml",
+                "spring bean config files", new DataHandler(new URL("file:///" + getClass()
+                        .getResource("/artifacts/ESB/mediatorconfig/spring/utils/invalid_spring_bean.xml").getPath())));
 
     }
-
 
     private void clearUploadedResource()
             throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException {
 
-        ResourceAdminServiceClient resourceAdminServiceStub =
-                new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
+                contextUrls.getBackEndUrl(), getSessionCookie());
 
         resourceAdminServiceStub.deleteResource("/_system/config/spring");
     }

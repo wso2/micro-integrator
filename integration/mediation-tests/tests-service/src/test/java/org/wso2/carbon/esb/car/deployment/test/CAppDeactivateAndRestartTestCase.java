@@ -33,7 +33,6 @@ import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
@@ -51,8 +50,7 @@ public class CAppDeactivateAndRestartTestCase extends ESBIntegrationTest {
     private File outputFolder;
     private FTPServerManager ftpServerManager;
 
-    @BeforeClass(alwaysRun = true)
-    protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
 
         //start FTP server
         startFTPServer();
@@ -60,16 +58,14 @@ public class CAppDeactivateAndRestartTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(context);
 
         //upload CAPP
-        CarbonAppUploaderClient carbonAppUploaderClient =
-                new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
-        carbonAppUploaderClient.uploadCarbonAppArtifact(carFileName,
-                new DataHandler(new FileDataSource(new File(getESBResourceLocation() +
-                                                            File.separator + "car" + File.separator + carFileName))));
+        CarbonAppUploaderClient carbonAppUploaderClient = new CarbonAppUploaderClient(
+                context.getContextUrls().getBackEndUrl(), sessionCookie);
+        carbonAppUploaderClient.uploadCarbonAppArtifact(carFileName, new DataHandler(new FileDataSource(
+                new File(getESBResourceLocation() + File.separator + "car" + File.separator + carFileName))));
         log.info(carFileName + " uploaded successfully");
 
         //deactivate proxy service
-        serviceAdminClient =
-                new ServiceAdminClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
+        serviceAdminClient = new ServiceAdminClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
         isProxyDeployed(service);
         serviceAdminClient.stopService(service);
 
@@ -81,20 +77,20 @@ public class CAppDeactivateAndRestartTestCase extends ESBIntegrationTest {
             log.info("Wait to service get deactivated");
             Thread.sleep(1000);
         }
-        Assert.assertFalse(serviceAdminClient.getServicesData(service).getActive(), "Unable to stop service: " + service);
+        Assert.assertFalse(serviceAdminClient.getServicesData(service).getActive(),
+                "Unable to stop service: " + service);
 
         serverConfigurationManager.restartGracefully();
         super.init();
     }
 
-    @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service is inactive")
-    public void testVFSProxyInactiveState() throws AutomationUtilException, IOException, InterruptedException {
+    @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service is inactive") public void testVFSProxyInactiveState()
+            throws AutomationUtilException, IOException, InterruptedException {
 
         //create test file in the ftp server
-        FileUtils.copyFile(new File(getESBResourceLocation() +
-                File.separator + "synapseconfig" +
-                File.separator + "vfsTransport" +
-                File.separator + "test.xml"), new File(inputFolder.getPath() + File.separator + "test.xml"));
+        FileUtils.copyFile(new File(
+                getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "vfsTransport"
+                        + File.separator + "test.xml"), new File(inputFolder.getPath() + File.separator + "test.xml"));
 
         //check the output directory
         File filePathToOutputFile = new File(outputFolder.getPath() + File.separator + "test.xml");
@@ -102,17 +98,16 @@ public class CAppDeactivateAndRestartTestCase extends ESBIntegrationTest {
         //wait and check till polling time get exceeded for ~15seconds
         for (int i = 0; i < 15; i++) {
             log.info("Wait and check output directory to verify service is deactivated successfully");
-            Assert.assertFalse(filePathToOutputFile.exists(), "File exists, hence the service :" +
-                    service + " deactivation is not persisted");
+            Assert.assertFalse(filePathToOutputFile.exists(),
+                    "File exists, hence the service :" + service + " deactivation is not persisted");
             Thread.sleep(1000);
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
         try {
-            ApplicationAdminClient applicationAdminClient =
-                    new ApplicationAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
+            ApplicationAdminClient applicationAdminClient = new ApplicationAdminClient(
+                    context.getContextUrls().getBackEndUrl(), getSessionCookie());
             applicationAdminClient.deleteApplication(cappName);
             super.cleanup();
         } finally {

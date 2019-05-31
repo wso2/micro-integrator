@@ -28,7 +28,6 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -36,10 +35,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import javax.xml.stream.XMLStreamException;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.fail;
-
 
 public class AxisServiceClientUtils {
 
@@ -127,9 +126,8 @@ public class AxisServiceClientUtils {
         }
     }
 
-    public static void sendRequest(String eprUrl, String operation, String payload,
-                                   int numberOfInstances, List<String> expectedStrings,
-                                   boolean twoWay) throws Exception {
+    public static void sendRequest(String eprUrl, String operation, String payload, int numberOfInstances,
+            List<String> expectedStrings, boolean twoWay) throws Exception {
         waitForServiceDeployment(eprUrl);
         assertFalse(!AxisServiceClientUtils.isServiceAvailable(eprUrl));
 
@@ -140,8 +138,7 @@ public class AxisServiceClientUtils {
                     OMElement result = AxisServiceClientUtils.sendRequest(payload, epr);
                     if (expectedStrings != null) {
                         for (String expectedString : expectedStrings) {
-                            assertFalse(!result.toString()
-                                    .contains(expectedString));
+                            assertFalse(!result.toString().contains(expectedString));
                         }
                     }
                 } else {
@@ -157,9 +154,8 @@ public class AxisServiceClientUtils {
         }
     }
 
-    public static void sendRequest(String eprUrl, String operation, String payload,
-                                   int numberOfInstances, String expectedException, boolean twoWay)
-            throws XMLStreamException, AxisFault {
+    public static void sendRequest(String eprUrl, String operation, String payload, int numberOfInstances,
+            String expectedException, boolean twoWay) throws XMLStreamException, AxisFault {
         assertFalse(!AxisServiceClientUtils.isServiceAvailable(eprUrl));
 
         for (int i = 0; i < numberOfInstances; i++) {
