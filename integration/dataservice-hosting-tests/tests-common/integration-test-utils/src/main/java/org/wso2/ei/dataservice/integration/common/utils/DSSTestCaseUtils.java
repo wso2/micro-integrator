@@ -27,21 +27,20 @@ import org.wso2.carbon.dataservices.ui.fileupload.stub.ExceptionException;
 import org.wso2.ei.dataservices.integration.common.clients.DataServiceFileUploaderClient;
 import org.wso2.ei.dataservices.integration.common.clients.ServiceAdminClient;
 
-import javax.activation.DataHandler;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Calendar;
+import javax.activation.DataHandler;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 public class DSSTestCaseUtils {
     private Log log = LogFactory.getLog(DSSTestCaseUtils.class);
     private static int SERVICE_DEPLOYMENT_DELAY = TestConfigurationProvider.getServiceDeploymentDelay();
-
 
     /**
      * Loads the specified resource from the file system and returns its content as an OMElement.
@@ -49,8 +48,7 @@ public class DSSTestCaseUtils {
      * @param filePath A relative path to the resource file
      * @return An OMElement containing the resource content
      */
-    public OMElement loadResourceFrom(String filePath) throws FileNotFoundException,
-                                                               XMLStreamException {
+    public OMElement loadResourceFrom(String filePath) throws FileNotFoundException, XMLStreamException {
         OMElement documentElement = null;
         FileInputStream inputStream = null;
         XMLStreamReader parser = null;
@@ -91,7 +89,7 @@ public class DSSTestCaseUtils {
     }
 
     /**
-     * @param  filePath to the resource file
+     * @param filePath to the resource file
      * @return content of the file as String
      * @throws IOException
      */
@@ -100,7 +98,6 @@ public class DSSTestCaseUtils {
     }
 
     /**
-     *
      * @param serviceUrl
      * @param sessionCookie
      * @param fileName
@@ -109,16 +106,14 @@ public class DSSTestCaseUtils {
      * @throws ExceptionException
      * @throws RemoteException
      */
-    public boolean uploadArtifact(String serviceUrl, String sessionCookie, String fileName,
-                                  DataHandler dh)
+    public boolean uploadArtifact(String serviceUrl, String sessionCookie, String fileName, DataHandler dh)
             throws ExceptionException, RemoteException {
-        DataServiceFileUploaderClient adminServiceDataServiceFileUploader =
-                new DataServiceFileUploaderClient(serviceUrl, sessionCookie);
+        DataServiceFileUploaderClient adminServiceDataServiceFileUploader = new DataServiceFileUploaderClient(
+                serviceUrl, sessionCookie);
         return adminServiceDataServiceFileUploader.uploadDataServiceFile(fileName, dh);
     }
 
     /**
-     *
      * @param backEndUrl
      * @param sessionCookie
      * @param serviceName
@@ -133,7 +128,8 @@ public class DSSTestCaseUtils {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         Calendar startTime = Calendar.getInstance();
         long time;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < SERVICE_DEPLOYMENT_DELAY) {
+        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
+                < SERVICE_DEPLOYMENT_DELAY) {
             if (adminServiceService.isServiceExists(serviceName)) {
                 isServiceDeployed = true;
                 log.info(serviceName + " Service Deployed in " + time + " millis");
@@ -151,21 +147,20 @@ public class DSSTestCaseUtils {
     }
 
     /**
-     *
      * @param backEndUrl
      * @param sessionCookie
      * @param serviceName
      * @return
      * @throws RemoteException
      */
-    public boolean isServiceFaulty(String backEndUrl, String sessionCookie, String serviceName)
-            throws RemoteException {
+    public boolean isServiceFaulty(String backEndUrl, String sessionCookie, String serviceName) throws RemoteException {
 
         boolean isServiceDeployed = false;
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         Calendar startTime = Calendar.getInstance();
         long time;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < SERVICE_DEPLOYMENT_DELAY) {
+        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
+                < SERVICE_DEPLOYMENT_DELAY) {
             if (adminServiceService.isServiceFaulty(serviceName)) {
                 isServiceDeployed = true;
                 break;
@@ -178,56 +173,48 @@ public class DSSTestCaseUtils {
         }
         return isServiceDeployed;
 
-
     }
 
     /**
-     *
      * @param backEndUrl
      * @param sessionCookie
      * @param serviceName
      * @return
      * @throws RemoteException
      */
-    public boolean isServiceExist(String backEndUrl, String sessionCookie, String serviceName)
-            throws RemoteException {
+    public boolean isServiceExist(String backEndUrl, String sessionCookie, String serviceName) throws RemoteException {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         return adminServiceService.isServiceExists(serviceName);
     }
 
     /**
-     *
      * @param backEndUrl
      * @param sessionCookie
      * @param serviceName
      * @return
      * @throws RemoteException
      */
-    public boolean isFaultyService(String backEndUrl, String sessionCookie, String serviceName)
-            throws RemoteException {
+    public boolean isFaultyService(String backEndUrl, String sessionCookie, String serviceName) throws RemoteException {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         return adminServiceService.isServiceFaulty(serviceName);
     }
 
     /**
-     *
      * @param backEndUrl
      * @param sessionCookie
      * @param serviceName
      * @throws RemoteException
      */
-    public void deleteService(String backEndUrl, String sessionCookie, String serviceName)
-            throws RemoteException {
+    public void deleteService(String backEndUrl, String sessionCookie, String serviceName) throws RemoteException {
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         if (isFaultyService(backEndUrl, sessionCookie, serviceName)) {
             adminServiceService.deleteFaultyServiceByServiceName(serviceName);
         } else if (isServiceExist(backEndUrl, sessionCookie, serviceName)) {
-            adminServiceService.deleteService(new String[]{adminServiceService.getServiceGroup(serviceName)});
+            adminServiceService.deleteService(new String[] { adminServiceService.getServiceGroup(serviceName) });
         }
     }
 
     /**
-     *
      * @param backEndUrl
      * @param sessionCookie
      * @param serviceName
@@ -241,7 +228,8 @@ public class DSSTestCaseUtils {
         boolean isServiceDeleted = false;
         Calendar startTime = Calendar.getInstance();
         long time;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < SERVICE_DEPLOYMENT_DELAY) {
+        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis()))
+                < SERVICE_DEPLOYMENT_DELAY) {
             if (!adminServiceService.isServiceExists(serviceName)) {
                 isServiceDeleted = true;
                 log.info(serviceName + " Service undeployed in " + time + " millis");

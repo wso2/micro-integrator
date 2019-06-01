@@ -18,14 +18,12 @@
 
 package org.wso2.ei.dataservices.integration.common.clients.utils;
 
-import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.client.Stub;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.utils.CarbonUtils;
-
 
 public class AuthenticateStubUtil {
 

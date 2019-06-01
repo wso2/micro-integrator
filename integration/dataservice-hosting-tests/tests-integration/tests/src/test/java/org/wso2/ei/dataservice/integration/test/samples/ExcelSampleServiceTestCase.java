@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.ei.dataservice.integration.test.samples;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -36,9 +36,9 @@ import org.wso2.carbon.automation.test.utils.concurrency.test.exception.Concurre
 import org.wso2.ei.dataservice.integration.common.utils.DSSTestCaseUtils;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.rmi.RemoteException;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -46,27 +46,26 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(ExcelSampleServiceTestCase.class);
     private final String serviceName = "ExcelSampleService";
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
         super.init();
 
-        deployService(serviceName,
-                      AXIOMUtil.stringToOM(FileManager.readFile(getResourceLocation()
-                                                                + File.separator + "dbs" + File.separator
-                                                                + "excel" + File.separator + "ExcelSampleService.dbs")));
+        deployService(serviceName, AXIOMUtil.stringToOM(FileManager.readFile(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "excel" + File.separator
+                        + "ExcelSampleService.dbs")));
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
-    public void testServiceDeployment() throws RemoteException, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
+            throws RemoteException, XPathExpressionException {
         DSSTestCaseUtils dssTestCaseUtils = new DSSTestCaseUtils();
-        assertTrue(dssTestCaseUtils.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(),
-                                                      sessionCookie, serviceName));
+        assertTrue(dssTestCaseUtils
+                .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = {"wso2.dss"}, invocationCount = 5, dependsOnMethods = "testServiceDeployment")
-    public void selectOperation() throws AxisFault, XPathExpressionException {
+    @Test(groups = {
+            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment") public void selectOperation()
+            throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
         OMElement payload = fac.createOMElement("getProducts", omNs);
@@ -79,12 +78,14 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
         log.info("Service invocation success");
     }
 
-    @Test(groups = {"wso2.dss"}, invocationCount = 5, dependsOnMethods = "selectOperation")
-    public void xsltTransformation() throws AxisFault, XPathExpressionException {
+    @Test(groups = {
+            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "selectOperation") public void xsltTransformation()
+            throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
         OMElement payload = fac.createOMElement("getProductClassifications", omNs);
-        OMElement result = new AxisServiceClient().sendReceive(payload, getServiceUrlHttp(serviceName), "getProductClassifications");
+        OMElement result = new AxisServiceClient()
+                .sendReceive(payload, getServiceUrlHttp(serviceName), "getProductClassifications");
         if (log.isDebugEnabled()) {
             log.debug("Response :" + result);
         }
@@ -96,8 +97,8 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
         log.info("XSLT Transformation Success");
     }
 
-    @Test(groups = {"wso2.dss"}, dependsOnMethods = {"xsltTransformation"}, timeOut = 1000 * 60 * 1)
-    public void concurrencyTest()
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "xsltTransformation" }, timeOut = 1000 * 60
+            * 1) public void concurrencyTest()
             throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
@@ -106,8 +107,7 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
         concurrencyTest.run(getServiceUrlHttp(serviceName), payload, "getProducts");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.scheduletask;
 
@@ -41,7 +41,6 @@ import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
-
 public class AddScheduleTaskTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(AddScheduleTaskTestCase.class);
 
@@ -51,35 +50,32 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
     private double empSalary;
     private String serviceName = "ScheduleTaskTest";
     private final OMFactory fac = OMAbstractFactory.getOMFactory();
-    private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/" +
-                                                           "rdbms_sample", "ns1");
+    private final OMNamespace omNs = fac
+            .createOMNamespace("http://ws.wso2.org/dataservice/samples/" + "rdbms_sample", "ns1");
     private String serviceEndPoint;
     private DataServiceTaskClient dssTaskClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
-        String resourceLocation =getResourceLocation();
+        String resourceLocation = getResourceLocation();
 
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName,
-                      createArtifact(resourceLocation + File.separator + "dbs" + File.separator
-                                     + "rdbms" + File.separator + "MySql" + File.separator
-                                     + "ScheduleTaskTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                resourceLocation + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
+                        + File.separator + "ScheduleTaskTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName);
 
         dssTaskClient = new DataServiceTaskClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed")
-    public void testServiceDeployment() throws Exception {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed") public void testServiceDeployment()
+            throws Exception {
         assertTrue(isServiceDeployed(serviceName));
     }
 
-
-    @Test(groups = "wso2.dss", dependsOnMethods = {"testServiceDeployment"})
-    public void serviceInvocation() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "testServiceDeployment" }) public void serviceInvocation()
+            throws AxisFault {
         deleteEmployees();
         addEmployee(employeeId);
         getEmployeeById(employeeId);
@@ -88,8 +84,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("service invocation success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"serviceInvocation"})
-    public void addScheduleTask() throws RemoteException {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "serviceInvocation" }) public void addScheduleTask()
+            throws RemoteException {
         DSTaskInfo dsTaskInfo = new DSTaskInfo();
         String[] taskNames = dssTaskClient.getAllTaskNames();
 
@@ -125,8 +121,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"addScheduleTask"})
-    public void startScheduleTask() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "addScheduleTask" }) public void startScheduleTask()
+            throws AxisFault {
         //if task count is 4
         for (int i = 0; i < 5; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
@@ -142,8 +138,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("ScheduleTask verifying Success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"startScheduleTask"})
-    public void verifyTaskCount() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "startScheduleTask" }) public void verifyTaskCount()
+            throws AxisFault {
         for (int i = 0; i < 5; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
             log.info("current salary after exceeding task count " + currentSalary);
@@ -158,14 +154,13 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("Task Count Verified");
     }
 
-//    @Test(groups = "wso2.dss", dependsOnMethods = {"verifyTaskCount"})
-//    public void deleteTask() throws RemoteException {
-//        dssTaskClient.deleteTask(scheduleTaskName);
-//        log.info("Task Deleted");
-//    }
+    //    @Test(groups = "wso2.dss", dependsOnMethods = {"verifyTaskCount"})
+    //    public void deleteTask() throws RemoteException {
+    //        dssTaskClient.deleteTask(scheduleTaskName);
+    //        log.info("Task Deleted");
+    //    }
 
-    @AfterClass(alwaysRun = true)
-    public void testCleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void testCleanup() throws Exception {
         dssTaskClient.deleteTask(scheduleTaskName);
         log.info("Task Deleted");
         deleteService(serviceName);

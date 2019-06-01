@@ -23,19 +23,18 @@ import org.wso2.ws.dataservice.samples.gspread_sample_service.Customer;
 
 public class GSpreadSample extends BaseSample {
 
-	public static void main(String[] args) throws Exception {
-		String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT + "/services/samples/GSpreadSample";
-		org.wso2.carbon.dataservices.samples.gspread_sample_service.GSpreadSample stub =
-                new GSpreadSampleStub(epr);
-		Customer[] customers = stub.getCustomers();
-		System.out.println("EPR: " + epr + "\n");
-		System.out.println("Products:-");
-		for (Customer customer : customers) {
-			System.out.println("\t-----------------------------");
-			System.out.println("\tCustomer Name: " + customer.getCustomerName());
-			System.out.println("\tCustomer Number: " + customer.getCustomerNumber());
-			System.out.println("\tCity: " + customer.getCity());
-		}
-	}
-	
+    public static void main(String[] args) throws Exception {
+        String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT + "/services/samples/GSpreadSample";
+        org.wso2.carbon.dataservices.samples.gspread_sample_service.GSpreadSample stub = new GSpreadSampleStub(epr);
+        Customer[] customers = stub.getCustomers();
+        System.out.println("EPR: " + epr + "\n");
+        System.out.println("Products:-");
+        for (Customer customer : customers) {
+            System.out.println("\t-----------------------------");
+            System.out.println("\tCustomer Name: " + customer.getCustomerName());
+            System.out.println("\tCustomer Number: " + customer.getCustomerNumber());
+            System.out.println("\tCity: " + customer.getCity());
+        }
+    }
+
 }

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.ei.dataservice.integration.test.syntax;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -48,31 +48,28 @@ public class DataTypesTestCase extends DSSIntegrationTest {
 
     private String serviceEndPoint;
 
-    @Factory(dataProvider = "userModeDataProvider")
-    public DataTypesTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider") public DataTypesTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init(userMode);
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("DataTypes.sql"));
-        deployService(serviceName,
-                      createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator
-                                              + "rdbms" + File.separator
-                                              + "h2" + File.separator + "Developer.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + "Developer.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
-
 
     /**
      * Method to test insertion of timestamp value.
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.dss"}, description = "insert a timestamp value and check it's successful", alwaysRun = true)
-    public void insertTimestampTest() throws Exception {
+    @Test(groups = {
+            "wso2.dss" }, description = "insert a timestamp value and check it's successful", alwaysRun = true) public void insertTimestampTest()
+            throws Exception {
         OMElement insertTimeStampPayload = fac.createOMElement("addDeveloper", omNs);
 
         OMElement devId = fac.createOMElement("devId", omNs);
@@ -93,9 +90,12 @@ public class DataTypesTestCase extends DSSIntegrationTest {
         getDeveloperByIdPayload.addChild(devId);
 
         //retrieve and see whether inserted correctly
-        OMElement responseProduct = new AxisServiceClient().sendReceive(getDeveloperByIdPayload, getServiceUrlHttp(serviceName), "select_developers_by_id_operation");
+        OMElement responseProduct = new AxisServiceClient()
+                .sendReceive(getDeveloperByIdPayload, getServiceUrlHttp(serviceName),
+                        "select_developers_by_id_operation");
         assertNotNull(responseProduct, "Response null " + responseProduct);
-        assertTrue(responseProduct.toString().contains("<devdob>2002-01"), "'devdob' should have exist in the response");
+        assertTrue(responseProduct.toString().contains("<devdob>2002-01"),
+                "'devdob' should have exist in the response");
         log.info("Insert TimeStamp Operation Success");
     }
 
@@ -104,8 +104,9 @@ public class DataTypesTestCase extends DSSIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.dss"}, description = "insert null value as timestamp value and check it's successful", alwaysRun = true)
-    public void insertTimestampNullTest() throws Exception {
+    @Test(groups = {
+            "wso2.dss" }, description = "insert null value as timestamp value and check it's successful", alwaysRun = true) public void insertTimestampNullTest()
+            throws Exception {
         OMElement insertTimeStampPayload = fac.createOMElement("addDeveloper", omNs);
 
         OMNamespace nullNameSpace = fac.createOMNamespace("http://www.w3.org/2001/XMLSchema-instance", "xsi");
@@ -120,7 +121,7 @@ public class DataTypesTestCase extends DSSIntegrationTest {
         insertTimeStampPayload.addChild(devName);
 
         OMElement devdob = fac.createOMElement("devdob", omNs);
-        OMAttribute nullAttribute = fac.createOMAttribute("nil", nullNameSpace,"true");
+        OMAttribute nullAttribute = fac.createOMAttribute("nil", nullNameSpace, "true");
         devdob.addAttribute(nullAttribute);
         insertTimeStampPayload.addChild(devdob);
 
@@ -130,16 +131,15 @@ public class DataTypesTestCase extends DSSIntegrationTest {
         getDeveloperByIdPayload.addChild(devId);
 
         //retrieve and see whether inserted correctly
-        OMElement responseProduct = new AxisServiceClient().sendReceive(getDeveloperByIdPayload, getServiceUrlHttp(serviceName), "select_developers_by_id_operation");
+        OMElement responseProduct = new AxisServiceClient()
+                .sendReceive(getDeveloperByIdPayload, getServiceUrlHttp(serviceName),
+                        "select_developers_by_id_operation");
         assertNotNull(responseProduct, "Response null " + responseProduct);
         assertTrue(responseProduct.toString().contains("<devdob"), "'devdob' should have exist in the response");
         log.info("Insert TimeStamp Operation Success");
     }
 
-
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

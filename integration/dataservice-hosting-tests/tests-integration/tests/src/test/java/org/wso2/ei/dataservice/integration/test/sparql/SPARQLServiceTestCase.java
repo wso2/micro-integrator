@@ -33,8 +33,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.activation.DataHandler;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -43,6 +41,8 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import javax.activation.DataHandler;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -51,37 +51,31 @@ public class SPARQLServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(SPARQLServiceTestCase.class);
 
     private final String serviceName = "SPARQLDataService";
-    private  String serviceEndPoint;
+    private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init();
         serviceEndPoint = getServiceUrlHttp(serviceName);
         String resourceFileLocation = getResourceLocation();
-        deployService(serviceName,
-                new DataHandler(new URL("file:///" + resourceFileLocation + File.separator + "dbs" + File.separator +
-                        "sparql" + File.separator + "SPARQLDataService.dbs")));
+        deployService(serviceName, new DataHandler(
+                new URL("file:///" + resourceFileLocation + File.separator + "dbs" + File.separator + "sparql"
+                        + File.separator + "SPARQLDataService.dbs")));
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether service deployed or not")
-    public void testServiceDeployment() throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether service deployed or not") public void testServiceDeployment()
+            throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = {"wso2.dss"})
-    public void getAllBookmarkData() throws IOException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }) public void getAllBookmarkData() throws IOException, XPathExpressionException {
         if (isExternalEndpointAvailable()) {
             String endpoint = serviceEndPoint + ".SOAP11Endpoint/";
             String content =
                     "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n"
-                            +
-                            "   <soapenv:Header/>\n" +
-                            "   <soapenv:Body>\n" +
-                            "      <dat:getBookmarks/>\n" +
-                            "   </soapenv:Body>\n" +
-                            "</soapenv:Envelope>";
+                            + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <dat:getBookmarks/>\n"
+                            + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
             Map<String, String> headers = new HashMap<>();
             headers.put("Accept", "application/xml");
             headers.put("Content-Type", "text/plain");
@@ -147,8 +141,8 @@ public class SPARQLServiceTestCase extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteService()
+            throws Exception {
         deleteService(serviceName);
         cleanup();
     }

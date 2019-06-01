@@ -30,59 +30,57 @@ import org.wso2.carbon.automation.test.utils.concurrency.test.ConcurrencyTest;
 import org.wso2.carbon.automation.test.utils.concurrency.test.exception.ConcurrencyTestFailedError;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.xml.namespace.QName;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This class performs tests, which related to Return Generated Keys.
  */
 public class ReturnGeneratedKeysTestCase extends DSSIntegrationTest {
-	private final OMFactory factory = OMAbstractFactory.getOMFactory();
-	private final OMNamespace omNs =
-			factory.createOMNamespace("http://ws.wso2.org/dataservice/samples/returnGeneratedKeysSample", "ns1");
-	private final String serviceName = "H2ReturnGeneratedKeysTest";
+    private final OMFactory factory = OMAbstractFactory.getOMFactory();
+    private final OMNamespace omNs = factory
+            .createOMNamespace("http://ws.wso2.org/dataservice/samples/returnGeneratedKeysSample", "ns1");
+    private final String serviceName = "H2ReturnGeneratedKeysTest";
 
-	@BeforeClass(alwaysRun = true)
-	public void serviceDeployment() throws Exception {
-		super.init();
-		List<File> sqlFileLis = new ArrayList<>();
-		sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-		deployService(serviceName, createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator +
-		                                          "rdbms" + File.separator + "h2" + File.separator +
-		                                          "H2ReturnGeneratedKeysTest.dbs", sqlFileLis));
-	}
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+        super.init();
+        List<File> sqlFileLis = new ArrayList<>();
+        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + "H2ReturnGeneratedKeysTest.dbs", sqlFileLis));
+    }
 
-	@AfterClass(alwaysRun = true)
-	public void destroy() throws Exception {
-		deleteService(serviceName);
-		cleanup();
-	}
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+        deleteService(serviceName);
+        cleanup();
+    }
 
-	@Test(groups = "wso2.dss", description = "Invoking insert operation with Return Generated Keys" , dependsOnMethods = "performConcurrencyTest")
-	public void performInsertWithReturnGeneratedKeysTest() throws AxisFault, XPathExpressionException {
-		OMElement payload = factory.createOMElement("insertBalance", omNs);
-		OMElement queryElement = factory.createOMElement("balance", omNs);
-		queryElement.setText("22.184");
-		payload.addChild(queryElement);
-		OMElement result = new AxisServiceClient().sendReceive(payload, getServiceUrlHttp(serviceName), "insertBalance");
-		/* id should be 26 because concurrency test has been performed before this method */
-		boolean id = "26".equals(result.getFirstElement().getFirstChildWithName(
-				new QName("http://ws.wso2.org/dataservice/samples/returnGeneratedKeysSample", "ID")).getText());
-		Assert.assertTrue(id, "Insert operation with return generated keys is failed");
-	}
+    @Test(groups = "wso2.dss", description = "Invoking insert operation with Return Generated Keys", dependsOnMethods = "performConcurrencyTest") public void performInsertWithReturnGeneratedKeysTest()
+            throws AxisFault, XPathExpressionException {
+        OMElement payload = factory.createOMElement("insertBalance", omNs);
+        OMElement queryElement = factory.createOMElement("balance", omNs);
+        queryElement.setText("22.184");
+        payload.addChild(queryElement);
+        OMElement result = new AxisServiceClient()
+                .sendReceive(payload, getServiceUrlHttp(serviceName), "insertBalance");
+        /* id should be 26 because concurrency test has been performed before this method */
+        boolean id = "26".equals(result.getFirstElement().getFirstChildWithName(
+                new QName("http://ws.wso2.org/dataservice/samples/returnGeneratedKeysSample", "ID")).getText());
+        Assert.assertTrue(id, "Insert operation with return generated keys is failed");
+    }
 
-	@Test(groups = "wso2.dss", description = "Concurrency Test for Return Generated Keys")
-	public void performConcurrencyTest() throws ConcurrencyTestFailedError, InterruptedException,
-	                                            XPathExpressionException {
-		ConcurrencyTest concurrencyTest = new ConcurrencyTest(5, 5);
-		OMElement payload = factory.createOMElement("insertBalance", omNs);
-		OMElement queryElement = factory.createOMElement("balance", omNs);
-		queryElement.setText("144.184");
-		payload.addChild(queryElement);
-		concurrencyTest.run(getServiceUrlHttp(serviceName), payload, "insertBalance");
-	}
+    @Test(groups = "wso2.dss", description = "Concurrency Test for Return Generated Keys") public void performConcurrencyTest()
+            throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
+        ConcurrencyTest concurrencyTest = new ConcurrencyTest(5, 5);
+        OMElement payload = factory.createOMElement("insertBalance", omNs);
+        OMElement queryElement = factory.createOMElement("balance", omNs);
+        queryElement.setText("144.184");
+        payload.addChild(queryElement);
+        concurrencyTest.run(getServiceUrlHttp(serviceName), payload, "insertBalance");
+    }
 
 }

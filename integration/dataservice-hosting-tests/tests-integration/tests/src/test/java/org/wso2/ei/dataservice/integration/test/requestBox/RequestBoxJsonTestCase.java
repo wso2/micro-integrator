@@ -18,15 +18,6 @@
 
 package org.wso2.ei.dataservice.integration.test.requestBox;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
@@ -36,6 +27,15 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This class contains test cases to check the json functionality in request box operation.
@@ -46,26 +46,23 @@ public class RequestBoxJsonTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(RequestBoxJsonTestCase.class);
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         sqlFileLis.add(selectSqlFile("Offices.sql"));
-        deployService(serviceName, createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator +
-                "rdbms" + File.separator + "h2" + File.separator +
-                "JSONSample.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + "JSONSample.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response")
-    public void performJsonInsertWithRequestBoxResponseTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response") public void performJsonInsertWithRequestBoxResponseTest() {
         String postInsertPaymentPayload =
                 "{\"request_box\" : {\n" + "\t\"_postemployee\": {\n" + "    \"employeeNumber\" : 14001,\n"
                         + "    \"lastName\": \"Smith\",\n" + "    \"firstName\": \"Will\",\n"
@@ -74,9 +71,7 @@ public class RequestBoxJsonTestCase extends DSSIntegrationTest {
         Assert.assertTrue(response.contains("DATA_SERVICE_REQUEST_BOX_RESPONSE"), "POST method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response",
-            dependsOnMethods = "performJsonInsertWithRequestBoxResponseTest")
-    public void performJsonInsertAndUpdateWithRequestBoxResponseTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response", dependsOnMethods = "performJsonInsertWithRequestBoxResponseTest") public void performJsonInsertAndUpdateWithRequestBoxResponseTest() {
         String postInsertPaymentPayload =
                 "{\"request_box\" : {\n" + "\t\"_postemployee\": {\n" + "    \"employeeNumber\" : 14002,\n"
                         + "    \"lastName\": \"Smith\",\n" + "    \"firstName\": \"Will\",\n"
@@ -89,8 +84,7 @@ public class RequestBoxJsonTestCase extends DSSIntegrationTest {
         String response = getHttpResponse(serviceEndPoint + "request_box", "POST", postInsertPaymentPayload);
         Assert.assertTrue(response.contains(
                 "{\"DATA_SERVICE_REQUEST_BOX_RESPONSE\":{\"employees\":{\"employee\":[{\"lastName\":\"Gunasekara\","
-                        + "\"firstName\":\"Madhawa\",\"salary\":78500.0}]}}}"),
-                "POST method failed");
+                        + "\"firstName\":\"Madhawa\",\"salary\":78500.0}]}}}"), "POST method failed");
     }
 
     private String getHttpResponse(String endpoint, String requestMethod, String payload) {

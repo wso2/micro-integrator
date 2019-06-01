@@ -10,7 +10,8 @@ import java.util.Map;
  * Class which Extends test server manager in DSS
  */
 public class DSSTestServerManager extends TestServerManager {
-    private Map<String,Object> paramMap = new HashMap<String,Object>(2);
+    private Map<String, Object> paramMap = new HashMap<String, Object>(2);
+
     public DSSTestServerManager(AutomationContext context) {
         super(context);
     }
@@ -27,15 +28,15 @@ public class DSSTestServerManager extends TestServerManager {
         super(context, carbonZip, commandMap);
     }
 
-    public void setParameter(String key, Object param){
-        paramMap.put(key,param);
+    public void setParameter(String key, Object param) {
+        paramMap.put(key, param);
     }
 
-    public Object getParameter(String key){
+    public Object getParameter(String key) {
         return paramMap.get(key);
     }
 
-    public void removeParameter(String key){
+    public void removeParameter(String key) {
         paramMap.remove(key);
     }
 }

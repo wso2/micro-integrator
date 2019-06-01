@@ -26,49 +26,48 @@ import java.util.Map;
  */
 public class ODataRequestThreadExecutor extends Thread {
 
-	private String httpMethod;
-	private String content;
-	private Map<String, String> headers;
-	private String endpoint;
+    private String httpMethod;
+    private String content;
+    private Map<String, String> headers;
+    private String endpoint;
 
-	public ODataRequestThreadExecutor(String httpMethod, String content, Map<String, String> headers,
-	                                  String endpoint) {
-		this.content = content;
-		this.endpoint = endpoint;
-		this.headers = headers;
-		this.httpMethod = httpMethod;
-	}
+    public ODataRequestThreadExecutor(String httpMethod, String content, Map<String, String> headers, String endpoint) {
+        this.content = content;
+        this.endpoint = endpoint;
+        this.headers = headers;
+        this.httpMethod = httpMethod;
+    }
 
-	public void run() {
-		switch (httpMethod) {
-			case "POST":
-				try {
-					ODataTestUtils.sendPOST(endpoint, content, headers);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			case "PUT":
-				try {
-					ODataTestUtils.sendPUT(endpoint, content, headers);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			case "PATCH":
-				try {
-					ODataTestUtils.sendPATCH(endpoint, content, headers);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-			case "DELETE":
-				try {
-					ODataTestUtils.sendDELETE(endpoint, headers);
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				break;
-		}
-	}
+    public void run() {
+        switch (httpMethod) {
+        case "POST":
+            try {
+                ODataTestUtils.sendPOST(endpoint, content, headers);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            break;
+        case "PUT":
+            try {
+                ODataTestUtils.sendPUT(endpoint, content, headers);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            break;
+        case "PATCH":
+            try {
+                ODataTestUtils.sendPATCH(endpoint, content, headers);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            break;
+        case "DELETE":
+            try {
+                ODataTestUtils.sendDELETE(endpoint, headers);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            break;
+        }
+    }
 }

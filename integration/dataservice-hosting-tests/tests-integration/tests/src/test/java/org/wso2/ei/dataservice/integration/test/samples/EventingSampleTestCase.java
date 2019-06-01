@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.samples;
 
@@ -39,11 +39,6 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamWriter;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,6 +49,11 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.Iterator;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLOutputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamWriter;
 
 import static org.testng.Assert.assertTrue;
 
@@ -70,14 +70,11 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
     private String modifiedTime;
     private String feedURL;
 
-
-    @Factory(dataProvider = "userModeDataProvider")
-    public EventingSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider") public EventingSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true, enabled = false)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
         super.init(userMode);
         String resourceFileLocation;
         feedURL = "https://mail.google.com/mail/feed/atom";
@@ -86,7 +83,7 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
         eventingSampleStub = new EventingSampleStub(serverEpr);
         serverEpr = getServiceUrlHttp(serviceName);
 
-//        productCode = "code" + System.currentTimeMillis();
+        //        productCode = "code" + System.currentTimeMillis();
         productCode = "999";
 
         updateAxis2_ClientXML();
@@ -94,47 +91,41 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
 
         super.init();
         resourceFileLocation = getResourceLocation();
-        deployService(serviceName,
-                      new DataHandler(new URL("file:///" + resourceFileLocation +
-                                              File.separator + "samples" + File.separator +
-                                              "dbs" + File.separator + "rdbms" + File.separator +
-                                              "EventingSample.dbs")));
+        deployService(serviceName, new DataHandler(
+                new URL("file:///" + resourceFileLocation + File.separator + "samples" + File.separator + "dbs"
+                        + File.separator + "rdbms" + File.separator + "EventingSample.dbs")));
         log.info(serviceName + " uploaded");
     }
 
-    @AfterClass(alwaysRun = true,  enabled = false)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false) public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not",  enabled = false)
-    public void testServiceDeployment() throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false) public void testServiceDeployment()
+            throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = "wso2.dss", description = "Add new product", dependsOnMethods = "testServiceDeployment",
-            enabled = false)
-    public void testAddProduct() throws RemoteException, DataServiceFault {
-//        eventingSampleStub.addProduct(productCode, "Line1", "BVK-Name", 100, 123.00);
-//        getProductByCode();
+    @Test(groups = "wso2.dss", description = "Add new product", dependsOnMethods = "testServiceDeployment", enabled = false) public void testAddProduct()
+            throws RemoteException, DataServiceFault {
+        //        eventingSampleStub.addProduct(productCode, "Line1", "BVK-Name", 100, 123.00);
+        //        getProductByCode();
         new AxisServiceClient().sendRobust(getAddPayload(), serverEpr, "addProduct");
-        OMElement result = new AxisServiceClient().sendReceive(getProductByCodePayload(), serverEpr,
-                                                               "getProductByCode");
+        OMElement result = new AxisServiceClient()
+                .sendReceive(getProductByCodePayload(), serverEpr, "getProductByCode");
         assertTrue(result.toString().contains("<productCode>999</productCode>"));
 
     }
 
-
-    @Test(groups = "wso2.dss", description = "update product quantity",
-          dependsOnMethods = "testAddProduct",  enabled = false)
-    public void testUpdateQuantity() throws RemoteException, DataServiceFault {
-//        eventingSampleStub.updateProductQuantity(productCode, 1);
-//        getProductByCode();
+    @Test(groups = "wso2.dss", description = "update product quantity", dependsOnMethods = "testAddProduct", enabled = false) public void testUpdateQuantity()
+            throws RemoteException, DataServiceFault {
+        //        eventingSampleStub.updateProductQuantity(productCode, 1);
+        //        getProductByCode();
         new AxisServiceClient().sendRobust(updateProductPayload(), serverEpr, "updateProductQuantity");
-        OMElement result = new AxisServiceClient().sendReceive(getProductByCodePayload(), serverEpr,
-                                                               "getProductByCode");
+        OMElement result = new AxisServiceClient()
+                .sendReceive(getProductByCodePayload(), serverEpr, "getProductByCode");
         assertTrue(result.toString().contains("<productCode>999</productCode>"));
         assertTrue(result.toString().contains("<quantityInStock>1</quantityInStock>"));
 
@@ -159,8 +150,7 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
         assertTrue(status, "product has been int");
     }*/
 
-    private OMElement getAtomFeedContent(String atomURL) throws IOException,
-                                                                       XMLStreamException {
+    private OMElement getAtomFeedContent(String atomURL) throws IOException, XMLStreamException {
         StringBuilder sb;
         InputStream inputStream = null;
         URL url = new URL(atomURL);
@@ -170,8 +160,7 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
             connection.setRequestMethod("GET");
             String userPassword = GMAIL_USER_NAME + ":" + GMAIL_PASSWORD;
             String encodedAuthorization = Base64Utils.encode(userPassword.getBytes());
-            connection.setRequestProperty("Authorization", "Basic " +
-                                                           encodedAuthorization);
+            connection.setRequestProperty("Authorization", "Basic " + encodedAuthorization);
             connection.connect();
 
             inputStream = connection.getInputStream();
@@ -191,12 +180,12 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
 
     }
 
-    private boolean waitForMailArrival()
-            throws XMLStreamException, IOException, InterruptedException {
+    private boolean waitForMailArrival() throws XMLStreamException, IOException, InterruptedException {
         long waitTime = 30 * 1000;
         long startTime = System.currentTimeMillis();
         while ((System.currentTimeMillis() - startTime) < waitTime) {
-            if ((((getMailCount(feedURL) - mailCountBeforeTestStart) >= 1)) || !(getModifiedTime(feedURL).equals(modifiedTime))) {
+            if ((((getMailCount(feedURL) - mailCountBeforeTestStart) >= 1)) || !(getModifiedTime(feedURL)
+                    .equals(modifiedTime))) {
                 return true;
             }
             Thread.sleep(5000);
@@ -284,10 +273,12 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
     }
 
     private void updateAxis2_ClientXML() throws Exception {
-        String axis2_client_path = CarbonUtils.getCarbonHome() + File.separator + "conf" + File.separator + "axis2" + File.separator + "axis2_client.xml";
+        String axis2_client_path =
+                CarbonUtils.getCarbonHome() + File.separator + "conf" + File.separator + "axis2" + File.separator
+                        + "axis2_client.xml";
 
-        String mail_transport_config = getResourceLocation()+ File.separator + "resources" + File.separator + "mailTransport.xml";
-
+        String mail_transport_config =
+                getResourceLocation() + File.separator + "resources" + File.separator + "mailTransport.xml";
 
         FileOutputStream fileOutputStream = null;
         XMLStreamWriter writer = null;

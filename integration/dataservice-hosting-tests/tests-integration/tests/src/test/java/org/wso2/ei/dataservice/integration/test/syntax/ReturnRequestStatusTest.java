@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.syntax;
 
@@ -45,50 +45,48 @@ import static org.testng.Assert.assertTrue;
 public class ReturnRequestStatusTest extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(ReturnRequestStatusTest.class);
     private final OMFactory fac = OMAbstractFactory.getOMFactory();
-    private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/" +
-                                                           "rdbms_sample", "ns1");
+    private final OMNamespace omNs = fac
+            .createOMNamespace("http://ws.wso2.org/dataservice/samples/" + "rdbms_sample", "ns1");
     private static String serviceName = "ReturnRequestStatusTest";
     private static String serviceEndPoint;
     private DSSTestCaseUtils dssTest;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         dssTest = new DSSTestCaseUtils();
 
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName,
-                      createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator
-                                     + "rdbms" + File.separator + "MySql" + File.separator
-                                     + "ReturnRequestStatusTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
+                        + File.separator + "ReturnRequestStatusTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed")
-    public void testServiceDeployment() throws Exception {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed") public void testServiceDeployment()
+            throws Exception {
 
-        assertTrue(dssTest.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie,
-                                             serviceName));
+        assertTrue(dssTest.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
     }
 
-
-    @Test(groups = "wso2.dss", dependsOnMethods = {"testServiceDeployment"}, description = "add employees")
-    public void requestStatusNameSpaceQualifiedForInsertOperation() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "testServiceDeployment" }, description = "add employees") public void requestStatusNameSpaceQualifiedForInsertOperation()
+            throws AxisFault {
 
         addEmployee(serviceEndPoint, String.valueOf(180));
         log.info("Insert Operation Success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"requestStatusNameSpaceQualifiedForInsertOperation"})
-    public void requestStatusNameSpaceQualifiedForDeleteOperation() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "requestStatusNameSpaceQualifiedForInsertOperation" }) public void requestStatusNameSpaceQualifiedForDeleteOperation()
+            throws AxisFault {
         deleteEmployeeById(String.valueOf(180));
         log.info("Delete operation success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"requestStatusNameSpaceQualifiedForDeleteOperation"}, timeOut = 1000 * 60 * 2)
-    public void inOperationConcurrencyTest() throws InterruptedException,
-                                                    ConcurrencyTestFailedError {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "requestStatusNameSpaceQualifiedForDeleteOperation" }, timeOut =
+            1000 * 60 * 2) public void inOperationConcurrencyTest()
+            throws InterruptedException, ConcurrencyTestFailedError {
 
         final ExceptionHandler handler = new ExceptionHandler();
         final int concurrencyNumber = 50;
@@ -101,8 +99,8 @@ public class ReturnRequestStatusTest extends DSSIntegrationTest {
                 public void run() {
                     for (int j = 0; j < numberOfIterations; j++) {
                         try {
-                            OMElement response = serviceClient.sendReceive(getAddEmployeePayload(empNo + ""),
-                                                                           serviceEndPoint, "addEmployee");
+                            OMElement response = serviceClient
+                                    .sendReceive(getAddEmployeePayload(empNo + ""), serviceEndPoint, "addEmployee");
                             Assert.assertTrue(response.toString().contains("SUCCESSFUL"), "Response Not Successful");
                             OMNamespace nameSpace = response.getNamespace();
                             Assert.assertNotNull(nameSpace, "Response Message NameSpace not qualified");
@@ -131,29 +129,27 @@ public class ReturnRequestStatusTest extends DSSIntegrationTest {
 
         if (!handler.isTestPass()) {
             throw new ConcurrencyTestFailedError(handler.getFailCount() + " service invocation/s failed out of "
-                                                 + concurrencyNumber * numberOfIterations + " service invocations.\n"
-                                                 + "Concurrency Test Failed for Thread Group=" + concurrencyNumber
-                                                 + " and loop count=" + numberOfIterations, handler.getException());
+                    + concurrencyNumber * numberOfIterations + " service invocations.\n"
+                    + "Concurrency Test Failed for Thread Group=" + concurrencyNumber + " and loop count="
+                    + numberOfIterations, handler.getException());
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void testCleanup() throws Exception {
-        dssTest.deleteService(dssContext.getContextUrls().getBackEndUrl(),sessionCookie, serviceName);
+    @AfterClass(alwaysRun = true) public void testCleanup() throws Exception {
+        dssTest.deleteService(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName);
     }
-
 
     private void addEmployee(String serviceEndPoint, String employeeNumber) throws AxisFault {
         OMElement result;
 
-        result = new AxisServiceClient().sendReceive(getAddEmployeePayload(employeeNumber), serviceEndPoint, "addEmployee");
+        result = new AxisServiceClient()
+                .sendReceive(getAddEmployeePayload(employeeNumber), serviceEndPoint, "addEmployee");
         Assert.assertTrue(result.toString().contains("SUCCESSFUL"), "Response Not Successful");
         OMNamespace nameSpace = result.getNamespace();
         Assert.assertNotNull(nameSpace, "Response Message NameSpace not qualified");
         Assert.assertNotNull(nameSpace.getPrefix(), "Invalid prefix. prefix value null");
         Assert.assertNotSame(nameSpace.getPrefix(), "", "Invalid prefix");
         Assert.assertEquals(nameSpace.getNamespaceURI(), "http://ws.wso2.org/dataservice", "Invalid NamespaceURI");
-
 
     }
 

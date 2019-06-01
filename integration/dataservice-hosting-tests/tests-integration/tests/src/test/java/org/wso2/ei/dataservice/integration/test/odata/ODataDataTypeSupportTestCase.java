@@ -42,28 +42,26 @@ public class ODataDataTypeSupportTestCase extends DSSIntegrationTest {
     private final String configId = "default";
     private String webAppUrl;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
         sqlFileLis.add(selectSqlFile("Customers.sql"));
         sqlFileLis.add(selectSqlFile("FIlesWithFIlesRecords.sql"));
         sqlFileLis.add(selectSqlFile("ODataDataTypes.sql"));
-        deployService(serviceName, createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator +
-                                                  "odata" + File.separator + "ODataDataTypesSampleService.dbs",
-                                                  sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "odata" + File.separator
+                        + "ODataDataTypesSampleService.dbs", sqlFileLis));
         webAppUrl = dssContext.getContextUrls().getWebAppURL();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Data type retrieval test", dependsOnMethods = "InsertionTestCase")
-    public void RetrievalTestCase() throws Exception {
+    @Test(groups = "wso2.dss", description = "Data type retrieval test", dependsOnMethods = "InsertionTestCase") public void RetrievalTestCase()
+            throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/TESTTABLE";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
@@ -71,30 +69,19 @@ public class ODataDataTypeSupportTestCase extends DSSIntegrationTest {
         Assert.assertEquals(response[0], 200);
     }
 
-    @Test(groups = "wso2.dss", description = "Data type insertion test")
-    public void InsertionTestCase() throws Exception {
+    @Test(groups = "wso2.dss", description = "Data type insertion test") public void InsertionTestCase()
+            throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/TESTTABLE";
-        String content = "{ \n" +
-                         "\"ID\" : 1, \n" +
-                         "\"TESTSMALLINT\" : 12, \n" +
-                         "\"TESTVARCHAR\" : \"SASAS\", \n" +
-                         "\"TESTDOUBLE\" : 2121.12121, \n" +
-                         "\"TESTBOOLEAN\" : true, \n" +
-                         "\"TESTCHAR\" : \"c\", \n" +
-                         "\"TESTMEDIUMINT\" : 32, \n" +
-                         "\"TESTTINYINT\": 32, \n" +
-                         "\"TESTFLOAT\" : 21.21,  \n" +
-                         "\"TESTDECIMAL\": 21.33 ,\n" +
-                         "\"TESTDATE\" : \"2000-01-01\" ,\n" +
-                         "\"TESTTIME\" : \"21:45:00\" , \n" +
-                         "\"TESTTIMESTAMP\" : \"2000-01-01T16:00:00.000Z\" ,\n" +
-                         "\"TESTBLOB\" : \"T0RhdGE\" \n" +
-                         "}";
+        String content = "{ \n" + "\"ID\" : 1, \n" + "\"TESTSMALLINT\" : 12, \n" + "\"TESTVARCHAR\" : \"SASAS\", \n"
+                + "\"TESTDOUBLE\" : 2121.12121, \n" + "\"TESTBOOLEAN\" : true, \n" + "\"TESTCHAR\" : \"c\", \n"
+                + "\"TESTMEDIUMINT\" : 32, \n" + "\"TESTTINYINT\": 32, \n" + "\"TESTFLOAT\" : 21.21,  \n"
+                + "\"TESTDECIMAL\": 21.33 ,\n" + "\"TESTDATE\" : \"2000-01-01\" ,\n"
+                + "\"TESTTIME\" : \"21:45:00\" , \n" + "\"TESTTIMESTAMP\" : \"2000-01-01T16:00:00.000Z\" ,\n"
+                + "\"TESTBLOB\" : \"T0RhdGE\" \n" + "}";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendPOST(endpoint, content, headers);
         Assert.assertEquals(response[0], CREATED);
     }
-
 
 }

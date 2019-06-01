@@ -52,21 +52,21 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
     private String sessionID = null;
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true)
-    public void init() throws Exception {
+    @BeforeClass(alwaysRun = true) public void init() throws Exception {
         super.init();
         serviceEndPoint = getServiceUrlHttp(serviceName);
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         sqlFileLis.add(selectSqlFile("Customers.sql"));
         sqlFileLis.add(selectSqlFile("Employees.sql"));
-        deployService(serviceName, createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator +
-                                                  "rdbms" + File.separator + "h2" + File.separator +
-                                                  "BoxcarringTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + "BoxcarringTest.dbs", sqlFileLis));
     }
 
-    @Test(groups = {"wso2.dss"} , dependsOnMethods = "testBoxcarringRollBackOperation")
-    public void testBoxcarringOperation() throws IOException {
+    @Test(groups = {
+            "wso2.dss" }, dependsOnMethods = "testBoxcarringRollBackOperation") public void testBoxcarringOperation()
+            throws IOException {
         beginBoxcarring();
         String response = selectOperation();
         Assert.assertTrue(!response.contains("Madhawa"));
@@ -77,8 +77,7 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
         log.info("Begin Boxcarring Operation verified");
     }
 
-    @Test(groups = {"wso2.dss"})
-    public void testBoxcarringRollBackOperation() throws IOException {
+    @Test(groups = { "wso2.dss" }) public void testBoxcarringRollBackOperation() throws IOException {
         beginBoxcarring();
         String response = selectOperation();
         Assert.assertTrue(!response.contains("Madhawa"));
@@ -91,12 +90,10 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
 
     private void beginBoxcarring() throws IOException {
         String endpoint = serviceEndPoint + ".SOAP11Endpoint/";
-        String content = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n" +
-                         "   <soapenv:Header/>\n" +
-                         "   <soapenv:Body>\n" +
-                         "      <dat:begin_boxcar/>\n" +
-                         "   </soapenv:Body>\n" +
-                         "</soapenv:Envelope>";
+        String content =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n"
+                        + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <dat:begin_boxcar/>\n"
+                        + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/xml");
         headers.put("Content-Type", "text/plain");
@@ -107,12 +104,11 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
 
     private String selectOperation() throws IOException {
         String endpoint = serviceEndPoint + ".SOAP11Endpoint/";
-        String content = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n" +
-                         "   <soapenv:Header/>\n" +
-                         "   <soapenv:Body>\n" +
-                         "      <dat:select_all_Employees_operation/>\n" +
-                         "   </soapenv:Body>\n" +
-                         "</soapenv:Envelope>";
+        String content =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n"
+                        + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n"
+                        + "      <dat:select_all_Employees_operation/>\n" + "   </soapenv:Body>\n"
+                        + "</soapenv:Envelope>";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/xml");
         headers.put("Content-Type", "text/plain");
@@ -124,22 +120,19 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
 
     private String insertOperation() throws IOException {
         String endpoint = serviceEndPoint + ".SOAP11Endpoint/";
-        String content ="<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n" +
-                        "   <soapenv:Header/>\n" +
-                        "   <soapenv:Body>\n" +
-                        "      <dat:insert_Employees_operation>\n" +
-                        "         <dat:employeeNumber>1</dat:employeeNumber>\n" +
-                        "         <dat:lastName>Gunasekara</dat:lastName>\n" +
-                        "         <dat:firstName>Madhawa</dat:firstName>\n" +
-                        "         <dat:extension>testdss</dat:extension>\n" +
-                        "         <dat:email>madhawag@wso2.com</dat:email>\n" +
-                        "         <dat:officeCode>1</dat:officeCode>\n" +
-                        "         <dat:reportsTo>1</dat:reportsTo>\n" +
-                        "         <dat:jobTitle>Software Engineer</dat:jobTitle>\n" +
-                        "         <dat:salary>0.0</dat:salary>\n" +
-                        "      </dat:insert_Employees_operation>\n" +
-                        "   </soapenv:Body>\n" +
-                        "</soapenv:Envelope>";
+        String content =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n"
+                        + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <dat:insert_Employees_operation>\n"
+                        + "         <dat:employeeNumber>1</dat:employeeNumber>\n"
+                        + "         <dat:lastName>Gunasekara</dat:lastName>\n"
+                        + "         <dat:firstName>Madhawa</dat:firstName>\n"
+                        + "         <dat:extension>testdss</dat:extension>\n"
+                        + "         <dat:email>madhawag@wso2.com</dat:email>\n"
+                        + "         <dat:officeCode>1</dat:officeCode>\n"
+                        + "         <dat:reportsTo>1</dat:reportsTo>\n"
+                        + "         <dat:jobTitle>Software Engineer</dat:jobTitle>\n"
+                        + "         <dat:salary>0.0</dat:salary>\n" + "      </dat:insert_Employees_operation>\n"
+                        + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/xml");
         headers.put("Content-Type", "text/plain");
@@ -151,12 +144,10 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
 
     private void endBoxcarring() throws IOException {
         String endpoint = serviceEndPoint + ".SOAP11Endpoint/";
-        String content = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n" +
-                         "   <soapenv:Header/>\n" +
-                         "   <soapenv:Body>\n" +
-                         "      <dat:end_boxcar/>\n" +
-                         "   </soapenv:Body>\n" +
-                         "</soapenv:Envelope>";
+        String content =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n"
+                        + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <dat:end_boxcar/>\n"
+                        + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/xml");
         headers.put("Content-Type", "text/plain");
@@ -167,12 +158,10 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
 
     private void rollbackBoxcarring() throws IOException {
         String endpoint = serviceEndPoint + ".SOAP11Endpoint/";
-        String content ="<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n" +
-                        "   <soapenv:Header/>\n" +
-                        "   <soapenv:Body>\n" +
-                        "      <dat:abort_boxcar/>\n" +
-                        "   </soapenv:Body>\n" +
-                        "</soapenv:Envelope>";
+        String content =
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:dat=\"http://ws.wso2.org/dataservice\">\n"
+                        + "   <soapenv:Header/>\n" + "   <soapenv:Body>\n" + "      <dat:abort_boxcar/>\n"
+                        + "   </soapenv:Body>\n" + "</soapenv:Envelope>";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/xml");
         headers.put("Content-Type", "text/plain");
@@ -180,15 +169,16 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
         Object[] response = sendPOST(endpoint, content, headers);
         Assert.assertEquals(Integer.parseInt(response[0].toString()), 202);
     }
+
     public Object[] sendPOST(String endpoint, String content, Map<String, String> headers) throws IOException {
         HttpClient httpClient = new DefaultHttpClient();
         httpClient.getParams().setParameter("http.socket.timeout", 120000);
         HttpPost httpPost = new HttpPost(endpoint);
 
-        if(sessionID == null) {
+        if (sessionID == null) {
             sessionID = "11";
         }
-        headers.put("Cookie",sessionID);
+        headers.put("Cookie", sessionID);
         for (String headerType : headers.keySet()) {
             httpPost.setHeader(headerType, headers.get(headerType));
         }
@@ -218,8 +208,7 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void comQuoServiceDelete() throws Exception {
+    @AfterClass(alwaysRun = true) public void comQuoServiceDelete() throws Exception {
         deleteService("BoxcarringTest");
         log.info("CommodityQuote service deleted");
     }

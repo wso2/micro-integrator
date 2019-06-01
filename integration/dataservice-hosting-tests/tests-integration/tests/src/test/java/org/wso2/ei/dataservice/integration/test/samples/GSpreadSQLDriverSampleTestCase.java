@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.samples;
 
@@ -32,10 +32,10 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.activation.DataHandler;
 import java.io.File;
 import java.net.URL;
 import java.rmi.RemoteException;
+import javax.activation.DataHandler;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -47,39 +47,32 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
     private String serverEpr;
     private String inputValue = String.valueOf(System.currentTimeMillis());
 
-
-    @Factory(dataProvider = "userModeDataProvider")
-    public GSpreadSQLDriverSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider") public GSpreadSQLDriverSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-
-    @BeforeClass(alwaysRun = true, enabled = false)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
         super.init(userMode);
         String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
         resourceFileLocation = getResourceLocation();
-        deployService(serviceName,
-                      new DataHandler(new URL("file:///" + resourceFileLocation +
-                                              File.separator + "samples" + File.separator +
-                                              "dbs" + File.separator + "gspread" + File.separator +
-                                              "GSpreadSQLDriverSample.dbs")));
+        deployService(serviceName, new DataHandler(
+                new URL("file:///" + resourceFileLocation + File.separator + "samples" + File.separator + "dbs"
+                        + File.separator + "gspread" + File.separator + "GSpreadSQLDriverSample.dbs")));
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false)
-    public void testServiceDeployment() throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false) public void testServiceDeployment()
+            throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-
-
     private OMElement addEmployeePayload() {
         OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/" +
-                                                 "gspread_sql_driver_sample_service", "gsp");
+        OMNamespace omNs = fac
+                .createOMNamespace("http://ws.wso2.org/dataservice/samples/" + "gspread_sql_driver_sample_service",
+                        "gsp");
         OMElement addCustomerSQL = fac.createOMElement("addCustomerSQL", omNs);
         OMElement customerNumber = fac.createOMElement("customerNumber", omNs);
         OMElement customerName = fac.createOMElement("customerName", omNs);
@@ -129,8 +122,9 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
 
     private OMElement deleteCustomer() {
         OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/" +
-                                                 "gspread_sql_driver_sample_service", "gsp");
+        OMNamespace omNs = fac
+                .createOMNamespace("http://ws.wso2.org/dataservice/samples/" + "gspread_sql_driver_sample_service",
+                        "gsp");
         OMElement deleteCustomerSQL = fac.createOMElement("deleteCustomerSQL", omNs);
         OMElement customerNumber = fac.createOMElement("customerNumber", omNs);
 
@@ -139,15 +133,15 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
         return deleteCustomerSQL;
     }
 
-    @Test(groups = "wso2.dss", description = "add customer", dependsOnMethods = "testServiceDeployment", enabled = false)
-    public void testAddEmployee() throws RemoteException {
+    @Test(groups = "wso2.dss", description = "add customer", dependsOnMethods = "testServiceDeployment", enabled = false) public void testAddEmployee()
+            throws RemoteException {
         new AxisServiceClient().sendRobust(addEmployeePayload(), serverEpr, "addCustomerSQL");
         OMElement result = new AxisServiceClient().sendReceive(getPayload(), serverEpr, "getCustomersSQL");
         assertTrue(result.toString().contains("<customerName>" + inputValue + "</customerName>"));
     }
 
-    @Test(groups = "wso2.dss", description = "Delete customer", dependsOnMethods = "testAddEmployee", enabled = false)
-    public void testDeleteCustomer() throws RemoteException {
+    @Test(groups = "wso2.dss", description = "Delete customer", dependsOnMethods = "testAddEmployee", enabled = false) public void testDeleteCustomer()
+            throws RemoteException {
         new AxisServiceClient().sendRobust(deleteCustomer(), serverEpr, "deleteCustomerSQL");
         OMElement result = new AxisServiceClient().sendReceive(getPayload(), serverEpr, "getCustomersSQL");
         assertFalse(result.toString().contains("<customerName>" + inputValue + "</customerName>"));
@@ -155,12 +149,12 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
 
     private OMElement getPayload() {
         OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/gspread_sql_driver_sample_service", "gsp");
+        OMNamespace omNs = fac
+                .createOMNamespace("http://ws.wso2.org/dataservice/samples/gspread_sql_driver_sample_service", "gsp");
         return fac.createOMElement("getCustomersSQL", omNs);
     }
 
-    @AfterClass(alwaysRun = true, enabled = false)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false) public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
         log.info(serviceName + " deleted");

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.faulty.service;
 
@@ -38,18 +38,17 @@ import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 import org.wso2.ei.dataservices.integration.common.clients.DataServiceAdminClient;
 import org.wso2.ei.dataservices.integration.common.clients.DataServiceFileUploaderClient;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.net.URL;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertTrue;
-
 
 public class FaultyDataServiceTestCase extends DSSIntegrationTest {
 
@@ -58,37 +57,31 @@ public class FaultyDataServiceTestCase extends DSSIntegrationTest {
     private String serviceName = "FaultyDataService";
     private String resourceFileLocation;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
         super.init();
         resourceFileLocation = getResourceLocation();
-        DataServiceFileUploaderClient dataServiceAdminClient =
-                new DataServiceFileUploaderClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
-        dataServiceAdminClient.uploadDataServiceFile("FaultyDataService.dbs",
-                                                     new DataHandler(new URL("file:///" + resourceFileLocation + File.separator + "dbs" +
-                                                                             File.separator + "rdbms" + File.separator +
-                                                                             "MySql" + File.separator + "FaultyDataService.dbs")));
+        DataServiceFileUploaderClient dataServiceAdminClient = new DataServiceFileUploaderClient(
+                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
+        dataServiceAdminClient.uploadDataServiceFile("FaultyDataService.dbs", new DataHandler(
+                new URL("file:///" + resourceFileLocation + File.separator + "dbs" + File.separator + "rdbms"
+                        + File.separator + "MySql" + File.separator + "FaultyDataService.dbs")));
     }
 
-
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
-    public void isFaultyService() throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void isFaultyService()
+            throws Exception {
         assertTrue(isServiceFaulty(serviceName));
         log.info(serviceName + " is faulty");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"isFaultyService"}, description = "Fix the fault and redeploy")
-    public void editFaultyService()
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "isFaultyService" }, description = "Fix the fault and redeploy") public void editFaultyService()
             throws Exception {
-        DataServiceAdminClient dataServiceAdminService =
-                new DataServiceAdminClient(dssContext.getContextUrls().getBackEndUrl(),
-                                          sessionCookie);
+        DataServiceAdminClient dataServiceAdminService = new DataServiceAdminClient(
+                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
         String serviceContent;
         String newServiceContent;
-        SqlDataSourceUtil dssUtil =
-                new SqlDataSourceUtil(sessionCookie,
-                                      dssContext.getContextUrls().getBackEndUrl());
+        SqlDataSourceUtil dssUtil = new SqlDataSourceUtil(sessionCookie, dssContext.getContextUrls().getBackEndUrl());
 
         dssUtil.createDataSource(getSqlScript());
 
@@ -128,22 +121,20 @@ public class FaultyDataServiceTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"editFaultyService"},
-          description = "Check whether service is redeployed")
-    public void serviceReDeployment() throws Exception {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "editFaultyService" }, description = "Check whether service is redeployed") public void serviceReDeployment()
+            throws Exception {
         Assert.assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " redeployed");
 
-
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"serviceReDeployment"},
-          description = "send requests to redeployed service")
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
-    public void serviceInvocation()
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "serviceReDeployment" }, description = "send requests to redeployed service") @SetEnvironment(executionEnvironments = {
+            ExecutionEnvironment.STANDALONE }) public void serviceInvocation()
             throws RemoteException, ServiceAdminException, XPathExpressionException {
         OMElement response;
-        String serviceEndPoint = getServiceUrlHttp(serviceName) +"/";
+        String serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         for (int i = 0; i < 5; i++) {
             response = axisServiceClient.sendReceive(getPayload(), serviceEndPoint, "showAllOffices");
@@ -156,8 +147,7 @@ public class FaultyDataServiceTestCase extends DSSIntegrationTest {
         log.info("service invocation success");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         deleteService(serviceName);
         log.info(serviceName + " deleted");
     }

@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.ei.dataservice.integration.test.services;
 
 import org.apache.axiom.attachments.ByteArrayDataSource;
@@ -41,15 +41,15 @@ import org.wso2.ei.dataservice.integration.common.utils.SqlDataSourceUtil;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 import org.wso2.ei.dataservices.integration.common.clients.DataServiceAdminClient;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.xpath.XPathExpressionException;
 
 public class CarbonDataSourceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(CarbonDataSourceTestCase.class);
@@ -61,8 +61,7 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
     private SqlDataSourceUtil sqlDataSource;
     private SampleDataServiceClient client;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
         super.init();
         carbonDataSourceName = createDataSource();
@@ -72,30 +71,27 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         client = new SampleDataServiceClient(getServiceUrlHttp(serviceName));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = {"wso2.dss"})
-    public void selectOperation() throws AxisFault {
+    @Test(groups = { "wso2.dss" }) public void selectOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.getCustomerInBoston();
         }
         log.info("Select Operation Success");
     }
 
-    @Test(groups = {"wso2.dss"})
-    public void insertOperation() throws AxisFault {
+    @Test(groups = { "wso2.dss" }) public void insertOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.addEmployee(String.valueOf(i));
         }
         log.info("Insert Operation Success");
     }
 
-    @Test(groups = {"wso2.dss"}, dependsOnMethods = {"insertOperation"})
-    public void selectByNumber() throws AxisFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" }) public void selectByNumber()
+            throws AxisFault {
         for (int i = 0; i < 5; i++) {
             OMElement result = client.getEmployeeById(String.valueOf(i));
             Assert.assertTrue(result.toString().contains("<first-name>AAA</first-name>"), "Expected Result Mismatched");
@@ -103,20 +99,21 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         log.info("Select Operation with parameter Success");
     }
 
-    @Test(groups = {"wso2.dss"}, dependsOnMethods = {"insertOperation"})
-    public void updateOperation() throws AxisFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" }) public void updateOperation()
+            throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.increaseEmployeeSalary(String.valueOf(i), "10000");
 
             OMElement result = client.getEmployeeById(String.valueOf(i));
-            Assert.assertTrue(result.toString().contains("<salary>60000.0</salary>"), "Expected Result Mismatched. update operation is not working fine");
+            Assert.assertTrue(result.toString().contains("<salary>60000.0</salary>"),
+                    "Expected Result Mismatched. update operation is not working fine");
 
         }
         log.info("Update Operation success");
     }
 
-    @Test(groups = {"wso2.dss"}, dependsOnMethods = {"updateOperation"})
-    public void deleteOperation() throws AxisFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "updateOperation" }) public void deleteOperation()
+            throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.deleteEmployeeById(String.valueOf(i));
             verifyDeletion(String.valueOf(i));
@@ -124,8 +121,7 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         log.info("Delete operation success");
     }
 
-    @Test(groups = {"wso2.dss"}, dependsOnMethods = {"selectOperation"})
-    public void concurrencyTest()
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectOperation" }) public void concurrencyTest()
             throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         final OMFactory fac = OMAbstractFactory.getOMFactory();
         final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/rdbms_sample", "ns1");
@@ -134,14 +130,13 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         concurrencyTest.run(getServiceUrlHttp(serviceName), payload, "customersInBoston");
     }
 
-
     private String createDataSource() throws Exception {
 
-        DataServiceAdminClient dataServiceAdminService =
-                new DataServiceAdminClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
+        DataServiceAdminClient dataServiceAdminService = new DataServiceAdminClient(
+                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
 
-        NDataSourceAdminServiceClient dataSourceAdminService =
-                new NDataSourceAdminServiceClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
+        NDataSourceAdminServiceClient dataSourceAdminService = new NDataSourceAdminServiceClient(
+                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
 
         String[] list = dataServiceAdminService.getCarbonDataSources();
         String createDataSourceResponse = null;
@@ -172,7 +167,6 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         dataSourceAdminService.addDataSource(dataSourceInfo);
         createDataSourceResponse = dataSourceName;
 
-
         list = dataServiceAdminService.getCarbonDataSources();
         Assert.assertNotNull(list, "Datasource list null");
         for (String ds : list) {
@@ -198,9 +192,9 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         Assert.assertNotNull("Carbon datasource name null. create carbon datasource first", carbonDataSourceName);
         try {
 
-            OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(getResourceLocation() + File.separator + "dbs" + File.separator
-                                                                          + "rdbms" + File.separator + "MySql"
-                                                                          + File.separator + serviceFileName).trim());
+            OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(
+                    getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
+                            + File.separator + serviceFileName).trim());
             OMElement dbsConfig = dbsFile.getFirstChildWithName(new QName("config"));
 
             Iterator configElement1 = dbsConfig.getChildElements();
@@ -227,8 +221,7 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         }
     }
 
-    private WSDataSourceMetaInfo getDataSourceInformation(String dataSourceName)
-            throws XMLStreamException {
+    private WSDataSourceMetaInfo getDataSourceInformation(String dataSourceName) throws XMLStreamException {
         WSDataSourceMetaInfo dataSourceInfo = new WSDataSourceMetaInfo();
 
         dataSourceInfo.setName(dataSourceName);
@@ -236,14 +229,12 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         WSDataSourceMetaInfo_WSDataSourceDefinition dataSourceDefinition = new WSDataSourceMetaInfo_WSDataSourceDefinition();
 
         dataSourceDefinition.setType("RDBMS");
-        OMElement dsConfig = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-                                                  "<configuration>\n" +
-                                                  "<driverClassName>" + sqlDataSource.getDriver() + "</driverClassName>\n" +
-                                                  "<url>" + sqlDataSource.getJdbcUrl() + "</url>\n" +
-                                                  "<username>" + sqlDataSource.getDatabaseUser() + "</username>\n" +
-                                                  "<password encrypted=\"true\">" + sqlDataSource.getDatabasePassword() + "</password>\n" +
-                                                  "</configuration>");
-
+        OMElement dsConfig = AXIOMUtil.stringToOM(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" + "<configuration>\n"
+                        + "<driverClassName>" + sqlDataSource.getDriver() + "</driverClassName>\n" + "<url>"
+                        + sqlDataSource.getJdbcUrl() + "</url>\n" + "<username>" + sqlDataSource.getDatabaseUser()
+                        + "</username>\n" + "<password encrypted=\"true\">" + sqlDataSource.getDatabasePassword()
+                        + "</password>\n" + "</configuration>");
 
         dataSourceDefinition.setDsXMLConfiguration(dsConfig.toString());
 
@@ -252,9 +243,9 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         return dataSourceInfo;
     }
 
-
     private void verifyDeletion(String employeeNumber) throws AxisFault {
         OMElement result = client.getEmployeeById(employeeNumber);
-        Assert.assertFalse(result.toString().contains("<employee>"), "Employee record found. deletion is now working fine");
+        Assert.assertFalse(result.toString().contains("<employee>"),
+                "Employee record found. deletion is now working fine");
     }
 }

@@ -24,28 +24,27 @@ import org.wso2.ws.dataservice.samples.rdbms_sample.Employee;
 
 public class RDBMSSample extends BaseSample {
 
-	public static void main(String[] args) throws Exception {
-		String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT + "/services/samples/RDBMSSample";
-		org.wso2.carbon.dataservices.samples.rdbms_sample.RDBMSSample stub =
-                new RDBMSSampleStub(epr);
-		Customer[] customers = stub.customersInBoston();
-		System.out.println("EPR: " + epr + "\n");
-		System.out.println("Customers:-");
-		for (Customer customer : customers) {
-			System.out.println("\t-----------------------------");
-			System.out.println("\tContact Name: " + customer.getContactFirstName() + " " +
-                               customer.getContactLastName());
-			System.out.println("\tCity: " + customer.getCity());
-			System.out.println("\tCountry: " + customer.getCountry());
-			System.out.println("\tCustomer Name: " + customer.getCustomerName());
-			System.out.println("\tPhone: " + customer.getPhone());
-		}
-		
-		System.out.println("\nRetrieving Employee info with Employee ID 1002:-");
-		System.out.println("\t-----------------------------");
-		Employee empl = stub.employeesByNumber(1002)[0];		
-		System.out.println("\tName: " + empl.getFirstName() + " " + empl.getLastName());
-		System.out.println("\tEmployee Number: " + empl.getEmail());
-	}
-	
+    public static void main(String[] args) throws Exception {
+        String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT + "/services/samples/RDBMSSample";
+        org.wso2.carbon.dataservices.samples.rdbms_sample.RDBMSSample stub = new RDBMSSampleStub(epr);
+        Customer[] customers = stub.customersInBoston();
+        System.out.println("EPR: " + epr + "\n");
+        System.out.println("Customers:-");
+        for (Customer customer : customers) {
+            System.out.println("\t-----------------------------");
+            System.out
+                    .println("\tContact Name: " + customer.getContactFirstName() + " " + customer.getContactLastName());
+            System.out.println("\tCity: " + customer.getCity());
+            System.out.println("\tCountry: " + customer.getCountry());
+            System.out.println("\tCustomer Name: " + customer.getCustomerName());
+            System.out.println("\tPhone: " + customer.getPhone());
+        }
+
+        System.out.println("\nRetrieving Employee info with Employee ID 1002:-");
+        System.out.println("\t-----------------------------");
+        Employee empl = stub.employeesByNumber(1002)[0];
+        System.out.println("\tName: " + empl.getFirstName() + " " + empl.getLastName());
+        System.out.println("\tEmployee Number: " + empl.getEmail());
+    }
+
 }

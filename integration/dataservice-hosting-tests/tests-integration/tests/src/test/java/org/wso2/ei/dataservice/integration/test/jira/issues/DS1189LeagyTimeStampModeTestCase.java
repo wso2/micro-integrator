@@ -17,11 +17,15 @@ import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.ei.dataservice.integration.common.utils.DSSTestCaseUtils;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.activation.DataHandler;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import javax.activation.DataHandler;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This test is to verify the fix for https://wso2.org/jira/browse/DS-1189
@@ -43,8 +47,7 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
 
     private AuthenticatorClient loginClient;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
         super.init();
 
@@ -56,12 +59,13 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
             public void configureServer() throws AutomationFrameworkException {
 
                 try {
-                    File sourceFile = new File(getResourceLocation() + File.separator + "serverConfigs" + File.separator
-                            + getParameter("shFilename"));
+                    File sourceFile = new File(
+                            getResourceLocation() + File.separator + "serverConfigs" + File.separator + getParameter(
+                                    "shFilename"));
 
                     //copying wso2server.sh file to bin folder
-                    FileManager.copyFile(sourceFile, this.getCarbonHome() + File.separator + "bin" + File.separator + "wso2server.sh");
-
+                    FileManager.copyFile(sourceFile,
+                            this.getCarbonHome() + File.separator + "bin" + File.separator + "wso2server.sh");
 
                 } catch (IOException e) {
                     throw new AutomationFrameworkException(e.getMessage(), e);
@@ -82,7 +86,6 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
         System.out.println("****************  back up user dir   " + backupUserDir);
         System.out.println("****************  back up carbonhome " + backupCarbonHome);
 
-
         System.setProperty("carbon.home", testServerCarbonHome);
 
         loginClient = new AuthenticatorClient(backendUrl);
@@ -90,10 +93,9 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
 
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTableTimeStamp.sql"));
-        deployService(serviceName,
-                createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator
-                        + "rdbms" + File.separator + "h2" + File.separator
-                        + serviceName + ".dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + serviceName + ".dbs", sqlFileLis));
 
         insertTimeStampToDb("Insert With America/New_York Time Zone", "1970-01-02T12:00:00.000+02:00");
 
@@ -109,15 +111,15 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         System.setProperty("carbon.home", backupCarbonHome);
         System.setProperty("user.dir", backupUserDir);
         cleanup();
     }
 
-    @Test(groups = {"wso2.dss"}, description = "insert timestamp in America/New_York timezone and UTC timezone, retrieve all and compare whether they are different", alwaysRun = true)
-    public void insertAndTestTimeStampValuesInDbTest() throws Exception {
+    @Test(groups = {
+            "wso2.dss" }, description = "insert timestamp in America/New_York timezone and UTC timezone, retrieve all and compare whether they are different", alwaysRun = true) public void insertAndTestTimeStampValuesInDbTest()
+            throws Exception {
         OMElement payload = fac.createOMElement("getTimeStamps", omNs);
 
         OMElement result = new AxisServiceClient().sendReceive(payload, backendUrl + serviceName, "getTimeStamps");
@@ -130,11 +132,11 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
             OMElement timeStamp = (OMElement) iterator.next();
             if (timeStampString == null) {
                 timeStampString = timeStamp.getChildrenWithLocalName("testTimeStamp").next().toString();
-                log.info("TimeStamp Recv:"+timeStampString);
+                log.info("TimeStamp Recv:" + timeStampString);
                 Assert.assertTrue(timeStampString.contains("1970-01-02T05:00:00.000+00:00"));
             } else {
                 String tempTimeStamp = timeStamp.getChildrenWithLocalName("testTimeStamp").next().toString();
-                log.info("Timestamp Comapre:"+timeStampString+"|"+tempTimeStamp);
+                log.info("Timestamp Comapre:" + timeStampString + "|" + tempTimeStamp);
                 Assert.assertFalse(timeStampString.equals(tempTimeStamp));
             }
         }
@@ -171,11 +173,9 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
      * @param dssConfiguration
      * @throws Exception
      */
-    protected void deployService(String serviceName, DataHandler dssConfiguration)
-            throws Exception {
+    protected void deployService(String serviceName, DataHandler dssConfiguration) throws Exception {
         DSSTestCaseUtils dssTest = new DSSTestCaseUtils();
-        Assert.assertTrue(dssTest.uploadArtifact(backendUrl, sessionCookie, serviceName,
-                        dssConfiguration),
+        Assert.assertTrue(dssTest.uploadArtifact(backendUrl, sessionCookie, serviceName, dssConfiguration),
                 "Service File Uploading failed");
         Assert.assertTrue(dssTest.isServiceDeployed(backendUrl, sessionCookie, serviceName),
                 "Service Not Found, Deployment time out ");

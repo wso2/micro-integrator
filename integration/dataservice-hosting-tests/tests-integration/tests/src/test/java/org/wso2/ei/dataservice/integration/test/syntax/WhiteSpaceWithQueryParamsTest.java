@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.syntax;
 
@@ -45,49 +45,50 @@ public class WhiteSpaceWithQueryParamsTest extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(WhiteSpaceWithQueryParamsTest.class);
 
     private final OMFactory fac = OMAbstractFactory.getOMFactory();
-    private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/rdbms_sample", "ns1");
+    private final OMNamespace omNs = fac
+            .createOMNamespace("http://ws.wso2.org/dataservice/samples/rdbms_sample", "ns1");
     private static String serviceName = "WhiteSpacesInQueryParamsTest";
     private static String serviceEndPoint;
     private DSSTestCaseUtils dssTest;
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         dssTest = new DSSTestCaseUtils();
 
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName,
-                      createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator
-                                     + "rdbms" + File.separator + "MySql" + File.separator
-                                     + "WhiteSpacesInQueryParamsTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
+                        + File.separator + "WhiteSpacesInQueryParamsTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed")
-    public void testServiceDeployment() throws Exception {
-        assertTrue(dssTest.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie,
-                                             serviceName));
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed") public void testServiceDeployment()
+            throws Exception {
+        assertTrue(dssTest.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"testServiceDeployment"}, description = "add employee records")
-    public void testInsertOperation() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "testServiceDeployment" }, description = "add employee records") public void testInsertOperation()
+            throws AxisFault {
         for (int i = 0; i < 5; i++) {
             addEmployee(serviceEndPoint, String.valueOf(i));
         }
         log.info("Insert Operation Success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"testInsertOperation"}, description = "get employee by Id")
-    public void testSelectByNumber() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "testInsertOperation" }, description = "get employee by Id") public void testSelectByNumber()
+            throws AxisFault {
         for (int i = 0; i < 5; i++) {
             getEmployeeById(String.valueOf(i));
         }
         log.info("Select operation with parameter success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"testSelectByNumber"}, description = "delete employees by id")
-    public void deleteOperation() throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "testSelectByNumber" }, description = "delete employees by id") public void deleteOperation()
+            throws AxisFault {
         for (int i = 0; i < 5; i++) {
             deleteEmployeeById(String.valueOf(i));
             verifyDeletion(String.valueOf(i));
@@ -95,11 +96,9 @@ public class WhiteSpaceWithQueryParamsTest extends DSSIntegrationTest {
         log.info("Delete operation success");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void testCleanup() throws Exception {
+    @AfterClass(alwaysRun = true) public void testCleanup() throws Exception {
         dssTest.deleteService(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName);
     }
-
 
     private void addEmployee(String serviceEndPoint, String employeeNumber) throws AxisFault {
         OMElement payload = fac.createOMElement("addEmployee", omNs);
@@ -149,7 +148,6 @@ public class WhiteSpaceWithQueryParamsTest extends DSSIntegrationTest {
 
         new AxisServiceClient().sendRobust(payload, serviceEndPoint, "deleteEmployeeById");
 
-
     }
 
     private void verifyDeletion(String employeeNumber) throws AxisFault {
@@ -160,6 +158,7 @@ public class WhiteSpaceWithQueryParamsTest extends DSSIntegrationTest {
         payload.addChild(empNo);
 
         OMElement result = new AxisServiceClient().sendReceive(payload, serviceEndPoint, "employeesByNumber");
-        Assert.assertFalse(result.toString().contains("<employee>"), "Employee record found. deletion is now working fine");
+        Assert.assertFalse(result.toString().contains("<employee>"),
+                "Employee record found. deletion is now working fine");
     }
 }

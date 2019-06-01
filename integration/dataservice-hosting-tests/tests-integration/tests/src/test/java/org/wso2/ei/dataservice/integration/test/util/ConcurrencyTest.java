@@ -65,8 +65,8 @@ public class ConcurrencyTest {
 
     public void run(final String serviceEndPoint, final OMElement payload, final String operation)
             throws ConcurrencyTestFailedError, InterruptedException {
-        log.info("Starting Concurrency test with " + this.concurrencyNumber + " Threads and " +
-                 this.numberOfIterations + " loop count");
+        log.info("Starting Concurrency test with " + this.concurrencyNumber + " Threads and " + this.numberOfIterations
+                + " loop count");
         this.clearQueue();
         this.clearErrorQueue();
         final ExceptionHandler handler = new ExceptionHandler();
@@ -79,9 +79,8 @@ public class ConcurrencyTest {
                 public void run() {
                     for (int j = 0; j < ConcurrencyTest.this.numberOfIterations; ++j) {
                         try {
-                            ConcurrencyTest.this.addToMessageQueue(serviceClient.sendReceive(payload.cloneOMElement(),
-                                                                                             serviceEndPoint,
-                                                                                             operation));
+                            ConcurrencyTest.this.addToMessageQueue(
+                                    serviceClient.sendReceive(payload.cloneOMElement(), serviceEndPoint, operation));
                         } catch (AxisFault var3) {
                             handler.setException(var3);
                             ConcurrencyTest.this.addToErrorQueue(var3);
@@ -98,11 +97,10 @@ public class ConcurrencyTest {
             thread.join();
         }
         if (!handler.isTestPass()) {
-            throw new ConcurrencyTestFailedError(handler.getFailCount() + " service invocation/s failed out of " +
-                                                 this.concurrencyNumber * this.numberOfIterations +
-                                                 " service invocations.\n" + "Concurrency Test Failed for Thread Group=" +
-                                                 this.concurrencyNumber + " and loop count=" + this.numberOfIterations,
-                                                 handler.getException());
+            throw new ConcurrencyTestFailedError(handler.getFailCount() + " service invocation/s failed out of "
+                    + this.concurrencyNumber * this.numberOfIterations + " service invocations.\n"
+                    + "Concurrency Test Failed for Thread Group=" + this.concurrencyNumber + " and loop count="
+                    + this.numberOfIterations, handler.getException());
         }
     }
 

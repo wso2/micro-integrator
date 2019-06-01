@@ -23,20 +23,20 @@ import org.wso2.carbon.dataservices.samples.csv_sample_service.CSVSampleServiceS
 import org.wso2.ws.dataservice.samples.csv_sample_service.Product;
 
 public class CSVSample extends BaseSample {
-	
-	public static void main(String[] args) throws Exception {
-		String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT + "/services/samples/CSVSampleService";
-		CSVSampleService stub = new CSVSampleServiceStub(epr);
-		Product[] products = stub.getProducts();
-		System.out.println("EPR: " + epr + "\n");
-		System.out.println("Products:-");
-		for (Product product : products) {
-			System.out.println("\t-----------------------------");
-			System.out.println("\tName: " + product.getName());
-			System.out.println("\tID: " + product.getID());
-			System.out.println("\tCategory: " + product.getCategory());
-			System.out.println("\tPrice: " + product.getPrice());
-		}		
-	}
-	
+
+    public static void main(String[] args) throws Exception {
+        String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT + "/services/samples/CSVSampleService";
+        CSVSampleService stub = new CSVSampleServiceStub(epr);
+        Product[] products = stub.getProducts();
+        System.out.println("EPR: " + epr + "\n");
+        System.out.println("Products:-");
+        for (Product product : products) {
+            System.out.println("\t-----------------------------");
+            System.out.println("\tName: " + product.getName());
+            System.out.println("\tID: " + product.getID());
+            System.out.println("\tCategory: " + product.getCategory());
+            System.out.println("\tPrice: " + product.getPrice());
+        }
+    }
+
 }

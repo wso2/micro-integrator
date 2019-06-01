@@ -37,26 +37,24 @@ public class ODataViewTestCase extends DSSIntegrationTest {
     private final String serviceName = "ODataSampleSuperTenantService";
     private String webAppUrl;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
         sqlFileLis.add(selectSqlFile("Customers.sql"));
-        deployService(serviceName,
-                createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator + "odata" +
-                        File.separator + "ODataSampleSuperTenantService.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "odata" + File.separator
+                        + "ODataSampleSuperTenantService.dbs", sqlFileLis));
         webAppUrl = dssContext.getContextUrls().getWebAppURL();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = {"wso2.dss"}, description = "OData View Test")
-    public void validateViewTestCase() throws Exception {
+    @Test(groups = { "wso2.dss" }, description = "OData View Test") public void validateViewTestCase()
+            throws Exception {
         String configId = "default";
         String viewName = "USACUSTOMERS";
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/" + viewName;
@@ -64,9 +62,12 @@ public class ODataViewTestCase extends DSSIntegrationTest {
         headers.put("Accept", "application/json");
         Object[] response = ODataTestUtils.sendGET(endpoint, headers);
         Assert.assertEquals(response[0], ODataTestUtils.OK, "OData Request is failed.");
-        Assert.assertTrue(response[1].toString().contains("USA"), "OData View Test case is failed : USA customers are not available in the database.");
-        Assert.assertTrue(!response[1].toString().contains("France"), "OData View Test case is failed : France customers are available in the database.");
-        Assert.assertTrue(!response[1].toString().contains("Finland"), "OData View Test case is failed : Finland customers are available in the database.");
+        Assert.assertTrue(response[1].toString().contains("USA"),
+                "OData View Test case is failed : USA customers are not available in the database.");
+        Assert.assertTrue(!response[1].toString().contains("France"),
+                "OData View Test case is failed : France customers are available in the database.");
+        Assert.assertTrue(!response[1].toString().contains("Finland"),
+                "OData View Test case is failed : Finland customers are available in the database.");
     }
 
 }

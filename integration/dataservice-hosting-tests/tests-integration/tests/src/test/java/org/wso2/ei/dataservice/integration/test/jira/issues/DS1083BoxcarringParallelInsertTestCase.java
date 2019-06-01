@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ *  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *  WSO2 Inc. licenses this file to you under the Apache License,
+ *  Version 2.0 (the "License"); you may not use this file except
+ *  in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.jira.issues;
 
@@ -55,8 +55,7 @@ public class DS1083BoxcarringParallelInsertTestCase extends DSSIntegrationTest {
 
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileList = new ArrayList<File>();
@@ -68,15 +67,16 @@ public class DS1083BoxcarringParallelInsertTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
-
-    @Test(groups = {"wso2.dss"}, description = "Send parallel boxcarring requests to the server and check whether they were added successfully", alwaysRun = true)
-    public void boxcarringParallelInsertsTest() throws Exception {
+    @Test(groups = {
+            "wso2.dss" }, description = "Send parallel boxcarring requests to the server and check whether they were added successfully", alwaysRun = true) public void boxcarringParallelInsertsTest()
+            throws Exception {
         int requestCount = 50;
         LockHolder.getInstance(requestCount, 30);
 
         OMElement beginBoxcarPayload = fac.createOMElement("begin_boxcar", omNs);
 
-        ParallelRequestHelper beginBoxcarHelper = new ParallelRequestHelper(null, "begin_boxcar", beginBoxcarPayload, serviceEndPoint);
+        ParallelRequestHelper beginBoxcarHelper = new ParallelRequestHelper(null, "begin_boxcar", beginBoxcarPayload,
+                serviceEndPoint);
 
         String sessionCookie = beginBoxcarHelper.beginBoxcarReturningSession();
 
@@ -91,7 +91,8 @@ public class DS1083BoxcarringParallelInsertTestCase extends DSSIntegrationTest {
             OMElement name = fac.createOMElement("SAMPLEINPUT", omNs);
             name.setText("sample input " + i);
             insertPayload.addChild(name);
-            ParallelRequestHelper insertRequestHelper = new ParallelRequestHelper(sessionCookie, "insert_operation", insertPayload, serviceEndPoint);
+            ParallelRequestHelper insertRequestHelper = new ParallelRequestHelper(sessionCookie, "insert_operation",
+                    insertPayload, serviceEndPoint);
             insertRequestsHelpers.add(insertRequestHelper);
         }
 
@@ -101,34 +102,36 @@ public class DS1083BoxcarringParallelInsertTestCase extends DSSIntegrationTest {
 
         int requestsSent = LockHolder.getInstance().waitForComplete();
 
-        Assert.assertEquals(requestsSent, requestCount, "All the requests are not sent to the back end within given time limit");
-
+        Assert.assertEquals(requestsSent, requestCount,
+                "All the requests are not sent to the back end within given time limit");
 
         OMElement selectCountPayload = fac.createOMElement("select_count_operation", omNs);
 
-        ParallelRequestHelper selectCountHelper = new ParallelRequestHelper(null, "select_count_operation", selectCountPayload, serviceEndPoint);
+        ParallelRequestHelper selectCountHelper = new ParallelRequestHelper(null, "select_count_operation",
+                selectCountPayload, serviceEndPoint);
 
         OMElement countResult = selectCountHelper.sendRequestAndReceiveResult();
 
         Assert.assertNotNull(countResult, "Response null");
-        System.out.println("Result "+countResult.toString());
+        System.out.println("Result " + countResult.toString());
         Assert.assertTrue(countResult.toString().contains("<ROW_COUNT>0</ROW_COUNT>"), "Expected result not found");
 
         OMElement endBoxcarPayload = fac.createOMElement("end_boxcar", omNs);
 
-        ParallelRequestHelper endBoxcarHelper = new ParallelRequestHelper(sessionCookie, "end_boxcar", endBoxcarPayload, serviceEndPoint);
+        ParallelRequestHelper endBoxcarHelper = new ParallelRequestHelper(sessionCookie, "end_boxcar", endBoxcarPayload,
+                serviceEndPoint);
 
         endBoxcarHelper.sendRequestAndReceiveResult();
 
         OMElement finalCountResult = selectCountHelper.sendRequestAndReceiveResult();
 
         Assert.assertNotNull(finalCountResult, "Response null");
-        System.out.println("Result "+finalCountResult.toString());
-        Assert.assertTrue(finalCountResult.toString().contains("<ROW_COUNT>" + requestCount + "</ROW_COUNT>"), "Expected result not found");
+        System.out.println("Result " + finalCountResult.toString());
+        Assert.assertTrue(finalCountResult.toString().contains("<ROW_COUNT>" + requestCount + "</ROW_COUNT>"),
+                "Expected result not found");
     }
 
-    @AfterClass
-    public void clean() throws Exception {
+    @AfterClass public void clean() throws Exception {
         cleanup();
     }
 }

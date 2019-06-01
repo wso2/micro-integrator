@@ -16,7 +16,8 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.ei</groupId>
@@ -25,12 +26,12 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>org.wso2.ei.dataservice.integration.common.utils</artifactId>
-  <packaging>jar</packaging>
-  <name>integration-test-utils</name>
-  
-      <dependencies>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.ei.dataservice.integration.common.utils</artifactId>
+    <packaging>jar</packaging>
+    <name>MI DSS Test Utils</name>
+
+    <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.engine</artifactId>
@@ -61,14 +62,14 @@
             <artifactId>org.wso2.ei.dataservice.integration.common.clients</artifactId>
             <scope>compile</scope>
         </dependency>
-          <dependency>
-              <groupId>org.testng</groupId>
-              <artifactId>testng</artifactId>
-              <scope>compile</scope>
-          </dependency>
-          <dependency>
-              <groupId>org.jacoco</groupId>
-              <artifactId>org.jacoco.agent</artifactId>
-          </dependency>
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+        </dependency>
     </dependencies>
 </project>

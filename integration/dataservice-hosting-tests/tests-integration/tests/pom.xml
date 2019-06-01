@@ -29,7 +29,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.ei.integration.test</artifactId>
     <packaging>jar</packaging>
-    <name>org.wso2.ei.integration.test</name>
+    <name>MI DSS Tests</name>
 
     <build>
         <plugins>

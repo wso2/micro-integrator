@@ -24,19 +24,18 @@ import org.wso2.ws.dataservice.samples.excel_sample_service.getproducts.Product;
 
 public class ExcelSample extends BaseSample {
 
-	public static void main(String[] args) throws Exception {
-		String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT +
-                     "/services/samples/ExcelSampleService";
-		ExcelSampleService stub = new ExcelSampleServiceStub(epr);
-		Product[] products = stub.getProducts();
-		System.out.println("EPR: " + epr + "\n");
-		System.out.println("Products:-");
-		for (Product product : products) {
-			System.out.println("\t-----------------------------");
-			System.out.println("\tName: " + product.getName());
-			System.out.println("\tID: " + product.getID());
-		}		
-	}
-	
+    public static void main(String[] args) throws Exception {
+        String epr = "http://" + HOST_IP + ":" + HOST_HTTP_PORT + "/services/samples/ExcelSampleService";
+        ExcelSampleService stub = new ExcelSampleServiceStub(epr);
+        Product[] products = stub.getProducts();
+        System.out.println("EPR: " + epr + "\n");
+        System.out.println("Products:-");
+        for (Product product : products) {
+            System.out.println("\t-----------------------------");
+            System.out.println("\tName: " + product.getName());
+            System.out.println("\tID: " + product.getID());
+        }
+    }
+
 }
 

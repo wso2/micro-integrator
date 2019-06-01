@@ -33,7 +33,7 @@ public class MsgContextHandler extends AddressingBasedDispatcher {
             String username = obj.getHeader(USERNAME);
             arg0.setProperty(USERNAME, username);
 
-            log.debug("********************** Username from msgcontext - "+arg0.getProperty(USERNAME));
+            log.debug("********************** Username from msgcontext - " + arg0.getProperty(USERNAME));
         }
         return InvocationResponse.CONTINUE;
     }

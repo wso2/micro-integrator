@@ -15,7 +15,8 @@
  ~ specific language governing permissions and limitations
  ~ under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.ei</groupId>
@@ -23,11 +24,11 @@
         <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-	
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>dataservices-samples-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 DataServices Samples Parent</name>
+    <name>DS Samples Parent</name>
     <url>http://wso2.org/projects/solutions/data-services/java</url>
     <description>WSO2 Data Services Server Samples Parent</description>
 
@@ -39,8 +40,8 @@
     </licenses>
 
     <build>
-       <sourceDirectory>src</sourceDirectory>
-       <plugins>
+        <sourceDirectory>src</sourceDirectory>
+        <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -49,7 +50,7 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-       </plugins>
+        </plugins>
     </build>
 
     <dependencies>
@@ -57,10 +58,10 @@
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.core</artifactId>
         </dependency>
-    	<dependency>
+        <dependency>
             <groupId>org.apache.ws.security.wso2</groupId>
             <artifactId>wss4j</artifactId>
-    	</dependency>
+        </dependency>
         <dependency>
             <groupId>org.apache.neethi.wso2</groupId>
             <artifactId>neethi</artifactId>
@@ -73,7 +74,7 @@
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-trust</artifactId>
         </dependency>
-	    <dependency>
+        <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-core</artifactId>
         </dependency>

@@ -31,13 +31,13 @@ import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
 import org.wso2.carbon.security.mgt.stub.config.SecurityAdminServiceSecurityConfigExceptionException;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This test case is written to verify the fix for https://wso2.org/jira/browse/DS-1053
@@ -52,66 +52,64 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(CARBON15261JsonFormatterTest.class);
     ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
         serverConfigurationManager = new ServerConfigurationManager(dssContext);
-        serverConfigurationManager.applyConfiguration(new File(getResourceLocation() + File.separator + "config" +
-                                                               File.separator + "CARBON1352" + File.separator +
-                                                               "axis2.xml"));
+        serverConfigurationManager.applyConfiguration(new File(
+                getResourceLocation() + File.separator + "config" + File.separator + "CARBON1352" + File.separator
+                        + "axis2.xml"));
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         sqlFileLis.add(selectSqlFile("Offices.sql"));
         client = new SimpleHttpClient();
         headers = new HashMap<>();
         super.init(TestUserMode.SUPER_TENANT_ADMIN);
-        deployService(serviceName, createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator +
-                                                  "rdbms" + File.separator + "h2" + File.separator +
-                                                  "H2JsonSecureServiceTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + "H2JsonSecureServiceTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttps("H2JsonSecureServiceTest") + "/";
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
         serverConfigurationManager.restartGracefully();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service",
-            dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest")
-    public void performJsonGetWithSecurityAttributesTest() throws Exception {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service", dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest") public void performJsonGetWithSecurityAttributesTest()
+            throws Exception {
         this.secureService();
         headers.clear();
         headers.put("Accept", "application/json");
-        String encode = (new String((new Base64()).encode((userInfo.getUserName() + ":" + userInfo.getPassword())
-                                                                  .getBytes()))).replaceAll("\n", "");
+        String encode = (new String(
+                (new Base64()).encode((userInfo.getUserName() + ":" + userInfo.getPassword()).getBytes())))
+                .replaceAll("\n", "");
         headers.put("Authorization", "Basic " + encode);
         HttpResponse response = client.doGet(serviceEndPoint + "nullm", headers);
         String responsePayload = client.getResponsePayload(response);
         Assert.assertTrue(responsePayload.contains("{\"status\":{\"null\":"),
-                          "Response with attributes test failed for secured service");
+                "Response with attributes test failed for secured service");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for unsecured service")
-    public void performJsonGetWithoutSecurityAttributesTest() throws Exception {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for unsecured service") public void performJsonGetWithoutSecurityAttributesTest()
+            throws Exception {
         headers.clear();
         headers.put("Accept", "application/json");
         HttpResponse response = client.doGet(serviceEndPoint + "nullm", headers);
         String responsePayload = client.getResponsePayload(response);
         Assert.assertTrue(responsePayload.contains("{\"status\":{\"null\":"),
-                          "Response with attributes test failed for unsecured service");
+                "Response with attributes test failed for unsecured service");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service",
-            dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest")
-    public void performJsonGetWithSecurityTest() throws Exception {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service", dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest") public void performJsonGetWithSecurityTest()
+            throws Exception {
         this.secureService();
         headers.clear();
         headers.put("Accept", "application/json");
-        String encode = (new String((new Base64()).encode((userInfo.getUserName() + ":" + userInfo.getPassword())
-                                                                  .getBytes()))).replaceAll("\n", "");
+        String encode = (new String(
+                (new Base64()).encode((userInfo.getUserName() + ":" + userInfo.getPassword()).getBytes())))
+                .replaceAll("\n", "");
         headers.put("Authorization", "Basic " + encode);
         HttpResponse response = client.doGet(serviceEndPoint + "singleSpacem", headers);
         String responsePayload = client.getResponsePayload(response);
@@ -120,11 +118,11 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
 
     private void secureService()
             throws SecurityAdminServiceSecurityConfigExceptionException, RemoteException, InterruptedException,
-                   XPathExpressionException {
-        SecurityAdminServiceClient securityAdminServiceClient =
-                new SecurityAdminServiceClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
+            XPathExpressionException {
+        SecurityAdminServiceClient securityAdminServiceClient = new SecurityAdminServiceClient(
+                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
         securityAdminServiceClient.applySecurity(serviceName, Integer.toString(1) + "", new String[] { "admin" },
-                                                 new String[] { "wso2carbon.jks" }, "wso2carbon.jks");
+                new String[] { "wso2carbon.jks" }, "wso2carbon.jks");
         log.info("Security Scenario Applied");
         Thread.sleep(6000);
 

@@ -16,7 +16,8 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.ei</groupId>
@@ -25,12 +26,12 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>org.wso2.ei.dataservice.integration.common.clients</artifactId>
-  <packaging>jar</packaging>
-  <name>admin-clients</name>
-   
-  <dependencies>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.ei.dataservice.integration.common.clients</artifactId>
+    <packaging>jar</packaging>
+    <name>MI DSS Admin Clients</name>
+
+    <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
@@ -61,10 +62,10 @@
             <artifactId>org.wso2.carbon.registry.resource.stub</artifactId>
             <scope>compile</scope>
         </dependency>
-      <dependency>
-          <groupId>org.wso2.carbon</groupId>
-          <artifactId>org.wso2.carbon.utils</artifactId>
-      </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.utils</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

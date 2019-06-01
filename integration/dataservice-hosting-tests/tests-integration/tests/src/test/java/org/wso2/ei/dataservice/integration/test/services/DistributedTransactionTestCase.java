@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.ei.dataservice.integration.test.services;
 
 import org.apache.axiom.attachments.ByteArrayDataSource;
@@ -37,15 +37,15 @@ import org.wso2.carbon.automation.test.utils.common.FileManager;
 import org.wso2.ei.dataservice.integration.common.utils.SqlDataSourceUtil;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.xpath.XPathExpressionException;
 
 public class DistributedTransactionTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(DistributedTransactionTestCase.class);
@@ -60,8 +60,7 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
     private final String serviceName = "DTPServiceTest";
     private final int userId = 2;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init();
         DataHandler dhArtifact;
         dhArtifact = getArtifactWithDTP(serviceFile);
@@ -69,37 +68,35 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-
-    @Test(groups = {"wso2.dss"})
-    public void addBankAccountToADatabase() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }) public void addBankAccountToADatabase() throws AxisFault, XPathExpressionException {
         addBankAccount1test();
         log.info("Added bank account on database1");
     }
 
-    @Test(groups = {"wso2.dss"})
-    public void addBankAccountOnOtherDatabase() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }) public void addBankAccountOnOtherDatabase()
+            throws AxisFault, XPathExpressionException {
         addBankAccount2test();
         log.info("Added bank account on database2");
     }
 
-    @Test(groups = {"wso2.dss"}, dependsOnMethods = {"addBankAccountToADatabase", "addBankAccountOnOtherDatabase"})
-    public void distributedTransactionTest() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addBankAccountToADatabase",
+            "addBankAccountOnOtherDatabase" }) public void distributedTransactionTest()
+            throws AxisFault, XPathExpressionException {
         distributedTransactionSuccess();
         log.info("Added transaction on both databases");
     }
 
-    @Test(groups = {"wso2.dss"}, dependsOnMethods = {"addBankAccountToADatabase", "addBankAccountOnOtherDatabase"})
-    public void distributedTransactionFailTest() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addBankAccountToADatabase",
+            "addBankAccountOnOtherDatabase" }) public void distributedTransactionFailTest()
+            throws AxisFault, XPathExpressionException {
         distributedTransactionFail();
         log.info("Distributed transaction verified");
     }
-
 
     private OMElement addAccountToBank1(double accountBalance) {
         OMElement payload = fac.createOMElement("addAccountToBank1", omNs);
@@ -228,8 +225,8 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
         int id1 = getAccountIdFromResponse(response);
 
         options.setAction("urn:" + "getAccountBalanceFromBank1");
-        Assert.assertEquals(100.0, getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank1(id1))), "invalid balance ");
-
+        Assert.assertEquals(100.0, getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank1(id1))),
+                "invalid balance ");
 
     }
 
@@ -245,7 +242,6 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
         options.setManageSession(true);
         sender.setOptions(options);
 
-
         options.setAction("urn:" + "addAccountToBank2");
         sender.setOptions(options);
         response = sender.sendReceive(addAccountToBank2(200));
@@ -254,8 +250,8 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
         int id1 = getAccountIdFromResponse(response);
 
         options.setAction("urn:" + "getAccountBalanceFromBank2");
-        Assert.assertEquals(200.0, getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id1))), "invalid balance ");
-
+        Assert.assertEquals(200.0, getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id1))),
+                "invalid balance ");
 
     }
 
@@ -295,12 +291,13 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
 
         options.setAction("urn:" + "getAccountBalanceFromBank1");
         sender.setOptions(options);
-        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank1(id1))), 150.0, "Expected not same");
+        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank1(id1))), 150.0,
+                "Expected not same");
 
         options.setAction("urn:" + "getAccountBalanceFromBank2");
         sender.setOptions(options);
-        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id2))), 175.0, "Expected not same");
-
+        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id2))), 175.0,
+                "Expected not same");
 
     }
 
@@ -350,20 +347,21 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
 
         options.setAction("urn:" + "getAccountBalanceFromBank1");
         sender.setOptions(options);
-        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank1(id1))), 11500.0, "Expected not same");
+        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank1(id1))), 11500.0,
+                "Expected not same");
 
         options.setAction("urn:" + "getAccountBalanceFromBank2");
         sender.setOptions(options);
-        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id2))), 2000.0, "Expected not same");
-        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id3))), 1500.0, "Expected not same");
-        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id4))), 3000.0, "Expected not same");
-
+        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id2))), 2000.0,
+                "Expected not same");
+        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id3))), 1500.0,
+                "Expected not same");
+        Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id4))), 3000.0,
+                "Expected not same");
 
     }
 
-
-    private DataHandler getArtifactWithDTP(String serviceFile)
-            throws Exception {
+    private DataHandler getArtifactWithDTP(String serviceFile) throws Exception {
         SqlDataSourceUtil dataSource1;
         SqlDataSourceUtil dataSource2;
         String dtpDriver;
@@ -382,9 +380,9 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
         }
 
         try {
-            OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(getResourceLocation() + File.separator + "dbs" + File.separator
-                                                                          + "rdbms" + File.separator + "MySql" + File.separator
-                                                                          + serviceFile).trim());
+            OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(
+                    getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
+                            + File.separator + serviceFile).trim());
             OMElement dbsConfig;
 
             Iterator config = dbsFile.getChildrenWithName(new QName("config"));

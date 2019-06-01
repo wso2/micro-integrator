@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 package org.wso2.ei.dataservice.integration.test.requestBox;
 
 import org.apache.axiom.om.OMAbstractFactory;
@@ -38,7 +38,7 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * Test class to test the functionality of request box.
- *
+ * <p>
  * Send multiple request.
  * Export param from one request to another.
  * Return results at the end of the request.
@@ -53,34 +53,32 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
 
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("RequestBoxTestTables.sql"));
-        deployService(serviceName,
-                      createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator
-                                     + "rdbms" + File.separator + "h2" + File.separator
-                                     + "RequestBoxTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + "RequestBoxTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
     /**
      * Method to test operations which needs to be successful.
-     *
+     * <p>
      * Id range starts from 1.
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.dss"}, description = "Send Request box requests which should be successful and check whether they are successful", alwaysRun = true)
-    public void requestBoxSuccessRequests() throws Exception {
+    @Test(groups = {
+            "wso2.dss" }, description = "Send Request box requests which should be successful and check whether they are successful", alwaysRun = true) public void requestBoxSuccessRequests()
+            throws Exception {
         // **************** test insert to two tables ******************
         OMElement payloadInsertOnly = fac.createOMElement("request_box", omNs);
 
@@ -90,13 +88,19 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
         new AxisServiceClient().sendRobust(payloadInsertOnly, getServiceUrlHttp(serviceName), "request_box");
 
         //retrieve and see whether inserted correctly
-        OMElement responseProduct = new AxisServiceClient().sendReceive(generateSelectProductByCodeElement(1), getServiceUrlHttp(serviceName), "select_product_by_code_operation");
+        OMElement responseProduct = new AxisServiceClient()
+                .sendReceive(generateSelectProductByCodeElement(1), getServiceUrlHttp(serviceName),
+                        "select_product_by_code_operation");
         assertNotNull(responseProduct, "Response null " + responseProduct);
-        assertTrue(responseProduct.toString().contains("<productName>productName1</productName>"), "'productName1' should have exist in the response");
+        assertTrue(responseProduct.toString().contains("<productName>productName1</productName>"),
+                "'productName1' should have exist in the response");
 
-        OMElement responseOrder = new AxisServiceClient().sendReceive(generateSelectOrderByNumberElement(1), getServiceUrlHttp(serviceName), "select_order_by_number_operation");
+        OMElement responseOrder = new AxisServiceClient()
+                .sendReceive(generateSelectOrderByNumberElement(1), getServiceUrlHttp(serviceName),
+                        "select_order_by_number_operation");
         assertNotNull(responseOrder, "Response null " + responseOrder);
-        assertTrue(responseOrder.toString().contains("<productName>productName1</productName>"), "'productName1' should have exist in the response");
+        assertTrue(responseOrder.toString().contains("<productName>productName1</productName>"),
+                "'productName1' should have exist in the response");
 
         // **************** test insert and select operation ******************
         OMElement payloadInsertAndSelect = fac.createOMElement("request_box", omNs);
@@ -105,18 +109,26 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
         payloadInsertAndSelect.addChild(generateInsertOrders(2));
         payloadInsertAndSelect.addChild(generateSelectProductByCodeElement(1));
 
-        OMElement responseInsertAndSelect = new AxisServiceClient().sendReceive(payloadInsertAndSelect, getServiceUrlHttp(serviceName), "request_box");
+        OMElement responseInsertAndSelect = new AxisServiceClient()
+                .sendReceive(payloadInsertAndSelect, getServiceUrlHttp(serviceName), "request_box");
         assertNotNull(responseInsertAndSelect, "Response null " + responseInsertAndSelect);
-        assertTrue(responseInsertAndSelect.toString().contains("<productName>productName1</productName>"), "'productName1' should have exist in the response");
+        assertTrue(responseInsertAndSelect.toString().contains("<productName>productName1</productName>"),
+                "'productName1' should have exist in the response");
 
         //retrieve and see whether inserted correctly
-        responseProduct = new AxisServiceClient().sendReceive(generateSelectProductByCodeElement(2), getServiceUrlHttp(serviceName), "select_product_by_code_operation");
+        responseProduct = new AxisServiceClient()
+                .sendReceive(generateSelectProductByCodeElement(2), getServiceUrlHttp(serviceName),
+                        "select_product_by_code_operation");
         assertNotNull(responseProduct, "Response null " + responseProduct);
-        assertTrue(responseProduct.toString().contains("<productName>productName2</productName>"), "'productName2' should have exist in the response");
+        assertTrue(responseProduct.toString().contains("<productName>productName2</productName>"),
+                "'productName2' should have exist in the response");
 
-        responseOrder = new AxisServiceClient().sendReceive(generateSelectOrderByNumberElement(2), getServiceUrlHttp(serviceName), "select_order_by_number_operation");
+        responseOrder = new AxisServiceClient()
+                .sendReceive(generateSelectOrderByNumberElement(2), getServiceUrlHttp(serviceName),
+                        "select_order_by_number_operation");
         assertNotNull(responseOrder, "Response null " + responseOrder);
-        assertTrue(responseOrder.toString().contains("<productName>productName2</productName>"), "'productName2' should have exist in the response");
+        assertTrue(responseOrder.toString().contains("<productName>productName2</productName>"),
+                "'productName2' should have exist in the response");
 
         // **************** test select and insert operation ******************
         OMElement payloadSelectAndInsert = fac.createOMElement("request_box", omNs);
@@ -125,18 +137,25 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
         payloadSelectAndInsert.addChild(generateInsertProducts(3));
         payloadSelectAndInsert.addChild(generateInsertOrders(3));
 
-        OMElement responseSelectAndInsert = new AxisServiceClient().sendReceive(payloadSelectAndInsert, getServiceUrlHttp(serviceName), "request_box");
+        OMElement responseSelectAndInsert = new AxisServiceClient()
+                .sendReceive(payloadSelectAndInsert, getServiceUrlHttp(serviceName), "request_box");
         assertNotNull(responseSelectAndInsert, "Response null " + responseSelectAndInsert);
-        assertTrue(!responseSelectAndInsert.toString().contains("product"), "response shouldn't contain any result" );
+        assertTrue(!responseSelectAndInsert.toString().contains("product"), "response shouldn't contain any result");
 
         //retrieve and see whether inserted correctly
-        responseProduct = new AxisServiceClient().sendReceive(generateSelectProductByCodeElement(3), getServiceUrlHttp(serviceName), "select_product_by_code_operation");
+        responseProduct = new AxisServiceClient()
+                .sendReceive(generateSelectProductByCodeElement(3), getServiceUrlHttp(serviceName),
+                        "select_product_by_code_operation");
         assertNotNull(responseProduct, "Response null " + responseProduct);
-        assertTrue(responseProduct.toString().contains("<productName>productName3</productName>"), "'productName3' should have exist in the response");
+        assertTrue(responseProduct.toString().contains("<productName>productName3</productName>"),
+                "'productName3' should have exist in the response");
 
-        responseOrder = new AxisServiceClient().sendReceive(generateSelectOrderByNumberElement(3), getServiceUrlHttp(serviceName), "select_order_by_number_operation");
+        responseOrder = new AxisServiceClient()
+                .sendReceive(generateSelectOrderByNumberElement(3), getServiceUrlHttp(serviceName),
+                        "select_order_by_number_operation");
         assertNotNull(responseOrder, "Response null " + responseOrder);
-        assertTrue(responseOrder.toString().contains("<productName>productName3</productName>"), "'productName3' should have exist in the response");
+        assertTrue(responseOrder.toString().contains("<productName>productName3</productName>"),
+                "'productName3' should have exist in the response");
 
         // **************** test selectExport insert select operation ******************
         OMElement payloadSelectExportInsertSelect = fac.createOMElement("request_box", omNs);
@@ -145,27 +164,34 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
         payloadSelectExportInsertSelect.addChild(generateInsertToOrdersWithImportElement(4));
         payloadSelectExportInsertSelect.addChild(generateSelectOrderByNumberElement(4));
 
-        OMElement responseSelectExportInsertSelect = new AxisServiceClient().sendReceive(payloadSelectExportInsertSelect, getServiceUrlHttp(serviceName), "request_box");
+        OMElement responseSelectExportInsertSelect = new AxisServiceClient()
+                .sendReceive(payloadSelectExportInsertSelect, getServiceUrlHttp(serviceName), "request_box");
         assertNotNull(responseSelectExportInsertSelect, "Response null " + responseSelectExportInsertSelect);
-        assertTrue(responseSelectExportInsertSelect.toString().contains("<productName>productName1</productName>"), "'productName1' should have exist in the response");
+        assertTrue(responseSelectExportInsertSelect.toString().contains("<productName>productName1</productName>"),
+                "'productName1' should have exist in the response");
 
         //retrieve and see whether inserted correctly
-        responseOrder = new AxisServiceClient().sendReceive(generateSelectOrderByNumberElement(4), getServiceUrlHttp(serviceName), "select_order_by_number_operation");
+        responseOrder = new AxisServiceClient()
+                .sendReceive(generateSelectOrderByNumberElement(4), getServiceUrlHttp(serviceName),
+                        "select_order_by_number_operation");
         assertNotNull(responseOrder, "Response null " + responseOrder);
-        assertTrue(responseOrder.toString().contains("<productName>productName1</productName>"), "'productName1' should have exist in the response");
+        assertTrue(responseOrder.toString().contains("<productName>productName1</productName>"),
+                "'productName1' should have exist in the response");
     }
 
     /**
      * Test operations which needs to be failed.
-     *
+     * <p>
      * Id range starts from 100.
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.dss"}, description = "Send Request box requests which should be failed and check whether they are really failed", alwaysRun = true)
-    public void requestBoxFailRequests() throws Exception {
+    @Test(groups = {
+            "wso2.dss" }, description = "Send Request box requests which should be failed and check whether they are really failed", alwaysRun = true) public void requestBoxFailRequests()
+            throws Exception {
         // **************** test insert to two tables(table1 entry already exist) ******************
-        new AxisServiceClient().sendRobust(generateInsertProducts(100), getServiceUrlHttp(serviceName), "insert_into_products_operation"); //first insert the value to table1 - productCode100
+        new AxisServiceClient().sendRobust(generateInsertProducts(100), getServiceUrlHttp(serviceName),
+                "insert_into_products_operation"); //first insert the value to table1 - productCode100
         OMElement payloadInsertOnly = fac.createOMElement("request_box", omNs);
 
         payloadInsertOnly.addChild(generateInsertProducts(100));
@@ -173,18 +199,19 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
 
         try {
             new AxisServiceClient().sendRobust(payloadInsertOnly, getServiceUrlHttp(serviceName), "request_box");
-            assertTrue(false, "Insert operation should have failed as 'productCode100' should already exist in the table");
+            assertTrue(false,
+                    "Insert operation should have failed as 'productCode100' should already exist in the table");
         } catch (Exception e) {
             assertTrue(true);
         }
 
         //retrieve and see whether order inserted (if inserted that's wrong)
-        OMElement responseOrder = new AxisServiceClient().sendReceive(generateSelectOrderByNumberElement(100), getServiceUrlHttp(serviceName), "select_order_by_number_operation");
+        OMElement responseOrder = new AxisServiceClient()
+                .sendReceive(generateSelectOrderByNumberElement(100), getServiceUrlHttp(serviceName),
+                        "select_order_by_number_operation");
         assertNotNull(responseOrder, "Response null " + responseOrder);
-        assertTrue(!responseOrder.toString().contains("<productName>productName100</productName>"), "'productName100' shouldn't have exist in the response");
-
-
-
+        assertTrue(!responseOrder.toString().contains("<productName>productName100</productName>"),
+                "'productName100' shouldn't have exist in the response");
 
         // **************** test insert to two tables(table2 entry already exist) ******************
         //order changed so second table entry should already be there
@@ -193,18 +220,20 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
 
         try {
             new AxisServiceClient().sendRobust(payloadInsertOnly, getServiceUrlHttp(serviceName), "request_box");
-            assertTrue(false, "Insert operation should have failed as 'productCode100' should already exist in the table");
+            assertTrue(false,
+                    "Insert operation should have failed as 'productCode100' should already exist in the table");
         } catch (Exception e) {
             assertTrue(true);
         }
 
         //retrieve and see whether order inserted (if inserted that's wrong)
-        responseOrder = new AxisServiceClient().sendReceive(generateSelectOrderByNumberElement(100), getServiceUrlHttp(serviceName), "select_order_by_number_operation");
+        responseOrder = new AxisServiceClient()
+                .sendReceive(generateSelectOrderByNumberElement(100), getServiceUrlHttp(serviceName),
+                        "select_order_by_number_operation");
         assertNotNull(responseOrder, "Response null " + responseOrder);
-        assertTrue(!responseOrder.toString().contains("<productName>productName100</productName>"), "'productName100' shouldn't have exist in the response");
+        assertTrue(!responseOrder.toString().contains("<productName>productName100</productName>"),
+                "'productName100' shouldn't have exist in the response");
     }
-
-
 
     /**
      * Helper method to generate insertProduct operation Request OME element.
@@ -247,7 +276,6 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
     private OMElement generateSelectProductByCodeAndExportElement(int id) {
         return generateSelectProductByCodeElement("select_product_by_code_nExport_operation", id);
     }
-
 
     /**
      * Helper method to generate InsertToOrdersWithImport operation Request OME element.
@@ -304,7 +332,6 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
 
         return insertOrderOpEl;
     }
-
 
     /**
      * Helper method to generate SelectProductByCode and return response operation Request OME element.

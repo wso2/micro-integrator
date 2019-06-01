@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.scheduletask;
 
@@ -55,34 +55,34 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     private double empSalary;
 
     private final OMFactory fac = OMAbstractFactory.getOMFactory();
-    private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/rdbms_sample", "ns1");
+    private final OMNamespace omNs = fac
+            .createOMNamespace("http://ws.wso2.org/dataservice/samples/rdbms_sample", "ns1");
     private String serviceName = "ScheduleTaskTest";
     private String serviceEndPoint;
     private DataServiceTaskClient dssTaskClient;
 
-    @BeforeClass(alwaysRun = true, enabled = false)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         String resourceLocation = getResourceLocation();
 
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName,
-                      createArtifact(resourceLocation + File.separator + "dbs" + File.separator
-                                     + "rdbms" + File.separator + "MySql" + File.separator
-                                     + "ScheduleTaskTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                resourceLocation + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
+                        + File.separator + "ScheduleTaskTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName);
 
         dssTaskClient = new DataServiceTaskClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed", enabled = false)
-    public void testServiceDeployment() throws Exception {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed", enabled = false) public void testServiceDeployment()
+            throws Exception {
         assertTrue(isServiceDeployed(serviceName));
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"testServiceDeployment"}, enabled = false)
-    public void serviceInvocation() throws AxisFault, InterruptedException {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "testServiceDeployment" }, enabled = false) public void serviceInvocation()
+            throws AxisFault, InterruptedException {
         deleteEmployees();
         addEmployee(employeeId);
         getEmployeeById(employeeId);
@@ -92,9 +92,9 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("service invocation success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"serviceInvocation"}, description = "schedule a task",
-            enabled = false)
-    public void addScheduleTask() throws RemoteException, InterruptedException {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "serviceInvocation" }, description = "schedule a task", enabled = false) public void addScheduleTask()
+            throws RemoteException, InterruptedException {
         dsTaskInfo = new DSTaskInfo();
 
         String[] taskNames = dssTaskClient.getAllTaskNames();
@@ -125,9 +125,9 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"addScheduleTask"}, description = "Verify the task execution",
-            enabled = false)
-    public void startScheduleTask() throws AxisFault, InterruptedException {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "addScheduleTask" }, description = "Verify the task execution", enabled = false) public void startScheduleTask()
+            throws AxisFault, InterruptedException {
         //if task count is 9
         for (int i = 0; i < 4; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
@@ -143,9 +143,9 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("ScheduleTask verifying Success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"startScheduleTask"},
-          description = "Task repeat count set to zero - This method has been added to avoid task repetition" ,enabled = false)
-    public void testSetRepeatCountToZero() throws RemoteException, InterruptedException {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "startScheduleTask" }, description = "Task repeat count set to zero - This method has been added to avoid task repetition", enabled = false) public void testSetRepeatCountToZero()
+            throws RemoteException, InterruptedException {
         dsTaskInfo.setTaskCount(0);
         dsTaskInfo.setTaskInterval(5000);
         assertTrue(dssTaskClient.rescheduleTask(dsTaskInfo));
@@ -162,10 +162,9 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("Employee salary is " + empSalary + " after setting task repeat count to zero");
     }
 
-
-
-    @Test(groups = "wso2.dss", dependsOnMethods = {"testSetRepeatCountToZero"}, description = "reschedule the task", enabled = false)
-    public void reScheduleTask() throws RemoteException {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "testSetRepeatCountToZero" }, description = "reschedule the task", enabled = false) public void reScheduleTask()
+            throws RemoteException {
         Calendar startTime = Calendar.getInstance();
         startTime.set(Calendar.SECOND, startTime.get(Calendar.SECOND) + 40);
         dsTaskInfo.setTaskCount(9);
@@ -184,9 +183,9 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"reScheduleTask"},
-          description = "Check whether the task has been stopped properly", enabled = false)
-    public void stopScheduleTask() throws AxisFault, InterruptedException {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "reScheduleTask" }, description = "Check whether the task has been stopped properly", enabled = false) public void stopScheduleTask()
+            throws AxisFault, InterruptedException {
         for (int i = 0; i < 5; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
             log.info("current salary after rescheduling task #######" + currentSalary);
@@ -197,8 +196,9 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("schedule task stopped");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {"stopScheduleTask"}, description = "Recheck the task invocation", enabled = false)
-    public void reStartScheduleTask() throws AxisFault, InterruptedException {
+    @Test(groups = "wso2.dss", dependsOnMethods = {
+            "stopScheduleTask" }, description = "Recheck the task invocation", enabled = false) public void reStartScheduleTask()
+            throws AxisFault, InterruptedException {
         while (dsTaskInfo.getStartTime().getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
             Thread.sleep(1000);
         }
@@ -221,19 +221,17 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("Task Count verified");
     }
 
-//    @Test(groups = "wso2.dss", dependsOnMethods = {"reStartScheduleTask"}, description = "delete the task")
-//    public void deleteTask() throws RemoteException {
-//        dssTaskClient.deleteTask(scheduleTaskName);
-//        log.info(scheduleTaskName + " deleted");
-//    }
+    //    @Test(groups = "wso2.dss", dependsOnMethods = {"reStartScheduleTask"}, description = "delete the task")
+    //    public void deleteTask() throws RemoteException {
+    //        dssTaskClient.deleteTask(scheduleTaskName);
+    //        log.info(scheduleTaskName + " deleted");
+    //    }
 
-    @AfterClass(alwaysRun = true, enabled = false)
-    public void testCleanup() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false) public void testCleanup() throws Exception {
         dssTaskClient.deleteTask(scheduleTaskName);
         log.info(scheduleTaskName + " deleted");
         deleteService(serviceName);
     }
-
 
     private void addEmployee(String employeeNumber) throws AxisFault {
         OMElement payload = fac.createOMElement("addEmployee", omNs);
@@ -262,8 +260,7 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
 
     }
 
-    private OMElement getEmployeeById(String employeeNumber) throws AxisFault,
-                                                                    InterruptedException {
+    private OMElement getEmployeeById(String employeeNumber) throws AxisFault, InterruptedException {
         OMElement payload = fac.createOMElement("employeesByNumber", omNs);
 
         OMElement empNo = fac.createOMElement("employeeNumber", omNs);
@@ -288,8 +285,7 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
 
     }
 
-    private void IncreaseEmployeeSalary(String employeeNumber)
-            throws AxisFault, InterruptedException {
+    private void IncreaseEmployeeSalary(String employeeNumber) throws AxisFault, InterruptedException {
         OMElement payload = fac.createOMElement("incrementEmployeeSalary", omNs);
 
         OMElement empNo = fac.createOMElement("employeeNumber", omNs);

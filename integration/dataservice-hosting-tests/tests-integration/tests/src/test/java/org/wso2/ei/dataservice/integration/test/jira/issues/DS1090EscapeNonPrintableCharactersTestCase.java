@@ -14,10 +14,10 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * This test case is to verify https://wso2.org/jira/browse/DS-1090,
@@ -32,33 +32,30 @@ public class DS1090EscapeNonPrintableCharactersTestCase extends DSSIntegrationTe
     OMFactory fac = OMAbstractFactory.getOMFactory();
     OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         sqlFileLis.add(selectSqlFile("Students.sql"));
-        deployService(serviceName,
-                createArtifact(getResourceLocation() + File.separator + "dbs"
-                        + File.separator + "rdbms" + File.separator + "h2"
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
                         + File.separator + serviceName + ".dbs", sqlFileLis));
     }
 
-    @AfterClass
-    public void clean() throws Exception {
+    @AfterClass public void clean() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" })
-    public void testForNullResultSet() throws AxisFault {
+    @Test(groups = { "wso2.dss" }) public void testForNullResultSet() throws AxisFault {
         OMElement payload = fac.createOMElement("select_all_Customers_operation", omNs);
         OMElement result = null;
         try {
-            result = new AxisServiceClient().sendReceive(payload, getServiceUrlHttp(serviceName), "select_all_Customers_operation");
+            result = new AxisServiceClient()
+                    .sendReceive(payload, getServiceUrlHttp(serviceName), "select_all_Customers_operation");
         } catch (XPathExpressionException e) {
-            log.info("EscapeNonPrintableCharactersTestCase failed ",e);
+            log.info("EscapeNonPrintableCharactersTestCase failed ", e);
         }
         Assert.assertNotNull(result, "Response message null ");
     }

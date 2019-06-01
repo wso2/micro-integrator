@@ -765,7 +765,7 @@
         <carbon.registry.version>4.6.46</carbon.registry.version>
         <opensaml.version>2.2.3</opensaml.version>
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
-            <testng.suiteXml.location>src/test/resources/testng.xml</testng.suiteXml.location>
+        <testng.suiteXml.location>src/test/resources/testng.xml</testng.suiteXml.location>
     </properties>
 
     <profiles>

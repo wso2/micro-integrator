@@ -51,9 +51,9 @@ public class CARBON15263JsonGsonFormatterSuperTenantModeTest extends DSSIntegrat
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         sqlFileLis.add(selectSqlFile("Offices.sql"));
-        deployService(serviceName, createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator +
-                                                  "rdbms" + File.separator + "h2" + File.separator +
-                                                  "H2SimpleJsonTest.dbs", sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + "H2SimpleJsonTest.dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
@@ -62,48 +62,43 @@ public class CARBON15263JsonGsonFormatterSuperTenantModeTest extends DSSIntegrat
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with PUT method", dependsOnMethods = "performJsonPostMethodWithRequestResponseTest")
-    public void performJsonPutMethodTest() {
-        String postUpdateOfficePayload = "{ \"_put_updateoffice\" : { \"officeCode\" : \"1\" , \"city\" : \"Colombo\"" +
-                                         " , \"telephone\" : \"+94 112954273\" , \"address1\" : \"Trace Expert City\" " +
-                                         ", \"address2\" : \"Colombo\" , \"state\" : null , \"country\" : \"LK\" , " +
-                                         "\"postalcode\" : \"10110\" , \"territory\" : \"Western\" } }";
+    @Test(groups = "wso2.dss", description = "Invoking Request with PUT method", dependsOnMethods = "performJsonPostMethodWithRequestResponseTest") public void performJsonPutMethodTest() {
+        String postUpdateOfficePayload = "{ \"_put_updateoffice\" : { \"officeCode\" : \"1\" , \"city\" : \"Colombo\""
+                + " , \"telephone\" : \"+94 112954273\" , \"address1\" : \"Trace Expert City\" "
+                + ", \"address2\" : \"Colombo\" , \"state\" : null , \"country\" : \"LK\" , "
+                + "\"postalcode\" : \"10110\" , \"territory\" : \"Western\" } }";
         String response = getHttpResponse(serviceEndPoint + "updateOffice", "PUT", postUpdateOfficePayload);
         Assert.assertTrue(response.contains("SUCCESSFUL"), "PUT method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with request response")
-    public void performJsonPostMethodWithRequestResponseTest() {
-        String postInsertPaymentPayload = "{ \"_post_insertoffice\" : { \"officeCode\" : \"9\" , \"city\" : \"Colombo\"" +
-                                          " , \"telephone\" : \"+94 112954273\" , \"address1\" : \"No 20, Palm grove\" " +
-                                          ", \"address2\" : \"Colombo\" , \"state\" : null , \"country\" : \"LK\" , " +
-                                          "\"postalcode\" : \"10110\" , \"territory\" : \"Western\" } }";
+    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with request response") public void performJsonPostMethodWithRequestResponseTest() {
+        String postInsertPaymentPayload = "{ \"_post_insertoffice\" : { \"officeCode\" : \"9\" , \"city\" : \"Colombo\""
+                + " , \"telephone\" : \"+94 112954273\" , \"address1\" : \"No 20, Palm grove\" "
+                + ", \"address2\" : \"Colombo\" , \"state\" : null , \"country\" : \"LK\" , "
+                + "\"postalcode\" : \"10110\" , \"territory\" : \"Western\" } }";
         String response = getHttpResponse(serviceEndPoint + "insertOffice", "POST", postInsertPaymentPayload);
         Assert.assertTrue(response.contains("SUCCESSFUL"), "POST method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with response")
-    public void performJsonPostMethodTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with response") public void performJsonPostMethodTest() {
         String postInsertPaymentPayload = "{ \"_post_insertbalance\" : { \"balance\" :12555.23 } }";
         String response = getHttpResponse(serviceEndPoint + "insertBalance", "POST", postInsertPaymentPayload);
         Assert.assertTrue(response.contains("GeneratedKeys"), "POST method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with DELETE method")
-    public void performJsonDeleteMethodTest() {
-        String response = getHttpResponse(serviceEndPoint + "deleteOffice/" +Integer.toString(2), "DELETE", null);
+    @Test(groups = "wso2.dss", description = "Invoking Request with DELETE method") public void performJsonDeleteMethodTest() {
+        String response = getHttpResponse(serviceEndPoint + "deleteOffice/" + Integer.toString(2), "DELETE", null);
         Assert.assertTrue(response.contains("SUCCESSFUL"), "DELETE method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method")
-    public void performJsonGetMethodTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method") public void performJsonGetMethodTest() {
         String response = getHttpResponse(serviceEndPoint + "getCountries", "GET", null);
         Assert.assertTrue(response.contains("country"), "GET method failed");
     }
 
     private String getHttpResponse(String endpoint, String requestMethod, String payload) {
         StringBuilder jsonString = new StringBuilder();
-        BufferedReader br= null;
+        BufferedReader br = null;
         try {
             String line;
             URL url = new URL(endpoint);

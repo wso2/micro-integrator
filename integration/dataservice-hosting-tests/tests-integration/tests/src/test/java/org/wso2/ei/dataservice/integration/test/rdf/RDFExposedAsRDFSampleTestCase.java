@@ -29,9 +29,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import javax.activation.DataHandler;
-import java.io.File;
-import java.net.URL;
 import java.util.Iterator;
 
 public class RDFExposedAsRDFSampleTestCase extends DSSIntegrationTest {
@@ -41,8 +38,7 @@ public class RDFExposedAsRDFSampleTestCase extends DSSIntegrationTest {
     private final String serviceName = "RDFExposeAsRDFSample";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init();
         String resourceFileLocation = getResourceLocation();
         Assert.assertTrue(isServiceDeployed("RDFExposeAsRDFSample"), "Data service not deployed");
@@ -50,8 +46,7 @@ public class RDFExposedAsRDFSampleTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @Test(groups = {"wso2.dss"})
-    public void testGetVehicles() throws Exception {
+    @Test(groups = { "wso2.dss" }) public void testGetVehicles() throws Exception {
         listVehicles();
         log.info("GET Request to retrieve vehicle data verified");
     }
@@ -66,14 +61,13 @@ public class RDFExposedAsRDFSampleTestCase extends DSSIntegrationTest {
             OMElement product = (OMElement) itr.next();
             OMElement productModel = (OMElement) product.getChildrenWithLocalName("Model").next();
             OMAttribute modelResource = (OMAttribute) productModel.getAllAttributes().next();
-            Assert.assertEquals(modelResource.getAttributeValue().startsWith("http://productlines/"),
-                    true, "Model rdf resource value is correct");
+            Assert.assertEquals(modelResource.getAttributeValue().startsWith("http://productlines/"), true,
+                    "Model rdf resource value is correct");
         }
     }
 
-
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteService()
+            throws Exception {
         cleanup();
     }
 

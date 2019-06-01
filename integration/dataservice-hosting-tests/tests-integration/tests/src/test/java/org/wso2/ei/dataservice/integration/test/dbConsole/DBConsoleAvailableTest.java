@@ -24,20 +24,19 @@ import org.testng.annotations.Test;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 import org.wso2.ei.dataservice.integration.test.odata.ODataTestUtils;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.xpath.XPathExpressionException;
 
 public class DBConsoleAvailableTest extends DSSIntegrationTest {
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.dss", description = "dbConsole available test case")
-    public void dbConsoleAvailableTest() throws XPathExpressionException, IOException {
+    @Test(groups = "wso2.dss", description = "dbConsole available test case") public void dbConsoleAvailableTest()
+            throws XPathExpressionException, IOException {
         String webAppUrl = dssContext.getContextUrls().getWebAppURL();
         String url = webAppUrl + "/" + "dbconsole/login.jsp?region=region5&item=dbconsole";
         Map<String, String> headers = new HashMap<>();

@@ -35,35 +35,33 @@ import java.util.Map;
 
 public class DS1081NullValuesTest extends DSSIntegrationTest {
 
-
     private static final Log log = LogFactory.getLog(DS1081NullValuesTest.class);
 
     private final String serviceName = "NullTest_DataService";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true)
-    public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTableNullTest.sql"));
-        deployService(serviceName, createArtifact(getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" +
-                                                  File.separator + "h2" + File.separator + serviceName + ".dbs",
-                                                  sqlFileLis));
+        deployService(serviceName, createArtifact(
+                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
+                        + File.separator + serviceName + ".dbs", sqlFileLis));
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "validate retrieval of null values")
-    public void validateNullValues() throws Exception {
+    @Test(groups = "wso2.dss", description = "validate retrieval of null values") public void validateNullValues()
+            throws Exception {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = ODataTestUtils.sendGET(serviceEndPoint + "select", headers);
         org.testng.Assert.assertEquals(response[0], 200);
-        Assert.assertTrue(response[1].toString().contains("\"PersonID\":null,\"LastName\":\"WSO2 Inc.\",\"City\":null,\"Weight\":null"));
+        Assert.assertTrue(response[1].toString()
+                .contains("\"PersonID\":null,\"LastName\":\"WSO2 Inc.\",\"City\":null,\"Weight\":null"));
     }
 }

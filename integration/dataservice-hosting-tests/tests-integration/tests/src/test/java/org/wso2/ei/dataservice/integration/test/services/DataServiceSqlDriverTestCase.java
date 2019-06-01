@@ -1,20 +1,20 @@
 /*
-*Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*WSO2 Inc. licenses this file to you under the Apache License,
-*Version 2.0 (the "License"); you may not use this file except
-*in compliance with the License.
-*You may obtain a copy of the License at
-*
-*http://www.apache.org/licenses/LICENSE-2.0
-*
-*Unless required by applicable law or agreed to in writing,
-*software distributed under the License is distributed on an
-*"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-*KIND, either express or implied.  See the License for the
-*specific language governing permissions and limitations
-*under the License.
-*/
+ *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ *WSO2 Inc. licenses this file to you under the Apache License,
+ *Version 2.0 (the "License"); you may not use this file except
+ *in compliance with the License.
+ *You may obtain a copy of the License at
+ *
+ *http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *Unless required by applicable law or agreed to in writing,
+ *software distributed under the License is distributed on an
+ *"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *KIND, either express or implied.  See the License for the
+ *specific language governing permissions and limitations
+ *under the License.
+ */
 
 package org.wso2.ei.dataservice.integration.test.services;
 
@@ -35,17 +35,16 @@ import org.wso2.ei.dataservice.integration.common.utils.DSSTestCaseUtils;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 import org.wso2.ei.dataservices.integration.common.clients.DataServiceFileUploaderClient;
 
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.rmi.RemoteException;
 import java.util.Iterator;
+import javax.activation.DataHandler;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertTrue;
-
 
 public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
 
@@ -57,49 +56,50 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(DataServiceSqlDriverTestCase.class);
 
-    @BeforeClass(alwaysRun = true)
-    public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
         super.init();
         resourceFileLocation = getResourceLocation();
         randomId = System.currentTimeMillis();
         dssTestCaseUtils = new DSSTestCaseUtils();
-        DataServiceFileUploaderClient dataServiceAdminClient =
-                new DataServiceFileUploaderClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
+        DataServiceFileUploaderClient dataServiceAdminClient = new DataServiceFileUploaderClient(
+                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
 
-        DataHandler dataHandler = modifyExcelURL(resourceFileLocation + File.separator + "dbs" + File.separator +
-                                                 "sqldriver" + File.separator + "sqlparsertest.dbs");
+        DataHandler dataHandler = modifyExcelURL(
+                resourceFileLocation + File.separator + "dbs" + File.separator + "sqldriver" + File.separator
+                        + "sqlparsertest.dbs");
 
         dataServiceAdminClient.uploadDataServiceFile("sqlparsertest.dbs", dataHandler);
         log.info(serviceName + " uploaded");
         serviceEPR = getServiceUrlHttp(serviceName);
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", enabled = false)
-    public void testServiceDeployment() throws RemoteException, XPathExpressionException {
-        assertTrue(dssTestCaseUtils.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(),
-                                                      sessionCookie, serviceName));
+    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", enabled = false) public void testServiceDeployment()
+            throws RemoteException, XPathExpressionException {
+        assertTrue(dssTestCaseUtils
+                .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
         log.info(serviceName + " is deployed");
     }
 
+    @Test(groups = "wso2.dss", description = "insert and retrieve records", dependsOnMethods = "testServiceDeployment", enabled = false) public void testInsertRecordsAndGetBack()
+            throws RemoteException {
 
-
-    @Test(groups = "wso2.dss", description = "insert and retrieve records", dependsOnMethods = "testServiceDeployment", enabled = false)
-    public void testInsertRecordsAndGetBack() throws RemoteException {
-
-        OMElement result = new AxisServiceClient().sendReceive(insertNewRecord(String.valueOf(randomId)), serviceEPR, "insertop");
+        OMElement result = new AxisServiceClient()
+                .sendReceive(insertNewRecord(String.valueOf(randomId)), serviceEPR, "insertop");
         assertTrue(result.toString().contains("SUCCESSFUL"));
 
         OMElement resultDetails = new AxisServiceClient().sendReceive(getDetails(), serviceEPR, "Getdetails");
         assertTrue(resultDetails.toString().contains(String.valueOf(randomId)));
     }
 
-    @Test(groups = "wso2.dss", description = "update and delete record", dependsOnMethods = "testInsertRecordsAndGetBack", enabled = false)
-    public void testUpdateAndDelete() throws RemoteException {
+    @Test(groups = "wso2.dss", description = "update and delete record", dependsOnMethods = "testInsertRecordsAndGetBack", enabled = false) public void testUpdateAndDelete()
+            throws RemoteException {
 
-        OMElement result = new AxisServiceClient().sendReceive(updateRecord(String.valueOf(randomId)), serviceEPR, "Update");
+        OMElement result = new AxisServiceClient()
+                .sendReceive(updateRecord(String.valueOf(randomId)), serviceEPR, "Update");
         assertTrue(result.toString().contains("SUCCESSFUL"));
 
-        OMElement resultDetails = new AxisServiceClient().sendReceive(deleteRecord(String.valueOf(randomId)), serviceEPR, "delete");
+        OMElement resultDetails = new AxisServiceClient()
+                .sendReceive(deleteRecord(String.valueOf(randomId)), serviceEPR, "delete");
         assertTrue(resultDetails.toString().contains("SUCCESSFUL"));
     }
 
@@ -108,8 +108,8 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
             OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(dbsFilePath));
             OMElement dbsConfig = dbsFile.getFirstChildWithName(new QName("config"));
             Iterator configElement1 = dbsConfig.getChildElements();
-            String productFilePath = resourceFileLocation + File.separator + "resources" + File.separator +
-                                     "Products-sql.xls";
+            String productFilePath =
+                    resourceFileLocation + File.separator + "resources" + File.separator + "Products-sql.xls";
             while (configElement1.hasNext()) {
                 OMElement property = (OMElement) configElement1.next();
                 String value = property.getAttributeValue(new QName("name"));
@@ -183,9 +183,7 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
         return payload;
     }
 
-
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
         deleteService(serviceName);
         log.info(serviceName + " deleted");
     }
