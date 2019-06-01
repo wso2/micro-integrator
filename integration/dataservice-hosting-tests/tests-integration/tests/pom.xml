@@ -16,12 +16,13 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.ei</groupId>
         <artifactId>dataservice-integration-tests</artifactId>
-        <version>6.6.0-SNAPSHOT</version>
+        <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -35,7 +36,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
-                <version>2.12.3</version>
+                <version>2.12.4</version>
                 <configuration>
                     <!--<argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m -Xdebug -Xnoagent -Djava.compiler=NONE -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5006</argLine>-->
                     <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m</argLine>
@@ -43,24 +44,8 @@
                         <suiteXmlFile>${testng.suiteXml.location}</suiteXmlFile>
                     </suiteXmlFiles>
                     <systemProperties>
-                        <property>
-                            <name>maven.test.haltafterfailure</name>
-                            <value>false</value>
-                        </property>
-                        <property>
-                            <name>java.io.tmpdir</name>
-                            <value>${basedir}/target/</value>
-                        </property>
-                        <property>
-                            <name>carbon.zip</name>
-                            <value>
-                                ${basedir}/../../../../distribution/target/wso2ei-${product.ei.version}.zip
-                            </value>
-                        </property>
-                        <property>
-                            <name>samples.dir</name>
-                            <value>${basedir}/../../../../samples/product</value>
-                        </property>
+                        <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
+                        <java.io.tmpdir>${basedir}/target/</java.io.tmpdir>
                         <property>
                             <name>framework.resource.location</name>
                             <value>
@@ -78,6 +63,9 @@
                             <value>false</value>
                         </property>
 
+                        <carbon.zip>
+                            ${basedir}/../../../../distribution/target/wso2mi-${product.mi.version}.zip
+                        </carbon.zip>
 
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <!--<emma.home>${basedir}/target/emma</emma.home>-->
@@ -132,26 +120,25 @@
                             <outputDirectory>${basedir}/src/test/resources/artifacts/dataservice/jar
                             </outputDirectory>
                             <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>mysql-connector-java
-                            </includeArtifactIds>
+                            <includeArtifactIds>mysql-connector-java</includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>copy-secVerifier</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
-                            <includeTypes>aar</includeTypes>
-                            <includeArtifactIds>SecVerifier</includeArtifactIds>
-                            <stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution>
+                    <!-- <execution>
+                         <id>copy-secVerifier</id>
+                         <phase>compile</phase>
+                         <goals>
+                             <goal>copy-dependencies</goal>
+                         </goals>
+                         <configuration>
+                             <outputDirectory>${basedir}/target/security-verifier</outputDirectory>
+                             <includeTypes>aar</includeTypes>
+                             <includeArtifactIds>SecVerifier</includeArtifactIds>
+                             <stripVersion>true</stripVersion>
+                         </configuration>
+                     </execution>-->
 
-                    <execution>
+                    <!--<execution>
                         <id>unpack-mar-jks</id>
                         <phase>compile</phase>
                         <goals>
@@ -170,7 +157,7 @@
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
-                    </execution>
+                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -187,6 +174,32 @@
             </plugin>
 
             <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <version>2.6</version>
+                <executions>
+                    <execution>
+                        <id>copy-samples</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/samples</outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/../../../../samples/
+                                    </directory>
+                                    <includes>
+                                        <include>**</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <!--<plugin>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>2.6</version>
                 <executions>
@@ -233,33 +246,11 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
+            </plugin>-->
         </plugins>
     </build>
 
     <dependencies>
-<!--        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents</groupId>
-                    <artifactId>httpcore</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>org.jacoco.core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>org.jacoco.report</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>-->
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>automation-extensions</artifactId>

@@ -29,12 +29,12 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <test name="InitializeAndSetupServer" preserve-order="true">
+    <!--<test name="InitializeAndSetupServer" preserve-order="true">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerStartupTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.datasource.DataSourceInitializationAtStartUpTestCase"/>
-            <!--disabled due to test failure-->
-            <!--<class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerBundleStatusTestCase"/>-->
+            &lt;!&ndash;disabled due to test failure&ndash;&gt;
+            &lt;!&ndash;<class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerBundleStatusTestCase"/>&ndash;&gt;
         </classes>
     </test>
 
@@ -45,11 +45,11 @@
         </classes>
     </test>
 
-<!--    <test name="DSS-DBConsole" parallel="false" verbose="2">
+&lt;!&ndash;    <test name="DSS-DBConsole" parallel="false" verbose="2">
         <packages>
             <package name="org.wso2.ei.dataservice.integration.test.dbConsole"/>
         </packages>
-    </test>-->
+    </test>&ndash;&gt;
 
     <test name="OData-tests" parallel="false" verbose="2">
         <classes>
@@ -72,11 +72,11 @@
         </classes>
     </test>
 
-<!--  TODO need to fix  <test name="SPARQL-tests" parallel="false" verbose="2">
+&lt;!&ndash;  TODO need to fix  <test name="SPARQL-tests" parallel="false" verbose="2">
         <packages>
             <package name="org.wso2.ei.dataservice.integration.test.sparql"/>
         </packages>
-    </test>-->
+    </test>&ndash;&gt;
 
     <test name="DSS-file-service-tests" parallel="false" verbose="2">
         <classes>
@@ -93,7 +93,7 @@
             <class name="org.wso2.ei.dataservice.integration.test.services.DataServiceSqlDriverTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.DistributedTransactionTestCase">
                 <methods>
-                    <!--This is added due to BoxCarring is not supported in EI, We will recommend Request Box option for BoxCarring-->
+                    &lt;!&ndash;This is added due to BoxCarring is not supported in EI, We will recommend Request Box option for BoxCarring&ndash;&gt;
                     <exclude name="distributedTransactionFailTest"/>
                 </methods>
                     </class>
@@ -131,20 +131,20 @@
         </classes>
     </test>
 
- <!--   <test name="DSS-jmx-tests" parallel="false" verbose="2">
+ &lt;!&ndash;   <test name="DSS-jmx-tests" parallel="false" verbose="2">
         <packages>
             <package name="org.wso2.ei.dataservice.integration.test.jmx.statistics"/>
         </packages>
-    </test>-->
+    </test>&ndash;&gt;
 
-    <!--<test name="DSS-jira-issues-tests" parallel="false" verbose="2">-->
-    <!--<packages>-->
-    <!--<package name="org.wso2.ei.dataservice.integration.test.jira.issues"/>-->
-    <!--</packages>-->
-    <!--</test>-->
+    &lt;!&ndash;<test name="DSS-jira-issues-tests" parallel="false" verbose="2">&ndash;&gt;
+    &lt;!&ndash;<packages>&ndash;&gt;
+    &lt;!&ndash;<package name="org.wso2.ei.dataservice.integration.test.jira.issues"/>&ndash;&gt;
+    &lt;!&ndash;</packages>&ndash;&gt;
+    &lt;!&ndash;</test>&ndash;&gt;
 
 
-  <!--  <test name="DSS-jira-issues-tests-jsonValue" parallel="false" verbose="2">
+  &lt;!&ndash;  <test name="DSS-jira-issues-tests-jsonValue" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15235JsonValueTypeMissMatchTest"/>
         </classes>
@@ -160,7 +160,7 @@
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15879XmlNullElementTest"/>
         </classes>
-    </test>-->
+    </test>&ndash;&gt;
 
      <test name="DSS-samples-tests" parallel="false" verbose="2">
         <packages>
@@ -168,19 +168,19 @@
         </packages>
     </test>
 
-<!--    <test name="DSS-jira-issues-tests-email" parallel="false" verbose="2">
+&lt;!&ndash;    <test name="DSS-jira-issues-tests-email" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1063EmailUsernameTestCase"/>
         </classes>
-    </test>-->
+    </test>&ndash;&gt;
 
-    <!--test name="DSS-jira-issues-tests" parallel="false" verbose="2">
+    &lt;!&ndash;test name="DSS-jira-issues-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15928JMXDisablingTest"/>
         </classes>
-    </test-->
+    </test&ndash;&gt;
 
-<!--    <test name="DSS-jira-issues-tests-time" parallel="false" verbose="2">
+&lt;!&ndash;    <test name="DSS-jira-issues-tests-time" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1069DifferentTimeStampStoreIssueTestCase"/>
         </classes>
@@ -190,13 +190,13 @@
        <classes>
            <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1189LeagyTimeStampModeTestCase"/>
        </classes>
-   </test>-->
+   </test>&ndash;&gt;
 
-   <!--test name="DSS-jira-issues-boxcarring-parallel-access" parallel="false" verbose="2">
+   &lt;!&ndash;test name="DSS-jira-issues-boxcarring-parallel-access" parallel="false" verbose="2">
        <classes>
            <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS937BoxcarringTestCase"/>
        </classes>
-    </test-->
+    </test&ndash;&gt;
 
     <test name="DSS-requestBox-tests" parallel="false" verbose="2">
         <classes>
@@ -204,26 +204,26 @@
             <class name="org.wso2.ei.dataservice.integration.test.requestBox.RequestBoxTestCase"/>
         </classes>
     </test>
-<!--TODO: Check what caused the test failure. Could be due to a change in Google side -->
-    <!--test name="DSS-gspread-tests" parallel="false" verbose="2">
+&lt;!&ndash;TODO: Check what caused the test failure. Could be due to a change in Google side &ndash;&gt;
+    &lt;!&ndash;test name="DSS-gspread-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.gspread.GSpreadDataServiceTestCase"/>
         </classes>
-    </test-->
+    </test&ndash;&gt;
 
-    <!--test name="DSS-gson-tests">
+    &lt;!&ndash;test name="DSS-gson-tests">
         <classes>
             TODO: This was commented out due to intermittent build failures. Need to find the root cause and fix
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15263JsonGsonFormatterSuperTenantModeTest"/>
         </classes>
-    </test-->
+    </test&ndash;&gt;
 
-    <!-- Test case is disabled because need axis2 1.6.1-wso2v21 version release -->
-<!--    <test name="RequestBoxJsonTests">
+    &lt;!&ndash; Test case is disabled because need axis2 1.6.1-wso2v21 version release &ndash;&gt;
+&lt;!&ndash;    <test name="RequestBoxJsonTests">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.requestBox.RequestBoxJsonTestCase"/>
         </classes>
-    </test>-->
+    </test>&ndash;&gt;
     <test name="DSS-JIRA-issues" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS954UseExcelFromRegistryTestCase"/>
@@ -246,5 +246,5 @@
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15262JsonGsonFormatterTenantModeTest"/>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.EI1222JSONSecuredServiceWithXMLCharacterTestCase"/>
         </classes>
-    </test>
+    </test>-->
 </suite>
