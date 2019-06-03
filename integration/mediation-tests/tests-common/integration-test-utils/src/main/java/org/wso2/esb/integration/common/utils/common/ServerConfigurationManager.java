@@ -17,9 +17,12 @@
  */
 package org.wso2.esb.integration.common.utils.common;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import org.wso2.carbon.integration.common.admin.client.ServerAdminClient;
 import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 import org.wso2.carbon.integration.common.utils.FileManager;
@@ -45,7 +48,10 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BooleanSupplier;
 import javax.xml.xpath.XPathExpressionException;
 
 /**
@@ -53,6 +59,7 @@ import javax.xml.xpath.XPathExpressionException;
  */
 public class ServerConfigurationManager {
 
+    private static final Log log = LogFactory.getLog(ServerConfigurationManager.class);
     private static final long TIME_OUT = 600000;
     private File originalConfig;
     private File backUpConfig;
@@ -62,7 +69,10 @@ public class ServerConfigurationManager {
     private AutomationContext autoCtx;
     private String sessionCookie;
     private LoginLogoutClient loginLogoutClient;
-    private List<ConfigData> configDatas = new ArrayList<ConfigData>();
+    private List<ConfigData> configData = new ArrayList<>();
+
+    private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
+    private static final String MI_HOME_SYSTEM_PROPERTY = "miCarbonHome";
 
     /**
      * Create a ServerConfigurationManager
@@ -104,8 +114,8 @@ public class ServerConfigurationManager {
         //restore backup configuration
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         String confDir = Paths.get(carbonHome, "conf").toString();
-        String AXIS2_XML = "axis2";
-        if (fileName.contains(AXIS2_XML)) {
+        String axis2Xml = "axis2";
+        if (fileName.contains(axis2Xml)) {
             confDir = Paths.get(confDir, "axis2").toString();
         }
         originalConfig = Paths.get(confDir, fileName).toFile();
@@ -118,7 +128,7 @@ public class ServerConfigurationManager {
                     "Failed to rename file from " + originalConfig.getName() + "to" + backUpConfig.getName());
         }
 
-        configDatas.add(new ConfigData(backUpConfig, originalConfig));
+        configData.add(new ConfigData(backUpConfig, originalConfig));
     }
 
     /**
@@ -139,7 +149,7 @@ public class ServerConfigurationManager {
                     "Failed to rename file from " + originalConfig.getName() + "to" + backUpConfig.getName());
         }
 
-        configDatas.add(new ConfigData(backUpConfig, originalConfig));
+        configData.add(new ConfigData(backUpConfig, originalConfig));
     }
 
     /**
@@ -204,10 +214,8 @@ public class ServerConfigurationManager {
                 source = new FileInputStream(sourceFile).getChannel();
                 destination = new FileOutputStream(originalConfig).getChannel();
             } else {
-                if (!targetFile.exists()) {
-                    if (!targetFile.createNewFile()) {
+                if (!targetFile.exists() && !targetFile.createNewFile()) {
                         throw new IOException("File " + targetFile + "creation fails");
-                    }
                 }
                 source = new FileInputStream(sourceFile).getChannel();
                 destination = new FileOutputStream(targetFile).getChannel();
@@ -248,7 +256,7 @@ public class ServerConfigurationManager {
      * @throws IOException             - throws if restore to last configuration fails
      */
     public void restoreToLastConfiguration(boolean isRestartRequired) throws AutomationUtilException, IOException {
-        for (ConfigData data : configDatas) {
+        for (ConfigData data : configData) {
             Files.move(data.getBackupConfig().toPath(), data.getOriginalConfig().toPath(),
                     StandardCopyOption.REPLACE_EXISTING);
 
@@ -271,32 +279,7 @@ public class ServerConfigurationManager {
      */
     public void applyConfiguration(File newConfig) throws AutomationUtilException, IOException {
         //to backup existing configuration
-        backupConfiguration(newConfig.getName());
-        InputStreamReader in = new InputStreamReader(new FileInputStream(newConfig), StandardCharsets.UTF_8);
-        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(originalConfig), StandardCharsets.UTF_8);
-        try {
-            int c;
-            while ((c = in.read()) != -1) {
-                out.write(c);
-            }
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
-        }
-        restartGracefully();
+        applyConfigurationUtil(newConfig, newConfig);
     }
 
     /**
@@ -307,31 +290,7 @@ public class ServerConfigurationManager {
      */
     public void applyConfigurationWithoutRestart(File newConfig) throws IOException {
         //to backup existing configuration
-        backupConfiguration(newConfig.getName());
-        InputStreamReader in = new InputStreamReader(new FileInputStream(newConfig), StandardCharsets.UTF_8);
-        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(originalConfig), StandardCharsets.UTF_8);
-        try {
-            int c;
-            while ((c = in.read()) != -1) {
-                out.write(c);
-            }
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
-        }
+        appluConfigurationUtilUtil(newConfig, newConfig);
     }
 
     /**
@@ -342,33 +301,25 @@ public class ServerConfigurationManager {
      */
     public void applyConfiguration(File sourceFile, File targetFile) throws AutomationUtilException, IOException {
         //to backup existing configuration
-        backupConfiguration(targetFile.getName());
-        InputStreamReader in = new InputStreamReader(new FileInputStream(sourceFile), StandardCharsets.UTF_8);
-        OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(originalConfig), StandardCharsets.UTF_8);
+        applyConfigurationUtil(sourceFile, targetFile);
+    }
 
-        try {
+    private void applyConfigurationUtil(File sourceFile, File targetFile) throws IOException, AutomationUtilException {
+        appluConfigurationUtilUtil(sourceFile, targetFile);
+        restartGracefully();
+    }
+
+    private void appluConfigurationUtilUtil(File sourceFile, File targetFile) throws IOException {
+        backupConfiguration(targetFile.getName());
+
+        try (InputStreamReader in = new InputStreamReader(new FileInputStream(sourceFile), StandardCharsets.UTF_8);
+                OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(originalConfig),
+                        StandardCharsets.UTF_8)) {
             int c;
             while ((c = in.read()) != -1) {
                 out.write(c);
             }
-        } finally {
-            if (in != null) {
-                try {
-                    in.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-
-            }
-            if (out != null) {
-                try {
-                    out.close();
-                } catch (IOException e) {
-                    //ignore
-                }
-            }
         }
-        restartGracefully();
     }
 
     /**
@@ -377,7 +328,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if server restart fails
      */
     public void restartGracefully() throws AutomationUtilException {
-        restartGracefully(TIME_OUT);
+        serverRestart();
     }
 
     /**
@@ -405,6 +356,60 @@ public class ServerConfigurationManager {
         }
     }
 
+    public synchronized void serverRestart() throws AutomationUtilException {
+
+        try {
+
+            log.info("Restarting the server..");
+
+            String miCarbonHome = System.getProperty(MI_HOME_SYSTEM_PROPERTY);
+
+            Process tempProcess = startProcess(miCarbonHome, getStartScriptCommand("restart"));
+
+            ServerLogReader inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
+            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 120, TimeUnit.SECONDS);
+
+            log.info("Server re started successfully...");
+
+        } catch (IOException | InterruptedException e) {
+            throw new AutomationUtilException("Failed to stop server ", e);
+        }
+
+    }
+
+    private Process startProcess(String workingDirectory, String[] cmdArray) throws IOException {
+        File commandDir = new File(workingDirectory);
+        ProcessBuilder processBuilder = new ProcessBuilder(cmdArray);
+        processBuilder.directory(commandDir);
+        return processBuilder.start();
+    }
+
+    private void waitTill(BooleanSupplier predicate, int maxWaitTime, TimeUnit timeUnit) throws InterruptedException {
+        long time = System.currentTimeMillis() + timeUnit.toMillis(maxWaitTime);
+        while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
+            TimeUnit.MILLISECONDS.sleep(1);
+        }
+    }
+
+    private String[] getStartScriptCommand(String... commands) {
+        String operatingSystem = System.getProperty("os.name").toLowerCase();
+        String scriptName = "micro-integrator";
+
+        String miHome = System.getProperty(MI_HOME_SYSTEM_PROPERTY);
+
+        ArrayList<String> commandArray;
+        if (operatingSystem.contains("windows")) {
+            commandArray = new ArrayList<>(Arrays.asList("cmd.exe", "/c",
+                    miHome + File.separator + "bin" + File.separator + scriptName + ".bat"));
+        } else {
+            commandArray = new ArrayList<>(
+                    Arrays.asList("sh", miHome + File.separator + "bin" + File.separator + scriptName + ".sh"));
+        }
+
+        commandArray.addAll(Arrays.asList(commands));
+        return commandArray.toArray(new String[0]);
+    }
+
     /**
      * Restart server gracefully from current user session
      *
@@ -423,13 +428,7 @@ public class ServerConfigurationManager {
                 //ignored
             }
             ClientConnectionUtil.waitForLogin(autoCtx);
-        } catch (RemoteException e) {
-            throw new AutomationUtilException("Error while gracefully restarting the server ", e);
-        } catch (ServerAdminException e) {
-            throw new AutomationUtilException("Error while gracefully restarting the server ", e);
-        } catch (MalformedURLException e) {
-            throw new AutomationUtilException("Error while gracefully restarting the server ", e);
-        } catch (LoginAuthenticationExceptionException e) {
+        } catch (RemoteException | ServerAdminException | MalformedURLException | LoginAuthenticationExceptionException e) {
             throw new AutomationUtilException("Error while gracefully restarting the server ", e);
         }
     }
@@ -440,27 +439,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if forceful restart fails
      */
     public void restartForcefully() throws AutomationUtilException {
-        try {
-            sessionCookie = loginLogoutClient.login();
-            ServerAdminClient serverAdmin = new ServerAdminClient(backEndUrl, sessionCookie);
-            serverAdmin.restart();
-            try {
-                Thread.sleep(20000); //force wait until server gracefully restarts
-                ClientConnectionUtil.waitForPort(port, TIME_OUT, true, hostname);
-                Thread.sleep(5000); //forceful wait until server is ready to be served
-            } catch (InterruptedException e) {
-                //ignored
-            }
-            ClientConnectionUtil.waitForLogin(autoCtx);
-        } catch (RemoteException e) {
-            throw new AutomationUtilException("Error while forcefully restarting the server ", e);
-        } catch (ServerAdminException e) {
-            throw new AutomationUtilException("Error while forcefully restarting the server ", e);
-        } catch (MalformedURLException e) {
-            throw new AutomationUtilException("Error while forcefully restarting the server ", e);
-        } catch (LoginAuthenticationExceptionException e) {
-            throw new AutomationUtilException("Error while forcefully restarting the server ", e);
-        }
+        serverRestart();
     }
 
     /**
@@ -499,11 +478,11 @@ public class ServerConfigurationManager {
      * @throws IOException
      * @throws URISyntaxException
      */
-    public void copyToComponentDropins(File jar) throws IOException, URISyntaxException {
+    /*public void copyToComponentDropins(File jar) throws IOException, URISyntaxException {
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         String lib = Paths.get(carbonHome, "dropins").toString();
         FileManager.copyJarFile(jar, lib);
-    }
+    }*/
 
     /**
      * @param fileName file name

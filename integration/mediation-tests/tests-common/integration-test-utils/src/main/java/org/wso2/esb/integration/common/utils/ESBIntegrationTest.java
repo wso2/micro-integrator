@@ -98,7 +98,6 @@ public abstract class ESBIntegrationTest {
     protected TestUserMode userMode;
 
     protected void init() throws Exception {
-        userMode = TestUserMode.SUPER_TENANT_ADMIN;
         init(userMode);
     }
 
@@ -125,7 +124,6 @@ public abstract class ESBIntegrationTest {
         axis2Client = new StockQuoteClient();
         context = new AutomationContext(ESBTestConstant.ESB_PRODUCT_GROUP, userMode);
         contextUrls = context.getContextUrls();
-        //sessionCookie = login(context);
         esbUtils = new ESBTestCaseUtils();
         tenantInfo = context.getContextTenant();
         userInfo = tenantInfo.getContextUser();
