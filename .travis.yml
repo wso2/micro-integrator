@@ -26,6 +26,11 @@ matrix:
       script:
         - go test -v ./...
 
+      cache:
+        directories:
+          - $HOME/.cache/go-build
+          - $HOME/gopath/pkg/mod
+
     - language: java
 
       services:
