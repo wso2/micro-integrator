@@ -20,13 +20,11 @@ package org.wso2.carbon.micro.integrator.management.apis.models.dataServices;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.annotations.SerializedName;
 
 public class DataServicesList {
     private int count;
 
-    @JsonProperty("list")
     @SerializedName("list")
     private List<DataServiceSummary> serviceSummaries;
 

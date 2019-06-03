@@ -29,15 +29,9 @@ public class DataServiceSummary {
     @SerializedName("wsdl2_0")
     private String wsdl20;
 
-    public void setServiceName(String serviceName) {
+    public DataServiceSummary(String serviceName, String[] wsdlUrls) {
         this.serviceName = serviceName;
-    }
-
-    public void setWsdl11(String wsdl11) {
-        this.wsdl11 = wsdl11;
-    }
-
-    public void setWsdl20(String wsdl20) {
-        this.wsdl20 = wsdl20;
+        this.wsdl11 = wsdlUrls[0];
+        this.wsdl20 = wsdlUrls[1];
     }
 }

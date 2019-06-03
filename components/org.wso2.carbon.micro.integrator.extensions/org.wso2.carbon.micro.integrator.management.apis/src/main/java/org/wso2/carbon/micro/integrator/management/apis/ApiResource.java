@@ -100,7 +100,7 @@ public class ApiResource extends APIResource {
             jsonBody.getJSONArray(Constants.LIST).put(apiObject);
 
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateApiData(MessageContext messageContext, String apiName) {
@@ -111,7 +111,7 @@ public class ApiResource extends APIResource {
         JSONObject jsonBody = getApiByName(messageContext, apiName);
 
         if (Objects.nonNull(jsonBody)) {
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }

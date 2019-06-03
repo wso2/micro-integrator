@@ -87,7 +87,7 @@ public class InboundEndpointResource extends APIResource {
 
             jsonBody.getJSONArray(Constants.LIST).put(inboundObject);
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateInboundEndpointData(MessageContext messageContext, String inboundEndpointName) {
@@ -98,7 +98,7 @@ public class InboundEndpointResource extends APIResource {
         JSONObject jsonBody = getInboundEndpointByName(messageContext, inboundEndpointName);
 
         if (Objects.nonNull(jsonBody)) {
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }

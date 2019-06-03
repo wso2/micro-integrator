@@ -31,43 +31,19 @@ public class DataServiceInfo {
 
     @SerializedName("wsdl2_0")
     private String wsdl20;
-    private List<Query> queries;
 
-    public DataServiceInfo(String serviceName, String serviceDescription, String serviceGroupName, String wsdl11,
-                           String wsdl20) {
+    private List<QuerySummary> queries;
+
+    public DataServiceInfo(String serviceName, String serviceDescription, String serviceGroupName, String[] wsdlUrls) {
         this.serviceName = serviceName;
         this.serviceDescription = serviceDescription;
         this.serviceGroupName = serviceGroupName;
-        this.wsdl11 = wsdl11;
-        this.wsdl20 = wsdl20;
+        this.wsdl11 = wsdlUrls[0];
+        this.wsdl20 = wsdlUrls[1];
         queries = new ArrayList<>();
     }
 
-    public String getServiceName() {
-        return serviceName;
-    }
-
-    public String getServiceDescription() {
-        return serviceDescription;
-    }
-
-    public String getServiceGroupName() {
-        return serviceGroupName;
-    }
-
-    public String getWsdl11() {
-        return wsdl11;
-    }
-
-    public String getWsdl20() {
-        return wsdl20;
-    }
-
-    public List<Query> getQueries() {
-        return queries;
-    }
-
-    public void addQuery(Query query) {
-        queries.add(query);
+    public void addQuery(QuerySummary querySummary) {
+        queries.add(querySummary);
     }
 }

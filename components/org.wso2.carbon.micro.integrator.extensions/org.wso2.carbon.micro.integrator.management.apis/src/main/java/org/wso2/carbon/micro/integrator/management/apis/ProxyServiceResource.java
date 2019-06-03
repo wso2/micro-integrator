@@ -101,7 +101,7 @@ public class ProxyServiceResource extends APIResource {
 
             jsonBody.getJSONArray(Constants.LIST).put(proxyObject);
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
 
@@ -113,7 +113,7 @@ public class ProxyServiceResource extends APIResource {
         JSONObject jsonBody = getProxyServiceByName(messageContext, proxyServiceName);
 
         if (Objects.nonNull(jsonBody)) {
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }

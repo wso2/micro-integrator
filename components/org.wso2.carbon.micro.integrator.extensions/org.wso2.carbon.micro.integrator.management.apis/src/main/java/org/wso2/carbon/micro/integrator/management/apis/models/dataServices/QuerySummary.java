@@ -17,14 +17,12 @@
 
 package org.wso2.carbon.micro.integrator.management.apis.models.dataServices;
 
-public class Query {
+public class QuerySummary {
     private String id;
+    private String namespace;
 
-    public Query(String id) {
+    public QuerySummary(String id, String namespace) {
         this.id = id;
-    }
-
-    public String getId() {
-        return id;
+        this.namespace = namespace;
     }
 }

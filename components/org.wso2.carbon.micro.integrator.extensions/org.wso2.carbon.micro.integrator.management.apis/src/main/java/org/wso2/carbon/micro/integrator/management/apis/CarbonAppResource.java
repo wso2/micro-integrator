@@ -90,7 +90,7 @@ public class CarbonAppResource extends APIResource {
 
             jsonBody.getJSONArray(Constants.LIST).put(appObject);
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void populateCarbonAppData(MessageContext messageContext, String carbonAppName) {
@@ -101,7 +101,7 @@ public class CarbonAppResource extends APIResource {
         JSONObject jsonBody = getCarbonAppByName(carbonAppName);
 
         if (Objects.nonNull(jsonBody)) {
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }

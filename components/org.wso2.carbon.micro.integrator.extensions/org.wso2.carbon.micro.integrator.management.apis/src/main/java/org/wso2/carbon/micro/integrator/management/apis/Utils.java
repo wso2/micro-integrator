@@ -40,10 +40,10 @@ public class Utils {
         return null;
     }
 
-    public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, String payload){
+    public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload) {
 
         try {
-            JsonUtil.getNewJsonPayload(axis2MessageContext, payload,  true, true);
+            JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(), true, true);
         } catch (AxisFault axisFault) {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
             log.error("Error occurred while setting json payload", axisFault);
