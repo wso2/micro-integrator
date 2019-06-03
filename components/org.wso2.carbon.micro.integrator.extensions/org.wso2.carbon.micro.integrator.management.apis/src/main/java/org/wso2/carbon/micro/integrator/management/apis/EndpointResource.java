@@ -105,7 +105,7 @@ public class EndpointResource extends APIResource {
 
             jsonBody.getJSONArray(Constants.LIST).put(endpointObject);
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
     }
 
     private void populateEndpointData(MessageContext messageContext, String endpointName) {
@@ -116,7 +116,7 @@ public class EndpointResource extends APIResource {
         JSONObject jsonBody = getEndpointByName(messageContext, endpointName);
 
         if (Objects.nonNull(jsonBody)) {
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }

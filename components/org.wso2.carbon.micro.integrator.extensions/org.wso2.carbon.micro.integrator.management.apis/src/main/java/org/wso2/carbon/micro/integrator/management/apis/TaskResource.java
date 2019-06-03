@@ -80,7 +80,7 @@ public class TaskResource extends APIResource {
             JSONObject taskObject = getTaskByName(messageContext, taskName);
             jsonBody.getJSONArray(Constants.LIST).put(taskObject);
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
     }
 
     private void populateTaskData(MessageContext messageContext, String taskName) {
@@ -91,7 +91,7 @@ public class TaskResource extends APIResource {
         JSONObject jsonBody = getTaskByName(messageContext, taskName);
 
         if (Objects.nonNull(jsonBody)) {
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }

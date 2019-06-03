@@ -1,30 +1,25 @@
 /*
- *  Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing,
- *  software distributed under the License is distributed on an
- *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- *  KIND, either express or implied.  See the License for the
- *  specific language governing permissions and limitations
- *  under the License.
- *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import javax.xml.stream.XMLStreamException;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import com.google.gson.Gson;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -35,17 +30,15 @@ import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.core.DBUtils;
-import org.wso2.carbon.dataservices.core.description.query.Query;
 import org.wso2.carbon.dataservices.core.engine.DataService;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.micro.integrator.management.apis.models.dataServices.DataServiceSummary;
+import org.wso2.carbon.micro.integrator.management.apis.models.dataServices.DataServicesList;
+import org.wso2.carbon.service.mgt.ServiceAdmin;
+import org.wso2.carbon.service.mgt.ServiceMetaData;
 
 public class DataServiceResource extends APIResource {
     private final Log log = LogFactory.getLog(DataService.class);
-
-    private static final String ROOT_ELEMENT_DATA_SERVICE = "<data></data>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-    private static final String LIST_ITEM = "<Item></Item>";
 
     public DataServiceResource(String urlTemplate) {
         super(urlTemplate);
@@ -61,60 +54,75 @@ public class DataServiceResource extends APIResource {
 
     @Override
     public boolean invoke(MessageContext msgCtx) {
-        try {
-            String[] dataServiceList = getDataServiceList(msgCtx);
-            for (String s : dataServiceList) {
-                OMElement doctorInformationStore = getDataServiceByName(msgCtx, s);
-                populateDataServiceData(msgCtx);
-                log.info(doctorInformationStore);
+        buildMessage(msgCtx);
+        String param = Utils.getQueryParameter(msgCtx, "dataServiceName");
+
+        if (Objects.nonNull(param)) {
+            populateDataServiceByName(msgCtx, param);
+        } else {
+            try {
+                populateDataServiceList(msgCtx);
+            } catch (AxisFault axisFault) {
+                log.error(axisFault.getStackTrace());
             }
-        } catch (AxisFault | XMLStreamException e) {
-            log.error(e.getStackTrace());
         }
-        return true;
-    }
 
-    private String[] getDataServiceList(MessageContext msgCtx) throws AxisFault {
-        SynapseConfiguration configuration = msgCtx.getConfiguration();
-        AxisConfiguration axisConfiguration = configuration.getAxisConfiguration();
-        return DBUtils.getAvailableDS(axisConfiguration);
-    }
-
-    private void populateDataServiceData(MessageContext msgCtx) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
 
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+        return true;
+    }
+
+    private void populateDataServiceList(MessageContext msgCtx) throws AxisFault {
         SynapseConfiguration configuration = msgCtx.getConfiguration();
+        AxisConfiguration axisConfiguration = configuration.getAxisConfiguration();
+        String[] dataServicesNames = DBUtils.getAvailableDS(axisConfiguration);
+
+        // initiate list model
+        DataServicesList dataServicesList = new DataServicesList(dataServicesNames.length);
+
+        for (String dataServiceName : dataServicesNames) {
+            DataService dataService = getDataServiceByName(msgCtx, dataServiceName);
+            ServiceMetaData serviceMetaData = getServiceMetaData(dataService);
+
+            // initiate summary model
+            DataServiceSummary summary = new DataServiceSummary();
+            if (Objects.nonNull(serviceMetaData)) {
+                summary.setServiceName(serviceMetaData.getName());
+                summary.setWsdl11(serviceMetaData.getWsdlURLs()[0]);
+                summary.setWsdl20(serviceMetaData.getWsdlURLs()[1]);
+            }
+            dataServicesList.addServiceSummary(summary);
+        }
+
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
+
+        Utils.setJsonPayLoad(axis2MessageContext, new Gson().toJson(dataServicesList));
+    }
+
+    private void populateDataServiceByName(MessageContext msgCtx, String param) {
 
     }
 
-    private OMElement getDataServiceByName(MessageContext msgCtx, String serviceId) throws XMLStreamException {
+    private DataService getDataServiceByName(MessageContext msgCtx, String serviceId) {
         AxisService axisService = msgCtx.getConfiguration().
                 getAxisConfiguration().getServiceForActivation(serviceId);
         DataService dataService = null;
         if (axisService != null) {
             dataService = (DataService) axisService.getParameter(DBConstants.DATA_SERVICE_OBJECT).getValue();
-            Map<String, Query> queries = dataService.getQueries();
-            Iterator<Map.Entry<String, Query>> iterator = queries.entrySet().iterator();
-            while (iterator.hasNext()) {
-                Map.Entry<String, Query> pair = iterator.next();
-                System.out.println(pair.getKey() + " = " + pair.getValue());
-            }
-            log.info(dataService.toString());
         } else {
             log.error("DataService " + serviceId + " is null.");
         }
-        return convertDataServiceToOMElement(dataService);
+        return dataService;
     }
 
-    private OMElement convertDataServiceToOMElement(DataService dataService) throws XMLStreamException {
-        if (null == dataService) {
+    private ServiceMetaData getServiceMetaData(DataService dataService) throws AxisFault {
+        if (Objects.nonNull(dataService)) {
+            return new ServiceAdmin().getServiceData(dataService.getName());
+        } else {
             return null;
         }
-
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_DATA_SERVICE);
-
-
-        return rootElement;
     }
 }

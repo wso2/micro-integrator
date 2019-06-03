@@ -17,16 +17,16 @@
 
 package org.wso2.carbon.micro.integrator.management.apis.models.dataServices;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class DataServiceSummary {
-    @JsonProperty("name")
+    @SerializedName("name")
     private String serviceName;
 
-    @JsonProperty("wsdl1_1")
+    @SerializedName("wsdl1_1")
     private String wsdl11;
 
-    @JsonProperty("wsdl2_0")
+    @SerializedName("wsdl2_0")
     private String wsdl20;
 
     public void setServiceName(String serviceName) {

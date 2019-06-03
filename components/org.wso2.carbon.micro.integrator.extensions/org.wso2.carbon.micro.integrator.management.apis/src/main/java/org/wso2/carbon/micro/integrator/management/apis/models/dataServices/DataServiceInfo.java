@@ -13,24 +13,23 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
  */
 
 package org.wso2.carbon.micro.integrator.management.apis.models.dataServices;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.google.gson.annotations.SerializedName;
 
 public class DataServiceInfo {
     private String serviceName;
     private String serviceDescription;
     private String serviceGroupName;
 
-    @JsonProperty("wsdl1_1")
+    @SerializedName("wsdl1_1")
     private String wsdl11;
 
-    @JsonProperty("wsdl2_0")
+    @SerializedName("wsdl2_0")
     private String wsdl20;
     private List<Query> queries;
 

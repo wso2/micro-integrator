@@ -93,7 +93,7 @@ public class SequenceResource extends APIResource {
 
             jsonBody.getJSONArray(Constants.LIST).put(sequenceObject);
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
     }
 
     private void populateSequenceData(MessageContext messageContext, String sequenceName) {
@@ -104,7 +104,7 @@ public class SequenceResource extends APIResource {
         JSONObject jsonBody = getSequenceByName(messageContext, sequenceName);
 
         if (Objects.nonNull(jsonBody)) {
-            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody.toString());
         } else {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }

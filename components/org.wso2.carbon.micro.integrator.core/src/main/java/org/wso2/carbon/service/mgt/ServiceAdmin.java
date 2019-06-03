@@ -110,7 +110,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
     private static final String DATA_SERVICE_TYPE = "data_service";
 
 
-    public ServiceAdmin() throws Exception {
+    public ServiceAdmin() {
         super();
 //        pf = PersistenceFactory.getInstance(getAxisConfig());
 //        spm = pf.getServicePM();
@@ -1002,7 +1002,7 @@ public class ServiceAdmin extends AbstractAdmin implements ServiceAdminMBean {
         }
     }
 
-    public ServiceMetaData getServiceData(String serviceName) throws Exception {
+    public ServiceMetaData getServiceData(String serviceName) throws AxisFault {
         AxisService service = getAxisConfig().getServiceForActivation(serviceName);
 
         if (service == null) {
