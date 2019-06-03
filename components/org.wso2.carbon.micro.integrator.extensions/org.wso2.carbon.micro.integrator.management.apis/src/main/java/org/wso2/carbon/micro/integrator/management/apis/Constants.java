@@ -28,6 +28,7 @@ public class Constants {
     public static final String PREFIX_PROXY_SERVICES = "/proxy-services";
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
+    public static final String PREFIX_TEMPLATES = "/templates";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";
@@ -46,4 +47,5 @@ public class Constants {
     public static final String HTTP_STATUS_CODE = "HTTP_SC";
     public static final String NOT_FOUND = "404";
     public static final String INTERNAL_SERVER_ERROR = "500";
+
 }
