@@ -210,6 +210,8 @@ public class CarbonServerManager {
         carbonHome =
                 new File(baseDir).getAbsolutePath() + File.separator + extractDir + File.separator + extractedCarbonDir;
 
+        System.setProperty("miCarbonHome" , carbonHome);
+
         copyResources();
         try {
             //read coverage status from automation.xml
