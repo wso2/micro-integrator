@@ -358,7 +358,7 @@ public class ServerConfigurationManager {
 
     public synchronized void serverRestart() throws AutomationUtilException {
 
-        try {
+       /* try {
 
             log.info("Restarting the server..");
 
@@ -373,7 +373,7 @@ public class ServerConfigurationManager {
 
         } catch (IOException | InterruptedException e) {
             throw new AutomationUtilException("Failed to stop server ", e);
-        }
+        }*/
 
     }
 
