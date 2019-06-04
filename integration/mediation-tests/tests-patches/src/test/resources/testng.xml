@@ -27,12 +27,12 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-  <!--  &lt;!&ndash; FIX - Cannot find class in classpath: org.wso2.carbon.esb.ServerStartupTestCase &ndash;&gt;
-    &lt;!&ndash;test name="Server-Stratup" preserve-order="true" verbose="2">
+    <!-- FIX - Cannot find class in classpath: org.wso2.carbon.esb.ServerStartupTestCase -->
+    <!--test name="Server-Stratup" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.ServerStartupTestCase"/>
          </classes>
-    </test&ndash;&gt;
+    </test-->
 
     <test name="API-Test" preserve-order="true" verbose="2">
         <classes>
@@ -58,7 +58,7 @@
             <class name="org.wso2.carbon.esb.mediators.clone.ESBJAVA4913HandleExceptionTest"/>
             <class name="org.wso2.carbon.esb.mediators.aggregate.ESBJAVA5103CorrelateOnExpressionTestCase"/>
             <class name="org.wso2.carbon.esb.mediators.cache.DistributedCachingHeaderSerializationTestcase"/>
-            &lt;!&ndash;class name="org.wso2.carbon.esb.mediators.cache.ESBJAVA4318Testcase"/&ndash;&gt;
+            <!--class name="org.wso2.carbon.esb.mediators.cache.ESBJAVA4318Testcase"/-->
             <class name="org.wso2.carbon.esb.mediators.rule.ESBJAVA2506RuleFetchFromRegistryFailsForTheFirstTime"/>
         </classes>
     </test>
@@ -96,7 +96,7 @@
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA3770DropLargePayloadsPreventESBFromOOMTestCase"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA3336HostHeaderValuePortCheckTestCase"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ForceMessageValidationTestCase" />
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4931PreserveContentTypeHeaderCharSetTestCase"/>&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4931PreserveContentTypeHeaderCharSetTestCase"/>-->
         </classes>
     </test>
 
@@ -106,21 +106,21 @@
             <class name="org.wso2.carbon.esb.nhttp.transport.json.test.ESBJAVA4940CharacterEncodingRemovalTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.json.test.ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.mtom.test.ESBJAVA4909MultipartRelatedTestCase"/>
-            &lt;!&ndash; If there are any test cases which need server restarts with new configurations, they should not be added
-             here but in a separate test block&ndash;&gt;
+            <!-- If there are any test cases which need server restarts with new configurations, they should not be added
+             here but in a separate test block-->
         </classes>
     </test>
 
-    &lt;!&ndash;test name="Cache mediator with REQUESTHASHGenerator test" preserve-order="true" verbose="2">
+    <!--test name="Cache mediator with REQUESTHASHGenerator test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.mediators.cache.APIMANAGER1838RequestHashGeneratorTestCase"/>
         </classes>
-    </test&ndash;&gt;
+    </test-->
     <test name="JMS Test">
         <classes>
             <class name="org.wso2.carbon.esb.jms.transport.test.JMSBrokerStartupTestCase" />
             <class name="org.wso2.carbon.esb.jms.transport.test.EI1622JMSInboundMessagePollingConsumerTest" />
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA3714JMXPauseJMSListener" />&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA3714JMXPauseJMSListener" />-->
             <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA3282CalloutJMSHeadersTestCase" />
             <class name="org.wso2.carbon.esb.mediators.store.ESBJAVA4470StoreMediatorEmptyOMArraySerializeException" />
             <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA4692_MP_FaultSequence_HttpsEndpoint_TestCase" />
@@ -134,16 +134,16 @@
             <class name="org.wso2.carbon.esb.vfs.transport.test.ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase"/>
         </classes>
     </test>
-    &lt;!&ndash; Commented the test case due to a regression issue occurred due to this fix.
-             Need to enable this test case once the original issue is fixed properly &ndash;&gt;
-    &lt;!&ndash;test
+    <!-- Commented the test case due to a regression issue occurred due to this fix.
+             Need to enable this test case once the original issue is fixed properly -->
+    <!--test
 		name="security-policy-reference-element-in-wsdl-bindings-for-capp-test"
 		preserve-order="true" verbose="2">
 		<classes>
 			<class
 				name="org.wso2.carbon.esb.security.policy.ESBJAVA3899_PolicyReferenceInWSDLBindingsTestCase" />
 		</classes>
-    </test&ndash;&gt;
+    </test-->
 
     <test name="Carbon-app-deployment-test" preserve-order="true" verbose="2">
         <classes>
@@ -164,7 +164,7 @@
 
     <test name="Misc-tests" preserve-order="true" verbose="2">
         <classes>
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.template.HttpEpTemplateWithSystemPropsTestCase"/>&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.template.HttpEpTemplateWithSystemPropsTestCase"/>-->
             <class name="org.wso2.carbon.esb.security.policy.UTResponseCode401UTauthFailure"/>
             <class name="org.wso2.carbon.esb.registry.task.ESBJAVA4565TestCase"/>
             <class name="org.wso2.carbon.esb.header.preserve.ESBJAVA4631PreserveContentTypeHeaderTestCase"/>
@@ -172,12 +172,12 @@
         </classes>
     </test>
 
-    &lt;!&ndash;todo uncomment below test once ESB  moves to ntask version 4.6.0 or higher&ndash;&gt;
-    &lt;!&ndash;<test name="Test startup logs for FATAL error when registry is mounted" preserve-order="true" verbose="2">&ndash;&gt;
-        &lt;!&ndash;<classes>&ndash;&gt;
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.ntask.CCOMMONS8SetTenantDomainTest"/>&ndash;&gt;
-        &lt;!&ndash;</classes>&ndash;&gt;
-    &lt;!&ndash;</test>&ndash;&gt;
+    <!--todo uncomment below test once ESB  moves to ntask version 4.6.0 or higher-->
+    <!--<test name="Test startup logs for FATAL error when registry is mounted" preserve-order="true" verbose="2">-->
+    <!--<classes>-->
+    <!--<class name="org.wso2.carbon.esb.ntask.CCOMMONS8SetTenantDomainTest"/>-->
+    <!--</classes>-->
+    <!--</test>-->
 
     <test name="Datamapper-mediator-tests" preserve-order="true" verbose="2">
         <classes>
@@ -186,6 +186,6 @@
             <class name="org.wso2.carbon.esb.datamapper.ESBJAVA5200DashSupportForMappingDataTestCase"/>
             <class name="org.wso2.carbon.esb.datamapper.NestedElementsWithSameNameTest"/>
         </classes>
-    </test>-->
+    </test>
 
 </suite>
