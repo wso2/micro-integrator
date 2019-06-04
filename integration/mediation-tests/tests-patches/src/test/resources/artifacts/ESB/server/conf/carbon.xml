@@ -26,17 +26,17 @@
     <!--
        Product Name
     -->
-    <Name>WSO2 Enterprise Integrator</Name>
+    <Name>WSO2 Micro Integrator</Name>
 
     <!--
        machine readable unique key to identify each product
     -->
-    <ServerKey>EI</ServerKey>
+    <ServerKey>MI</ServerKey>
 
     <!--
        Product Version
     -->
-    <Version>6.5.0</Version>
+    <Version>1.0.0</Version>
 
     <!--
        Host name or IP address of the machine hosting this server
@@ -76,7 +76,6 @@
         <Role>EnterpriseIntegrator</Role>
         <Role>EnterpriseServiceBus</Role>
         <Role>DataServicesServer</Role>
-        <Role>ApplicationServer</Role>
     </ServerRoles>
 
     <!-- uncommnet this line to subscribe to a bam instance automatically -->
@@ -378,6 +377,8 @@
             <KeyResolver className="org.wso2.carbon.crypto.defaultProvider.resolver.ContextIndependentKeyResolver" priority="-1"/>
         </KeyResolvers>
 
+        <Secret>SECRET_KEY</Secret>
+
     </CryptoService>
 
     <!--
@@ -603,14 +604,6 @@
             <Item>xsd</Item>
             <Class>org.wso2.carbon.core.transports.util.XsdProcessor</Class>
         </Processor>
-	<Processor>
-            <Item>swagger.json</Item>
-            <Class>org.wso2.appcloud.api.swagger.processors.json.SwaggerJsonProcessor</Class>
-        </Processor>
-	<Processor>
-            <Item>swagger.yaml</Item>
-            <Class>org.wso2.appcloud.api.swagger.processors.yaml.SwaggerYamlProcessor</Class>
-        </Processor>
     </HttpGetRequestProcessors>
 
     <!-- Deployment Synchronizer Configuration. Enable value to true when running with "svn based" dep sync.
@@ -639,12 +632,12 @@
     </DeploymentSynchronizer>-->
 
     <!-- Mediation persistence configurations. Only valid if mediation features are available i.e. ESB -->
-    <!--<MediationConfig>
+    <MediationConfig>
         <LoadFromRegistry>false</LoadFromRegistry>
         <SaveToFile>false</SaveToFile>
         <Persistence>enabled</Persistence>
         <RegistryPersistence>enabled</RegistryPersistence>
-    </MediationConfig>-->
+    </MediationConfig>
 
     <!--
     Server intializing code, specified as implementation classes of org.wso2.carbon.core.ServerInitializer.
