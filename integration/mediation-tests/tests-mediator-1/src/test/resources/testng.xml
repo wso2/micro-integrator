@@ -1,7 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
 <suite name="ESBTestSuite" parallel="false">
-
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
@@ -9,22 +8,7 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
     </listeners>
-
-
-    <test name="Aggregate Mediator Tests" verbose="2">
-       <classes>
-           <class name="org.wso2.carbon.esb.mediator.test.aggregate.NestedAggregatesTestCase"/>
-       </classes>
-   </test>
-
-  <test name="Drop Mediator Tests" verbose="2">
-       <classes>
-           <class name="org.wso2.carbon.esb.mediator.test.drop.DropIntegrationTest"/>
-       </classes>
-   </test>
-
-
-    <!--<test name="Throttle-mediator-Test" preserve-order="true" verbose="2">
+    <test name="Throttle-mediator-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.throttle"/>
         </packages>
@@ -53,12 +37,12 @@
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.cache"/>
         </packages>
-		<classes>
-           <class name="org.wso2.carbon.esb.mediator.test.cache.LargeCacheTimeOutTestCase">
+        <classes>
+            <class name="org.wso2.carbon.esb.mediator.test.cache.LargeCacheTimeOutTestCase">
                 <methods>
                     <exclude name=".*" />
                 </methods>
-           </class>
+            </class>
         </classes>
     </test>
 
@@ -90,22 +74,22 @@
     <test name="Call-mediator-Test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorHttpStatusResponseTestCase"/>
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorAPIWithNamedSeqCase"/>&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorAPIWithNamedSeqCase"/>-->
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingAPITestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingDirectEndpointTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingFilterTestCase"/>
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingInboundOutboundPolicySecurityTestCase"/>&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingInboundOutboundPolicySecurityTestCase"/>-->
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingIndirectEndpointTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingInTemplateTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingProxyWithNamedSeqCase"/>
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingSecurityTestCase"/>&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingSecurityTestCase"/>-->
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingSwitchTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingTransportHeaderTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingWSDLEndpointTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorFailOverTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorFaultHandlingTests"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorFaultTriggerTestCase"/>
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInAPITestCase"/>&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInAPITestCase"/>-->
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInBothProxyInAndOutSequencesTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInCloneTargetSequencesTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInCloneTestCase"/>
@@ -122,38 +106,38 @@
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorLoadBalanceFailoverTest"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorOutOnlyTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorProxyWithNamedSeqCase"/>
-           <class name="org.wso2.carbon.esb.mediator.test.call.ESBJAVA4469CallMediatorWithOutOnlyTestCase"/>
-           <class name="org.wso2.carbon.esb.mediator.test.call.ESBJAVA5216CallMediatorPerAPILogTest"/>
+            <class name="org.wso2.carbon.esb.mediator.test.call.ESBJAVA4469CallMediatorWithOutOnlyTestCase"/>
+            <class name="org.wso2.carbon.esb.mediator.test.call.ESBJAVA5216CallMediatorPerAPILogTest"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingFailoverTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingLoadBalanceFailoverTest"/>
-            &lt;!&ndash;This has been commented out until carbon kernel going to release with axis2 version 1.6.1-wso2v23.&ndash;&gt;
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.mediator.test.call.ESBJAVA5217NoDefaultContentTypeTestCase"/>&ndash;&gt;
+            <!--This has been commented out until carbon kernel going to release with axis2 version 1.6.1-wso2v23.-->
+            <!--<class name="org.wso2.carbon.esb.mediator.test.call.ESBJAVA5217NoDefaultContentTypeTestCase"/>-->
 
-&lt;!&ndash;            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorFailOverTestCase">
-                <methods>
-                    <exclude name=".*" />
-                </methods>
-           </class>
-                <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInAPITestCase">
-                <methods>
-                    <exclude name=".*" />
-                </methods>
-           </class>
-                <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorAPIWithNamedSeqCase">
-                <methods>
-                    <exclude name=".*" />
-                </methods>
-           </class>
-            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingSecurityTestCase">
-                <methods>
-                    <exclude name=".*" />
-                </methods>
-            </class>
-            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingInboundOutboundPolicySecurityTestCase">
-                <methods>
-                    <exclude name=".*" />
-                </methods>
-            </class>&ndash;&gt;&ndash;&gt;
+            <!--            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorFailOverTestCase">
+                            <methods>
+                                <exclude name=".*" />
+                            </methods>
+                       </class>
+                            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInAPITestCase">
+                            <methods>
+                                <exclude name=".*" />
+                            </methods>
+                       </class>
+                            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorAPIWithNamedSeqCase">
+                            <methods>
+                                <exclude name=".*" />
+                            </methods>
+                       </class>
+                        <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingSecurityTestCase">
+                            <methods>
+                                <exclude name=".*" />
+                            </methods>
+                        </class>
+                        <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorBlockingInboundOutboundPolicySecurityTestCase">
+                            <methods>
+                                <exclude name=".*" />
+                            </methods>
+                        </class>&ndash;&gt;-->
         </classes>
     </test>
 
@@ -177,7 +161,7 @@
 
     <test name="Message-Store-Test" preserve-order="true" verbose="2">
         <classes>
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.message.store.test.JMSEndpointSuspensionViaVFSTest"/>&ndash;&gt;
+            <!--<class name="org.wso2.carbon.esb.message.store.test.JMSEndpointSuspensionViaVFSTest"/>-->
             <class name="org.wso2.carbon.esb.message.store.test.MessageStoreMessageCleaningTestCase"/>
             <class name="org.wso2.carbon.esb.message.store.test.MessageStoreMessageConcurrencyTestCase"/>
             <class name="org.wso2.carbon.esb.message.store.test.MessageStoreMessageDeleteTestCase"/>
@@ -317,21 +301,21 @@
             <package name="org.wso2.carbon.esb.mediator.test.db.dbreport"/>
         </packages>
     </test>
-    &lt;!&ndash;This has been commented out due to an issue in the automation framework. Once it is fixed (pull request already sent), we can uncomment this.&ndash;&gt;
-    &lt;!&ndash;test name="dbreport-mediator-Test" preserve-order="true" verbose="2">
+    <!--This has been commented out due to an issue in the automation framework. Once it is fixed (pull request already sent), we can uncomment this.-->
+    <!--test name="dbreport-mediator-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.db.dbreport"/>
         </packages>
-    </test&ndash;&gt;
+    </test-->
 
     <test name="MSMP-Testcases" preserve-order="true" verbose="2">
         <classes>
-            &lt;!&ndash;TODO Uncomment following test case after wso2-synapse 2.1.7-wso2v22 upgrade
-            <class name="org.wso2.carbon.esb.message.processor.test.MessageProcessorSOAPHeadersTestcase"/&ndash;&gt;
+            <!--TODO Uncomment following test case after wso2-synapse 2.1.7-wso2v22 upgrade
+            <class name="org.wso2.carbon.esb.message.processor.test.MessageProcessorSOAPHeadersTestcase"/-->
             <class name="org.wso2.carbon.esb.message.processor.test.DynamicallySettingWSAHeadersTestCase"/>
             <class name="org.wso2.carbon.esb.message.processor.test.DeactivatedCappMPBehaviourOnRestartTestCase"/>
         </classes>
-    </test>-->
+    </test>
 
 </suite>
 
