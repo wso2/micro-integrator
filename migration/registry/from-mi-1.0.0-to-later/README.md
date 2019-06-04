@@ -1,10 +1,10 @@
-#Registry Migration Tool for WSO2 Micro Integrator
+# Registry Migration Tool for WSO2 Micro Integrator
 
 This tool creates metadata files for registry resources. 
 Metadata files which are used to store media type of the resource were not available in the MI 1.0.0 release.
 The tool infers media types from the file extensions of the resource files.
 
-##How to run the tool
+## How to run the tool
 
 1. Build RegistryMigrator using maven 
 
@@ -14,7 +14,7 @@ The tool infers media types from the file extensions of the resource files.
 
 `java -jar target/RegistryMigrator-1.0.jar <Absolute_Path_To_MI_HOME>`
 
-##More information
+## More information
 
 The metadata related to registry resource is stored in a separate file named <resource_file_name>.meta inside 
 the ".metadata" dir which is located where the registry resource is.
