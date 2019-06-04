@@ -20,8 +20,6 @@ import java.rmi.RemoteException;
 public class ESBJAVA1857TestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/synapseconfig/filters/switchMediator/ESBJAVA_1857_switch_case_synapse.xml");
     }
 
     @Test(groups = {
