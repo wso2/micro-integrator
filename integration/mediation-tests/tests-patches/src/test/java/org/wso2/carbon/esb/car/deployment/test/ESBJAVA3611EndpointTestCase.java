@@ -37,7 +37,7 @@ public class ESBJAVA3611EndpointTestCase extends ESBIntegrationTest {
     String carFileName = "ESBCApp-3.2.2.car";
 
     @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
-        super.init(TestUserMode.TENANT_ADMIN);
+        super.init();
         uploadCapp(carFileName, new DataHandler(new FileDataSource(
                 new File(getESBResourceLocation() + File.separator + "car" + File.separator + carFileName))));
         log.info(carFileName + " uploaded successfully");

@@ -48,7 +48,7 @@ public class ESBPOXSecurityWithInvalidGroupTestCase extends ESBIntegrationTest {
     private SecurityAdminServiceClient securityAdminServiceClient;
 
     @BeforeClass(alwaysRun = true) public void init() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
 
         updateESBConfiguration(RestEndpointSetter.setEndpoint(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"

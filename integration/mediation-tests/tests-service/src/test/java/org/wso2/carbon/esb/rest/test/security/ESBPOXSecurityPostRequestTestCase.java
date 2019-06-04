@@ -48,7 +48,7 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
     private SecurityAdminServiceClient securityAdminServiceClient;
 
     @BeforeClass(alwaysRun = true) public void init() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         updateESBConfiguration(RestEndpointSetter.setEndpoint(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                         + File.separator + "rest" + File.separator + "axis2-service-synapse.xml"));
@@ -71,7 +71,7 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
     @Test(groups = {
             "wso2.esb" }, description = "POST request by user/tenant", dependsOnMethods = "testPOSTRequestBySuperAdmin") public void testPOSTRequestByUser()
             throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init();
         applySecurity("1", "Axis2ServiceProxy", getUserRole()[0]);
         String securedRestURL = getProxyServiceURLHttps("Axis2ServiceProxy") + "/echoString";
         HttpsResponse response = HttpsURLConnectionClient
@@ -84,7 +84,7 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
     @Test(groups = {
             "wso2.esb" }, description = "POST request by invalid user", dependsOnMethods = "testPOSTRequestByUser", expectedExceptions = IOException.class) public void testPOSTRequestByInvalidUser()
             throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init();
         applySecurity("1", "Axis2ServiceProxy", getUserRole()[0]);
 
         String securedRestURL = getProxyServiceURLHttps("Axis2ServiceProxy") + "/echoString";

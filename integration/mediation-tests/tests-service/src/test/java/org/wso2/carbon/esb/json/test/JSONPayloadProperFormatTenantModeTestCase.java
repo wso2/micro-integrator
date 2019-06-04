@@ -41,7 +41,7 @@ import static org.testng.Assert.assertTrue;
 public class JSONPayloadProperFormatTenantModeTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
-        super.init(TestUserMode.TENANT_ADMIN);
+        super.init();
     }
 
     @Test(groups = "wso2.esb", description = "Check whether JSON message formatting works properly in tenant mode") public void testJSONFormattingInTenantMode()

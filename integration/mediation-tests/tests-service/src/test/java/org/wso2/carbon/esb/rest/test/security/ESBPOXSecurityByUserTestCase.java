@@ -47,7 +47,7 @@ public class ESBPOXSecurityByUserTestCase extends ESBIntegrationTest {
     private SecurityAdminServiceClient securityAdminServiceClient;
 
     @BeforeClass(alwaysRun = true) public void init() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init();
         updateESBConfiguration(RestEndpointSetter.setEndpoint(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                         + File.separator + "rest" + File.separator + "student-service-synapse.xml"));

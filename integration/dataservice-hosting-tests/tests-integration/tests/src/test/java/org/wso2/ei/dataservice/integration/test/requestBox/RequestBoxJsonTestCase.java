@@ -47,7 +47,7 @@ public class RequestBoxJsonTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(RequestBoxJsonTestCase.class);
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         sqlFileLis.add(selectSqlFile("Offices.sql"));

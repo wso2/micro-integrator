@@ -54,7 +54,7 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         deployService(serviceName, createArtifact(

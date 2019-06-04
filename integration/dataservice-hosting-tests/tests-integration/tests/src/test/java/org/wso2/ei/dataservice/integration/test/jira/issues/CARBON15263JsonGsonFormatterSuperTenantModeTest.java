@@ -47,7 +47,7 @@ public class CARBON15263JsonGsonFormatterSuperTenantModeTest extends DSSIntegrat
     private static final Log log = LogFactory.getLog(CARBON15263JsonGsonFormatterSuperTenantModeTest.class);
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
         sqlFileLis.add(selectSqlFile("Offices.sql"));

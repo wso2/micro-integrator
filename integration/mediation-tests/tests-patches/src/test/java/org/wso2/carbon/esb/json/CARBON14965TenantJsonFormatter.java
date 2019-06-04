@@ -23,7 +23,7 @@ public class CARBON14965TenantJsonFormatter extends ESBIntegrationTest {
 
     @BeforeTest(alwaysRun = true) public void setEnvironment() throws Exception {
 
-        super.init(TestUserMode.TENANT_ADMIN);
+        super.init();
         serverManager = new ServerConfigurationManager(context);
         File sourceFile = new File(
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator

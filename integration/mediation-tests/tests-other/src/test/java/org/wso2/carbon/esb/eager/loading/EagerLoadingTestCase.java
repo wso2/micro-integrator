@@ -38,7 +38,7 @@ public class EagerLoadingTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
     @BeforeClass(alwaysRun = true) protected void startServerWithEagerLoading() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init();
         serverManager = new ServerConfigurationManager(context);
         AutomationContext autoContext = new AutomationContext();
         // upload a faulty sequence which refer registry resource doesn't exists
@@ -48,7 +48,7 @@ public class EagerLoadingTestCase extends ESBIntegrationTest {
         File carbonXml = new File(
                 FrameworkPathUtil.getSystemResourceLocation() + "/artifacts/ESB/eager/loading/ESBJAVA3602Carbon.xml");
         serverManager.applyConfiguration(carbonXml, getCarbonXmlFile());
-        super.init(TestUserMode.TENANT_ADMIN);
+        super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
     }

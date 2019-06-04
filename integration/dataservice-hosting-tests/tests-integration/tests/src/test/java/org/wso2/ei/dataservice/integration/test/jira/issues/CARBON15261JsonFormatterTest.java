@@ -53,7 +53,7 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
     ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         serverConfigurationManager = new ServerConfigurationManager(dssContext);
         serverConfigurationManager.applyConfiguration(new File(
                 getResourceLocation() + File.separator + "config" + File.separator + "CARBON1352" + File.separator
@@ -63,7 +63,7 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
         sqlFileLis.add(selectSqlFile("Offices.sql"));
         client = new SimpleHttpClient();
         headers = new HashMap<>();
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         deployService(serviceName, createArtifact(
                 getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
                         + File.separator + "H2JsonSecureServiceTest.dbs", sqlFileLis));

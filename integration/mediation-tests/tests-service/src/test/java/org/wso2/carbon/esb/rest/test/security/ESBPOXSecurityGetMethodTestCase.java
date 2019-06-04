@@ -47,7 +47,7 @@ public class ESBPOXSecurityGetMethodTestCase extends ESBIntegrationTest {
     private SecurityAdminServiceClient securityAdminServiceClient;
 
     @BeforeClass(alwaysRun = true) public void init() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         updateESBConfiguration(RestEndpointSetter.setEndpoint(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                         + File.separator + "rest" + File.separator + "synapse.xml"));
@@ -68,7 +68,7 @@ public class ESBPOXSecurityGetMethodTestCase extends ESBIntegrationTest {
     @Test(groups = {
             "wso2.esb" }, description = "test pox security with user credentials", dependsOnMethods = "testGetQuote") public void testGetQuoteByUser()
             throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_USER);
+        super.init();
         applySecurity("1", SERVICE_NAME, getUserRole()[0]);
         String securedRestURL = getProxyServiceURLHttps(SERVICE_NAME) + "/getSimpleQuote";
         HttpsResponse response = HttpsURLConnectionClient
