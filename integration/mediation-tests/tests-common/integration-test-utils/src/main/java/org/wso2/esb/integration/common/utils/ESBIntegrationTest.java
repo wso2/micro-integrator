@@ -97,9 +97,6 @@ public abstract class ESBIntegrationTest {
     protected User userInfo;
     protected TestUserMode userMode;
 
-    protected void init() throws Exception {
-        init(userMode);
-    }
 
     /**
      * Initialize the context given a tenant domain and a user.
@@ -120,13 +117,11 @@ public abstract class ESBIntegrationTest {
         userInfo = tenantInfo.getContextUser();
     }
 
-    protected void init(TestUserMode userMode) throws Exception {
+    protected void init() throws Exception {
         axis2Client = new StockQuoteClient();
-        context = new AutomationContext(ESBTestConstant.ESB_PRODUCT_GROUP, userMode);
+        context = new AutomationContext();
         contextUrls = context.getContextUrls();
         esbUtils = new ESBTestCaseUtils();
-        tenantInfo = context.getContextTenant();
-        userInfo = tenantInfo.getContextUser();
     }
 
     protected void cleanup() throws Exception {
