@@ -24,6 +24,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/olekukonko/tablewriter"
 	"golang.org/x/crypto/ssh/terminal"
 	"gopkg.in/resty.v1"
 	"net/http"
@@ -199,4 +200,12 @@ func GetCmdUsage(program, cmd, subcmd, arg string) string {
 		"  " + program + " " + cmd + " " + subcmd + "(s)\n" +
 		"  " + program + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
 	return showCmdUsage
+}
+
+func GetTableWriter() *tablewriter.Table {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetBorder(false)
+	table.SetColumnSeparator(" ")
+	return table
 }

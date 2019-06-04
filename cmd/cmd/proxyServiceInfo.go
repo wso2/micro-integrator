@@ -35,7 +35,7 @@ const showProxyServiceCmdShortDesc = "Get information about proxy services"
 var showProxyServiceCmdLongDesc = "Get information about the Proxy Service specified by command line argument [proxy-name] If not specified, list all the proxy services\n"
 
 var showProxyServiceCmdExamples = "Example:\n" +
-	"To get details about a specific prxoy\n" +
+	"To get details about a specific proxy\n" +
 	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + " SampleProxy\n\n" +
 	"To list all the proxies\n" +
 	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + "\n\n"

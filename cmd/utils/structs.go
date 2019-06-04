@@ -190,3 +190,28 @@ type TokenResponse struct {
 	TokenType    string `xml:"token_type"`
 	ExpiresIn    int32  `xml:"expires_in"`
 }
+
+type DataServicesList struct {
+	Count int32                `json:"count"`
+	List  []DataServiceSummary `json:"list"`
+}
+
+type DataServiceInfo struct {
+	ServiceName        string         `json:"serviceName"`
+	ServiceDescription string         `json:"serviceDescription"`
+	ServiceGroupName   string         `json:"serviceGroupName"`
+	Wsdl11             string         `json:"wsdl1_1"`
+	Wsdl20             string         `json:"wsdl2_0"`
+	Queries            []QuerySummary `json:"queries"`
+}
+
+type DataServiceSummary struct {
+	ServiceName string `json:"name"`
+	Wsdl11      string `json:"wsdl1_1"`
+	Wsdl20      string `json:"wsdl2_0"`
+}
+
+type QuerySummary struct {
+	Id        string `json:"id"`
+	Namespace string `json:"namespace"`
+}
