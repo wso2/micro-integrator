@@ -2,20 +2,20 @@
 
 <suite name="ESBTestSuite" parallel="false">
     <listeners>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
+        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
-        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
-        <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
     </listeners>
 
-   <test name="POST-Request-Without-Body-without-chunking" preserve-order="true" verbose="2">
+    <test name="POST-Request-Without-Body-without-chunking" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4402MessageWithoutPayloadTestCase"/>
         </classes>
     </test>
 
-    <!-- <test name="axis2-transport-test" preserve-order="true" verbose="2">
+    <test name="axis2-transport-test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.axis2.transport.test.MultipartFormDataFormatTestCase"/>
         </classes>
@@ -111,20 +111,25 @@
         </packages>
     </test>
 
+    <!--disabled since feature management is used to install hl7 feature-->
+    <!--    <test name="HL7-transport-Test" preserve-order="true" verbose="2">
+            <packages>
+                <package name="org.wso2.carbon.esb.hl7.transport.test.*"/>
+            </packages>
+        </test>-->
 
-
-    &lt;!&ndash;<test name="inbound-File Transport-Test" preserve-order="true" verbose="2">&ndash;&gt;
-        &lt;!&ndash;<packages>&ndash;&gt;
-            &lt;!&ndash;<package name="org.wso2.carbon.esb.file.inbound.transport.test"/>&ndash;&gt;
-        &lt;!&ndash;</packages>&ndash;&gt;
-        &lt;!&ndash;<classes>&ndash;&gt;
-            &lt;!&ndash;<class name="org.wso2.carbon.esb.file.inbound.transport.test.FtpInboundTransportTest">&ndash;&gt;
-                &lt;!&ndash;<methods>&ndash;&gt;
-                    &lt;!&ndash;<exclude name=".*"/>&ndash;&gt;
-                &lt;!&ndash;</methods>&ndash;&gt;
-            &lt;!&ndash;</class>&ndash;&gt;
-        &lt;!&ndash;</classes>&ndash;&gt;
-    &lt;!&ndash;</test>&ndash;&gt;
+    <!--<test name="inbound-File Transport-Test" preserve-order="true" verbose="2">-->
+    <!--<packages>-->
+    <!--<package name="org.wso2.carbon.esb.file.inbound.transport.test"/>-->
+    <!--</packages>-->
+    <!--<classes>-->
+    <!--<class name="org.wso2.carbon.esb.file.inbound.transport.test.FtpInboundTransportTest">-->
+    <!--<methods>-->
+    <!--<exclude name=".*"/>-->
+    <!--</methods>-->
+    <!--</class>-->
+    <!--</classes>-->
+    <!--</test>-->
 
     <test name="inbound-Generic Transport-Test" preserve-order="true" verbose="2">
         <packages>
@@ -145,11 +150,11 @@
         </packages>
     </test>
 
-    &lt;!&ndash;<test name="inbound-JMS Transport-Test" preserve-order="true" verbose="2">&ndash;&gt;
-        &lt;!&ndash;<packages>&ndash;&gt;
-            &lt;!&ndash;<package name="org.wso2.carbon.esb.jms.inbound.transport.test"/>&ndash;&gt;
-        &lt;!&ndash;</packages>&ndash;&gt;
-    &lt;!&ndash;</test>&ndash;&gt;
+    <!--<test name="inbound-JMS Transport-Test" preserve-order="true" verbose="2">-->
+    <!--<packages>-->
+    <!--<package name="org.wso2.carbon.esb.jms.inbound.transport.test"/>-->
+    <!--</packages>-->
+    <!--</test>-->
 
     <test name="inbound-MQTT-Transport-Test" preserve-order="true" verbose="2">
         <packages>
@@ -157,12 +162,18 @@
         </packages>
     </test>
 
-    &lt;!&ndash; Kafka is not availble with framework&ndash;&gt;
-    &lt;!&ndash;test name="inbound-KAFKA Transport-Test" preserve-order="true" verbose="2">
+    <!-- Kafka is not availble with framework-->
+    <!--test name="inbound-KAFKA Transport-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.kafka.inbound.transport.test"/>
         </packages>
-    </test&ndash;&gt;
+    </test-->
+
+    <test name="inbound-HL7 Transport-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.hl7.inbound.transport.test"/>
+        </packages>
+    </test>
 
     <test name="MailTo-transport-Test-Receiver" preserve-order="true" verbose="2">
         <packages>
@@ -209,7 +220,7 @@
             <class name="org.wso2.carbon.esb.nhttp.transport.test.MultipartFormdataMIMEBoundaryTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.ESBJAVA3689AccessMIMEMessageContentTestCase"/>
         </classes>
-    </test>-->
+    </test>
 
     <!-- Tests should not be added beyond this point since all those will run with the nhttp transport enabled
     unlike the default axis2.xml-->
