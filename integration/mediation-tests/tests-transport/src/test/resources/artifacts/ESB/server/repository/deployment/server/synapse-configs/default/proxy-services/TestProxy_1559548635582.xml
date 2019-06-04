@@ -1,4 +1,4 @@
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="TestProxy" startOnLoad="true" trace="disable" transports="https http">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="TestProxy_1559548635582" startOnLoad="true" trace="disable" transports="https http">
         <target>
             <inSequence>
                 <property name="FORCE_POST_PUT_NOBODY" scope="axis2" type="BOOLEAN" value="true"/>

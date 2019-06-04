@@ -32,7 +32,7 @@ import javax.xml.stream.XMLStreamException;
 public class HttpInboundTransportTenantTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
-        super.init(TestUserMode.TENANT_ADMIN);
+        super.init();
 
         addSequence(getArtifactConfig("TestIn.xml"));
         addSequence(getArtifactConfig("reciveSeq.xml"));

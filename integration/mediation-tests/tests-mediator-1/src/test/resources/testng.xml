@@ -11,17 +11,17 @@
     </listeners>
 
 
-    <!--Following two are already fixed
     <test name="Aggregate Mediator Tests" verbose="2">
        <classes>
            <class name="org.wso2.carbon.esb.mediator.test.aggregate.NestedAggregatesTestCase"/>
        </classes>
    </test>
-   <test name="Drop Mediator Tests" verbose="2">
+
+  <test name="Drop Mediator Tests" verbose="2">
        <classes>
            <class name="org.wso2.carbon.esb.mediator.test.drop.DropIntegrationTest"/>
        </classes>
-   </test>-->
+   </test>
 
 
     <!--<test name="Throttle-mediator-Test" preserve-order="true" verbose="2">

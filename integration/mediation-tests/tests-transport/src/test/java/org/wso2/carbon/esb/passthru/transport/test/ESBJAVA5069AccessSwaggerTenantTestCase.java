@@ -38,7 +38,7 @@ import java.io.IOException;
 public class ESBJAVA5069AccessSwaggerTenantTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
-        super.init(TestUserMode.TENANT_ADMIN);
+        super.init();
         String artifactPath =
                 "artifacts" + File.separator + "ESB" + File.separator + "api" + File.separator + "Tenant.xml";
         loadESBConfigurationFromClasspath(artifactPath);

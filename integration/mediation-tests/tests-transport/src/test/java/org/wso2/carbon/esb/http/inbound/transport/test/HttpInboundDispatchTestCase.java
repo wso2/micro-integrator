@@ -97,7 +97,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Inbound HTTP Tenant Dispatch "
             + "(Shared Port between super tenant and regular tenant)") public void inboundHttpTenantDispatchTests()
             throws Exception {
-        super.init(TestUserMode.TENANT_ADMIN);
+        super.init();
 
         List<OMElement> seqList = new ArrayList<>();
         seqList.add(getArtifactConfig("tenant/sequences", "main.xml"));

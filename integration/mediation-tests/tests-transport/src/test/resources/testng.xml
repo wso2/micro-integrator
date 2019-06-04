@@ -9,13 +9,13 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
     </listeners>
 
-   <!-- <test name="POST-Request-Without-Body-without-chunking" preserve-order="true" verbose="2">
+   <test name="POST-Request-Without-Body-without-chunking" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4402MessageWithoutPayloadTestCase"/>
         </classes>
     </test>
 
-    <test name="axis2-transport-test" preserve-order="true" verbose="2">
+    <!-- <test name="axis2-transport-test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.axis2.transport.test.MultipartFormDataFormatTestCase"/>
         </classes>
@@ -111,12 +111,7 @@
         </packages>
     </test>
 
-    &lt;!&ndash;disabled since feature management is used to install hl7 feature&ndash;&gt;
-    &lt;!&ndash;    <test name="HL7-transport-Test" preserve-order="true" verbose="2">
-            <packages>
-                <package name="org.wso2.carbon.esb.hl7.transport.test.*"/>
-            </packages>
-        </test>&ndash;&gt;
+
 
     &lt;!&ndash;<test name="inbound-File Transport-Test" preserve-order="true" verbose="2">&ndash;&gt;
         &lt;!&ndash;<packages>&ndash;&gt;
@@ -168,12 +163,6 @@
             <package name="org.wso2.carbon.esb.kafka.inbound.transport.test"/>
         </packages>
     </test&ndash;&gt;
-
-    <test name="inbound-HL7 Transport-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.hl7.inbound.transport.test"/>
-        </packages>
-    </test>
 
     <test name="MailTo-transport-Test-Receiver" preserve-order="true" verbose="2">
         <packages>

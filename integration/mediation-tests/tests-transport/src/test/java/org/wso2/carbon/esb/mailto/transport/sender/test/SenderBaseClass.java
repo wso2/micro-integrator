@@ -32,7 +32,7 @@ public class SenderBaseClass extends ESBIntegrationTest {
     private GreenMailServer greenMailServer;
 
     @BeforeTest(alwaysRun = true) public void setUp() throws Exception {
-        super.init(TestUserMode.SUPER_TENANT_ADMIN);
+        super.init();
         greenMailServer = new GreenMailServer();
         greenMailServer.startServer();
     }
