@@ -28,6 +28,7 @@ public class Constants {
     public static final String PREFIX_PROXY_SERVICES = "/proxy-services";
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
+    public static final String PREFIX_LOGGING = "/logging";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";
