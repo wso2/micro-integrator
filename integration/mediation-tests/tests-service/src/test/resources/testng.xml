@@ -7,17 +7,16 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
-
-    <!--<test name="ProxyService-Test" preserve-order="true" verbose="2" parallel="false">
+    <test name="ProxyService-Test" preserve-order="true" verbose="2" parallel="false">
         <packages>
             <package name="org.wso2.carbon.esb.proxyservice.test.proxyservices"/>
             <package name="org.wso2.carbon.esb.proxyservice.test.customProxy"/>
             <package name="org.wso2.carbon.esb.proxyservice.test.passThroughProxy"/>
             <package name="org.wso2.carbon.esb.proxyservice.test.transformerProxy"/>
             <package name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy"/>
-            &lt;!&ndash; secureProxy package commented since it requires carbon-identity release for applySecurity functionality
-                in SecurityConfigAdmin &ndash;&gt;
-            &lt;!&ndash;package name="org.wso2.carbon.esb.proxyservice.test.secureProxy"/&ndash;&gt;
+            <!-- secureProxy package commented since it requires carbon-identity release for applySecurity functionality
+                in SecurityConfigAdmin -->
+            <!--package name="org.wso2.carbon.esb.proxyservice.test.secureProxy"/-->
         </packages>
         <classes>
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.WSDLOptionsPickedFromRegistryTestCase">
@@ -68,13 +67,13 @@
             <package name="org.wso2.carbon.esb.rest.test.header"/>
         </packages>
     </test>
-    &lt;!&ndash; org.wso2.carbon.esb.rest.test.security  package commented since it requires carbon-identity release for
-        applySecurity functionality in SecurityConfigAdmin &ndash;&gt;
-    &lt;!&ndash;test name="POX-security-Test" preserve-order="true" verbose="2">
+    <!-- org.wso2.carbon.esb.rest.test.security  package commented since it requires carbon-identity release for
+        applySecurity functionality in SecurityConfigAdmin -->
+    <!--test name="POX-security-Test" preserve-order="true" verbose="2">
     	<packages>
     		<package name="org.wso2.carbon.esb.rest.test.security"/>
     	</packages>
-    </test&ndash;&gt;
+    </test-->
     <test name="Rest-JSON-Test" preserve-order="true" verbose="2" parallel="false">
         <packages>
             <package name="org.wso2.carbon.esb.json.test"/>
@@ -107,5 +106,5 @@
         <classes>
             <class name="org.wso2.carbon.esb.proxyservice.test.secureProxy.SecureProxyUsingPolicyFileInLocalEntryTestCase"/>
         </classes>
-    </test>-->
+    </test>
 </suite>
