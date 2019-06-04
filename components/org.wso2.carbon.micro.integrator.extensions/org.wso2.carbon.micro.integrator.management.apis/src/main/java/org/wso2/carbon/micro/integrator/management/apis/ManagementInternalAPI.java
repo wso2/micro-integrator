@@ -19,6 +19,8 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 
@@ -34,6 +36,12 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.REST_AP
 public class ManagementInternalAPI implements InternalAPI {
 
     private String name;
+
+    private static Log log = LogFactory.getLog(ManagementInternalAPI.class);
+
+    public ManagementInternalAPI(){
+        log.warn("Management Api has been enabled");
+    }
 
     public APIResource[] getResources() {
 
