@@ -1,0 +1,6 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="onStoreSequence1">
+		<log>
+			<property name="On-Store" value="Storing message"/>
+		</log>
+
+	</sequence>

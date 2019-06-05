@@ -1,0 +1,5 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="faultSeq">
+        <header name="To" action="remove"/>
+        <property name="RESPONSE" value="true"/>
+        <send/>
+    </sequence>
