@@ -210,10 +210,12 @@ public abstract class ESBIntegrationTest {
     }
 
     protected void loadESBConfigurationFromClasspath(String relativeFilePath) throws Exception {
-        relativeFilePath = relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
+       // DO Nothing
+
+        /*relativeFilePath = relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
 
         OMElement synapseConfig = esbUtils.loadResource(relativeFilePath);
-        updateESBConfiguration(synapseConfig);
+        updateESBConfiguration(synapseConfig);*/
 
     }
 
@@ -228,7 +230,9 @@ public abstract class ESBIntegrationTest {
 
     protected void updateESBConfiguration(OMElement synapseConfig) throws Exception {
 
-        if (synapseConfiguration == null) {
+        // Do Nothing
+
+        /*if (synapseConfiguration == null) {
             synapseConfiguration = synapseConfig;
         } else {
             Iterator<OMElement> itr = synapseConfig.cloneOMElement().getChildElements();
@@ -252,7 +256,7 @@ public abstract class ESBIntegrationTest {
                 Assert.assertTrue(isProxyWSDlExist(getProxyServiceURLHttp(proxy), deploymentDelay),
                         "Deployment Synchronizing failed in workers");
             }
-        }
+        }*/
     }
 
     protected void addProxyService(OMElement proxyConfig) throws Exception {
