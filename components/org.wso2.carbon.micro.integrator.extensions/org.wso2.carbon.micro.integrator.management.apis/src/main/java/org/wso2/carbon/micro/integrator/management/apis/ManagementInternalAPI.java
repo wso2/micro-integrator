@@ -46,7 +46,7 @@ public class ManagementInternalAPI implements InternalAPI {
         resources[4] = new CarbonAppResource(PREFIX_CARBON_APPS);
         resources[5] = new TaskResource(PREFIX_TASKS);
         resources[6] = new SequenceResource(PREFIX_SEQUENCES);
-        resources[7] = new SequenceResource(PREFIX_LOGGING);
+        resources[7] = new LoggingResource(PREFIX_LOGGING);
         return resources;
     }
 
