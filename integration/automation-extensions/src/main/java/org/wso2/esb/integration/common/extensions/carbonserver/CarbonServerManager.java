@@ -87,7 +87,7 @@ public class CarbonServerManager {
 
             File commandDir = new File(carbonHome);
 
-            log.info("Starting carbon server............. ");
+            log.info("Starting server ... ");
             scriptName = commandMap.get("startupScript");
             String componentBinPath = commandMap.get("runtimePath");
 
@@ -145,7 +145,7 @@ public class CarbonServerManager {
             ClientConnectionUtil.waitForPort(defaultHttpPort + portOffset, DEFAULT_START_STOP_WAIT_MS, false,
                     automationContext.getInstance().getHosts().get("default"));
 
-            log.info("Server started successfully.........");
+            log.info("Server started successfully ...");
 
         } catch (IOException | XPathExpressionException e) {
             throw new IllegalStateException("Unable to start server", e);
@@ -244,13 +244,13 @@ public class CarbonServerManager {
 
     public synchronized void serverShutdown(int portOffset) throws AutomationFrameworkException {
         if (process != null) {
-            log.info("Shutting down server..");
+            log.info("Shutting down server ...");
 
             try {
 
                 startProcess(carbonHome, getStartScriptCommand("stop"));
                 waitTill(() -> isRemotePortInUse("localhost", 8280 + portOffset), 60, TimeUnit.SECONDS);
-                log.info("Server stopped successfully...");
+                log.info("Server stopped successfully ...");
 
             } catch (IOException | InterruptedException e) {
                 throw new AutomationFrameworkException("Failed to stop server ", e);
