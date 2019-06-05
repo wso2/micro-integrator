@@ -21,6 +21,7 @@ package org.wso2.esb.integration.common.utils.servers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,7 +48,9 @@ public class WireMonitorServer {
         response = "";
         WireMonitor wireMonitor = new WireMonitor(port, this);
         wireMonitor.start();
-        while (!wireMonitor.isStarted()) {
+        long startTime = System.currentTimeMillis();
+
+        while (!wireMonitor.isStarted() && (System.currentTimeMillis() - startTime) < TIMEOUT_VALUE) {
             try {
                 //wait until the wire monitor is started
                 TimeUnit.MILLISECONDS.sleep(100);
