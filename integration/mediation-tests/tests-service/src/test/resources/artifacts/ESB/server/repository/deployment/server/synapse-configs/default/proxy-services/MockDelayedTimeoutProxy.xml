@@ -1,0 +1,13 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="MockDelayedTimeoutProxy" startOnLoad="true" trace="disable" transports="https http">
+        <description/>
+        <target>
+            <inSequence>
+                <send>
+                    <endpoint key="MockDelayedTimeoutEndpoint"/>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>

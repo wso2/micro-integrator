@@ -1,0 +1,3 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="endpointThroughURLPassthroughOutSeq">
+        <send/>
+    </sequence>

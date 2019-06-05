@@ -1,0 +1,41 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="failoverEndPoint_Specific_Errors" transports="http,https">
+        <target faultSequence="fault">
+            <inSequence>
+                <send>
+                    <endpoint>
+                        <failover>
+                            <endpoint name="9001 Server">
+                                <address uri="http://localhost:9001/services/LBService1">
+                                    <timeout>
+                                        <duration>1000</duration>
+                                    </timeout>
+                                    <suspendOnFailure>
+                                        <initialDuration>20000</initialDuration>
+                                        <progressionFactor>2</progressionFactor>
+                                    </suspendOnFailure>
+                                    <markForSuspension>
+                                        <errorCodes>101000,101500,101501,101503,101505,101506,101507,101509</errorCodes>
+                                        <retriesBeforeSuspension>3</retriesBeforeSuspension>
+                                    </markForSuspension>
+                                    <retryConfig>
+                                        <disabledErrorCodes>101000,101500,101501,101503,101505,101506,101507,101509</disabledErrorCodes>
+                                    </retryConfig>
+                                </address>
+                            </endpoint>
+                            <endpoint name="9002 Server">
+                                <address uri="http://localhost:9002/services/LBService1">
+                                    <timeout>
+                                        <duration>8000</duration>
+                                    </timeout>
+                                    <suspendDurationOnFailure>20000</suspendDurationOnFailure>
+                                </address>
+                            </endpoint>
+                        </failover>
+                    </endpoint>
+                </send>
+            </inSequence>
+            <outSequence>
+                <send/>
+            </outSequence>
+        </target>
+    </proxy>
