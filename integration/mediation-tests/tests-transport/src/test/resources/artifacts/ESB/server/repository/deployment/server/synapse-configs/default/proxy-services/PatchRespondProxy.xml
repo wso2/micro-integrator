@@ -1,0 +1,9 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="PatchRespondProxy" transports="https http" startOnLoad="true" trace="disable">
+   <description/>
+   <target>
+      <inSequence>
+         <log level="full"/>
+         <respond/>
+      </inSequence>
+   </target>
+</proxy>

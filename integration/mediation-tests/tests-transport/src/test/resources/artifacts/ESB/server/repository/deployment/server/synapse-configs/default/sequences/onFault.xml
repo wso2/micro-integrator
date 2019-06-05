@@ -1,0 +1,5 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="onFault">
+        <log category="INFO" level="full" separator=",">
+            <property name="Axis2SenderError" value="Error creating file under the FTP root"/>
+        </log>
+    </sequence>

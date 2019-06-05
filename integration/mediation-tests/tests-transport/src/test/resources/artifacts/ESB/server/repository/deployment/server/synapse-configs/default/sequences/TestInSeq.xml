@@ -1,0 +1,4 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="TestInSeq">
+        <log level="full"/>
+        <drop/>
+    </sequence>
