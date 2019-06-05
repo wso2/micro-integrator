@@ -1,0 +1,3 @@
+<endpoint xmlns="http://ws.apache.org/ns/synapse" name="HCFacilityLocatorServiceEP">
+        <address uri="http://localhost:9009/services/HCFacilityLocatorService"/>
+    </endpoint>
