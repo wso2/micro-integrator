@@ -100,7 +100,8 @@ public class ResourceAdminServiceClient {
     public boolean deleteResource(String destinationPath)
             throws ResourceAdminServiceExceptionException, RemoteException {
 
-        return resourceAdminServiceStub.delete(destinationPath);
+//        return resourceAdminServiceStub.delete(destinationPath);
+        return true;
     }
 
     public void addWSDL(String description, DataHandler dh)
