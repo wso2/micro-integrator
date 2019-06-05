@@ -70,8 +70,8 @@ public abstract class DSSIntegrationTest {
     }
 
     protected void cleanup() {
-        userInfo = null;
-        dssContext = null;
+        /*userInfo = null;
+        dssContext = null;*/
     }
 
     protected String getServiceUrlHttp(String serviceName) throws XPathExpressionException {
@@ -112,11 +112,11 @@ public abstract class DSSIntegrationTest {
     }
 
     protected void deleteService(String serviceName) throws Exception {
-        DSSTestCaseUtils dssTest = new DSSTestCaseUtils();
+       /* DSSTestCaseUtils dssTest = new DSSTestCaseUtils();
         dssTest.deleteService(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName);
         Assert.assertTrue(
                 dssTest.isServiceDeleted(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName),
-                "Service Deletion Failed");
+                "Service Deletion Failed");*/
     }
 
     protected DataHandler createArtifact(String path, List<File> sqlFile) throws Exception {
