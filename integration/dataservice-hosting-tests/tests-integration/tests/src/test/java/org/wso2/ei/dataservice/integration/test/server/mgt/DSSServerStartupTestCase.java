@@ -29,7 +29,8 @@ public class DSSServerStartupTestCase extends ServerStartupBaseTest {
 
     private static final Log log = LogFactory.getLog(DSSServerStartupTestCase.class);
 
-    @BeforeSuite @Override public void initialize() throws XPathExpressionException, AxisFault {
+    @BeforeSuite @Override
+    public void initialize() throws XPathExpressionException, AxisFault {
         log.info("Starting DSSServerStartupTestCase ...");
         super.initialize();
     }

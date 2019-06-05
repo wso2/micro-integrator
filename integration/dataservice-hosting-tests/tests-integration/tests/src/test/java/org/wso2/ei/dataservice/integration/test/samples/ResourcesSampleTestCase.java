@@ -46,7 +46,7 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
-        super.init(userMode);
+        super.init();
         deployService(serviceName, new DataHandler(
                 new URL("file:///" + getResourceLocation() + File.separator + "samples" + File.separator + "dbs"
                         + File.separator + "rdbms" + File.separator + "ResourcesSample.dbs")));

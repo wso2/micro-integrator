@@ -49,7 +49,7 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
-        super.init(userMode);
+        super.init();
         String serviceEndPoint = getServiceUrlHttp(serviceName);
         stub = new RDBMSSampleStub(serviceEndPoint);
         List<File> sqlFileLis = new ArrayList<File>();

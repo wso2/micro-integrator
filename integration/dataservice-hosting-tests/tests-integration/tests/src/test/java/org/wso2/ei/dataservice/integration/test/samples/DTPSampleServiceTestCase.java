@@ -49,7 +49,7 @@ public class DTPSampleServiceTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
-        super.init(userMode);
+        super.init();
         serverEpr = getServiceUrlHttp(serviceName);
         String resourceFileLocation;
         resourceFileLocation = getResourceLocation();

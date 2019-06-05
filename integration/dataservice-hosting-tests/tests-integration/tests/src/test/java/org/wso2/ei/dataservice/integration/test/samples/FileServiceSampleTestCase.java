@@ -52,7 +52,7 @@ public class FileServiceSampleTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
-        super.init(userMode);
+        super.init();
         serverEpr = getServiceUrlHttp(serviceName);
         resourceFileLocation = getResourceLocation();
         deployService(serviceName, new DataHandler(

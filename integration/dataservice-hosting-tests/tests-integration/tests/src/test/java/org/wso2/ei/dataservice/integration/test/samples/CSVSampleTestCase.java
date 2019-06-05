@@ -47,7 +47,7 @@ public class CSVSampleTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
-        super.init(userMode);
+        super.init();
         String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
         resourceFileLocation = getResourceLocation();

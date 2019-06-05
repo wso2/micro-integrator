@@ -51,7 +51,7 @@ public class ODataTenantUserTestCase extends DSSIntegrationTest {
     private String webAppUrl;
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
-        super.init(TestUserMode.TENANT_USER);
+        super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
         sqlFileLis.add(selectSqlFile("Customers.sql"));

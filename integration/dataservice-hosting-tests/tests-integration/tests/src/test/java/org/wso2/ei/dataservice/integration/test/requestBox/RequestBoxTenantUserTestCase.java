@@ -56,7 +56,7 @@ public class RequestBoxTenantUserTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
 
-        super.init(TestUserMode.TENANT_USER);
+        super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("RequestBoxTestTables.sql"));
         deployService(serviceName, createArtifact(

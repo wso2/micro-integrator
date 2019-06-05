@@ -52,7 +52,7 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
-        super.init(userMode);
+        super.init();
         String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
         resourceFileLocation = getResourceLocation();

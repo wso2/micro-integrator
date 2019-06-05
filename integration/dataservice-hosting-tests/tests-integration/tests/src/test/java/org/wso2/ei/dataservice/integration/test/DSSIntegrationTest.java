@@ -51,21 +51,21 @@ public abstract class DSSIntegrationTest {
     protected String sessionCookie;
     protected TestUserMode userMode;
 
-    protected void init() throws Exception {
+   /* protected void init() throws Exception {
         userMode = TestUserMode.SUPER_TENANT_ADMIN;
         init(userMode);
 
-    }
+    }*/
 
-    protected void init(TestUserMode userType) throws Exception {
+    protected void init() throws Exception {
         //        dssContext = new AutomationContext("DSS", "dss01", "carbon.supper", "admin");
-        dssContext = new AutomationContext(PRODUCT_NAME, userType);
-        LoginLogoutClient loginLogoutClient = new LoginLogoutClient(dssContext);
+        dssContext = new AutomationContext();
+        /*LoginLogoutClient loginLogoutClient = new LoginLogoutClient(dssContext);
         sessionCookie = loginLogoutClient.login();
         //return the current tenant as the userType(TestUserMode)
         tenantInfo = dssContext.getContextTenant();
         //return the user information initialized with the system
-        userInfo = tenantInfo.getContextUser();
+        userInfo = tenantInfo.getContextUser();*/
 
     }
 

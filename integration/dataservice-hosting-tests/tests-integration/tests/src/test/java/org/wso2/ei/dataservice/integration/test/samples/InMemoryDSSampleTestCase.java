@@ -54,7 +54,7 @@ public class InMemoryDSSampleTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
-        super.init(userMode);
+        super.init();
         String resourceFileLocation;
         resourceFileLocation = getResourceLocation();
         //DataSource already exist by default for super user.

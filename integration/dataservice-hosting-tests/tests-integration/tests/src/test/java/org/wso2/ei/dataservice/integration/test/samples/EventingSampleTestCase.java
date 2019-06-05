@@ -75,7 +75,7 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
-        super.init(userMode);
+        super.init();
         String resourceFileLocation;
         feedURL = "https://mail.google.com/mail/feed/atom";
         mailCountBeforeTestStart = getMailCount(feedURL);

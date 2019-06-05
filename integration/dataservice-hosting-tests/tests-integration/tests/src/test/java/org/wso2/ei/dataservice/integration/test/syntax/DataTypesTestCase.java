@@ -53,7 +53,7 @@ public class DataTypesTestCase extends DSSIntegrationTest {
     }
 
     @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
-        super.init(userMode);
+        super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("DataTypes.sql"));
         deployService(serviceName, createArtifact(
