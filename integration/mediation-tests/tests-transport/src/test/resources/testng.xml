@@ -169,11 +169,11 @@
         </packages>
     </test-->
 
-    <test name="inbound-HL7 Transport-Test" preserve-order="true" verbose="2">
+    <!--<test name="inbound-HL7 Transport-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.hl7.inbound.transport.test"/>
         </packages>
-    </test>
+    </test>-->
 
     <test name="MailTo-transport-Test-Receiver" preserve-order="true" verbose="2">
         <packages>
