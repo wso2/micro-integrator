@@ -43,29 +43,22 @@ public class LoggingResource extends ApiResource {
         String logLevel = jsonPayload.getString("loggingLevel");
         boolean persist = jsonPayload.getBoolean("persist");
 
-        setSystemLog(messageContext, logLevel, persist);
+        updateSystemLog(messageContext, logLevel, persist);
 
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
-    private void setSystemLog(MessageContext messageContext, String logLevel, boolean persist) {
+    private void updateSystemLog(MessageContext messageContext, String logLevel, boolean persist) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        JSONObject jsonBody = updateSystemLog(logLevel, persist);
-
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
-    }
-
-    private JSONObject updateSystemLog(String logLevel, boolean persist) {
-
-        JSONObject jsonObject = new JSONObject();
+        JSONObject jsonBody = new JSONObject();
 
         if (!isALogLevel(logLevel)) {
-            jsonObject.put("message", "Invalid log level");
-            return jsonObject;
+            jsonBody.put("message", "Invalid log level");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
         }
 
         Set<Appender> appenderSet = new HashSet<>();
@@ -90,8 +83,8 @@ public class LoggingResource extends ApiResource {
             addAppendersToSet(logger.getAllAppenders(), appenderSet);
             logger.setLevel(systemLevel);
         }
-        jsonObject.put("message", "Successfully updated");
-        return jsonObject;
+        jsonBody.put("message", "Successfully updated log level to " + rootLogger.getLevel().toString());
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
     private void addAppendersToSet(Enumeration appenders, Set<Appender> appenderSet) {
