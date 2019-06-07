@@ -20,7 +20,6 @@ package org.wso2.ei.dataservice.integration.test.rdf;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.dataservices.samples.rdf_dataservice.DataServiceFaultException;
@@ -35,40 +34,31 @@ public class RDFSampleTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(RDFSampleTestCase.class);
 
-    private final String serviceName = "RDFSampleService";
     private SamplesRDFSampleServiceStub stub;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
+        String serviceName = "RDFSampleService";
         String serviceEndPoint = getServiceUrlHttp(serviceName);
-        String resourceFileLocation = getResourceLocation();
         stub = new SamplesRDFSampleServiceStub(serviceEndPoint);
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether service deployed or not") public void testServiceDeployment()
-            throws Exception {
-        assertTrue(isServiceDeployed(serviceName));
-        log.info(serviceName + " is deployed");
-    }
-
-    @Test(groups = { "wso2.dss" }) public void getAllMovieData() throws RemoteException, DataServiceFaultException {
+    @Test(groups = { "wso2.dss" })
+    public void getAllMovieData() throws RemoteException, DataServiceFaultException {
 
         log.info("Running RDFSampleServiceTestCase#getAllMovieData");
         assertTrue(stub.getAllMovieData().length > 0, "No of movies should be greater than zero");
         log.info("RDF select Operation Success");
     }
 
-    @Test(groups = { "wso2.dss" }) public void getMovieDataByGenre() throws RemoteException, DataServiceFaultException {
+    @Test(groups = { "wso2.dss" })
+    public void getMovieDataByGenre() throws RemoteException, DataServiceFaultException {
 
         log.info("Running RDFSampleServiceTestCase#getMoviesByGenre");
         assertTrue(stub.getMoviesByGenre("Comedy").length > 0, "No of movies should be greater than zero");
         log.info("RDF select Operation with param Success");
-    }
-
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteService()
-            throws Exception {
-        cleanup();
     }
 
 }
