@@ -21,27 +21,17 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
-import org.wso2.carbon.automation.test.utils.common.FileManager;
 import org.wso2.carbon.automation.test.utils.concurrency.test.ConcurrencyTest;
 import org.wso2.carbon.automation.test.utils.concurrency.test.exception.ConcurrencyTestFailedError;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
-import org.wso2.ei.dataservices.integration.common.clients.ResourceAdminServiceClient;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
 import javax.xml.xpath.XPathExpressionException;
 
 public class CSVDataServiceTestCase extends DSSIntegrationTest {
@@ -52,18 +42,6 @@ public class CSVDataServiceTestCase extends DSSIntegrationTest {
     public void serviceDeployment() throws Exception {
 
         super.init();
-        addResource();
-        deployService(serviceName, AXIOMUtil.stringToOM(FileManager.readFile(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "csv" + File.separator
-                        + "CSVDataService.dbs")));
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        deleteResource();
-        cleanup();
     }
 
     @Test(groups = { "wso2.dss" }, invocationCount = 5)
@@ -93,21 +71,4 @@ public class CSVDataServiceTestCase extends DSSIntegrationTest {
         concurrencyTest.run(getServiceUrlHttp(serviceName), payload, "getProducts");
     }
 
-    private void addResource() throws RemoteException, MalformedURLException, ResourceAdminServiceExceptionException,
-            XPathExpressionException {
-        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(
-                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
-        resourceAdmin.deleteResource("/_system/config/automation/resources/csv/");
-        resourceAdmin
-                .addResource("/_system/config/automation/resources/csv/Products.csv", "text/comma-separated-values", "",
-                        new DataHandler(new URL("file:///" + getResourceLocation() + File.separator + "resources"
-                                + File.separator + "Products.csv")));
-    }
-
-    private void deleteResource() throws RemoteException, MalformedURLException, ResourceAdminServiceExceptionException,
-            XPathExpressionException {
-        ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(
-                dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
-        resourceAdmin.deleteResource("/_system/config/automation/resources/csv/");
-    }
 }
