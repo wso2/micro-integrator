@@ -34,14 +34,14 @@ var programName = os.Args[0]
 var rootCmdShortDesc = "CLI for Micro Integrator"
 
 var rootCmdLongDesc = dedent.Dedent(`
-        ` + utils.ProjectName + ` is a Command Line Tool for Management of WSO2 Micro Integrator
+        ` + programName + ` is a Command Line Tool for Management of WSO2 Micro Integrator
         `)
 
 var rootCmdValidArgs = []string{"init", "show", "version", "help"}
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:       utils.ProjectName,
+	Use:       programName,
 	Short:     rootCmdShortDesc,
 	Long:      rootCmdLongDesc,
 	ValidArgs: rootCmdValidArgs,
@@ -74,7 +74,7 @@ func initConfig() {
 		utils.IsVerbose = true
 		utils.EnableVerboseMode()
 		t := time.Now()
-		utils.Logf(utils.LogPrefixInfo+"Executed ManagementCLI (%s) on %v\n", utils.ProjectName, t.Format(time.RFC1123))
+		utils.Logf(utils.LogPrefixInfo+"Executed ManagementCLI (%s) on %v\n", programName, t.Format(time.RFC1123))
 	} else {
 		utils.IsVerbose = false
 	}
