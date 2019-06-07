@@ -23,7 +23,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
@@ -35,18 +34,17 @@ public class RDFExposedAsRDFSampleTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(RDFExposedAsRDFSampleTestCase.class);
 
-    private final String serviceName = "RDFExposeAsRDFSample";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
-        String resourceFileLocation = getResourceLocation();
-        Assert.assertTrue(isServiceDeployed("RDFExposeAsRDFSample"), "Data service not deployed");
-        log.info(serviceName + " uploaded");
+        String serviceName = "RDFExposeAsRDFSample";
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @Test(groups = { "wso2.dss" }) public void testGetVehicles() throws Exception {
+    @Test(groups = { "wso2.dss" })
+    public void testGetVehicles() throws Exception {
         listVehicles();
         log.info("GET Request to retrieve vehicle data verified");
     }
@@ -61,14 +59,9 @@ public class RDFExposedAsRDFSampleTestCase extends DSSIntegrationTest {
             OMElement product = (OMElement) itr.next();
             OMElement productModel = (OMElement) product.getChildrenWithLocalName("Model").next();
             OMAttribute modelResource = (OMAttribute) productModel.getAllAttributes().next();
-            Assert.assertEquals(modelResource.getAttributeValue().startsWith("http://productlines/"), true,
+            Assert.assertTrue(modelResource.getAttributeValue().startsWith("http://productlines/"),
                     "Model rdf resource value is correct");
         }
-    }
-
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteService()
-            throws Exception {
-        cleanup();
     }
 
 }
