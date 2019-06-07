@@ -139,7 +139,7 @@ func GetArtifactList(url string, model interface{}) (interface{}, error) {
 		unmarshalError := json.Unmarshal([]byte(resp.Body()), &response)
 
 		if unmarshalError != nil {
-			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+			HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
 		}
 		return response, nil
 	} else {
@@ -171,7 +171,7 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 		unmarshalError := json.Unmarshal([]byte(resp.Body()), &response)
 
 		if unmarshalError != nil {
-			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+			HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
 		}
 		return response, nil
 	} else {
