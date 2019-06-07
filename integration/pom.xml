@@ -777,7 +777,7 @@
             <modules>
                 <module>automation-extensions</module>
                 <module>tests-common</module>
-                <module>mediation-tests</module>
+<!--                <module>mediation-tests</module>-->
                 <module>dataservice-hosting-tests</module>
             </modules>
         </profile>
