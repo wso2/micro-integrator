@@ -31,19 +31,23 @@
 
     <test name="InitializeAndSetupServer" preserve-order="true">
         <classes>
-            <class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerStartupTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.datasource.DataSourceInitializationAtStartUpTestCase"/>
+            <!-- Covered in the framework itself
+            <class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerStartupTestCase"/>-->
+
+            <!--Commenting out due to https://github.com/wso2/micro-integrator/issues/255
+            <class name="org.wso2.ei.dataservice.integration.test.datasource.DataSourceInitializationAtStartUpTestCase"/>-->
             <!--disabled due to test failure-->
             <!--<class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerBundleStatusTestCase"/>-->
         </classes>
     </test>
 
+    <!--Commenting out due to https://github.com/wso2/micro-integrator/issues/256
     <test name="DSS-Schedule-task-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.scheduletask.AddScheduleTaskTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.scheduletask.ReScheduleTaskTestCase"/>
         </classes>
-    </test>
+    </test>-->
 
     <!--    <test name="DSS-DBConsole" parallel="false" verbose="2">
             <packages>
