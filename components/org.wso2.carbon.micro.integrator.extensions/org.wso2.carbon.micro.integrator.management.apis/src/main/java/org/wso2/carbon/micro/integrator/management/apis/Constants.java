@@ -42,6 +42,7 @@ public class Constants {
     public static final String TRACING = "tracing";
     public static final String ENABLED = "enabled";
     public static final String DISABLED = "disabled";
+    public static final String MESSAGE = "message";
 
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String HTTP_STATUS_CODE = "HTTP_SC";

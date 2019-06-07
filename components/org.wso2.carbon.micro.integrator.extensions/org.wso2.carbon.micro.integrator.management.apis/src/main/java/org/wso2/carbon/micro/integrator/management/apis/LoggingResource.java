@@ -25,7 +25,6 @@ public class LoggingResource extends ApiResource {
     public Set<String> getMethods() {
 
         Set<String> methods = new HashSet<>();
-        methods.add("GET");
         methods.add("PATCH");
         return methods;
     }
@@ -41,15 +40,14 @@ public class LoggingResource extends ApiResource {
         JSONObject jsonPayload = new JSONObject(JsonUtil.jsonPayloadToString(axis2MessageContext));
 
         String logLevel = jsonPayload.getString("loggingLevel");
-        boolean persist = jsonPayload.getBoolean("persist");
 
-        updateSystemLog(messageContext, logLevel, persist);
+        updateSystemLog(messageContext, logLevel);
 
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
-    private void updateSystemLog(MessageContext messageContext, String logLevel, boolean persist) {
+    private void updateSystemLog(MessageContext messageContext, String logLevel) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -57,33 +55,26 @@ public class LoggingResource extends ApiResource {
         JSONObject jsonBody = new JSONObject();
 
         if (!isALogLevel(logLevel)) {
-            jsonBody.put("message", "Invalid log level");
+            jsonBody.put(Constants.MESSAGE, "Invalid log level " + logLevel);
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+        } else {
+            Set<Appender> appenderSet = new HashSet<>();
+
+            // update root logger details
+            Logger rootLogger = Logger.getRootLogger();
+            rootLogger.setLevel(Level.toLevel(logLevel));
+            addAppendersToSet(rootLogger.getAllAppenders(), appenderSet);
+
+            // update logger and appender data, following are set
+            Enumeration loggersEnum = LogManager.getCurrentLoggers();
+            Level systemLevel = Level.toLevel(logLevel);
+            while (loggersEnum.hasMoreElements()) {
+                Logger logger = (Logger) loggersEnum.nextElement();
+                addAppendersToSet(logger.getAllAppenders(), appenderSet);
+                logger.setLevel(systemLevel);
+            }
+            jsonBody.put(Constants.MESSAGE, "Successfully updated log level to " + rootLogger.getLevel().toString());
         }
-
-        Set<Appender> appenderSet = new HashSet<>();
-
-        if (persist) {
-            //
-        }
-
-        // update root logger details
-        Logger rootLogger = Logger.getRootLogger();
-        rootLogger.setLevel(Level.toLevel(logLevel));
-        addAppendersToSet(rootLogger.getAllAppenders(), appenderSet);
-
-        // update logger and appender data, following are set
-        // 1. log level of all the loggers to logLevel
-        // 2. pattern of all the appenders to logpattern
-        Enumeration loggersEnum = LogManager.getCurrentLoggers();
-        Level systemLevel = Level.toLevel(logLevel);
-        while (loggersEnum.hasMoreElements()) {
-            Logger logger = (Logger) loggersEnum.nextElement();
-            // we ignore all class level defined loggers
-            addAppendersToSet(logger.getAllAppenders(), appenderSet);
-            logger.setLevel(systemLevel);
-        }
-        jsonBody.put("message", "Successfully updated log level to " + rootLogger.getLevel().toString());
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
