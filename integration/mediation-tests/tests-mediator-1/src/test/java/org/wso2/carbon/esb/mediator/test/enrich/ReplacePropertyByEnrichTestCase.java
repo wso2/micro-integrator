@@ -30,13 +30,14 @@ import javax.xml.xpath.XPathExpressionException;
 
 public class ReplacePropertyByEnrichTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichReplacePropertyByEnrichTestProxy");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "replacing a property by using an enrich mediator") public void test()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }, description = "replacing a property by using an enrich mediator")
+    public void test() throws AxisFault, XPathExpressionException {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichReplacePropertyByEnrichTestProxy"),
@@ -47,7 +48,8 @@ public class ReplacePropertyByEnrichTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

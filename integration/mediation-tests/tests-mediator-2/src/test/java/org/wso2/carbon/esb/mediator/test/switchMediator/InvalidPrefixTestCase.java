@@ -27,13 +27,13 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class InvalidPrefixTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "SwitchMediator:Negative Case 2: Invalid prefix") public void testSample2()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "SwitchMediator:Negative Case 2: Invalid prefix")
+    public void testSample2() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("switchMediatorInvalidPrefixTestProxy"),
@@ -44,7 +44,8 @@ public class InvalidPrefixTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 }

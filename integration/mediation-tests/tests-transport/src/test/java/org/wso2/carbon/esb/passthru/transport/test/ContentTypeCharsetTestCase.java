@@ -35,7 +35,8 @@ public class ContentTypeCharsetTestCase extends ESBIntegrationTest {
 
     private Log log = LogFactory.getLog(ContentTypeCharsetTestCase.class);
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         try {
@@ -52,9 +53,8 @@ public class ContentTypeCharsetTestCase extends ESBIntegrationTest {
                 "/artifacts/ESB/synapseconfig/nhttp_transport" + "/content_type_charset_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test for charset value proprty in the header response") public void testReturnContentType()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test for charset value proprty in the header response")
+    public void testReturnContentType() throws Exception {
 
         String contentType = "application/xml;charset=UTF-8";
 
@@ -89,7 +89,8 @@ public class ContentTypeCharsetTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

@@ -30,13 +30,14 @@ public class InvalidThrottlingPolicyTest extends ESBIntegrationTest {
 
     private static final int THROTTLE_MAX_MSG_COUNT = 4;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("invalidThrottlingPolicyTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Invalid throttling policy test") public void testInvalidPolicy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invalid throttling policy test")
+    public void testInvalidPolicy() throws Exception {
 
         OMElement response;
 
@@ -55,7 +56,8 @@ public class InvalidThrottlingPolicyTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

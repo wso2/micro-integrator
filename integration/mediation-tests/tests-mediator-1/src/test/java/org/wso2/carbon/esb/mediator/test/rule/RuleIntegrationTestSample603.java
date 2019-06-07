@@ -33,14 +33,15 @@ import static org.testng.Assert.fail;
 
 public class RuleIntegrationTestSample603 extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config603/synapse.xml");
     }
 
     @Test(groups = "wso2.esb", description = "Scenario to verify advance rule based routing - Switching Routing"
-            + "Decision According to the Rules - Rule Mediator as Switch mediator -Invoke IBM rule") public void testInvokeIBMRule()
-            throws AxisFault {
+            + "Decision According to the Rules - Rule Mediator as Switch mediator -Invoke IBM rule")
+    public void testInvokeIBMRule() throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
@@ -56,8 +57,8 @@ public class RuleIntegrationTestSample603 extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Scenario to verify advance rule based routing - Switching Routing"
-            + "Decision According to the Rules - Rule Mediator as Switch mediator- Invoke SUN rule ") public void testInvokeSUNRule()
-            throws Exception {
+            + "Decision According to the Rules - Rule Mediator as Switch mediator- Invoke SUN rule ")
+    public void testInvokeSUNRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "SUN");
             fail("Response message not expected. AxisFault expected");
@@ -68,8 +69,8 @@ public class RuleIntegrationTestSample603 extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Scenario to verify advance rule based routing - Switching Routing"
-            + "Decision According to the Rules - Rule Mediator as Switch mediator- Invoke MFST rule ") public void testInvokeMSFTRule()
-            throws Exception {
+            + "Decision According to the Rules - Rule Mediator as Switch mediator- Invoke MFST rule ")
+    public void testInvokeMSFTRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "MFST");
             fail("Response message not expected. AxisFault expected");
@@ -81,8 +82,8 @@ public class RuleIntegrationTestSample603 extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Scenario to verify advance rule based routing - Switching Routing"
-            + "Decision According to the Rules - Rule Mediator as Switch mediator- Invoke an invalid rule ") public void testInvokeInvalidRule()
-            throws Exception {
+            + "Decision According to the Rules - Rule Mediator as Switch mediator- Invoke an invalid rule ")
+    public void testInvokeInvalidRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "Invalid");
             fail("Response message not expected. AxisFault expected");
@@ -93,7 +94,8 @@ public class RuleIntegrationTestSample603 extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

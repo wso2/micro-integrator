@@ -37,13 +37,13 @@ public class AddHeadersUsingNashornJsTestCase extends ESBIntegrationTest {
 
     private static final String ADD_HEADER_API = "addHeadersWithNashornJsAPI";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Adding soap headers by NashornJS with String") public void testAddHeaderUsingString()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Adding soap headers by NashornJS with String")
+    public void testAddHeaderUsingString() throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/xml");
@@ -55,9 +55,8 @@ public class AddHeadersUsingNashornJsTestCase extends ESBIntegrationTest {
                 "Response does not contain the keyword " + "\"STRING\". Response: " + response.getData());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Adding soap headers by NashornJS with DOMElement") public void testAddHeaderUsingDomElement()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Adding soap headers by NashornJS with DOMElement")
+    public void testAddHeaderUsingDomElement() throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/xml");
@@ -70,9 +69,8 @@ public class AddHeadersUsingNashornJsTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Adding soap headers by NashornJS with OMElement") public void testAddHeaderUsingOmElement()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Adding soap headers by NashornJS with OMElement")
+    public void testAddHeaderUsingOmElement() throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/xml");
@@ -85,7 +83,8 @@ public class AddHeadersUsingNashornJsTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -43,7 +43,8 @@ public class DS1042GetContentTypeSpecifiedTestCase extends DSSIntegrationTest {
     private final String serviceName = "ResourcesSample";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CustomProducts.sql"));
@@ -54,13 +55,14 @@ public class DS1042GetContentTypeSpecifiedTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "test the service when Content-Type is specified in GET resource requests - xml", alwaysRun = true) public void testWithXML()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "test the service when Content-Type is specified in GET resource requests - xml", alwaysRun = true)
+    public void testWithXML() throws Exception {
         HttpResponse result = getHttpResponse(serviceEndPoint + "products", "application/xml");
         Assert.assertNotNull(result, "Response null");
         Assert.assertTrue(result.getData().contains(
@@ -72,8 +74,8 @@ public class DS1042GetContentTypeSpecifiedTestCase extends DSSIntegrationTest {
                 + " GET-method");
     }
 
-    @Test(groups = "wso2.dss", description = "test the service when Content-Type is specified in GET resource requests - json", alwaysRun = true, dependsOnMethods = "testWithXML") public void contentTypetestWithJson()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "test the service when Content-Type is specified in GET resource requests - json", alwaysRun = true, dependsOnMethods = "testWithXML")
+    public void contentTypetestWithJson() throws Exception {
         HttpResponse result = getHttpResponse(serviceEndPoint + "products", "application/json");
         Assert.assertNotNull(result, "Response null");
         Assert.assertTrue(result.getData().contains("{\"productCode\":\"S10_1678\",\"productName\":\"1969 Harley "

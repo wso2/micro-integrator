@@ -13,17 +13,19 @@ public class SetPropertyWithScopeInScriptMediatorTestCase extends ESBIntegration
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator") public void testSetPropertyWithAxis2ScopeInScript()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator")
+    public void testSetPropertyWithAxis2ScopeInScript() throws Exception {
 
         StockQuoteClient axis2Client1 = new StockQuoteClient();
         axis2Client1.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("scriptMediatorSetPropertyWithScopeTestProxy"),
@@ -36,8 +38,8 @@ public class SetPropertyWithScopeInScriptMediatorTestCase extends ESBIntegration
         Assert.assertTrue(removePropertyInLog, " The property with axis2 scope is not remove ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator") public void testSetPropertyWithTransportScopeInScript()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator")
+    public void testSetPropertyWithTransportScopeInScript() throws Exception {
 
         StockQuoteClient axis2Client1 = new StockQuoteClient();
 
@@ -51,8 +53,8 @@ public class SetPropertyWithScopeInScriptMediatorTestCase extends ESBIntegration
         Assert.assertTrue(removePropertyInLog, " The property with axis2 transport is not remove ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator") public void testSetPropertyWithOperationScopeInScript()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator")
+    public void testSetPropertyWithOperationScopeInScript() throws Exception {
 
         StockQuoteClient axis2Client1 = new StockQuoteClient();
 

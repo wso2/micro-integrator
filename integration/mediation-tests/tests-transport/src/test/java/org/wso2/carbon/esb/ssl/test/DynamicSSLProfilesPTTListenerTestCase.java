@@ -53,9 +53,9 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
             getESBResourceLocation() + File.separator + "dynamicsslprofiles" + File.separator + "pttlistener"
                     + File.separator;
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) public void initialize()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(context);
         serverManager.applyConfigurationWithoutRestart(new File(
@@ -65,9 +65,10 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Testing Mutual SSL Connection with dynamically loaded SSL configuration") public void testMutualSSLConnectionWithUpdatedProfile()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = {
+            "wso2.esb" }, description = "Testing Mutual SSL Connection with dynamically loaded SSL configuration")
+    public void testMutualSSLConnectionWithUpdatedProfile() throws Exception {
         String soapMessage = "<soapenv:Envelope " + "xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
                 + "xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">\n" + "   <soapenv:Header/>\n"
                 + "   <soapenv:Body>\n" + "      <echo:echoString>\n" + "         <in>WSO2 Stock</in>\n"
@@ -125,8 +126,9 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.reloadSessionCookie();
         deleteProxyService(proxyService);
         super.cleanup();

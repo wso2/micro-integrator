@@ -47,11 +47,13 @@ public class InOnlyRequestsServiceTestCase extends DSSIntegrationTest {
     private final String serviceName = "InOnlyRequestsServiceTest";
     private String serverEpr;
 
-    @Factory(dataProvider = "userModeDataProvider") public InOnlyRequestsServiceTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public InOnlyRequestsServiceTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -65,20 +67,22 @@ public class InOnlyRequestsServiceTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void insertOperation() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void insertOperation() throws AxisFault, XPathExpressionException {
         for (int i = 1; i <= 10; i++) {
             addStudent(i);
         }
         log.info("Insert Operation finished");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" }) public void countOperation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" })
+    public void countOperation() throws AxisFault, XPathExpressionException {
         Assert.assertEquals("10", getStudentCount(), "Student Count Verified");
         log.info("Insert Operation verified");
     }

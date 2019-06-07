@@ -34,13 +34,13 @@ import static org.testng.Assert.assertNotNull;
 
 public class LogMediatorAfterSendMediatorTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "use Log mediator after send mediator", enabled = false) public void logMediatorAfterSendMediatorTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "use Log mediator after send mediator", enabled = false)
+    public void logMediatorAfterSendMediatorTest() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("sendMediatorWithLogAfterwardsTestProxy"), null,
                         "WSO2");
@@ -52,7 +52,8 @@ public class LogMediatorAfterSendMediatorTestCase extends ESBIntegrationTest {
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -30,7 +30,8 @@ public class RetrieveBackendWsdlTestCase extends ESBIntegrationTest {
     private HttpClientUtil httpClientUtil;
     private String backendWSDLUrl;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         httpClientUtil = new HttpClientUtil();
@@ -44,7 +45,8 @@ public class RetrieveBackendWsdlTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb") public void testRetrieveBackendServiceWsdl() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void testRetrieveBackendServiceWsdl() throws Exception {
 
         OMElement result = httpClientUtil.get(backendWSDLUrl);
         // Return the backend service WSDL instead of  proxy WSDL
@@ -52,7 +54,8 @@ public class RetrieveBackendWsdlTestCase extends ESBIntegrationTest {
                 "Failed to receive service WSDL, Named SimpleStockQuoteService");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

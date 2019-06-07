@@ -30,15 +30,16 @@ import static org.testng.Assert.assertNotNull;
 
 public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/wsdl_options_specified_source_url.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "- WSDL based proxy"
-            + "- Publish WSDL Options - Specified source url") public void testWSDLBasedProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- WSDL based proxy" + "- Publish WSDL Options - Specified source url")
+    public void testWSDLBasedProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromSourceUrlWsdlBasedProxy"), null,
@@ -54,7 +55,8 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

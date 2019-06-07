@@ -36,7 +36,8 @@ import static org.testng.Assert.assertTrue;
 
 public class ValidPathAxis2XmlTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         String axis2XmlPath = FrameworkPathUtil.getSystemResourceLocation()
@@ -54,8 +55,9 @@ public class ValidPathAxis2XmlTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb") public void TestPath() throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb")
+    public void TestPath() throws AxisFault {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CalloutMediatorAxis2RepoPathTestProxy"), "",
@@ -67,7 +69,8 @@ public class ValidPathAxis2XmlTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 

@@ -42,15 +42,16 @@ public class ResolvingEndpointTestCase extends ESBIntegrationTest {
     private final String ENDPOINT_NAME = "resolvingEP";
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         addResolvingEndpoint();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a dynamically resolved endpoint") public void testSendingToDynamicallyResolvedEndpoint()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a dynamically resolved endpoint")
+    public void testSendingToDynamicallyResolvedEndpoint() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 "http://localhost:8480/services/resolvingEndpointTestProxy?myKey=resolvingEP", null, "WSO2");
@@ -58,7 +59,8 @@ public class ResolvingEndpointTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

@@ -35,7 +35,8 @@ import static org.testng.Assert.assertTrue;
  * in it's configuration
  */
 public class LargeCacheTimeOutTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/cache/LargeCacheTimeOut.xml");
     }
@@ -44,9 +45,9 @@ public class LargeCacheTimeOutTestCase extends ESBIntegrationTest {
      * This test case checks whether the  back-end (axis2Server) has been hit only once for whole of 30 mins, which
      * was set as cache timeout value. As soon as 1800 secs passes the server should be hit once more.
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator") public void testLargeCacheTimeOut()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator")
+    public void testLargeCacheTimeOut() throws Exception {
         OMElement response;
         response = axis2Client.sendSimpleStockQuoteRequest(null, getMainSequenceURL(), "WSO2");
 
@@ -85,7 +86,8 @@ public class LargeCacheTimeOutTestCase extends ESBIntegrationTest {
                 .equals(newChange2Value), "Response caching didn't work with a very large time out value ");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

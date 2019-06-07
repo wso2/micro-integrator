@@ -39,18 +39,20 @@ public class PropertyIntegrationForceHttpContentLengthPropertyTestCase extends E
 
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         wireServer = new WireMonitorServer(8994);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests when both properties are enabled") public void testWithEnableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests when both properties are enabled")
+    public void testWithEnableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest() throws Exception {
 
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/EnableFORCE_HTTP_CONTENT_LENGTH.xml");
 
@@ -78,8 +80,8 @@ public class PropertyIntegrationForceHttpContentLengthPropertyTestCase extends E
                 "Content-Length not found in the out-going message");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests when both properties are disabled", dependsOnMethods = "testWithEnableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest") public void testWithDisableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests when both properties are disabled", dependsOnMethods = "testWithEnableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest")
+    public void testWithDisableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/property/DisableFORCE_HTTP_CONTENT_LENGTH.xml");

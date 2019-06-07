@@ -46,7 +46,8 @@ public class JMXStatisticsTestCase extends DSSIntegrationTest {
     private final String serviceName = "GSpreadDataService";
     private JMXClient jmxClient;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         deployService(serviceName, AXIOMUtil.stringToOM(FileManager.readFile(
@@ -58,15 +59,15 @@ public class JMXStatisticsTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false) public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false)
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
     @Test(groups = {
-            "wso2.dss" }, invocationCount = 5, description = "invoke service", dependsOnMethods = "testServiceDeployment", enabled = false) public void selectOperation()
-            throws AxisFault, XPathExpressionException {
+            "wso2.dss" }, invocationCount = 5, description = "invoke service", dependsOnMethods = "testServiceDeployment", enabled = false)
+    public void selectOperation() throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac
                 .createOMNamespace("http://ws.wso2.org/dataservice/samples/gspread_sample_service", "ns1");
@@ -83,8 +84,8 @@ public class JMXStatisticsTestCase extends DSSIntegrationTest {
         log.info("Service Invocation success");
     }
 
-    @Test(groups = "wso2.dss", description = "Verify service attributes exposed via jmx interface", dependsOnMethods = "selectOperation", enabled = false) public void testVerifyServiceAttributesViaJMX()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Verify service attributes exposed via jmx interface", dependsOnMethods = "selectOperation", enabled = false)
+    public void testVerifyServiceAttributesViaJMX() throws Exception {
         assertEquals(jmxClient.getAttribute("ServiceName"), serviceName);
         assertTrue(((String[]) jmxClient.getAttribute("ResourcePaths"))[0].equals("customers"));
         assertTrue(((String[]) jmxClient.getAttribute("OperationNames"))[0].equals("getCustomers"));
@@ -95,8 +96,8 @@ public class JMXStatisticsTestCase extends DSSIntegrationTest {
                         + "dataservices" + File.separator + "GSpreadDataService.dbs"));
     }
 
-    @Test(groups = "wso2.dss", description = "Verify service operations exposed via jmx interface", dependsOnMethods = "testVerifyServiceAttributesViaJMX", enabled = false) public void testVerifyServiceOperationsViaJMX()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Verify service operations exposed via jmx interface", dependsOnMethods = "testVerifyServiceAttributesViaJMX", enabled = false)
+    public void testVerifyServiceOperationsViaJMX() throws Exception {
         assertTrue(jmxClient.invoke("getQueryIdFromOperationName", new Object[] { "getCustomers" }).equals("aa"));
         assertTrue(jmxClient.invoke("getConfigIdFromQueryId", new Object[] { "aa" }).equals("GSpreadDataSource"));
         assertFalse(jmxClient.invoke("getHTTPMethodsForResourcePath", new Object[] { "dummy" }).equals("dummy"));
@@ -109,7 +110,8 @@ public class JMXStatisticsTestCase extends DSSIntegrationTest {
         assertTrue(jmxClient.invoke("getOpenDatabaseConnectionsCount", new Object[] { "" }).toString().equals("-1"));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         jmxClient.disconnect();
         cleanup();

@@ -31,7 +31,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/loggingProxy/proxy_service_with_end_point_through_url.xml");
@@ -39,8 +40,8 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Proxy service with providing endpoint through url") public void testLoggingProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Proxy service with providing endpoint through url")
+    public void testLoggingProxy() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteLoggingProxy"), null, "WSO2");
 
@@ -61,7 +62,8 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
                 "Request INFO log entry not found");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

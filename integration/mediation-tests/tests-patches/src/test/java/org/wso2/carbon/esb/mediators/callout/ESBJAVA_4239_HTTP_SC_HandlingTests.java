@@ -37,7 +37,8 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
     private SimpleSocketServer simpleSocketServer;
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
         super.init();
         int port = 1995;
         String expectedResponse =
@@ -51,7 +52,8 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Test whether response HTTP status code getting correctly after callout "
-            + "mediator successfully execute") public void testHttpStatusCodeGettingSuccessfully() throws Exception {
+            + "mediator successfully execute")
+    public void testHttpStatusCodeGettingSuccessfully() throws Exception {
         String endpoint = getProxyServiceURLHttp("TestCalloutHTTP_SC");
         String soapRequest =
                 TestConfigurationProvider.getResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
@@ -86,7 +88,8 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
         if (simpleSocketServer != null) {
             simpleSocketServer.shutdown();

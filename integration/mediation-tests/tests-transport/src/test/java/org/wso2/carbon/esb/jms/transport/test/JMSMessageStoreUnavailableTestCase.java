@@ -28,13 +28,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class JMSMessageStoreUnavailableTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jms/transport/jms_message_store_unavailable_service.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Test proxy service with unavailable jms message store") public void testCustomProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test proxy service with unavailable jms message store")
+    public void testCustomProxy() throws Exception {
         OMElement response = null;
         try {
             response = axis2Client
@@ -46,7 +47,8 @@ public class JMSMessageStoreUnavailableTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

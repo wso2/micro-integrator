@@ -36,14 +36,15 @@ import static org.testng.Assert.assertNotNull;
 public class EnrichIntegrationAddSourceAsSiblingInBodyTest extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         init();
         verifyProxyServiceExistence("enrichAddSourceAsSiblingInBodyTestProxy");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Adding a source as a sibling of message body") public void testAddSourceAsSiblingInBody()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Adding a source as a sibling of message body")
+    public void testAddSourceAsSiblingInBody() throws AxisFault, XMLStreamException {
 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichAddSourceAsSiblingInBodyTestProxy"), null,
@@ -55,7 +56,8 @@ public class EnrichIntegrationAddSourceAsSiblingInBodyTest extends ESBIntegratio
                 "WSO2", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

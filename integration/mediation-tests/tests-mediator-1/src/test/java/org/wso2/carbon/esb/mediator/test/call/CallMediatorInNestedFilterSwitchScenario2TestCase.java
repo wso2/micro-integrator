@@ -28,12 +28,14 @@ import static org.testng.Assert.assertTrue;
 
 public class CallMediatorInNestedFilterSwitchScenario2TestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/synapse8.xml");
     }
 
-    @Test(groups = { "wso2.esb" }) public void callMediatorInNestedFilterSwitchScenario2TestCase() throws AxisFault {
+    @Test(groups = { "wso2.esb" })
+    public void callMediatorInNestedFilterSwitchScenario2TestCase() throws AxisFault {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "IBM");
@@ -42,7 +44,8 @@ public class CallMediatorInNestedFilterSwitchScenario2TestCase extends ESBIntegr
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

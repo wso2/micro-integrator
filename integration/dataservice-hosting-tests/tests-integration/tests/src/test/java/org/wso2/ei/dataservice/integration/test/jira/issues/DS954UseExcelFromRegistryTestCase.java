@@ -46,7 +46,8 @@ public class DS954UseExcelFromRegistryTestCase extends DSSIntegrationTest {
     private final String serviceName = "ExcelFromReg";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -66,14 +67,15 @@ public class DS954UseExcelFromRegistryTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "test the use of registry excel sheet as registry resource in dbs", alwaysRun = true) public void useExcelFromRegistryTest()
-            throws Exception {
+            "wso2.dss" }, description = "test the use of registry excel sheet as registry resource in dbs", alwaysRun = true)
+    public void useExcelFromRegistryTest() throws Exception {
         HttpClientUtil httpClient = new HttpClientUtil();
         OMElement result = httpClient.get(serviceEndPoint + ".HTTPEndpoint/" + "products");
         Assert.assertNotNull(result, "Response null");

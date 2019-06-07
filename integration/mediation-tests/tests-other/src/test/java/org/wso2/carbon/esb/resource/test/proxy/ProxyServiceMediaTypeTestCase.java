@@ -31,15 +31,15 @@ public class ProxyServiceMediaTypeTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdmin;
     private final String proxyName = "testProxyMetaData123456";
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Proxy Service media type", enabled = false) public void testProxyServiceMediaType()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Proxy Service media type", enabled = false)
+    public void testProxyServiceMediaType() throws Exception {
         OMElement proxyService = AXIOMUtil.stringToOM(
                 "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + proxyName + "\" transports=\"https,http\""
                         + "       statistics=\"disable\" trace=\"disable\" startOnLoad=\"true\">" + "        <target>"
@@ -56,7 +56,8 @@ public class ProxyServiceMediaTypeTestCase extends ESBIntegrationTest {
         Assert.assertEquals(metadata.getMediaType(), "text/xml", "Media Type mismatched for proxy service");
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         deleteProxyService(proxyName);
         resourceAdmin = null;
         super.cleanup();

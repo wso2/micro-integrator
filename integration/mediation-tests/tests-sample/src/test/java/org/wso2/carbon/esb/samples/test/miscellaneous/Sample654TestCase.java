@@ -51,7 +51,8 @@ public class Sample654TestCase extends ESBSampleIntegrationTest {
             File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator
                     + "vfsTransport" + File.separator;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -69,10 +70,10 @@ public class Sample654TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @Test(groups = { "wso2.esb",
-            "local only" }, description = "Smooks configuration refer from"
-            + " configuration registry", enabled = false) public void testSmookConfigFromConfigRegistry()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = { "wso2.esb", "local only" }, description = "Smooks configuration refer from"
+            + " configuration registry", enabled = false)
+    public void testSmookConfigFromConfigRegistry() throws Exception {
         multiMessageReceiver = new MultiMessageReceiver(PORT);
 
         multiMessageReceiver.startServer();
@@ -121,7 +122,8 @@ public class Sample654TestCase extends ESBSampleIntegrationTest {
         assertTrue(totalResponse.contains("SUN"), "SUN is not in the response");
     }
 
-    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void restoreServerConfiguration() throws Exception {
         try {
             if (multiMessageReceiver != null) {
                 multiMessageReceiver.stopServer();

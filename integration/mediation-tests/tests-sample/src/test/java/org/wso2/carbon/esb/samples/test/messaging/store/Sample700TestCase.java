@@ -37,7 +37,8 @@ public class Sample700TestCase extends ESBSampleIntegrationTest {
     private MessageStoreAdminClient messageStoreAdminClient;
     private final String MESSAGE_STORE_NAME = "MyStore";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(700);
 
@@ -45,9 +46,8 @@ public class Sample700TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Introduction to Message Store test case ") public void messageStoringTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Introduction to Message Store test case ")
+    public void messageStoringTest() throws Exception {
         // The count should be 0 as soon as the message store is created
         Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
                 "Message store should be initially empty");
@@ -90,7 +90,8 @@ public class Sample700TestCase extends ESBSampleIntegrationTest {
         return payload;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         cleanup();
         messageStoreAdminClient = null;
         context = null;

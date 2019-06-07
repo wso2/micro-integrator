@@ -28,15 +28,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class Soap11FaultWithAttributeResponseTrueTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/fault/soap11_fault_set_response_true_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Creating SOAP1.1 fault messages as Response true") public void testSOAP11FaultAttributeResponseTrue()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault messages as Response true")
+    public void testSOAP11FaultAttributeResponseTrue() throws AxisFault {
         OMElement response;
         try {
             response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
@@ -55,7 +55,8 @@ public class Soap11FaultWithAttributeResponseTrueTestCase extends ESBIntegration
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

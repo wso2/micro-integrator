@@ -49,11 +49,13 @@ public class InMemoryDSSampleTestCase extends DSSIntegrationTest {
     private final String serviceName = "InMemoryDSSample";
     private String serviceUrl;
 
-    @Factory(dataProvider = "userModeDataProvider") public InMemoryDSSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public InMemoryDSSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation;
         resourceFileLocation = getResourceLocation();
@@ -68,15 +70,14 @@ public class InMemoryDSSampleTestCase extends DSSIntegrationTest {
         serviceUrl = getServiceUrlHttp(serviceName);
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = {
-            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment") public void selectOperation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment")
+    public void selectOperation() throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://www.w3.org/2005/08/addressing", "ns1");
         OMElement payload = fac.createOMElement("getAllUsers", omNs);
@@ -88,8 +89,8 @@ public class InMemoryDSSampleTestCase extends DSSIntegrationTest {
         log.info("Service invocation success");
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteFaultyService()
-            throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
+    public void deleteFaultyService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

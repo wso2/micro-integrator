@@ -44,7 +44,8 @@ public class ESBJAVA4565TestCase extends ESBIntegrationTest {
     private static final String REGISTRY_ARTIFACT = "/_system/governance/services/test/config/ftp.xml";
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         verifySequenceExistence("ESBJAVA4565TestSequence");
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -65,8 +66,8 @@ public class ESBJAVA4565TestCase extends ESBIntegrationTest {
         this.addScheduledTask(task);
     }
 
-    @Test(groups = "wso2.esb", description = "Analyze carbon logs to find NPE due to unresolved tenant domain.") public void checkErrorLog()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Analyze carbon logs to find NPE due to unresolved tenant domain.")
+    public void checkErrorLog() throws Exception {
         LogViewerClient cli = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         LogEvent[] logs = cli.getAllRemoteSystemLogs();
         Assert.assertNotNull(logs, "No logs found");
@@ -83,7 +84,8 @@ public class ESBJAVA4565TestCase extends ESBIntegrationTest {
                 "Tenant domain not resolved when registry resource is accessed inside " + "a scheduled task");
     }
 
-    @AfterClass(alwaysRun = true, enabled = false) public void UndeployService() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false)
+    public void UndeployService() throws Exception {
         resourceAdminServiceStub.deleteResource(REGISTRY_ARTIFACT);
         super.cleanup();
     }

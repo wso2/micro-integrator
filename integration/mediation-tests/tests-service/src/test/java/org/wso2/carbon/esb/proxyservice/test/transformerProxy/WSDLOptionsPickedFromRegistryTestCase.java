@@ -36,7 +36,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath(
@@ -44,8 +45,8 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Transformer proxy"
-            + "- Publish WSDL Options - Picked from registry") public void testTransformerProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Transformer proxy" + "- Publish WSDL Options - Picked from registry")
+    public void testTransformerProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromRegTransformerProxy"), null, "WSO2");
@@ -64,7 +65,8 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

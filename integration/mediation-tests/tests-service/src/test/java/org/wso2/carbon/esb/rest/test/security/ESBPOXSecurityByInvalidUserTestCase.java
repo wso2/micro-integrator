@@ -47,7 +47,8 @@ public class ESBPOXSecurityByInvalidUserTestCase extends ESBIntegrationTest {
     private static final String studentName = "automationStudent";
     private SecurityAdminServiceClient securityAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         updateESBConfiguration(RestEndpointSetter.setEndpoint(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -55,8 +56,8 @@ public class ESBPOXSecurityByInvalidUserTestCase extends ESBIntegrationTest {
         applySecurity("1", "StudentServiceProxy", null);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "POST request by invalid user", expectedExceptions = IOException.class) public void testAddNewStudent()
+    @Test(groups = { "wso2.esb" }, description = "POST request by invalid user", expectedExceptions = IOException.class)
+    public void testAddNewStudent()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -88,7 +89,8 @@ public class ESBPOXSecurityByInvalidUserTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "PUT request  by invalid user", dependsOnMethods = "testAddNewStudent", expectedExceptions = IOException.class) public void testUpdateStudent()
+            "wso2.esb" }, description = "PUT request  by invalid user", dependsOnMethods = "testAddNewStudent", expectedExceptions = IOException.class)
+    public void testUpdateStudent()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -119,7 +121,8 @@ public class ESBPOXSecurityByInvalidUserTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "DELETE request  by invalid user", dependsOnMethods = "testUpdateStudent") public void testDeleteStudent()
+            "wso2.esb" }, description = "DELETE request  by invalid user", dependsOnMethods = "testUpdateStudent")
+    public void testDeleteStudent()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
         boolean status = false;
@@ -138,7 +141,8 @@ public class ESBPOXSecurityByInvalidUserTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "GET resource after delete  by invalid user", dependsOnMethods = "testDeleteStudent") public void testGetResourceAfterDelete()
+            "wso2.esb" }, description = "GET resource after delete  by invalid user", dependsOnMethods = "testDeleteStudent")
+    public void testGetResourceAfterDelete()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -173,7 +177,8 @@ public class ESBPOXSecurityByInvalidUserTestCase extends ESBIntegrationTest {
         Thread.sleep(2000);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         securityAdminServiceClient.disableSecurity(SERVICE_NAME);
         super.cleanup();
     }

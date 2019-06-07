@@ -27,15 +27,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class Soap11FaultWithAttributeResponseFalseWithAddressingTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/fault/soap11_fault_set_response_attribute_false_with_addressing_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Creating SOAP1.1 fault messages as Response property false") public void testSOAP11FaultAttributeResponseFalseWithAddressing()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault messages as Response property false")
+    public void testSOAP11FaultAttributeResponseFalseWithAddressing() throws AxisFault {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
                     "http://localhost:9070/services/NonExistingServiceFromAddressing", "WSO2");
@@ -49,7 +49,8 @@ public class Soap11FaultWithAttributeResponseFalseWithAddressingTestCase extends
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

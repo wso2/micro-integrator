@@ -28,13 +28,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class JSONToSOAPConversionUsingSample440TestCase extends ESBSampleIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(440);
     }
 
-    @Test(groups = "wso2.esb", description = "JSON to SOAP conversion using sample 440") public void testJSONToSOAPConversion()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "JSON to SOAP conversion using sample 440")
+    public void testJSONToSOAPConversion() throws Exception {
         JSONClient jsonClient = new JSONClient();
         JSONObject response = jsonClient
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("JSONProxy"), "IBM", "getQuote");
@@ -44,7 +45,8 @@ public class JSONToSOAPConversionUsingSample440TestCase extends ESBSampleIntegra
         assertEquals(returnElement.getJSONObject("return").getString("symbol"), "IBM", "Symbol is mismatch");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

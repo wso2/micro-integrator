@@ -30,17 +30,19 @@ import javax.xml.xpath.XPathExpressionException;
 
 public class SOAPNSBasedSwitching extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         super.init();
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Switch Mediator:Write xpath expression using SOAP 1.1/1.2 NS Send SOAP 1.1/1.2 response and assert switch") public void testXPathOnDifferentSOAPNS()
-            throws AxisFault, XPathExpressionException {
+            "wso2.esb" }, description = "Switch Mediator:Write xpath expression using SOAP 1.1/1.2 NS Send SOAP 1.1/1.2 response and assert switch")
+    public void testXPathOnDifferentSOAPNS() throws AxisFault, XPathExpressionException {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteSoap11(getProxyServiceURLHttp("switchMediatorSoap11Soap12TestProxy"),

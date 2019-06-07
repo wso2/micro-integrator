@@ -31,13 +31,14 @@ import javax.xml.xpath.XPathExpressionException;
 import static org.testng.Assert.assertEquals;
 
 public class InvokeOnErrorSequenceFromSwitchIntegrationTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Switch Mediator : Check whether Onerror sequence is executed if an error happens inside a switch") public void testSample2()
-            throws AxisFault, XPathExpressionException {
+            "wso2.esb" }, description = "Switch Mediator : Check whether Onerror sequence is executed if an error happens inside a switch")
+    public void testSample2() throws AxisFault, XPathExpressionException {
         //Send mediator will be defined inside onError sequence so that a response will come only is onError sequence is executed.
         try {
             axis2Client.sendSimpleStockQuoteRequest(
@@ -51,7 +52,8 @@ public class InvokeOnErrorSequenceFromSwitchIntegrationTestCase extends ESBInteg
         }
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 

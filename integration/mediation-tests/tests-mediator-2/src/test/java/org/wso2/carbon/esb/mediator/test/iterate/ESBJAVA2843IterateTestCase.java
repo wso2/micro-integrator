@@ -37,12 +37,13 @@ import javax.xml.namespace.QName;
  */
 public class ESBJAVA2843IterateTestCase extends ESBIntegrationTest {
 
-    @BeforeClass() public void uploadSynapseConfig() throws Exception {
+    @BeforeClass()
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Iterating when payload containing different element") public void testIteratorWithMultipleElement()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Iterating when payload containing different element")
+    public void testIteratorWithMultipleElement() throws Exception {
         IterateClient client = new IterateClient();
         String response = client
                 .send(getProxyServiceURLHttp("iterateWithMultipleElementsTestProxy"), createRequestPayload(),
@@ -61,7 +62,8 @@ public class ESBJAVA2843IterateTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass() public void close() throws Exception {
+    @AfterClass()
+    public void close() throws Exception {
         super.cleanup();
     }
 

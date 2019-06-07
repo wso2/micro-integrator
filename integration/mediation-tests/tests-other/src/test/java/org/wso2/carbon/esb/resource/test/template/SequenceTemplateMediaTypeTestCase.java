@@ -40,7 +40,8 @@ public class SequenceTemplateMediaTypeTestCase extends ESBIntegrationTest {
     private final String KEY = "conf:/template/registrySequenceTemplate";
     private final String DEFINED_SEQUENCE_TEMPLATE_NAME = "automationSequenceTemplate";
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         sequenceTemplateAdminServiceClient = new SequenceTemplateAdminServiceClient(contextUrls.getBackEndUrl(),
                 getSessionCookie());
@@ -48,8 +49,8 @@ public class SequenceTemplateMediaTypeTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test dynamic Sequence Template media type - application/vnd.wso2.template") public void dynamicSequenceTemplateMediaTypeTest()
-            throws Exception {
+            "wso2.esb" }, description = "Test dynamic Sequence Template media type - application/vnd.wso2.template")
+    public void dynamicSequenceTemplateMediaTypeTest() throws Exception {
         final String name = "registrySequenceTemplate";
 
         OMElement sequence = AXIOMUtil.stringToOM(
@@ -68,8 +69,8 @@ public class SequenceTemplateMediaTypeTestCase extends ESBIntegrationTest {
 
     //since Registry persistence is no longer available
     @Test(groups = {
-            "wso2.esb" }, description = "Test defined Sequence Template media type - text/xml", enabled = false) public void definedSequenceTemplateMediaTypeTest()
-            throws Exception {
+            "wso2.esb" }, description = "Test defined Sequence Template media type - text/xml", enabled = false)
+    public void definedSequenceTemplateMediaTypeTest() throws Exception {
 
         OMElement sequence = AXIOMUtil.stringToOM(
                 "<template xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + DEFINED_SEQUENCE_TEMPLATE_NAME + "\">"
@@ -87,7 +88,8 @@ public class SequenceTemplateMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         if (isDefinedSequenceTemplateExist) {
             sequenceTemplateAdminServiceClient.deleteTemplate(DEFINED_SEQUENCE_TEMPLATE_NAME);
         }

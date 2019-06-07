@@ -41,12 +41,13 @@ import javax.xml.xpath.XPathExpressionException;
 public class SecurityVerificationTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(SecurityVerificationTestCase.class);
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
     }
 
-    @Test(description = "Ensures that all Admin services are exposed only via HTTPS", enabled = false) public void verifyAdminServiceSecurity()
-            throws AxisFault, XPathExpressionException {
+    @Test(description = "Ensures that all Admin services are exposed only via HTTPS", enabled = false)
+    public void verifyAdminServiceSecurity() throws AxisFault, XPathExpressionException {
         ServiceClient client = new ServiceClient(null, null);
         Options opts = new Options();
         String serviceName = "SecurityVerifierService";

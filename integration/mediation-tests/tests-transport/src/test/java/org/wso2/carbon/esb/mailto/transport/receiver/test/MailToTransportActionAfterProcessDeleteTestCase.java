@@ -44,7 +44,8 @@ public class MailToTransportActionAfterProcessDeleteTestCase extends ESBIntegrat
     private static GreenMailClient greenMailClient;
     private static GreenMailUser greenMailUser;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
@@ -58,9 +59,8 @@ public class MailToTransportActionAfterProcessDeleteTestCase extends ESBIntegrat
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test email transport action after process delete") public void testEmailTransportActionAfterProcessDelete()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test email transport action after process delete")
+    public void testEmailTransportActionAfterProcessDelete() throws Exception {
         logViewerClient.clearLogs();
         Date date = new Date();
         emailSubject = "Process Delete : " + new Timestamp(date.getTime());
@@ -71,7 +71,8 @@ public class MailToTransportActionAfterProcessDeleteTestCase extends ESBIntegrat
         assertTrue(GreenMailServer.checkEmailDeleted(emailSubject, "imap"), "Mail has not been deleted successfully");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 }

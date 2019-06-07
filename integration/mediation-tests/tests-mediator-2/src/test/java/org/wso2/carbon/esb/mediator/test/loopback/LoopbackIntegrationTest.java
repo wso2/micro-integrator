@@ -32,12 +32,13 @@ import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class LoopbackIntegrationTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "LoopBack mediator test") public void testRespondMediator()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "LoopBack mediator test")
+    public void testRespondMediator() throws AxisFault {
         OMElement stockQuoteResponse1 = null;
         stockQuoteResponse1 = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("loopBackMediatorTestProxy"), null, "WSO2");
@@ -55,7 +56,8 @@ public class LoopbackIntegrationTest extends ESBIntegrationTest {
                 "First element should Not be messageAfterLoopBack");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

@@ -35,14 +35,15 @@ public class PropertyIntegrationPropertyInTransportScopeTest extends ESBIntegrat
 
     private WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         wireServer = new WireMonitorServer(8995);
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test- Property in transport scope") public void testPropertyInTransportScope()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test- Property in transport scope")
+    public void testPropertyInTransportScope() throws Exception {
 
         wireServer.start();
         try {
@@ -55,7 +56,8 @@ public class PropertyIntegrationPropertyInTransportScopeTest extends ESBIntegrat
         assertTrue(response.contains("TransportProperty: testProperty"), "Property not set");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

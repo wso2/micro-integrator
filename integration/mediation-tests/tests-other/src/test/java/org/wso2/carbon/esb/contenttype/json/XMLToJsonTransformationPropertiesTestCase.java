@@ -41,7 +41,8 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -61,9 +62,8 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test XML to JSON preserve namespace") public void testXmlToJsonPreserveNamespace()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON preserve namespace")
+    public void testXmlToJsonPreserveNamespace() throws Exception {
 
         String xmlPayload =
                 "<ns:stock xmlns:ns='http://services.samples'>\n" + "               <ns:name>WSO2</ns:name>\n"
@@ -84,9 +84,8 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test XML to JSON build Valid NC Names") public void testXmlToJsonBuildValidNCNames()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON build Valid NC Names")
+    public void testXmlToJsonBuildValidNCNames() throws Exception {
 
         String xmlPayload = "<stock_JsonReader_32_quote>\n" + "               <name>WSO2</name>\n"
                 + "            </stock_JsonReader_32_quote>";
@@ -105,9 +104,8 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test XML to JSON auto primitive") public void testXmlToJsonAutoPrimitive()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON auto primitive")
+    public void testXmlToJsonAutoPrimitive() throws Exception {
 
         String xmlPayload = "<stock>\n" + "               <name>WSO2</name>\n" + "               <price>10</price>\n"
                 + "            </stock>";
@@ -125,8 +123,8 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON Array conversion") public void testXmlToJsonArray()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON Array conversion")
+    public void testXmlToJsonArray() throws Exception {
 
         String xmlPayload = "<stocks>" + "               <stock>\n" + "                   <name>WSO2</name>\n"
                 + "                   <price>10</price>\n" + "               </stock>\n" + "               <stock>\n"
@@ -142,7 +140,8 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
                 "Invalid XML to JSON array conversion. " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
         serverConfigurationManager = null;

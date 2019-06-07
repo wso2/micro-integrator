@@ -37,12 +37,13 @@ import static org.testng.Assert.assertNotNull;
 public class XQueryEmptyEmptySoapRequestTestCase extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-XQuery test on empty message body") public void testEmptyMessageBody()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-XQuery test on empty message body")
+    public void testEmptyMessageBody() throws AxisFault, XMLStreamException {
         OMElement payload = null;
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("xQueryMediatorEmptySoapRequestTestProxy"), null,
@@ -54,7 +55,8 @@ public class XQueryEmptyEmptySoapRequestTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

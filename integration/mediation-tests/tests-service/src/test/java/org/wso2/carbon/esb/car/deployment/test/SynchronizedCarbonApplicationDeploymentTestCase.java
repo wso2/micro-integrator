@@ -45,14 +45,16 @@ public class SynchronizedCarbonApplicationDeploymentTestCase extends ESBIntegrat
     private static LogViewerClient logViewer;
     private static ApplicationAdminClient applicationAdminClient;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         applicationAdminClient = new ApplicationAdminClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
     }
 
-    @AfterClass(alwaysRun = true) protected void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    protected void close() throws Exception {
 
         // TODO - Faulty car app removal
         super.cleanup();
@@ -60,8 +62,8 @@ public class SynchronizedCarbonApplicationDeploymentTestCase extends ESBIntegrat
 
     //TODO - ReEnable
     @Test(groups = { "wso2.esb" }, description = "verify artifact deployment "
-            + "- testing valid synchronized deployment", enabled = false) public void validSynchronizedCarAppDeploymentTest()
-            throws Exception {
+            + "- testing valid synchronized deployment", enabled = false)
+    public void validSynchronizedCarAppDeploymentTest() throws Exception {
 
         String messageStoreLog = "Message Store named 'MyStore' has been deployed";
         String messageProcessorLog = "Message Processor named 'ScheduledProcessor' " + "has been deployed";
@@ -138,8 +140,8 @@ public class SynchronizedCarbonApplicationDeploymentTestCase extends ESBIntegrat
 
     //TODO Re-enable the Test
     @Test(groups = { "wso2.esb" }, description = "verify artifact deployment and revert "
-            + "- testing invalid synchronized deployment", dependsOnMethods = "validSynchronizedCarAppDeploymentTest", enabled = false) public void invalidSynchronizedCarAppDeploymentTest()
-            throws Exception {
+            + "- testing invalid synchronized deployment", dependsOnMethods = "validSynchronizedCarAppDeploymentTest", enabled = false)
+    public void invalidSynchronizedCarAppDeploymentTest() throws Exception {
 
         String messageStoreLog = "Message Store named 'MyStore1' has been deployed";
         String messageProcessorLog = "Message Processor named 'ScheduledProcessor1' " + "has been deployed";

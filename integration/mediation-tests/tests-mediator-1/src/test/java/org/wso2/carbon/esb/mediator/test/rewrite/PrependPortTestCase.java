@@ -29,14 +29,15 @@ import static org.testng.Assert.assertTrue;
 
 //todo https://wso2.org/jira/browse/ESBJAVA-1008
 public class PrependPortTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewritePrependPortTestProxy");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Prepend text to a port", dataProvider = "addressingUrl", enabled = false) public void prependPort(
-            String addUrl) throws AxisFault {
+            "wso2.esb" }, description = "Prepend text to a port", dataProvider = "addressingUrl", enabled = false)
+    public void prependPort(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -45,11 +46,13 @@ public class PrependPortTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "http://localhost:00/services/SimpleStockQuoteService" },
                 { "https://localhost:00/services/SimpleStockQuoteService" },
 

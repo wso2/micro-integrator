@@ -32,14 +32,16 @@ public class TaskRedeployWithCappTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = { "wso2.esb" }) public void taskRedeployWithCappTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void taskRedeployWithCappTest() throws Exception {
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         carbonAppUploaderClient.uploadCarbonAppArtifact(carFileFullName, new DataHandler(new FileDataSource(new File(
@@ -102,7 +104,8 @@ public class TaskRedeployWithCappTestCase extends ESBIntegrationTest {
         return isCarFileDeployed;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

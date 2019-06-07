@@ -25,7 +25,8 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class RequestLogLevelFullResponseLogLevelFullTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/loggingProxy/request_log_level_full_response_log_level_full.xml");
@@ -33,15 +34,16 @@ public class RequestLogLevelFullResponseLogLevelFullTestCase extends ESBIntegrat
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy -Request log level full response log level full", enabled = false) public void testLoggingProxyLoggingLevel()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy -Request log level full response log level full", enabled = false)
+    public void testLoggingProxyLoggingLevel() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("reqLogFullResLogFullLoggingProxy"), null, "WSO2");
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

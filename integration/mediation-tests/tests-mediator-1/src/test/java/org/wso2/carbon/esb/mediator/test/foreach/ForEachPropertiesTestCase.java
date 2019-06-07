@@ -40,12 +40,13 @@ import static org.testng.Assert.assertTrue;
  */
 public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct") public void testSingleForEachProperties()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct")
+    public void testSingleForEachProperties() throws Exception {
         verifyProxyServiceExistence("foreachSinglePropertyTestProxy");
 
         LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -139,8 +140,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified") public void testMultipleForEachPropertiesWithoutID()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified")
+    public void testMultipleForEachPropertiesWithoutID() throws Exception {
         verifyProxyServiceExistence("foreachMultiplePropertyWithoutIDTestProxy");
 
         LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -303,8 +304,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs with id specified") public void testMultipleForEachPropertiesWithID()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs with id specified")
+    public void testMultipleForEachPropertiesWithID() throws Exception {
         verifyProxyServiceExistence("foreachMultiplePropertyWithIDTestProxy");
 
         LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -466,7 +467,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         super.cleanup();
     }
 

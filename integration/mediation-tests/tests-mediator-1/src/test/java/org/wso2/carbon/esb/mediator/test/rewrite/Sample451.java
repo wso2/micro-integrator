@@ -30,14 +30,16 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class Sample451 extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/rewrite/synapse_sample451.xml");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sample 451:  Conditional URL Rewriting", dataProvider = "addressingUrl") public void invokeService(
-            String addUrl) throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = {
+            "wso2.esb" }, description = "Sample 451:  Conditional URL Rewriting", dataProvider = "addressingUrl")
+    public void invokeService(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), addUrl, "IBM");
@@ -45,11 +47,13 @@ public class Sample451 extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") private Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    private Object[][] addressingUrl() {
         return new Object[][] { { "http://localhost:9000/services/SimpleStockQuoteService" },
                 { "https://localhost:9002/services/SimpleStockQuoteService" },
                 //                {"jms://localhost:8989/services/SimpleStockQuoteService"},

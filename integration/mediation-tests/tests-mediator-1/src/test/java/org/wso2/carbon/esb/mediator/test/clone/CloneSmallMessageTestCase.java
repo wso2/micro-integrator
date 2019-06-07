@@ -35,7 +35,8 @@ public class CloneSmallMessageTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server;
     private CloneClient client;
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
         client = new CloneClient();
         axis2Server = new SampleAxis2Server("test_axis2_server_9001.xml");
@@ -47,9 +48,9 @@ public class CloneSmallMessageTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests small message in small number ~20") public void testSmallNumbers()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
+    public void testSmallNumbers() throws Exception {
 
         String symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
         String response;
@@ -62,9 +63,9 @@ public class CloneSmallMessageTestCase extends ESBIntegrationTest {
         response = null;
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests small message in small number ~100") public void testLargeNumbers()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
+    public void testLargeNumbers() throws Exception {
         String symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
         String response;
         for (int i = 0; i < 100; i++) {
@@ -75,7 +76,8 @@ public class CloneSmallMessageTestCase extends ESBIntegrationTest {
         symbol = null;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         axis2Server.stop();
         client.destroy();
         client = null;

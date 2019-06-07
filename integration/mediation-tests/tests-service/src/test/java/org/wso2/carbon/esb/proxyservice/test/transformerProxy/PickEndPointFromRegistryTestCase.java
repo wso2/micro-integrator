@@ -36,7 +36,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath(
@@ -45,8 +46,8 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Transformer proxy"
-            + "- Create a proxy service and pick the endpoint from registry (config)") public void testTransformerProxy()
-            throws Exception {
+            + "- Create a proxy service and pick the endpoint from registry (config)")
+    public void testTransformerProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("pickEndpointFromRegTransformerProxy"), null, "WSO2");
@@ -65,7 +66,8 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             clearUploadedResource();
         } finally {

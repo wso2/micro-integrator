@@ -33,12 +33,13 @@ import javax.xml.namespace.QName;
 
 public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (defaultscope)") public void testDoubleVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (defaultscope)")
+    public void testDoubleVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyDoubleDefaultTestProxy"), null,
                         "123123.123123");
@@ -48,8 +49,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (defaultscope)") public void testIntVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (defaultscope)")
+    public void testIntVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntDefaultTestProxy"), null, "123");
         Assert.assertTrue(
@@ -58,8 +59,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (defaultscope)") public void testStringVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (defaultscope)")
+    public void testStringVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringDefaultTestProxy"), null, "WSO2");
         Assert.assertTrue(
@@ -68,8 +69,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (defaultscope)") public void testBooleanVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (defaultscope)")
+    public void testBooleanVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyBooleanDefaultTestProxy"), null, "TRUE");
         Assert.assertTrue(
@@ -78,8 +79,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (defaultscope)") public void testFloatVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (defaultscope)")
+    public void testFloatVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatDefaultTestProxy"), null, "123.123");
         Assert.assertTrue(
@@ -88,8 +89,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (defaultscope)") public void testShortVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (defaultscope)")
+    public void testShortVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortDefaultTestProxy"), null, "12");
         Assert.assertTrue(
@@ -98,7 +99,8 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

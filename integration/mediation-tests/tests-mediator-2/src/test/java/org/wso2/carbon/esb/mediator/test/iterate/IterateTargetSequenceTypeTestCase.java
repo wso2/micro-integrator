@@ -37,7 +37,8 @@ public class IterateTargetSequenceTypeTestCase extends ESBIntegrationTest {
 
     private IterateClient client;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         client = new IterateClient();
     }
@@ -60,8 +61,8 @@ public class IterateTargetSequenceTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for named sequences") public void testNamedSequences()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for named sequences")
+    public void testNamedSequences() throws Exception {
         String response = client
                 .getMultipleResponse(getProxyServiceURLHttp("iterateWithNamedSequenceTestProxy"), "WSO2", 2);
         Assert.assertNotNull(response);
@@ -78,7 +79,8 @@ public class IterateTargetSequenceTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         client = null;
         super.cleanup();
     }

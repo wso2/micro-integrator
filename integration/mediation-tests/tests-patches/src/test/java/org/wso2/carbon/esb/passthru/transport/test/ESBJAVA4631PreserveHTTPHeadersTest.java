@@ -40,7 +40,8 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private WireMonitorServer wireServer;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -57,8 +58,8 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
         verifyAPIExistence("ContentTypePreserveAPI");
     }
 
-    @Test(groups = "wso2.esb", description = "Preserve Content-Type header test", enabled = true) public void testPreserveContentTypeHeader()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Preserve Content-Type header test", enabled = true)
+    public void testPreserveContentTypeHeader() throws Exception {
         wireServer.start();
 
         DefaultHttpClient httpclient = new DefaultHttpClient();
@@ -89,7 +90,8 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
         Assert.assertTrue(isContentTypePresent, "Content-Type header is not present in the ESB request");
     }
 
-    @AfterClass public void cleanUp() throws Exception {
+    @AfterClass
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

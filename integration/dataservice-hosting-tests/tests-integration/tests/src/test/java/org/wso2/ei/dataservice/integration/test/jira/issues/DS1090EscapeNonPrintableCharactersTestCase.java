@@ -32,7 +32,8 @@ public class DS1090EscapeNonPrintableCharactersTestCase extends DSSIntegrationTe
     OMFactory fac = OMAbstractFactory.getOMFactory();
     OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -43,12 +44,14 @@ public class DS1090EscapeNonPrintableCharactersTestCase extends DSSIntegrationTe
                         + File.separator + serviceName + ".dbs", sqlFileLis));
     }
 
-    @AfterClass public void clean() throws Exception {
+    @AfterClass
+    public void clean() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void testForNullResultSet() throws AxisFault {
+    @Test(groups = { "wso2.dss" })
+    public void testForNullResultSet() throws AxisFault {
         OMElement payload = fac.createOMElement("select_all_Customers_operation", omNs);
         OMElement result = null;
         try {

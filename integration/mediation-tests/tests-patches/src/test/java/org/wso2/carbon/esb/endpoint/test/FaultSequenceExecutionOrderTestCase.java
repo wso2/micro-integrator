@@ -41,7 +41,8 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server;
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -52,9 +53,8 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Correct Fault Sequence Invoke Test") public void testCorrectFaultSequenceExecution()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Correct Fault Sequence Invoke Test")
+    public void testCorrectFaultSequenceExecution() throws Exception {
 
         String contentType = "application/xml";
         SimpleHttpClient httpClient = new SimpleHttpClient();
@@ -75,7 +75,8 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
         Assert.assertFalse(isSuperSequecefalutExecuted);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         axis2Server.stop();
         axis2Server = null;
         logViewer = null;

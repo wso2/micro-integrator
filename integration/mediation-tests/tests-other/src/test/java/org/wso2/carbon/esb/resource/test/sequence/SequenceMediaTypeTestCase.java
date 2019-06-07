@@ -40,15 +40,15 @@ public class SequenceMediaTypeTestCase extends ESBIntegrationTest {
     private final String KEY = "conf:/sequence/testAutomationSequence";
     private final String DEFINED_SEQUENCE_NAME = "definedSequence";
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         sequenceAdminServiceClient = new SequenceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test dynamic Sequence media type - application/vnd.wso2.sequence") public void dynamicSequenceMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test dynamic Sequence media type - application/vnd.wso2.sequence")
+    public void dynamicSequenceMediaTypeTest() throws Exception {
         final String name = "automationDynamicSequence";
 
         OMElement sequence = AXIOMUtil.stringToOM(
@@ -66,9 +66,8 @@ public class SequenceMediaTypeTestCase extends ESBIntegrationTest {
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test defined Sequence media type - text/xml", enabled = false) public void definedSequenceMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test defined Sequence media type - text/xml", enabled = false)
+    public void definedSequenceMediaTypeTest() throws Exception {
 
         OMElement sequence = AXIOMUtil.stringToOM(
                 "<sequence xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + DEFINED_SEQUENCE_NAME + "\">" + " <in>"
@@ -85,7 +84,8 @@ public class SequenceMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         if (isDefinedSequenceExist) {
             sequenceAdminServiceClient.deleteSequence(DEFINED_SEQUENCE_NAME);
         }

@@ -30,13 +30,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class CallTemplateIntegrationParamsWithValuesTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call_template/synapse_param_with_values.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Call Template Mediator Sample Parameters with"
-            + " values assigned test") public void testTemplatesParameter() throws Exception {
+            + " values assigned test")
+    public void testTemplatesParameter() throws Exception {
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer.clearLogs();
         OMElement response = axis2Client
@@ -63,7 +65,8 @@ public class CallTemplateIntegrationParamsWithValuesTestCase extends ESBIntegrat
         Assert.assertTrue((requestLog && responseLog), "Relevant log not found in carbon logs");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

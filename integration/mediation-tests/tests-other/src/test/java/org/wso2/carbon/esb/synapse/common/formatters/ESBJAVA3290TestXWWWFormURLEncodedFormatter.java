@@ -25,7 +25,8 @@ public class ESBJAVA3290TestXWWWFormURLEncodedFormatter extends ESBIntegrationTe
     private static final String synapseConfig = "x_www_form_url_encoded_formatter_test.xml";
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         wireServer = new WireMonitorServer(8991);
         wireServer.start();
@@ -35,10 +36,10 @@ public class ESBJAVA3290TestXWWWFormURLEncodedFormatter extends ESBIntegrationTe
         Thread.sleep(5000);
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description =
-            "POST request against REST endpoint where "
-                    + "body parameter name starts with digit") public void testPostRequest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "POST request against REST endpoint where "
+            + "body parameter name starts with digit")
+    public void testPostRequest() throws Exception {
 
         URL endpoint = new URL(getProxyServiceURLHttp("RestProxy"));
         try {
@@ -59,7 +60,8 @@ public class ESBJAVA3290TestXWWWFormURLEncodedFormatter extends ESBIntegrationTe
                         + "specified");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
         Thread.sleep(3000);
     }

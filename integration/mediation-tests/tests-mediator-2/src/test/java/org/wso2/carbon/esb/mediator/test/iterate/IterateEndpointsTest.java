@@ -34,13 +34,14 @@ public class IterateEndpointsTest extends ESBIntegrationTest {
 
     private IterateClient client;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         client = new IterateClient();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for http endpoint") public void testHTTP()
-            throws Exception, InterruptedException {
+    @Test(groups = "wso2.esb", description = "Tests for http endpoint")
+    public void testHTTP() throws Exception, InterruptedException {
         String response = client
                 .getMultipleResponse(getProxyServiceURLHttp("iterateWithHttpEndPointTestProxy"), "WSO2", 2);
         Assert.assertNotNull(response);
@@ -57,7 +58,8 @@ public class IterateEndpointsTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for https endpoint") public void testHTTPS() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for https endpoint")
+    public void testHTTPS() throws Exception {
         verifyProxyServiceExistence("iterateWithHttpsEndPointTestProxy");
         String response = client
                 .getMultipleResponse(getProxyServiceURLHttps("iterateWithHttpsEndPointTestProxy"), "WSO2", 2);
@@ -75,7 +77,8 @@ public class IterateEndpointsTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         client = null;
         super.cleanup();
     }

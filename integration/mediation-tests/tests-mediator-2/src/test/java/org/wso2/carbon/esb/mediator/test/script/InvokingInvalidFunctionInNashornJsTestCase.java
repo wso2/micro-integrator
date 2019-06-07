@@ -28,18 +28,20 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class InvokingInvalidFunctionInNashornJsTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
     @Test(groups = "wso2.esb", description = "Try to invoke a non-existing function in a script. it throws an "
-            + "AxisFault.", expectedExceptions = { AxisFault.class }) public void testInvokeNonExistingFunc()
-            throws AxisFault {
+            + "AxisFault.", expectedExceptions = { AxisFault.class })
+    public void testInvokeNonExistingFunc() throws AxisFault {
         axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("nashornJsInvokeInvalidFunctionTestProxy"), null,
                 "Invalid");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -37,7 +37,8 @@ public class HttpsInboundTransportTestCase extends ESBIntegrationTest {
 
     private SecureServiceClient secureAxisServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         secureAxisServiceClient = new SecureServiceClient();
 
@@ -58,7 +59,8 @@ public class HttpsInboundTransportTestCase extends ESBIntegrationTest {
                 .until(isServicesDeployed(sequenceList, inboundList));
     }
 
-    @Test(groups = "wso2.esb", description = "") public void testSecureProxyEndPointThruUri() throws Exception {
+    @Test(groups = "wso2.esb", description = "")
+    public void testSecureProxyEndPointThruUri() throws Exception {
 
         OMElement response = secureAxisServiceClient.
                 sendSecuredStockQuoteRequest(userInfo, "https://localhost:8081/", "WSO2", false);
@@ -66,7 +68,8 @@ public class HttpsInboundTransportTestCase extends ESBIntegrationTest {
         Assert.assertEquals("getQuoteResponse", response.getLocalName());
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
@@ -86,7 +89,8 @@ public class HttpsInboundTransportTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isServicesDeployed(final List<OMElement> omSeqList, final List<OMElement> omInboundList) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 boolean isServicesDeployed;
                 for (OMElement seqElement : omSeqList) {
                     isServicesDeployed = isSequenceDeployed(seqElement);

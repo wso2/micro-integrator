@@ -35,18 +35,20 @@ public class PropertyIntegrationXPathExtensionTestCase extends ESBIntegrationTes
     private static LogViewerClient logViewer;
     private Boolean status = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATHEXTENSION.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "RESPONSETEnabledTrue scenario") public void testRESPONSETEnabledTrue()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "RESPONSETEnabledTrue scenario")
+    public void testRESPONSETEnabledTrue() throws IOException {
 
         // before deployment of car app
         int beforeLogSize = logViewer.getAllSystemLogs().length;

@@ -34,7 +34,8 @@ public class SapIdocTest extends ESBIntegrationTest {
     public static final String MEDIA_TYPE_TEXT_XML = "text/xml";
     public static final int HTTP_SC_OK = 200;
 
-    @BeforeClass() public void init() throws Exception {
+    @BeforeClass()
+    public void init() throws Exception {
         super.init();
 
     }
@@ -44,9 +45,8 @@ public class SapIdocTest extends ESBIntegrationTest {
      *
      * @throws Exception if an error occurs while sending the IDoc.
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as an IDoc Sender") public void testSendIdocUsingCallBlocking()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as an IDoc Sender")
+    public void testSendIdocUsingCallBlocking() throws Exception {
         SimpleHttpClient soapClient = new SimpleHttpClient();
         String payload = "<_-DSD_-ROUTEACCOUNT_CORDER002>\n" + "         <IDOC BEGIN=\"1\">\n"
                 + "            <EDI_DC40 SEGMENT=\"1\">\n" + "               <TABNAM>EDI_DC40</TABNAM>\n"
@@ -93,7 +93,8 @@ public class SapIdocTest extends ESBIntegrationTest {
                 "Transaction Id not present in the response. Received response: " + responseString);
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
     }
 }

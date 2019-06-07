@@ -28,12 +28,15 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 import javax.ws.rs.ext.RuntimeDelegate;
 
-@Configuration public class AppConfig {
-    @Bean(destroyMethod = "shutdown") public SpringBus cxf() {
+@Configuration
+public class AppConfig {
+    @Bean(destroyMethod = "shutdown")
+    public SpringBus cxf() {
         return new SpringBus();
     }
 
-    @Bean public Server jaxRsServer() {
+    @Bean
+    public Server jaxRsServer() {
         JAXRSServerFactoryBean factory = RuntimeDelegate.getInstance()
                 .createEndpoint(jaxRsApiApplication(), JAXRSServerFactoryBean.class);
         factory.setServiceBeans(Arrays.<Object>asList(peopleRestService()));
@@ -42,19 +45,23 @@ import javax.ws.rs.ext.RuntimeDelegate;
         return factory.create();
     }
 
-    @Bean public JaxRsApiApplication jaxRsApiApplication() {
+    @Bean
+    public JaxRsApiApplication jaxRsApiApplication() {
         return new JaxRsApiApplication();
     }
 
-    @Bean public PeopleRestService peopleRestService() {
+    @Bean
+    public PeopleRestService peopleRestService() {
         return new PeopleRestService();
     }
 
-    @Bean public PeopleService peopleService() {
+    @Bean
+    public PeopleService peopleService() {
         return new PeopleService();
     }
 
-    @Bean public JacksonJsonProvider jsonProvider() {
+    @Bean
+    public JacksonJsonProvider jsonProvider() {
         return new JacksonJsonProvider();
     }
 }

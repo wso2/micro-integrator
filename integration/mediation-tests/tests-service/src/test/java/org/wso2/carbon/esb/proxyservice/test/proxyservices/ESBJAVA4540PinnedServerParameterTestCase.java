@@ -40,14 +40,15 @@ public class ESBJAVA4540PinnedServerParameterTestCase extends ESBIntegrationTest
     private final String proxyServiceName = "pinnedServerProxy";
     private final String proxyServiceNameEditProxy = "EditProxyWithPinnedServer";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/proxyservice/editProxyWithPinnedServer.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Deploying proxy when the pinnedServer is having another instance name") public void deployProxyService()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Deploying proxy when the pinnedServer is having another instance name")
+    public void deployProxyService() throws Exception {
         OMElement proxyConfig = esbUtils.loadResource(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "proxyconfig" + File.separator
                         + "proxy" + File.separator + "proxyservice" + File.separator + "proxyWithPinnedServer.xml");
@@ -73,7 +74,8 @@ public class ESBJAVA4540PinnedServerParameterTestCase extends ESBIntegrationTest
     }
 
     @Test(groups = "wso2.esb", description = "Editing a proxy service when the pinnedServer is having"
-            + " another instance name") public void modifyProxyService() throws Exception {
+            + " another instance name")
+    public void modifyProxyService() throws Exception {
         ProxyServiceAdminClient proxyAdmin = new ProxyServiceAdminClient(contextUrls.getBackEndUrl(),
                 getSessionCookie());
         ProxyData proxyData = proxyAdmin.getProxyDetails(proxyServiceNameEditProxy);
@@ -100,7 +102,8 @@ public class ESBJAVA4540PinnedServerParameterTestCase extends ESBIntegrationTest
                 "Proxy service deployed successfully");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteProxyService(proxyServiceName);
         deleteProxyService(proxyServiceNameEditProxy);
         super.cleanup();

@@ -32,7 +32,8 @@ public class JMSCAppDeploymentWithFaultyProxyTestCase extends ESBIntegrationTest
     private ServiceAdminClient serviceAdminClient;
     private final String proxyServiceName = "JMSProxyWQConf";
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
 
         super.init();
 
@@ -41,7 +42,8 @@ public class JMSCAppDeploymentWithFaultyProxyTestCase extends ESBIntegrationTest
         applicationAdminClient = new ApplicationAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupArtifactsIfExist() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupArtifactsIfExist() throws Exception {
         if (isCarFileUploaded) {
             applicationAdminClient.deleteApplication(carFileName);
             verifyUndeployment();
@@ -49,9 +51,8 @@ public class JMSCAppDeploymentWithFaultyProxyTestCase extends ESBIntegrationTest
         }
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "faulty proxy service deployment from car file") public void proxyServiceDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "faulty proxy service deployment from car file")
+    public void proxyServiceDeploymentTest() throws Exception {
         carbonAppUploaderClient.uploadCarbonAppArtifact("cApp_faulty_jms_1.0.0.car", new DataHandler(
                 new URL("file:" + File.separator + File.separator + getESBResourceLocation() + File.separator + "car"
                         + File.separator + "cApp_faulty_jms_1.0.0.car")));
@@ -65,8 +66,8 @@ public class JMSCAppDeploymentWithFaultyProxyTestCase extends ESBIntegrationTest
     }
 
     @Test(groups = {
-            "wso2.esb" }, dependsOnMethods = "proxyServiceDeploymentTest", description = "faulty proxy service invocation") public void deleteCarFileAndArtifactUnDeploymentTest()
-            throws Exception {
+            "wso2.esb" }, dependsOnMethods = "proxyServiceDeploymentTest", description = "faulty proxy service invocation")
+    public void deleteCarFileAndArtifactUnDeploymentTest() throws Exception {
         applicationAdminClient.deleteApplication(carFileName);
         isCarFileUploaded = false;
         Assert.assertTrue(isCarFileUnDeployed(carFileName));

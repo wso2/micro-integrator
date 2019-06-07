@@ -57,7 +57,8 @@ public class FaultyDataServiceTestCase extends DSSIntegrationTest {
     private String serviceName = "FaultyDataService";
     private String resourceFileLocation;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         resourceFileLocation = getResourceLocation();
@@ -68,15 +69,14 @@ public class FaultyDataServiceTestCase extends DSSIntegrationTest {
                         + File.separator + "MySql" + File.separator + "FaultyDataService.dbs")));
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void isFaultyService()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void isFaultyService() throws Exception {
         assertTrue(isServiceFaulty(serviceName));
         log.info(serviceName + " is faulty");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {
-            "isFaultyService" }, description = "Fix the fault and redeploy") public void editFaultyService()
-            throws Exception {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "isFaultyService" }, description = "Fix the fault and redeploy")
+    public void editFaultyService() throws Exception {
         DataServiceAdminClient dataServiceAdminService = new DataServiceAdminClient(
                 dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
         String serviceContent;
@@ -122,17 +122,17 @@ public class FaultyDataServiceTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "editFaultyService" }, description = "Check whether service is redeployed") public void serviceReDeployment()
-            throws Exception {
+            "editFaultyService" }, description = "Check whether service is redeployed")
+    public void serviceReDeployment() throws Exception {
         Assert.assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " redeployed");
 
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "serviceReDeployment" }, description = "send requests to redeployed service") @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) public void serviceInvocation()
-            throws RemoteException, ServiceAdminException, XPathExpressionException {
+            "serviceReDeployment" }, description = "send requests to redeployed service")
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void serviceInvocation() throws RemoteException, ServiceAdminException, XPathExpressionException {
         OMElement response;
         String serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
         AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -147,7 +147,8 @@ public class FaultyDataServiceTestCase extends DSSIntegrationTest {
         log.info("service invocation success");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         log.info(serviceName + " deleted");
     }

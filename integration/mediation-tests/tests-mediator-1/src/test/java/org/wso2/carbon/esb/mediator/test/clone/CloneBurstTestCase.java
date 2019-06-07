@@ -49,7 +49,8 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
     private Trigger trigger;
     Thread[] threads;
 
-    @BeforeClass(groups = "wso2.esb") public void setEnvironment() throws Exception {
+    @BeforeClass(groups = "wso2.esb")
+    public void setEnvironment() throws Exception {
         init();
         trigger = new Trigger();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CloneAndAggregateTestProxy");
@@ -65,9 +66,9 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests message burst", enabled = false) public void testBurstMessage()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests message burst", enabled = false)
+    public void testBurstMessage() throws Exception {
 
         MessageSender[] senders = new MessageSender[10];
         threads = new Thread[10];
@@ -97,7 +98,8 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         trigger.setStopped(true);

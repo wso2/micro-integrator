@@ -38,14 +38,15 @@ import java.io.InputStreamReader;
  */
 public class ESBJAVA5103CorrelateOnExpressionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         verifyAPIExistence("AggregatorTestAPI");
         verifyAPIExistence("CorrelateOnExpressionTestAPI1");
     }
 
-    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ") public void testAggregateWithCorrelateExpression()
-            throws IOException {
+    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ")
+    public void testAggregateWithCorrelateExpression() throws IOException {
         String expectedOutput1 = "<result><value>value1</value><value>value2</value></result>";
         String expectedOutput2 = "<result><value>value2</value><value>value1</value></result>";
 
@@ -68,7 +69,8 @@ public class ESBJAVA5103CorrelateOnExpressionTestCase extends ESBIntegrationTest
         }
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

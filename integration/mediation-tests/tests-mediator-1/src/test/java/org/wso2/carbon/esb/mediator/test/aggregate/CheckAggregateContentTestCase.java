@@ -34,7 +34,8 @@ public class CheckAggregateContentTestCase extends ESBIntegrationTest {
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 5;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorContentTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -44,9 +45,8 @@ public class CheckAggregateContentTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Check the content of the aggregation specified by an xpath") public void test()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Check the content of the aggregation specified by an xpath")
+    public void test() throws IOException, XMLStreamException {
 
         String Response = aggregatedRequestClient.getResponse();
         Assert.assertNotNull(Response);
@@ -132,7 +132,8 @@ public class CheckAggregateContentTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         aggregatedRequestClient = null;
     }

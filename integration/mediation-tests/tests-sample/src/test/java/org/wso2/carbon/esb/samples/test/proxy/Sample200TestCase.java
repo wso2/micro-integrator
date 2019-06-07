@@ -31,13 +31,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class Sample200TestCase extends ESBSampleIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(200);
     }
 
-    @Test(groups = "wso2.esb", description = "Custom sequences and endpoints with proxy services", enabled = false) public void sample200Test()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Custom sequences and endpoints with proxy services", enabled = false)
+    public void sample200Test() throws Exception {
         //todo
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest(null, null, getProxyServiceURLHttp("StockQuoteProxy"), null,
@@ -53,7 +54,8 @@ public class Sample200TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

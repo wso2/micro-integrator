@@ -36,7 +36,8 @@ public class SimpleMQTTCallback implements MqttCallback {
      *
      * @param throwable Connection lost cause
      */
-    @Override public void connectionLost(Throwable throwable) {
+    @Override
+    public void connectionLost(Throwable throwable) {
         log.error("Mqtt client lost connection with the server", throwable);
     }
 
@@ -47,7 +48,8 @@ public class SimpleMQTTCallback implements MqttCallback {
      * @param mqttMessage The message received
      * @throws Exception
      */
-    @Override public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
+    @Override
+    public void messageArrived(String topic, MqttMessage mqttMessage) throws Exception {
         log.info("Message arrived on topic : \"" + topic + "\" Message : \"" + mqttMessage.toString() + "\"");
     }
 
@@ -56,7 +58,8 @@ public class SimpleMQTTCallback implements MqttCallback {
      *
      * @param iMqttDeliveryToken The message complete token
      */
-    @Override public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
+    @Override
+    public void deliveryComplete(IMqttDeliveryToken iMqttDeliveryToken) {
         for (String topic : iMqttDeliveryToken.getTopics()) {
             log.info("Message delivered successfully to topic : \"" + topic + "\".");
         }

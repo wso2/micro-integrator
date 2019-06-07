@@ -22,7 +22,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 import org.wso2.carbon.integration.common.admin.client.ServerAdminClient;
 import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 import org.wso2.carbon.integration.common.utils.FileManager;
@@ -215,7 +214,7 @@ public class ServerConfigurationManager {
                 destination = new FileOutputStream(originalConfig).getChannel();
             } else {
                 if (!targetFile.exists() && !targetFile.createNewFile()) {
-                        throw new IOException("File " + targetFile + "creation fails");
+                    throw new IOException("File " + targetFile + "creation fails");
                 }
                 source = new FileInputStream(sourceFile).getChannel();
                 destination = new FileOutputStream(targetFile).getChannel();

@@ -40,7 +40,8 @@ public class ESBJAVA4999ResponsePayloadWithHTTPAcceptedTestCase extends ESBInteg
      *
      * @throws Exception throws when initialisation process failed
      */
-    @BeforeClass(alwaysRun = true) public void deployAPI() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployAPI() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/ESBJAVA-4999.xml");
@@ -52,9 +53,8 @@ public class ESBJAVA4999ResponsePayloadWithHTTPAcceptedTestCase extends ESBInteg
      *
      * @throws Exception throws on test failure
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "test for the respond for 202 status code and payload") public void testPayloadWithHTTP202Response()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test for the respond for 202 status code and payload")
+    public void testPayloadWithHTTP202Response() throws Exception {
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/json");
 
@@ -65,7 +65,8 @@ public class ESBJAVA4999ResponsePayloadWithHTTPAcceptedTestCase extends ESBInteg
         Assert.assertFalse(response.getData().isEmpty());
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupSynapseConfig() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupSynapseConfig() throws Exception {
         super.cleanup();
     }
 }

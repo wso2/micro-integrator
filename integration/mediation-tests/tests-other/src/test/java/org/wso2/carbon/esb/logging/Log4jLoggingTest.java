@@ -32,13 +32,14 @@ import static org.testng.Assert.assertEquals;
  */
 public class Log4jLoggingTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         // start the server in super tenant mode
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Set the global logging to different levels and restore defaults") public void testRestoreDefaults()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set the global logging to different levels and restore defaults")
+    public void testRestoreDefaults() throws Exception {
         LoggingAdminClient loggingAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), sessionCookie);
 
         String logPattern = "[%d] - %x %m {%c}%n";
@@ -59,8 +60,8 @@ public class Log4jLoggingTest extends ESBIntegrationTest {
                 "Default log pattern was not returned.");
     }
 
-    @Test(groups = "wso2.esb", description = "Get Appender data for appender name") public void testGetAppenderData()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Get Appender data for appender name")
+    public void testGetAppenderData() throws Exception {
         LoggingAdminClient loggingAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), sessionCookie);
 
         String appenderName = "AUDIT_LOGFILE";

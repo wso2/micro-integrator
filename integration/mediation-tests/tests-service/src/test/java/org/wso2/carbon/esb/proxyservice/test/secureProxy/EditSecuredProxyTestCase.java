@@ -31,16 +31,16 @@ public class EditSecuredProxyTestCase extends ESBIntegrationTest {
 
     private ProxyServiceAdminClient proxyServiceAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         proxyServiceAdminClient = new ProxyServiceAdminClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
         addProxy();
     }
 
     //Related to Patch Automation https://wso2.org/jira/browse/CARBON-5551
-    @Test(groups = {
-            "wso2.esb" }, description = "Adding a WSDL to a Proxy Service with Security") public void testEditSecuredProxy()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Adding a WSDL to a Proxy Service with Security")
+    public void testEditSecuredProxy() throws Exception {
 
         applySecurity("EditSecuredProxy", 1, new String[] { "admin" });
         Thread.sleep(5000);
@@ -54,7 +54,8 @@ public class EditSecuredProxyTestCase extends ESBIntegrationTest {
         Assert.assertEquals(prxy.getWsdlURI(), "file:samples/service-bus/resources/proxy/sample_proxy_1.wsdl");
     }
 
-    @AfterClass(alwaysRun = true) public void clear() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clear() throws Exception {
         super.cleanup();
         proxyServiceAdminClient = null;
 

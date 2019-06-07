@@ -40,7 +40,8 @@ public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
 
     private WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         //create wireMonitor server and start it
@@ -49,7 +50,8 @@ public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Testcase to check preservation of SOAP headers during MSMP scenario") public void testPreservationOfSoapHeadersMSMPScennario()
+    @Test(groups = "wso2.esb", description = "Testcase to check preservation of SOAP headers during MSMP scenario")
+    public void testPreservationOfSoapHeadersMSMPScennario()
             throws IOException, LogViewerLogViewerException, InterruptedException {
         String payload =
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header/>"
@@ -80,7 +82,8 @@ public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
         Assert.assertTrue(expectedHeaderFound, "Expected SOAP Header not available at Message Processor sequence");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

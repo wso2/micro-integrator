@@ -35,12 +35,14 @@ public class ESBJAVA4423CustomStatusDescriptionTest extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private SimpleSocketServer simpleSocketServer;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         verifyProxyServiceExistence("ESBJAVA4423HttpCustomProxyTest");
     }
 
-    @Test(groups = "wso2.esb", description = "Test custom status description", enabled = true) public void testCustomStatusDescription() {
+    @Test(groups = "wso2.esb", description = "Test custom status description", enabled = true)
+    public void testCustomStatusDescription() {
         String expectedResponse =
                 "HTTP/1.1 417 Custom response\r\nServer: testServer\r\n" + "Content-Type: text/xml; charset=UTF-8\r\n"
                         + "Transfer-Encoding: chunked\r\n" + "\r\n" + "\"<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
@@ -58,7 +60,8 @@ public class ESBJAVA4423CustomStatusDescriptionTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass public void cleanUp() throws Exception {
+    @AfterClass
+    public void cleanUp() throws Exception {
         if (simpleSocketServer != null) {
             simpleSocketServer.shutdown();
         }

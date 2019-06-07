@@ -31,15 +31,16 @@ public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTes
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         verifyAPIExistence("passParamsToEPTestApi");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via REST to test query param works with space character", enabled = true) public void testPassParamsToEndpoint()
-            throws Exception {
+            "wso2.esb" }, description = "Sending a Message Via REST to test query param works with space character", enabled = true)
+    public void testPassParamsToEndpoint() throws Exception {
         String requestString = "/context?queryParam=some%20value";
         boolean isSpaceCharacterEscaped = false;
         logViewerClient.clearLogs();
@@ -64,7 +65,8 @@ public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTes
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

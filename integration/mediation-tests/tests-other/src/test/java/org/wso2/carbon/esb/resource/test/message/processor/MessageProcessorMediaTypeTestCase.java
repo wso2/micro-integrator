@@ -44,16 +44,16 @@ public class MessageProcessorMediaTypeTestCase extends ESBIntegrationTest {
     private boolean isMessageProcessorExist = false;
     private boolean isMessageStoreExist = false;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         messageProcessorClient = new MessageProcessorClient(contextUrls.getBackEndUrl(), getSessionCookie());
         messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test message Processor media type - text/xml", enabled = false) public void messageProcessorMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test message Processor media type - text/xml", enabled = false)
+    public void messageProcessorMediaTypeTest() throws Exception {
         String messageStoreName = "xyz";
         OMElement messageStore = AXIOMUtil.stringToOM(
                 "<messageStore xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + messageStoreName + "\">"
@@ -75,7 +75,8 @@ public class MessageProcessorMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws RemoteException {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws RemoteException {
         if (isMessageProcessorExist) {
             messageProcessorClient.deleteMessageProcessor(MESSAGE_PROCESSOR_NAME);
         }

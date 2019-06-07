@@ -16,7 +16,8 @@ import static java.io.File.separator;
  */
 public class WithInMemoryStoreTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -31,9 +32,9 @@ public class WithInMemoryStoreTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb") public void testForwardingWithInMemoryStore()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb")
+    public void testForwardingWithInMemoryStore() throws Exception {
 
         //Setting up Wire Monitor Server
         WireMonitorServer wireServer = new WireMonitorServer(9500);
@@ -55,7 +56,8 @@ public class WithInMemoryStoreTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -34,15 +34,15 @@ import static org.testng.Assert.assertNotNull;
 public class SendIntegrationSequenceAtConfigRegistryTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadResourcesToConfigRegistry();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence at config registry build message") public void testSequenceAtConfigRegistryBuildMessage()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Receiving sequence at config registry build message")
+    public void testSequenceAtConfigRegistryBuildMessage() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorReceiveSeqAtConfigBuildMessageTrueTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -53,9 +53,8 @@ public class SendIntegrationSequenceAtConfigRegistryTestCase extends ESBIntegrat
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence at config registry not build message") public void testSequenceAtConfigRegistryBuildMessageNo()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Receiving sequence at config registry not build message")
+    public void testSequenceAtConfigRegistryBuildMessageNo() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorReceiveSeqAtConfigBuildMessageFalseTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -83,7 +82,8 @@ public class SendIntegrationSequenceAtConfigRegistryTestCase extends ESBIntegrat
                                 + "/mediatorconfig/send/sequence/test_sequence_build_message_conf.xml"))));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
         resourceAdminServiceStub.deleteResource("/_system/config/sequence_conf");
         super.cleanup();

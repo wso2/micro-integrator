@@ -36,15 +36,16 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class ESBJAVA5217NoDefaultContentTypeTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         verifyProxyServiceExistence("CallMediatorNoDefaultContentTypeTestProxy");
         verifyProxyServiceExistence("CallMediatorReplyNoDefaultContentTypeTestProxy");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test to verify whether bocking enabled calls not going to set default content type") public void testSettingDefaultContentType()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test to verify whether bocking enabled calls not going to set default content type")
+    public void testSettingDefaultContentType() throws Exception {
         boolean isContentTypeAvailable = false;
         logViewerClient.clearLogs();
         HttpResponse response = HttpRequestUtil
@@ -62,7 +63,8 @@ public class ESBJAVA5217NoDefaultContentTypeTestCase extends ESBIntegrationTest 
         Assert.assertTrue(isContentTypeAvailable, "Call mediator set default content type for get a request");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

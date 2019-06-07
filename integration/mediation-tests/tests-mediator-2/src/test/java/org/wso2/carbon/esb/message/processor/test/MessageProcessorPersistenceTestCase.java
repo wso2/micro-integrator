@@ -39,7 +39,8 @@ public class MessageProcessorPersistenceTestCase extends ESBIntegrationTest {
     private SynapseConfigAdminClient synapseConfigAdminClient;
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -51,9 +52,9 @@ public class MessageProcessorPersistenceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testMessagePersistenceAfterRestart()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb")
+    public void testMessagePersistenceAfterRestart() throws Exception {
 
         // Configuration which contains a message store and a message processor  - did this way to stop dropping XML tags.
 
@@ -76,7 +77,8 @@ public class MessageProcessorPersistenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
         serverConfigurationManager = null;
         synapseConfigAdminClient = null;

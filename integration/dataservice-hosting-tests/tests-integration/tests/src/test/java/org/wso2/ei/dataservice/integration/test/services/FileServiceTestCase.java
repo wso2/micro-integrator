@@ -50,7 +50,8 @@ public class FileServiceTestCase extends DSSIntegrationTest {
     private final String txtFileType = "txt";
     private final String serviceName = "FileServiceTest";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -61,12 +62,14 @@ public class FileServiceTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void createNewFile() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void createNewFile() throws AxisFault, XPathExpressionException {
         OMElement response;
         OMElement payload;
 
@@ -88,8 +91,8 @@ public class FileServiceTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "createNewFile" }) public void checkFileType()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "createNewFile" })
+    public void checkFileType() throws AxisFault, XPathExpressionException {
         OMElement payload = fac.createOMElement("_getgetfiletype", omNs);
 
         OMElement fileName = fac.createOMElement("fileName", omNs);
@@ -103,8 +106,8 @@ public class FileServiceTestCase extends DSSIntegrationTest {
         log.info("File type verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "createNewFile" }) public void checkFileName()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "createNewFile" })
+    public void checkFileName() throws AxisFault, XPathExpressionException {
         OMElement payload = fac.createOMElement("_getgetfilenames", omNs);
 
         OMElement result = new AxisServiceClient()
@@ -115,8 +118,8 @@ public class FileServiceTestCase extends DSSIntegrationTest {
         log.info("File Name Verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "createNewFile" }) public void addRecord()
-            throws IOException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "createNewFile" })
+    public void addRecord() throws IOException, XPathExpressionException {
         OMElement payload = fac.createOMElement("_postappenddatatofile", omNs);
         String recordsExpected = "";
 
@@ -150,8 +153,8 @@ public class FileServiceTestCase extends DSSIntegrationTest {
         Assert.assertEquals(recordData, recordsExpected, "Record Data Mismatched");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addRecord" }) public void checkFileSize()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addRecord" })
+    public void checkFileSize() throws AxisFault, XPathExpressionException {
         OMElement payload = fac.createOMElement("_getgetfilesize", omNs);
 
         OMElement fileName = fac.createOMElement("fileName", omNs);
@@ -167,8 +170,8 @@ public class FileServiceTestCase extends DSSIntegrationTest {
         log.info("File Size Verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "checkFileSize" }) public void deleteFile()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "checkFileSize" })
+    public void deleteFile() throws AxisFault, XPathExpressionException {
         OMElement response;
         OMElement payload = fac.createOMElement("_getdeletefile", omNs);
 

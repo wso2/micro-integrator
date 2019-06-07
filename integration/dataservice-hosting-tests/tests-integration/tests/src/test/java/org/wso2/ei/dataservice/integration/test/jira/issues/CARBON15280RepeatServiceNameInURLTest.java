@@ -46,7 +46,8 @@ public class CARBON15280RepeatServiceNameInURLTest extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(CARBON15280RepeatServiceNameInURLTest.class);
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
@@ -57,12 +58,14 @@ public class CARBON15280RepeatServiceNameInURLTest extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking a GET Request with repeating the SerivceName in URL") public void performJsonPutMethodTest() {
+    @Test(groups = "wso2.dss", description = "Invoking a GET Request with repeating the SerivceName in URL")
+    public void performJsonPutMethodTest() {
         String endpoint = serviceEndPoint
                 + "insert/OfficeCode/Colombo/telephone/address1/address2/H2SimpleJsonTes/LK/postalCode/Western";
         String response = getHttpResponse(endpoint, "GET", null);

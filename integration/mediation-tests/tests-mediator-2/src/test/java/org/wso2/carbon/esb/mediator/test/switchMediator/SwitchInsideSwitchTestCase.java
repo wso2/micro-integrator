@@ -27,13 +27,13 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class SwitchInsideSwitchTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Switch Mediator: Testing Switch inside Switch Scenario") public void testSample2()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Switch Mediator: Testing Switch inside Switch Scenario")
+    public void testSample2() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -44,7 +44,8 @@ public class SwitchInsideSwitchTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 

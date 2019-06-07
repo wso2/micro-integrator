@@ -32,16 +32,18 @@ import static org.testng.Assert.assertTrue;
  */
 public class PropertyIntegrationOUT_ONLYPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests when Out_Only property is disabled") public void testOutOnlyPropertyEnabledFalse()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests when Out_Only property is disabled")
+    public void testOutOnlyPropertyEnabledFalse() throws Exception {
         verifyProxyServiceExistence("OUT_ONLY_FalseTestProxy");
 
         OMElement response = axis2Client
@@ -51,8 +53,8 @@ public class PropertyIntegrationOUT_ONLYPropertyTestCase extends ESBIntegrationT
         assertTrue(response.toString().contains("WSO2 Company"));
     }
 
-    @Test(groups = "wso2.esb", description = "Tests when Out_Only property is enabled", dependsOnMethods = "testOutOnlyPropertyEnabledFalse", expectedExceptions = AxisFault.class) public void testOutOnlyPropertyEnabledTrue()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests when Out_Only property is enabled", dependsOnMethods = "testOutOnlyPropertyEnabledFalse", expectedExceptions = AxisFault.class)
+    public void testOutOnlyPropertyEnabledTrue() throws Exception {
         verifyProxyServiceExistence("OUT_ONLY_TrueTestProxy");
 
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("OUT_ONLY_TrueTestProxy"), null, "WSO2");

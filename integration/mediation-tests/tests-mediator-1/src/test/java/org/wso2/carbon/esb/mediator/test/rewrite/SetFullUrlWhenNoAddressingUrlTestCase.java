@@ -27,19 +27,20 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class SetFullUrlWhenNoAddressingUrlTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteSetUrlTestProxy");
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Setting full url when there is no addressing url") public void setFulUrlWhenNoAddressingUrl()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Setting full url when there is no addressing url")
+    public void setFulUrlWhenNoAddressingUrl() throws AxisFault {
         OMElement response;
 
         response = axis2Client

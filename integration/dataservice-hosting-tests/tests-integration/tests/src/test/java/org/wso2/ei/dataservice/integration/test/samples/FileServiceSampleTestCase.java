@@ -47,11 +47,13 @@ public class FileServiceSampleTestCase extends DSSIntegrationTest {
     private String serverEpr;
     private String resourceFileLocation;
 
-    @Factory(dataProvider = "userModeDataProvider") public FileServiceSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public FileServiceSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         serverEpr = getServiceUrlHttp(serviceName);
         resourceFileLocation = getResourceLocation();
@@ -61,14 +63,14 @@ public class FileServiceSampleTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testServiceDeployment") public void testGetProducts()
-            throws DataServiceFault, RemoteException, MalformedURLException,
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testServiceDeployment")
+    public void testGetProducts() throws DataServiceFault, RemoteException, MalformedURLException,
             org.wso2.carbon.dataservices.samples.file_service.DataServiceFault {
 
         String fileName = "transform.xslt";
@@ -96,7 +98,8 @@ public class FileServiceSampleTestCase extends DSSIntegrationTest {
         assertNull("File has not been deleted", filesNameDeleted);
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
         log.info(serviceName + " deleted");

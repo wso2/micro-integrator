@@ -37,7 +37,8 @@ public class ESBJAVA4519TestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -46,9 +47,8 @@ public class ESBJAVA4519TestCase extends ESBIntegrationTest {
         logViewerClient.clearLogs();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test whether file get restored after deployment failure") public void testRestoringToPreviousConfigurationOnHotDeploymentFailure()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test whether file get restored after deployment failure")
+    public void testRestoringToPreviousConfigurationOnHotDeploymentFailure() throws Exception {
 
         String esbApiPath =
                 System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "repository" + File.separator
@@ -90,7 +90,8 @@ public class ESBJAVA4519TestCase extends ESBIntegrationTest {
         Assert.assertTrue(messageInLog, "Original xml is not restored.");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

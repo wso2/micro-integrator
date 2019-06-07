@@ -34,13 +34,13 @@ import javax.activation.FileDataSource;
  */
 public class CarbonApplicationReDeploymentTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "test proxy service re-deployment from car file") public void carReDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test proxy service re-deployment from car file")
+    public void carReDeploymentTest() throws Exception {
         String proxyName = "samplePassThroughProxy";
         for (int i = 0; i < 3; i++) {
             log.info("######################  Iteration : " + (i + 1));
@@ -67,7 +67,8 @@ public class CarbonApplicationReDeploymentTestCase extends ESBIntegrationTest {
         uploadCapp("sample-passthrough-proxy-car_1.0.0.car", new DataHandler(new FileDataSource(new File(cAppPath))));
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupEnvironment() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 }

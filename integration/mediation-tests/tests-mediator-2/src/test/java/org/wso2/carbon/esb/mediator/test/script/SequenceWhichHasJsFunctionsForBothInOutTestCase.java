@@ -30,12 +30,13 @@ import static org.testng.Assert.assertNotNull;
 
 public class SequenceWhichHasJsFunctionsForBothInOutTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Invoke a sequence which has inlined js functions for both 'in' and 'outMediator' flows") public void testInvokeSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoke a sequence which has inlined js functions for both 'in' and 'outMediator' flows")
+    public void testInvokeSequence() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorInAndOutTestProxy"), null, "WSO2");
@@ -53,7 +54,8 @@ public class SequenceWhichHasJsFunctionsForBothInOutTestCase extends ESBIntegrat
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

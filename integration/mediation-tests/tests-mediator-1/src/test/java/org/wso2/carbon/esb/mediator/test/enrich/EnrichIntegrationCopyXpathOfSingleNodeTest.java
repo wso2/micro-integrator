@@ -37,14 +37,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationCopyXpathOfSingleNodeTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         init();
         verifyProxyServiceExistence("enrichCopyXpathOfSingleNodeTestProxy");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-copy xpath of single node") public void testCopyXpathOfSingleNode()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-copy xpath of single node")
+    public void testCopyXpathOfSingleNode() throws AxisFault, XMLStreamException {
         OMElement response;
         String payload =
                 "<m:getQuote xmlns:m=\"http://services.samples\">" + "<m:symbol>IBM</m:symbol>" + "</m:getQuote>";
@@ -59,7 +60,8 @@ public class EnrichIntegrationCopyXpathOfSingleNodeTest extends ESBIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

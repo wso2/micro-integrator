@@ -39,7 +39,8 @@ import java.io.InputStreamReader;
 public class EI2084EnrichNamespaceAdditionTestCase extends ESBIntegrationTest {
     private static final String API_NAME = "EI2084";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         String api = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + API_NAME + "\" context=\"/" + API_NAME
                 + "\">\n" + "   <resource methods=\"POST\" uri-template=\"/test_with_pf\">\n" + "      <inSequence>\n"
@@ -59,8 +60,8 @@ public class EI2084EnrichNamespaceAdditionTestCase extends ESBIntegrationTest {
         Assert.assertTrue(esbUtils.isApiDeployed(contextUrls.getBackEndUrl(), sessionCookie, API_NAME));
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich / Payload Factory mediators,soap namespace is added when soap is not in use") public void testEnrichNamespaceAdditionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Enrich / Payload Factory mediators,soap namespace is added when soap is not in use")
+    public void testEnrichNamespaceAdditionTestCase() throws Exception {
 
         String endpoint = getApiInvocationURL(API_NAME) + "/test_with_pf";
         String requestXml = "<MetaData><DateTimeSent/></MetaData>";
@@ -82,7 +83,8 @@ public class EI2084EnrichNamespaceAdditionTestCase extends ESBIntegrationTest {
                 "unnessary namespaces present in message");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

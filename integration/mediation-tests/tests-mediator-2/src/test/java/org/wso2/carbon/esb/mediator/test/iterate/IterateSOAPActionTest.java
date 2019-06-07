@@ -35,19 +35,21 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
 
 public class IterateSOAPActionTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests SOAP action property ") public void testSOAPAction()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests SOAP action property ")
+    public void testSOAPAction() throws Exception {
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement response = axisServiceClient.sendReceive(createSimpleQuoteRequestBody("WSO2"),
                 getProxyServiceURLHttp("iterateWithSOAPActionTestProxy"), "");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

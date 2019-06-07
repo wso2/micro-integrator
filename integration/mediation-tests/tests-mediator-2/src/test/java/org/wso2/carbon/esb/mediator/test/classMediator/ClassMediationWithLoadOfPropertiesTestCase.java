@@ -42,15 +42,17 @@ import static org.testng.Assert.assertNotNull;
 
 public class ClassMediationWithLoadOfPropertiesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/class/class_mediation_with_twenty_properties.xml");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Class Mediator "
-            + " -Class mediator which has a load of properties to be passed and mediation") public void testMediationWithLoadOfProperties()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Class Mediator "
+            + " -Class mediator which has a load of properties to be passed and mediation")
+    public void testMediationWithLoadOfProperties()
             throws IOException, PropertiesAdminServiceRegistryExceptionException,
             ResourceAdminServiceExceptionException, XMLStreamException, InterruptedException {
 
@@ -82,7 +84,8 @@ public class ClassMediationWithLoadOfPropertiesTestCase extends ESBIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

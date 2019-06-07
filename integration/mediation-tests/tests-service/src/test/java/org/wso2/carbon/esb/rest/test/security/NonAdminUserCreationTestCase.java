@@ -35,7 +35,8 @@ public class NonAdminUserCreationTestCase {
     protected static User nonAdminUser = null;
     protected final String ROLE_NAME = "nonadmin";
 
-    @BeforeTest(alwaysRun = true) public void addNonAdminUser() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void addNonAdminUser() throws Exception {
         AutomationContext esbContext = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         String sessionCookie = new LoginLogoutClient(esbContext).login();
         ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(

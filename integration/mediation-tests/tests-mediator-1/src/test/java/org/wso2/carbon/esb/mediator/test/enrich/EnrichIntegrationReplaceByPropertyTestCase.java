@@ -36,7 +36,8 @@ import static org.testng.Assert.assertTrue;
 public class EnrichIntegrationReplaceByPropertyTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -46,7 +47,8 @@ public class EnrichIntegrationReplaceByPropertyTestCase extends ESBIntegrationTe
     }
 
     @Test(groups = { "wso2.esb" }, description = "Enrich mediator replace a part of message define in "
-            + "xpath by property in source config") public void enrichMediatorReplaceByProperty() throws Exception {
+            + "xpath by property in source config")
+    public void enrichMediatorReplaceByProperty() throws Exception {
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("enrichReplaceByPropertyTestProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
@@ -68,7 +70,8 @@ public class EnrichIntegrationReplaceByPropertyTestCase extends ESBIntegrationTe
         Thread.sleep(1000);
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
 
         resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
         cleanup();

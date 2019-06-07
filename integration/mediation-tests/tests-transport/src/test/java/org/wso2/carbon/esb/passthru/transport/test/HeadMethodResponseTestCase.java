@@ -33,14 +33,15 @@ public class HeadMethodResponseTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/HeadMethodResponseTestSynapse.xml");
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = " Checking response for HEAD request contains a body") public void testResponseBodyOfHEADRequest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = " Checking response for HEAD request contains a body")
+    public void testResponseBodyOfHEADRequest() throws Exception {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         httpClient.doGet(contextUrls.getServiceUrl() + "/ClientProxy", null);
 
@@ -56,7 +57,8 @@ public class HeadMethodResponseTestCase extends ESBIntegrationTest {
                 "HTTP protocol violation for Http HEAD request, " + "Response for HEAD request contains a body");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -38,16 +38,16 @@ public class MessageStoreMediaTypeTestCase extends ESBIntegrationTest {
     private final String MESSAGE_STORE_NAME = "automationMessageStore";
     private boolean isMessageStoreExist = false;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test message Store media type - text/xml", enabled = false) public void messageStoreMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test message Store media type - text/xml", enabled = false)
+    public void messageStoreMediaTypeTest() throws Exception {
 
         OMElement messageStore = AXIOMUtil.stringToOM(
                 "<messageStore xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + MESSAGE_STORE_NAME + "\">"
@@ -62,7 +62,8 @@ public class MessageStoreMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         if (isMessageStoreExist) {
             messageStoreAdminClient.deleteMessageStore(MESSAGE_STORE_NAME);
         }

@@ -29,18 +29,21 @@ public class ActiveMQServerExtension extends ExecutionListenerExtension {
     private static final Log log = LogFactory.getLog(ActiveMQServerExtension.class);
     private static JMSBrokerController activeMqBroker;
 
-    @Override public void initiate() throws AutomationFrameworkException {
+    @Override
+    public void initiate() throws AutomationFrameworkException {
         activeMqBroker = new JMSBrokerController("localhost", getJMSBrokerConfiguration());
     }
 
-    @Override public void onExecutionStart() throws AutomationFrameworkException {
+    @Override
+    public void onExecutionStart() throws AutomationFrameworkException {
         if (!JMSBrokerController.isBrokerStarted()) {
             log.info("String JMS Broker...");
             activeMqBroker.start();
         }
     }
 
-    @Override public void onExecutionFinish() throws AutomationFrameworkException {
+    @Override
+    public void onExecutionFinish() throws AutomationFrameworkException {
         if (activeMqBroker != null) {
             log.info("Stopping JMS broker...");
             activeMqBroker.stop();

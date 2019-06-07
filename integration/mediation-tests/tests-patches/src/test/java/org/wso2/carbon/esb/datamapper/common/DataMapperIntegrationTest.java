@@ -36,7 +36,8 @@ public class DataMapperIntegrationTest extends ESBIntegrationTest {
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -89,7 +90,8 @@ public class DataMapperIntegrationTest extends ESBIntegrationTest {
                         new FileDataSource(new File(getClass().getResource(artifactRoot + outSchema).getPath()))));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             resourceAdminServiceClient.deleteResource("/_system/governance/datamapper");
         } finally {

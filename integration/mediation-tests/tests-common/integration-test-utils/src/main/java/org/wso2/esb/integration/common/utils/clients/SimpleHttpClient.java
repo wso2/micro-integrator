@@ -215,8 +215,8 @@ public class SimpleHttpClient {
     /**
      * Send a HTTP Head request to the specified URL
      *
-     * @param url         Target endpoint URL
-     * @param headers     Any HTTP headers that should be added to the request
+     * @param url     Target endpoint URL
+     * @param headers Any HTTP headers that should be added to the request
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
@@ -229,8 +229,8 @@ public class SimpleHttpClient {
     /**
      * Send a HTTP DELETE request to the specified URL
      *
-     * @param url         Target endpoint URL
-     * @param headers     Any HTTP headers that should be added to the request
+     * @param url     Target endpoint URL
+     * @param headers Any HTTP headers that should be added to the request
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
@@ -243,8 +243,8 @@ public class SimpleHttpClient {
     /**
      * Send a HTTP DELETE request with entity body to the specified URL
      *
-     * @param url         Target endpoint URL
-     * @param headers     Any HTTP headers that should be added to the request
+     * @param url     Target endpoint URL
+     * @param headers Any HTTP headers that should be added to the request
      * @return Returned HTTP response
      * @throws IOException If an error occurs while making the invocation
      */
@@ -309,6 +309,7 @@ public class SimpleHttpClient {
 
     /**
      * Function to extract response body as a string
+     *
      * @param response org.apache.http.HttpResponse object containing response entity body
      * @return returns the response entity body as a string
      * @throws IOException
@@ -349,7 +350,8 @@ public class SimpleHttpClient {
             this.payload = entityBody;
         }
 
-        @Override public void writeTo(OutputStream outputStream) throws IOException {
+        @Override
+        public void writeTo(OutputStream outputStream) throws IOException {
             OutputStream out = outputStream;
             if (zip) {
                 out = new GZIPOutputStream(outputStream);

@@ -50,61 +50,63 @@ public class IterateJsonPathTest extends ESBIntegrationTest {
 
     private String input;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         input = FileUtils.readFileToString(new File(getESBResourceLocation() + "/json/inputESBIterateJson.json"));
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/iterate/iterate_jsonpath.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with basic configuration") public void testBasicIterateMediatorFlow()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with basic configuration")
+    public void testBasicIterateMediatorFlow() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample1") + "/iteratejson1");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with PreservePayload attribute") public void testIterateMediatorFlowWithPreservePayload()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with PreservePayload attribute")
+    public void testIterateMediatorFlowWithPreservePayload() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample2") + "/iteratejson2");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with AttachPath attribute") public void testIterateMediatorFlowWithAttachPath()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with AttachPath attribute")
+    public void testIterateMediatorFlowWithAttachPath() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample3") + "/iteratejson3");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with Different AttachPath attribute") public void testIterateMediatorFlowWithDifferentAttachPath()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with Different AttachPath attribute")
+    public void testIterateMediatorFlowWithDifferentAttachPath() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample4") + "/iteratejson4");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with AttachPath as `$`") public void testIterateMediatorFlowWithRootAttachPath()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with AttachPath as `$`")
+    public void testIterateMediatorFlowWithRootAttachPath() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample5") + "/iteratejson5");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with ContinueParent attribute") public void testIterateMediatorFlowWithContinueParent()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with ContinueParent attribute")
+    public void testIterateMediatorFlowWithContinueParent() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample6") + "/iteratejson6");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with Call mediator inside target") public void testIterateMediatorFlowWithCallMediator()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with Call mediator inside target")
+    public void testIterateMediatorFlowWithCallMediator() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample7") + "/iteratejson7");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with Sequential attribute") public void testIterateMediatorFlowWithSequential()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing Iterate mediator json support with Sequential attribute")
+    public void testIterateMediatorFlowWithSequential() throws Exception {
         URL endpoint = new URL(getApiInvocationURL("iteratesample8") + "/iteratejson8");
         executeSequenceAndAssertResponse(endpoint);
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 

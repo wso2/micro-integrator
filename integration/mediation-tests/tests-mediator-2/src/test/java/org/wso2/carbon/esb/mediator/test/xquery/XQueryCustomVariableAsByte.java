@@ -31,17 +31,19 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class XQueryCustomVariableAsByte extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value and variable as byte") public void testXQueryTransformationWithByteValue()
-            throws AxisFault {
+            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value and variable as byte")
+    public void testXQueryTransformationWithByteValue() throws AxisFault {
         OMElement response;
         RequestUtil getQuoteCustomRequest = new RequestUtil();
         response = getQuoteCustomRequest

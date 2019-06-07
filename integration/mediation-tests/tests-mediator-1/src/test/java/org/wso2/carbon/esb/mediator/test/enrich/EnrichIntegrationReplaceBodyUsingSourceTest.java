@@ -37,13 +37,14 @@ import static org.testng.Assert.assertNotNull;
 public class EnrichIntegrationReplaceBodyUsingSourceTest extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         init();
         verifyProxyServiceExistence("enrichReplaceBodyUsingSourceTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-replace body using source type body") public void testReplaceBodyUsingSourceBody()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-replace body using source type body")
+    public void testReplaceBodyUsingSourceBody() throws AxisFault, XMLStreamException {
 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichReplaceBodyUsingSourceTestProxy"), null,
@@ -56,7 +57,8 @@ public class EnrichIntegrationReplaceBodyUsingSourceTest extends ESBIntegrationT
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

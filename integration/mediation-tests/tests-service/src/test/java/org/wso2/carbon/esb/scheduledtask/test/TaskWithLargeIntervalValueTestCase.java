@@ -34,13 +34,14 @@ import static org.testng.Assert.assertTrue;
  */
 public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test successful deployment of scheduled task with large interval value") public void testDeployWithLargeIntervalValue()
-            throws Exception {
+            "wso2.esb" }, description = "Test successful deployment of scheduled task with large interval value")
+    public void testDeployWithLargeIntervalValue() throws Exception {
 
         OMElement task = AXIOMUtil.stringToOM(
                 "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n"
@@ -64,7 +65,8 @@ public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
         assertTrue(assertValue, "Scheduled task with large interval value has not deployed.");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

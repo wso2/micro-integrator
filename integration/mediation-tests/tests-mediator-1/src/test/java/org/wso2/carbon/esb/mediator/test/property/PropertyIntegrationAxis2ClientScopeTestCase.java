@@ -31,59 +31,61 @@ import static org.testng.Assert.assertTrue;
  */
 public class PropertyIntegrationAxis2ClientScopeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (axis2-client scope)") public void testDoubleVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (axis2-client scope)")
+    public void testDoubleVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyDoubleAxis2ClientTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123123.123123"), "Double Property Not Set in the Axis2-client scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (axis2-client scope)") public void testIntVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (axis2-client scope)")
+    public void testIntVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntAxis2ClientTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123"), "Integer Property Not Set in the Axis2-client scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (axis2-client scope)") public void testStringVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (axis2-client scope)")
+    public void testStringVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringAxis2ClientTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("WSO2 Lanka"), "String Property Not Set in the Axis2-client scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (axis2-client scope)") public void testBooleanVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (axis2-client scope)")
+    public void testBooleanVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyBooleanAxis2ClientTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("true"), "Boolean Property Not Set in the Axis2-client scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (axis2-client scope)") public void testFloatVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (axis2-client scope)")
+    public void testFloatVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatAxis2ClientTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123.123"), "Float Property Not Set in the Axis2-client scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (axis2-client scope)") public void testShortVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (axis2-client scope)")
+    public void testShortVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortAxis2ClientTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("12"), "Short Property Not Set in the Axis2-client scope!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

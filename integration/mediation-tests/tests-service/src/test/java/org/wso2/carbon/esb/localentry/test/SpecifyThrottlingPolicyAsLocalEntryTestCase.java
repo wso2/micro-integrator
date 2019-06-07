@@ -31,13 +31,14 @@ public class SpecifyThrottlingPolicyAsLocalEntryTestCase extends ESBIntegrationT
 
     private static final int THROTTLE_MAX_MSG_COUNT = 4;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/localEntryConfig/throttle_policy_as_a_local_entry.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Specified throttling policy as a local entry") public void testThrottlingPolicyAsALocalEntry()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Specified throttling policy as a local entry")
+    public void testThrottlingPolicyAsALocalEntry() throws Exception {
         int throttleCounter = 0;
         OMElement response = null;
 
@@ -60,7 +61,8 @@ public class SpecifyThrottlingPolicyAsLocalEntryTestCase extends ESBIntegrationT
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

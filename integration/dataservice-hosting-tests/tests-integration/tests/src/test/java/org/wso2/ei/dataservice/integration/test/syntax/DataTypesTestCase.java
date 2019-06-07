@@ -48,11 +48,13 @@ public class DataTypesTestCase extends DSSIntegrationTest {
 
     private String serviceEndPoint;
 
-    @Factory(dataProvider = "userModeDataProvider") public DataTypesTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public DataTypesTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("DataTypes.sql"));
@@ -67,9 +69,8 @@ public class DataTypesTestCase extends DSSIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.dss" }, description = "insert a timestamp value and check it's successful", alwaysRun = true) public void insertTimestampTest()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, description = "insert a timestamp value and check it's successful", alwaysRun = true)
+    public void insertTimestampTest() throws Exception {
         OMElement insertTimeStampPayload = fac.createOMElement("addDeveloper", omNs);
 
         OMElement devId = fac.createOMElement("devId", omNs);
@@ -105,8 +106,8 @@ public class DataTypesTestCase extends DSSIntegrationTest {
      * @throws Exception
      */
     @Test(groups = {
-            "wso2.dss" }, description = "insert null value as timestamp value and check it's successful", alwaysRun = true) public void insertTimestampNullTest()
-            throws Exception {
+            "wso2.dss" }, description = "insert null value as timestamp value and check it's successful", alwaysRun = true)
+    public void insertTimestampNullTest() throws Exception {
         OMElement insertTimeStampPayload = fac.createOMElement("addDeveloper", omNs);
 
         OMNamespace nullNameSpace = fac.createOMNamespace("http://www.w3.org/2001/XMLSchema-instance", "xsi");
@@ -139,7 +140,8 @@ public class DataTypesTestCase extends DSSIntegrationTest {
         log.info("Insert TimeStamp Operation Success");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

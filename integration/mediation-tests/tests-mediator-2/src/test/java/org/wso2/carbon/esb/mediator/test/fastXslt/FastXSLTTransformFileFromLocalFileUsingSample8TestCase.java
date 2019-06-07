@@ -32,15 +32,16 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class FastXSLTTransformFileFromLocalFileUsingSample8TestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fast_xslt/synapse_fast_xslt_sample_8.xml");
 
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test for local entry XSLT file refer from File System by FastXSLT - Sample 8") public void testLocalEntryFastXSLTFileFromLocalFile()
-            throws Exception {
+            "wso2.esb" }, description = "Test for local entry XSLT file refer from File System by FastXSLT - Sample 8")
+    public void testLocalEntryFastXSLTFileFromLocalFile() throws Exception {
         OMElement response = axis2Client.sendCustomQuoteRequest(getMainSequenceURL(),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         assertNotNull(response, "Response message is null");
@@ -51,7 +52,8 @@ public class FastXSLTTransformFileFromLocalFileUsingSample8TestCase extends ESBI
                 "Symbol not match");
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -37,12 +37,13 @@ import javax.xml.stream.XMLStreamException;
 
 public class IterateAttachPathTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests attach path property ") public void testAttachPath()
-            throws IOException, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests attach path property ")
+    public void testAttachPath() throws IOException, XMLStreamException {
 
         IterateClient client = new IterateClient();
         String response = client
@@ -62,7 +63,8 @@ public class IterateAttachPathTest extends ESBIntegrationTest {
         Assert.assertEquals(i, 2, "Response count mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

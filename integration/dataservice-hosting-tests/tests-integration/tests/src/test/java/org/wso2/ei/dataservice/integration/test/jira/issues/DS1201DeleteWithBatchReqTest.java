@@ -47,7 +47,8 @@ public class DS1201DeleteWithBatchReqTest extends DSSIntegrationTest {
     private final String serviceName = "DELETEWithBatchTest";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTableDeleteTest.sql"));
@@ -57,14 +58,14 @@ public class DS1201DeleteWithBatchReqTest extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = {
-            "wso2.dss" }, description = "Check the service returns correct code", alwaysRun = true) public void deleteWithBatchReqTestCase()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, description = "Check the service returns correct code", alwaysRun = true)
+    public void deleteWithBatchReqTestCase() throws Exception {
         HttpResponse response1 = this.getHttpResponse(serviceEndPoint + "filter/" + Integer.toString(2));
         assertTrue(202 == response1.getResponseCode());
     }

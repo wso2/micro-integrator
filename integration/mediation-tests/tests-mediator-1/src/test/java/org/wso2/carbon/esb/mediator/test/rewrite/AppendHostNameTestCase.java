@@ -30,14 +30,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class AppendHostNameTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteAppendHostNameTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Append text to host name", dataProvider = "addressingUrl") public void appendHostName(
-            String addUrl) throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Append text to host name", dataProvider = "addressingUrl")
+    public void appendHostName(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -47,11 +48,13 @@ public class AppendHostNameTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "http://local:9000/services/SimpleStockQuoteService" },
                 { "https://local:9000/services/SimpleStockQuoteService" },
 

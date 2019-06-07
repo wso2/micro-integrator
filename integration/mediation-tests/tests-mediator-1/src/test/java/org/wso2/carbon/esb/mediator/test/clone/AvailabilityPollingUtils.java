@@ -39,7 +39,8 @@ public class AvailabilityPollingUtils {
     public static Callable<Boolean> isMessageRecived(LogViewerClient logViewerClient) {
         final LogViewerClient logViewer = logViewerClient;
         return new Callable<Boolean>() {
-            @Override public Boolean call() {
+            @Override
+            public Boolean call() {
                 LogEvent[] getLogsInfo;
                 boolean assertValue = false;
                 try {

@@ -58,7 +58,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
     private static final String updateCustomerName = "Emma";
     private static final String getCustomerResponse = "<getCustomerResponse xmlns=\"http://ws.apache.org/ns/synapse\"><id>8fa3fc1b-f63c-4b21-8aff-3ac684c74d97</id><name>John</name></getCustomerResponse>";
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         verifyProxyServiceExistence("InvalidHttpEndPointProxy");
         verifyProxyServiceExistence("HttpEndPointProxy");
@@ -69,23 +70,22 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test HTTP Endpoint addition, deletion & stats", priority = 1) public void testHttpEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test HTTP Endpoint addition, deletion & stats", priority = 1)
+    public void testHttpEndpoint() throws Exception {
         cleanupEndpoints();
         endpointAdditionScenario();
         endpointStatisticsScenario();
         endpointDeletionScenario();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "HTTP Endpoint POST Test: RESTful", priority = 5) public void testToPost()
-            throws IOException, Exception {
+    @Test(groups = { "wso2.esb" }, description = "HTTP Endpoint POST Test: RESTful", priority = 5)
+    public void testToPost() throws IOException, Exception {
 
         String createCustomerData =
                 "<createCustomer>\n" + "<id>" + customerId + "</id>\n" + "<name>" + customerName + "</name>\n"
@@ -99,9 +99,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "HTTP Endpoint GET test: RESTful", priority = 6) public void testToGet()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "HTTP Endpoint GET test: RESTful", priority = 6)
+    public void testToGet() throws IOException {
 
         String getRestURI = getApiInvocationURL(CUSTOMER_API_CONTEXT) + RESOURCE_CONTEXT + "/" + customerId;
         HttpResponse getResponseData = HttpURLConnectionClient.sendGetRequest(getRestURI, null);
@@ -110,9 +109,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "HTTP Endpoint PUT Test: RESTful", priority = 7) public void testToPut()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "HTTP Endpoint PUT Test: RESTful", priority = 7)
+    public void testToPut() throws Exception {
 
         String updateCustomerData =
                 "<createCustomer>\n" + "<id>" + customerId + "</id>\n" + "<name>" + updateCustomerName + "</name>\n"
@@ -126,9 +124,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "HTTP Endpoint DELETE Test: RESTful", priority = 9) public void testToDelete()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "HTTP Endpoint DELETE Test: RESTful", priority = 9)
+    public void testToDelete() throws Exception {
 
         URL deleteRestURL = new URL((getApiInvocationURL(CUSTOMER_API_CONTEXT)) + RESOURCE_CONTEXT + "/" + customerId);
 
@@ -140,8 +137,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test usage of legacy-encoding property for encoded URL: RESTful", priority = 10) public void testLegacyEncodingProperty()
-            throws Exception {
+            "wso2.esb" }, description = "Test usage of legacy-encoding property for encoded URL: RESTful", priority = 10)
+    public void testLegacyEncodingProperty() throws Exception {
 
         String getEncodedRestURI = getApiInvocationURL(CUSTOMER_API_CONTEXT) + RESOURCE_ENCODED_CONTEXT + customerId;
         HttpResponse getResponseData = HttpURLConnectionClient.sendGetRequest(getEncodedRestURI, null);
@@ -149,9 +146,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
                 "Unexpected output received for encoded URL:" + getResponseData.toString());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "HTTP endpoint POST test: SOAP", priority = 2) public void testSendingToHttpEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "HTTP endpoint POST test: SOAP", priority = 2)
+    public void testSendingToHttpEndpoint() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("HttpEndPointProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         Assert.assertNotNull(response);
@@ -159,9 +155,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
                 "Contains unexpected output: " + response.toString());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to HTTP Endpoint with invalid URI", priority = 3) public void testSendingToInvalidHttpEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to HTTP Endpoint with invalid URI", priority = 3)
+    public void testSendingToInvalidHttpEndpoint() throws Exception {
         try {
             OMElement response = axis2Client
                     .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("InvalidHttpEndPointProxy"),
@@ -174,8 +169,8 @@ public class HttpEndpointTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to an HTTP endpoint with missing uri.var variable", priority = 4) public void testSendingToNoVarHttpEndpoint()
-            throws XMLStreamException, FileNotFoundException, AxisFault {
+            "wso2.esb" }, description = "Sending a Message to an HTTP endpoint with missing uri.var variable", priority = 4)
+    public void testSendingToNoVarHttpEndpoint() throws XMLStreamException, FileNotFoundException, AxisFault {
         try {
             OMElement response = axis2Client
                     .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("MissingVariableEndPointProxy"),

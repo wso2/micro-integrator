@@ -52,7 +52,8 @@ public class ESBJAVA4891ConsumeAndDiscardTest extends ESBIntegrationTest {
     public static final String EXPECTED_ERROR = "<Exception>DATA IS ENCODED IMPROPERLY</Exception>";
     private String input;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         input = FileUtils
                 .readFileToString(new File(getESBResourceLocation() + "/passthru/transport/inputESBJAVA4891.xml"),
@@ -67,8 +68,8 @@ public class ESBJAVA4891ConsumeAndDiscardTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Testing with a Payload Mediator") public void testPartialReadErrorWithPayloadMediator()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with a Payload Mediator")
+    public void testPartialReadErrorWithPayloadMediator() throws Exception {
         URL endpoint = new URL(getProxyServiceURLHttp("TestProxy"));
         Map<String, String> header = new HashMap<>();
         header.put("Content-Type", "application/xml");
@@ -76,7 +77,8 @@ public class ESBJAVA4891ConsumeAndDiscardTest extends ESBIntegrationTest {
         assertTrue(EXPECTED_ERROR.equals(httpResponse.getData()), "Expected error message not received");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 

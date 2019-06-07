@@ -39,15 +39,17 @@ import static org.testng.Assert.fail;
 
 public class ProvidingDifferentBeanNamesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation_different_bean.xml");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Spring Mediator " + "-Added Simple bean into lib "
-            + "-Different bean ids in spring xml") public void testUsingAddedBeanSpringMediation() throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Spring Mediator " + "-Added Simple bean into lib "
+            + "-Different bean ids in spring xml")
+    public void testUsingAddedBeanSpringMediation() throws AxisFault {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
@@ -59,7 +61,8 @@ public class ProvidingDifferentBeanNamesTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

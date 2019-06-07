@@ -47,7 +47,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(SecureDataServiceTestCase.class);
     private final String serviceName = "SecureDataService";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         DSSTestCaseUtils dssTestCaseUtils = new DSSTestCaseUtils();
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -67,14 +68,15 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info(serviceName + " is deployed");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Provides Authentication. Clients have Username Tokens", enabled = false) public void securityPolicy1()
-            throws Exception {
+            "wso2.dss" }, description = "Provides Authentication. Clients have Username Tokens", enabled = false)
+    public void securityPolicy1() throws Exception {
         final int policyId = 1;
 
         this.secureService(policyId);
@@ -89,7 +91,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("UsernameToken verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy2() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy2() throws Exception {
         final int policyId = 2;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -103,7 +106,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("Non-repudiation verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy3() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy3() throws Exception {
         final int policyId = 3;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -117,7 +121,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("Integrity verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy4() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy4() throws Exception {
         final int policyId = 4;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -131,7 +136,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("Confidentiality verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy5() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy5() throws Exception {
         final int policyId = 5;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -145,7 +151,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("Sign and encrypt - X509 Authentication verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy6() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy6() throws Exception {
         final int policyId = 6;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -159,7 +166,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("Sign and Encrypt - Anonymous clients verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy7() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy7() throws Exception {
         final int policyId = 7;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -173,7 +181,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("Encrypt only - Username Token Authentication verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy8() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy8() throws Exception {
         final int policyId = 8;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -187,7 +196,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
         log.info("Sign and Encrypt - Username Token Authentication verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy9() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy9() throws Exception {
         final int policyId = 9;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -202,7 +212,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
                 + " X509 Authentication verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy10() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy10() throws Exception {
         final int policyId = 10;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -217,7 +228,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
                 + " X509 Authentication verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy11() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy11() throws Exception {
         final int policyId = 11;
         this.secureService(policyId);
         Thread.sleep(5000);
@@ -233,7 +245,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
                 "SecureConversation - Sign and Encrypt - Service as STS - Bootstrap policy - Sign and Encrypt , X509 Authentication verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy12() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy12() throws Exception {
         final int policyId = 12;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -248,7 +261,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
                 + " Anonymous clients verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy13() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy13() throws Exception {
         final int policyId = 13;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -263,7 +277,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
                 + "Sign and Encrypt , Anonymous clients verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy14() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy14() throws Exception {
         final int policyId = 14;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -278,7 +293,8 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
                 + "Sign and Encrypt , Username Token Authentication verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void securityPolicy15() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void securityPolicy15() throws Exception {
         final int policyId = 15;
         this.secureService(policyId);
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();

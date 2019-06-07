@@ -22,13 +22,14 @@ public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
     private static final String PROXY_SERVICE_NAME = "HTTPSCProxy";
     private static final String EXPECTED_LOG_MESSAGE = "Status Code inSequence = 500";
 
-    @BeforeClass(alwaysRun = true) public void deployeService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployeService() throws Exception {
         super.init();
         verifyProxyServiceExistence("HTTPSCProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test whether an HTTP SC can be retrieved after the callout mediator.") public void testFetchHTTP_SC_After_Callout_Mediator()
+    @Test(groups = { "wso2.esb" }, description = "Test whether an HTTP SC can be retrieved after the callout mediator.")
+    public void testFetchHTTP_SC_After_Callout_Mediator()
             throws RemoteException, InterruptedException, LogViewerLogViewerException {
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         AxisServiceClient client = new AxisServiceClient();
@@ -60,7 +61,8 @@ public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
         return placeOrder;
     }
 
-    @AfterClass(alwaysRun = true) public void UndeployeService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void UndeployeService() throws Exception {
         super.cleanup();
     }
 

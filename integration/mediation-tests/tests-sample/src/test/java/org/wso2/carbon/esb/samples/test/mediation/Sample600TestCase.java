@@ -31,13 +31,14 @@ import static org.testng.Assert.assertEquals;
 
 public class Sample600TestCase extends ESBSampleIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(600);
     }
 
-    @Test(enabled = false, description = "Simple Message Transformation - Rule Mediator for Message Transformation- SUN changed to IBM") public void testSymbolSunChangedToIBM()
-            throws Exception {
+    @Test(enabled = false, description = "Simple Message Transformation - Rule Mediator for Message Transformation- SUN changed to IBM")
+    public void testSymbolSunChangedToIBM() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "SUN");
         Assert.assertNotNull(response, "Response is null");
@@ -48,8 +49,8 @@ public class Sample600TestCase extends ESBSampleIntegrationTest {
         assertEquals(symbolElement.getText(), "IBM", "Fault, invalid response");
     }
 
-    @Test(enabled = false, description = "Simple Message Transformation - Rule Mediator for Message Transformation - MSFT changed to IBM") public void testSymbolMsftChangedToIBM()
-            throws Exception {
+    @Test(enabled = false, description = "Simple Message Transformation - Rule Mediator for Message Transformation - MSFT changed to IBM")
+    public void testSymbolMsftChangedToIBM() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "MSFT");
         Assert.assertNotNull(response, "Response is null");
@@ -60,8 +61,8 @@ public class Sample600TestCase extends ESBSampleIntegrationTest {
         assertEquals(symbolElement.getText(), "IBM", "Fault, invalid response");
     }
 
-    @Test(enabled = false, description = "Simple Message Transformation - Rule Mediator for Message Transformation - WSO2 not changed to IBM") public void testSymbolWso2NotChanged()
-            throws Exception {
+    @Test(enabled = false, description = "Simple Message Transformation - Rule Mediator for Message Transformation - WSO2 not changed to IBM")
+    public void testSymbolWso2NotChanged() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
         Assert.assertNotNull(response, "Response is null");
@@ -72,7 +73,8 @@ public class Sample600TestCase extends ESBSampleIntegrationTest {
         assertEquals(symbolElement.getText(), "WSO2", "Fault, invalid response");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

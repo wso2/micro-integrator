@@ -34,16 +34,16 @@ import java.io.File;
  */
 public class URITemplateRESTTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                         + File.separator + "rest" + File.separator + "uri-template-synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via REST to test uri template fix") public void testRESTURITemplate()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST to test uri template fix")
+    public void testRESTURITemplate() throws Exception {
         /*
         sending parameter /view/WSO2 to match /view/{symbol} in uri-template
          */
@@ -61,7 +61,8 @@ public class URITemplateRESTTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.getData().contains("WSO2 Company"), "Response message is not as expected");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

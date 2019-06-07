@@ -34,11 +34,13 @@ import javax.xml.namespace.QName;
 
 public class IterateIDTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests iterate ID property") public void testIterateID() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests iterate ID property")
+    public void testIterateID() throws Exception {
 
         IterateClient client = new IterateClient();
         String response = client.getGetQuotesResponse(getProxyServiceURLHttp("iterateDifferentIdTestProxy"), "WSO2", 2);
@@ -55,7 +57,8 @@ public class IterateIDTestCase extends ESBIntegrationTest {
         Assert.assertEquals(i, 2);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

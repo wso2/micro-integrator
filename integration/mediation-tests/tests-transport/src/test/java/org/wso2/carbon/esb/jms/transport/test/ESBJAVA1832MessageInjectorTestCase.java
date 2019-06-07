@@ -38,7 +38,8 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
 
     private JMSQueueMessageConsumer consumer;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement msgProessor = esbUtils.loadResource("/artifacts/ESB/jms/transport/msgInjection/msg_store.xml");
         OMElement task = esbUtils.loadResource("/artifacts/ESB/jms/transport/msgInjection/msg_injecting_task.xml");
@@ -47,9 +48,8 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
         esbUtils.addScheduleTask(contextUrls.getBackEndUrl(), getSessionCookie(), task);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test proxy service with jms transport") public void testMessageInjection()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
+    public void testMessageInjection() throws Exception {
         String queueName = "jmsQueue";
         int numberOfMsgToExpect = 10;
         TimeUnit.SECONDS.sleep(15);
@@ -65,7 +65,8 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         esbUtils.deleteScheduleTask(contextUrls.getBackEndUrl(), getSessionCookie(), "TheTask",
                 "synapse.simple.quartz");
         super.cleanup();

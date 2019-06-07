@@ -34,13 +34,14 @@ import javax.activation.DataHandler;
 public class RouterMediatorSequenceTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
         resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests different kinds of sequences in target") public void testSequences()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests different kinds of sequences in target")
+    public void testSequences() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/router/router_sequence_test.xml");
         URL url = new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/router/router_sequence.xml");
         resourceAdminServiceClient
@@ -55,7 +56,8 @@ public class RouterMediatorSequenceTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("IBM"));
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         resourceAdminServiceClient.deleteResource("/_system/governance/sequences/router/routerSequence");
         super.cleanup();
     }

@@ -36,14 +36,16 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
         super.init();
         verifyProxyServiceExistence("TestCalloutSoapHeader");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", description = "Test whether the callout mediator successfully handle SOAP messages "
-            + "Having SOAP header") public void testSOAPHeaderHandling() throws Exception {
+            + "Having SOAP header")
+    public void testSOAPHeaderHandling() throws Exception {
         String endpoint = "http://localhost:8480/services/TestCalloutSoapHeader";
         String soapRequest =
                 TestConfigurationProvider.getResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
@@ -78,7 +80,8 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
         assertFalse(errorLog, "Mediator Hasn't invoked successfully.");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

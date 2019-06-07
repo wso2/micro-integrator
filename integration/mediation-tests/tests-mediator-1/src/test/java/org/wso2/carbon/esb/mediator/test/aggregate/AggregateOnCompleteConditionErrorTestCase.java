@@ -23,7 +23,8 @@ public class AggregateOnCompleteConditionErrorTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
@@ -34,8 +35,8 @@ public class AggregateOnCompleteConditionErrorTestCase extends ESBIntegrationTes
      * @throws XMLStreamException
      */
     @Test(groups = {
-            "wso2.esb" }, description = "verify proxy service return exception evaluating the on complete", expectedExceptions = org.apache.axis2.AxisFault.class, expectedExceptionsMessageRegExp = ".*Error evaluating expression.*") public void testAggregatorOnCompleteConditionError()
-            throws IOException, XMLStreamException {
+            "wso2.esb" }, description = "verify proxy service return exception evaluating the on complete", expectedExceptions = org.apache.axis2.AxisFault.class, expectedExceptionsMessageRegExp = ".*Error evaluating expression.*")
+    public void testAggregatorOnCompleteConditionError() throws IOException, XMLStreamException {
         OMElement payload = AXIOMUtil.stringToOM(
                 "<soapenv:Envelope\n" + "    xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
                         + "    xmlns:ser=\"http://services.samples\"\n"
@@ -56,7 +57,8 @@ public class AggregateOnCompleteConditionErrorTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

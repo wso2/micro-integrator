@@ -59,15 +59,15 @@ public class CARBON15928JMXDisablingTest extends DSSIntegrationTest {
     private SqlDataSourceUtil sqlDataSource;
     private String dataSourceName = "";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         carbonDataSourceName = createDataSource();
         log.info(carbonDataSourceName + " carbon Datasource Created");
     }
 
-    @Test(groups = {
-            "wso2.dss" }, expectedExceptions = InstanceNotFoundException.class) public void testMBeanForDatasourceBeforeRestart()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, expectedExceptions = InstanceNotFoundException.class)
+    public void testMBeanForDatasourceBeforeRestart() throws Exception {
         testMBeanForDatasource();
     }
 
@@ -158,7 +158,8 @@ public class CARBON15928JMXDisablingTest extends DSSIntegrationTest {
         return dataSourceInfo;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

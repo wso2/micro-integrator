@@ -41,16 +41,16 @@ public class TaskMediaTypeTestCase extends ESBIntegrationTest {
     private final String TASK_GROUP = "synapse.simple.quartz";
     private boolean isTaskExist = false;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         taskAdminClient = new TaskAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Schedule Task media type - text/xml", enabled = false) public void scheduleTaskMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Schedule Task media type - text/xml", enabled = false)
+    public void scheduleTaskMediaTypeTest() throws Exception {
 
         OMElement task = AXIOMUtil.stringToOM(
                 "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\" " + "name=\"" + TASK_NAME
@@ -67,7 +67,8 @@ public class TaskMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         if (isTaskExist) {
             taskAdminClient.deleteTask(TASK_NAME, TASK_GROUP);
         }

@@ -32,13 +32,14 @@ import static org.testng.Assert.assertNotNull;
  */
 public class LocalEntryWhiteSpaceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("artifacts/ESB/proxyconfig/proxy/proxyservice/localentry_url_proxy.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Test local entry value retrieval for endpoint url") public void testLocalEntryProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test local entry value retrieval for endpoint url")
+    public void testLocalEntryProxy() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest("http://localhost:8480/services/LocalEntryTestProxy", null, "IBM");
         String lastPrice = response.getFirstElement()
@@ -46,7 +47,8 @@ public class LocalEntryWhiteSpaceTestCase extends ESBIntegrationTest {
         assertNotNull(lastPrice, "Fault: response message 'last' price null");
     }
 
-    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void unDeployService() throws Exception {
         super.cleanup();
     }
 }

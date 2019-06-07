@@ -30,13 +30,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceHttpToHttpsServiceTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/proxyservice/http_to_https_proxy.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "proxy service http calling https proxy service as the endpoint") public void testHttpsViaHttpProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "proxy service http calling https proxy service as the endpoint")
+    public void testHttpsViaHttpProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyHttp"), null, "WSO2");
@@ -51,7 +52,8 @@ public class ProxyServiceHttpToHttpsServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

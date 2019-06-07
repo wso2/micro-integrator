@@ -30,7 +30,8 @@ public class RetrieveBackendWsdlTestCase extends ESBIntegrationTest {
     private HttpClientUtil httpClientUtil;
     private String backendWSDLUrl;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         httpClientUtil = new HttpClientUtil();
@@ -44,7 +45,8 @@ public class RetrieveBackendWsdlTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb") public void testRetrieveBackendServiceWsdl() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void testRetrieveBackendServiceWsdl() throws Exception {
 
         OMElement result = httpClientUtil.get(backendWSDLUrl);
 
@@ -55,7 +57,8 @@ public class RetrieveBackendWsdlTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
         httpClientUtil = null;
         backendWSDLUrl = null;

@@ -42,7 +42,8 @@ public class CAppArtifactIndicationTestCase extends ESBIntegrationTest {
     String service = "sampleCustomProxy";
     String carFileName = "esb-artifacts-car_1.0.0.car";
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
         super.init();
         CarbonAppUploaderClient carbonAppUploaderClient = new CarbonAppUploaderClient(
                 context.getContextUrls().getBackEndUrl(), sessionCookie);
@@ -54,8 +55,8 @@ public class CAppArtifactIndicationTestCase extends ESBIntegrationTest {
         log.info(carFileName + " uploaded successfully");
     }
 
-    @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service get deployed through capp") public void testProxyServiceIsCApp()
-            throws Exception {
+    @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service get deployed through capp")
+    public void testProxyServiceIsCApp() throws Exception {
         Thread.sleep(6000);
         Assert.assertTrue(
                 esbUtils.isProxyDeployed(context.getContextUrls().getBackEndUrl(), sessionCookie, "sampleCustomProxy"),
@@ -68,7 +69,8 @@ public class CAppArtifactIndicationTestCase extends ESBIntegrationTest {
                 "CApp artifact");*/
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

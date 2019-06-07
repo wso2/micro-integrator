@@ -36,7 +36,6 @@ import org.wso2.carbon.automation.extensions.servers.utils.ClientConnectionUtil;
 import org.wso2.carbon.automation.extensions.servers.utils.FileManipulator;
 import org.wso2.carbon.automation.extensions.servers.utils.ServerLogReader;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
@@ -47,6 +46,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.function.BooleanSupplier;
+import javax.xml.xpath.XPathExpressionException;
 
 /**
  * A set of utility methods such as starting & stopping a Carbon server.
@@ -210,7 +210,7 @@ public class CarbonServerManager {
         carbonHome =
                 new File(baseDir).getAbsolutePath() + File.separator + extractDir + File.separator + extractedCarbonDir;
 
-        System.setProperty("miCarbonHome" , carbonHome);
+        System.setProperty("miCarbonHome", carbonHome);
 
         copyResources();
         try {

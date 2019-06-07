@@ -40,7 +40,8 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
     private LogViewerClient logViewerClient = null;
     private static final String ENDPOINT_NAME = "jms_inbound";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator
@@ -49,9 +50,8 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Check whether polling is suspended.") public void testPollingWithSuspensionLimit()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Check whether polling is suspended.")
+    public void testPollingWithSuspensionLimit() throws Exception {
 
         pushMessageToQue(addEndpoint());
 
@@ -61,9 +61,8 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         deleteInboundEndpointFromName(ENDPOINT_NAME);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Check whether polling is permanently suspended when limit is zero.") public void testPollingWithSuspensionLimitAsZero()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Check whether polling is permanently suspended when limit is zero.")
+    public void testPollingWithSuspensionLimitAsZero() throws Exception {
 
         pushMessageToQue(addEndpointWithSuspensionLimitZero());
 
@@ -100,7 +99,8 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

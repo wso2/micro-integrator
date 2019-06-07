@@ -29,7 +29,6 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import javax.xml.xpath.XPathExpressionException;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 /**
@@ -38,14 +37,15 @@ import static org.testng.Assert.fail;
  */
 public class CollectorTypeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/cache/CollectorTypeCacheMediator.xml");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Creating Collector Type Mediator Test Case") public void testCollectorTypeMediator()
-            throws AxisFault, XPathExpressionException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Creating Collector Type Mediator Test Case")
+    public void testCollectorTypeMediator() throws AxisFault, XPathExpressionException {
         OMElement response;
         try {
             response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
@@ -80,7 +80,8 @@ public class CollectorTypeTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

@@ -33,13 +33,15 @@ public class ESBJAVA4270TestCase extends ESBIntegrationTest {
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
     private static String url = "http://localhost:8480/ESBJAVA4270stockquote/view?Name=MSFT";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("ESBJAVA4270StockQuoteAPI");
     }
 
     @Test(groups = "wso2.esb", description = "Call API with GET request and content type = application/json in NHTTP "
-            + "transport") public void getRequestContentTypeJSONTest() throws Exception {
+            + "transport")
+    public void getRequestContentTypeJSONTest() throws Exception {
         headers.put("Content-Type", "application/json");
         HttpResponse response = httpClient.doGet(url, headers);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
@@ -47,14 +49,16 @@ public class ESBJAVA4270TestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Call API with GET request and content type = application/xml in NHTTP "
-            + "transport") public void getRequestContentTypeXMLTest() throws Exception {
+            + "transport")
+    public void getRequestContentTypeXMLTest() throws Exception {
         headers.put("Content-Type", "application/xml");
         HttpResponse response = httpClient.doGet(url, headers);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -33,7 +33,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class IterateExpressionLessTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
 
     }
@@ -43,9 +44,8 @@ public class IterateExpressionLessTestCase extends ESBIntegrationTest {
      * a sequence.A sequence cannot be created because  SequenceMediator Sequence named Value cannot be found.
      */
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing when there is no iterate expression is specified") public void testIterateExpressionLessSequenceAdding()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Testing when there is no iterate expression is specified")
+    public void testIterateExpressionLessSequenceAdding() throws Exception {
         try {
             loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/iterate/iterator_expressionLess.xml");
             Assert.fail(
@@ -56,7 +56,8 @@ public class IterateExpressionLessTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

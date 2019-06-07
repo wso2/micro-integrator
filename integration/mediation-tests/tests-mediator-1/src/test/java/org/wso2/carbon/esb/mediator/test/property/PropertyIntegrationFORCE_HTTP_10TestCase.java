@@ -34,7 +34,8 @@ public class PropertyIntegrationFORCE_HTTP_10TestCase extends ESBIntegrationTest
 
     private TCPMonListener tcpMonListener;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         tcpMonListener = new TCPMonListener(9005, context.getDefaultInstance().getHosts().
                 get("default"), 9000);
@@ -42,13 +43,14 @@ public class PropertyIntegrationFORCE_HTTP_10TestCase extends ESBIntegrationTest
         tcpMonListener.start();
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         tcpMonListener.stop();
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Test-with FORCE_HTTP_1.0 Property enabled false "
-            + "scenario") public void testWithForceHTTP10EnabledFalseTest() throws Exception {
+    @Test(groups = "wso2.esb", description = "Test-with FORCE_HTTP_1.0 Property enabled false " + "scenario")
+    public void testWithForceHTTP10EnabledFalseTest() throws Exception {
 
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/FORCE_HTTP_1.0_DISABLED.xml");
 
@@ -63,8 +65,8 @@ public class PropertyIntegrationFORCE_HTTP_10TestCase extends ESBIntegrationTest
         assertTrue(esbOutGoingMsg.contains("HTTP/1.1"), "TCP mon incoming message" + " should be in HTTP/1.1");
     }
 
-    @Test(groups = "wso2.esb", description = "Test-with FORCE_HTTP_1.0 Property enabled true scenario", dependsOnMethods = "testWithForceHTTP10EnabledFalseTest") public void testWithForceHTTP10EnabledTrueTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test-with FORCE_HTTP_1.0 Property enabled true scenario", dependsOnMethods = "testWithForceHTTP10EnabledFalseTest")
+    public void testWithForceHTTP10EnabledTrueTest() throws Exception {
 
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/FORCE_HTTP_1.0_ENABLED.xml");
 

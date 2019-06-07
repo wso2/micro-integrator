@@ -14,7 +14,8 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
 public class ESBJAVA1910TestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/HTTP_SC.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
@@ -23,8 +24,8 @@ public class ESBJAVA1910TestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test Property get-property('HTTP_SC') in message.processor.reply.sequence", enabled = false) public void testStatusCode()
-            throws Exception {
+            "wso2.esb" }, description = "Test Property get-property('HTTP_SC') in message.processor.reply.sequence", enabled = false)
+    public void testStatusCode() throws Exception {
         int beforeLogCount = logViewerClient.getAllSystemLogs().length;
         AxisServiceClient client = new AxisServiceClient();
         Thread.sleep(3000); //force wait until message processor executes
@@ -34,7 +35,8 @@ public class ESBJAVA1910TestCase extends ESBIntegrationTest {
         Assert.assertTrue(status, "Status Code not found in the logs");
     }
 
-    @AfterClass(alwaysRun = true) protected void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    protected void cleanup() throws Exception {
         super.cleanup();
 
     }

@@ -54,7 +54,8 @@ public class DS1169FunctionsWithArrayParametersTestCase extends DSSIntegrationTe
     This testcase is disabled as this needs an oracle database server to run the test.
      */
 
-    @BeforeClass(alwaysRun = true, enabled = false) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true, enabled = false)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -65,12 +66,14 @@ public class DS1169FunctionsWithArrayParametersTestCase extends DSSIntegrationTe
                         + File.separator + serviceName + ".dbs", sqlFileLis));
     }
 
-    @AfterClass(enabled = false) public void clean() throws Exception {
+    @AfterClass(enabled = false)
+    public void clean() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void testForArrayParameters() throws AxisFault {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void testForArrayParameters() throws AxisFault {
         OMElement payload = fac.createOMElement("getStudentGrades", omNs);
 
         OMElement className = fac.createOMElement("class_name", omNs);

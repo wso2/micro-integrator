@@ -47,7 +47,8 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
     private final String TENANT1_INBOUND_EP = "JMSTenant1InboundEp";
     private final String TENANT2_INBOUND_EP = "JMSTenant2InboundEp";
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         OMElement synapse;
         super.init(TENANT1, "user1");
@@ -62,9 +63,8 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tenants Sending Messages to the Same Backend") public void testTenantTestCase()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tenants Sending Messages to the Same Backend")
+    public void testTenantTestCase() throws Exception {
 
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
@@ -89,7 +89,8 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
                 "Message is not received by tenant: " + TENANT2);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             super.cleanup();
             inboundAdminClient1.removeInboundEndpoint(TENANT1_INBOUND_EP);

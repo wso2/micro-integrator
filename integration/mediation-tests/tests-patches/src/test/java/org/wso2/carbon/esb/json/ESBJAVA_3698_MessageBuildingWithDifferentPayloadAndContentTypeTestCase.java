@@ -34,14 +34,16 @@ public class ESBJAVA_3698_MessageBuildingWithDifferentPayloadAndContentTypeTestC
     private final DefaultHttpClient httpClient = new DefaultHttpClient();
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("ESBJAVA3698JsonStockQuoteAPI");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check for Axis Fault when xml payload is sent with application/json"
-            + " content type", enabled = true) public void testAxisFaultWithXmlPayloadAndJSONContentType()
+            + " content type", enabled = true)
+    public void testAxisFaultWithXmlPayloadAndJSONContentType()
             throws ClientProtocolException, IOException, InterruptedException, LogViewerLogViewerException {
         final HttpPost post = new HttpPost("http://localhost:8480/ESBJAVA3698jsonstockquote/test");
         post.addHeader("Content-Type", "application/json");
@@ -67,7 +69,8 @@ public class ESBJAVA_3698_MessageBuildingWithDifferentPayloadAndContentTypeTestC
         return payload;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         logViewerClient = null;
         super.cleanup();
     }

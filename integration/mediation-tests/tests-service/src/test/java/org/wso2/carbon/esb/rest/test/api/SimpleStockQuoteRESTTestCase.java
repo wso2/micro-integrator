@@ -36,14 +36,16 @@ import javax.xml.stream.XMLStreamException;
  */
 public class SimpleStockQuoteRESTTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                         + File.separator + "rest" + File.separator + "synapse.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST") public void testSendingStockQuoteREST()
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST")
+    public void testSendingStockQuoteREST()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -54,7 +56,8 @@ public class SimpleStockQuoteRESTTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

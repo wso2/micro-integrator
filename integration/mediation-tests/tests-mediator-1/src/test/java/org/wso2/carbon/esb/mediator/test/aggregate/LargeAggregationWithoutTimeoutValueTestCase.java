@@ -35,7 +35,8 @@ public class LargeAggregationWithoutTimeoutValueTestCase extends ESBIntegrationT
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 300;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorWithoutTimeoutTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -45,9 +46,8 @@ public class LargeAggregationWithoutTimeoutValueTestCase extends ESBIntegrationT
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending large request for aggregation") public void AggregateLargeMessage()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Sending large request for aggregation")
+    public void AggregateLargeMessage() throws IOException, XMLStreamException {
         int responseCount = 0;
 
         String Response = aggregatedRequestClient.getResponse();
@@ -67,7 +67,8 @@ public class LargeAggregationWithoutTimeoutValueTestCase extends ESBIntegrationT
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }

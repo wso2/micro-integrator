@@ -38,7 +38,8 @@ public class AvailabilityPollingUtils {
     public static Callable<Boolean> isProxyNotAvailable(final String proxyName, final String backEndUrl,
             final String sessionCookie) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() {
+            @Override
+            public Boolean call() {
                 log.info("Waiting until the proxy, " + proxyName + " is un-deployed.");
                 try {
                     return !esbUtils.isProxyServiceExist(backEndUrl, sessionCookie, proxyName);

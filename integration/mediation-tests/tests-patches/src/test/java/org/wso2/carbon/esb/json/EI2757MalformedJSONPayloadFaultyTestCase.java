@@ -34,16 +34,17 @@ This testcase is to test the fix done for https://github.com/wso2/product-ei/iss
 public class EI2757MalformedJSONPayloadFaultyTestCase extends ESBIntegrationTest {
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "json" + File.separator
                         + "malformedJsonFaulty.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description = "test malformed json in faulty sequence", enabled = true) public void testMalformedJSONPayloadInFaultySequence()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb", description = "test malformed json in faulty sequence", enabled = true)
+    public void testMalformedJSONPayloadInFaultySequence() throws Exception {
         String payload = "{\"Symbol\": \"IBM}";
         HttpResponse response = httpClient
                 .doPost(getApiInvocationURL("malformedJson"), null, payload, "application/json");
@@ -51,7 +52,8 @@ public class EI2757MalformedJSONPayloadFaultyTestCase extends ESBIntegrationTest
                 "The status code set in the faulty sequence is not received");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -33,13 +33,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationAddChildXpathTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichAddChildByXPathTestProxy");
     }
 
     @Test(groups = "wso2.esb", description = "Add custom content as a child to the part of message"
-            + " specified by xpath expression ") public void testEnrichMediator() throws Exception {
+            + " specified by xpath expression ")
+    public void testEnrichMediator() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -54,7 +56,8 @@ public class EnrichIntegrationAddChildXpathTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

@@ -34,14 +34,15 @@ import static org.testng.Assert.assertNotNull;
 public class EnrichIntegrationAddPropertyAsChildInBodyTest extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         init();
         verifyProxyServiceExistence("enrichAddPropertyAsChildInBodyTestProxy");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Adding a defined property as a child of message body") public void testAddPropertyAsChildInBody()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Adding a defined property as a child of message body")
+    public void testAddPropertyAsChildInBody() throws AxisFault, XMLStreamException {
 
         String payload = "<m:getQuote xmlns:m=\"http://services.samples\">" + "</m:getQuote>";
         OMElement payloadOM = AXIOMUtil.stringToOM(payload);
@@ -54,7 +55,8 @@ public class EnrichIntegrationAddPropertyAsChildInBodyTest extends ESBIntegratio
                         .getText(), "IBM", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

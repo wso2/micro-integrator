@@ -52,7 +52,8 @@ public class DBReportMediatorTestCase extends ESBIntegrationTest {
     private String DB_PASSWORD;
     private String JDBC_DRIVER;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
         DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
@@ -71,11 +72,9 @@ public class DBReportMediatorTestCase extends ESBIntegrationTest {
     /*  before a request is sent to the db mediator the count of price rows greater than 1000 should
 be 3. After the request is gone through db mediator the count should be zero. price values
 greater than 1000 will remain with the count of one */
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description =
-            "DBLookup/DBReport mediator should replace a"
-                    + " &lt;/&gt; with </>") public void DBMediatorReplaceLessThanAndGreaterThanSignTestCase()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "DBLookup/DBReport mediator should replace a" + " &lt;/&gt; with </>")
+    public void DBMediatorReplaceLessThanAndGreaterThanSignTestCase() throws Exception {
         h2DataBaseManager.executeUpdate("INSERT INTO company VALUES(100,'ABC')");
         h2DataBaseManager.executeUpdate("INSERT INTO company VALUES(2000,'XYZ')");
         h2DataBaseManager.executeUpdate("INSERT INTO company VALUES(200,'CDE')");
@@ -102,9 +101,9 @@ the 'name' "WSO2".
 * After the request is sent, the value 200.0 is replaced by the value given by xpath to response
 * message content. */
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Insert or update DB table using message contents.") public void DBReportUseMessageContentTestCase()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Insert or update DB table using message contents.")
+    public void DBReportUseMessageContentTestCase() throws Exception {
         double price = 200.0;
         OMElement response;
         String priceMessageContent;
@@ -128,7 +127,8 @@ the 'name' "WSO2".
         assertEquals(priceMessageContent, lastElement.getText(), "Fault, invalid response");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         h2DataBaseManager.disconnect();
         h2DataBaseManager = null;
         super.cleanup();

@@ -33,21 +33,24 @@ import static org.testng.Assert.assertTrue;
 
 public class DynamicEndpointTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToRegistry();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie,
                 "DynamicEndpointWithCallMediatorProxy");
     }
 
-    @Test(groups = { "wso2.esb" }) public void dynamicEndpointTest() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" })
+    public void dynamicEndpointTest() throws AxisFault, XPathExpressionException {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("DynamicEndpointWithCallMediatorProxy"), "", "IBM");
         boolean ResponseContainsIBM = response.getFirstElement().toString().contains("IBM");
         assertTrue(ResponseContainsIBM);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             clearRegistry();
         } finally {

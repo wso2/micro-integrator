@@ -35,19 +35,22 @@ public class WebSocketRemoteServerFrameHandler extends SimpleChannelInboundHandl
 
     private static final Logger log = LoggerFactory.getLogger(WebSocketRemoteServerFrameHandler.class);
 
-    @Override public void channelActive(ChannelHandlerContext ctx) throws Exception {
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("channel is active");
         }
     }
 
-    @Override public void channelInactive(ChannelHandlerContext ctx) throws Exception {
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("channel is inactive");
         }
     }
 
-    @Override protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
+    @Override
+    protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
         if (frame instanceof TextWebSocketFrame) {
             // Echos the same text
             String text = ((TextWebSocketFrame) frame).text();
@@ -62,7 +65,8 @@ public class WebSocketRemoteServerFrameHandler extends SimpleChannelInboundHandl
         }
     }
 
-    @Override public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         log.error("Exception Caught: " + cause.getMessage());
         ctx.close();
     }

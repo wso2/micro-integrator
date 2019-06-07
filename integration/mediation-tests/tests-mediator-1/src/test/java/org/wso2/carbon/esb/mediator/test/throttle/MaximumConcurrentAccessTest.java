@@ -44,7 +44,8 @@ public class MaximumConcurrentAccessTest extends ESBIntegrationTest {
     private int grantedRequests;
     private int deniedRequests;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         verifyProxyServiceExistence("throttlingMaxConcurrentAccessProxy");
@@ -58,7 +59,8 @@ public class MaximumConcurrentAccessTest extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Test MaximumConcurrentAccess = <max.accepted.value> For testing 100 is used", timeOut =
-            1000 * 60 * 2) public void testMaximumValue() throws InterruptedException {
+            1000 * 60 * 2)
+    public void testMaximumValue() throws InterruptedException {
         startClients();
         while (clientsDone.getCount() < CONCURRENT_CLIENTS) {
             Thread.sleep(1000);
@@ -77,7 +79,8 @@ public class MaximumConcurrentAccessTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         concurrencyThrottleTestClients = null;
         clients = null;
         clientsDone = null;

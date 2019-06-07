@@ -28,12 +28,13 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class FaviconTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test for ClosedChannel Exception") public void faviconTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test for ClosedChannel Exception")
+    public void faviconTest() throws Exception {
         HttpsResponse response = HttpsURLConnectionClient.
                 getRequest("https://localhost:8443/" + "favicon.ico", null);
         Assert.assertEquals(response.getResponseCode(), 301, "Response code mismatch");
@@ -52,7 +53,8 @@ public class FaviconTest extends ESBIntegrationTest {
         Assert.assertTrue(!exceptionFound, "ClosedChannelException occurred while retrieving favicon.ico");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -114,7 +114,8 @@ public class SpecialCharacterTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isStarted() {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return httpServer.isStarted();
             }
         };

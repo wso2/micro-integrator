@@ -39,7 +39,8 @@ public class JSONContentTypeHandlerTestCase extends DSSIntegrationTest {
     private final String serviceName = "ResourcesServiceTest";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
@@ -49,20 +50,20 @@ public class JSONContentTypeHandlerTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void postRequest() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void postRequest() throws Exception {
         this.addProducts();
         log.info("POST Request verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = {
-            "postRequest" }, enabled = false) public void getAllProductsWithMappedXMLNotation() throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "postRequest" }, enabled = false)
+    public void getAllProductsWithMappedXMLNotation() throws Exception {
         this.listProducts("application/json");
         log.info("GET Request verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = {
-            "getAllProductsWithMappedXMLNotation" }, enabled = false) public void getProductWithMappedXMLNotation()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "getAllProductsWithMappedXMLNotation" }, enabled = false)
+    public void getProductWithMappedXMLNotation() throws Exception {
         this.getProductByCode("N10_1671");
         log.info("GET Request verified");
     }

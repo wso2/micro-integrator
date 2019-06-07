@@ -38,7 +38,8 @@ import static org.testng.Assert.assertEquals;
 public class NullNameSpaceForAttachPathTestCase extends ESBIntegrationTest {
     private String symbol;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         symbol = FileUtils
                 .readFileToString(new File(getESBResourceLocation() + "/mediatorconfig/iterate/iterate1.txt"));
@@ -49,9 +50,8 @@ public class NullNameSpaceForAttachPathTestCase extends ESBIntegrationTest {
      * and verify error handling by sending stock quote requests. Evaluation of the XPath expression will result
      * in an error
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing null namespace for 'attachPath' field") public void testNullNameSpaceForAttachPath()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Testing null namespace for 'attachPath' field")
+    public void testNullNameSpaceForAttachPath() throws Exception {
 
         try {
             axis2Client
@@ -67,7 +67,8 @@ public class NullNameSpaceForAttachPathTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(groups = "wso2.esb", alwaysRun = true) public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb", alwaysRun = true)
+    public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

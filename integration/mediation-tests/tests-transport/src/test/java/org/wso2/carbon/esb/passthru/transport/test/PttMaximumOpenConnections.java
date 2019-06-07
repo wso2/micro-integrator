@@ -44,7 +44,8 @@ public class PttMaximumOpenConnections extends ESBIntegrationTest {
     private MaximumOpenConnectionsClient[] maxOpenConnectionClients;
     private Thread[] clients;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         serverConfigurationManagerProp = new ServerConfigurationManager(
@@ -60,9 +61,9 @@ public class PttMaximumOpenConnections extends ESBIntegrationTest {
         clients = new Thread[CONCURRENT_CLIENTS];
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description = "PTT Test Maximum Open Connections") public void testMaximumConnections()
-            throws InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb", description = "PTT Test Maximum Open Connections")
+    public void testMaximumConnections() throws InterruptedException {
         initClients();         //initialising Axis2Clients
         startClients();
         int aliveCount = 0;
@@ -108,7 +109,8 @@ public class PttMaximumOpenConnections extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         maxOpenConnectionClients = null;
         clients = null;
         try {

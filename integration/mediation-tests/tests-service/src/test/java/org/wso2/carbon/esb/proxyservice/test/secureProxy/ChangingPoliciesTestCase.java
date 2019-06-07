@@ -36,7 +36,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class ChangingPoliciesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -44,14 +45,15 @@ public class ChangingPoliciesTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "- Secure proxy"
             + "- Change the policy and checking whether messages are processed accordingly"
-            + "- used scenario1-policy(UsernameToken) and scenario5-policy(Sign and encrypt - X509 Authentication)") public void testPolicyChanges()
-            throws Exception {
+            + "- used scenario1-policy(UsernameToken) and scenario5-policy(Sign and encrypt - X509 Authentication)")
+    public void testPolicyChanges() throws Exception {
 
         OMElement response;
         String lastPrice;

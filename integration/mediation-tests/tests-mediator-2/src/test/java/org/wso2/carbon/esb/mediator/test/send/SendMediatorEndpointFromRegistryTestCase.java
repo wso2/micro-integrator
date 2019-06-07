@@ -34,16 +34,16 @@ import static org.testng.Assert.assertNotNull;
 public class SendMediatorEndpointFromRegistryTestCase extends ESBIntegrationTest {
     ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadResourcesToRegistry();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/send/synapse_endpoint_registry.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "End point in config registry") public void endPointFromConfigRegistryTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "End point in config registry")
+    public void endPointFromConfigRegistryTest() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("testConfRegistry"), null, "IBM");
         assertNotNull(response, "Response is null");
@@ -54,9 +54,8 @@ public class SendMediatorEndpointFromRegistryTestCase extends ESBIntegrationTest
         assertEquals(symbolResponse, "IBM", "Symbol is not match");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "End point in local registry") public void endPointFromLocalRegistryTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "End point in local registry")
+    public void endPointFromLocalRegistryTest() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("testLocalRegistry"), null, "IBM");
         assertNotNull(response, "Response is null");
@@ -67,9 +66,8 @@ public class SendMediatorEndpointFromRegistryTestCase extends ESBIntegrationTest
         assertEquals(symbolResponse, "IBM", "Symbol is not match");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "End point in governance registry") public void endPointFromGovernanceRegistryTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "End point in governance registry")
+    public void endPointFromGovernanceRegistryTest() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("testGovRegistry"), null, "IBM");
         assertNotNull(response, "Response is null");
@@ -108,7 +106,8 @@ public class SendMediatorEndpointFromRegistryTestCase extends ESBIntegrationTest
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/config/endpointConfig");
         resourceAdminServiceStub.deleteResource("/_system/local/endpointConfig");
         resourceAdminServiceStub.deleteResource("/_system/governance/endpointConfig");

@@ -43,7 +43,8 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
     private static final String QUEUE_NAME = "testInboundQueue";
     private SqlDataSourceUtil sqlDataSourceUtilLookup = null;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         sqlDataSourceUtilLookup = new SqlDataSourceUtil(getSessionCookie(), contextUrls.getBackEndUrl());
 
@@ -97,9 +98,10 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test for the operation context of axis2 context with inbound endpoint") public void settingOperationContextWithInboundTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = {
+            "wso2.esb" }, description = "Test for the operation context of axis2 context with inbound endpoint")
+    public void settingOperationContextWithInboundTest() throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
 
@@ -124,7 +126,8 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
         Assert.assertTrue(assertValue, "Operation context becomes null with the inbound endpoint.");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 

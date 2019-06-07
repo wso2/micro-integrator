@@ -36,18 +36,20 @@ public class JSONWithAPITestCase extends ESBIntegrationTest {
     private Client client = Client.create();
     private String JSON_PAYLOAD = "{\"album\":\"New Moon\",\"singer\":\"Eagles\"}";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonwithapi.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing json requests with API - POST request scenario") public void testJSONWithAPIHTTPPostScenario()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing json requests with API - POST request scenario")
+    public void testJSONWithAPIHTTPPostScenario() throws Exception {
 
         WebResource webResource = client.resource(getApiInvocationURL("addMusic") + "/music");
 
@@ -61,8 +63,8 @@ public class JSONWithAPITestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Testing json requests with API - GET request scenario", dependsOnMethods = "testJSONWithAPIHTTPPostScenario") public void testJSONWithAPIHTTPGetScenario()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing json requests with API - GET request scenario", dependsOnMethods = "testJSONWithAPIHTTPPostScenario")
+    public void testJSONWithAPIHTTPGetScenario() throws Exception {
 
         WebResource webResource = client.resource(getApiInvocationURL("getMusic") + "/music");
 

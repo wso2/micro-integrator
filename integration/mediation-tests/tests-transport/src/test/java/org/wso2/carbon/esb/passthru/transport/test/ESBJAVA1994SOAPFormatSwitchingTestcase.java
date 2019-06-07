@@ -34,14 +34,15 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisOperationCl
 public class ESBJAVA1994SOAPFormatSwitchingTestcase extends ESBIntegrationTest {
     private AxisOperationClient operationClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/httpproxy/httpProxySwitchingSoap12.xml");
     }
 
     @Test(groups = "wso2.esb", description = "test to verify soap format of response converted properly "
-            + "when the soap format switching occurred in sequences.") public void testSendingSoap12AfterSoap11Request()
-            throws Exception {
+            + "when the soap format switching occurred in sequences.")
+    public void testSendingSoap12AfterSoap11Request() throws Exception {
         operationClient = new AxisOperationClient();
         OMElement response = operationClient
                 .send(getProxyServiceURLHttp("EchoTest"), null, createEchoRequestBody(), "urn:mediate");
@@ -66,7 +67,8 @@ public class ESBJAVA1994SOAPFormatSwitchingTestcase extends ESBIntegrationTest {
         return method;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         if (operationClient != null) {
             operationClient.destroy();

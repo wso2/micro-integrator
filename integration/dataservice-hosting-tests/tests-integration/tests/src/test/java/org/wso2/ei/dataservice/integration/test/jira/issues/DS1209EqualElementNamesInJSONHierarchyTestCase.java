@@ -37,7 +37,8 @@ public class DS1209EqualElementNamesInJSONHierarchyTestCase extends DSSIntegrati
     private SimpleHttpClient client;
     Map<String, String> headers;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileList = new ArrayList<>();
         sqlFileList.add(selectSqlFile("CreateTables.sql"));
@@ -51,14 +52,15 @@ public class DS1209EqualElementNamesInJSONHierarchyTestCase extends DSSIntegrati
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @Test(groups = "wso2.dss", description = "Sending a GET request expecting a response with more than one records") public void sendGetRequest()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Sending a GET request expecting a response with more than one records")
+    public void sendGetRequest() throws Exception {
         headers.put("Accept", "application/json");
         org.apache.http.HttpResponse response = client.doGet(serviceEndPoint + "getstudent", headers);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

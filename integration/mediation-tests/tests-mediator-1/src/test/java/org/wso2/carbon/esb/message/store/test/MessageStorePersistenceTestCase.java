@@ -41,15 +41,16 @@ public class MessageStorePersistenceTestCase extends ESBIntegrationTest {
     private final String MESSAGE_STORE_NAME = "automationMessageStore";
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         serverConfigurationManager = new ServerConfigurationManager(context);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test whether message store is persistance") public void messageStorePersistenceTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test whether message store is persistance")
+    public void messageStorePersistenceTest() throws Exception {
         OMElement messageStore = AXIOMUtil.stringToOM(
                 "<messageStore xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + MESSAGE_STORE_NAME + "\">"
                         + "<parameter name=\"abc\">10</parameter>" + "</messageStore>");
@@ -94,7 +95,8 @@ public class MessageStorePersistenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         String[] messageStores = messageStoreAdminClient.getMessageStores();
         if (messageStores != null) {
             List list = Arrays.asList(messageStores);

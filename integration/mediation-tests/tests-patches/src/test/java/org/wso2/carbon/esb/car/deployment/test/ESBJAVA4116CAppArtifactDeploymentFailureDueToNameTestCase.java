@@ -25,19 +25,21 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA4116CAppArtifactDeploymentFailureDueToNameTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
         super.init();
     }
 
     @Test(groups = "wso2.esb", description = "Test whether capp deployment fails "
-            + "if sequence artifact name consist of *main* as a substring") public void testSequenceDeployed()
-            throws Exception {
+            + "if sequence artifact name consist of *main* as a substring")
+    public void testSequenceDeployed() throws Exception {
         org.testng.Assert.assertTrue(
                 esbUtils.isSequenceDeployed(contextUrls.getBackEndUrl(), getSessionCookie(), "MySequenceDomain"),
                 "ERROR - CappAxis2Deployer Error while deploying carbon application");
     }
 
-    @AfterTest(alwaysRun = true) public void cleanupEnvironment() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 }

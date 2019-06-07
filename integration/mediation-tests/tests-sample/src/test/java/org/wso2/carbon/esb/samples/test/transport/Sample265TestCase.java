@@ -41,7 +41,8 @@ public class Sample265TestCase extends ESBSampleIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private String pathToVfsDir;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         pathToVfsDir = getClass().getResource(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -66,7 +67,8 @@ public class Sample265TestCase extends ESBSampleIntegrationTest {
         assertTrue(failureFolder.exists(), "File folder doesn't exists");
     }
 
-    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void restoreServerConfiguration() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -76,11 +78,11 @@ public class Sample265TestCase extends ESBSampleIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : " + "transport.vfs.FileURI = "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : " + "transport.vfs.FileURI = "
             + "/home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
-            + "transport.vfs.FileNamePattern = *", enabled = false) public void testVFSProxyFileURI_LinuxPath_SelectAll_FileNamePattern()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = *", enabled = false)
+    public void testVFSProxyFileURI_LinuxPath_SelectAll_FileNamePattern() throws Exception {
 
         addVFSProxy();
 

@@ -34,7 +34,8 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
 
     private static LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
@@ -47,15 +48,15 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test email transport with invalid folder") public void testEmailTransportInvalidFolder()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test email transport with invalid folder")
+    public void testEmailTransportInvalidFolder() throws Exception {
         logViewerClient.clearLogs();
         assertTrue(Utils.checkForLog(logViewerClient, "FolderABC not found", 1000),
                 "Couldn't find the error message in log");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 

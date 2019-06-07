@@ -32,15 +32,16 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
 import static org.testng.Assert.assertTrue;
 
 public class ESBJAVA3282CalloutJMSHeadersTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.
                 loadResource("/artifacts/ESB/jms/transport/callout_jms_headers.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Callout JMS headers test case") public void testCalloutJMSHeaders()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Callout JMS headers test case")
+    public void testCalloutJMSHeaders() throws Exception {
 
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<payload/>";
@@ -66,7 +67,8 @@ public class ESBJAVA3282CalloutJMSHeadersTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

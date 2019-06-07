@@ -416,19 +416,23 @@ public class StockQuoteClient {
 
         try {
             serviceClient.sendReceiveNonBlocking(createStandardRequest(symbol), new AxisCallback() {
-                @Override public void onMessage(MessageContext messageContext) {
+                @Override
+                public void onMessage(MessageContext messageContext) {
                     log.info("Response received to the callback");
                 }
 
-                @Override public void onFault(MessageContext messageContext) {
+                @Override
+                public void onFault(MessageContext messageContext) {
                     log.info("Fault received to the callback : " + messageContext.getEnvelope().getBody().getFault());
                 }
 
-                @Override public void onError(Exception e) {
+                @Override
+                public void onError(Exception e) {
                     log.error("Error inside callback", e);
                 }
 
-                @Override public void onComplete() {
+                @Override
+                public void onComplete() {
                     log.info("OnComplete called....");
                 }
             });

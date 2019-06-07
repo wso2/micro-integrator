@@ -40,15 +40,15 @@ public class EndPointMediaTypeTestCase extends ESBIntegrationTest {
     private final String KEY = "conf:/endpoint/testAutomationEndpoint";
     private final String DEFINED_ENDPOINT_NAME = "definedEndpoint";
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endpointAdminClient = new EndPointAdminClient(contextUrls.getBackEndUrl(), sessionCookie);
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test dynamic Endpoint media type - application/vnd.wso2.esb.endpoint") public void dynamicEndpointMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test dynamic Endpoint media type - application/vnd.wso2.esb.endpoint")
+    public void dynamicEndpointMediaTypeTest() throws Exception {
         final String name = "automationEndpoint";
 
         OMElement endpoint = AXIOMUtil.stringToOM(
@@ -74,9 +74,8 @@ public class EndPointMediaTypeTestCase extends ESBIntegrationTest {
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test defined Endpoint media type - text/xml", enabled = false) public void definedEndpointMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test defined Endpoint media type - text/xml", enabled = false)
+    public void definedEndpointMediaTypeTest() throws Exception {
 
         OMElement endpoint = AXIOMUtil.stringToOM(
                 "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" " + "name=\"" + DEFINED_ENDPOINT_NAME + "\">"
@@ -99,7 +98,8 @@ public class EndPointMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         if (isDefinedEndpointExist) {
             endpointAdminClient.deleteEndpoint(DEFINED_ENDPOINT_NAME);
         }

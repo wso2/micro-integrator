@@ -36,19 +36,21 @@ public class JSONWithSwitchMediatorTestCase extends ESBIntegrationTest {
 
     private Client client = Client.create();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonwithswicthproxy.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Tests with switch mediator - JSON path Scenario - Case condition true") public void testJSONWithSwitchMediatorCaseTrueTestScenario()
-            throws Exception {
+            "wso2.esb" }, description = "Tests with switch mediator - JSON path Scenario - Case condition true")
+    public void testJSONWithSwitchMediatorCaseTrueTestScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Sky\",\"singer\":\"Sam\"}";
 
@@ -68,8 +70,8 @@ public class JSONWithSwitchMediatorTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Tests with switch mediator - JSON path Scenario Case condition False", dependsOnMethods = "testJSONWithSwitchMediatorCaseTrueTestScenario") public void testJSONWithSwitchMediatorCaseFalseTestScenario()
-            throws Exception {
+            "wso2.esb" }, description = "Tests with switch mediator - JSON path Scenario Case condition False", dependsOnMethods = "testJSONWithSwitchMediatorCaseTrueTestScenario")
+    public void testJSONWithSwitchMediatorCaseFalseTestScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Home\",\"singer\":\"Sam\"}";
 

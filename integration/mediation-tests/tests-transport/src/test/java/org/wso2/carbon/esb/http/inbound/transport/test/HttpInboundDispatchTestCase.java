@@ -6,7 +6,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -40,7 +39,8 @@ import javax.xml.stream.XMLStreamException;
 public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -59,15 +59,15 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch") public void inboundHttpSuperSequenceTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch")
+    public void inboundHttpSuperSequenceTest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/", null, "WSO2");
         //this case matches with the regex but there is no api or proxy so dispatch to  super tenant main sequence
         Assert.assertTrue(stringExistsInLog("SUPER_MAIN"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch") public void inboundHttpSuperAPITest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch")
+    public void inboundHttpSuperAPITest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/foo", null, "WSO2");
         Assert.assertTrue(stringExistsInLog("FOO"));
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/boo", null, "WSO2");
@@ -82,21 +82,21 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
         Assert.assertTrue(stringExistsInLog("SUPER_MAIN"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch") public void inboundHttpSuperDefaultMainTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch")
+    public void inboundHttpSuperDefaultMainTest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9091/", null, "WSO2");
         Assert.assertTrue(stringExistsInLog("SUPER_MAIN"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch") public void inboundHttpSuperProxyDispatchTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch")
+    public void inboundHttpSuperProxyDispatchTest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/services/TestProxy", null, "WSO2");
         Assert.assertTrue(stringExistsInLog("PROXY_HIT"));
     }
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Tenant Dispatch "
-            + "(Shared Port between super tenant and regular tenant)") public void inboundHttpTenantDispatchTests()
-            throws Exception {
+            + "(Shared Port between super tenant and regular tenant)")
+    public void inboundHttpTenantDispatchTests() throws Exception {
         super.init();
 
         List<OMElement> seqList = new ArrayList<>();
@@ -145,7 +145,8 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
                 "Dispatch to http://localhost:9090/t/idoexistassupertenantapi");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
@@ -182,7 +183,8 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     private Callable<Boolean> isServiceDeployed(final List<OMElement> omSeqList, final List<OMElement> omInboundList,
             final List<OMElement> omproxyList) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 boolean isServicesDeployed;
                 for (OMElement seqElement : omSeqList) {
                     isServicesDeployed = isSequenceDeployed(seqElement);

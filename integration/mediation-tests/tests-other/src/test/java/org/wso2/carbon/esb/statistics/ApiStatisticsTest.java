@@ -45,7 +45,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
             + "     <quantity>10</quantity>\n" + "     <symbol>IBM</symbol>\n" + "  </order>\n" + "</placeOrder>";
     String contentType = "application/xml";
 
-    @BeforeClass(alwaysRun = true) protected void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void initialize() throws Exception {
         //Starting the thrift port to listen to statistics events
         thriftServer = new ThriftServer("Wso2EventTestCase", 7612, true);
         thriftServer.start(7612);
@@ -69,9 +70,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         Assert.assertEquals("Three configuration events are required", 3, thriftServer.getMsgCount());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "API statistics message count check.") public void statisticsCollectionCountTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "API statistics message count check.")
+    public void statisticsCollectionCountTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
 
@@ -86,9 +86,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
                 thriftServer.getMsgCount());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "API statistics message count check for post requests") public void statisticsCollectionCountTestForPostRequests()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "API statistics message count check for post requests")
+    public void statisticsCollectionCountTestForPostRequests() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
         for (int i = 0; i < 100; i++) {
@@ -101,9 +100,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
                 thriftServer.getMsgCount());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "API statistics statistics event data check") public void statisticsEventDataTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "API statistics statistics event data check")
+    public void statisticsEventDataTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
         SimpleHttpClient httpClient = new SimpleHttpClient();
@@ -151,9 +149,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "API statistics statistics event data check for post requests") public void statisticsEventDataTestForPostRequest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "API statistics statistics event data check for post requests")
+    public void statisticsEventDataTestForPostRequest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
 
@@ -199,7 +196,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupArtifactsIfExist() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupArtifactsIfExist() throws Exception {
         thriftServer.stop();
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();

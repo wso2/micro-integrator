@@ -70,15 +70,16 @@ public class SftpServerRunner {
             this.ftpPassword = ftpPassword;
         }
 
-        @Override public void run() {
+        @Override
+        public void run() {
             sshd.setPort(port);
             sshd.setSubsystemFactories(Arrays.<NamedFactory<Command>>asList(new SftpSubsystem.Factory()));
             sshd.setCommandFactory(new ScpCommandFactory());
             sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
             sshd.setFileSystemFactory(new VirtualFileSystemFactory(path));
             sshd.setPasswordAuthenticator(new PasswordAuthenticator() {
-                @Override public boolean authenticate(final String username, final String password,
-                        final ServerSession session) {
+                @Override
+                public boolean authenticate(final String username, final String password, final ServerSession session) {
                     return StringUtils.equals(username, ftpUser) && StringUtils.equals(password, ftpPassword);
                 }
             });

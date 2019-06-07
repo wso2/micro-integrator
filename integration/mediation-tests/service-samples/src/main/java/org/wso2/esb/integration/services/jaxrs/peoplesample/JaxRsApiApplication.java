@@ -21,5 +21,6 @@ package org.wso2.esb.integration.services.jaxrs.peoplesample;
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
-@ApplicationPath("api") public class JaxRsApiApplication extends Application {
+@ApplicationPath("api")
+public class JaxRsApiApplication extends Application {
 }

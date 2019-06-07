@@ -30,7 +30,8 @@ public class AggregateWithinTimeoutTestCase extends ESBIntegrationTest {
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 200;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorTimeoutTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -40,9 +41,8 @@ public class AggregateWithinTimeoutTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "replacing a property by using an enrich mediator", enabled = false) public void test()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "replacing a property by using an enrich mediator", enabled = false)
+    public void test() throws IOException {
         int companyCount = 0, responseTagCount = 0, SoapEnvCount = 0;
 
         String Response = aggregatedRequestClient.getResponse();
@@ -64,7 +64,8 @@ public class AggregateWithinTimeoutTestCase extends ESBIntegrationTest {
         Assert.assertTrue((no_of_requests > companyCount));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }

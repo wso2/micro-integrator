@@ -46,7 +46,8 @@ public class SpringMediationBeansTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         clearUploadedResource();
@@ -56,7 +57,8 @@ public class SpringMediationBeansTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             clearUploadedResource();
         } finally {
@@ -64,9 +66,10 @@ public class SpringMediationBeansTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Spring Mediator - Provide proper error message when problem in the custom java class") public void testBeanSpringMediation()
-            throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Spring Mediator - Provide proper error message when problem in the custom java class")
+    public void testBeanSpringMediation() throws AxisFault {
 
         // To check whether the correct error message is getting printed
         boolean responseInLog = false;

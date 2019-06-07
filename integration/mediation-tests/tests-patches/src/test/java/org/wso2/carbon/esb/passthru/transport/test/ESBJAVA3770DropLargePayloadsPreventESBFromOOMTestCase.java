@@ -78,7 +78,8 @@ public class ESBJAVA3770DropLargePayloadsPreventESBFromOOMTestCase extends ESBIn
             + "                </ns3:contact>\n" + "            </ns3:invoice-to-address>\n"
             + "        </ns3:order-header>\n" + "    </ns3:order>\n" + "</ns3:orders>";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -90,7 +91,8 @@ public class ESBJAVA3770DropLargePayloadsPreventESBFromOOMTestCase extends ESBIn
     }
 
     @Test(groups = "wso2.esb", description = "test whether messages are getting dropped when message size "
-            + "exceeds a given threshold specified at passthough-http.properties") public void testValidationBasedOnMessageSize() {
+            + "exceeds a given threshold specified at passthough-http.properties")
+    public void testValidationBasedOnMessageSize() {
 
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-type", "application/xml;charset=UTF-8");
@@ -117,7 +119,8 @@ public class ESBJAVA3770DropLargePayloadsPreventESBFromOOMTestCase extends ESBIn
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

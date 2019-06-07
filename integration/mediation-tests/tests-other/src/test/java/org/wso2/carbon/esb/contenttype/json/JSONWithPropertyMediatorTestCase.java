@@ -41,20 +41,21 @@ public class JSONWithPropertyMediatorTestCase extends ESBIntegrationTest {
     private Client client = Client.create();
     private boolean isJsonPathProperty = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonwithpropertymediator.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests JSON requests behaviour with property mediator") public void testJSONWithPropertyMediatorTestScenario()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests JSON requests behaviour with property mediator")
+    public void testJSONWithPropertyMediatorTestScenario() throws Exception {
 
         String FirstJSON_PAYLOAD = "{\"album\":\"Hotel California\",\"singer\":\"Eagles\"}";
         String SecondJSON_PAYLOAD = "{\"album\":\"TradeWorld\",\"singer\":\"Hotel California\"}";

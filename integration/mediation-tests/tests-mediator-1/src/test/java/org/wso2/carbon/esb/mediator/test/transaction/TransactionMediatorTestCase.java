@@ -51,7 +51,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         HttpRequestUtil.doPost(new URL(API_URL + INIT_CONTEXT), "");
     }
 
@@ -60,8 +61,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test commit transaction") public void commitTransactionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test commit transaction")
+    public void commitTransactionTest() throws Exception {
 
         String expectedOutput = "<response><table1/><table2>2</table2></response>";
 
@@ -76,8 +77,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test rollback transaction") public void rollbackTransactionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test rollback transaction")
+    public void rollbackTransactionTest() throws Exception {
 
         String expectedOutput = "<response><table1>2</table1><table2>1</table2></response>";
 
@@ -93,8 +94,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test fault-if-no-tx transaction") public void faultIfNoTxTransactionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test fault-if-no-tx transaction")
+    public void faultIfNoTxTransactionTest() throws Exception {
 
         String expectedOutput = "<response><message>No Transactions</message></response>";
 
@@ -109,8 +110,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for creating new transaction") public void createNewTransactionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for creating new transaction")
+    public void createNewTransactionTest() throws Exception {
 
         String expectedOutput = "<response><table1>3</table1><table2>3</table2></response>";
 
@@ -126,8 +127,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for using an existing transaction") public void useExistingTransactionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test use-existing-or-new action for using an existing transaction")
+    public void useExistingTransactionTest() throws Exception {
 
         String expectedOutputForNick = "<response><table1>4</table1><table2>4</table2></response>";
         String expectedOutputForJohn = "<response><table1>5</table1><table2>5</table2></response>";
@@ -150,8 +151,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test new action without commit transaction") public void newActionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test new action without commit transaction")
+    public void newActionTest() throws Exception {
 
         String expectedOutput = "<response><table1/><table2/></response>";
 
@@ -168,8 +169,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend action without commit transaction") public void suspendActionTest()
-            throws Exception {
+    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend action without commit transaction")
+    public void suspendActionTest() throws Exception {
 
         String expectedOutput = "<response><table1/><table2/></response>";
 
@@ -185,8 +186,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend and resume actions  transaction") public void suspendResumeActionTest()
-            throws Exception {
+    @Test(enabled = false, groups = "wso2.esb", description = "Test suspend and resume actions  transaction")
+    public void suspendResumeActionTest() throws Exception {
 
         String expectedSuspendActionOutput = "<response1><response><table1/><table2/></response></response1>";
         String expectedResumeActionOutput = "<response2><response><table1>8</table1><table2>8</table2></response></response2>";
@@ -205,7 +206,8 @@ public class TransactionMediatorTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         HttpRequestUtil.doPost(new URL(API_URL + CLEANUP_CONTEXT), "");
     }
 }

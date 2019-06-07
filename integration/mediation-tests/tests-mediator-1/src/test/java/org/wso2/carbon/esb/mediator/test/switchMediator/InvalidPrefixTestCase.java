@@ -27,14 +27,14 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class InvalidPrefixTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/switchMediator/invalid_prefix.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "SwitchMediator:Negative Case 2: Invalid prefix") public void testSample2()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "SwitchMediator:Negative Case 2: Invalid prefix")
+    public void testSample2() throws Exception {
 
         try {
 
@@ -46,7 +46,8 @@ public class InvalidPrefixTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         cleanup();
     }
 }

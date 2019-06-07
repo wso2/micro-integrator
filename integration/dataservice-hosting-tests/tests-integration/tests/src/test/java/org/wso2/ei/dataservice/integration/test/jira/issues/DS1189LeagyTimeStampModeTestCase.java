@@ -47,7 +47,8 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
 
     private AuthenticatorClient loginClient;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
 
@@ -111,15 +112,16 @@ public class DS1189LeagyTimeStampModeTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         System.setProperty("carbon.home", backupCarbonHome);
         System.setProperty("user.dir", backupUserDir);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "insert timestamp in America/New_York timezone and UTC timezone, retrieve all and compare whether they are different", alwaysRun = true) public void insertAndTestTimeStampValuesInDbTest()
-            throws Exception {
+            "wso2.dss" }, description = "insert timestamp in America/New_York timezone and UTC timezone, retrieve all and compare whether they are different", alwaysRun = true)
+    public void insertAndTestTimeStampValuesInDbTest() throws Exception {
         OMElement payload = fac.createOMElement("getTimeStamps", omNs);
 
         OMElement result = new AxisServiceClient().sendReceive(payload, backendUrl + serviceName, "getTimeStamps");

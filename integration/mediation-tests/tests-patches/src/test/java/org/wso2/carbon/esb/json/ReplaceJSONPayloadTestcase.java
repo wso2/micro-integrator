@@ -33,19 +33,22 @@ public class ReplaceJSONPayloadTestcase extends ESBIntegrationTest {
 
     private final String proxyServiceName = "replaceJSONPayload";
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         verifyProxyServiceExistence(proxyServiceName);
     }
 
-    @Test(groups = "wso2.esb") public void replaceJSONPlayloadTest() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void replaceJSONPlayloadTest() throws Exception {
         String expectedResponse = "SUCCESS";
         String requestMessageBody = createRequest();
         String response = httpClient(getProxyServiceURLHttp(proxyServiceName), requestMessageBody);
         Assert.assertTrue(response.contains(expectedResponse), "The expected response is not received");
     }
 
-    @AfterClass(alwaysRun = true) public void clear() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clear() throws Exception {
         super.cleanup();
     }
 

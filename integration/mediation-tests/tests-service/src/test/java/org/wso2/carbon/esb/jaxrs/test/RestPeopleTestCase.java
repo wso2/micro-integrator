@@ -34,7 +34,8 @@ import java.io.File;
 public class RestPeopleTestCase extends ESBIntegrationTest {
     TomcatServerManager tomcatServerManager;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB" + File.separator + "jaxrs" + File.separator + "putpeopleproxy.xml");
@@ -42,7 +43,8 @@ public class RestPeopleTestCase extends ESBIntegrationTest {
         tomcatServerManager = new TomcatServerManager(AppConfig.class.getName(), TomcatServerType.jaxrs.name(), 8080);
     }
 
-    @Test public void addPeople() throws Exception {
+    @Test
+    public void addPeople() throws Exception {
 
         tomcatServerManager.startServer();
         Thread.sleep(50000);
@@ -73,7 +75,8 @@ public class RestPeopleTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 

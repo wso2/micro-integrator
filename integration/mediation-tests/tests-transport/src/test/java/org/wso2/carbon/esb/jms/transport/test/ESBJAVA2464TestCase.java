@@ -18,7 +18,8 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadSynapseConfig();
@@ -31,8 +32,8 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test ESBJAVA2464 proxy service with jms and nonBlockingLocal transport") public void testMessageInjection()
-            throws Exception {
+            "wso2.esb" }, description = "Test ESBJAVA2464 proxy service with jms and nonBlockingLocal transport")
+    public void testMessageInjection() throws Exception {
         Thread.sleep(7000);
 
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
@@ -58,7 +59,8 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         // Restore the axis2 configuration altered by this test case
         super.cleanup();
     }

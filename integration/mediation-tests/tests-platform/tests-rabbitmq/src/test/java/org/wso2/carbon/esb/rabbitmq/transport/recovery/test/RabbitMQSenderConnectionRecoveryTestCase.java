@@ -40,7 +40,8 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
     private RabbitMQServer rabbitMQServer;
     private ServerConfigurationManager configurationManagerAxis2;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
@@ -56,9 +57,8 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as a RabbitMQ sender with connection recovery") public void testRabbitMQSenderRecoverySuccess()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ sender with connection recovery")
+    public void testRabbitMQSenderRecoverySuccess() throws Exception {
 
         rabbitMQServer.start();
         rabbitMQServer.initialize();
@@ -140,7 +140,8 @@ public class RabbitMQSenderConnectionRecoveryTestCase extends ESBIntegrationTest
         rabbitMQServer.stop();
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
         rabbitMQServer.stop();
         rabbitMQServer = null;

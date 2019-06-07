@@ -39,7 +39,8 @@ import static org.testng.Assert.assertTrue;
 public class EnrichReplaceBodyBySpecifiedPropertyTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -48,9 +49,8 @@ public class EnrichReplaceBodyBySpecifiedPropertyTestCase extends ESBIntegration
         verifyProxyServiceExistence("enrichReplaceBodyBySpecifiedPropertyTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Enrich mediator replace body by specified property") public void replaceMessageBodyByProperty()
-            throws IOException, XMLStreamException, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }, description = "Enrich mediator replace body by specified property")
+    public void replaceMessageBodyByProperty() throws IOException, XMLStreamException, XPathExpressionException {
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("enrichReplaceBodyBySpecifiedPropertyTestProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
@@ -73,7 +73,8 @@ public class EnrichReplaceBodyBySpecifiedPropertyTestCase extends ESBIntegration
         Thread.sleep(1000);
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
         cleanup();
     }

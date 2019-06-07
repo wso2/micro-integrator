@@ -27,18 +27,20 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class CARBON11016TestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Patch : CARBON-11016 : Updating the synapse configuration with end point which has set the timeout duration makes synapse configuration invalid.") public void testSetTimeoutDurationInEndpoints()
-            throws Exception {
+            "wso2.esb" }, description = "Patch : CARBON-11016 : Updating the synapse configuration with end point which has set the timeout duration makes synapse configuration invalid.")
+    public void testSetTimeoutDurationInEndpoints() throws Exception {
         String filePath = "/artifacts/ESB/synapseconfig/patch_automation/CARBON11016_synapse.xml";
         loadESBConfigurationFromClasspath(filePath);
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         cleanup();
     }
 

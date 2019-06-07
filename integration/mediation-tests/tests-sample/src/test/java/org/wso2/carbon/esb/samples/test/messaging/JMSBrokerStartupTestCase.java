@@ -28,16 +28,17 @@ public class JMSBrokerStartupTestCase extends ESBSampleIntegrationTest {
 
     private ActiveMQServer activeMQServer = new ActiveMQServer();
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @BeforeTest(alwaysRun = true) public void startJMSBrokerAndConfigureESB()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @BeforeTest(alwaysRun = true)
+    public void startJMSBrokerAndConfigureESB() throws Exception {
         super.init();
         activeMQServer.startJMSBrokerAndConfigureESB();
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @AfterTest(alwaysRun = true) public void close() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @AfterTest(alwaysRun = true)
+    public void close() throws Exception {
         activeMQServer.stopJMSBrokerRevertESBConfiguration();
 
     }

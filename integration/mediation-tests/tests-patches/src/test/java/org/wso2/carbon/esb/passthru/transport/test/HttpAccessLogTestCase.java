@@ -49,7 +49,8 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private String httpLogDir;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
@@ -72,9 +73,9 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
         verifyProxyServiceExistence("HttpAccessLogsTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testHttpAccessLogGeneration()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb")
+    public void testHttpAccessLogGeneration() throws Exception {
         BufferedReader bf = null;
         boolean found = false;
         String line;
@@ -157,7 +158,8 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         try {
             super.cleanup();
         } finally {

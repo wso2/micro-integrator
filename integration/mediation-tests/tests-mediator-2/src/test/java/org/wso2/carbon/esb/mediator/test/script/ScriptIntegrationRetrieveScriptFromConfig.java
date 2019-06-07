@@ -33,13 +33,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class ScriptIntegrationRetrieveScriptFromConfig extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests ScriptMediator retrieve script from config registry") public void testRetrieveKey()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests ScriptMediator retrieve script from config registry")
+    public void testRetrieveKey() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -58,7 +59,8 @@ public class ScriptIntegrationRetrieveScriptFromConfig extends ESBIntegrationTes
                 "Fault response null localpart");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

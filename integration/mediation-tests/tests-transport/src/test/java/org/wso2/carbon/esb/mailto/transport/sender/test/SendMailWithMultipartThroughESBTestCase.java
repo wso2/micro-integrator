@@ -45,7 +45,8 @@ public class SendMailWithMultipartThroughESBTestCase extends ESBIntegrationTest 
 
     private static GreenMailUser receiver;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         super.reloadSessionCookie();
 
@@ -60,8 +61,8 @@ public class SendMailWithMultipartThroughESBTestCase extends ESBIntegrationTest 
         GreenMailServer.deleteAllEmails("imap", receiver);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test email transport with multipart email") public void testEmailTransport()
+    @Test(groups = { "wso2.esb" }, description = "Test email transport with multipart email")
+    public void testEmailTransport()
             throws ESBMailTransportIntegrationTestException, AxisFault, XMLStreamException, MessagingException {
         Date date = new Date();
         String message = "Multipart Email : " + new Timestamp(date.getTime());
@@ -75,7 +76,8 @@ public class SendMailWithMultipartThroughESBTestCase extends ESBIntegrationTest 
         assertTrue(GreenMailServer.isMailReceived("imap", receiver, message), "Mail not received");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 }

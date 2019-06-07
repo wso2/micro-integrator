@@ -37,20 +37,21 @@ public class FilterFromXpathTestCase extends ESBIntegrationTest {
     private Client client = Client.create();
     private WebResource webResource;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonfilterfromxpath.xml");
         webResource = client.resource(getProxyServiceURLHttp("FilterWithJSONProxyXpath"));
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests with filter mediator - xpath Scenario - Filter condition true") public void testJSONFilterFromXpathConditionTrueTestScenario()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests with filter mediator - xpath Scenario - Filter condition true")
+    public void testJSONFilterFromXpathConditionTrueTestScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"River\",\"singer\":\"Thompson\"}";
 
@@ -68,8 +69,8 @@ public class FilterFromXpathTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Tests with filter mediator - xpath Scenario Filter condition False", dependsOnMethods = "testJSONFilterFromXpathConditionTrueTestScenario") public void testJSONFilterFromXpathConditionFalseTestScenario()
-            throws Exception {
+            "wso2.esb" }, description = "Tests with filter mediator - xpath Scenario Filter condition False", dependsOnMethods = "testJSONFilterFromXpathConditionTrueTestScenario")
+    public void testJSONFilterFromXpathConditionFalseTestScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Life\",\"singer\":\"Thompson\"}";
 

@@ -48,7 +48,8 @@ public class DBMediatorUseTransaction extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_URL + INIT_CONTEXT_1)), "");
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_URL + INIT_CONTEXT_2)), "");
@@ -60,9 +61,9 @@ public class DBMediatorUseTransaction extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test UseTransaction option .Use in conjunction with Transaction mediator ") public void testDBmediatorSuccessCase()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test UseTransaction option .Use in conjunction with Transaction mediator ")
+    public void testDBmediatorSuccessCase() throws Exception {
         String ibmStringDB1, ibmStringDB2;
         ibmStringDB1 = getDatabaseResultsForDB1();
         assertTrue(ibmStringDB1.contains("IBM"), "Fault, invalid response");
@@ -83,10 +84,10 @@ public class DBMediatorUseTransaction extends ESBIntegrationTest {
      * @throws Exception
      */
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    /*JIRA issue: https://wso2.org/jira/browse/ESBJAVA-1553*/ @Test(groups = "wso2.esb", description =
-            "Test UseTransaction option ."
-                    + "Use in conjunction with Transaction mediator. Fail casse") public void testDBmediatorFailCase()
-            throws Exception {
+    /*JIRA issue: https://wso2.org/jira/browse/ESBJAVA-1553*/
+    @Test(groups = "wso2.esb", description = "Test UseTransaction option ."
+            + "Use in conjunction with Transaction mediator. Fail casse")
+    public void testDBmediatorFailCase() throws Exception {
         String sunStringtDB1, sunStringtDB2;
         sunStringtDB1 = getDatabaseResultsForDB1FailCase();
         assertTrue(sunStringtDB1.contains("SUN"), "Fault, invalid response");
@@ -129,7 +130,8 @@ public class DBMediatorUseTransaction extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_URL + CLEANUP_CONTEXT)), "");
     }
 }

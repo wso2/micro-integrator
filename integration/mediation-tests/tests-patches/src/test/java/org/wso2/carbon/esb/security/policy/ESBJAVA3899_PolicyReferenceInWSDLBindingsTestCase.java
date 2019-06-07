@@ -37,7 +37,8 @@ import javax.activation.FileDataSource;
 public class ESBJAVA3899_PolicyReferenceInWSDLBindingsTestCase extends ESBIntegrationTest {
     private String carFileName = "SecurityPolicyWSDLBindingCapp_1.0.0.car";
 
-    @BeforeClass protected void init() throws Exception {
+    @BeforeClass
+    protected void init() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
 
@@ -47,8 +48,8 @@ public class ESBJAVA3899_PolicyReferenceInWSDLBindingsTestCase extends ESBIntegr
         log.info(carFileName + " uploaded successfully");
     }
 
-    @Test(groups = "wso2.esb", description = "Verify whether the WSDL Bindings contain Policyreference element when security policy is added via capp.") public void testPolicyReferenceInWSDLBindings()
-            throws IOException, InterruptedException {
+    @Test(groups = "wso2.esb", description = "Verify whether the WSDL Bindings contain Policyreference element when security policy is added via capp.")
+    public void testPolicyReferenceInWSDLBindings() throws IOException, InterruptedException {
         String epr = "http://localhost:8280/services/SecpolicyCappTest?wsdl";
         final SimpleHttpClient httpClient = new SimpleHttpClient();
         HttpResponse response = httpClient.doGet(epr, null);
@@ -73,7 +74,8 @@ public class ESBJAVA3899_PolicyReferenceInWSDLBindingsTestCase extends ESBIntegr
         Thread.sleep(4000);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

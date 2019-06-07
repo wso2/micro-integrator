@@ -36,13 +36,14 @@ public class propertyIntegrationAxis2ClientRemovePropertiesTestCase extends ESBI
 
     private static LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2-client scope)") public void testStringVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2-client scope)")
+    public void testStringVal() throws Exception {
         logViewer.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyAxis2ClientRemoveTestProxy"), null,
@@ -70,7 +71,8 @@ public class propertyIntegrationAxis2ClientRemovePropertiesTestCase extends ESBI
         return isSet;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

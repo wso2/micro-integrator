@@ -65,7 +65,8 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
     private static final String USERNAME = "SFTPUser";
     private static final String PASSWORD = "SFTP321";
 
-    @BeforeClass(alwaysRun = true) public void runFTPServer() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void runFTPServer() throws Exception {
 
         String pathToFtpDir = getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/").getPath();
 
@@ -119,7 +120,8 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
         super.init();
     }
 
-    @AfterClass(alwaysRun = true) public void stopFTPServer() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stopFTPServer() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -130,8 +132,8 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
         }
     }
 
-    @Test(groups = "wso2.esb", description = "VFS secure password test") public void securePasswordTest()
-            throws XMLStreamException, IOException {
+    @Test(groups = "wso2.esb", description = "VFS secure password test")
+    public void securePasswordTest() throws XMLStreamException, IOException {
 
         //copy SOAP message  into the SFTP server
         String sentMessageFile = "test.xml";
@@ -212,7 +214,8 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
 
     private Callable<Boolean> checkForOutputFile(final File outputFolder) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() {
+            @Override
+            public Boolean call() {
                 File[] files = outputFolder.listFiles();
                 return files != null && files.length > 0;
             }

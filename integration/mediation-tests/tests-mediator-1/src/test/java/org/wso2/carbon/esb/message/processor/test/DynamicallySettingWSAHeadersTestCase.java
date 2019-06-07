@@ -39,12 +39,13 @@ public class DynamicallySettingWSAHeadersTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing message Processor handling message when setting wsa headers dynamically") public void testForwardingWithInMemoryStore()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing message Processor handling message when setting wsa headers dynamically")
+    public void testForwardingWithInMemoryStore() throws Exception {
 
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer.clearLogs();
@@ -57,7 +58,8 @@ public class DynamicallySettingWSAHeadersTestCase extends ESBIntegrationTest {
                 "Message processor unable to handle the message!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

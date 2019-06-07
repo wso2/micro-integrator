@@ -30,13 +30,13 @@ import javax.xml.stream.XMLStreamException;
 
 public class XquaryInvaluedKeyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "more number of messages than maximum count") public void testXquaryInvaluedKey()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "more number of messages than maximum count")
+    public void testXquaryInvaluedKey() throws IOException, XMLStreamException {
 
         try {
             axis2Client
@@ -50,7 +50,8 @@ public class XquaryInvaluedKeyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

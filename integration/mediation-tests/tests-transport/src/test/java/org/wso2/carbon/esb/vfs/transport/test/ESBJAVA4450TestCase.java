@@ -37,7 +37,8 @@ public class ESBJAVA4450TestCase extends ESBIntegrationTest {
     private FTPServerManager ftpServerManager;
     private File FTPFolder;
 
-    @BeforeClass(alwaysRun = true) public void runFTPServer() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void runFTPServer() throws Exception {
         // Username password for the FTP server to be started
         String FTPUsername = "admin";
         String FTPPassword = "admin";
@@ -71,8 +72,8 @@ public class ESBJAVA4450TestCase extends ESBIntegrationTest {
                         + File.separator + "vfsTransport" + File.separator + "vfs_file_type.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "VFS transfer file type if default") public void TestDefaultFileType()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "VFS transfer file type if default")
+    public void TestDefaultFileType() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyDefault"), null, "WSO2");
         } catch (Exception axisFault) {
@@ -82,8 +83,8 @@ public class ESBJAVA4450TestCase extends ESBIntegrationTest {
         Assert.assertTrue(file.exists(), "Default file type transfer failed");
     }
 
-    @Test(groups = "wso2.esb", description = "VFS transfer file type if Binary") public void TestBinaryFileType()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "VFS transfer file type if Binary")
+    public void TestBinaryFileType() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyBinary"), null, "WSO2");
         } catch (Exception axisFault) {
@@ -93,8 +94,8 @@ public class ESBJAVA4450TestCase extends ESBIntegrationTest {
         Assert.assertTrue(file.exists(), "Default file type transfer failed");
     }
 
-    @Test(groups = "wso2.esb", description = "VFS transfer file type if ascii") public void TestAsciiFileType()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "VFS transfer file type if ascii")
+    public void TestAsciiFileType() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxyAscii"), null, "WSO2");
         } catch (Exception axisFault) {
@@ -104,7 +105,8 @@ public class ESBJAVA4450TestCase extends ESBIntegrationTest {
         Assert.assertTrue(file.exists(), "Default file type transfer failed");
     }
 
-    @AfterClass(alwaysRun = true) public void stopFTPServer() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stopFTPServer() throws Exception {
         try {
             super.cleanup();
         } finally {

@@ -33,13 +33,14 @@ import static org.testng.Assert.assertNotNull;
 public class EnrichIntegrationAddPropertyAsChildTest extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         verifyProxyServiceExistence("enrichAddPropertyAsChildTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Adding a defined property as a child of message") public void testAddPropertyAsChild()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Adding a defined property as a child of message")
+    public void testAddPropertyAsChild() throws AxisFault, XMLStreamException {
 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichAddPropertyAsChildTestProxy"), null, "IBM");
@@ -51,7 +52,8 @@ public class EnrichIntegrationAddPropertyAsChildTest extends ESBIntegrationTest 
                 .getText(), "test", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

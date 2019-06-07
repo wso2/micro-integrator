@@ -56,7 +56,8 @@ public class AddressEndpointTestCase extends ESBIntegrationTest {
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
 
@@ -66,25 +67,24 @@ public class AddressEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         resourceAdminServiceClient.deleteResource("/_system/config/test_ep_config");
         resourceAdminServiceClient = null;
         endPointAdminClient = null;
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test endpoint addition, deletion & stats") public void testAddressEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test endpoint addition, deletion & stats")
+    public void testAddressEndpoint() throws Exception {
         cleanupEndpoints();
         endpointAdditionScenario();
         endpointStatisticsScenario();
         endpointDeletionScenario();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Address endpoint") public void testSendingToAddressEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Address endpoint")
+    public void testSendingToAddressEndpoint() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("addressEndpointTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         Assert.assertNotNull(response);
@@ -92,9 +92,8 @@ public class AddressEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Address endpoint in Config Reg") public void testSendingToAddressEndpoint_ConfigReg()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Address endpoint in Config Reg")
+    public void testSendingToAddressEndpoint_ConfigReg() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("addressEndPointRegistryConfigProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
@@ -103,8 +102,8 @@ public class AddressEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Invalid Address endpoint") public void testSendingToInvalidAddressEndpoint()
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Invalid Address endpoint")
+    public void testSendingToInvalidAddressEndpoint()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
         try {
@@ -116,8 +115,8 @@ public class AddressEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Address endpoint has a Invalid Property") public void testSendingToInvalidPropertyAddressEndpoint()
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Address endpoint has a Invalid Property")
+    public void testSendingToInvalidPropertyAddressEndpoint()
             throws XMLStreamException, FileNotFoundException, AxisFault, XPathExpressionException {
         ProxyServiceAdminClient proxyAdmin = new ProxyServiceAdminClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
@@ -134,8 +133,8 @@ public class AddressEndpointTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Adding Duplicate Address endpoint", expectedExceptions = AxisFault.class) public void testAddingDuplicateAddressEndpoint()
-            throws Exception {
+            "wso2.esb" }, description = "Adding Duplicate Address endpoint", expectedExceptions = AxisFault.class)
+    public void testAddingDuplicateAddressEndpoint() throws Exception {
         addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + ENDPOINT_NAME1 + "\">\n"
                 + "    <address uri=\"" + getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE) + "\" />\n"

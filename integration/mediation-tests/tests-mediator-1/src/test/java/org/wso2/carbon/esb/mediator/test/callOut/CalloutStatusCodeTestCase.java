@@ -26,13 +26,14 @@ import static org.testng.Assert.assertTrue;
 
 public class CalloutStatusCodeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
         super.init();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "StatusCodeTestClientProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Test for check http status code can be retrived form HTTP_SC") public void testCalloutStatusCode()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test for check http status code can be retrived form HTTP_SC")
+    public void testCalloutStatusCode() throws Exception {
 
         OMElement response = axis2Client.
                 sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StatusCodeTestClientProxy"), null, "IBM");
@@ -40,7 +41,8 @@ public class CalloutStatusCodeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void unDeployService() throws Exception {
         super.cleanup();
     }
 

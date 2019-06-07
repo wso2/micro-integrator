@@ -36,7 +36,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class TransformPayloadXmlArrayTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
@@ -44,9 +45,8 @@ public class TransformPayloadXmlArrayTestCase extends ESBIntegrationTest {
      * This tests the issue of getting &lt; and &gt; instead of < and > when parsing an XML payload with an array inside
      * the payload factory.
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Transformation a payload that has an XML array") public void transformPayloadWithXmlArray()
-            throws AxisFault, XPathExpressionException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Transformation a payload that has an XML array")
+    public void transformPayloadWithXmlArray() throws AxisFault, XPathExpressionException, XMLStreamException {
         OMElement response;
 
         response = axis2Client
@@ -81,7 +81,8 @@ public class TransformPayloadXmlArrayTestCase extends ESBIntegrationTest {
         return omCode;
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -35,7 +35,8 @@ public class ESBJAVA3650_CustomHeaderPreserved_MessageProcessorOutMessage_TestCa
     private static final String PROXY_SERVICE_NAME = "testProxy";
     private TCPMonListener tcpMonListener;
 
-    @BeforeClass(alwaysRun = true) public void deployeService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployeService() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/messageProcessorConfig/CustomHeaderPreserved_MessageProcessorOutMessage.xml");
@@ -45,8 +46,8 @@ public class ESBJAVA3650_CustomHeaderPreserved_MessageProcessorOutMessage_TestCa
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test whether HTTP headers are not preserved when the message goes through Message store > Message processor") public void testCustomHeaderPreserved_MessageProcessorOutMessage()
-            throws RemoteException, InterruptedException {
+            "wso2.esb" }, description = "Test whether HTTP headers are not preserved when the message goes through Message store > Message processor")
+    public void testCustomHeaderPreserved_MessageProcessorOutMessage() throws RemoteException, InterruptedException {
 
         axis2Client.sendPlaceOrderRequest(getProxyServiceURLHttp(PROXY_SERVICE_NAME), null, "IBM");
         Thread.sleep(5000);
@@ -56,7 +57,8 @@ public class ESBJAVA3650_CustomHeaderPreserved_MessageProcessorOutMessage_TestCa
                 "customHeader:customHeaderValue does not exist in out message of ESB");
     }
 
-    @AfterClass(alwaysRun = true) public void UndeployeService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void UndeployeService() throws Exception {
         tcpMonListener.stop();
         super.cleanup();
     }

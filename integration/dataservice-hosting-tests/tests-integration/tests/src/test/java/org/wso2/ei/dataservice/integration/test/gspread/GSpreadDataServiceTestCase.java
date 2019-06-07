@@ -43,7 +43,8 @@ public class GSpreadDataServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(GSpreadDataServiceTestCase.class);
     private final String serviceName = "GSpreadDataService";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         deployService(serviceName, AXIOMUtil.stringToOM(FileManager.readFile(
@@ -52,13 +53,14 @@ public class GSpreadDataServiceTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }, invocationCount = 5, enabled = true) public void selectOperation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, invocationCount = 5, enabled = true)
+    public void selectOperation() throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac
                 .createOMNamespace("http://ws.wso2.org/dataservice/samples/gspread_sample_service", "ns1");
@@ -75,9 +77,8 @@ public class GSpreadDataServiceTestCase extends DSSIntegrationTest {
         log.info("Service Invocation success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectOperation" }, timeOut = 1000 * 60
-            * 2, enabled = true) public void concurrencyTest()
-            throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectOperation" }, timeOut = 1000 * 60 * 2, enabled = true)
+    public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac
                 .createOMNamespace("http://ws.wso2.org/dataservice/samples/gspread_sample_service", "ns1");

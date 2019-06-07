@@ -22,7 +22,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.http.client.HttpsResponse;
 import org.wso2.carbon.automation.test.utils.http.client.HttpsURLConnectionClient;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
@@ -47,7 +46,8 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
     private static final String SERVICE_NAME = "Axis2ServiceProxy";
     private SecurityAdminServiceClient securityAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         updateESBConfiguration(RestEndpointSetter.setEndpoint(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -55,8 +55,8 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
         applySecurity("1", "Axis2ServiceProxy", getUserRole()[0]);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "POST request by super admin") public void testPOSTRequestBySuperAdmin()
+    @Test(groups = { "wso2.esb" }, description = "POST request by super admin")
+    public void testPOSTRequestBySuperAdmin()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException, XPathExpressionException {
         userInfo = context.getContextTenant().getTenantUserList().get(1);
@@ -69,8 +69,8 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "POST request by user/tenant", dependsOnMethods = "testPOSTRequestBySuperAdmin") public void testPOSTRequestByUser()
-            throws Exception {
+            "wso2.esb" }, description = "POST request by user/tenant", dependsOnMethods = "testPOSTRequestBySuperAdmin")
+    public void testPOSTRequestByUser() throws Exception {
         super.init();
         applySecurity("1", "Axis2ServiceProxy", getUserRole()[0]);
         String securedRestURL = getProxyServiceURLHttps("Axis2ServiceProxy") + "/echoString";
@@ -82,8 +82,8 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "POST request by invalid user", dependsOnMethods = "testPOSTRequestByUser", expectedExceptions = IOException.class) public void testPOSTRequestByInvalidUser()
-            throws Exception {
+            "wso2.esb" }, description = "POST request by invalid user", dependsOnMethods = "testPOSTRequestByUser", expectedExceptions = IOException.class)
+    public void testPOSTRequestByInvalidUser() throws Exception {
         super.init();
         applySecurity("1", "Axis2ServiceProxy", getUserRole()[0]);
 
@@ -96,8 +96,8 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test post request by user belongs to unauthorized group", dependsOnMethods = "testPOSTRequestByInvalidUser", expectedExceptions = IOException.class) public void testPOSTRequestByGroup()
-            throws Exception {
+            "wso2.esb" }, description = "Test post request by user belongs to unauthorized group", dependsOnMethods = "testPOSTRequestByInvalidUser", expectedExceptions = IOException.class)
+    public void testPOSTRequestByGroup() throws Exception {
         String adminUserGroup = "admin";
         applySecurity("1", "Axis2ServiceProxy", adminUserGroup);
         String securedRestURL = getProxyServiceURLHttps("Axis2ServiceProxy") + "/echoString";
@@ -126,7 +126,8 @@ public class ESBPOXSecurityPostRequestTestCase extends ESBIntegrationTest {
         Thread.sleep(2000);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         securityAdminServiceClient.disableSecurity(SERVICE_NAME);
         super.cleanup();
     }

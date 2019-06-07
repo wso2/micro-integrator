@@ -29,13 +29,14 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class XQueryCustom extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value - <xquery key=\"string\" target = xpath>") public void testXQueryTransformation()
-            throws AxisFault {
+            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value - <xquery key=\"string\" target = xpath>")
+    public void testXQueryTransformation() throws AxisFault {
         OMElement response;
         RequestUtil getQuoteCustomRequest = new RequestUtil();
 
@@ -46,7 +47,8 @@ public class XQueryCustom extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

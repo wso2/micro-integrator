@@ -30,7 +30,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         log.info("Initializing environment");
         super.init();
         log.info("Loading ESB configuration from classpath");
@@ -41,8 +42,8 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
         log.info("Initializing environment completed");
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy"
-            + "- Publish WSDL Options - Specified source url") public void testLoggingProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy" + "- Publish WSDL Options - Specified source url")
+    public void testLoggingProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromSourceUrlLoggingProxy"), null,
@@ -58,12 +59,13 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Specified source url -Log", enabled = false) public void testLoggingProxyLogging()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Specified source url -Log", enabled = false)
+    public void testLoggingProxyLogging() throws Exception {
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -40,7 +40,8 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "jmsQueueClientAckInboundEndpointTestCase";
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
 
         verifySequenceExistence("jmsClientAckInboundEPSendInSequence");
@@ -58,9 +59,9 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
      *
      * @throws Exception if any error occurred while running tests
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test JMS client ack mode with inbound endpoint") public void testJmsQueueToHttpWithInboundEndpoint()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test JMS client ack mode with inbound endpoint")
+    public void testJmsQueueToHttpWithInboundEndpoint() throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
 
@@ -75,7 +76,8 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
         Assert.assertTrue(Utils.isQueueEmpty(QUEUE_NAME), "Queue should be empty if ack was properly sent");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 

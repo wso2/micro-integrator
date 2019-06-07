@@ -43,7 +43,8 @@ import javax.xml.stream.XMLStreamException;
 public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server1;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server1.deployService("LBServiceWithSleep");
@@ -52,8 +53,8 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
-            + "aggregator timeout when iterator is used") public void checkOnCompleteExecutionInIterator()
-            throws Exception {
+            + "aggregator timeout when iterator is used")
+    public void checkOnCompleteExecutionInIterator() throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         OMElement payload = getSleepOperationRequestForIterator();
@@ -67,7 +68,8 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
-            + "aggregator timeout when clone is used") public void checkOnCompleteExecutionInClone() throws Exception {
+            + "aggregator timeout when clone is used")
+    public void checkOnCompleteExecutionInClone() throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         OMElement payload = getSleepOperationRequest();
@@ -80,7 +82,8 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         Assert.assertTrue(logFound, "OnComplete has been triggered more than expecting");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             super.cleanup();
         } finally {

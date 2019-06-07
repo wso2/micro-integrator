@@ -36,15 +36,16 @@ import javax.xml.xpath.XPathExpressionException;
 import static org.testng.Assert.assertTrue;
 
 public class TransformPayloadWhenArgsValueAndExpressionTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/value_expression_arg_payload_factory_synapse.xml");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do transformation with a Payload Format that has arguments - Argument Types : Value and Expression both") public void transformPayloadByArgsBothValueAndExpression()
-            throws AxisFault, XPathExpressionException {
+            "wso2.esb" }, description = "Do transformation with a Payload Format that has arguments - Argument Types : Value and Expression both")
+    public void transformPayloadByArgsBothValueAndExpression() throws AxisFault, XPathExpressionException {
 
         //sendRobust(getMainSequenceURL(), "WSO2");
 
@@ -56,7 +57,8 @@ public class TransformPayloadWhenArgsValueAndExpressionTestCase extends ESBInteg
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

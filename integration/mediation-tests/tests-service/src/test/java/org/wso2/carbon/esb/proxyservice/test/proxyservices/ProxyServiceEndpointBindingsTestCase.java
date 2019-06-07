@@ -32,14 +32,15 @@ import static org.testng.Assert.assertNotNull;
 public class ProxyServiceEndpointBindingsTestCase extends ESBIntegrationTest {
     private String proxyServiceName = "StockQuoteProxyEndpointBinding";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/proxyservice/stock_quote_proxy.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Proxy service endpoint binding HttpSoap11Endpoint test") public void testHttpSoap11EndpointBinding()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Proxy service endpoint binding HttpSoap11Endpoint test")
+    public void testHttpSoap11EndpointBinding() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceHttp11BindingURL(proxyServiceName), null,
@@ -52,8 +53,8 @@ public class ProxyServiceEndpointBindingsTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Proxy service endpoint binding HttpsSoap11Endpoint test") public void testHttpsSoap11EndpointBinding()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Proxy service endpoint binding HttpsSoap11Endpoint test")
+    public void testHttpsSoap11EndpointBinding() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceHttps11BindingURL(proxyServiceName), null,
@@ -66,7 +67,8 @@ public class ProxyServiceEndpointBindingsTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

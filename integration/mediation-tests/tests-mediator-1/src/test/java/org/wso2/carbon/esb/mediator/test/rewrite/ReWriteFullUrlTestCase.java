@@ -28,14 +28,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class ReWriteFullUrlTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteFulUriTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Rewrite Full Url", dataProvider = "addressingUrl") public void reWriteUrl(
-            String addUrl) throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Rewrite Full Url", dataProvider = "addressingUrl")
+    public void reWriteUrl(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -44,11 +44,13 @@ public class ReWriteFullUrlTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "http://10.100.10.9:8000/services/SimpleStockQuoteService" },
                 { "https://test.com/SimpleStockQuoteService" }, };
 

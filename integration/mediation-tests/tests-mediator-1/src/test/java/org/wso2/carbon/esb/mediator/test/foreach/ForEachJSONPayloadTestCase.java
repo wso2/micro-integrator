@@ -39,14 +39,14 @@ import static org.testng.Assert.assertTrue;
  */
 public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("foreachJSONTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ForEach mediator with JSON payload") public void testForEachMediatorWithJSONPayload()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ForEach mediator with JSON payload")
+    public void testForEachMediatorWithJSONPayload() throws Exception {
 
         LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer.clearLogs();
@@ -87,7 +87,8 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
         assertTrue(reachedEnd, "Transformed json payload");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

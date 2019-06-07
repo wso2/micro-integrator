@@ -31,13 +31,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class XQueryCustomVariableAsInt extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value and variable as Int") public void testXQueryTransformationWithIntValue()
-            throws AxisFault {
+            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value and variable as Int")
+    public void testXQueryTransformationWithIntValue() throws AxisFault {
         OMElement response;
         RequestUtil getQuoteCustomRequest = new RequestUtil();
         response = getQuoteCustomRequest
@@ -49,7 +50,8 @@ public class XQueryCustomVariableAsInt extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

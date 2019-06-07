@@ -46,7 +46,8 @@ public class HttpsServiceViaHttpProxyTestCase extends ESBIntegrationTest {
     private final String RESOURCE_NAME = "test_axis2_server_9015.xml";
     private final String MODIFIED_RESOURCE_NAME = "test_axis2_server_9015_test.xml";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         changeConfiguration(RESOURCE_NAME);
         axisServer = new SampleAxis2Server(MODIFIED_RESOURCE_NAME);
@@ -98,15 +99,16 @@ public class HttpsServiceViaHttpProxyTestCase extends ESBIntegrationTest {
         os.close();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Patch : ESB-JAVA 1193 : HTTPS request via HTTP proxy") public void testHttpsRequestViaHttpProxy()
-            throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Patch : ESB-JAVA 1193 : HTTPS request via HTTP proxy")
+    public void testHttpsRequestViaHttpProxy() throws AxisFault {
         OMElement response;
         response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestProxy"), null, "IBM");
         Assert.assertTrue(response.toString().contains("IBM"), "Asserting response for string 'IBM'");
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
 
         File toDelete = new File(
                 FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator + "AXIS2"

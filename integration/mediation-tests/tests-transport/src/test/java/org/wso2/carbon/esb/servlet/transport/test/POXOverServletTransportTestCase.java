@@ -48,7 +48,8 @@ public class POXOverServletTransportTestCase extends ESBIntegrationTest {
     private SimpleHttpServer httpServer;
     private TestRequestInterceptor interceptor;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -64,9 +65,9 @@ public class POXOverServletTransportTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests SOAP to POX Conversion", enabled = false) public void testSoapToPOXConversion()
-            throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests SOAP to POX Conversion", enabled = false)
+    public void testSoapToPOXConversion() throws IOException, InterruptedException {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SOAP2POX"), null, "WSO2");
         log.info("Response received: " + response);
@@ -74,7 +75,8 @@ public class POXOverServletTransportTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         try {
             httpServer.stop();
         } catch (IOException e) {

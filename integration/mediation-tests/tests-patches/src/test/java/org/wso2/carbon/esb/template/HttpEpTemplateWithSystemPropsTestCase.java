@@ -52,8 +52,9 @@ public class HttpEpTemplateWithSystemPropsTestCase {
     ESBTestCaseUtils esbUtils;
     CarbonTestServerManager server2;
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @BeforeClass(groups = {
-            "wso2.esb" }) public void init() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @BeforeClass(groups = { "wso2.esb" })
+    public void init() throws Exception {
         context = new AutomationContext();
         esbUtils = new ESBTestCaseUtils();
         startupParameterMap.put("-DportOffset", String.valueOf(OFFSET));
@@ -65,8 +66,9 @@ public class HttpEpTemplateWithSystemPropsTestCase {
         deploySynapseConfig();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @Test(groups = {
-            "wso2.esb" }, enabled = true) public void testHttpEpTemplateWithSystemProps() throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = { "wso2.esb" }, enabled = true)
+    public void testHttpEpTemplateWithSystemProps() throws AxisFault {
         StockQuoteClient axis2Client = new StockQuoteClient();
         OMElement response = axis2Client.sendSimpleStockQuoteRequestREST(API_URL, null, "WSO2");
         // (API_URL, null, "WSO2");
@@ -74,8 +76,9 @@ public class HttpEpTemplateWithSystemPropsTestCase {
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @AfterClass public void clean()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @AfterClass
+    public void clean() throws Exception {
         server2.stopServer();
     }
 

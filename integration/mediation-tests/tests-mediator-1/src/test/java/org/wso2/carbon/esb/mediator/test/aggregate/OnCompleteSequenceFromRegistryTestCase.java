@@ -36,7 +36,8 @@ public class OnCompleteSequenceFromRegistryTestCase extends ESBIntegrationTest {
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 5;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadResourcesToConfigRegistry();
@@ -50,8 +51,8 @@ public class OnCompleteSequenceFromRegistryTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "pick up a sequence from registry conf on onComplete action of aggregate mediator") public void test()
-            throws IOException, XMLStreamException {
+            "wso2.esb" }, description = "pick up a sequence from registry conf on onComplete action of aggregate mediator")
+    public void test() throws IOException, XMLStreamException {
 
         String Response = aggregatedRequestClient.getResponse();
         Assert.assertNotNull(Response, "Response message is null");
@@ -71,7 +72,8 @@ public class OnCompleteSequenceFromRegistryTestCase extends ESBIntegrationTest {
                                 + "/synapseconfig/onCompleteSequenceConfig/sequences/dynamic_seq1.xml")));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             resourceAdminServiceStub.deleteResource("/_system/config/sequences");
             resourceAdminServiceStub = null;

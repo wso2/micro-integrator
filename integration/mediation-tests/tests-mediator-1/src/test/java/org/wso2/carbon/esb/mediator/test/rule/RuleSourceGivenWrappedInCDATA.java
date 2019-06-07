@@ -33,14 +33,15 @@ import static org.testng.Assert.fail;
 
 public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config_rule_s3/synapse.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA -Invoke IBM rule") public void testInvokeIBMRule()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA -Invoke IBM rule")
+    public void testInvokeIBMRule() throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
@@ -55,8 +56,8 @@ public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke SUN rule ") public void testInvokeSUNRule()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke SUN rule ")
+    public void testInvokeSUNRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "SUN");
             fail("Response message not expected. AxisFault expected");
@@ -66,8 +67,8 @@ public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke MFST rule ") public void testInvokeMSFTRule()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke MFST rule ")
+    public void testInvokeMSFTRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "MFST");
             fail("Response message not expected. AxisFault expected");
@@ -78,8 +79,8 @@ public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke an invalid rule ") public void testInvokeInvalidRule()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke an invalid rule ")
+    public void testInvokeInvalidRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "Invalid");
             fail("Response message not expected. AxisFault expected");
@@ -90,7 +91,8 @@ public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

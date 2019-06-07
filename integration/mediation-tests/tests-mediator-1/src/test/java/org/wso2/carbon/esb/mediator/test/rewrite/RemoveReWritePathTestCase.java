@@ -30,14 +30,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class RemoveReWritePathTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteRemovePathTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Remove and rewrite path", dataProvider = "addressingUrl") public void removeAndReWritePath(
-            String addUrl) throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Remove and rewrite path", dataProvider = "addressingUrl")
+    public void removeAndReWritePath(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -46,11 +47,13 @@ public class RemoveReWritePathTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "http://localhost:9000/soap/SimpleStockQuoteService" },
                 { "http://localhost:9000/SimpleStockQuoteService" }, { "http://localhost:9000/soap/SimpleStockQuote" },
                 { "http://localhost:9000/soap/service/SimpleStockQuote" }, };

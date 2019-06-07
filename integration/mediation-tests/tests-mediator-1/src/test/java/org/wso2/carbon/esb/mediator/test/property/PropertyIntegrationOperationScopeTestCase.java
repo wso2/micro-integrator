@@ -31,59 +31,61 @@ import static org.testng.Assert.assertTrue;
  */
 public class PropertyIntegrationOperationScopeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (operation scope)") public void testDoubleVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (operation scope)")
+    public void testDoubleVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyDoubleOperationTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123123.123123"), "Double Property Not Set in the Operation scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (operation scope)") public void testIntVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (operation scope)")
+    public void testIntVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntOperationTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123"), "Integer Property Not Set in the Operation scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (operation scope)") public void testStringVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (operation scope)")
+    public void testStringVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringOperationTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("WSO2 Lanka"), "Sting Property Not Set in the Operation scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (operation scope)") public void testBooleanVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (operation scope)")
+    public void testBooleanVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyBooleanOperationTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("true"), "Boolean Property Not Set in the Operation scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (operation scope)") public void testFloatVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (operation scope)")
+    public void testFloatVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatOperationTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123.123"), "Float Property Not Set in the Operation scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (operation scope)") public void testShortVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (operation scope)")
+    public void testShortVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortOperationTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("12"), "Short Property Not Set in the Operation scope!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

@@ -49,12 +49,13 @@ import javax.xml.namespace.QName;
 
 public class IterateSequentialPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests sequential='true' property") public void testSequentialProperty()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests sequential='true' property")
+    public void testSequentialProperty() throws Exception {
         AxisOperationClient operationClient = new AxisOperationClient();
         String response = operationClient.send(getProxyServiceURLHttp("iterateSequentialTestProxy"), null,
                 createMultipleQuoteRequestBody("WSO2", 10), "urn:getQuote").toString();
@@ -72,7 +73,8 @@ public class IterateSequentialPropertyTestCase extends ESBIntegrationTest {
         Assert.assertEquals(i, 10, "Chile Element mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

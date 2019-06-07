@@ -27,11 +27,11 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.ExtensionConstants;
 import org.wso2.carbon.integration.common.utils.FileManager;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.xpath.XPathExpressionException;
 
 public class TestServerManager {
     protected CarbonServerManager carbonServer;

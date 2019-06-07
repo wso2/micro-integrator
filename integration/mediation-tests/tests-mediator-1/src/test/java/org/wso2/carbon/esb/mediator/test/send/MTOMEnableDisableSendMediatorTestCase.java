@@ -36,14 +36,14 @@ import java.util.Map;
  */
 public class MTOMEnableDisableSendMediatorTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/send/mtom_enable_disable_config.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "disable mtom before send mediator", enabled = true) public void disableMtomBeforeSendMediatorTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "disable mtom before send mediator", enabled = true)
+    public void disableMtomBeforeSendMediatorTest() throws Exception {
         String proxyHttpUrl = getProxyServiceURLHttp("MtomEnabledBackEndOUT");
 
         SimpleHttpClient simpleHttpClient = new SimpleHttpClient();
@@ -59,7 +59,8 @@ public class MTOMEnableDisableSendMediatorTestCase extends ESBIntegrationTest {
         Assert.assertEquals("text/xml; charset=UTF-8", httpResponse.getFirstHeader("Content-Type").getValue());
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

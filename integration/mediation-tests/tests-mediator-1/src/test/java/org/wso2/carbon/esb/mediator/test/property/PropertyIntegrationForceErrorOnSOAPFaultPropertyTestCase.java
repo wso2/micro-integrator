@@ -33,17 +33,19 @@ import java.util.Map;
  */
 public class PropertyIntegrationForceErrorOnSOAPFaultPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/FORCE_ERROR_ON_SOAP_FAULT.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property", enabled = false) public void testWithoutOutOnlyPropertyTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property", enabled = false)
+    public void testWithoutOutOnlyPropertyTest() throws Exception {
 
         SimpleHttpClient httpClient = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<String, String>();

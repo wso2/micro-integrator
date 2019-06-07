@@ -67,7 +67,8 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
     private static final String GMAIL_USER_NAME = "test.automation.dummy";
     private static final String GMAIL_PASSWORD = "automation.test";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         path2ResourceSample271 = getESBResourceLocation() + File.separator + "sample_271" + File.separator;
@@ -140,8 +141,8 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "File Processing", enabled = false) public void testFileProcessing()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "File Processing", enabled = false)
+    public void testFileProcessing() throws Exception {
         String feedURL = "https://mail.google.com/mail/feed/atom";
         int beforeMaiilCount = getMailCount(feedURL);
 
@@ -167,7 +168,8 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
         // todo : database record insertion
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
 
         // Remove the database

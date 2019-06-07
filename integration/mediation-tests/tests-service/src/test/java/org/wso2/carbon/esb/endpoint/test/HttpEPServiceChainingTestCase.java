@@ -30,7 +30,8 @@ import static org.testng.Assert.assertTrue;
 
 public class HttpEPServiceChainingTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         loadESBConfigurationFromClasspath(
@@ -38,9 +39,8 @@ public class HttpEPServiceChainingTestCase extends ESBIntegrationTest {
                         + "httpEndpointConfig" + File.separator + "serviceChainingWithHTTPEP.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Service Chaining test with Http endpoint") public void testHTTPEPServiceChaining()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Service Chaining test with Http endpoint")
+    public void testHTTPEPServiceChaining() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest("http://localhost:8480/services/ChainingTestProxy", null, "IBM");
 
@@ -48,7 +48,8 @@ public class HttpEPServiceChainingTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

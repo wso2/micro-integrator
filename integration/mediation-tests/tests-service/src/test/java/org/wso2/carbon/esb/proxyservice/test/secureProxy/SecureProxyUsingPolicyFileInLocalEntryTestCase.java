@@ -34,13 +34,14 @@ import java.io.IOException;
  */
 public final class SecureProxyUsingPolicyFileInLocalEntryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass protected void init() throws Exception {
+    @BeforeClass
+    protected void init() throws Exception {
         super.init();
     }
 
     @Test(groups = "wso2.esb", description = "Verifies whether a Proxy service can be secured using a policy file "
-            + "stored as a local entry.") public void testPolicyReferenceInWSDLBindings()
-            throws IOException, InterruptedException {
+            + "stored as a local entry.")
+    public void testPolicyReferenceInWSDLBindings() throws IOException, InterruptedException {
         String epr = contextUrls.getServiceUrl() + "/SecureProxyWithPolicyInLocalEntryTestProxy?wsdl";
         final SimpleHttpClient httpClient = new SimpleHttpClient();
         HttpResponse response = httpClient.doGet(epr, null);
@@ -52,7 +53,8 @@ public final class SecureProxyUsingPolicyFileInLocalEntryTestCase extends ESBInt
                 "Expected response not received. Receive response: " + wsdlResponse);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

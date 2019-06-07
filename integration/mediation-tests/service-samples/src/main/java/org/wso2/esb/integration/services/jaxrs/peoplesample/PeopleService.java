@@ -28,7 +28,8 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@Service public class PeopleService {
+@Service
+public class PeopleService {
     private ConcurrentMap<String, Person> persons = new ConcurrentHashMap<String, Person>();
 
     public void setInitPeople() {

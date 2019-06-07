@@ -32,14 +32,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class HTTPHeaderCaseSensitivityTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("httpHeaderTestProxy");
     }
 
     /*Add a http header with name "TEST_HEADER" where all the letters are in uppercase.*/
-    @Test(groups = "wso2.esb", description = " extracting http header value, when header name can "
-            + "be uppercase") public void testHttpHeaderUpperCase() throws AxisFault {
+    @Test(groups = "wso2.esb", description = " extracting http header value, when header name can " + "be uppercase")
+    public void testHttpHeaderUpperCase() throws AxisFault {
         StockQuoteClient axis2Client1 = new StockQuoteClient();
         OMElement response;
         axis2Client1.addHttpHeader("TEST_HEADER", "uppercase");
@@ -56,8 +57,8 @@ public class HTTPHeaderCaseSensitivityTestCase extends ESBIntegrationTest {
     }
 
     /*Add a http header with name "test_header" where all the letters are in lower case.*/
-    @Test(groups = "wso2.esb", description = " extracting http header value, when header name can "
-            + "be  lowercase ") public void testHttpHeaderLowerCase() throws AxisFault {
+    @Test(groups = "wso2.esb", description = " extracting http header value, when header name can " + "be  lowercase ")
+    public void testHttpHeaderLowerCase() throws AxisFault {
         StockQuoteClient axis2Client2 = new StockQuoteClient();
         OMElement response;
         axis2Client2.addHttpHeader("test_header", "lowercase");
@@ -74,7 +75,8 @@ public class HTTPHeaderCaseSensitivityTestCase extends ESBIntegrationTest {
 
     /*Add a http header with name "test_header" where  the letters are in both upper & lower case.*/
     @Test(groups = "wso2.esb", description = " extracting http header value, when header name can "
-            + "be a mix of lowercase or uppercase") public void testHttpHeaderCombined() throws AxisFault {
+            + "be a mix of lowercase or uppercase")
+    public void testHttpHeaderCombined() throws AxisFault {
         StockQuoteClient axis2Client3 = new StockQuoteClient();
         OMElement response;
         axis2Client3.addHttpHeader("Test_Header", "mixed");
@@ -89,7 +91,8 @@ public class HTTPHeaderCaseSensitivityTestCase extends ESBIntegrationTest {
         assertEquals(symbolElement.getText(), "mixed", "Fault, invalid response");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

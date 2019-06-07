@@ -24,7 +24,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 import org.wso2.ei.dataservice.integration.test.requestBox.RequestBoxJsonTestCase;
 
@@ -52,7 +51,8 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
     private String serviceEndPoint;
     private static final Log log = LogFactory.getLog(RequestBoxJsonTestCase.class);
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
@@ -63,13 +63,15 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking POST Request with JSON payload without postemployee tag") public void performJsonPostRequest() {
+    @Test(groups = "wso2.dss", description = "Invoking POST Request with JSON payload without postemployee tag")
+    public void performJsonPostRequest() {
 
         String postInsertPayload =
                 "{\n" + "\"employee\":{\n" + "\"employeeNumber\":52,\n" + "\"lastName\":\"Karunaratne\",\n"
@@ -83,7 +85,8 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", description = "Invoking BATCH request with JSON payload with out "
-            + "_postemployee_batch_req and _postemployee tags ") public void performJsonBatchRequest() {
+            + "_postemployee_batch_req and _postemployee tags ")
+    public void performJsonBatchRequest() {
 
         String postInsertPayload =
                 "{\n" + "\"employees\":{\n" + "\"employee\":[\n" + "{\n" + "\"employeeNumber\" :53,\n"
@@ -100,7 +103,8 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
                 + "\"firstName\":\"Will\",\"salary\":15500.0}]}}"), "Batch request POST method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking PUT Request without optional fields in JSON payload") public void performJsonPutRequestWithoutOptionaParameter() {
+    @Test(groups = "wso2.dss", description = "Invoking PUT Request without optional fields in JSON payload")
+    public void performJsonPutRequestWithoutOptionaParameter() {
 
         String payload =
                 "{\n" + "\"employee\":{\n" + "\"employeeNumber\":52,\n" + "\"salary\":21400.00\n" + "}\n" + "}";
@@ -112,7 +116,8 @@ public class JSONPayloadSampleTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", description = "Invoking PUT Request with optional fields in JSON payload as "
-            + "declared in the update query") public void performJsonPutRequestWithOptionalParameter() {
+            + "declared in the update query")
+    public void performJsonPutRequestWithOptionalParameter() {
 
         String payload = "{\n" + "\"employee\":{\n" + "\"employeeNumber\":52,\n" + "\"firstName\":\"Sangeeth\",\n"
                 + "\"email\":\"sangeeth@wso2.com\",\n" + "\"salary\":18400.00\n" + "}\n" + "}";

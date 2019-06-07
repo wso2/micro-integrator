@@ -45,7 +45,8 @@ public class ReturnGeneratedKeysTestCase extends DSSIntegrationTest {
             .createOMNamespace("http://ws.wso2.org/dataservice/samples/returnGeneratedKeysSample", "ns1");
     private final String serviceName = "H2ReturnGeneratedKeysTest";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
@@ -54,13 +55,14 @@ public class ReturnGeneratedKeysTestCase extends DSSIntegrationTest {
                         + File.separator + "H2ReturnGeneratedKeysTest.dbs", sqlFileLis));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking insert operation with Return Generated Keys", dependsOnMethods = "performConcurrencyTest") public void performInsertWithReturnGeneratedKeysTest()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Invoking insert operation with Return Generated Keys", dependsOnMethods = "performConcurrencyTest")
+    public void performInsertWithReturnGeneratedKeysTest() throws AxisFault, XPathExpressionException {
         OMElement payload = factory.createOMElement("insertBalance", omNs);
         OMElement queryElement = factory.createOMElement("balance", omNs);
         queryElement.setText("22.184");
@@ -73,7 +75,8 @@ public class ReturnGeneratedKeysTestCase extends DSSIntegrationTest {
         Assert.assertTrue(id, "Insert operation with return generated keys is failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Concurrency Test for Return Generated Keys") public void performConcurrencyTest()
+    @Test(groups = "wso2.dss", description = "Concurrency Test for Return Generated Keys")
+    public void performConcurrencyTest()
             throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         ConcurrencyTest concurrencyTest = new ConcurrencyTest(5, 5);
         OMElement payload = factory.createOMElement("insertBalance", omNs);

@@ -42,7 +42,8 @@ public class JSONWithCloneMediatorTestCase extends ESBIntegrationTest {
     private TCPMonListener tcpMonListenerThree;
     private Client client = Client.create();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
 
@@ -61,7 +62,8 @@ public class JSONWithCloneMediatorTestCase extends ESBIntegrationTest {
         tcpMonListenerThree.start();
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
 
         client.destroy();
         super.cleanup();
@@ -71,9 +73,8 @@ public class JSONWithCloneMediatorTestCase extends ESBIntegrationTest {
         tcpMonListenerThree.stop();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests JSON requests behaviour with clone mediator") public void testJSONWithCloneMediatorTestScenario()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests JSON requests behaviour with clone mediator")
+    public void testJSONWithCloneMediatorTestScenario() throws Exception {
 
         WebResource webResource = client.resource(getProxyServiceURLHttp("JsonWithCloneMediatorProxy"));
 

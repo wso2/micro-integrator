@@ -35,12 +35,13 @@ import javax.xml.namespace.QName;
 
 public class IterateAnonymousEndpointsTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for anaonymous endpoints") public void tesAnonymousEndpoints()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for anaonymous endpoints")
+    public void tesAnonymousEndpoints() throws Exception {
 
         IterateClient client = new IterateClient();
         String response = client
@@ -60,7 +61,8 @@ public class IterateAnonymousEndpointsTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

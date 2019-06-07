@@ -37,7 +37,8 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
     private final String configId = "default";
     private String webAppUrl;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
@@ -49,13 +50,14 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
         webAppUrl = dssContext.getContextUrls().getWebAppURL();
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "select query test") public void validateContainsFunctionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "select query test")
+    public void validateContainsFunctionTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId
                 + "/CUSTOMERS?$filter=contains(CUSTOMERNAME,%27Dragon%27)%20eq%20true";
         Map<String, String> headers = new HashMap<>();
@@ -65,8 +67,8 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
         Assert.assertTrue(!response[1].toString().contains("FILENAME"));
     }
 
-    @Test(groups = "wso2.dss", description = "select query test") public void validateEndsWithFunctionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "select query test")
+    public void validateEndsWithFunctionTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId
                 + "/CUSTOMERS?$filter=endswith(CUSTOMERNAME,%27Stores%27)%20eq%20true";
         Map<String, String> headers = new HashMap<>();
@@ -75,8 +77,8 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
         Assert.assertEquals(response[0], ODataTestUtils.OK);
     }
 
-    @Test(groups = "wso2.dss", description = "select query test") public void validateStartsWithFunctionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "select query test")
+    public void validateStartsWithFunctionTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId
                 + "/CUSTOMERS?$filter=startswith(CUSTOMERNAME,%27Gift%27)%20eq%20true";
         Map<String, String> headers = new HashMap<>();
@@ -85,8 +87,8 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
         Assert.assertEquals(response[0], ODataTestUtils.OK);
     }
 
-    @Test(groups = "wso2.dss", description = "select query test") public void validateLengthFunctionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "select query test")
+    public void validateLengthFunctionTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId
                 + "/CUSTOMERS?$filter=length(CUSTOMERNAME)%20eq%2012";
         Map<String, String> headers = new HashMap<>();
@@ -95,8 +97,8 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
         Assert.assertEquals(response[0], ODataTestUtils.OK);
     }
 
-    @Test(groups = "wso2.dss", description = "select query test") public void validateIndexOfFunctionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "select query test")
+    public void validateIndexOfFunctionTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId
                 + "/CUSTOMERS?$filter=indexof(CUSTOMERNAME,%27Gift%27)%20eq%201";
         Map<String, String> headers = new HashMap<>();
@@ -105,8 +107,8 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
         Assert.assertEquals(response[0], ODataTestUtils.OK);
     }
 
-    @Test(groups = "wso2.dss", description = "select query test") public void validateToLowerFunctionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "select query test")
+    public void validateToLowerFunctionTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId
                 + "/CUSTOMERS?$filter=tolower(CUSTOMERNAME)%20eq%20%27signal%20gift%20stores%27";
         Map<String, String> headers = new HashMap<>();
@@ -116,8 +118,8 @@ public class ODataStringFunctionsTestCase extends DSSIntegrationTest {
         Assert.assertTrue(!response[1].toString().contains("FILENAME"));
     }
 
-    @Test(groups = "wso2.dss", description = "select query test") public void validateToUpperFunctionTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "select query test")
+    public void validateToUpperFunctionTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId
                 + "/CUSTOMERS?$filter=toupper(CUSTOMERNAME)%20eq%20%27SIGNAL%20GIFT%20STORES%27";
         Map<String, String> headers = new HashMap<>();

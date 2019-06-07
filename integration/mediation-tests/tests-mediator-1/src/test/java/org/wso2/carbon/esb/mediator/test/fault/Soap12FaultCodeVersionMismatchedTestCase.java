@@ -27,15 +27,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class Soap12FaultCodeVersionMismatchedTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/fault/soap12_fault_code_VersionMismatch_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Creating SOAP1.2 fault code VersionMismatched") public void testSOAP12FaultCodeVersionMismatched()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.2 fault code VersionMismatched")
+    public void testSOAP12FaultCodeVersionMismatched() throws AxisFault {
         try {
             axis2Client.sendSimpleStockQuoteSoap12(getMainSequenceURL(),
                     "http://localhost:9010/services/NonExistingService", "WSO2");
@@ -50,7 +50,8 @@ public class Soap12FaultCodeVersionMismatchedTestCase extends ESBIntegrationTest
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

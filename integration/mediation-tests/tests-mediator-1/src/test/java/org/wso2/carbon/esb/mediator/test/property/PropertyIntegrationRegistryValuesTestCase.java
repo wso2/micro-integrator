@@ -21,7 +21,8 @@ public class PropertyIntegrationRegistryValuesTestCase extends ESBIntegrationTes
     private static final String CONF_PATH = "/_system/config/custom";
     private static final String GOV_PATH = "/_system/governance/custom";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToRegistry();
     }
@@ -59,16 +60,16 @@ public class PropertyIntegrationRegistryValuesTestCase extends ESBIntegrationTes
         Thread.sleep(1000);
     }
 
-    @Test(groups = "wso2.esb", description = "Set value from config registry (default scope)") public void testConfVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set value from config registry (default scope)")
+    public void testConfVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyConfRegistryTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("Config Reg Test String"), "Property Not Set");
     }
 
-    @Test(groups = "wso2.esb", description = "Set value from goverance registry (default scope)") public void testGovVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set value from goverance registry (default scope)")
+    public void testGovVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyGovRegistryTestProxy"), null,
                         "Random Symbol");
@@ -84,7 +85,8 @@ public class PropertyIntegrationRegistryValuesTestCase extends ESBIntegrationTes
         resourceAdminServiceClient.deleteResource("/_system/governance/custom/test");
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         try {
             clearRegistry();
         } finally {

@@ -20,7 +20,8 @@ public class ESBJAVA2006RetryOnSOAPFaultTestCase extends ESBIntegrationTest {
 
     private SampleAxis2Server axis2Server;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         axis2Server = new SampleAxis2Server("test_axis2_server_9003.xml");
         axis2Server.deployService("RetryOnSoapFault");
@@ -28,9 +29,9 @@ public class ESBJAVA2006RetryOnSOAPFaultTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "<property name=\"RETRY_ON_SOAPFAULT\" value=\"false\"/>") public void testRetryOnSOAPFaultWithInOutFalse()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "<property name=\"RETRY_ON_SOAPFAULT\" value=\"false\"/>")
+    public void testRetryOnSOAPFaultWithInOutFalse() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -74,7 +75,8 @@ public class ESBJAVA2006RetryOnSOAPFaultTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             super.cleanup();
         } finally {

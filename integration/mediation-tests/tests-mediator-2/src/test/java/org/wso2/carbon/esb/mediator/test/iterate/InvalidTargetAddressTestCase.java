@@ -38,7 +38,8 @@ import static org.testng.Assert.assertEquals;
 public class InvalidTargetAddressTestCase extends ESBIntegrationTest {
     private String symbol;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         symbol = FileUtils
                 .readFileToString(new File(getESBResourceLocation() + "/mediatorconfig/iterate/iterate1.txt"));
@@ -48,9 +49,8 @@ public class InvalidTargetAddressTestCase extends ESBIntegrationTest {
      * This sets an invalid "To Address" in the clone target and message is mediated and see whether the service
      * can be found for the end point reference.
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests an invalid 'To Address'' in the clone target") public void testInvalidTargetAddress()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests an invalid 'To Address'' in the clone target")
+    public void testInvalidTargetAddress() throws Exception {
 
         try {
             axis2Client.sendMultipleQuoteRequest(getProxyServiceURLHttp("iterateInvalidTargetAddressTestProxy"), null,
@@ -63,7 +63,8 @@ public class InvalidTargetAddressTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(groups = "wso2.esb", alwaysRun = true) public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb", alwaysRun = true)
+    public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

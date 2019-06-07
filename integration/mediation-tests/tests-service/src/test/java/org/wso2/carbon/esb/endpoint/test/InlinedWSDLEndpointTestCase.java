@@ -41,19 +41,22 @@ public class InlinedWSDLEndpointTestCase extends ESBIntegrationTest {
     private final String ENDPOINT_NAME = "wsdlEpTest";
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
     }
 
-    @Test(groups = { "wso2.esb" }) public void testInlineWSDLEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testInlineWSDLEndpoint() throws Exception {
         endpointAdditionScenario();
         endpointStatisticsScenario();
         endpointDeletionScenario();
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }

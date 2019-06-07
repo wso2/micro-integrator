@@ -36,7 +36,8 @@ public class Sample155TestCase extends ESBSampleIntegrationTest {
     private TCPMonListener listener1;
     private TCPMonListener listener2;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         updateESBConfiguration(loadAndEditSample(155));
 
@@ -48,8 +49,8 @@ public class Sample155TestCase extends ESBSampleIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "Dual Channel Invocation on Both Client Side "
-            + "and Server Side of Synapse with Proxy Services") public void testDualChannelInvocation()
-            throws Exception {
+            + "and Server Side of Synapse with Proxy Services")
+    public void testDualChannelInvocation() throws Exception {
 
         axis2Client.sendDualQuoteRequest(null, "http://localhost:8481/services/StockQuoteProxy", "WSO2");
         Thread.sleep(10000);
@@ -73,7 +74,8 @@ public class Sample155TestCase extends ESBSampleIntegrationTest {
         Assert.assertTrue(foundHTTP202OK, "ESB to client reply 'HTTP 202 OK' not found");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         listener1.stop();
         listener2.stop();

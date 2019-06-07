@@ -31,12 +31,13 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class ESBJAVA4907SwaggerGenerationTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test API definition request is served correctly") public void apiDefinitionRequestTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test API definition request is served correctly")
+    public void apiDefinitionRequestTest() throws Exception {
         String restURL = getMainSequenceURL() + "swaggerGenerationTestApi?swagger.json";
         SimpleHttpClient httpClient = new SimpleHttpClient();
         HttpResponse response = httpClient.doGet(restURL, null);
@@ -48,7 +49,8 @@ public class ESBJAVA4907SwaggerGenerationTestCase extends ESBIntegrationTest {
                 baos.toString().contains("API Definition of swaggerGenerationTestApi"));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

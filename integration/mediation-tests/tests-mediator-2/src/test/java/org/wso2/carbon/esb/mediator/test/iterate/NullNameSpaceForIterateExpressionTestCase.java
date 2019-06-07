@@ -38,7 +38,8 @@ import static org.testng.Assert.assertEquals;
 public class NullNameSpaceForIterateExpressionTestCase extends ESBIntegrationTest {
     private String symbol;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         symbol = FileUtils
                 .readFileToString(new File(getESBResourceLocation() + "/mediatorconfig/iterate/iterate1.txt"));
@@ -50,9 +51,8 @@ public class NullNameSpaceForIterateExpressionTestCase extends ESBIntegrationTes
      * error handling by sending stock quote requests.It should return n error message saying evaluation of the
      * XPath expression resulted in an error.
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing null namespace for 'iterate expression' field") public void testNullNameSpaceForIterateExpression()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Testing null namespace for 'iterate expression' field")
+    public void testNullNameSpaceForIterateExpression() throws Exception {
         try {
             axis2Client
                     .sendMultipleQuoteRequest(getProxyServiceURLHttp("iterateWithNullNamespaceForExpressionTestProxy"),
@@ -67,7 +67,8 @@ public class NullNameSpaceForIterateExpressionTestCase extends ESBIntegrationTes
 
     }
 
-    @AfterClass(groups = "wso2.esb", alwaysRun = true) public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb", alwaysRun = true)
+    public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

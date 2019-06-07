@@ -31,18 +31,20 @@ import static org.testng.Assert.assertEquals;
  */
 public class PropertyIntegrationTransportInNameTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("TRANSPORT_IN_NAME_TestProxy");
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Test Property -  read incoming transport name") public void testTransportInNameProperty()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test Property -  read incoming transport name")
+    public void testTransportInNameProperty() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TRANSPORT_IN_NAME_TestProxy"), null, "");

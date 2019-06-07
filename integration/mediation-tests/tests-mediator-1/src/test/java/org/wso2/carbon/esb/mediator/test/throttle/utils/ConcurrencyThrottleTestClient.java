@@ -39,7 +39,8 @@ public class ConcurrencyThrottleTestClient implements Runnable {
         axis2Client = new AxisServiceClient();
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         try {
             OMElement response = axis2Client.sendReceive(getSleepOperationRequest(), endpointUri, "sleepOperation");
             if (response.toString().contains("Response from server")) {

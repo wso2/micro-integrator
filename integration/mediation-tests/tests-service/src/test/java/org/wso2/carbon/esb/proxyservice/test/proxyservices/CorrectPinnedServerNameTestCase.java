@@ -36,13 +36,14 @@ import static org.testng.Assert.assertEquals;
  */
 public class CorrectPinnedServerNameTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Testing if the proxy is getting deployed when the correct value is given for the pinned server") public void testDeployedProxy()
-            throws IOException {
+            "wso2.esb" }, description = "Testing if the proxy is getting deployed when the correct value is given for the pinned server")
+    public void testDeployedProxy() throws IOException {
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/xml");
 
@@ -59,7 +60,8 @@ public class CorrectPinnedServerNameTestCase extends ESBIntegrationTest {
         assertEquals(responsePayload, testResponse, "Proxy not deployed successfully!");
     }
 
-    @AfterClass(alwaysRun = true) public void clean() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clean() throws Exception {
         super.cleanup();
     }
 }

@@ -39,13 +39,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class RubyScriptSupportTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Script Mediator -Run a Ruby script with the mediator") public void testJRubyScriptMediation()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Script Mediator -Run a Ruby script with the mediator")
+    public void testJRubyScriptMediation() throws Exception {
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorRubyBasicTestProxy"), null, "WSO2");
 
@@ -61,10 +62,10 @@ public class RubyScriptSupportTestCase extends ESBIntegrationTest {
                 "Fault response null localpart");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Script Mediator -Run a Ruby script with the mediator"
-            + " -Script from gov registry") public void testJRubyScriptMediationScriptFromGovRegistry()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Script Mediator -Run a Ruby script with the mediator"
+            + " -Script from gov registry")
+    public void testJRubyScriptMediationScriptFromGovRegistry() throws Exception {
         enableDebugLogging();
         uploadResourcesToConfigRegistry();
 
@@ -85,7 +86,8 @@ public class RubyScriptSupportTestCase extends ESBIntegrationTest {
         clearUploadedResource();
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

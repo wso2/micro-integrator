@@ -34,13 +34,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class ScriptIntegrationInvokeJsScriptFunction extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests script mediator2") public void testInvokeJs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests script mediator2")
+    public void testInvokeJs() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -58,7 +60,8 @@ public class ScriptIntegrationInvokeJsScriptFunction extends ESBIntegrationTest 
                 "Fault response null localpart");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
 
     }

@@ -36,7 +36,8 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
 
     private String trpUrl;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
 
         super.init();
 
@@ -51,8 +52,8 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("artifacts/ESB/synapseconfig/registry/caching/synapse.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "ESBRegistry cachableDuration 0 property test") public void testCachableDuration()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "ESBRegistry cachableDuration 0 property test")
+    public void testCachableDuration() throws Exception {
 
         //invoking the service
         SendRequest(ADD_URL, trpUrl);
@@ -117,7 +118,8 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void unDeployService() throws Exception {
         /* un deploying deployed artifact */
         propertyPropertiesAdminServiceClient.removeProperty(PATH, NAME);
         super.cleanup();

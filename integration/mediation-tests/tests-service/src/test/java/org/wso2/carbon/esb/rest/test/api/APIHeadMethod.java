@@ -35,7 +35,8 @@ import static org.testng.Assert.assertTrue;
 public class APIHeadMethod extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -47,8 +48,8 @@ public class APIHeadMethod extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "API HTTP HEAD Method") public void apiHTTPHeadMethodTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "API HTTP HEAD Method")
+    public void apiHTTPHeadMethodTest() throws Exception {
         String restURL = "http://localhost:8480/headTest";
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpHead httpHead = new HttpHead(restURL);
@@ -62,7 +63,8 @@ public class APIHeadMethod extends ESBIntegrationTest {
         assertTrue(response.getEntity() == null);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

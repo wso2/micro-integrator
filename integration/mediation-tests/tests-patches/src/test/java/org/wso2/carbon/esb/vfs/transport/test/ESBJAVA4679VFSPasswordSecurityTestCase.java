@@ -63,7 +63,8 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
     private String inputFolderName = "in";
     private String outputFolderName = "out";
 
-    @BeforeClass(alwaysRun = true) public void runFTPServer() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void runFTPServer() throws Exception {
 
         // Username password for the FTP server to be started
         FTPUsername = "user1";
@@ -108,7 +109,8 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void stopFTPServer() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stopFTPServer() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -121,7 +123,8 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "VFS secure password test") public void securePasswordTest()
+    @Test(groups = "wso2.esb", description = "VFS secure password test")
+    public void securePasswordTest()
             throws XMLStreamException, IOException, InterruptedException, LogViewerLogViewerException {
 
         //copy SOAP message  into the SFTP server

@@ -34,7 +34,8 @@ public class PropertyWithinSequenceTestCase extends ESBIntegrationTest {
     private AggregatedRequestClient aggregatedRequestClient;
     private int no_of_requests = 0;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorPropertyTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -45,9 +46,8 @@ public class PropertyWithinSequenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Defining a property within Iterator") public void testPropertyWithinIteratorMediator()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Defining a property within Iterator")
+    public void testPropertyWithinIteratorMediator() throws IOException, XMLStreamException {
         int responseCount = 0;
         for (int i = 0; i < 10; i++) {
             String Response = aggregatedRequestClient.getResponse();
@@ -82,7 +82,8 @@ public class PropertyWithinSequenceTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }

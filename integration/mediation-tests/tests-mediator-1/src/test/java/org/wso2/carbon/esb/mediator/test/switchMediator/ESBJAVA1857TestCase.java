@@ -18,15 +18,15 @@ import java.net.URL;
 import java.rmi.RemoteException;
 
 public class ESBJAVA1857TestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/synapseconfig/filters/switchMediator/ESBJAVA_1857_switch_case_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "ESBJAVA1857 SwitchMediator:Negative Case 2: Invalid prefix") public void testSample2()
-            throws RemoteException {
+    @Test(groups = { "wso2.esb" }, description = "ESBJAVA1857 SwitchMediator:Negative Case 2: Invalid prefix")
+    public void testSample2() throws RemoteException {
 
         try {
             HttpResponse httpResponse = this.sendGetRequest("http://localhost:8280", null);
@@ -40,7 +40,8 @@ public class ESBJAVA1857TestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         cleanup();
     }
 

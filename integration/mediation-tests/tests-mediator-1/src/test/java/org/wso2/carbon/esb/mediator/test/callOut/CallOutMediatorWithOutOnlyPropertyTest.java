@@ -33,20 +33,22 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 
 public class CallOutMediatorWithOutOnlyPropertyTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CallOutMediatorOutOnlyTestProxy");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Call") public void callOutMediatorWithOutOnlyPropertyTest()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Call")
+    public void callOutMediatorWithOutOnlyPropertyTest() throws AxisFault {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CallOutMediatorOutOnlyTestProxy"), null, "WSO2");
         Assert.assertFalse(response.toString().contains("<ax21:ErrorCode>401000</ax21:ErrorCode>"),
                 " Error is using call out mediator with OUT ONLY='true' property");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -27,12 +27,13 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class IterateContinueParentTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests with continue parent=true", enabled = false) public void testContinueParentTrue()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests with continue parent=true", enabled = false)
+    public void testContinueParentTrue() throws Exception {
 
         axis2Client.sendMultipleQuoteRequest(getProxyServiceURLHttp("iterateWithContinueParentTrueTestProxy"), null,
                 "WSO2", 2);
@@ -40,15 +41,16 @@ public class IterateContinueParentTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests with continue parent=false", enabled = false) public void testContinueParentFalse()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests with continue parent=false", enabled = false)
+    public void testContinueParentFalse() throws Exception {
         axis2Client.sendMultipleQuoteRequest(getProxyServiceURLHttp("iterateWithContinueParentFalseTestProxy"), null,
                 "WSO2", 2);
         //TODO log must be checked and verify the log has not printed
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

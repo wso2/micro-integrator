@@ -44,9 +44,8 @@ public class SendIntegrationSequenceAtLocalRegistryTestCase extends ESBIntegrati
         uploadResourcesToConfigRegistry();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence at local registry build message before receive ") public void testSequenceAtLocalRegistryBuildMessage()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Receiving sequence at local registry build message before receive ")
+    public void testSequenceAtLocalRegistryBuildMessage() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorReceiveSeqAtLocalRegBuildMessageTrueTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -58,8 +57,8 @@ public class SendIntegrationSequenceAtLocalRegistryTestCase extends ESBIntegrati
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence at local registry not build message before receive ") public void testSequenceAtLocalRegistryBuildMessageNo()
-            throws Exception {
+            "wso2.esb" }, description = "Receiving sequence at local registry not build message before receive ")
+    public void testSequenceAtLocalRegistryBuildMessageNo() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorReceiveSeqAtLocalRegBuildMessageFalseTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -86,7 +85,8 @@ public class SendIntegrationSequenceAtLocalRegistryTestCase extends ESBIntegrati
                                 + "/mediatorconfig/send/sequence/test_sequence_build_message_local.xml"))));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
         resourceAdminServiceStub.deleteResource("/_system/local/sequence_conf");
         super.cleanup();

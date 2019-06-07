@@ -48,15 +48,15 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
     private IterateClient client;
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         client = new IterateClient();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Transforming a Message Using a Nested ForEach Construct") public void testNestedForEach()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using a Nested ForEach Construct")
+    public void testNestedForEach() throws Exception {
         verifyProxyServiceExistence("foreachNestedTestProxy");
 
         logViewer.clearLogs();
@@ -102,8 +102,8 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend") public void testNestedForEachMediatorWithIterate()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
+    public void testNestedForEachMediatorWithIterate() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/nested_foreach_iterate.xml");
         logViewer.clearLogs();
 
@@ -179,7 +179,8 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         client = null;
         super.cleanup();
     }

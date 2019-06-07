@@ -48,7 +48,8 @@ public class CSVDataServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(CSVDataServiceTestCase.class);
     private final String serviceName = "CSVDataService";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         addResource();
@@ -58,14 +59,15 @@ public class CSVDataServiceTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         deleteResource();
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }, invocationCount = 5) public void selectOperation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, invocationCount = 5)
+    public void selectOperation() throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/csv_sample_service", "ns1");
         OMElement payload = fac.createOMElement("getProducts", omNs);
@@ -82,9 +84,8 @@ public class CSVDataServiceTestCase extends DSSIntegrationTest {
         log.info("Service invocation success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectOperation" }, timeOut = 1000
-            * 60) public void concurrencyTest()
-            throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectOperation" }, timeOut = 1000 * 60)
+    public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/csv_sample_service", "ns1");
         OMElement payload = fac.createOMElement("getProducts", omNs);

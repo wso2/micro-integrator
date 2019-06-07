@@ -32,13 +32,14 @@ import static org.testng.Assert.assertTrue;
 
 public class InvokeAfterRemovingPropertiesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
     }
 
-    @Test(groups = "wso2.esb", description = "Invoke after removing some properties") public void testAfterRemovingProperties()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoke after removing some properties")
+    public void testAfterRemovingProperties() throws Exception {
         loadSampleESBConfiguration(380);
         OMElement response, editedResponse;
 
@@ -62,7 +63,8 @@ public class InvokeAfterRemovingPropertiesTestCase extends ESBIntegrationTest {
         Assert.assertEquals(editResponse, 0, "Value mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

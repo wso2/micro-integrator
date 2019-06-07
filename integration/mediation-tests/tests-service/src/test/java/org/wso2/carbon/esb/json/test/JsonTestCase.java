@@ -39,14 +39,15 @@ public class JsonTestCase extends ESBIntegrationTest {
 
     String epr;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         epr = this.getProxyServiceURLHttp("Version");
         httpClient = new SimpleHttpClient();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via REST with empty payload") public void testEmptyPayloadJson()
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with empty payload")
+    public void testEmptyPayloadJson()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -57,7 +58,8 @@ public class JsonTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

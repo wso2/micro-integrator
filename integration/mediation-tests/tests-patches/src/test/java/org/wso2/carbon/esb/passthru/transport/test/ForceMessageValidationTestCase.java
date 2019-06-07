@@ -50,7 +50,8 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -71,7 +72,8 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
      * @throws Exception
      */
     @Test(groups = "wso2.esb", description = "Test for invalid JSON payload with force.json.message.validation "
-            + "property.") public void testInvalidJSONMessage() throws Exception {
+            + "property.")
+    public void testInvalidJSONMessage() throws Exception {
         logViewerClient.clearLogs();
 
         String inputPayload = "{\"abc\" :\"123\" } xyz";
@@ -91,8 +93,8 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test for invalid XML payload with force.xml.message.validation property.") public void testInvalidXMLMessage()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test for invalid XML payload with force.xml.message.validation property.")
+    public void testInvalidXMLMessage() throws Exception {
         logViewerClient.clearLogs();
 
         String inputPayload = "<foo>\n" + "  <bar>xyz</bar>\n" + "</foo>\n" + "</bar>";
@@ -107,7 +109,8 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
                 "Test fails for forcing XML validation with force.xml.message.validation passthru-http property.");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

@@ -34,7 +34,8 @@ public class Sample264TestCase extends ESBSampleIntegrationTest {
 
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
 
@@ -45,14 +46,15 @@ public class Sample264TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
     //https://wso2.org/jira/browse/ESBJAVA-3440
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test JMS two way transport ", enabled = false) public void testJMSProxy()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test JMS two way transport ", enabled = false)
+    public void testJMSProxy() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "Sample264");

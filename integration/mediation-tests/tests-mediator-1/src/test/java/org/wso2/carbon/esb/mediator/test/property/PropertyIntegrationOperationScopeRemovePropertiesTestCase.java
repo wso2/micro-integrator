@@ -36,13 +36,14 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
 
     private static LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (operation scope)") public void testIntVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (operation scope)")
+    public void testIntVal() throws Exception {
         logViewer.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntOperationRemoveTestProxy"), null,
@@ -51,8 +52,8 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
         assertTrue(isMatchFound("symbol = 123"), "Integer Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (operation scope)") public void testStringVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (operation scope)")
+    public void testStringVal() throws Exception {
         logViewer.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringOperationRemoveTestProxy"), null,
@@ -62,8 +63,8 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
                 "String Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (operation scope)") public void testFloatVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (operation scope)")
+    public void testFloatVal() throws Exception {
         logViewer.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatOperationRemoveTestProxy"), null,
@@ -72,8 +73,8 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
         assertTrue(isMatchFound("symbol = 123.123"), "Float Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (operation scope)") public void testLongVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (operation scope)")
+    public void testLongVal() throws Exception {
         logViewer.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyLongOperationRemoveTestProxy"), null,
@@ -82,8 +83,8 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
         assertTrue(isMatchFound("symbol = 123123123"), "Long Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (operation scope)") public void testShortVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (operation scope)")
+    public void testShortVal() throws Exception {
         logViewer.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortOperationRemoveTestProxy"), null,
@@ -92,8 +93,8 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
         assertTrue(isMatchFound("symbol = 12"), "Short Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (operation scope)") public void testOMVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (operation scope)")
+    public void testOMVal() throws Exception {
         logViewer.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyOMOperationRemoveTestProxy"), null,
@@ -124,7 +125,8 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
         return isSet;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

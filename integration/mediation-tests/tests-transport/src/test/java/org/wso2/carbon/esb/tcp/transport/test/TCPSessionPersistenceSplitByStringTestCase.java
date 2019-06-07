@@ -36,15 +36,16 @@ public class TCPSessionPersistenceSplitByStringTestCase extends ESBIntegrationTe
     private static String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap"
             + ".org/soap/envelope/\"><soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/tcp/transport/tcpProxy_splitByString.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tcp proxy service which configured to split by string") public void tcpTransportSplitByStringProxy()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tcp proxy service which configured to split by string")
+    public void tcpTransportSplitByStringProxy() throws Exception {
         int messageCount = 3;
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.STRING.getDelimiterType(),
                 messageCount);
@@ -59,7 +60,8 @@ public class TCPSessionPersistenceSplitByStringTestCase extends ESBIntegrationTe
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

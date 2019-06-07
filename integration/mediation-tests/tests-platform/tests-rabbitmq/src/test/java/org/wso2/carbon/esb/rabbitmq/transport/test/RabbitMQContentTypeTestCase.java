@@ -38,7 +38,8 @@ public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewer;
     private RabbitMQProducerClient sender;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange2", "simple_consumer_test");
         //The consumer proxy cannot be pre-deployed since the queue declaration(which is done in 'initRabbitMQBroker')
@@ -49,9 +50,8 @@ public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test RabbitMQ consumer with no content type") public void testContentTypeEmpty()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test RabbitMQ consumer with no content type")
+    public void testContentTypeEmpty() throws Exception {
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
         String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
                 + "<ser:price>100</ser:price>\n" + "<ser:quantity>2000</ser:quantity>\n"
@@ -79,7 +79,8 @@ public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
         Assert.assertEquals(count, 1, "All messages are not received from queue");
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         sender.disconnect();
         super.cleanup();
     }

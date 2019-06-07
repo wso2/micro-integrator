@@ -64,16 +64,19 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         return handshakeFuture;
     }
 
-    @Override public void handlerAdded(ChannelHandlerContext ctx) {
+    @Override
+    public void handlerAdded(ChannelHandlerContext ctx) {
         handshakeFuture = ctx.newPromise();
         this.ctx = ctx;
     }
 
-    @Override public void channelActive(ChannelHandlerContext ctx) {
+    @Override
+    public void channelActive(ChannelHandlerContext ctx) {
         handshaker.handshake(ctx.channel());
     }
 
-    @Override public void channelInactive(ChannelHandlerContext ctx) throws InterruptedException {
+    @Override
+    public void channelInactive(ChannelHandlerContext ctx) throws InterruptedException {
         if (logger.isDebugEnabled()) {
             logger.debug("WebSocket Client disconnected!");
         }
@@ -81,7 +84,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         isOpen = false;
     }
 
-    @Override public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+    @Override
+    public void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
         Channel ch = ctx.channel();
         if (!handshaker.isHandshakeComplete()) {
             handshaker.finishHandshake(ch, (FullHttpResponse) msg);
@@ -150,7 +154,8 @@ public class WebSocketClientHandler extends SimpleChannelInboundHandler<Object> 
         return isOpen;
     }
 
-    @Override public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
+    @Override
+    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
         if (!handshakeFuture.isDone()) {
             handshakeFuture.setFailure(cause);
         }

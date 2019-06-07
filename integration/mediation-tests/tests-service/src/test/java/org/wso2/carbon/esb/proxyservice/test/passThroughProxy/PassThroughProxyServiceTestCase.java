@@ -31,14 +31,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/passThroughProxy/passThroughProxy.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Pass through proxy http with addressing uri") public void testHttpPassThroughProxyWithAddressing()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Pass through proxy http with addressing uri")
+    public void testHttpPassThroughProxyWithAddressing() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuotePassThroughProxyWithAddressing"),
@@ -54,8 +55,8 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Pass through http  proxy with out addressing uri") public void testHttpPassThroughProxyWithEndpoint()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Pass through http  proxy with out addressing uri")
+    public void testHttpPassThroughProxyWithEndpoint() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyWithEndpoint"), null, "WSO2");
@@ -70,8 +71,8 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Pass through proxy http with out addressing uri") public void testHttpPassThroughProxyWithSendMediatorInInSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Pass through proxy http with out addressing uri")
+    public void testHttpPassThroughProxyWithSendMediatorInInSequence() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuotePassThroughProxy"), null, "WSO2");
@@ -86,8 +87,8 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Pass through proxy https with addressing uri") public void testHttpsPassThroughProxyWithAddressing()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Pass through proxy https with addressing uri")
+    public void testHttpsPassThroughProxyWithAddressing() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttps("StockQuotePassThroughProxyWithAddressing"),
@@ -103,8 +104,8 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Pass through https  proxy with out addressing uri") public void testHttpsPassThroughProxyWithEndpoint()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Pass through https  proxy with out addressing uri")
+    public void testHttpsPassThroughProxyWithEndpoint() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttps("StockQuoteProxyWithEndpoint"), null, "WSO2");
@@ -119,8 +120,8 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Pass through proxy https with out addressing uri") public void testHttpsPassThroughProxyWithSendMediatorInInSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Pass through proxy https with out addressing uri")
+    public void testHttpsPassThroughProxyWithSendMediatorInInSequence() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttps("StockQuotePassThroughProxy"), null, "WSO2");
@@ -135,7 +136,8 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

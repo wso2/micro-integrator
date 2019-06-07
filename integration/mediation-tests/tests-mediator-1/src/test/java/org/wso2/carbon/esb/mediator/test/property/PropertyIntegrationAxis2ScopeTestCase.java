@@ -32,74 +32,76 @@ import static org.testng.Assert.assertTrue;
 
 public class PropertyIntegrationAxis2ScopeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (axis2 scope)") public void testDoubleVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (axis2 scope)")
+    public void testDoubleVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyDoubleAxis2TestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123123.123123"), "Double Property Not Set in the Axis2 scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (axis2 scope)") public void testIntVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (axis2 scope)")
+    public void testIntVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntAxis2TestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123"), "Integer Property Not Set in the Axis2 scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (axis2 scope)") public void testStringVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (axis2 scope)")
+    public void testStringVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringAxis2TestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("WSO2 Lanka"), "String Property Not Set in the Axis2 scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (axis2 scope)") public void testBooleanVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (axis2 scope)")
+    public void testBooleanVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyBooleanAxis2TestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("true"), "Boolean Property Not Set in the Axis2 scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (axis2 scope)") public void testFloatVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (axis2 scope)")
+    public void testFloatVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatAxis2TestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123.123"), "Float Property Not Set in the Axis2 scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Long (axis2 scope)") public void testLongVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Long (axis2 scope)")
+    public void testLongVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyLongAxis2TestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123123123"), "Long Property Not Set in the Axis2 scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (axis2 scope)") public void testShortVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (axis2 scope)")
+    public void testShortVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortAxis2TestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("12"), "Short Property Not Set in the Axis2 scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type OM (axis2 scope)") public void testOMVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type OM (axis2 scope)")
+    public void testOMVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyOMAxis2TestProxy"), null, "Random Symbol");
         assertTrue(response.toString().contains("OMMMMM"), "OM Property Not Set in the Axis2 scope!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

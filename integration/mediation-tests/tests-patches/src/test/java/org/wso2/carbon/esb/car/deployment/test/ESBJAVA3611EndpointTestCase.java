@@ -22,7 +22,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.application.mgt.synapse.stub.ExceptionException;
 import org.wso2.carbon.application.mgt.synapse.stub.types.carbon.EndpointMetadata;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.File;
@@ -36,25 +35,28 @@ public class ESBJAVA3611EndpointTestCase extends ESBIntegrationTest {
 
     String carFileName = "ESBCApp-3.2.2.car";
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
         super.init();
         uploadCapp(carFileName, new DataHandler(new FileDataSource(
                 new File(getESBResourceLocation() + File.separator + "car" + File.separator + carFileName))));
         log.info(carFileName + " uploaded successfully");
     }
 
-    @Test(groups = "wso2.esb", enabled = true, description = "Test whether Endpoint get deployed in tenant through  capp") public void testEndpointDeployed()
-            throws Exception {
+    @Test(groups = "wso2.esb", enabled = true, description = "Test whether Endpoint get deployed in tenant through  capp")
+    public void testEndpointDeployed() throws Exception {
         Awaitility.await().atMost(60, TimeUnit.SECONDS).until(checkEndpointExistence());
     }
 
-    @AfterTest(alwaysRun = true) public void cleanupEnvironment() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 
     private Callable<Boolean> checkEndpointExistence() {
         return new Callable<Boolean>() {
-            @Override public Boolean call() {
+            @Override
+            public Boolean call() {
                 EndpointMetadata[] endpointMetadatas;
                 try {
                     endpointMetadatas = getSynapseAppData("ESBCApp_3.2.2").getEndpoints();

@@ -40,14 +40,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class ScriptIntegrationToGenerateFaultTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
     //check the fault response using "MSFT" as input .
-    @Test(groups = "wso2.esb", description = "Using script mediator to generate faults. Test 1.") public void testGenerateFaults1()
-            throws XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Using script mediator to generate faults. Test 1.")
+    public void testGenerateFaults1() throws XMLStreamException {
         try {
 
             axis2Client
@@ -72,8 +73,8 @@ public class ScriptIntegrationToGenerateFaultTestCase extends ESBIntegrationTest
     }
 
     //check the fault response using "SUN" as input .
-    @Test(groups = "wso2.esb", description = "Using script mediator to generate faults.Test 2. ") public void testGenerateFaults2()
-            throws XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Using script mediator to generate faults.Test 2. ")
+    public void testGenerateFaults2() throws XMLStreamException {
         try {
 
             axis2Client
@@ -95,7 +96,8 @@ public class ScriptIntegrationToGenerateFaultTestCase extends ESBIntegrationTest
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

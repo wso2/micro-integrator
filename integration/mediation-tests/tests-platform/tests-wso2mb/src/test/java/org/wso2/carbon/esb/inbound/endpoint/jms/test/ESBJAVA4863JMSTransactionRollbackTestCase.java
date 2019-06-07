@@ -40,7 +40,8 @@ import java.io.File;
 public class ESBJAVA4863JMSTransactionRollbackTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator
@@ -56,9 +57,8 @@ public class ESBJAVA4863JMSTransactionRollbackTestCase extends ESBIntegrationTes
         addInboundEndpoint(jmsInboundEp);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test fault sequence on error : ESBJAVA-4864") public void faultSequenceOnErrorTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test fault sequence on error : ESBJAVA-4864")
+    public void faultSequenceOnErrorTest() throws Exception {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         JMSQueueMessageProducer mbQueueMessageProducer = new JMSQueueMessageProducer(
@@ -91,9 +91,8 @@ public class ESBJAVA4863JMSTransactionRollbackTestCase extends ESBIntegrationTes
         Assert.assertTrue(faultSequenceInvoked, "Fault Sequence not invoked on error while building the message");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test transaction rollback : ESBJAVA-4863 and ESBJAVA-4293") public void transactionRolBackWhenErrorTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test transaction rollback : ESBJAVA-4863 and ESBJAVA-4293")
+    public void transactionRolBackWhenErrorTest() throws Exception {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         JMSTopicMessagePublisher mbTopicMessageProducer = new JMSTopicMessagePublisher(
@@ -127,7 +126,8 @@ public class ESBJAVA4863JMSTransactionRollbackTestCase extends ESBIntegrationTes
         Assert.assertEquals(rollbackCount, 11, "ESB does not process message again after rollback");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

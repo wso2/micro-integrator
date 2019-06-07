@@ -35,8 +35,9 @@ public class NewInstanceTestCase {
     private HashMap<String, String> startupParameterMap2 = new HashMap<>();
     private AutomationContext context;
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @BeforeClass(groups = {
-            "esb.multi.server" }) public void testStartServers() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @BeforeClass(groups = { "esb.multi.server" })
+    public void testStartServers() throws Exception {
         context = new AutomationContext();
         startupParameterMap1.put("-DportOffset", "10");
         startupParameterMap1.put("startupScript", "integrator");
@@ -51,13 +52,15 @@ public class NewInstanceTestCase {
         manager.startServers(server1, server2);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "esb.multi.server" }) public void test() {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "esb.multi.server" })
+    public void test() {
         System.out.println("Test server startup with system properties");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @AfterClass public void clean()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @AfterClass
+    public void clean() throws Exception {
         manager.stopAllServers();
     }
 }

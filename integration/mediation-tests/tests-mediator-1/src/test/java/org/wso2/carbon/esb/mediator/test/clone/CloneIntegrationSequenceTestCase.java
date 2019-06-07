@@ -41,7 +41,8 @@ public class CloneIntegrationSequenceTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private CloneClient client;
 
-    @BeforeClass(groups = "wso2.esb") public void setEnvironment() throws Exception {
+    @BeforeClass(groups = "wso2.esb")
+    public void setEnvironment() throws Exception {
         init();
         client = new CloneClient();
         resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -54,8 +55,8 @@ public class CloneIntegrationSequenceTestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_sequence.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry") public void testSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry")
+    public void testSequence() throws Exception {
 
         String response = client.getResponse(getMainSequenceURL(), "WSO2");
         Assert.assertNotNull(response);
@@ -72,7 +73,8 @@ public class CloneIntegrationSequenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         resourceAdminServiceClient.deleteResource("/_system/governance/sequences/clone/cloneLogAndSendSequence");
         resourceAdminServiceClient.deleteResource("/_system/config/sequences/clone/cloneLogAndSendSequence");
         resourceAdminServiceClient = null;

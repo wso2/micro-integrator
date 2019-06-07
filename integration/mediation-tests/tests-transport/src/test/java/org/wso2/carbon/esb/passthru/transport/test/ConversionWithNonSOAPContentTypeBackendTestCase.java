@@ -47,7 +47,8 @@ public class ConversionWithNonSOAPContentTypeBackendTestCase extends ESBIntegrat
 
     private ServerConfigurationManager serverManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverManager.applyConfiguration(new File(
@@ -59,8 +60,8 @@ public class ConversionWithNonSOAPContentTypeBackendTestCase extends ESBIntegrat
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for response Content-Type when the client invokes as a SOAP11 "
-            + "request and the SOAP backend responses with content type that is not in SOAP11/SOAP12 format") public void testResponseContentType()
-            throws Exception {
+            + "request and the SOAP backend responses with content type that is not in SOAP11/SOAP12 format")
+    public void testResponseContentType() throws Exception {
 
         String payload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                 + "   <soapenv:Header/>\n   <soapenv:Body/>\n</soapenv:Envelope>";
@@ -84,7 +85,8 @@ public class ConversionWithNonSOAPContentTypeBackendTestCase extends ESBIntegrat
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         try {
             cleanup();
         } finally {

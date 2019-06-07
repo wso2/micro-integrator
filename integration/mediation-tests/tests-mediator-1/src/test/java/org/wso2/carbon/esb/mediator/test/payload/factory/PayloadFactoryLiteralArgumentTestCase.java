@@ -43,15 +43,16 @@ public class PayloadFactoryLiteralArgumentTestCase extends ESBIntegrationTest {
 
     String payload = "{\"extract\": \"<hello/>\"}"; // actual payload {"extract": "<hello/>"}
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig" + File.separator + "payload"
                         + File.separator + "factory" + File.separator + "literal_argument_payload_factory.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing Payload factory mediator with literal argument 'true'") public void testPayloadFactoryWithLiteralArgumentTrue()
+    @Test(groups = { "wso2.esb" }, description = "Testing Payload factory mediator with literal argument 'true'")
+    public void testPayloadFactoryWithLiteralArgumentTrue()
             throws AxisFault, XPathExpressionException, MalformedURLException, AutomationFrameworkException {
         String serviceURL = getMainSequenceURL() + "literal/true";
         Reader data = new StringReader(payload);
@@ -64,8 +65,8 @@ public class PayloadFactoryLiteralArgumentTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing Payload factory mediator with literal argument 'false'") public void testPayloadFactoryWithLiteralArgumentFalse()
+    @Test(groups = { "wso2.esb" }, description = "Testing Payload factory mediator with literal argument 'false'")
+    public void testPayloadFactoryWithLiteralArgumentFalse()
             throws AxisFault, XPathExpressionException, MalformedURLException, AutomationFrameworkException {
         String serviceURL = getMainSequenceURL() + "literal/false";
         Reader data = new StringReader(payload);
@@ -78,7 +79,8 @@ public class PayloadFactoryLiteralArgumentTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

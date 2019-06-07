@@ -42,7 +42,8 @@ public class CloneIntegrationAnonymousEndpointsTestCase extends ESBIntegrationTe
     private SampleAxis2Server axis2Server2;
     private CloneClient client;
 
-    @BeforeClass() public void setEnvironment() throws Exception {
+    @BeforeClass()
+    public void setEnvironment() throws Exception {
         init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_unknown_endpoints.xml");
         client = new CloneClient();
@@ -56,9 +57,9 @@ public class CloneIntegrationAnonymousEndpointsTestCase extends ESBIntegrationTe
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests http address") public void testSequence()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests http address")
+    public void testSequence() throws Exception {
 
         String response = client
                 .getResponse(getProxyServiceURLHttp("CloneIntegrationAnonymousEndpointsTestProxy"), "WSO2");
@@ -75,7 +76,8 @@ public class CloneIntegrationAnonymousEndpointsTestCase extends ESBIntegrationTe
         Assert.assertEquals(i, 2, "Child Element count mismatched");
     }
 
-    @AfterClass() public void close() throws Exception {
+    @AfterClass()
+    public void close() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         client.destroy();

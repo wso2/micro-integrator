@@ -39,7 +39,8 @@ public class CARBON15119DuplicateSOAPActionHeader extends ESBIntegrationTest {
 
     WireMonitorServer wireMonitorServer;
 
-    @BeforeTest(alwaysRun = true) public void init() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         wireMonitorServer = new WireMonitorServer(6769);
@@ -48,8 +49,8 @@ public class CARBON15119DuplicateSOAPActionHeader extends ESBIntegrationTest {
         verifyProxyServiceExistence("DuplicateSOAPActionHeader");
     }
 
-    @Test(groups = "wso2.esb", description = "Test to check whether there are duplicate SOAPAction headers in the request to the service from callout mediator") public void testCheckForDuplicateSOAPActionHeaders()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test to check whether there are duplicate SOAPAction headers in the request to the service from callout mediator")
+    public void testCheckForDuplicateSOAPActionHeaders() throws Exception {
 
         String proxyServiceUrl = getProxyServiceURLHttp("DuplicateSOAPActionHeader");
 
@@ -67,7 +68,8 @@ public class CARBON15119DuplicateSOAPActionHeader extends ESBIntegrationTest {
         Assert.assertTrue(capturedMsg.contains("SOAPAction"));
     }
 
-    @AfterTest(alwaysRun = true) public void destroy() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

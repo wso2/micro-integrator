@@ -29,19 +29,21 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import javax.xml.xpath.XPathExpressionException;
 
 public class SOAPNSBasedSwitchingNegativeCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/synapseconfig/filters/switchMediator/SOAP11_SOAP12_XPath_nagative_case.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Switch Mediator:Write xpath expression using SOAP 1.1/1.2 NS Send SOAP 1.1/1.2 response and assert switch") public void testXPathOnDifferentSOAPNS()
-            throws AxisFault, XPathExpressionException {
+            "wso2.esb" }, description = "Switch Mediator:Write xpath expression using SOAP 1.1/1.2 NS Send SOAP 1.1/1.2 response and assert switch")
+    public void testXPathOnDifferentSOAPNS() throws AxisFault, XPathExpressionException {
         OMElement response1 = null;
         OMElement response2 = null;
         response1 = axis2Client.sendSimpleStockQuoteSoap11(getProxyServiceURLHttp("switchSoap11SampleNegative"),

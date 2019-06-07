@@ -44,11 +44,13 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
     private RDBMSSampleStub stub;
     private int randomNumber;
 
-    @Factory(dataProvider = "userModeDataProvider") public RDBMSSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public RDBMSSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         String serviceEndPoint = getServiceUrlHttp(serviceName);
         stub = new RDBMSSampleStub(serviceEndPoint);
@@ -62,7 +64,8 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
         randomNumber = new Random().nextInt(2000) + 2000; //added 2000 because table already have ids up nearly to 2000
     }
 
-    @Test(groups = { "wso2.dss" }) public void selectOperation() throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" })
+    public void selectOperation() throws RemoteException, DataServiceFault {
         for (int i = 0; i < 5; i++) {
             Customer[] customers = stub.customersInBoston();
             for (Customer customer : customers) {
@@ -72,16 +75,16 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
         log.info("Select Operation Success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = "selectOperation") public void insertOperation()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "selectOperation")
+    public void insertOperation() throws RemoteException, DataServiceFault {
         for (int i = 0; i < 5; i++) {
             stub.addEmployee(randomNumber + i, "FirstName", "LastName", "testmail@test.com", 50000.00);
         }
         log.info("Insert Operation Success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = "selectOperation") public void testLengthValidator()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "selectOperation")
+    public void testLengthValidator() throws RemoteException, DataServiceFault {
         try {
             stub.addEmployee(1, "FN", "LN", "testmail@test.com", 50000.00);
         } catch (DataServiceFault e) {
@@ -90,8 +93,8 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
         }
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = "selectOperation") public void testPatternValidator()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "selectOperation")
+    public void testPatternValidator() throws RemoteException, DataServiceFault {
         try {
             stub.addEmployee(1, "FirstName", "LastName", "wrong_email_pattern", 50000.00);
         } catch (DataServiceFault e) {
@@ -100,8 +103,8 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
         }
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" }) public void selectByNumber()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" })
+    public void selectByNumber() throws RemoteException, DataServiceFault {
         for (int i = 0; i < 5; i++) {
             Employee[] employees = stub.employeesByNumber(randomNumber + i);
             Assert.assertNotNull(employees, "Employee not found");
@@ -110,8 +113,8 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
         log.info("Select operation with parameter success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectByNumber" }) public void updateOperation()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectByNumber" })
+    public void updateOperation() throws RemoteException, DataServiceFault {
         for (int i = 0; i < 5; i++) {
             stub.incrementEmployeeSalary(20000.00, randomNumber + i);
             Employee[] employees = stub.employeesByNumber(randomNumber + i);
@@ -122,9 +125,8 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
         log.info("Update Operation success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = {
-            "updateOperation" }, enabled = false) public void deleteOperation()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "updateOperation" }, enabled = false)
+    public void deleteOperation() throws RemoteException, DataServiceFault {
         for (int i = 0; i < 5; i++) {
             stub.begin_boxcar();
             stub.thousandFive();
@@ -138,7 +140,8 @@ public class RDBMSSampleTestCase extends DSSIntegrationTest {
         log.info("Delete operation success");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
         stub = null;

@@ -27,14 +27,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class Soap11FaultCodeServerTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap11_fault_code_Server_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Creating SOAP1.1 fault code Server") public void testSOAP11FaultCodeServer()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault code Server")
+    public void testSOAP11FaultCodeServer() throws AxisFault {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
             fail("This query must throw an exception.");
@@ -48,7 +48,8 @@ public class Soap11FaultCodeServerTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

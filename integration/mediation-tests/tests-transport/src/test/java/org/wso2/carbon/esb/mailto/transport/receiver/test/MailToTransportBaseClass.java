@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mailto.transport.receiver.test;
 
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
 
@@ -29,12 +28,14 @@ import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
  */
 public class MailToTransportBaseClass extends ESBIntegrationTest {
 
-    @BeforeTest(alwaysRun = true) public void setUp() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void setUp() throws Exception {
         super.init();
         GreenMailServer.startServer();
     }
 
-    @AfterTest(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void cleanUp() throws Exception {
         GreenMailServer.stopServer();
     }
 }

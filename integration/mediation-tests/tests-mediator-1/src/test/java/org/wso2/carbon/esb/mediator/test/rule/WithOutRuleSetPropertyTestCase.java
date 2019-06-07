@@ -25,17 +25,16 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import static org.testng.Assert.assertEquals;
-
 public class WithOutRuleSetPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
     }
 
-    @Test(groups = "wso2.esb", description = "scenario without rules") public void testSequenceWithOutRuleSet()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "scenario without rules")
+    public void testSequenceWithOutRuleSet() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config_without_rule/synapse.xml");
         try {
 
@@ -48,7 +47,8 @@ public class WithOutRuleSetPropertyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

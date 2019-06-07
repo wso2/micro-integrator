@@ -34,14 +34,15 @@ import static org.testng.Assert.assertNotNull;
 public class EditPassThroughProxyServiceTestCase extends ESBIntegrationTest {
     private final String proxyName = "EditStockQuotePassThroughProxy";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/passThroughProxy/EditPassThroughProxy.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Edit Pass through proxy ") public void editProxyService()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Edit Pass through proxy ")
+    public void editProxyService() throws Exception {
         ProxyServiceAdminClient proxyServiceAdminClient = new ProxyServiceAdminClient(
                 context.getContextUrls().getBackEndUrl(), getSessionCookie());
         ProxyData prxy = proxyServiceAdminClient.getProxyDetails(proxyName);
@@ -56,7 +57,8 @@ public class EditPassThroughProxyServiceTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Invoking Pass through proxy http", dependsOnMethods = {
-            "editProxyService" }) public void testHttpPassThroughProxyAfterEditing() throws Exception {
+            "editProxyService" })
+    public void testHttpPassThroughProxyAfterEditing() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName), null, "WSO2");
 
@@ -71,7 +73,8 @@ public class EditPassThroughProxyServiceTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Invoking Pass through proxy https", dependsOnMethods = {
-            "editProxyService" }) public void testHttpsPassThroughProxyAfterEditing() throws Exception {
+            "editProxyService" })
+    public void testHttpsPassThroughProxyAfterEditing() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttps(proxyName), null, "WSO2");
 
@@ -85,7 +88,8 @@ public class EditPassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -111,7 +111,8 @@ public class SimpleHTTPServer {
             this.responsePayload = responsePayload;
         }
 
-        @Override public void handle(HttpExchange httpExchange) throws IOException {
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
 
             //Add headers to response message
             if (responseHeaders != null) {

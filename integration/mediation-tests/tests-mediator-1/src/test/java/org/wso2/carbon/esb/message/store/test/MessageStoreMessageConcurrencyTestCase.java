@@ -41,15 +41,15 @@ public class MessageStoreMessageConcurrencyTestCase extends ESBIntegrationTest {
     private boolean isMessageStoreCreated = false;
     private String[] messageStores = null;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         initialize();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test whether all messages are stored from different sources") public void messageStoreQuantityTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test whether all messages are stored from different sources")
+    public void messageStoreQuantityTest() throws Exception {
         // The count should be 0 as soon as the message store is created
         Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
                 "Message store should be initially empty");
@@ -80,7 +80,8 @@ public class MessageStoreMessageConcurrencyTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         clear();
         messageStoreAdminClient = null;
         super.cleanup();
@@ -129,7 +130,8 @@ public class MessageStoreMessageConcurrencyTestCase extends ESBIntegrationTest {
     class Sender extends Thread {
         private StockQuoteClient client = new StockQuoteClient();
 
-        @Override public void run() {
+        @Override
+        public void run() {
             for (int i = 0; i < 4; i++) {
                 try {
                     client.sendSimpleQuoteRequest(getMainSequenceURL(), null, "WSO2");

@@ -48,7 +48,8 @@ public class NestedQueryTestCase extends DSSIntegrationTest {
     private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples", "ns1");
     private final String serviceName = "NestedQueryTest";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -64,30 +65,30 @@ public class NestedQueryTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void getCustomerOrdersNestedQuery()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void getCustomerOrdersNestedQuery() throws AxisFault, XPathExpressionException {
         for (int i = 1; i < 6; i++) {
             getCustomerOrders();
         }
         log.info("Customer Orders Nested Query verified");
     }
 
-    @Test(groups = { "wso2.dss" }) public void listOfficeNestedQueryOperation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void listOfficeNestedQueryOperation() throws AxisFault, XPathExpressionException {
         for (int i = 1; i < 6; i++) {
             getOffices();
         }
         log.info("List Office Nested Query verified");
     }
 
-    @Test(groups = {
-            "wso2.dss" }, description = "nested query empty result test") public void testNestedQueryEmptyResultJson()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, description = "nested query empty result test")
+    public void testNestedQueryEmptyResultJson() throws Exception {
         String endpoint = getServiceUrlHttp(serviceName) + "/listOffices";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");

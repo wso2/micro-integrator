@@ -36,7 +36,8 @@ public class ESBServerExtension extends ExecutionListenerExtension {
     private static final Log log = LogFactory.getLog(ESBServerExtension.class);
     private static TestServerManager testServerWithSecurityManager;
 
-    @Override public void initiate() throws AutomationFrameworkException {
+    @Override
+    public void initiate() throws AutomationFrameworkException {
 
         AutomationContext context;
         try {
@@ -78,7 +79,8 @@ public class ESBServerExtension extends ExecutionListenerExtension {
 
     }
 
-    @Override public void onExecutionStart() throws AutomationFrameworkException {
+    @Override
+    public void onExecutionStart() throws AutomationFrameworkException {
 
         try {
             String carbonHome = testServerWithSecurityManager.startServer();
@@ -90,7 +92,8 @@ public class ESBServerExtension extends ExecutionListenerExtension {
         }
     }
 
-    @Override public void onExecutionFinish() throws AutomationFrameworkException {
+    @Override
+    public void onExecutionFinish() throws AutomationFrameworkException {
 
         testServerWithSecurityManager.stopServer();
 

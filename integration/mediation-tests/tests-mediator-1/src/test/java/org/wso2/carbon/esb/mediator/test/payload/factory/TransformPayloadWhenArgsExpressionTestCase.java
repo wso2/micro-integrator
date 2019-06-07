@@ -32,15 +32,16 @@ import static org.testng.Assert.assertTrue;
 
 public class TransformPayloadWhenArgsExpressionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/expression_arg_payload_factory_synapse.xml");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do transformation with a Payload Format that has arguments - Argument Type : Value") public void transformPayloadByArgsValue()
-            throws AxisFault, XPathExpressionException {
+            "wso2.esb" }, description = "Do transformation with a Payload Format that has arguments - Argument Type : Value")
+    public void transformPayloadByArgsValue() throws AxisFault, XPathExpressionException {
         OMElement response;
         response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), RequestUtil.getCustomPayload("IBM"));
@@ -48,7 +49,8 @@ public class TransformPayloadWhenArgsExpressionTestCase extends ESBIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

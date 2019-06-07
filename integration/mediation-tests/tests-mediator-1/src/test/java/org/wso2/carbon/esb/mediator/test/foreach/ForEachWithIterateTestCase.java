@@ -39,14 +39,15 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
     private IterateClient client;
     private LogViewerClient logViewer;
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
         client = new IterateClient();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators") public void testForEachInlineSequenceWithIterateEndpoint()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators")
+    public void testForEachInlineSequenceWithIterateEndpoint() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple.xml");
         logViewer.clearLogs();
 
@@ -82,8 +83,8 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and aggregate mediators") public void testForEachSequenceRefWithIterateEndpoint()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and aggregate mediators")
+    public void testForEachSequenceRefWithIterateEndpoint() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple_sequenceref.xml");
         logViewer.clearLogs();
 
@@ -117,7 +118,8 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
         Assert.assertEquals(i, 2, "Message count mismatched in response");
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         client = null;
         super.cleanup();
     }

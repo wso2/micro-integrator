@@ -35,19 +35,21 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class PayloadFormatValueAndExpressionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         // applying changes to esb - source view
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/synapseconfig/payloadmediatype/" + "valueandexpression_arguments.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "invoke service - operation placeOrder") public void invokeServiceFromXmlRequest()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "invoke service - operation placeOrder")
+    public void invokeServiceFromXmlRequest() throws AxisFault {
 
         ServiceClient sender;
         Options options;

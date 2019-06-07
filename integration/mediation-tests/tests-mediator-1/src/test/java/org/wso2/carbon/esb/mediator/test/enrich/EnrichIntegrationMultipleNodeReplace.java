@@ -31,14 +31,16 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationMultipleNodeReplace extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichMultipleNodeReplaceTestProxy");
     }
 
     //test whether the return element isreplaced by multiple node.
     @Test(groups = "wso2.esb", description = "Replace the part of message defined by custom "
-            + "xpath value with the envelope of source message ") public void testEnrichMediator() throws Exception {
+            + "xpath value with the envelope of source message ")
+    public void testEnrichMediator() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -54,7 +56,8 @@ public class EnrichIntegrationMultipleNodeReplace extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

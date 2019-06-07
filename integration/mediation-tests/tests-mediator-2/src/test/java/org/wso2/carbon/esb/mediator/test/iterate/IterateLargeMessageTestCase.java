@@ -53,15 +53,16 @@ import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 public class IterateLargeMessageTestCase extends ESBIntegrationTest {
     private String symbol;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         symbol = FixedSizeSymbolGenerator.generateMessageMB(1);
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE,
-            ExecutionEnvironment.PLATFORM }) @Test(groups = "wso2.esb", description = "Tests large message in small number 5") public void testSmallNumbers()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE, ExecutionEnvironment.PLATFORM })
+    @Test(groups = "wso2.esb", description = "Tests large message in small number 5")
+    public void testSmallNumbers() throws Exception {
         OMElement response;
         for (int i = 0; i < 5; i++) {
             response = axis2Client
@@ -72,8 +73,8 @@ public class IterateLargeMessageTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Tests large message in large number 10", enabled = false) public void testLargeNumbers()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests large message in large number 10", enabled = false)
+    public void testLargeNumbers() throws Exception {
         OMElement response;
         for (int i = 0; i < 10; i++) {
             response = axis2Client
@@ -84,8 +85,8 @@ public class IterateLargeMessageTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Tests large message 3MB") public void testLargeMessage()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests large message 3MB")
+    public void testLargeMessage() throws Exception {
         String symbol2 = FixedSizeSymbolGenerator.generateMessageMB(3);
         OMElement response;
         for (int i = 0; i < 1; i++) {
@@ -97,7 +98,8 @@ public class IterateLargeMessageTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

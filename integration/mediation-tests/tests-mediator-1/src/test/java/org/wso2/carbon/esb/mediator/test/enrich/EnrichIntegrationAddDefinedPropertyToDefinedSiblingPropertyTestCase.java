@@ -27,7 +27,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationAddDefinedPropertyToDefinedSiblingPropertyTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichAddSiblingFromPropertyTestProxy");
     }
@@ -35,8 +36,8 @@ public class EnrichIntegrationAddDefinedPropertyToDefinedSiblingPropertyTestCase
     //add a sibling to the response body, and check whether the sibling element is contained in the
     // response.
     @Test(groups = "wso2.esb", description = "Add defined property in source configuration as "
-            + "a sibling of specified property in target " + "configuration") public void testEnrichMediator()
-            throws Exception {
+            + "a sibling of specified property in target " + "configuration")
+    public void testEnrichMediator() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -49,7 +50,8 @@ public class EnrichIntegrationAddDefinedPropertyToDefinedSiblingPropertyTestCase
         assertEquals(newSibling.getText(), "Sibling", "Fault, new sibling property content not " + "added.");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

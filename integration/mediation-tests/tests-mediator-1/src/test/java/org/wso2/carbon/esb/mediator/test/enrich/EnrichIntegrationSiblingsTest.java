@@ -35,13 +35,14 @@ public class EnrichIntegrationSiblingsTest extends ESBIntegrationTest {
 
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         verifyProxyServiceExistence("enrichIntegrationSiblingsTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Adding custom content as sibling") public void testAddSibling()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Adding custom content as sibling")
+    public void testAddSibling() throws AxisFault, XMLStreamException {
 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichIntegrationSiblingsTestProxy"), null, "IBM");
@@ -50,7 +51,8 @@ public class EnrichIntegrationSiblingsTest extends ESBIntegrationTest {
                 .getText(), "test", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 

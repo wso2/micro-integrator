@@ -39,22 +39,23 @@ public class HTTPGETOnJSONPayloadsTestCase extends ESBIntegrationTest {
     private TomcatServerManager tomcatServerManager;
     private Client client = Client.create();
 
-    @BeforeTest(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonHTTPGetProxy.xml");
         tomcatServerManager = new TomcatServerManager(MusicConfig.class.getName(), "jaxrs", 8080);
         tomcatServerManager.startServer();
     }
 
-    @AfterTest(alwaysRun = true) public void stop() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         tomcatServerManager.stop();
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests GET method with application/json content type") public void testHTTPGetRequestJSONScenario()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests GET method with application/json content type")
+    public void testHTTPGetRequestJSONScenario() throws Exception {
 
         WebResource webResource = client.resource(getProxyServiceURLHttp("GetProxy"));
 

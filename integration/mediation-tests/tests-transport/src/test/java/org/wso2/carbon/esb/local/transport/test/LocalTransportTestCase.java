@@ -33,7 +33,8 @@ import static org.testng.Assert.assertEquals;
  */
 public class LocalTransportTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployProxyServices() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployProxyServices() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "local" + File.separator
@@ -41,13 +42,13 @@ public class LocalTransportTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void unDeployProxyServices() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void unDeployProxyServices() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "testing local transport scenario") public void testLocalTransportScenario()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "testing local transport scenario")
+    public void testLocalTransportScenario() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("LocalTransportProxy"), null, "WSO2");

@@ -24,7 +24,8 @@ import org.wso2.esb.integration.services.jaxrs.musicsample.bean.Singer;
 
 import java.util.concurrent.ConcurrentHashMap;
 
-@Service public class MusicService {
+@Service
+public class MusicService {
 
     private final ConcurrentHashMap<String, Music> musicCollection = new ConcurrentHashMap<String, Music>();
     private final ConcurrentHashMap<String, Singer> singerCollection = new ConcurrentHashMap<String, Singer>();

@@ -20,11 +20,11 @@ package org.wso2.esb.integration.common.extensions.carbonserver;
 
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import javax.xml.xpath.XPathExpressionException;
 
 public class MultipleServersManager {
 

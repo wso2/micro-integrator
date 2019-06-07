@@ -38,12 +38,13 @@ public class LocationHeaderWithRelativeURLPathTestCase extends ESBIntegrationTes
     private final String LOCATION_HEADER_NAME = "Location";
     private final String EXPECTED_LOCATION_HEADER = "http://127.0.0.1:8480/services";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test to check whether location header value persists in the http response") public void testForLocationHeaderInResponse()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test to check whether location header value persists in the http response")
+    public void testForLocationHeaderInResponse() throws Exception {
 
         String proxyServiceUrl = getProxyServiceURLHttp("LocationHeaderTestProxy");
 
@@ -62,7 +63,8 @@ public class LocationHeaderWithRelativeURLPathTestCase extends ESBIntegrationTes
         assertEquals(locationHeaderValue, EXPECTED_LOCATION_HEADER, "Incorrect location header!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

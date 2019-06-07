@@ -43,7 +43,8 @@ import static org.testng.Assert.assertTrue;
  * as XML.
  */
 public class JSONPayloadXMLSpecialCharEscapeTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -51,11 +52,13 @@ public class JSONPayloadXMLSpecialCharEscapeTest extends ESBIntegrationTest {
                         + "JSONPayloadXMLSpecialCharEscapeTest.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "JSONPayload with XMLSpecialChar Escape Test") public void JSONPayloadWithXMLSpecialCharEscapeTest()
+    @Test(groups = "wso2.esb", description = "JSONPayload with XMLSpecialChar Escape Test")
+    public void JSONPayloadWithXMLSpecialCharEscapeTest()
             throws AxisFault, MalformedURLException, AutomationFrameworkException {
 
         //json request payload.

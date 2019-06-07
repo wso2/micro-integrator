@@ -37,13 +37,14 @@ import static org.testng.Assert.fail;
  */
 public class DropIntegrationTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2240*/
-    @Test(groups = "wso2.esb", description = "Tests-Null response after Drop mediator") public void testDropMediator()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Tests-Null response after Drop mediator")
+    public void testDropMediator() throws AxisFault {
         OMElement stockQuoteResponse1 = null;
         OMElement stockQuoteResponse2 = null;
         OMElement stockQuoteResponse3 = null;
@@ -75,7 +76,8 @@ public class DropIntegrationTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

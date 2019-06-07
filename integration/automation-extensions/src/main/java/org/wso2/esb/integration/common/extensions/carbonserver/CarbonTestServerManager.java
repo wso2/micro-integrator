@@ -21,9 +21,9 @@ package org.wso2.esb.integration.common.extensions.carbonserver;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 
-import javax.xml.xpath.XPathExpressionException;
 import java.io.IOException;
 import java.util.HashMap;
+import javax.xml.xpath.XPathExpressionException;
 
 public class CarbonTestServerManager extends TestServerManager {
     public CarbonTestServerManager(AutomationContext autoCtx, String carbonZip,

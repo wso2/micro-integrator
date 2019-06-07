@@ -21,7 +21,6 @@ package org.wso2.carbon.esb.json.test;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
@@ -40,12 +39,13 @@ import static org.testng.Assert.assertTrue;
  */
 public class JSONPayloadProperFormatTenantModeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Check whether JSON message formatting works properly in tenant mode") public void testJSONFormattingInTenantMode()
-            throws MalformedURLException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Check whether JSON message formatting works properly in tenant mode")
+    public void testJSONFormattingInTenantMode() throws MalformedURLException, AutomationFrameworkException {
         String JSON_PAYLOAD = "{\"emails\": [{\"value\": \"test@wso2.com\"}]}";
         Map<String, String> headers = new HashMap<>();
         headers.put("Content-Type", "application/json");
@@ -61,7 +61,8 @@ public class JSONPayloadProperFormatTenantModeTestCase extends ESBIntegrationTes
                 "Expected format not received!");
     }
 
-    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void unDeployService() throws Exception {
         super.cleanup();
     }
 

@@ -20,7 +20,8 @@ public class JMSEndpointTestCase extends ESBIntegrationTest {
     private EndPointAdminClient endPointAdminClient;
     private int NUM_OF_MESSAGES = 3;
 
-    @BeforeClass(alwaysRun = true) public void deployeService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployeService() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_transport.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
@@ -30,7 +31,8 @@ public class JMSEndpointTestCase extends ESBIntegrationTest {
                 .until(isServiceDeployed("JMSEndpointTestCaseProxy"));
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test JMS to JMS ") public void testJMSProxy() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test JMS to JMS ")
+    public void testJMSProxy() throws Exception {
 
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
@@ -66,7 +68,8 @@ public class JMSEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void UndeployeService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void UndeployeService() throws Exception {
         super.init();
         endPointAdminClient = null;
         super.cleanup();
@@ -74,7 +77,8 @@ public class JMSEndpointTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isServiceDeployed(final String proxyName) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return isProxySuccesfullyDeployed(proxyName);
             }
         };
@@ -82,7 +86,8 @@ public class JMSEndpointTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return consumer.getMessages().size() == NUM_OF_MESSAGES;
             }
         };

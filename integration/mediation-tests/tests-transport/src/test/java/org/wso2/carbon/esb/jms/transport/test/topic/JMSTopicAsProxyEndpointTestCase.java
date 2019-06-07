@@ -31,14 +31,15 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
 
 public class JMSTopicAsProxyEndpointTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/topic/send_messages_topic_synapse.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport") public void testJMSProxy()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
+    public void testJMSProxy() throws Exception {
 
         AxisServiceClient client = new AxisServiceClient();
         int messageCount = 5;
@@ -71,7 +72,8 @@ public class JMSTopicAsProxyEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

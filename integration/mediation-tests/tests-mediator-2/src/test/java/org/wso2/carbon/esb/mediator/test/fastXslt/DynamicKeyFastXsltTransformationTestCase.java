@@ -32,7 +32,8 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class DynamicKeyFastXsltTransformationTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         uploadResourcesToRegistry();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fast_xslt/fast_xslt_dynamic_key_synapse.xml");
@@ -40,8 +41,8 @@ public class DynamicKeyFastXsltTransformationTestCase extends ESBIntegrationTest
 
     @Test(groups = { "wso2.esb" }, description =
             "Do Fast fastXSLT transformation by Select the key type as dynamic key and retrieve"
-                    + " the transformation from that.") public void fastXsltTransformationFromDynamicKeyTest()
-            throws Exception {
+                    + " the transformation from that.")
+    public void fastXsltTransformationFromDynamicKeyTest() throws Exception {
 
         OMElement response;
         response = axis2Client.sendCustomQuoteRequest(getMainSequenceURL(), null, "WSO2");
@@ -51,7 +52,8 @@ public class DynamicKeyFastXsltTransformationTestCase extends ESBIntegrationTest
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         try {
             clearRegistry();
         } finally {

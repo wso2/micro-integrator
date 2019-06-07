@@ -23,7 +23,8 @@ public class HealthCareScenarioTestCase extends ESBIntegrationTest {
     ResourceAdminServiceClient resourceAdminServiceStub;
     AxisServiceClient a2Client = new AxisServiceClient();
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -36,9 +37,9 @@ public class HealthCareScenarioTestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/healthcarescenario/synapse.xml");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Health Care Scenario Test Case") public void testScenario()
-            throws IOException, XMLStreamException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Health Care Scenario Test Case")
+    public void testScenario() throws IOException, XMLStreamException {
 
         OMElement requestXML = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n"
                 + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
@@ -78,7 +79,8 @@ public class HealthCareScenarioTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/governance/service_integration");
         resourceAdminServiceStub = null;
         a2Client = null;

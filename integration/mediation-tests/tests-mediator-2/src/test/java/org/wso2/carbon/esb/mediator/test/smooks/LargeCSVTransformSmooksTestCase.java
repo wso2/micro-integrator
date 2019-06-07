@@ -36,7 +36,8 @@ public class LargeCSVTransformSmooksTestCase extends ESBIntegrationTest {
 
     private final int RECORD_COUNT = 11;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
@@ -45,9 +46,8 @@ public class LargeCSVTransformSmooksTestCase extends ESBIntegrationTest {
      * This test checks the completeness of the resulting XML, when we perform a smooks transformation in a csv file
      * which is large in size(>4K)
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests the smooks transformation when large CSV files are sent") public void testLargeCSVTransformSmooks()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests the smooks transformation when large CSV files are sent")
+    public void testLargeCSVTransformSmooks() throws Exception {
         OMElement response;
         CSVInputRequestUtil testCSVInputRequest = new CSVInputRequestUtil();
         response = testCSVInputRequest
@@ -62,7 +62,8 @@ public class LargeCSVTransformSmooksTestCase extends ESBIntegrationTest {
         assertEquals(recordCount, RECORD_COUNT, "Smooks Mediator couldn't transform large CSV files(>4K) ");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

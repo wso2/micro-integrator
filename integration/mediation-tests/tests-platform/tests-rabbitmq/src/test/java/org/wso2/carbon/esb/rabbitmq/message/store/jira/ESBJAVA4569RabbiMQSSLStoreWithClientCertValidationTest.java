@@ -71,7 +71,8 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
 
     private File destinationConfig = null;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
@@ -89,8 +90,8 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "RabbitMQ message store support for SSL(with client certificate validation)") public void testRabbitMQMessageStore()
-            throws Exception {
+            "wso2.esb" }, description = "RabbitMQ message store support for SSL(with client certificate validation)")
+    public void testRabbitMQMessageStore() throws Exception {
 
         HttpResponse response = httpClient.doPost(url, headers, payload, "application/json");
         if (response.getStatusLine().getStatusCode() == 200 || response.getStatusLine().getStatusCode() == 202) {
@@ -114,7 +115,8 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         super.init();
         rabbitMQServer.stop();

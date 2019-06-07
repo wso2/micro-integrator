@@ -54,7 +54,8 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private SampleAxis2Server axis2Server1;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
@@ -72,7 +73,8 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         resourceAdminServiceClient.deleteResource("/_system/config/test_ep_config");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -83,8 +85,9 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }) public void testDefaultEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" })
+    public void testDefaultEndpoint() throws Exception {
 
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
@@ -93,18 +96,18 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
         endpointDeletionScenario();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Default endpoint") public void testSendingToDefaultEndpoint()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Default endpoint")
+    public void testSendingToDefaultEndpoint() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPoint"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Default endpoint in Config Reg") public void testSendingToDefaultEndpoint_ConfigReg()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Default endpoint in Config Reg")
+    public void testSendingToDefaultEndpoint_ConfigReg() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("defaultEndPoint_Config_Reg"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
@@ -113,8 +116,9 @@ public class DefaultEndpointTestCase extends ESBIntegrationTest {
     }
 
     //Related to Patch Automation https://wso2.org/jira/browse/CARBON-10551
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Default endpoint which have Suspension") public void testSendingToDefaultEndpointWithSuspension()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Default endpoint which have Suspension")
+    public void testSendingToDefaultEndpointWithSuspension()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException, InterruptedException {
 

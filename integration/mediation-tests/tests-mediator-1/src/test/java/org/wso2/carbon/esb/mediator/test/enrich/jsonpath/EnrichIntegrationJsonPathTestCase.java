@@ -52,7 +52,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
     private String input;
     private JsonParser parser;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         setJsonPathConfiguration();
         input = FileUtils.readFileToString(new File(
@@ -66,7 +67,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Take the response json and add it as a child to the same json "
-            + "specified by the json path") public void testAddBodyToChildJsonpath() throws Exception {
+            + "specified by the json path")
+    public void testAddBodyToChildJsonpath() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"patient\": {\n" + "        \"name\": \"John Doe\",\n" + "        \"address\": null,\n"
                         + "        \"phone\": [\n" + "            8770586755,\n" + "            35352399,\n"
@@ -86,8 +88,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Add a child json object to the source payload") public void testAddChildUsingJsonPath()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Add a child json object to the source payload")
+    public void testAddChildUsingJsonPath() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
                         + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
@@ -100,8 +102,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Add json objects as a child to a json array and json object") public void testAddChildJsonpath()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Add json objects as a child to a json array and json object")
+    public void testAddChildJsonpath() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
                         + "        8770586755,\n" + "        35352399,\n" + "        null,\n" + "        {\n"
@@ -118,8 +120,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Enrich value to property, enrich inline json object to body "
-            + "and swap the former property") public void testEnrichToPropertyReplaceBodyandEnrichPropertyBack()
-            throws Exception {
+            + "and swap the former property")
+    public void testEnrichToPropertyReplaceBodyandEnrichPropertyBack() throws Exception {
         String expectedOutput = "{\n" + "    \"person\": {\n" + "        \"name\": \"Alice\",\n"
                 + "        \"email\": \"johndoe@gmail.com\"\n" + "    }\n" + "}";
 
@@ -127,8 +129,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
                 "Enrich property back and forth from the message body failed");
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich json body to property and enrich property to body bacck") public void testEnrichToPropertyandEnrichBodyBack()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Enrich json body to property and enrich property to body bacck")
+    public void testEnrichToPropertyandEnrichBodyBack() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
                         + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
@@ -143,8 +145,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Enrich Json body to Property, replace body "
-            + "and enrich the property back to body") public void testEnrichBodyToPropertyReplaceBodyandEnrichPropertyBack()
-            throws Exception {
+            + "and enrich the property back to body")
+    public void testEnrichBodyToPropertyReplaceBodyandEnrichPropertyBack() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
                         + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
@@ -158,8 +160,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich a child value to its parent and replace") public void testEnrichChildPropertyToParent()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Enrich a child value to its parent and replace")
+    public void testEnrichChildPropertyToParent() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
                         + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
@@ -173,8 +175,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Enrich a json payload to property, receive a xml body "
-            + "from backend and enrich the json property back to body") public void testEnrichJsonToPropertyAndReplaceXmlBody()
-            throws Exception {
+            + "from backend and enrich the json property back to body")
+    public void testEnrichJsonToPropertyAndReplaceXmlBody() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
                         + "        8770586755,\n" + "        35352399,\n" + "        null\n" + "    ],\n"
@@ -188,8 +190,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Enrich several inline objects to properties and enrich them to body") public void testEnrichInlineToPropertyAndBody()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Enrich several inline objects to properties and enrich them to body")
+    public void testEnrichInlineToPropertyAndBody() throws Exception {
         String expectedOutput =
                 "{\n" + "    \"name\": \"John Doe\",\n" + "    \"address\": null,\n" + "    \"phone\": [\n"
                         + "        32535235,\n" + "        35353897,\n" + "        null\n" + "    ],\n"
@@ -202,7 +204,8 @@ public class EnrichIntegrationJsonPathTestCase extends ESBIntegrationTest {
                 "Enriching several inline objects to properties and enrich them to body failed");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 

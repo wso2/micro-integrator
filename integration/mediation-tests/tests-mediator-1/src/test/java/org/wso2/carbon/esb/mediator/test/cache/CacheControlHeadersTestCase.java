@@ -46,7 +46,8 @@ public class CacheControlHeadersTestCase extends ESBIntegrationTest {
 
     private String messagePayload;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -64,9 +65,9 @@ public class CacheControlHeadersTestCase extends ESBIntegrationTest {
      * This test case checks whether the  back-end (axis2Server) has been hit for each request as no-store header is
      * returned with the response.
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator") public void testNoStore()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator")
+    public void testNoStore() throws Exception {
         String apiName = "noStore";
         OMElement response;
         response = axis2Client.sendSimpleStockQuoteRequest(null, getApiInvocationURL(apiName), "");
@@ -86,9 +87,9 @@ public class CacheControlHeadersTestCase extends ESBIntegrationTest {
     /**
      * This test case checks whether an Age header is returned with the response.
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator") public void testAgeHeader()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator")
+    public void testAgeHeader() throws Exception {
         String apiName = "includeAge";
 
         Map<String, String> headers = new HashMap<>();
@@ -108,9 +109,9 @@ public class CacheControlHeadersTestCase extends ESBIntegrationTest {
     /**
      * This test case checks whether an Age header is returned with the response.
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator") public void testMaxAge()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Testing with a large cache time out value for cache mediator")
+    public void testMaxAge() throws Exception {
         String apiName = "maxAge";
         OMElement response;
         response = axis2Client.sendSimpleStockQuoteRequest(null, getApiInvocationURL(apiName), "");
@@ -135,7 +136,8 @@ public class CacheControlHeadersTestCase extends ESBIntegrationTest {
         assertTrue(changeValue.equals(newChangeValue) && !changeValue.equals(newChangeValue1));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

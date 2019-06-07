@@ -39,7 +39,8 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewer;
     private RabbitMQProducerClient sender;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange2", "simple_consumer_test");
         //The consumer proxy cannot be pre-deployed since the queue declaration(which is done in 'initRabbitMQBroker')
@@ -50,8 +51,8 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer ") public void testRabbitMQConsumer()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer ")
+    public void testRabbitMQConsumer() throws Exception {
         logViewer.clearLogs();
 
         String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
@@ -78,9 +79,8 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
         Assert.assertEquals(count, 200, "All messages are not received from queue");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with large messages ~10KB") public void testRabbitMQConsumerLargeMessage()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with large messages ~10KB")
+    public void testRabbitMQConsumerLargeMessage() throws Exception {
         logViewer.clearLogs();
 
         String message = FixedSizeSymbolGenerator.generateMessageKB(10);
@@ -104,7 +104,8 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
         Assert.assertEquals(count, 200, "All messages are not received from queue");
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
         sender.disconnect();
         sender = null;

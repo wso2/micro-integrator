@@ -26,7 +26,8 @@ public class ESBJAVA4318Testcase extends ESBIntegrationTest {
     private final DefaultHttpClient httpClient = new DefaultHttpClient();
     private final Map<String, String> headers = new HashMap<String, String>(1);
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
 
         String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"PF\"\n"
@@ -58,8 +59,8 @@ public class ESBJAVA4318Testcase extends ESBIntegrationTest {
         isProxyDeployed("PF");
     }
 
-    @Test(groups = "wso2.esb", description = "cache meditor with payloads including Processing Insturctions") public void testCacheMediatorWithPIs()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "cache meditor with payloads including Processing Insturctions")
+    public void testCacheMediatorWithPIs() throws Exception {
 
         String requestXml =
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"

@@ -41,15 +41,15 @@ public class UTResponseCode401UTauthFailure extends ESBIntegrationTest {
             + "   </soapenv:Body></soapenv:Envelope>";
     OMElement payload = null;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("UTResponseCode401UTauthFailureProxy");
         payload = AXIOMUtil.stringToOM(requestPayload);
     }
 
-    @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Test UT scenario without basic auth headers") public void testWithoutAuthHeaders()
-            throws Exception {
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Test UT scenario without basic auth headers")
+    public void testWithoutAuthHeaders() throws Exception {
         String addUrl = getProxyServiceURLHttps("UTResponseCode401UTauthFailureProxy");
         try {
             axis2Client.clearHttpHeader();
@@ -60,9 +60,8 @@ public class UTResponseCode401UTauthFailure extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Test UT scenario with correct basic auth headers") public void testWithAuthHeaders()
-            throws Exception {
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Test UT scenario with correct basic auth headers")
+    public void testWithAuthHeaders() throws Exception {
         String addUrl = getProxyServiceURLHttps("UTResponseCode401UTauthFailureProxy");
         axis2Client.clearHttpHeader();
         axis2Client.addHttpHeader("Content-type", "text/xml;charset=UTF-8");
@@ -75,9 +74,8 @@ public class UTResponseCode401UTauthFailure extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Test UT scenario with incorrect basic auth headers") public void testWithWrongCredentials()
-            throws Exception {
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Test UT scenario with incorrect basic auth headers")
+    public void testWithWrongCredentials() throws Exception {
         String addUrl = getProxyServiceURLHttps("UTResponseCode401UTauthFailureProxy");
         axis2Client.clearHttpHeader();
         axis2Client.addHttpHeader("Authorization", "Basic YWRtaW46YddWRtaW4=");
@@ -89,7 +87,8 @@ public class UTResponseCode401UTauthFailure extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

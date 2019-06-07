@@ -50,7 +50,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private Map<String, String> httpHeaders = new HashMap();
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
@@ -74,7 +75,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Validating the request payload against the JSON Schema"
-            + " stored in local-entry") public void validRequestTest1() throws Exception {
+            + " stored in local-entry")
+    public void validRequestTest1() throws Exception {
         String payload =
                 "{\"msg\":{" + "  \"getQuote\": {" + "    \"request\": { \"symbol\": \"WSO2\" }" + "  }" + "}" + "}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonTestProxy")), payload,
@@ -84,7 +86,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Validating the request payload against the JSON Schema "
-            + "stored in config registry") public void validRequestTest2() throws Exception {
+            + "stored in config registry")
+    public void validRequestTest2() throws Exception {
         String payload = "{" + "  \"getQuote\": {" + "    \"request\": { \"symbol\": \"WSO2\" }" + "  }" + "}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonSchemaFromRegTestProxy")),
                 payload, httpHeaders);
@@ -93,7 +96,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Validating the request payload against the JSON Schema"
-            + " stored in local-entry") public void inValidRequestTest1() throws Exception {
+            + " stored in local-entry")
+    public void inValidRequestTest1() throws Exception {
         String payload =
                 "{\"msg\":{" + "  \"getQuote\": {" + "    \"request\": { \"symbol1\": \"WSO2\" }" + "  }" + "}" + "}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonTestProxy")), payload,
@@ -104,8 +108,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Validating the invalid request payload having invalid "
-            + "element against the JSON Schema stored in config registry") public void inValidRequestTest2()
-            throws Exception {
+            + "element against the JSON Schema stored in config registry")
+    public void inValidRequestTest2() throws Exception {
         String payload = "{" + "  \"getQuote\": {" + "    \"request\": { \"symbol1\": \"WSO2\" }" + "  }" + "}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonSchemaFromRegTestProxy")),
                 payload, httpHeaders);
@@ -115,7 +119,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Validating the invalid request payload with Source path "
-            + "against the JSON Schema stored in local-entry") public void inValidRequestTest3() throws Exception {
+            + "against the JSON Schema stored in local-entry")
+    public void inValidRequestTest3() throws Exception {
         String payload =
                 "{\"body\":{" + "  \"getQuote\": {" + "    \"request\": { \"symbol\": \"WSO2\" }" + "  }" + "}" + "}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonTestProxy")), payload,
@@ -126,7 +131,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Validating the empty request payload({}) against the JSON Schema"
-            + " stored in local-entry") public void inValidRequestEmptyJSONMessageTest() throws Exception {
+            + " stored in local-entry")
+    public void inValidRequestEmptyJSONMessageTest() throws Exception {
         String payload = "{}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonTestProxy")), payload,
                 httpHeaders);
@@ -141,8 +147,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
      *
      * @throws Exception on a test exception
      */
-    @Test(groups = "wso2.esb", description = "Validating the valid and invalid requests series against the JSON Schema") public void validAndInvalidRequestTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Validating the valid and invalid requests series against the JSON Schema")
+    public void validAndInvalidRequestTest() throws Exception {
         sendInvalidRequestAndAssert();
         sendInvalidRequestAndAssert();
         sendInvalidRequestAndAssert();
@@ -195,7 +201,8 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
         return new String(encoded, StandardCharsets.UTF_8);
     }
 
-    @AfterClass(alwaysRun = true) public void clear() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clear() throws Exception {
         super.cleanup();
         resourceAdminServiceClient.deleteResource("/_system/config/StockQuoteSchema.json");
     }

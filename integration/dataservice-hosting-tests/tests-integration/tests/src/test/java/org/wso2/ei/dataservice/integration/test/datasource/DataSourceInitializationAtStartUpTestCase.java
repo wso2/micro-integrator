@@ -76,7 +76,8 @@ public class DataSourceInitializationAtStartUpTestCase extends DSSIntegrationTes
     private SampleDataServiceClient client;
     private String dataSourceName = "";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         carbonDataSourceName = createDataSource();
@@ -86,34 +87,39 @@ public class DataSourceInitializationAtStartUpTestCase extends DSSIntegrationTes
         client = new SampleDataServiceClient(getServiceUrlHttp(serviceName));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void selectOperation() throws AxisFault {
+    @Test(groups = { "wso2.dss" })
+    public void selectOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.getCustomerInBoston();
         }
         log.info("Select Operation Success");
     }
 
-    @Test(dependsOnMethods = { "selectOperation" }, timeOut = 1000 * 60 * 5) @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) public void testServerRestarting() throws Exception {
+    @Test(dependsOnMethods = { "selectOperation" }, timeOut = 1000 * 60 * 5)
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void testServerRestarting() throws Exception {
         log.info("Restarting Server.....");
         new ServerConfigurationManager("DSS", TestUserMode.SUPER_TENANT_ADMIN);
 
     }
 
-    @Test(dependsOnMethods = { "testServerRestarting" }) @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) public void isServiceExistAfterRestarting() throws Exception {
+    @Test(dependsOnMethods = { "testServerRestarting" })
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void isServiceExistAfterRestarting() throws Exception {
         DSSTestCaseUtils dssTest = new DSSTestCaseUtils();
         super.init();
         dssTest.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName);
     }
 
-    @Test(dependsOnMethods = { "isServiceExistAfterRestarting" }) @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) public void invokeOperation() throws AxisFault {
+    @Test(dependsOnMethods = { "isServiceExistAfterRestarting" })
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void invokeOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.getCustomerInBoston();
         }
@@ -121,9 +127,9 @@ public class DataSourceInitializationAtStartUpTestCase extends DSSIntegrationTes
     }
 
     //TestCase for https://wso2.org/jira/browse/CARBON-15172
-    @Test(dependsOnMethods = {
-            "isServiceExistAfterRestarting" }, enabled = false) @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) public void testMBeanForDatasource() throws AxisFault {
+    @Test(dependsOnMethods = { "isServiceExistAfterRestarting" }, enabled = false)
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void testMBeanForDatasource() throws AxisFault {
         Map<String, String[]> env = new HashMap<String, String[]>();
         String[] credentials = { "admin", "admin" };
         env.put(JMXConnector.CREDENTIALS, credentials);

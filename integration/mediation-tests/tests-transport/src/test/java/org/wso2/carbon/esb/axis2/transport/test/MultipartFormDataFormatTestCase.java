@@ -45,12 +45,13 @@ import static org.testng.Assert.assertNotNull;
  */
 public class MultipartFormDataFormatTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test the order of elements in the response received from the esb in multipart form data") public void elementOrderTestCase()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test the order of elements in the response received from the esb in multipart form data")
+    public void elementOrderTestCase() throws Exception {
         String serviceURL = getProxyServiceURLHttp("MultipartFormDataTestProxy");
         String payload = "<body/>";
         Reader data = new StringReader(payload);
@@ -77,7 +78,8 @@ public class MultipartFormDataFormatTestCase extends ESBIntegrationTest {
                 "Incorrect order of elements in the response!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

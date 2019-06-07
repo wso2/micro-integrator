@@ -37,21 +37,22 @@ import java.util.Map;
  */
 public class ESBJAVA4940CharacterEncodingRemovalTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         verifyProxyServiceExistence("ESBJAVA4940SetEncodingTrue");
         verifyProxyServiceExistence("ESBJAVA4940SetEncodingFalse");
     }
 
-    @Test(groups = "wso2.esb", description = "Test charset encoding removal when SetEncoding is true") public void testRemoveCharsetSetEncodingPropertyTrue()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test charset encoding removal when SetEncoding is true")
+    public void testRemoveCharsetSetEncodingPropertyTrue() throws Exception {
         Assert.assertTrue(isCharsetEncodingPresent("ESBJAVA4940SetEncodingTrue", 8995),
                 "Charset Encoding is not present in the request sent");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Test charset encoding removal when SetEncoding is false") public void testRemoveCharsetSetEncodingPropertyFalse()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test charset encoding removal when SetEncoding is false")
+    public void testRemoveCharsetSetEncodingPropertyFalse() throws Exception {
         Assert.assertFalse(isCharsetEncodingPresent("ESBJAVA4940SetEncodingFalse", 8996),
                 "Charset Encoding is present in the request sent");
     }
@@ -82,7 +83,8 @@ public class ESBJAVA4940CharacterEncodingRemovalTestCase extends ESBIntegrationT
         return capturedMessage.contains("charset=UTF-8");
     }
 
-    @AfterClass public void cleanUp() throws Exception {
+    @AfterClass
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

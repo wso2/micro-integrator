@@ -34,18 +34,20 @@ public class PropertyIntegrationOperationNamePropertyTestCase extends ESBIntegra
 
     private HttpClientUtil clientUtil;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("propertyOperationNameTestProxy");
         clientUtil = new HttpClientUtil();
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing functionality of OperationName Property") public void testOperationNameProperty()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing functionality of OperationName Property")
+    public void testOperationNameProperty() throws Exception {
 
         OMElement response = clientUtil.get(getProxyServiceURLHttp("propertyOperationNameTestProxy"));
         assertEquals(response.getText(), "mediate",

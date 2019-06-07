@@ -37,17 +37,19 @@ import static org.testng.Assert.assertTrue;
  */
 public class JSONArrayTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/xmltojsonarray.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Conversion of xml to json array response") public void testXMLToJSONArray()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Conversion of xml to json array response")
+    public void testXMLToJSONArray() throws Exception {
 
         String xmlPayload = "<StockQuotes>" + " <Stock> " + "<Symbol>IBM</Symbol> " + "<Last>0.00</Last> "
                 + "<Date>15/12/2015</Date> " + "<Time>N/A</Time> " + "<Change>N/A</Change> " + "<Open>N/A</Open> "

@@ -31,7 +31,8 @@ import static org.testng.Assert.fail;
 
 public class SendMessageWithoutSecurityHeadersTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -39,8 +40,8 @@ public class SendMessageWithoutSecurityHeadersTestCase extends ESBIntegrationTes
     }
 
     @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Send a message without security headers to a secure proxy", expectedExceptions = {
-            AxisFault.class }) public void testSendingMessagesWithoutSecHeaders() throws Exception {
+            + "- Send a message without security headers to a secure proxy", expectedExceptions = { AxisFault.class })
+    public void testSendingMessagesWithoutSecHeaders() throws Exception {
 
         applySecurity();
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "WSO2");
@@ -49,7 +50,8 @@ public class SendMessageWithoutSecurityHeadersTestCase extends ESBIntegrationTes
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

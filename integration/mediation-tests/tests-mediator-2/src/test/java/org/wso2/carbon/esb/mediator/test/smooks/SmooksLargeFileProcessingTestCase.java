@@ -45,7 +45,8 @@ public class SmooksLargeFileProcessingTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private boolean isProxyDeployed = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
@@ -56,7 +57,8 @@ public class SmooksLargeFileProcessingTestCase extends ESBIntegrationTest {
         addSmooksProxy();
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             if (isProxyDeployed) {
                 deleteProxyService("SmooksProxy");
@@ -68,9 +70,9 @@ public class SmooksLargeFileProcessingTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Large File To Smooks Mediator") public void testSendingToSmooks()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Large File To Smooks Mediator")
+    public void testSendingToSmooks() throws Exception {
         String smooksResourceDirstr = getClass().getResource("/artifacts/ESB/synapseconfig/smooks/").getFile();
         File fileSmook = new File(smooksResourceDirstr);
         String smooksResourceDir = fileSmook.getAbsolutePath();

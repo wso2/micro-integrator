@@ -41,15 +41,16 @@ public class TestFunctionStackDeepClone extends ESBIntegrationTest {
 
     private final int iterations = 10;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/template/functionStackDeepCloneTestSynapse.xml");
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @Test(groups = {
-            "wso2.esb" }, priority = 1, description = "Test function stack is properly deep cloned") public void testFunctionStackDeepClone()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = { "wso2.esb" }, priority = 1, description = "Test function stack is properly deep cloned")
+    public void testFunctionStackDeepClone() throws Exception {
 
         for (int i = 0; i < iterations; i++) {
             SimpleHttpClient httpClient = new SimpleHttpClient();
@@ -80,7 +81,8 @@ public class TestFunctionStackDeepClone extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

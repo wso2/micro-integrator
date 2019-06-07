@@ -36,7 +36,8 @@ public class ESBJAVA3047Soap12EndpointTestCase extends ESBIntegrationTest {
 
     private WireMonitorServer wireMonitorServer;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         wireMonitorServer = new WireMonitorServer(8888);
         wireMonitorServer.start();
@@ -46,12 +47,14 @@ public class ESBJAVA3047Soap12EndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         super.cleanup();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Soap12 endpoint and checks weather 'action' is present in Content-Type header") public void testSoap12EndpointForAction()
+            "wso2.esb" }, description = "Sending a Message to a Soap12 endpoint and checks weather 'action' is present in Content-Type header")
+    public void testSoap12EndpointForAction()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
         try {

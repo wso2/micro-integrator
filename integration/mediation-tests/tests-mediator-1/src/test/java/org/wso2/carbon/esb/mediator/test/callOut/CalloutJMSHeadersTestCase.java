@@ -31,14 +31,15 @@ import static org.testng.Assert.assertTrue;
 
 public class CalloutJMSHeadersTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "JMCalloutClientProxy");
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "JMSCalloutBEProxy");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Callout JMS headers test case") public void testCalloutJMSHeaders()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Callout JMS headers test case")
+    public void testCalloutJMSHeaders() throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         AxisServiceClient client = new AxisServiceClient();
@@ -70,7 +71,8 @@ public class CalloutJMSHeadersTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

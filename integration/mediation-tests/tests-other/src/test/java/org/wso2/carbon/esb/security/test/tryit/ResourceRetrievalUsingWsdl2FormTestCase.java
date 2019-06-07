@@ -34,12 +34,13 @@ import static org.testng.Assert.assertEquals;
  */
 public class ResourceRetrievalUsingWsdl2FormTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests wsdl2form arbitrary file retrieval") public void testResourceRetrievalUsingWsdl2Form()
-            throws InterruptedException, IOException {
+    @Test(groups = "wso2.esb", description = "Tests wsdl2form arbitrary file retrieval")
+    public void testResourceRetrievalUsingWsdl2Form() throws InterruptedException, IOException {
         int expectedStatusCode = 400;
         String url = getProxyServiceURLHttp("echo") + "?wsdl2form&contentType=text/html&resource=.";
         URL connectionURL = new URL(url);
@@ -50,7 +51,8 @@ public class ResourceRetrievalUsingWsdl2FormTestCase extends ESBIntegrationTest 
                 "Response status code should be " + expectedStatusCode + " but received " + actualStatusCode);
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupEnvironment() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 }

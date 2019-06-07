@@ -42,16 +42,16 @@ public class MessageStoreMessageDeleteTestCase extends ESBIntegrationTest {
     private String[] messageStores = null;
     private StockQuoteClient client;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         client = new StockQuoteClient();
         initialize();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test whether messages are deleted successfully") public void messageDeletingTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test whether messages are deleted successfully")
+    public void messageDeletingTest() throws Exception {
         // The count should be 0 as soon as the message store is created
         Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
                 "Message store should be initially empty");
@@ -80,7 +80,8 @@ public class MessageStoreMessageDeleteTestCase extends ESBIntegrationTest {
                 "Error in message deletion");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         clear();
         messageStoreAdminClient = null;
         super.cleanup();

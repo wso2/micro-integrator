@@ -47,11 +47,13 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
     private String serverEpr;
     private String inputValue = String.valueOf(System.currentTimeMillis());
 
-    @Factory(dataProvider = "userModeDataProvider") public GSpreadSQLDriverSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public GSpreadSQLDriverSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true, enabled = false)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
@@ -62,8 +64,8 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false) public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false)
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
@@ -133,15 +135,15 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
         return deleteCustomerSQL;
     }
 
-    @Test(groups = "wso2.dss", description = "add customer", dependsOnMethods = "testServiceDeployment", enabled = false) public void testAddEmployee()
-            throws RemoteException {
+    @Test(groups = "wso2.dss", description = "add customer", dependsOnMethods = "testServiceDeployment", enabled = false)
+    public void testAddEmployee() throws RemoteException {
         new AxisServiceClient().sendRobust(addEmployeePayload(), serverEpr, "addCustomerSQL");
         OMElement result = new AxisServiceClient().sendReceive(getPayload(), serverEpr, "getCustomersSQL");
         assertTrue(result.toString().contains("<customerName>" + inputValue + "</customerName>"));
     }
 
-    @Test(groups = "wso2.dss", description = "Delete customer", dependsOnMethods = "testAddEmployee", enabled = false) public void testDeleteCustomer()
-            throws RemoteException {
+    @Test(groups = "wso2.dss", description = "Delete customer", dependsOnMethods = "testAddEmployee", enabled = false)
+    public void testDeleteCustomer() throws RemoteException {
         new AxisServiceClient().sendRobust(deleteCustomer(), serverEpr, "deleteCustomerSQL");
         OMElement result = new AxisServiceClient().sendReceive(getPayload(), serverEpr, "getCustomersSQL");
         assertFalse(result.toString().contains("<customerName>" + inputValue + "</customerName>"));
@@ -154,7 +156,8 @@ public class GSpreadSQLDriverSampleTestCase extends DSSIntegrationTest {
         return fac.createOMElement("getCustomersSQL", omNs);
     }
 
-    @AfterClass(alwaysRun = true, enabled = false) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false)
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
         log.info(serviceName + " deleted");

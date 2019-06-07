@@ -42,7 +42,8 @@ public class WebSocketRemoteServerInitializer extends ChannelInitializer<SocketC
         this.subProtocols = subProtocols;
     }
 
-    @Override public void initChannel(SocketChannel ch) throws Exception {
+    @Override
+    public void initChannel(SocketChannel ch) throws Exception {
         ChannelPipeline pipeline = ch.pipeline();
         if (sslCtx != null) {
             pipeline.addLast(sslCtx.newHandler(ch.alloc()));

@@ -47,7 +47,8 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
      *
      * @throws Exception if error occurs in super.init call
      */
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         verifyProxyServiceExistence("jmsHeaderInboundEpTestProxy");
@@ -65,8 +66,8 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
      * @throws LogViewerLogViewerException if logviewer is not initialized properly
      * @throws InterruptedException        if thread.sleep call is interrupted
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test JMS Headers : ESBJAVA-4702") public void JMSInboundEndpointHeaderTest()
+    @Test(groups = { "wso2.esb" }, description = "Test JMS Headers : ESBJAVA-4702")
+    public void JMSInboundEndpointHeaderTest()
             throws RemoteException, XMLStreamException, LogViewerLogViewerException, InterruptedException {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
@@ -76,7 +77,8 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
         Assert.assertTrue(isHeaderSet, "Log for transport header is not present in carbon log");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

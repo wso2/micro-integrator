@@ -32,13 +32,14 @@ import static org.testng.Assert.assertEquals;
 
 public class EnrichPreserveOrder extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichOrderTest");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Enrichment of response message") public void enrichMediatorTest()
-            throws XMLStreamException, AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Enrichment of response message")
+    public void enrichMediatorTest() throws XMLStreamException, AxisFault {
         AxisOperationClient operationClient = new AxisOperationClient();
         OMElement response = null;
         try {
@@ -71,7 +72,8 @@ public class EnrichPreserveOrder extends ESBIntegrationTest {
         return AXIOMUtil.stringToOM(sb.toString());
     }
 
-    @AfterClass(alwaysRun = true) public void closeTestArtifacts() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void closeTestArtifacts() throws Exception {
         super.cleanup();
     }
 

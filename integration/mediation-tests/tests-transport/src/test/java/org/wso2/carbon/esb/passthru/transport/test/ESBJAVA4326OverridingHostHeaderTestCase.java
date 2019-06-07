@@ -41,16 +41,16 @@ public class ESBJAVA4326OverridingHostHeaderTestCase extends ESBIntegrationTest 
 
     WireMonitorServer wireMonitorServer = new WireMonitorServer(8456);
 
-    @BeforeClass(alwaysRun = true) public void deployAPI() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployAPI() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/ESBJAVA-4326.xml");
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "replacing the host header after first call") public void settingHostHeaderTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "replacing the host header after first call")
+    public void settingHostHeaderTest() throws Exception {
         wireMonitorServer.start();
         String payload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
                 + "                                          xmlns:xsd=\"http://services.samples/xsd\"\n"
@@ -77,7 +77,8 @@ public class ESBJAVA4326OverridingHostHeaderTestCase extends ESBIntegrationTest 
                 "Host name header not replaced with new-host-name2:8280 in out message\n" + outMessage);
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupSynapseConfig() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupSynapseConfig() throws Exception {
         super.cleanup();
     }
 }

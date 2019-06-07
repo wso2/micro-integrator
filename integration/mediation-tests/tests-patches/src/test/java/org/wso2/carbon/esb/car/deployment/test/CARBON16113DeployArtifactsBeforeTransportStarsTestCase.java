@@ -44,15 +44,15 @@ public class CARBON16113DeployArtifactsBeforeTransportStarsTestCase extends ESBI
     private ServerConfigurationManager serverConfigurationManager;
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) private void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    private void initialize() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing whether CApp is deployed before transport starts") public void carReDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Testing whether CApp is deployed before transport starts")
+    public void carReDeploymentTest() throws Exception {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadCapp("car-deployment-before-tranaport-start-test_1.0.0.car", new DataHandler(new FileDataSource(new File(
                 getESBResourceLocation() + File.separator + "car" + File.separator
@@ -79,7 +79,8 @@ public class CARBON16113DeployArtifactsBeforeTransportStarsTestCase extends ESBI
         Assert.assertTrue(cappBeforeTransport, "Transport started before deploying Carbon app");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupEnvironment() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 }

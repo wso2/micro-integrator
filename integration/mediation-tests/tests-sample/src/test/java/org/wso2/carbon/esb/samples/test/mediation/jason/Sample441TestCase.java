@@ -31,14 +31,15 @@ public class Sample441TestCase extends ESBSampleIntegrationTest {
 
     private String JSONRequest = "{\"symbol\":\"WSO2\", \"ID\":\"StockQuote\"}";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         //loadESBConfigurationFromClasspath("/artifacts/ESB/json/synapse_sample_441.xml");
         loadSampleESBConfiguration(441);
     }
 
-    @Test(groups = "wso2.esb", description = "JSON to XML conversion using sample 441") public void testJSONToXMLConversion()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "JSON to XML conversion using sample 441")
+    public void testJSONToXMLConversion() throws Exception {
 
         JSONClient jsonClient = new JSONClient();
         JSONObject response = jsonClient.sendUserDefineRequest(getProxyServiceURLHttp("JSONProxy"), JSONRequest);
@@ -49,7 +50,8 @@ public class Sample441TestCase extends ESBSampleIntegrationTest {
         assertTrue(returnElement.toString().contains("WSO2"), "Response JSON invalid");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

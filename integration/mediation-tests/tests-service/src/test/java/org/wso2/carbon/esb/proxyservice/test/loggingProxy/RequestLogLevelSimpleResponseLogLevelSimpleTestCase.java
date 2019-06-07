@@ -25,7 +25,8 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class RequestLogLevelSimpleResponseLogLevelSimpleTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/loggingProxy/request_log_level_simple_response_log_level_simple.xml");
@@ -33,8 +34,8 @@ public class RequestLogLevelSimpleResponseLogLevelSimpleTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy -Request log level simple response log level simple", enabled = false) public void testLoggingProxyLoggingLevel()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy -Request log level simple response log level simple", enabled = false)
+    public void testLoggingProxyLoggingLevel() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("reqLogSimpleResLogSimpleLoggingProxy"), null,
@@ -42,7 +43,8 @@ public class RequestLogLevelSimpleResponseLogLevelSimpleTestCase extends ESBInte
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

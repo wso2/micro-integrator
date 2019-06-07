@@ -33,7 +33,8 @@ public class Axis2ServerStartupTestCase {
     private SampleAxis2Server axis2Server1 = null;
     private AutomationContext asContext;
 
-    @BeforeTest(alwaysRun = true) public void deployServices() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void deployServices() throws Exception {
 
         if (TestConfigurationProvider.isIntegration()) {
             axis2Server1 = new SampleAxis2Server("test_axis2_server_9009.xml");
@@ -64,7 +65,8 @@ public class Axis2ServerStartupTestCase {
         }
     }
 
-    @AfterTest(alwaysRun = true) public void unDeployServices() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void unDeployServices() throws Exception {
         if (axis2Server1 != null && axis2Server1.isStarted()) {
             axis2Server1.stop();
         } else {

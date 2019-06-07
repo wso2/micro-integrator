@@ -55,7 +55,8 @@ public class DS1063EmailUsernameTestCase extends DSSIntegrationTest {
     private UserManagementClient userManagementClient;
     private String backendUrl;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -92,14 +93,15 @@ public class DS1063EmailUsernameTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Check whether email users can correctly access the data", alwaysRun = true) public void invokeServiceWithEmailUsernameTest()
-            throws Exception {
+            "wso2.dss" }, description = "Check whether email users can correctly access the data", alwaysRun = true)
+    public void invokeServiceWithEmailUsernameTest() throws Exception {
         /* when invoked with correct username header with correct email address user name
         (for example "emailUser@wso2.com") it should return <employeeNumber> and <salary> elements */
         HttpResponse response1 = this.getHttpResponse(serviceEndPoint + "/_getemployees", "emailUser@wso2.com");

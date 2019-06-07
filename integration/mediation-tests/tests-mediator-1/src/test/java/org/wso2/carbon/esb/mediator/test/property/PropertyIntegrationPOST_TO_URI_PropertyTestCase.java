@@ -35,14 +35,16 @@ public class PropertyIntegrationPOST_TO_URI_PropertyTestCase extends ESBIntegrat
 
     private WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         wireServer = new WireMonitorServer(8992);
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property") public void testPOST_TO_URI_PropertyTest() {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property")
+    public void testPOST_TO_URI_PropertyTest() {
 
         wireServer.start();
         try {
@@ -54,7 +56,8 @@ public class PropertyIntegrationPOST_TO_URI_PropertyTestCase extends ESBIntegrat
         assertTrue(response.contains("POST http://localhost:8992"), "Faulty Response");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 

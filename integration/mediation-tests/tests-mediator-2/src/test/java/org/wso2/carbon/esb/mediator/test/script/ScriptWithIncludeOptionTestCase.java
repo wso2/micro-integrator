@@ -36,13 +36,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class ScriptWithIncludeOptionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
-    @Test(groups = "wso2.esb", description = "Invoke a script which uses another script with 'include' option") public void testInvokeAScriptWhichUsesAnother()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoke a script which uses another script with 'include' option")
+    public void testInvokeAScriptWhichUsesAnother() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorWithIncludeOptionTestProxy"), null,
@@ -62,7 +63,8 @@ public class ScriptWithIncludeOptionTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

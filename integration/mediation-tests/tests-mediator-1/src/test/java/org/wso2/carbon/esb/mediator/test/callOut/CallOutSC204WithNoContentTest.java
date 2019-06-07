@@ -34,14 +34,15 @@ import static org.testng.Assert.assertEquals;
  */
 public class CallOutSC204WithNoContentTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("CallOutMediatorNoContentTestAPI");
         verifyAPIExistence("CallOutMediatorSC204NoContentTMockAPI");
     }
 
-    @Test(description = "Test for 204 no content response when using call out mediator") public void testCalloutMediatorWhenReceiving204WithNoContent()
-            throws Exception {
+    @Test(description = "Test for 204 no content response when using call out mediator")
+    public void testCalloutMediatorWhenReceiving204WithNoContent() throws Exception {
 
         String requestPayload = "{\"hello\":\"world\"}";
 
@@ -54,7 +55,8 @@ public class CallOutSC204WithNoContentTest extends ESBIntegrationTest {
         assertEquals(httpResponse.getData(), "", "correct response body not received." + httpResponse.getData());
     }
 
-    @AfterClass(alwaysRun = true) private void clean() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void clean() throws Exception {
         super.cleanup();
     }
 }

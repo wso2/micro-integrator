@@ -36,14 +36,15 @@ import static org.testng.Assert.assertTrue;
 
 public class InvalidScriptLanguageTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
 
     }
 
-    @Test(groups = "wso2.esb", description = "Give an invalid scripting language name (jh instead of js) . it throws an Exception") public void testSequenceJSMediatorWithInvalidScriptLanguage()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Give an invalid scripting language name (jh instead of js) . it throws an Exception")
+    public void testSequenceJSMediatorWithInvalidScriptLanguage() throws Exception {
         try {
             loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config66/synapse.xml");
             Assert.fail("This Configuration can not be saved successfully due to invalid Script language");
@@ -56,7 +57,8 @@ public class InvalidScriptLanguageTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

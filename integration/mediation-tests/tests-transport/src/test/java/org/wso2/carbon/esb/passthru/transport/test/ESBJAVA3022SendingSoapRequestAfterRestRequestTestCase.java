@@ -38,7 +38,8 @@ import static org.testng.Assert.assertFalse;
 
 public class ESBJAVA3022SendingSoapRequestAfterRestRequestTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -46,8 +47,8 @@ public class ESBJAVA3022SendingSoapRequestAfterRestRequestTestCase extends ESBIn
     }
 
     @Test(groups = "wso2.esb", description = "test to verify that the soap builder/formatter is invoked properly"
-            + "when the soap request is made after rest request.") public void testSendingSoapCallAfterRestCall()
-            throws Exception {
+            + "when the soap request is made after rest request.")
+    public void testSendingSoapCallAfterRestCall() throws Exception {
         String restURL = getApiInvocationURL("api_poc_messagetype");//esbServer.getServiceUrl() + "/testmessagetype";
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpGet request = new HttpGet(restURL);
@@ -63,7 +64,8 @@ public class ESBJAVA3022SendingSoapRequestAfterRestRequestTestCase extends ESBIn
         assertFalse(responseText.contains("soapenv:Body"), "Another <soapenv:Body> tag found inside soap body.");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

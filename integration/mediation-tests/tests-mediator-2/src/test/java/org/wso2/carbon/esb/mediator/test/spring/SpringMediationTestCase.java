@@ -43,12 +43,14 @@ import static org.testng.Assert.fail;
 
 public class SpringMediationTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             clearUploadedResource();
         } finally {
@@ -56,10 +58,10 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Spring Mediator "
-            + "- Change the spring xml and see whether message context is changed") public void changeSpringXmlAndCheckMessageContextTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Spring Mediator "
+            + "- Change the spring xml and see whether message context is changed")
+    public void changeSpringXmlAndCheckMessageContextTest() throws Exception {
 
         OMElement response;
         String lastPrice;
@@ -106,10 +108,10 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Spring Mediator "
-            + "-Added Simple bean into lib -referring to an invalid spring xml") public void uploadSequenceHavingInvalidSpringXMLTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Spring Mediator "
+            + "-Added Simple bean into lib -referring to an invalid spring xml")
+    public void uploadSequenceHavingInvalidSpringXMLTest() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/spring/spring_mediation_invalid_spring_bean.xml");
@@ -124,10 +126,10 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Spring Mediator "
-            + "- referring to an non existing spring xml") public void uploadSequenceHavingNonExistingSpringXMLResourceTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Spring Mediator "
+            + "- referring to an non existing spring xml")
+    public void uploadSequenceHavingNonExistingSpringXMLResourceTest() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/spring/spring_mediation_springBean_resource_not_exist.xml");
@@ -142,9 +144,10 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Spring Mediator " + "-Added Simple bean into lib "
-            + "-Different bean ids in spring xml") public void providingNonExistingBeanNamesTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Spring Mediator " + "-Added Simple bean into lib "
+            + "-Different bean ids in spring xml")
+    public void providingNonExistingBeanNamesTest() throws Exception {
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/spring/spring_mediation_different_bean_id.xml");
         try {
@@ -157,9 +160,9 @@ public class SpringMediationTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Spring Mediator -Added Simple bean into lib") public void springBeanMediationTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Spring Mediator -Added Simple bean into lib")
+    public void springBeanMediationTest() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/spring/spring_mediation.xml");
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 

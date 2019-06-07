@@ -21,7 +21,6 @@ package org.wso2.esb.integration.common.utils.servers;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.sql.Time;
 import java.util.concurrent.TimeUnit;
 
 /**

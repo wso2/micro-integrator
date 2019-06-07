@@ -34,7 +34,8 @@ public class SecurityTransformationProxyForPolicy6BackEndTestCase extends ESBInt
             TestConfigurationProvider.getSecurityPolicyLocation() + File.separator + "custom" + File.separator;
     private final String symbol = "Secured";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
@@ -48,7 +49,8 @@ public class SecurityTransformationProxyForPolicy6BackEndTestCase extends ESBInt
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 sessionCookie);
         try {

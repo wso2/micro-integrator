@@ -27,14 +27,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class XQueryIntegrationTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
     //use SimpleURLRegistry
-    @Test(groups = {
-            "wso2.esb" }, description = "Introduction to the XQuery mediator", enabled = false) public void testXQueryTransformation()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Introduction to the XQuery mediator", enabled = false)
+    public void testXQueryTransformation() throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -43,7 +43,8 @@ public class XQueryIntegrationTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

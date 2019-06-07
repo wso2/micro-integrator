@@ -35,15 +35,16 @@ public class PropertyIntegrationDISABLE_CHUNKING_PropertyTest extends ESBIntegra
 
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/DISABLE_CHUNKING.xml");
         wireServer = new WireMonitorServer(8993);
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property") public void testDISABLE_CHUNKINGPropertyTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property")
+    public void testDISABLE_CHUNKINGPropertyTest() throws Exception {
 
         wireServer.start();
         try {
@@ -57,7 +58,8 @@ public class PropertyIntegrationDISABLE_CHUNKING_PropertyTest extends ESBIntegra
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

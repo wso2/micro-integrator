@@ -49,21 +49,22 @@ public class LoggingWithJSONTestCase extends ESBIntegrationTest {
     private Client client = Client.create();
     private final String JSON_LOG_FULL_PROXY = "jsonLog";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/loggingwithjson.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
         verifyProxyServiceExistence(JSON_LOG_FULL_PROXY);
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests logging functionality of JSON payloads") public void testJSONLoggingTestScenario()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests logging functionality of JSON payloads")
+    public void testJSONLoggingTestScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Desperado\",\"singer\":\"Eagles\"}";
 
@@ -122,9 +123,8 @@ public class LoggingWithJSONTestCase extends ESBIntegrationTest {
         assertEquals(getResponse.getEntity(String.class), JSON_PAYLOAD, "Response mismatch for HTTP Get call");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests whether Json Payloads are getting logged in Native Json Form") public void testJsonWithLogLevelFull()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests whether Json Payloads are getting logged in Native Json Form")
+    public void testJsonWithLogLevelFull() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Desperado\",\"singer\":\"Eagles\"}";
 

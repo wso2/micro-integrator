@@ -28,15 +28,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class AppendFullUrlTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteAppendFullUriTestProxy");
     }
 
     //todo requirement not clear for append keyword. it replace full url
-    @Test(groups = {
-            "wso2.esb" }, description = "Append text to full url", dataProvider = "addressingUrl") public void appendFulUrl(
-            String addUrl) throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Append text to full url", dataProvider = "addressingUrl")
+    public void appendFulUrl(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -45,11 +45,13 @@ public class AppendFullUrlTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "http://test.com:9000/services/SimpleStockQuoteService" }, { "https://test.com" },
 
         };

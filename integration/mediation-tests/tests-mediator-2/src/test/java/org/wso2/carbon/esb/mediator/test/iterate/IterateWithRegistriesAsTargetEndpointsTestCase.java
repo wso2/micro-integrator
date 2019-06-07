@@ -41,14 +41,15 @@ public class IterateWithRegistriesAsTargetEndpointsTestCase extends ESBIntegrati
     private IterateClient client;
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         client = new IterateClient();
         endPointAdminClient = new EndPointAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for sequence from governors registry ") public void testGovernanceEndPoint()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for sequence from governors registry ")
+    public void testGovernanceEndPoint() throws Exception {
         URL url = new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateEndpoint.xml");
         endPointAdminClient.addDynamicEndPoint("gov:/myEndpoint/iterateEndpoint", setEndpoints(new DataHandler(url)));
         String response = client
@@ -67,8 +68,8 @@ public class IterateWithRegistriesAsTargetEndpointsTestCase extends ESBIntegrati
         endPointAdminClient.deleteDynamicEndpoint("gov:/myEndpoint/iterateEndpoint");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for sequence from configuration registry") public void testConfigurationEndPoint()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for sequence from configuration registry")
+    public void testConfigurationEndPoint() throws Exception {
         URL url = new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateEndpoint.xml");
         endPointAdminClient.addDynamicEndPoint("conf:/myEndpoint/iterateEndpoint", setEndpoints(new DataHandler(url)));
         String response = client
@@ -87,7 +88,8 @@ public class IterateWithRegistriesAsTargetEndpointsTestCase extends ESBIntegrati
         endPointAdminClient.deleteDynamicEndpoint("conf:/myEndpoint/iterateEndpoint");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         client = null;
         endPointAdminClient = null;
         super.cleanup();

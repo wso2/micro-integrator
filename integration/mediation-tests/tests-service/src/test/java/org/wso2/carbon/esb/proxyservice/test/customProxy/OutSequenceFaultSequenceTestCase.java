@@ -38,7 +38,8 @@ import static org.testng.Assert.fail;
 
 public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/customProxy/outsequence_faultsequence.xml");
@@ -50,8 +51,8 @@ public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "- Custom proxy -Out sequence inline") public void testCustomProxyOutSequenceInline()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -Out sequence inline")
+    public void testCustomProxyOutSequenceInline() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyOne"), null, "WSO2");
@@ -66,8 +67,8 @@ public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "- Custom proxy -Out sequence existing") public void testCustomProxyOutSequenceExistingSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -Out sequence existing")
+    public void testCustomProxyOutSequenceExistingSequence() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyTwo"), null, "WSO2");
@@ -82,8 +83,8 @@ public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "- Custom proxy -Out sequence -from registry") public void testCustomProxyOutSequenceFromRegistry()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -Out sequence -from registry")
+    public void testCustomProxyOutSequenceFromRegistry() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyThree"), null, "IBM");
@@ -98,8 +99,8 @@ public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "- Custom proxy -Fault sequence inline") public void testCustomProxyFaultInline()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -Fault sequence inline")
+    public void testCustomProxyFaultInline() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyFour"), null, "WSO2");
@@ -115,8 +116,8 @@ public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "- Custom proxy -Fault sequence From registry") public void testCustomProxyFaultFromRegistry()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -Fault sequence From registry")
+    public void testCustomProxyFaultFromRegistry() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyFour"), null, "WSO2");
@@ -131,8 +132,8 @@ public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "- Custom proxy -Fault sequence existing fault sequence") public void testCustomProxyFaultExistingFaultSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -Fault sequence existing fault sequence")
+    public void testCustomProxyFaultExistingFaultSequence() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxyFour"), null, "WSO2");
@@ -142,7 +143,8 @@ public class OutSequenceFaultSequenceTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

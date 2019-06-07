@@ -26,13 +26,14 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class FurtherProcessingOfSwitchAfterMatchTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Switch Mediator: Test whether further processing of the switch block is done after a match is found.") public void testFurtherProcessingOfSwitch()
-            throws Exception {
+            "wso2.esb" }, description = "Switch Mediator: Test whether further processing of the switch block is done after a match is found.")
+    public void testFurtherProcessingOfSwitch() throws Exception {
 
         axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("switchMediatorFurtherProcessingAfterMatchTestProxy"),
@@ -42,7 +43,8 @@ public class FurtherProcessingOfSwitchAfterMatchTestCase extends ESBIntegrationT
         // TODO !AssertTrue Test property of INFO log for "Oh no! IBM again?"
     }
 
-    @AfterClass public void afterClass() throws Exception {
+    @AfterClass
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 

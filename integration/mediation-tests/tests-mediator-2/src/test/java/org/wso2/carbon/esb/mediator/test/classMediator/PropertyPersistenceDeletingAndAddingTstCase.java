@@ -49,7 +49,8 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
     private static final String osname = System.getProperty("os.name").toLowerCase().toString();
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         if (!(osname.contains("windows"))) {
 
             super.init();
@@ -66,10 +67,10 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Class Mediator "
-            + " -Class mediator property persistence -deleting and adding different properties") public void testMediationPersistenceDeletingAndAdding()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Class Mediator "
+            + " -Class mediator property persistence -deleting and adding different properties")
+    public void testMediationPersistenceDeletingAndAdding() throws Exception {
         if (!(osname.contains("windows"))) {
             OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
@@ -142,7 +143,8 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
 
     private Callable<Boolean> isFileWrittenInDisk(final File jar) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 if (jar.exists()) {
                     return true;
                 } else {
@@ -152,7 +154,8 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
         };
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         if (!(osname.contains("windows"))) {
             super.cleanup();
             serverConfigurationManager.removeFromComponentLib(CLASS_JAR_FOUR_PROPERTIES);

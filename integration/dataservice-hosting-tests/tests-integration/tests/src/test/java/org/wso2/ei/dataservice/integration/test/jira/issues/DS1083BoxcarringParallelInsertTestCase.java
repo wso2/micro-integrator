@@ -55,7 +55,8 @@ public class DS1083BoxcarringParallelInsertTestCase extends DSSIntegrationTest {
 
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileList = new ArrayList<File>();
@@ -68,8 +69,8 @@ public class DS1083BoxcarringParallelInsertTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Send parallel boxcarring requests to the server and check whether they were added successfully", alwaysRun = true) public void boxcarringParallelInsertsTest()
-            throws Exception {
+            "wso2.dss" }, description = "Send parallel boxcarring requests to the server and check whether they were added successfully", alwaysRun = true)
+    public void boxcarringParallelInsertsTest() throws Exception {
         int requestCount = 50;
         LockHolder.getInstance(requestCount, 30);
 
@@ -131,7 +132,8 @@ public class DS1083BoxcarringParallelInsertTestCase extends DSSIntegrationTest {
                 "Expected result not found");
     }
 
-    @AfterClass public void clean() throws Exception {
+    @AfterClass
+    public void clean() throws Exception {
         cleanup();
     }
 }

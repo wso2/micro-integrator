@@ -36,18 +36,20 @@ public class TransformPayloadMessageContentFromXpathTestCase extends ESBIntegrat
 
     private Client client = Client.create();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/transformmessagecontentxpath.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Transform Message content inside payload factory using x path") public void testTransformMessageFromXpathScenario()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Transform Message content inside payload factory using x path")
+    public void testTransformMessageFromXpathScenario() throws Exception {
 
         // Here are our JSON payloads
         String FirstJSON_PAYLOAD = "{\"album\":\"Doom\",\"singer\":\"Henry\"}";

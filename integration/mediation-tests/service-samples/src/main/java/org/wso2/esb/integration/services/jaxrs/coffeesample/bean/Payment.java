@@ -4,7 +4,8 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Payment") public class Payment {
+@XmlRootElement(name = "Payment")
+public class Payment {
 
     private static final NumberFormat currencyFormat = new DecimalFormat("#.##");
 

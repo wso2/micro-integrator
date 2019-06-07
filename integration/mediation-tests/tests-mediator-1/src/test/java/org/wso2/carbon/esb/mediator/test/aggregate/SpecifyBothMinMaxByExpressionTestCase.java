@@ -37,7 +37,8 @@ public class SpecifyBothMinMaxByExpressionTestCase extends ESBIntegrationTest {
     private final int minMessageCount = 5;
     private final int maxMessageCount = 10;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorBothMinMaxTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -46,9 +47,8 @@ public class SpecifyBothMinMaxByExpressionTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "less number of messages than minimum count") public void testLessThanMinimum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "less number of messages than minimum count")
+    public void testLessThanMinimum() throws IOException, XMLStreamException {
         int responseCount = 0;
         no_of_requests = 3;
 
@@ -68,9 +68,8 @@ public class SpecifyBothMinMaxByExpressionTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "number of messages is equal to the minimum") public void testEqualtoMinimum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "number of messages is equal to the minimum")
+    public void testEqualtoMinimum() throws IOException, XMLStreamException {
         int responseCount = 0;
         no_of_requests = minMessageCount;
         aggregatedRequestClient.setNoOfIterations(no_of_requests);
@@ -89,9 +88,8 @@ public class SpecifyBothMinMaxByExpressionTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "number of messages is equal to the maximum") public void testEqualtoMaximum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "number of messages is equal to the maximum")
+    public void testEqualtoMaximum() throws IOException, XMLStreamException {
         int responseCount = 0;
         no_of_requests = maxMessageCount;
         aggregatedRequestClient.setNoOfIterations(no_of_requests);
@@ -110,9 +108,8 @@ public class SpecifyBothMinMaxByExpressionTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "higher number of messages than minimum count") public void testMoreNumberThanMinimum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "higher number of messages than minimum count")
+    public void testMoreNumberThanMinimum() throws IOException, XMLStreamException {
         int responseCount = 0;
         no_of_requests = 8;
         aggregatedRequestClient.setNoOfIterations(no_of_requests);
@@ -131,9 +128,8 @@ public class SpecifyBothMinMaxByExpressionTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "more number of messages than maximum count") public void testMoreNumberThanMaximum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "more number of messages than maximum count")
+    public void testMoreNumberThanMaximum() throws IOException, XMLStreamException {
         int responseCount = 0;
         no_of_requests = 15;
         aggregatedRequestClient.setNoOfIterations(no_of_requests);
@@ -152,7 +148,8 @@ public class SpecifyBothMinMaxByExpressionTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }

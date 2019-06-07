@@ -26,17 +26,19 @@ import java.io.IOException;
 
 public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
     }
 
-    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void restoreServerConfiguration() throws Exception {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Checking VFSTransportListener not logs the clear password on error") public void testVFSListenerHidePasswordInLog()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportListener not logs the clear password on error")
+    public void testVFSListenerHidePasswordInLog() throws Exception {
 
         addProxyService(AXIOMUtil.stringToOM(
                 "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"HidePasswordListenerProxy\"\n"
@@ -71,9 +73,9 @@ public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Checking VFSTransportSender not logs the clear password on error") public void testVFSSenderHidePasswordInLog()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportSender not logs the clear password on error")
+    public void testVFSSenderHidePasswordInLog() throws Exception {
 
         addProxyService(AXIOMUtil.stringToOM(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"HidePasswordSenderProxy\"\n"

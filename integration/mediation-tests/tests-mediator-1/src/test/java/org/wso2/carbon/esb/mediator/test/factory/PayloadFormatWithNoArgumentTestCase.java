@@ -34,18 +34,20 @@ import static org.testng.Assert.assertTrue;
  */
 public class PayloadFormatWithNoArgumentTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         // applying changes to esb - source view
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/payloadmediatype/" + "no_arguments.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "invoke service - operation echoString") public void invokeServiceFromXmlRequest()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "invoke service - operation echoString")
+    public void invokeServiceFromXmlRequest() throws AxisFault {
 
         AxisServiceClient axisServiceClient = new AxisServiceClient();
 

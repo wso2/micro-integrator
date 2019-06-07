@@ -38,20 +38,22 @@ public class PropertyIntegrationXpathCtxPropertyTestCase extends ESBIntegrationT
     private static LogViewerClient logViewer;
     private boolean isBody = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATHCTX.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Endpoint is a non-existent endpoint reference key , "
-            + "$ctx:ERROR_MESSAGE scenario", enabled = false) public void testRESPONSETEnabledTrue()
-            throws IOException, XMLStreamException {
+            + "$ctx:ERROR_MESSAGE scenario", enabled = false)
+    public void testRESPONSETEnabledTrue() throws IOException, XMLStreamException {
 
         int beforeLogSize = logViewer.getAllSystemLogs().length;
 

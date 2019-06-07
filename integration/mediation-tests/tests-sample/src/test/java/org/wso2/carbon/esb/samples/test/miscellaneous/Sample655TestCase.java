@@ -32,14 +32,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class Sample655TestCase extends ESBSampleIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(655);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test ESB mediation - Sample 655: Message Relay - "
-            + "Basics Sample") public void messageRelayTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test ESB mediation - Sample 655: Message Relay - " + "Basics Sample")
+    public void messageRelayTest() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "WSO2");
@@ -51,7 +52,8 @@ public class Sample655TestCase extends ESBSampleIntegrationTest {
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

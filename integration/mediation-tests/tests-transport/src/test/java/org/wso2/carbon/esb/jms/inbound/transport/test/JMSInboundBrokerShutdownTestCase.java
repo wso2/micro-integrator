@@ -38,7 +38,8 @@ public class JMSInboundBrokerShutdownTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private ActiveMQServer activeMQServer = new ActiveMQServer();
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         activeMQServer.startJMSBroker();
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
@@ -47,8 +48,8 @@ public class JMSInboundBrokerShutdownTestCase extends ESBIntegrationTest {
 
     //Disabling due to https://github.com/wso2/product-ei/issues/1199
     @Test(groups = {
-            "wso2.esb" }, description = "Behaviour of a server, with a JMS Inbound Endpoint configured, when the JMS broker is down", enabled = false) public void testJMSInboundEndpointBehaviourWithBrokerShutdown()
-            throws Exception {
+            "wso2.esb" }, description = "Behaviour of a server, with a JMS Inbound Endpoint configured, when the JMS broker is down", enabled = false)
+    public void testJMSInboundEndpointBehaviourWithBrokerShutdown() throws Exception {
         addInboundEndpoint(AXIOMUtil.stringToOM("<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n"
                 + "                 name=\"JMSInboundBrokerShutdown\"\n"
                 + "                 sequence=\"requestHandlerSeq\"\n" + "                 onError=\"inFault\"\n"
@@ -110,7 +111,8 @@ public class JMSInboundBrokerShutdownTestCase extends ESBIntegrationTest {
         Assert.assertTrue(assertSuccessfulStart, "ESB server start up affected by broker shutdown.");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         activeMQServer.stopJMSBroker();
     }

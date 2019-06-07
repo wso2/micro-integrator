@@ -57,7 +57,8 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server3;
     private LoadbalanceFailoverClient lbClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
@@ -86,7 +87,8 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         log.info("Tests Are Completed");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -107,8 +109,9 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }) public void testLoadBalanceEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" })
+    public void testLoadBalanceEndpoint() throws Exception {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
 
         cleanupEndpoints();
@@ -117,8 +120,9 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
         endpointDeletionScenario();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a loadbalancing endpoint") public void testSendingToLoaBalancingEndpoint()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a loadbalancing endpoint")
+    public void testSendingToLoaBalancingEndpoint()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -136,8 +140,9 @@ public class LoadBalanceEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a loadbalancing endpoint in Config Reg") public void testSendingToLoaBalancingEndpoint_ConfigReg()
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a loadbalancing endpoint in Config Reg")
+    public void testSendingToLoaBalancingEndpoint_ConfigReg()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 

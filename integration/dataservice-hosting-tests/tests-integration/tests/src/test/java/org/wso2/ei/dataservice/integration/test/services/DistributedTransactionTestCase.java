@@ -60,7 +60,8 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
     private final String serviceName = "DTPServiceTest";
     private final int userId = 2;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         DataHandler dhArtifact;
         dhArtifact = getArtifactWithDTP(serviceFile);
@@ -68,32 +69,32 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void addBankAccountToADatabase() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void addBankAccountToADatabase() throws AxisFault, XPathExpressionException {
         addBankAccount1test();
         log.info("Added bank account on database1");
     }
 
-    @Test(groups = { "wso2.dss" }) public void addBankAccountOnOtherDatabase()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void addBankAccountOnOtherDatabase() throws AxisFault, XPathExpressionException {
         addBankAccount2test();
         log.info("Added bank account on database2");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addBankAccountToADatabase",
-            "addBankAccountOnOtherDatabase" }) public void distributedTransactionTest()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addBankAccountToADatabase", "addBankAccountOnOtherDatabase" })
+    public void distributedTransactionTest() throws AxisFault, XPathExpressionException {
         distributedTransactionSuccess();
         log.info("Added transaction on both databases");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addBankAccountToADatabase",
-            "addBankAccountOnOtherDatabase" }) public void distributedTransactionFailTest()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addBankAccountToADatabase", "addBankAccountOnOtherDatabase" })
+    public void distributedTransactionFailTest() throws AxisFault, XPathExpressionException {
         distributedTransactionFail();
         log.info("Distributed transaction verified");
     }

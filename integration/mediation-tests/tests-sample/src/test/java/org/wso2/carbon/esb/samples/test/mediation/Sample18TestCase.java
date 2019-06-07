@@ -39,14 +39,14 @@ import static org.testng.Assert.assertTrue;
  */
 public class Sample18TestCase extends ESBSampleIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadSampleESBConfiguration(18);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Transforming a Message Using ForEachMediator") public void testTransformWithForEachMediator()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using ForEachMediator")
+    public void testTransformWithForEachMediator() throws Exception {
 
         LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer.clearLogs();
@@ -90,7 +90,8 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

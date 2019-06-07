@@ -31,24 +31,26 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class RouterMediatorBreakRouterPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests with breakRouter=true") public void testBreakRouterTrue()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests with breakRouter=true")
+    public void testBreakRouterTrue() throws Exception {
         //        https://wso2.org/jira/browse/ESBJAVA-1516
     }
 
     //since router mediator is removed from UI
-    @Test(groups = "wso2.esb", description = "Tests with breakRouter=false", enabled = false) public void testBreakRouterFalse()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests with breakRouter=false", enabled = false)
+    public void testBreakRouterFalse() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/router/router_breakRouter_false_test.xml");
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
         Assert.assertTrue(response == null, "Response should be null");
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         super.cleanup();
     }
 

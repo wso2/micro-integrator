@@ -40,7 +40,8 @@ public class CheckAuthHeaderOrderTestCase extends ESBIntegrationTest {
 
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         wireServer = new WireMonitorServer(8991);
         wireServer.start();
@@ -49,9 +50,8 @@ public class CheckAuthHeaderOrderTestCase extends ESBIntegrationTest {
                         + "transport" + File.separator + "auth-headers.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via REST to check the order of the auth headers") public void testAuthHeaderOrder()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST to check the order of the auth headers")
+    public void testAuthHeaderOrder() throws Exception {
 
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
@@ -71,7 +71,8 @@ public class CheckAuthHeaderOrderTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

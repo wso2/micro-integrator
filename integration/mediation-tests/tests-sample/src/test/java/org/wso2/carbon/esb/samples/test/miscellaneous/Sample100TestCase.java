@@ -36,16 +36,16 @@ import static org.testng.Assert.assertNotNull;
  * Unlimited strength policy files for the JDK have to be installed for this test case to succeed
  */
 public class Sample100TestCase extends ESBSampleIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         updateESBRegistry(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                 + File.separator + "ESBRegistry.xml");
         loadSampleESBConfiguration(100);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Adding a policy as a local entry and secure endpoint using it") public void testAddPolicyViaLocalEntry()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Adding a policy as a local entry and secure endpoint using it")
+    public void testAddPolicyViaLocalEntry() throws IOException, XMLStreamException {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
         assertNotNull(response, "Response is null");
         assertEquals(response.getLocalName(), "getQuoteResponse", "getQuoteResponse mismatch");
@@ -55,7 +55,8 @@ public class Sample100TestCase extends ESBSampleIntegrationTest {
         assertEquals(symbolResponse, "IBM", "Symbol is not match");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

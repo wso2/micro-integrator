@@ -37,14 +37,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         enableDebugLogging();
         uploadResourcesToConfigRegistry();
     }
 
-    @Test(groups = "wso2.esb", description = "custom mediator with JS and store it in registry and invoke it with the given 'key'") public void testJSMediatorWithTheGivenKey()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "custom mediator with JS and store it in registry and invoke it with the given 'key'")
+    public void testJSMediatorWithTheGivenKey() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorJSStoredInRegistryTestProxy"), null,
@@ -64,7 +65,8 @@ public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrat
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

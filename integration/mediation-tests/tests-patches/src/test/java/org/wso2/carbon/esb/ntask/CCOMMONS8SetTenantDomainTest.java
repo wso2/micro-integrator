@@ -61,7 +61,8 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
     private final String COMMON_FILE_LOCATION =
             File.separator + "artifacts" + File.separator + "ESB" + File.separator + "registry" + File.separator;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         regTestContext = new AutomationContext("ESB", "esbsRegTest", TestUserMode.SUPER_TENANT_ADMIN);
 
@@ -97,7 +98,8 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
     /**
      * Starting up the server and check the logs for error.
      */
-    @Test(groups = "wso2.esb", description = "Test startup logs to see whether ntask FATAL exception occurred", enabled = true) public void testStartupNtaskErrorTest() {
+    @Test(groups = "wso2.esb", description = "Test startup logs to see whether ntask FATAL exception occurred", enabled = true)
+    public void testStartupNtaskErrorTest() {
 
         try {
             testServerManager.startServer();
@@ -120,7 +122,8 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass public void cleanUp() throws Exception {
+    @AfterClass
+    public void cleanUp() throws Exception {
         try {
             super.cleanup();
         } finally {

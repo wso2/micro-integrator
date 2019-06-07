@@ -1255,7 +1255,7 @@ public class ESBTestCaseUtils {
             return false;
         }
         return ArrayUtils.contains(localEntries, localEntryName);*/
-       return true;
+        return true;
     }
 
     /**
@@ -1294,7 +1294,7 @@ public class ESBTestCaseUtils {
             return false;
         }
         return ArrayUtils.contains(endpoints, endpointName);*/
-        return  true;
+        return true;
     }
 
     /**
@@ -1308,7 +1308,7 @@ public class ESBTestCaseUtils {
             throws RemoteException {
        /* MessageStoreAdminClient messageStoreAdminClient = new MessageStoreAdminClient(backEndUrl, sessionCookie);
         return ArrayUtils.contains(messageStoreAdminClient.getMessageStores(), messageProcessor);*/
-       return  true;
+        return true;
 
     }
 
@@ -1543,7 +1543,7 @@ public class ESBTestCaseUtils {
         }
         return isServiceDeleted;*/
 
-       return true;
+        return true;
     }
 
     public boolean isMessageStoreUnDeployed(String backEndUrl, String sessionCookie, String messageStoreName)
@@ -1568,7 +1568,7 @@ public class ESBTestCaseUtils {
             }
         }
         return isMessageStoreDeleted;*/
-       return true;
+        return true;
     }
 
     public boolean isMessageProcessorUnDeployed(String backEndUrl, String sessionCookie, String messageProcessorName)

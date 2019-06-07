@@ -36,13 +36,14 @@ public class MalformedHTTPRequestTest extends ESBIntegrationTest {
 
     private HttpURLConnectionClient httpClientUtil;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         httpClientUtil = new HttpURLConnectionClient();
     }
 
-    @Test(groups = "wso2.esb", description = "test with different kinds of malformed urls") public void testMalformedURL()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "test with different kinds of malformed urls")
+    public void testMalformedURL() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/customProxy/simple_proxy.xml");
         //Send three malformed requests
         for (int i = 0; i < 3; i++) {
@@ -81,7 +82,8 @@ public class MalformedHTTPRequestTest extends ESBIntegrationTest {
         Assert.assertTrue(response3.toString().contains("WSO2"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         httpClientUtil = null;
         super.cleanup();
     }

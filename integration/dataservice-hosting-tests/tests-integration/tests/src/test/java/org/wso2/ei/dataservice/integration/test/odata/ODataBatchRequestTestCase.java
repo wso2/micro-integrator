@@ -40,7 +40,8 @@ public class ODataBatchRequestTestCase extends DSSIntegrationTest {
     private final String configId = "default";
     private String webappURL;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
@@ -52,13 +53,14 @@ public class ODataBatchRequestTestCase extends DSSIntegrationTest {
         webappURL = "http://localhost:8480";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "test the service document retrieval") public void validateBatchRequestTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "test the service document retrieval")
+    public void validateBatchRequestTestCase() throws Exception {
         String endpoint = webappURL + "/odata/" + serviceName + "/" + configId + "/$batch";
         String content = "--batch_36522ad7-fc75-4b56-8c71-56071383e77b\n" + "Content-Type: application/http\n"
                 + "Content-Transfer-Encoding:binary\n" + "\n" + "GET " + webappURL + "/odata/" + serviceName + "/"
@@ -92,8 +94,8 @@ public class ODataBatchRequestTestCase extends DSSIntegrationTest {
                 .contains("WSO2 Message Broker"));
     }
 
-    @Test(groups = "wso2.dss", description = "test the service document retrieval", dependsOnMethods = "validateBatchRequestTestCase") public void validateBatchRequestRollBackTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "test the service document retrieval", dependsOnMethods = "validateBatchRequestTestCase")
+    public void validateBatchRequestRollBackTestCase() throws Exception {
         String endpoint = webappURL + "/odata/" + serviceName + "/" + configId + "/$batch";
         String content = "--batch_36522ad7-fc75-4b56-8c71-56071383e77b\n" + "Content-Type: application/http\n"
                 + "Content-Transfer-Encoding:binary\n" + "\n" + "GET " + webappURL + "/odata/" + serviceName + "/"
@@ -126,8 +128,8 @@ public class ODataBatchRequestTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.dss", description = "test the service document retrieval", dependsOnMethods = "validateBatchRequestTestCase") public void validateBatchRequestContinueOnErrorTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "test the service document retrieval", dependsOnMethods = "validateBatchRequestTestCase")
+    public void validateBatchRequestContinueOnErrorTestCase() throws Exception {
         String endpoint = webappURL + "/odata/" + serviceName + "/" + configId + "/$batch";
         String content = "--batch_36522ad7-fc75-4b56-8c71-56071383e77b\n" + "Content-Type: application/http\n"
                 + "Content-Transfer-Encoding:binary\n" + "\n" + "GET " + webappURL + "/odata/" + serviceName + "/"

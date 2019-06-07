@@ -38,17 +38,19 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator") public void testSetPropertyWithAxis2ScopeInScript()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator")
+    public void testSetPropertyWithAxis2ScopeInScript() throws Exception {
 
         boolean propertySet;
         boolean propertyRemoved;
@@ -63,8 +65,8 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         Assert.assertTrue(propertyRemoved, " The property with axis2 scope is not removed ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator") public void testSetPropertyWithTransportScopeInScript()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator")
+    public void testSetPropertyWithTransportScopeInScript() throws Exception {
 
         boolean propertySet;
         boolean propertyRemoved;
@@ -79,8 +81,8 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         Assert.assertTrue(propertyRemoved, " The property with transport scope is not removed ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator") public void testSetPropertyWithOperationScopeInScript()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator")
+    public void testSetPropertyWithOperationScopeInScript() throws Exception {
 
         boolean propertySet;
         boolean propertyRemoved;

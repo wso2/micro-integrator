@@ -40,7 +40,8 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server3;
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server3 = new SampleAxis2Server("test_axis2_server_9003.xml");
@@ -66,7 +67,8 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         log.info("Tests Are Completed");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -90,7 +92,8 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
         Thread.sleep(1000);
     }*/
 
-    @BeforeMethod(groups = "wso2.esb") public void startServersB() throws InterruptedException, IOException {
+    @BeforeMethod(groups = "wso2.esb")
+    public void startServersB() throws InterruptedException, IOException {
         if (!axis2Server1.isStarted()) {
             axis2Server1.start();
         }
@@ -114,9 +117,9 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
             "primary_0 currently TIMEOUT will now be marked active since it processed its last message" };
 
     //Disabled this test case since there is an actual issue to be fixed when dealing with endpoint timeouts
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint", enabled = false) public void testFailOverWithTimingOutPrimaryEp()
-            throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint", enabled = false)
+    public void testFailOverWithTimingOutPrimaryEp() throws IOException, InterruptedException {
         request(1);  // send request 7 times and observe the carbon log.
         LogEvent[] logs = logViewer.getAllSystemLogs();
         int[] occurrences = new int[10];

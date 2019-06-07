@@ -28,18 +28,20 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class NonAsciiCharactersForValuesOfPropertiesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Patch : ESBJAVA-956 : Put non-ascii characters as the values of the properties of the proxy services") public void testNonAsciiCharactersInProperties()
-            throws Exception {
+            "wso2.esb" }, description = "Patch : ESBJAVA-956 : Put non-ascii characters as the values of the properties of the proxy services")
+    public void testNonAsciiCharactersInProperties() throws Exception {
         String filePath = "/artifacts/ESB/synapseconfig/patchAutomation/non_ascii_value_properties_synapse_.xml";
         loadESBConfigurationFromClasspath(filePath);
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 

@@ -44,7 +44,8 @@ public class MediationStatEnableTestCase extends ESBIntegrationTest {
             getESBResourceLocation() + File.separator + "mediationStatConfig" + File.separator;
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "artifacts" + File.separator + "ESB" + File.separator + "mediationStatConfig" + File.separator
@@ -52,9 +53,8 @@ public class MediationStatEnableTestCase extends ESBIntegrationTest {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Mediation Statistics") public void testEnablingMediationStatistics()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Mediation Statistics")
+    public void testEnablingMediationStatistics() throws Exception {
         cleanupEndpoints();
         addEndpoint();
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("addressEndPoint"),
@@ -64,7 +64,8 @@ public class MediationStatEnableTestCase extends ESBIntegrationTest {
         checkStaticsEnabled();
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }

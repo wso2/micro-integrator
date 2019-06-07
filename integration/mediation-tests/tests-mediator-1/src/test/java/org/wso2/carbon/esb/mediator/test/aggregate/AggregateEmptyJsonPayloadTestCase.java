@@ -39,7 +39,8 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
     private static final String PROXY_NAME = "aggregateEmptyJsonPayloadTestProxy";
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         isProxyDeployed(PROXY_NAME);
@@ -51,8 +52,8 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ") public void testAggregateEmptyJsonPayload()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ")
+    public void testAggregateEmptyJsonPayload() throws Exception {
 
         String inputPayload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                 + "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
@@ -73,7 +74,8 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
                 "No content 204 responses are not properly aggregated at the aggregate mediator.");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

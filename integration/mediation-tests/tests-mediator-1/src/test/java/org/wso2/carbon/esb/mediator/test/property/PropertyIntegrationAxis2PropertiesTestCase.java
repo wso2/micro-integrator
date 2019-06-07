@@ -55,20 +55,22 @@ public class PropertyIntegrationAxis2PropertiesTestCase extends ESBIntegrationTe
 
     private ServerConfigurationManager serverManager = null;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         serverManager = new ServerConfigurationManager(context);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.init();
         super.cleanup();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Send messages using  ConcurrentConsumers "
-            + "and MaxConcurrentConsumers Axis2 level properties") public void maxConcurrentConsumersTest()
-            throws Exception {
+            + "and MaxConcurrentConsumers Axis2 level properties")
+    public void maxConcurrentConsumersTest() throws Exception {
         serverManager.restartGracefully();
 
         super.init();  // after restart the server instance initialization

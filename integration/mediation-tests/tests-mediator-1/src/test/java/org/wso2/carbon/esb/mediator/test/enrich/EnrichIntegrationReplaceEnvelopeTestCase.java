@@ -36,12 +36,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationReplaceEnvelopeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichReplaceEnvelopeTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Replace envelope ") public void testEnrichMediator() throws Exception {
+    @Test(groups = "wso2.esb", description = "Replace envelope ")
+    public void testEnrichMediator() throws Exception {
 
         String soapResponse = getResponse();
         assertNotNull(soapResponse, "Response message null");
@@ -103,7 +105,8 @@ public class EnrichIntegrationReplaceEnvelopeTestCase extends ESBIntegrationTest
         return method;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

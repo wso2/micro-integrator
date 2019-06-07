@@ -45,8 +45,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
     private final String PROXY_NAME = "mspAdminTestProxy";
     private final String STORE_NAME = "mspAdminTestInMemoryMessageStore";
 
-    @BeforeClass(alwaysRun = true, description = "Test Car with Mediator deployment") protected void setup()
-            throws Exception {
+    @BeforeClass(alwaysRun = true, description = "Test Car with Mediator deployment")
+    protected void setup() throws Exception {
         super.init();
 
         loadESBConfigurationFromClasspath("artifacts/ESB/messageProcessorConfig/mspAdminTestConfig.xml");
@@ -64,9 +64,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test modifying a message processor.") public void modifyMessageProcessor()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test modifying a message processor.")
+    public void modifyMessageProcessor() throws Exception {
 
         String modifyingAttribute = "interval";
         String modifiedInterval = "6000";
@@ -115,9 +114,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test activating/deactivating a message processor.") public void testActivateMessageProcessor()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test activating/deactivating a message processor.")
+    public void testActivateMessageProcessor() throws Exception {
 
         messageProcessorClient.deactivateProcessor(PROCESSOR_NAME);
 
@@ -137,9 +135,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test pending message related operations on a message processor.") public void testMessagesInMessageProcessor()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test pending message related operations on a message processor.")
+    public void testMessagesInMessageProcessor() throws Exception {
 
         int initialMessageCount = 5;
         long waitMilliseconds = 30000;
@@ -198,7 +195,8 @@ public class MessageProcessorAdminTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanState() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanState() throws Exception {
 
         super.cleanup();
     }

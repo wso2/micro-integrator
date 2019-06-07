@@ -30,14 +30,15 @@ import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 public class ESBJAVA_4572TestCase extends ESBIntegrationTest {
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("ESBJAVA4572TestAPI");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description = "disabling auto primitive option in synapse properties ", enabled = false) public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb", description = "disabling auto primitive option in synapse properties ", enabled = false)
+    public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter() throws Exception {
         String payload = "{\"state\":[{\"path\":\"user_programs_progress\",\"entry\":"
                 + "[{\"value\":\"false\",\"key\":\"testJson14\"}]}]}";
 
@@ -51,7 +52,8 @@ public class ESBJAVA_4572TestCase extends ESBIntegrationTest {
         Assert.assertEquals(val, exPayload);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -40,7 +40,8 @@ import javax.xml.xpath.XPathExpressionException;
 public class OutputMappingAsAttributeDataServiceTestCase extends DSSIntegrationTest {
     private final String serviceName = "OutputMappingAttributeDataService";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -53,12 +54,14 @@ public class OutputMappingAsAttributeDataServiceTestCase extends DSSIntegrationT
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void addOffice() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void addOffice() throws AxisFault, XPathExpressionException {
         AxisServiceClient serviceClient = new AxisServiceClient();
         serviceClient.sendRobust(getPayloadAddOffice("25", "NY", "Boston", "EMEA"), getServiceUrlHttp(serviceName),
                 "addOffice");
@@ -68,8 +71,8 @@ public class OutputMappingAsAttributeDataServiceTestCase extends DSSIntegrationT
                 "addOffice");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addOffice" }) public void getOffices()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addOffice" })
+    public void getOffices() throws AxisFault, XPathExpressionException {
         AxisServiceClient serviceClient = new AxisServiceClient();
         OMElement response = serviceClient
                 .sendReceive(getPayloadGetOffice(), getServiceUrlHttp(serviceName), "showAllOffices");

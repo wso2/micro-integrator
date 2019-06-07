@@ -35,15 +35,16 @@ public class ESBJAVA3051HTTPPatchMethodSupportTestCase extends ESBIntegrationTes
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/synapseconfig/http_transport/HTTPPatchMethodSupportTestSynapse.xml");
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = " Checking Listener side for the HTTP Patch method for Proxy services") public void testHTTPPatchListenerProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = " Checking Listener side for the HTTP Patch method for Proxy services")
+    public void testHTTPPatchListenerProxy() throws Exception {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         String requestXML = "<echo>wso2</echo>";
         String requestContentType = "application/xml";
@@ -60,8 +61,8 @@ public class ESBJAVA3051HTTPPatchMethodSupportTestCase extends ESBIntegrationTes
 
     }
 
-    @Test(groups = "wso2.esb", description = " Checking Listener side for the HTTP Patch method for REST API ") public void testHTTPPatchListenerAPI()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = " Checking Listener side for the HTTP Patch method for REST API ")
+    public void testHTTPPatchListenerAPI() throws Exception {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         String requestXML = "<echo>wso2</echo>";
         String requestContentType = "application/xml";
@@ -79,8 +80,8 @@ public class ESBJAVA3051HTTPPatchMethodSupportTestCase extends ESBIntegrationTes
 
     }
 
-    @Test(groups = "wso2.esb", description = " Checking Listener and sender for the HTTP Patch method") public void testHTTPPatchSenderListener()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = " Checking Listener and sender for the HTTP Patch method")
+    public void testHTTPPatchSenderListener() throws Exception {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         String requestXML = "<echo>wso2</echo>";
         String requestContentType = "application/xml";
@@ -97,7 +98,8 @@ public class ESBJAVA3051HTTPPatchMethodSupportTestCase extends ESBIntegrationTes
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

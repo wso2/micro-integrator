@@ -41,19 +41,21 @@ public class ReplaceJSONRequestWithPayloadFactoryTestCase extends ESBIntegration
     private Client client = Client.create();
     private boolean isJsonPayload = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonreplacepayload.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing and Replacing of JSON Payload With Payload Factory scenario") public void testReplaceJSONPayloadWithPayloadFactoryScenario()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing and Replacing of JSON Payload With Payload Factory scenario")
+    public void testReplaceJSONPayloadWithPayloadFactoryScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Ocean\",\"singer\":\"Brown\"}";
 

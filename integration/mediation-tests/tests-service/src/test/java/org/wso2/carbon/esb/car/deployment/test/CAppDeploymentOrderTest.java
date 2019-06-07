@@ -56,14 +56,16 @@ public class CAppDeploymentOrderTest extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
     private String pathToFtpDir;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         runFTPServerForInboundTest();
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service get deployed,unDeploy "
-            + "through capp in order") protected void carFileDeploymentOrderTest() throws Exception {
+            + "through capp in order")
+    protected void carFileDeploymentOrderTest() throws Exception {
         logViewerClient.clearLogs();
         carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
@@ -218,7 +220,8 @@ public class CAppDeploymentOrderTest extends ESBIntegrationTest {
         log.info("FTP Server startup completed successfully");
     }
 
-    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void restoreServerConfiguration() throws Exception {
         try {
             super.cleanup();
         } finally {

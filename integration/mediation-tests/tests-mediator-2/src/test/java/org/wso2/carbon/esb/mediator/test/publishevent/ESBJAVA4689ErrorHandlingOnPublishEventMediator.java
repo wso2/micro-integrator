@@ -28,13 +28,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class ESBJAVA4689ErrorHandlingOnPublishEventMediator extends ESBIntegrationTest {
     private static final String PROXY_NAME = "publishevent";
 
-    @BeforeClass(alwaysRun = true) public void deployArtifact() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifact() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/publishevent/synapseConfig.xml");
     }
 
     @Test(groups = "wso2.esb", description = "Test whether fault sequence is hit when on error in publish event"
-            + " mediator") public void invokeMediator() throws Exception {
+            + " mediator")
+    public void invokeMediator() throws Exception {
 
         String endpoint = getProxyServiceURLHttp(PROXY_NAME);
         try {
@@ -47,7 +49,8 @@ public class ESBJAVA4689ErrorHandlingOnPublishEventMediator extends ESBIntegrati
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

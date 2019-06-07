@@ -47,7 +47,8 @@ public class ConcurrencyAndRequestThrottlingTestRequest extends ESBIntegrationTe
     private int deniedRequests;
     private ThrottleTestCounter requestThrottledClients;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -64,8 +65,8 @@ public class ConcurrencyAndRequestThrottlingTestRequest extends ESBIntegrationTe
     }
 
     //use file system registry
-    @Test(groups = "wso2.esb", description = "Use of both concurrency throttling and request rate based throttling- Throttle Request Massages", enabled = false) public void testConcurrencyAndRequestBasedPolicyThrottlingRequest()
-            throws InterruptedException {
+    @Test(groups = "wso2.esb", description = "Use of both concurrency throttling and request rate based throttling- Throttle Request Massages", enabled = false)
+    public void testConcurrencyAndRequestBasedPolicyThrottlingRequest() throws InterruptedException {
         startClients();
         while (clientsDone.getCount() < CONCURRENT_CLIENTS) {
             Thread.sleep(1000);
@@ -84,7 +85,8 @@ public class ConcurrencyAndRequestThrottlingTestRequest extends ESBIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         concurrencyAndRequestThrottleTestClients = null;
         list = null;
         clients = null;

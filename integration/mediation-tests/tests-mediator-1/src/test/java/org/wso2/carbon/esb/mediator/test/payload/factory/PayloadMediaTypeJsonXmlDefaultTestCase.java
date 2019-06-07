@@ -38,7 +38,8 @@ public class PayloadMediaTypeJsonXmlDefaultTestCase extends ESBIntegrationTest {
 
     private static String serviceURL;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         // applying changes to esb - source view
         loadESBConfigurationFromClasspath(
@@ -46,12 +47,13 @@ public class PayloadMediaTypeJsonXmlDefaultTestCase extends ESBIntegrationTest {
         serviceURL = this.getProxyServiceURLHttp("Dummy");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "sending xml request using media-type application/xml") public void invokeServiceFromXmlRequest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "sending xml request using media-type application/xml")
+    public void invokeServiceFromXmlRequest() throws Exception {
 
         // xml request payload
         String payload = "<xml><id_str>84315710834212866</id_str>\n" + "\t<entities>\n" + "\t\t<hashtags>\n"
@@ -71,8 +73,8 @@ public class PayloadMediaTypeJsonXmlDefaultTestCase extends ESBIntegrationTest {
         assertTrue(response.contains("\"id_str\": \"peterfalk\""));
     }
 
-    @Test(groups = "wso2.esb", description = "sending json request using media-type application/json", dependsOnMethods = "invokeServiceFromXmlRequest") public void invokeServiceFromJsonRequest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "sending json request using media-type application/json", dependsOnMethods = "invokeServiceFromXmlRequest")
+    public void invokeServiceFromJsonRequest() throws Exception {
 
         // json request payload
         String payload =
@@ -96,8 +98,8 @@ public class PayloadMediaTypeJsonXmlDefaultTestCase extends ESBIntegrationTest {
         assertTrue(response.contains("\"id_str\": \"peterfalk\""));
     }
 
-    @Test(groups = "wso2.esb", description = "sending default request using no value media-type ", dependsOnMethods = "invokeServiceFromJsonRequest") public void invokeServiceFromDefaultRequest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "sending default request using no value media-type ", dependsOnMethods = "invokeServiceFromJsonRequest")
+    public void invokeServiceFromDefaultRequest() throws Exception {
 
         // xml request payload
         String payload = "<xml><id_str>84315710834212866</id_str>\n" + "\t<entities>\n" + "\t\t<hashtags>\n"

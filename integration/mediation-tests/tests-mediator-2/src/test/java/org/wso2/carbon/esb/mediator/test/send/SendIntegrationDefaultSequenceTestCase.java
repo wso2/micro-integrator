@@ -34,15 +34,16 @@ import static org.testng.Assert.assertNotNull;
 public class SendIntegrationDefaultSequenceTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "End point in local registry and default receiving sequence with build message before receive") public void testSequenceDefaultBuildMessageTest()
-            throws Exception {
+            "wso2.esb" }, description = "End point in local registry and default receiving sequence with build message before receive")
+    public void testSequenceDefaultBuildMessageTest() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("sendMediatorWithBuildMessageTrueTestProxy"), null,
                         "WSO2");
@@ -55,8 +56,8 @@ public class SendIntegrationDefaultSequenceTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "End point in local registry and default receiving sequence with not build message before receive") public void testSequenceDefaultBuildMessageNo()
-            throws Exception {
+            "wso2.esb" }, description = "End point in local registry and default receiving sequence with not build message before receive")
+    public void testSequenceDefaultBuildMessageNo() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("sendMediatorWithBuildMessageFalseTestProxy"), null,
                         "WSO2");
@@ -77,7 +78,8 @@ public class SendIntegrationDefaultSequenceTestCase extends ESBIntegrationTest {
                                 + "/mediatorconfig/send/endpoints/registry_endpoint.xml"))));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
         super.cleanup();
     }

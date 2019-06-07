@@ -36,13 +36,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class IterateSequentialFaultSequenceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("iterateMediatorSequentialFaultSequenceTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests property retrieval in fault sequence") public void testPropertyRetrievalInFaultSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests property retrieval in fault sequence")
+    public void testPropertyRetrievalInFaultSequence() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(
                     getProxyServiceURLHttp("iterateMediatorSequentialFaultSequenceTestProxy"), null, "WSO2");
@@ -52,7 +53,8 @@ public class IterateSequentialFaultSequenceTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

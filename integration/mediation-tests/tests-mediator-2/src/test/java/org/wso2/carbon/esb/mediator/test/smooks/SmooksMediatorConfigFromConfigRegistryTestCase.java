@@ -39,7 +39,8 @@ public class SmooksMediatorConfigFromConfigRegistryTestCase extends ESBIntegrati
     private ResourceAdminServiceClient resourceAdminServiceClient;
     private boolean isProxyDeployed = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
@@ -50,9 +51,9 @@ public class SmooksMediatorConfigFromConfigRegistryTestCase extends ESBIntegrati
         addSmooksProxy();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Transform from a Smook mediator config picked out of config registry") public void testSendingToSmooks()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Transform from a Smook mediator config picked out of config registry")
+    public void testSendingToSmooks() throws Exception {
         String smooksResourceDirstr = getClass().getResource("/artifacts/ESB/synapseconfig/smooks/").getFile();
         File fileSmook = new File(smooksResourceDirstr);
         String smooksResourceDir = fileSmook.getAbsolutePath();
@@ -102,7 +103,8 @@ public class SmooksMediatorConfigFromConfigRegistryTestCase extends ESBIntegrati
         isProxyDeployed = true;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             if (isProxyDeployed) {
                 deleteProxyService("SmooksProxy");

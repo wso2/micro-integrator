@@ -47,7 +47,8 @@ public class ESBJAVA1716UpdatingJMSMessageStoreBeingUsedTestCase extends ESBInte
     private String messageStoreName = "JMSTestMessageStoreUpdatingTest";
     private String proxyServiceName = "JMSStoreAndProcessorTestProxy";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         synapseConfig = esbUtils.loadResource("/artifacts/ESB/jms/transport/ESBJAVA-1716_messageStore.xml");
         synapseConfig = JMSEndpointManager.setConfigurations(synapseConfig);
@@ -66,8 +67,8 @@ public class ESBJAVA1716UpdatingJMSMessageStoreBeingUsedTestCase extends ESBInte
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Adding MessageStore configuration and sending messages to store using a proxy") public void addMessageStoreConfigurationTest()
-            throws Exception {
+            "wso2.esb" }, description = "Adding MessageStore configuration and sending messages to store using a proxy")
+    public void addMessageStoreConfigurationTest() throws Exception {
         updateESBConfiguration(synapseConfig);
         Thread.sleep(3000);
 
@@ -80,8 +81,8 @@ public class ESBJAVA1716UpdatingJMSMessageStoreBeingUsedTestCase extends ESBInte
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Updating MessageStore once it is used by message processor", dependsOnMethods = "addMessageStoreConfigurationTest") public void updateMessageStoreBeingUsedTest()
-            throws Exception {
+            "wso2.esb" }, description = "Updating MessageStore once it is used by message processor", dependsOnMethods = "addMessageStoreConfigurationTest")
+    public void updateMessageStoreBeingUsedTest() throws Exception {
         int beforeLogSize = logViewer.getAllSystemLogs().length;
         messageStoreAdminClient.updateMessageStore(synapseConfig.getFirstChildWithName(
                 new QName(synapseConfiguration.getNamespace().getNamespaceURI(), "messageStore")));
@@ -99,7 +100,8 @@ public class ESBJAVA1716UpdatingJMSMessageStoreBeingUsedTestCase extends ESBInte
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

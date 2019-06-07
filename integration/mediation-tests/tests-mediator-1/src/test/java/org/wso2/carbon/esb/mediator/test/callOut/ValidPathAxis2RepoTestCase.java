@@ -35,7 +35,8 @@ import static org.testng.Assert.assertTrue;
 
 public class ValidPathAxis2RepoTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
 
@@ -75,9 +76,9 @@ public class ValidPathAxis2RepoTestCase extends ESBIntegrationTest {
     }
 
     //TODO
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", enabled = false) public void TestPath()
-            throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", enabled = false)
+    public void TestPath() throws AxisFault {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null,
                 "IBM");    // send the simplestockquote request. service url is set at the synapse
@@ -88,7 +89,8 @@ public class ValidPathAxis2RepoTestCase extends ESBIntegrationTest {
         assertTrue(ResponseContainsIBM, "Symbol name mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 

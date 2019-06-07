@@ -39,7 +39,8 @@ public class SoapHeaderBlocksTestCase extends ESBIntegrationTest {
     private final String carFileNameWithExtension = "SoapHeaderTestRegFiles_1.0.0.car";
     private final String serviceName = "SoapHeaderBlockTestProxy";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
@@ -56,7 +57,8 @@ public class SoapHeaderBlocksTestCase extends ESBIntegrationTest {
         TimeUnit.SECONDS.sleep(5);
     }
 
-    @Test(groups = { "wso2.esb" }) public void aggregateMediatorSoapHeaderBlockTestCase() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void aggregateMediatorSoapHeaderBlockTestCase() throws Exception {
 
         HttpsResponse response = postWithBasicAuth(getProxyServiceURLHttps(serviceName),
                 "<s:Envelope xmlns:s=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -77,7 +79,8 @@ public class SoapHeaderBlocksTestCase extends ESBIntegrationTest {
         Assert.assertEquals(response.getResponseCode(), 200);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
@@ -144,7 +147,8 @@ public class SoapHeaderBlocksTestCase extends ESBIntegrationTest {
      */
     private Callable<Boolean> isCarFileDeployed(final String carFileName) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws ApplicationAdminExceptionException, RemoteException {
+            @Override
+            public Boolean call() throws ApplicationAdminExceptionException, RemoteException {
                 log.info("waiting " + MAX_TIME + " millis for car deployment " + carFileName);
                 Calendar startTime = Calendar.getInstance();
                 long time = Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis();

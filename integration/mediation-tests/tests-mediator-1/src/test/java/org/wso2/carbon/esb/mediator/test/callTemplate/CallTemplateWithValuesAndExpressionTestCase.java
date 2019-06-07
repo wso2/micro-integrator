@@ -43,19 +43,20 @@ public class CallTemplateWithValuesAndExpressionTestCase extends ESBIntegrationT
     private final int iterations = 4;
     private String symbol = "IBM";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call_template/synapse_expressions.xml");
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Template with values and expressions") public void testTemplateWithValuesAndExpressions()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Template with values and expressions")
+    public void testTemplateWithValuesAndExpressions() throws IOException, XMLStreamException {
         String soapResponse = getResponse();
         assertNotNull(soapResponse, "Response message is null");
         OMElement response = AXIOMUtil.stringToOM(soapResponse);

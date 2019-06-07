@@ -31,7 +31,8 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class InSequenceIntegrationTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
     }
@@ -42,7 +43,8 @@ public class InSequenceIntegrationTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", enabled = false) public void inSequenceLogTest() throws Exception {
+    @Test(groups = "wso2.esb", enabled = false)
+    public void inSequenceLogTest() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/in/synapse.xml");
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
@@ -61,7 +63,8 @@ public class InSequenceIntegrationTestCase extends ESBIntegrationTest {
      * @throws Exception
      */
     /*https://wso2.org/jira/browse/ESBJAVA-1695*/
-    @Test(groups = "wso2.esb") public void inSequenceSample15Test() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void inSequenceSample15Test() throws Exception {
         loadSampleESBConfiguration(15);
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
@@ -69,7 +72,8 @@ public class InSequenceIntegrationTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("getQuoteResponse"), "'getQuoteResponse' String not found !");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

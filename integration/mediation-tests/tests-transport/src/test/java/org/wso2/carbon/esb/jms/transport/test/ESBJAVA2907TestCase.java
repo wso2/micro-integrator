@@ -18,15 +18,16 @@ public class ESBJAVA2907TestCase extends ESBIntegrationTest {
 
     private static String GET_QUOTE_REQUEST_BODY = "OM_ELEMENT_PREFIX_ = <ns:getQuote xmlns:ns=\"http://services.samples\"><ns:request><ns:symbol>IBM</ns:symbol></ns:request></ns:getQuote>";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils
                 .loadResource("/artifacts/ESB/synapseconfig/messageStore/ESBJAVA-2907StoreOmElementsAsProperties.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = "wso2.esb", description = "Test adding OMElements as properties when saving messages to the MessageStore") public void testAddingOMElementPropertyToMessageStore()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test adding OMElements as properties when saving messages to the MessageStore")
+    public void testAddingOMElementPropertyToMessageStore() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
         client.sendRobust(Utils.getStockQuoteRequest("IBM"), getProxyServiceURLHttp("testPS"), "getQuote");
         LogViewerClient cli = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -35,7 +36,8 @@ public class ESBJAVA2907TestCase extends ESBIntegrationTest {
         log.info(cli.getAllSystemLogs());
     }
 
-    @AfterClass(alwaysRun = true) public void UndeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void UndeployService() throws Exception {
         super.cleanup();
     }
 }

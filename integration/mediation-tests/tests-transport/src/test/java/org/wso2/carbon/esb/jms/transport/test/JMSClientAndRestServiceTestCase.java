@@ -39,7 +39,8 @@ public class JMSClientAndRestServiceTestCase extends ESBIntegrationTest {
 
     private TomcatServerManager tomcatServerManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         tomcatServerManager = new TomcatServerManager(CustomerConfig.class.getName(), TomcatServerType.jaxrs.name(),
                 8060);
 
@@ -51,7 +52,8 @@ public class JMSClientAndRestServiceTestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/jms/transport/jmsclient-and-restService.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             if (tomcatServerManager != null) {
                 tomcatServerManager.stop();
@@ -63,7 +65,8 @@ public class JMSClientAndRestServiceTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "JMS front-end client sending message to "
-            + "REST back-end service through ESB") public void sendRequest() throws Exception {
+            + "REST back-end service through ESB")
+    public void sendRequest() throws Exception {
 
         String basedirLocation = System.getProperty("basedir") + File.separator + "target";
 

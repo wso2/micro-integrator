@@ -42,24 +42,31 @@ import javax.ws.rs.core.Request;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
-@Path("/people") public class PeopleRestService {
-    @Inject private PeopleService peopleService;
+@Path("/people")
+public class PeopleRestService {
+    @Inject
+    private PeopleService peopleService;
 
     public void PeopleRestService() {
         peopleService.setInitPeople();
     }
 
-    @Produces({ MediaType.APPLICATION_JSON }) @GET public Collection<Person> getPeople(
-            @QueryParam("page") @DefaultValue("1") final int page) {
+    @Produces({ MediaType.APPLICATION_JSON })
+    @GET
+    public Collection<Person> getPeople(@QueryParam("page") @DefaultValue("1") final int page) {
         return peopleService.getPeople(page, 5);
     }
 
-    @Produces({ MediaType.APPLICATION_JSON }) @PUT public Person addPerson(@FormParam("email") final String email) {
+    @Produces({ MediaType.APPLICATION_JSON })
+    @PUT
+    public Person addPerson(@FormParam("email") final String email) {
         return peopleService.addPerson(email);
     }
 
-    @Produces({ MediaType.APPLICATION_JSON }) @Path("/{email}") @GET public Person getPeople(
-            @PathParam("email") final String email) {
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Path("/{email}")
+    @GET
+    public Person getPeople(@PathParam("email") final String email) {
         return peopleService.getByEmail(email);
     }
 
@@ -76,9 +83,9 @@ import javax.ws.rs.core.UriInfo;
 
 */
 
-    @Produces({ MediaType.APPLICATION_JSON,
-            MediaType.APPLICATION_FORM_URLENCODED }) @POST public Response addPersonQueryParam(
-            @Context final UriInfo uriInfo, @QueryParam("email") final String email,
+    @Produces({ MediaType.APPLICATION_JSON, MediaType.APPLICATION_FORM_URLENCODED })
+    @POST
+    public Response addPersonQueryParam(@Context final UriInfo uriInfo, @QueryParam("email") final String email,
             @QueryParam("firstName") final String firstName, @QueryParam("lastName") final String lastName) {
         peopleService.addPerson(email, firstName, lastName);
         return Response.created(uriInfo.getRequestUriBuilder().path(email).build()).build();
@@ -103,8 +110,10 @@ import javax.ws.rs.core.UriInfo;
          return person;
      }
  */
-    @Produces({ MediaType.APPLICATION_JSON }) @Path("/{email}") @HEAD public Response checkPerson(
-            @PathParam("email") final String email) {
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Path("/{email}")
+    @HEAD
+    public Response checkPerson(@PathParam("email") final String email) {
         if (peopleService.checkPersonByEmail(email)) {
             return Response.ok().build();
         } else {
@@ -113,9 +122,11 @@ import javax.ws.rs.core.UriInfo;
 
     }
 
-    @Produces({ MediaType.APPLICATION_JSON }) @Path("/{email}") @PUT public Person updatePersonQueryParam(
-            @PathParam("email") final String email, @QueryParam("firstName") final String firstName,
-            @QueryParam("lastName") final String lastName) {
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Path("/{email}")
+    @PUT
+    public Person updatePersonQueryParam(@PathParam("email") final String email,
+            @QueryParam("firstName") final String firstName, @QueryParam("lastName") final String lastName) {
 
         final Person person = peopleService.getByEmail(email);
         if (firstName != null) {
@@ -129,19 +140,25 @@ import javax.ws.rs.core.UriInfo;
         return person;
     }
 
-    @Path("/{email}") @DELETE public Response deletePerson(@PathParam("email") final String email) {
+    @Path("/{email}")
+    @DELETE
+    public Response deletePerson(@PathParam("email") final String email) {
         peopleService.removePerson(email);
         return Response.ok().build();
     }
 
-    @Produces({ MediaType.APPLICATION_JSON }) @Path("/options") @OPTIONS public Response getOptions(
-            @Context HttpHeaders headers, @Context Request request) {
+    @Produces({ MediaType.APPLICATION_JSON })
+    @Path("/options")
+    @OPTIONS
+    public Response getOptions(@Context HttpHeaders headers, @Context Request request) {
         return Response.ok().header(CorsHeaderConstants.HEADER_AC_ALLOW_METHODS, "GET POST DELETE PUT OPTIONS")
                 .header(CorsHeaderConstants.HEADER_AC_ALLOW_CREDENTIALS, "false")
                 .header(CorsHeaderConstants.HEADER_AC_REQUEST_HEADERS, MediaType.APPLICATION_JSON).build();
     }
 
-    @POST @Path("/NoBodyNoContentTypeFor201/{param}") public Response DoTest(@PathParam("param") String msg) {
+    @POST
+    @Path("/NoBodyNoContentTypeFor201/{param}")
+    public Response DoTest(@PathParam("param") String msg) {
         return Response.status(201).build();
     }
 }

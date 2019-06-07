@@ -34,14 +34,15 @@ import static org.testng.Assert.fail;
 
 public class MultipleRuleSetPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config_multiple_rule/synapse.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke IBM rule") public void testInvokeIBMRule()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke IBM rule")
+    public void testInvokeIBMRule() throws AxisFault {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("MultipleRuleSetPropertyTestProxy"),
                         "http://localhost:9000/services/SimpleStockQuoteService", "IBM");
@@ -56,16 +57,16 @@ public class MultipleRuleSetPropertyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke SUN rule ") public void testInvokeSUNRule()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke SUN rule ")
+    public void testInvokeSUNRule() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("MultipleRuleSetPropertyTestProxy"),
                         "http://localhost:9000/services/SimpleStockQuoteService", "SUN");
         assertTrue(response.toString().contains("WRONG_RULE"), "Fault: value 'responseText' mismatched");
     }
 
-    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke MFST rule ") public void testInvokeMSFTRule()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke MFST rule ")
+    public void testInvokeMSFTRule() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("MultipleRuleSetPropertyTestProxy"),
@@ -73,8 +74,8 @@ public class MultipleRuleSetPropertyTestCase extends ESBIntegrationTest {
         assertTrue(response.toString().contains("WRONG_RULE"), "Fault: value 'responseText' mismatched");
     }
 
-    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke an invalid rule ") public void testInvokeInvalidRule()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "scenario with multiple rules- Invoke an invalid rule ")
+    public void testInvokeInvalidRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("MultipleRuleSetPropertyTestProxy"),
                     "http://localhost:9000/services/SimpleStockQuoteService", "Invalid");
@@ -86,7 +87,8 @@ public class MultipleRuleSetPropertyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

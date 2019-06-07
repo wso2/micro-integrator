@@ -52,7 +52,8 @@ public class PartialInputStreamReadError extends ESBIntegrationTest {
     public static final String EXPECTED_ERROR = "<Exception>DATA IS ENCODED IMPROPERLY</Exception>";
     private String input;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         input = FileUtils
                 .readFileToString(new File(getESBResourceLocation() + "/passthru/transport/inputESBJAVA4616.xml"),
@@ -60,8 +61,8 @@ public class PartialInputStreamReadError extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/ESBJAVA-4616.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Testing with a inSequence with Log Mediator") public void testPartialReadErrorWithLogMediator()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with a inSequence with Log Mediator")
+    public void testPartialReadErrorWithLogMediator() throws Exception {
         URL endpoint = new URL(getProxyServiceURLHttp("ProcessPO2"));
         Map<String, String> header = new HashMap<>();
         header.put("Content-Type", "application/xml");
@@ -69,8 +70,8 @@ public class PartialInputStreamReadError extends ESBIntegrationTest {
         assertTrue(EXPECTED_ERROR.equals(httpResponse.getData()), "Expected error message not received");
     }
 
-    @Test(groups = "wso2.esb", description = "Testing with a inSequence with Conditional statement") public void testPartialReadErrorWithSequenceMediator()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with a inSequence with Conditional statement")
+    public void testPartialReadErrorWithSequenceMediator() throws Exception {
         URL endpoint = new URL(getProxyServiceURLHttp("ProcessPO"));
         Map<String, String> header = new HashMap<>();
         header.put("Content-Type", "application/xml");
@@ -78,7 +79,8 @@ public class PartialInputStreamReadError extends ESBIntegrationTest {
         assertTrue(EXPECTED_ERROR.equals(httpResponse.getData()), "Expected error message not received");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 

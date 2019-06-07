@@ -41,7 +41,8 @@ public class MessageStoreMessageCleaningTestCase extends ESBIntegrationTest {
     private String[] messageStores = null;
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         initVariables();
     }
@@ -51,9 +52,9 @@ public class MessageStoreMessageCleaningTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(context);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test whether FIX messages are stored from store mediator") public void messageStoreFIXStoringTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test whether FIX messages are stored from store mediator")
+    public void messageStoreFIXStoringTest() throws Exception {
         // The count should be 0 as soon as the message store is created
         Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
                 "Message store should be initially empty");
@@ -76,7 +77,8 @@ public class MessageStoreMessageCleaningTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         clear();
         cleanup();
         messageStoreAdminClient = null;

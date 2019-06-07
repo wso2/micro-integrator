@@ -43,7 +43,8 @@ import java.io.InputStream;
 public class DefaultRequestContentTypeTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
@@ -63,9 +64,9 @@ public class DefaultRequestContentTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test for DEFAULT_REQUEST_TYPE for nhttp transport") public void testReturnContentType()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test for DEFAULT_REQUEST_TYPE for nhttp transport")
+    public void testReturnContentType() throws Exception {
         try {
             String url = getApiInvocationURL("defaultRequestContentTypeApi").concat("?symbol=wso2");
             HttpUriRequest request = new HttpPut(url);
@@ -82,7 +83,8 @@ public class DefaultRequestContentTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         String confDir = carbonHome + File.separator + "conf" + File.separator;
         File configTemp = new File(confDir + "axis2" + File.separator + "default_content_type_axis2.xml");

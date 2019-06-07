@@ -35,15 +35,16 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class IterateSequentialPropertySavingTestCase extends ESBIntegrationTest {
     private ProxyServiceAdminClient proxyServiceAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         addProxyService(esbUtils.loadResource(
                 "/artifacts/ESB/mediatorconfig/iterate/iterateSequentialTruePropertyWithOutProperty.xml"));
         proxyServiceAdminClient = new ProxyServiceAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests updating the sequential='true' property") public void testSavingSequentialTrueProperty()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests updating the sequential='true' property")
+    public void testSavingSequentialTrueProperty() throws Exception {
         proxyServiceAdminClient.updateProxy(
                 esbUtils.loadResource("/artifacts/ESB/mediatorconfig/iterate/iterateSequentialTrueProperty.xml"));
         isProxyDeployed("IterateSequentialTrueCheckProxy");
@@ -52,7 +53,8 @@ public class IterateSequentialPropertySavingTestCase extends ESBIntegrationTest 
                 "Synapse Configuration doesn't contain sequential=true after updating");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

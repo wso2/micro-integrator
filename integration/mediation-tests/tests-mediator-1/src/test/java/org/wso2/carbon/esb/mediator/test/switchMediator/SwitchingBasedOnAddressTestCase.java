@@ -32,15 +32,16 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class SwitchingBasedOnAddressTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/synapseconfig/filters/switchMediator/switching_based_on_address_synapse.xml");
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Switch messages based on address") public void testSample2()
-            throws RemoteException, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }, description = "Switch messages based on address")
+    public void testSample2() throws RemoteException, XPathExpressionException {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("switchByAddress"),
@@ -56,7 +57,8 @@ public class SwitchingBasedOnAddressTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 

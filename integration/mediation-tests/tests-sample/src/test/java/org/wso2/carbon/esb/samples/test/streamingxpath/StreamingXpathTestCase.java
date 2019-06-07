@@ -37,7 +37,8 @@ public class StreamingXpathTestCase extends ESBSampleIntegrationTest {
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
     private ServerConfigurationManager serverManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         File sourceFile = new File(
@@ -53,13 +54,14 @@ public class StreamingXpathTestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = " Streaming XPath Running", enabled = true) public void streamingXpathTestCase()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = " Streaming XPath Running", enabled = true)
+    public void streamingXpathTestCase() throws Exception {
         OMElement result = axis2Client.sendSimpleQuoteRequest("http://localhost:8480/services/Streaming", null, "IBM");
         Assert.assertNotNull(result);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverManager.restoreToLastConfiguration();
     }

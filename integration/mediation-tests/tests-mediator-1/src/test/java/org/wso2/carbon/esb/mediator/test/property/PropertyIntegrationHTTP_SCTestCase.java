@@ -37,18 +37,20 @@ import static org.testng.Assert.assertEquals;
  */
 public class PropertyIntegrationHTTP_SCTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("HTTP_SCTestProxy");
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Getting HTTP status code number ") public void testHttpResponseCode()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Getting HTTP status code number ")
+    public void testHttpResponseCode() throws Exception {
 
         int responseStatus = 0;
 

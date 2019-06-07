@@ -38,7 +38,8 @@ public class PriorityExecutorMediaTypeTestCase extends ESBIntegrationTest {
     private final String PRIORITY_EXECUTOR_NAME = "automationPriorityExecutor";
     private boolean isPriorityExecutorExist = false;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         priorityMediationAdminClient = new PriorityMediationAdminClient(contextUrls.getBackEndUrl(),
                 getSessionCookie());
@@ -46,9 +47,8 @@ public class PriorityExecutorMediaTypeTestCase extends ESBIntegrationTest {
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Priority Executor media type - text/xml", enabled = false) public void priorityExecutorMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Priority Executor media type - text/xml", enabled = false)
+    public void priorityExecutorMediaTypeTest() throws Exception {
 
         OMElement priorityConfig = AXIOMUtil.stringToOM(
                 "<priority-executor xmlns=\"http://ws.apache.org/ns/synapse\" " + "name=\"" + PRIORITY_EXECUTOR_NAME
@@ -65,7 +65,8 @@ public class PriorityExecutorMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         if (isPriorityExecutorExist) {
             priorityMediationAdminClient.remove(PRIORITY_EXECUTOR_NAME);
         }

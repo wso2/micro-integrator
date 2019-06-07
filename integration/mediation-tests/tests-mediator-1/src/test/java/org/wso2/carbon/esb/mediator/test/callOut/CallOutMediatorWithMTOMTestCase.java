@@ -28,9 +28,9 @@ public class CallOutMediatorWithMTOMTestCase extends ESBIntegrationTest {
     private final String MTOM_SERVICE = "MTOMSwASampleService";
     private SampleAxis2Server axis2Server;
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) public void setEnvironment()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         axis2Server = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server.start();
@@ -38,9 +38,8 @@ public class CallOutMediatorWithMTOMTestCase extends ESBIntegrationTest {
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CallOutMediatorWithMTOMProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "callOutMediatorWithMTOMTest") public void callOutMediatorWithMTOMTest()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "callOutMediatorWithMTOMTest")
+    public void callOutMediatorWithMTOMTest() throws IOException {
         String targetEPR = getProxyServiceURLHttp("CallOutMediatorWithMTOMProxy");
         String fileName =
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
@@ -48,7 +47,8 @@ public class CallOutMediatorWithMTOMTestCase extends ESBIntegrationTest {
         sendUsingMTOM(fileName, targetEPR);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         if (axis2Server != null && axis2Server.isStarted()) {
             axis2Server.stop();
         }

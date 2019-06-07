@@ -34,7 +34,8 @@ import java.net.URL;
 
 public class EndpointFormatRestPTTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
@@ -42,8 +43,8 @@ public class EndpointFormatRestPTTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test whether message is not built when endpoint format is set to rest") public void testEndpointFormatRestPTTestCase()
-            throws Exception {
+            "wso2.esb" }, description = "Test whether message is not built when endpoint format is set to rest")
+    public void testEndpointFormatRestPTTestCase() throws Exception {
 
         URL endpoint = new URL(getProxyServiceURLHttp("EndpointFormatRestPTTestProxy"));
         Reader data = new StringReader("<Customer>\n" + "    <name>WSO2</name>\n" + "</Customer>");
@@ -52,7 +53,8 @@ public class EndpointFormatRestPTTestCase extends ESBIntegrationTest {
         Assert.assertTrue(!writer.toString().contains("com.ctc.wstx.exc.WstxEOFException"));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

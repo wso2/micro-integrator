@@ -43,7 +43,8 @@ public class MessageWithoutContentTypeTestCase extends ESBIntegrationTest {
 
     private static final Log log = LogFactory.getLog(MessageWithoutContentTypeTestCase.class);
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/messagewithoutcontent/synapse.xml");
     }
@@ -58,9 +59,9 @@ public class MessageWithoutContentTypeTestCase extends ESBIntegrationTest {
      *
      * @throws Exception - if the scenario fail
      */
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testMessageWithoutContentType()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb")
+    public void testMessageWithoutContentType() throws Exception {
 
         // Get target URL
         String strURL = getMainSequenceURL();
@@ -96,7 +97,8 @@ public class MessageWithoutContentTypeTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

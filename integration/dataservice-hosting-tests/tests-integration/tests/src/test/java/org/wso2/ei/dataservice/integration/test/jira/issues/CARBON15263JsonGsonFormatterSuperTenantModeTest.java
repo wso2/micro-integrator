@@ -46,7 +46,8 @@ public class CARBON15263JsonGsonFormatterSuperTenantModeTest extends DSSIntegrat
 
     private static final Log log = LogFactory.getLog(CARBON15263JsonGsonFormatterSuperTenantModeTest.class);
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
@@ -57,12 +58,14 @@ public class CARBON15263JsonGsonFormatterSuperTenantModeTest extends DSSIntegrat
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with PUT method", dependsOnMethods = "performJsonPostMethodWithRequestResponseTest") public void performJsonPutMethodTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Request with PUT method", dependsOnMethods = "performJsonPostMethodWithRequestResponseTest")
+    public void performJsonPutMethodTest() {
         String postUpdateOfficePayload = "{ \"_put_updateoffice\" : { \"officeCode\" : \"1\" , \"city\" : \"Colombo\""
                 + " , \"telephone\" : \"+94 112954273\" , \"address1\" : \"Trace Expert City\" "
                 + ", \"address2\" : \"Colombo\" , \"state\" : null , \"country\" : \"LK\" , "
@@ -71,7 +74,8 @@ public class CARBON15263JsonGsonFormatterSuperTenantModeTest extends DSSIntegrat
         Assert.assertTrue(response.contains("SUCCESSFUL"), "PUT method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with request response") public void performJsonPostMethodWithRequestResponseTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with request response")
+    public void performJsonPostMethodWithRequestResponseTest() {
         String postInsertPaymentPayload = "{ \"_post_insertoffice\" : { \"officeCode\" : \"9\" , \"city\" : \"Colombo\""
                 + " , \"telephone\" : \"+94 112954273\" , \"address1\" : \"No 20, Palm grove\" "
                 + ", \"address2\" : \"Colombo\" , \"state\" : null , \"country\" : \"LK\" , "
@@ -80,18 +84,21 @@ public class CARBON15263JsonGsonFormatterSuperTenantModeTest extends DSSIntegrat
         Assert.assertTrue(response.contains("SUCCESSFUL"), "POST method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with response") public void performJsonPostMethodTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Request with POST method with response")
+    public void performJsonPostMethodTest() {
         String postInsertPaymentPayload = "{ \"_post_insertbalance\" : { \"balance\" :12555.23 } }";
         String response = getHttpResponse(serviceEndPoint + "insertBalance", "POST", postInsertPaymentPayload);
         Assert.assertTrue(response.contains("GeneratedKeys"), "POST method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with DELETE method") public void performJsonDeleteMethodTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Request with DELETE method")
+    public void performJsonDeleteMethodTest() {
         String response = getHttpResponse(serviceEndPoint + "deleteOffice/" + Integer.toString(2), "DELETE", null);
         Assert.assertTrue(response.contains("SUCCESSFUL"), "DELETE method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method") public void performJsonGetMethodTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method")
+    public void performJsonGetMethodTest() {
         String response = getHttpResponse(serviceEndPoint + "getCountries", "GET", null);
         Assert.assertTrue(response.contains("country"), "GET method failed");
     }

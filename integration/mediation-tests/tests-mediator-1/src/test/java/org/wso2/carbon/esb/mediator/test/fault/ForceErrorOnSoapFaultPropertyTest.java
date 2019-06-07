@@ -31,14 +31,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertEquals;
 
 public class ForceErrorOnSoapFaultPropertyTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/force_error_soap_fault.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Checking Force Error Property") public void testForceErrorOnSoapFault()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Checking Force Error Property")
+    public void testForceErrorOnSoapFault() throws AxisFault {
         try {
             axis2Client
                     .send(getProxyServiceURLHttp("ForceErrorTestProxy"), null, "getQuote", createFaultRequest("IBM"));
@@ -47,7 +47,8 @@ public class ForceErrorOnSoapFaultPropertyTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -34,7 +34,8 @@ public class LogMediatorLevelTest extends ESBIntegrationTest {
     private LogViewerClient logViewer;
     private LoggingAdminClient logAdmin;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         logAdmin = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -43,8 +44,8 @@ public class LogMediatorLevelTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests level log") public void testSendingToDefinedEndpoint()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests level log")
+    public void testSendingToDefinedEndpoint() throws Exception {
 
         logAdmin.updateLoggerData("org.apache.synapse", LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
         logViewer.clearLogs();
@@ -61,7 +62,8 @@ public class LogMediatorLevelTest extends ESBIntegrationTest {
         logAdmin.updateLoggerData("org.apache.synapse", LoggingAdminClient.LogLevel.INFO.name(), true, false);
     }
 
-    @Test(groups = "wso2.esb", description = "Tests System Logs") public void testSystemLogs() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests System Logs")
+    public void testSystemLogs() throws Exception {
         int beforeCount = logViewer.getAllSystemLogs().length;
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("logMediatorLevelTestProxy"), null, "WSO2");
@@ -71,7 +73,8 @@ public class LogMediatorLevelTest extends ESBIntegrationTest {
         Assert.assertTrue(logFound, "System Log not found. LogViewer Admin service not working properly");
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         super.cleanup();
     }
 }

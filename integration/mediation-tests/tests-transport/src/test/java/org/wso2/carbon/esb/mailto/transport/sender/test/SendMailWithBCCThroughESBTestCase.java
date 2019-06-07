@@ -45,7 +45,8 @@ public class SendMailWithBCCThroughESBTestCase extends ESBIntegrationTest {
 
     private GreenMailUser bccUser;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         super.reloadSessionCookie();
 
@@ -58,7 +59,8 @@ public class SendMailWithBCCThroughESBTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("imap", bccUser);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test email sender with BCC ") public void testEmailTransport()
+    @Test(groups = { "wso2.esb" }, description = "Test email sender with BCC ")
+    public void testEmailTransport()
             throws ESBMailTransportIntegrationTestException, XMLStreamException, AxisFault, MessagingException {
         Date date = new Date();
         String message = "Send Mail With BCC" + new Timestamp(date.getTime());
@@ -71,7 +73,8 @@ public class SendMailWithBCCThroughESBTestCase extends ESBIntegrationTest {
         assertTrue(GreenMailServer.isMailReceived("imap", bccUser, message), "Mail not received");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 

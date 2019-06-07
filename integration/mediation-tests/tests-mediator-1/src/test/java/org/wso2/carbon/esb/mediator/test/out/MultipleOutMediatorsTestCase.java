@@ -25,15 +25,15 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class MultipleOutMediatorsTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/out/multiple_out_mediators_config.xml");
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2257*/
-    @Test(groups = {
-            "wso2.esb" }, description = "Out Mediator: Negative Case 2: Multiple out Mediators") public void testMultipleOutMediators()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Out Mediator: Negative Case 2: Multiple out Mediators")
+    public void testMultipleOutMediators() throws Exception {
 
         axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
@@ -42,7 +42,8 @@ public class MultipleOutMediatorsTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         cleanup();
     }
 

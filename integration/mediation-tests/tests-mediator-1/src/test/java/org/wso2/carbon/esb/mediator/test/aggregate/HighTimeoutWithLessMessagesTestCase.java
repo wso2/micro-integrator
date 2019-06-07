@@ -35,7 +35,8 @@ public class HighTimeoutWithLessMessagesTestCase extends ESBIntegrationTest {
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 300;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorHighTimeoutTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -45,9 +46,8 @@ public class HighTimeoutWithLessMessagesTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "replacing a property by using an enrich mediator") public void maxValueTest()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "replacing a property by using an enrich mediator")
+    public void maxValueTest() throws IOException, XMLStreamException {
         int responseCount = 0;
 
         String Response = aggregatedRequestClient.getResponse();
@@ -66,7 +66,8 @@ public class HighTimeoutWithLessMessagesTestCase extends ESBIntegrationTest {
         Assert.assertEquals(responseCount, no_of_requests, "GetQuoteResponse Element count mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -30,13 +30,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class ESBJAVA4892EnrichPropertyTestCase extends ESBIntegrationTest {
     private static final String PROXY_NAME = "OperationContextService";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence(PROXY_NAME);
     }
 
-    @Test(groups = "wso2.esb", description = "Tests Enriching Property in Operation context") public void testEnrichOperationContextProperty()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests Enriching Property in Operation context")
+    public void testEnrichOperationContextProperty() throws Exception {
 
         OMElement response1 = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(PROXY_NAME), null, "WSO2");
         OMElement response2 = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(PROXY_NAME), null, "WSO2");
@@ -45,7 +46,8 @@ public class ESBJAVA4892EnrichPropertyTestCase extends ESBIntegrationTest {
         Assert.assertEquals(response1.toString(), response2.toString(), "Response messages are not equal.   ");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

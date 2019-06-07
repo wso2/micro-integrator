@@ -36,7 +36,8 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
     private String symbol;
     private LogViewerClient logViewer;
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
         verifyProxyServiceExistence("foreachSmallMessageTestProxy");
         symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
@@ -44,8 +45,8 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20") public void testSmallNumbers()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
+    public void testSmallNumbers() throws Exception {
         logViewer.clearLogs();
 
         OMElement response = null;
@@ -74,8 +75,8 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
         Assert.assertEquals(forEachCount, 20, "Count of messages entered ForEach scope is incorrect");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100") public void testLargeNumbers()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
+    public void testLargeNumbers() throws Exception {
         logViewer.clearLogs();
 
         OMElement response = null;
@@ -105,7 +106,8 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
         Assert.assertEquals(forEachCount, 100, "Count of messages entered ForEach scope is incorrect");
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

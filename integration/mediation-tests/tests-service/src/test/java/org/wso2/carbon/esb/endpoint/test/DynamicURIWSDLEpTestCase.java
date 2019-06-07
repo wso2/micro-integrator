@@ -43,13 +43,15 @@ public class DynamicURIWSDLEpTestCase extends ESBIntegrationTest {
             + "         <retryDelay>0</retryDelay>\n" + "      </markForSuspension>\n" + "   </wsdl>\n" + "</endpoint>";
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
     }
 
-    @Test(groups = { "wso2.esb" }) public void testDynamicURIESDLEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testDynamicURIESDLEndpoint() throws Exception {
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_1);
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_2);
 
@@ -57,7 +59,8 @@ public class DynamicURIWSDLEpTestCase extends ESBIntegrationTest {
         dynamicEndpointDeletionScenario(ENDPOINT_PATH_2);
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }

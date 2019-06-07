@@ -31,19 +31,21 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class RouterMediatorExpressionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
         verifyProxyServiceExistence("routerExpressionTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests the matches part of the expression") public void testMatchesExpression()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests the matches part of the expression")
+    public void testMatchesExpression() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("routerExpressionTestProxy"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         super.cleanup();
     }
 

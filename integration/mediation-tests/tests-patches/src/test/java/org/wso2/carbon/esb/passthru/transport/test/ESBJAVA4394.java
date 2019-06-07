@@ -19,7 +19,8 @@ public class ESBJAVA4394 extends ESBIntegrationTest {
     private TCPMonListener tcpMonListener1;
     private TCPMonListener tcpMonListener2;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         /**
          * The configuration contains 'simpleStockPassthroug' proxy, which connects to port 5000
          * here two tcpmon listener are started in port 5000 target port 8000, in port 8000 target port 9001
@@ -38,10 +39,10 @@ public class ESBJAVA4394 extends ESBIntegrationTest {
         tcpMonListener2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description =
-            "Test Error response created via makefault is never sent to the client "
-                    + "when the error connection timeout occurs by closing the TCP mon connection") public void testMakeFaultForConnectionTimeoutResponse() {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test Error response created via makefault is never sent to the client "
+            + "when the error connection timeout occurs by closing the TCP mon connection")
+    public void testMakeFaultForConnectionTimeoutResponse() {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ESBJAVA4394simpleStockPassthrough"), null,
                     "WSO2");
@@ -54,7 +55,8 @@ public class ESBJAVA4394 extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
         tcpMonListener1.stop();
         tcpMonListener2.stop();

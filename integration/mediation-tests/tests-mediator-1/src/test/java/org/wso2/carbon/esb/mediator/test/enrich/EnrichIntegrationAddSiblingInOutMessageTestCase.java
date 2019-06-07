@@ -35,16 +35,17 @@ public class EnrichIntegrationAddSiblingInOutMessageTestCase extends ESBIntegrat
 
     public WireMonitorServer wireMonitorServer;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichAddSiblingInOutMessageTestProxy");
         wireMonitorServer = new WireMonitorServer(8991);
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Enrich mediator:Add as a sibling to message body") public void addAsSiblingToMessageBody()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Enrich mediator:Add as a sibling to message body")
+    public void addAsSiblingToMessageBody() throws Exception {
         wireMonitorServer.start();
         String payload =
                 "<m:getQuote xmlns:m=\"http://services.samples\">" + "<m:request>" + "</m:request>" + "</m:getQuote>";
@@ -63,7 +64,8 @@ public class EnrichIntegrationAddSiblingInOutMessageTestCase extends ESBIntegrat
 
     }
 
-    @AfterClass private void destroy() throws Exception {
+    @AfterClass
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

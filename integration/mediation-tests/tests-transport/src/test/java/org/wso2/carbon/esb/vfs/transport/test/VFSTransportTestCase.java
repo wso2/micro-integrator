@@ -47,7 +47,8 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private String pathToVfsDir;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         pathToVfsDir = getClass().getResource(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -71,13 +72,14 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         assertTrue(failureFolder.exists(), "File folder doesn't exists");
     }
 
-    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void restoreServerConfiguration() throws Exception {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Writing to a file the content of a xml with content in text element") public void testVFSProxyPlainXMLWriter()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Writing to a file the content of a xml with content in text element")
+    public void testVFSProxyPlainXMLWriter() throws Exception {
 
         addVFSProxyWriteFile();
 
@@ -149,11 +151,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                         + "   <description/>\n" + "</proxy>"));
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @Test(groups = { "wso2.esb" }, description =
-            "Sending a file through VFS Transport : " + "transport.vfs.FileURI = Linux Path, "
-                    + "transport.vfs.ContentType = text/xml, "
-                    + "transport.vfs.FileNamePattern = - *\\.xml") public void testVFSProxyFileURI_LinuxPath_ContentType_XML()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
+            + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
+            + "transport.vfs.FileNamePattern = - *\\.xml")
+    public void testVFSProxyFileURI_LinuxPath_ContentType_XML() throws Exception {
 
         addVFSProxy1();
 
@@ -174,11 +176,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir" + " transport.vfs.ContentType = text/plain, "
-            + "transport.vfs.FileNamePattern = - *\\.txt") public void testVFSProxyFileURI_LinuxPath_ContentType_Plain()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.txt")
+    public void testVFSProxyFileURI_LinuxPath_ContentType_Plain() throws Exception {
 
         addVFSProxy2();
 
@@ -200,11 +202,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : " + "transport.vfs.FileURI = "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : " + "transport.vfs.FileURI = "
             + "/home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
-            + "transport.vfs.FileNamePattern = *") public void testVFSProxyFileURI_LinuxPath_SelectAll_FileNamePattern()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = *")
+    public void testVFSProxyFileURI_LinuxPath_SelectAll_FileNamePattern() throws Exception {
 
         addVFSProxy3();
 
@@ -225,11 +227,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
-            + "transport.vfs.FileNamePattern = nothing") public void testVFSProxyFileURI_LinuxPath_No_FileNamePattern()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = nothing")
+    public void testVFSProxyFileURI_LinuxPath_No_FileNamePattern() throws Exception {
 
         addVFSProxy4();
 
@@ -248,11 +250,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
-            + "transport.vfs.FileNamePattern = - *\\.txt, transport.PollInterval=1") public void testVFSProxyPollInterval_1()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.txt, transport.PollInterval=1")
+    public void testVFSProxyPollInterval_1() throws Exception {
 
         addVFSProxy5();
 
@@ -273,11 +275,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
-            + "transport.vfs.FileNamePattern = - *\\.txt, transport.PollInterval=30") public void testVFSProxyPollInterval_30()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.txt, transport.PollInterval=30")
+    public void testVFSProxyPollInterval_30() throws Exception {
 
         addVFSProxy6();
 
@@ -304,12 +306,12 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport :"
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport :"
             + " transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
             + "transport.vfs.FileNamePattern = - *\\.txt, "
-            + "transport.PollInterval=1, transport.vfs.ActionAfterProcess=MOVE") public void testVFSProxyActionAfterProcess_Move()
-            throws Exception {
+            + "transport.PollInterval=1, transport.vfs.ActionAfterProcess=MOVE")
+    public void testVFSProxyActionAfterProcess_Move() throws Exception {
 
         addVFSProxy7();
 
@@ -338,12 +340,12 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
             + "transport.vfs.FileNamePattern = - *\\.txt, transport.PollInterval=1, "
-            + "transport.vfs.ActionAfterProcess=DELETE") public void testVFSProxyActionAfterProcess_DELETE()
-            throws Exception {
+            + "transport.vfs.ActionAfterProcess=DELETE")
+    public void testVFSProxyActionAfterProcess_DELETE() throws Exception {
 
         addVFSProxy8();
 
@@ -371,12 +373,12 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
             + "transport.vfs.FileNamePattern = - *\\.txt, " + "transport.PollInterval=1,"
-            + " transport.vfs.ReplyFileName = out.txt ") public void testVFSProxyReplyFileName_Normal()
-            throws Exception {
+            + " transport.vfs.ReplyFileName = out.txt ")
+    public void testVFSProxyReplyFileName_Normal() throws Exception {
 
         addVFSProxy9();
 
@@ -398,12 +400,12 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
             + "transport.vfs.FileNamePattern = - *\\.txt, " + "transport.PollInterval=1, "
-            + "transport.vfs.ReplyFileName = out123@wso2_text.txt ") public void testVFSProxyReplyFileName_SpecialChars()
-            throws Exception {
+            + "transport.vfs.ReplyFileName = out123@wso2_text.txt ")
+    public void testVFSProxyReplyFileName_SpecialChars() throws Exception {
 
         addVFSProxy10();
 
@@ -425,12 +427,12 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
             + "transport.vfs.FileNamePattern = - *\\.txt, " + "transport.PollInterval=1, "
-            + "transport.vfs.ReplyFileName = not specified ") public void testVFSProxyReplyFileName_NotSpecified()
-            throws Exception {
+            + "transport.vfs.ReplyFileName = not specified ")
+    public void testVFSProxyReplyFileName_NotSpecified() throws Exception {
 
         addVFSProxy11();
 
@@ -452,12 +454,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.ActionAfterFailure=MOVE") public void testVFSProxyActionAfterFailure_MOVE()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure=MOVE")
+    public void testVFSProxyActionAfterFailure_MOVE() throws Exception {
 
         addVFSProxy12();
 
@@ -488,12 +489,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.ActionAfterFailure=DELETE") public void testVFSProxyActionAfterFailure_DELETE()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure=DELETE")
+    public void testVFSProxyActionAfterFailure_DELETE() throws Exception {
 
         addVFSProxy13();
 
@@ -519,12 +519,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport :"
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport :"
             + " transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.ActionAfterFailure=NotSpecified") public void testVFSProxyActionAfterFailure_NotSpecified()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure=NotSpecified")
+    public void testVFSProxyActionAfterFailure_NotSpecified() throws Exception {
 
         addVFSProxy14();
 
@@ -550,10 +549,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : " + "transport.vfs.FileURI = Invalid, "
-            + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml") public void testVFSProxyFileURI_Invalid() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
+            + "transport.vfs.FileURI = Invalid, " + "transport.vfs.ContentType = text/xml, "
+            + "transport.vfs.FileNamePattern = - *\\.xml")
+    public void testVFSProxyFileURI_Invalid() throws Exception {
 
         addVFSProxy15();
 
@@ -565,11 +565,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         removeProxy("VFSProxy15");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = Invalid, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.FileURI = Invalid") public void testVFSProxyContentType_Invalid() throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.FileURI = Invalid")
+    public void testVFSProxyContentType_Invalid() throws Exception {
 
         addVFSProxy16();
 
@@ -593,12 +593,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
     }
 
     //https://wso2.org/jira/browse/ESBJAVA-2273
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = Not Specified, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.FileURI = Invalid", enabled = false) public void testVFSProxyContentType_NotSpecified()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.FileURI = Invalid", enabled = false)
+    public void testVFSProxyContentType_NotSpecified() throws Exception {
 
         addVFSProxy17();
 
@@ -618,12 +617,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.PollInterval = Non Integer") public void testVFSProxyPollInterval_NonInteger()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.PollInterval = Non Integer")
+    public void testVFSProxyPollInterval_NonInteger() throws Exception {
 
         addVFSProxy18();
 
@@ -645,12 +643,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.ActionAfterProcess = Invalid") public void testVFSProxyActionAfterProcess_Invalid()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterProcess = Invalid")
+    public void testVFSProxyActionAfterProcess_Invalid() throws Exception {
 
         addVFSProxy19();
 
@@ -676,12 +673,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport :"
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport :"
             + " transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.ActionAfterFailure = Invalid") public void testVFSProxyActionAfterFailure_Invalid()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure = Invalid")
+    public void testVFSProxyActionAfterFailure_Invalid() throws Exception {
 
         addVFSProxy20();
 
@@ -711,12 +707,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path," + " transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.MoveAfterProcess = processed") public void testVFSProxyMoveAfterProcessInvalidFile()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.MoveAfterProcess = processed")
+    public void testVFSProxyMoveAfterProcessInvalidFile() throws Exception {
 
         addVFSProxy21();
 
@@ -741,12 +736,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path," + " transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.MoveAfterProcess = processed") public void testVFSProxyMoveAfterProcess()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.MoveAfterProcess = processed")
+    public void testVFSProxyMoveAfterProcess() throws Exception {
 
         addVFSProxy21();
 
@@ -774,11 +768,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml "
-            + "transport.vfs.MoveAfterFailure = Invalid") public void testVFSProxyMoveAfterFailure() throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.MoveAfterFailure = Invalid")
+    public void testVFSProxyMoveAfterFailure() throws Exception {
 
         addVFSProxy22();
 
@@ -812,11 +806,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : "
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml, "
-            + "transport.vfs.ReplyFileURI  = Invalid") public void testVFSProxyReplyFileURI_Invalid() throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml, " + "transport.vfs.ReplyFileURI  = Invalid")
+    public void testVFSProxyReplyFileURI_Invalid() throws Exception {
 
         addVFSProxy23();
 
@@ -840,12 +834,11 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport :"
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport :"
             + " transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml, "
-            + "transport.vfs.ReplyFileName  = Invalid") public void testVFSProxyReplyFileName_Invalid()
-            throws Exception {
+            + "transport.vfs.FileNamePattern = - *\\.xml, " + "transport.vfs.ReplyFileName  = Invalid")
+    public void testVFSProxyReplyFileName_Invalid() throws Exception {
 
         addVFSProxy24();
 
@@ -1394,7 +1387,8 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isFileExist(final File file) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return file.exists();
             }
         };
@@ -1402,7 +1396,8 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isFileNotExist(final File file) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return !file.exists();
             }
         };

@@ -39,7 +39,8 @@ public class Music {
         this.singer = singer;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Your Album " + album + " Of " + singer + " Was Added Successfully";
     }
 

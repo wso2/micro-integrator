@@ -35,7 +35,8 @@ public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrati
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -48,8 +49,8 @@ public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrati
     }
 
     @Test(groups = "wso2.esb", description = "check whether Backend JSON payload is missing Json empty array elements "
-            + "after flowing through NHTTP transport in response path back to client") public void testJSONEmptyArrayMissingNHTTPTransport()
-            throws Exception {
+            + "after flowing through NHTTP transport in response path back to client")
+    public void testJSONEmptyArrayMissingNHTTPTransport() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("testJsonEmptyArray/testapi1"), null);
         Assert.assertTrue(
@@ -78,7 +79,8 @@ public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrati
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

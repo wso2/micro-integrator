@@ -30,11 +30,13 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class InlinedFunctionTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests level log") public void testInlineFunction() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests level log")
+    public void testInlineFunction() throws Exception {
         OMElement response;
         response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorJSInlineTestProxy"), null, "wso2");
@@ -49,7 +51,8 @@ public class InlinedFunctionTest extends ESBIntegrationTest {
                 "Text does not exist");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

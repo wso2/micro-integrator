@@ -29,14 +29,16 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationBodyToXpathSiblingTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichBodyToXpathSiblingTestProxy");
     }
 
     //get the body of response and add it as a sibling of xpath ://ns:getQuote/ns:request
     @Test(groups = "wso2.esb", description = "Add custom content as a sibling to the part of message"
-            + " specified by xpath expression ") public void testEnrichMediator() throws Exception {
+            + " specified by xpath expression ")
+    public void testEnrichMediator() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -57,7 +59,8 @@ public class EnrichIntegrationBodyToXpathSiblingTestCase extends ESBIntegrationT
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

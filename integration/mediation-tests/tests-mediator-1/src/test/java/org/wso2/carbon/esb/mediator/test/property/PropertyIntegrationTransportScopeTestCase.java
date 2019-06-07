@@ -32,59 +32,61 @@ import static org.testng.Assert.assertTrue;
 
 public class PropertyIntegrationTransportScopeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (transport scope)") public void testDoubleVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Double (transport scope)")
+    public void testDoubleVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyDoubleTransportTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123123.123123"), "Double Property Not Set in the Transport scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (transport scope)") public void testIntVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Integer (transport scope)")
+    public void testIntVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntTransportTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123"), "Integer Property Not Set in the Transport scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (transport scope)") public void testStringVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type String (transport scope)")
+    public void testStringVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringTransportTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("WSO2 Lanka"), "String Property Not Set in the Transport scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (transport scope)") public void testBooleanVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Boolean (transport scope)")
+    public void testBooleanVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyBooleanTransportTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("true"), "Boolean Property Not Set in the Transport scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (transport scope)") public void testFloatVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Float (transport scope)")
+    public void testFloatVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatTransportTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("123.123"), "Float Property Not Set in the Transport scope!");
     }
 
-    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (transport scope)") public void testShortVal()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Set action as \"value\" and type Short (transport scope)")
+    public void testShortVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortTransportTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("12"), "Short Property Not Set in the Transport scope!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 }

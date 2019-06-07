@@ -42,7 +42,8 @@ public class EndpointTemplateMediaTypeTestCase extends ESBIntegrationTest {
     private final String KEY = "conf:/template/registryEndpointTemplate";
     private final String DEFINED_ENDPOINT_TEMPLATE_NAME = "definedEndpointTemplate";
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         endpointTemplateAdminServiceClient = new EndpointTemplateAdminServiceClient(contextUrls.getBackEndUrl(),
                 getSessionCookie());
@@ -50,8 +51,8 @@ public class EndpointTemplateMediaTypeTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test dynamic Endpoint Template media type - application/vnd.wso2.template.endpoint") public void dynamicEndpointTemplateMediaTypeTest()
-            throws Exception {
+            "wso2.esb" }, description = "Test dynamic Endpoint Template media type - application/vnd.wso2.template.endpoint")
+    public void dynamicEndpointTemplateMediaTypeTest() throws Exception {
         final String name = "registryEndpointTemplate";
 
         OMElement endpoint = AXIOMUtil.stringToOM(
@@ -73,8 +74,8 @@ public class EndpointTemplateMediaTypeTestCase extends ESBIntegrationTest {
 
     //since Registry persistence is no longer available
     @Test(groups = {
-            "wso2.esb" }, description = "Test defined Endpoint Template media type - text/xml", enabled = false) public void definedEndpointTemplateMediaTypeTest()
-            throws Exception {
+            "wso2.esb" }, description = "Test defined Endpoint Template media type - text/xml", enabled = false)
+    public void definedEndpointTemplateMediaTypeTest() throws Exception {
 
         OMElement endpoint = AXIOMUtil.stringToOM(
                 "<template xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + DEFINED_ENDPOINT_TEMPLATE_NAME + "\">"
@@ -97,7 +98,8 @@ public class EndpointTemplateMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass public void destroy() throws RemoteException {
+    @AfterClass
+    public void destroy() throws RemoteException {
         if (isDefinedEndpointTemplateExist) {
             endpointTemplateAdminServiceClient.deleteEndpointTemplate(DEFINED_ENDPOINT_TEMPLATE_NAME);
         }

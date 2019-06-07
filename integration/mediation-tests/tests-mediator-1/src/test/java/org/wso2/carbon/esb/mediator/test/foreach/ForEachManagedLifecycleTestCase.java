@@ -38,13 +38,14 @@ import java.util.Map;
  */
 public class ForEachManagedLifecycleTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         verifyProxyServiceExistence("forEachManagedLifeCycleTestProxy");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "testManagedLifecycle") public void testManagedLifecycle()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "testManagedLifecycle")
+    public void testManagedLifecycle() throws Exception {
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
@@ -60,7 +61,8 @@ public class ForEachManagedLifecycleTestCase extends ESBIntegrationTest {
                 "Invalid response received. " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

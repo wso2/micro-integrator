@@ -36,7 +36,8 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
  */
 
 public class ESBJAVA1793TestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils
                 .loadResource("/artifacts/ESB/jms/transport/ESBJAVA-1793MessageStore-targetEndPointFormat-pox.xml");
@@ -44,9 +45,8 @@ public class ESBJAVA1793TestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Message Store Target Endpoint format as POX", enabled = false) public void testMessageProcessorTargetEndpointFormatPox()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Message Store Target Endpoint format as POX", enabled = false)
+    public void testMessageProcessorTargetEndpointFormatPox() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
 
         JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
@@ -74,7 +74,8 @@ public class ESBJAVA1793TestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void UndeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void UndeployService() throws Exception {
         super.cleanup();
     }
 }

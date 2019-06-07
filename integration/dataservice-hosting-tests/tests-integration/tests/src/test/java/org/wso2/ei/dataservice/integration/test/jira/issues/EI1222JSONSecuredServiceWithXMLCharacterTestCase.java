@@ -61,7 +61,8 @@ public class EI1222JSONSecuredServiceWithXMLCharacterTestCase extends DSSIntegra
     private ServerConfigurationManager serverConfigurationManager;
     private static final String INPUT_FACTORY_PROPERTIES_FILE = "XMLInputFactory.properties";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(dssContext);
         List<File> sqlFileLis = new ArrayList<>();
@@ -90,8 +91,8 @@ public class EI1222JSONSecuredServiceWithXMLCharacterTestCase extends DSSIntegra
     }
 
     @Test(groups = "wso2.dss", description = "Testing json output with xml characters resides within configured "
-            + "com.ctc.wstx.minTextSegment in XMLInputFactory.properties test case.") public void getJSONOutputWithXMLCharacter()
-            throws Exception {
+            + "com.ctc.wstx.minTextSegment in XMLInputFactory.properties test case.")
+    public void getJSONOutputWithXMLCharacter() throws Exception {
         HttpResponse response = this.getHttpResponse(serviceEndPoint + "studentData/001", "application/json");
         Assert.assertNotNull(response, "Response is null");
         String receivedResult = response.getData();
@@ -102,7 +103,8 @@ public class EI1222JSONSecuredServiceWithXMLCharacterTestCase extends DSSIntegra
         Assert.assertTrue(expectedResult.equals(receivedResult), "Expected result not found");
     }
 
-    @AfterClass public void clean() throws Exception {
+    @AfterClass
+    public void clean() throws Exception {
         deleteService(serviceName);
         cleanup();
         // Delete carbon_home/XMLInputFactory.properties

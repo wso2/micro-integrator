@@ -51,7 +51,8 @@ public class CARBON15046JsonGsonNUllValueTest extends DSSIntegrationTest {
     private final String serviceName = "JsonNullValueOnGET";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -64,14 +65,14 @@ public class CARBON15046JsonGsonNUllValueTest extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = {
-            "wso2.dss" }, description = "Check whether the null received successfully", alwaysRun = true) public void returnNullValueInJsonObjectsOnGETTestCase()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, description = "Check whether the null received successfully", alwaysRun = true)
+    public void returnNullValueInJsonObjectsOnGETTestCase() throws Exception {
         HttpResponse response = this.getHttpResponse(serviceEndPoint + "_getbird", "application/json");
         JSONObject result = new JSONObject(response.getData());
         assertNotNull(result, "Response is null");

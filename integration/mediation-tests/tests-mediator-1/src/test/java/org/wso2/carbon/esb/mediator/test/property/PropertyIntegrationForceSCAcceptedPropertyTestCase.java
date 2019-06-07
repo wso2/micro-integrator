@@ -37,16 +37,18 @@ import static org.testng.Assert.assertEquals;
  */
 public class PropertyIntegrationForceSCAcceptedPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing functionality of FORCE_SC_ACCEPTED "
-            + "- Enabled False") public void testFORCE_SC_ACCEPTEDPropertyEnabledFalseScenario() throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing functionality of FORCE_SC_ACCEPTED " + "- Enabled False")
+    public void testFORCE_SC_ACCEPTEDPropertyEnabledFalseScenario() throws Exception {
         verifyProxyServiceExistence("FORCE_SC_ACCEPTED_FalseTestProxy");
 
         int responseStatus = 0;
@@ -74,8 +76,8 @@ public class PropertyIntegrationForceSCAcceptedPropertyTestCase extends ESBInteg
     }
 
     @Test(groups = "wso2.esb", description = "Testing functionality of FORCE_SC_ACCEPTED " + "Enabled True  - "
-            + "Client should receive 202 message", dependsOnMethods = "testFORCE_SC_ACCEPTEDPropertyEnabledFalseScenario") public void testWithFORCE_SC_ACCEPTEDPropertyEnabledTrueScenario()
-            throws Exception {
+            + "Client should receive 202 message", dependsOnMethods = "testFORCE_SC_ACCEPTEDPropertyEnabledFalseScenario")
+    public void testWithFORCE_SC_ACCEPTEDPropertyEnabledTrueScenario() throws Exception {
         verifyProxyServiceExistence("FORCE_SC_ACCEPTED_TrueTestProxy");
 
         int responseStatus = 0;

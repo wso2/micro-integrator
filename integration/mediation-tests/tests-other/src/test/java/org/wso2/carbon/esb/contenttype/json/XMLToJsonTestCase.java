@@ -35,13 +35,14 @@ import java.util.Map;
  */
 public class XMLToJsonTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         verifyProxyServiceExistence("xmlToJsonTestProxy");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON conversion") public void testXmlToJson()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON conversion")
+    public void testXmlToJson() throws Exception {
 
         String xmlPayload =
                 "<location>\n" + "               <name>Bermuda Triangle</name>\n" + "               <n>25.0000</n>\n"
@@ -56,8 +57,8 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid XML to JSON conversion. " + response.getData());
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON Array conversion") public void testXmlToJsonArray()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON Array conversion")
+    public void testXmlToJsonArray() throws Exception {
 
         String xmlPayload = "<coordinates>\n" + "    <location>\n" + "        <name>Bermuda Triangle</name>\n"
                 + "        <n>25.0000</n>\n" + "        <w>71.0000</w>\n" + "    </location>\n" + "    <location>\n"
@@ -72,9 +73,8 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid XML to JSON array conversion . " + response.getData());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test XML with attributes to JSON conversion") public void testXmlAttributesToJson()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML with attributes to JSON conversion")
+    public void testXmlAttributesToJson() throws Exception {
 
         String xmlPayload = "<location id=\"1\">\n" + "               <name>Bermuda Triangle</name>\n"
                 + "               <n>25.0000</n>\n" + "               <w>71.0000</w>\n" + "            </location>";
@@ -88,9 +88,8 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid XML to JSON attribute conversion . " + response.getData());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test XML text nodes with attributes to JSON conversion") public void testXmlTextNodesWithAttributesToJson()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML text nodes with attributes to JSON conversion")
+    public void testXmlTextNodesWithAttributesToJson() throws Exception {
 
         String xmlPayload = "<location id=\"1\">Bermuda Triangle</location>";
         Map<String, String> requestHeader = new HashMap<>();
@@ -102,9 +101,8 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid XML to JSON attribute conversion . " + response.getData());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test empty XML node to JSON conversion") public void testEmptyXmlNodeToJson()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test empty XML node to JSON conversion")
+    public void testEmptyXmlNodeToJson() throws Exception {
 
         String xmlPayload =
                 "<location>\n" + "<name>Bermuda Triangle</name>\n" + "<description></description>\n" + "</location>";
@@ -117,7 +115,8 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                 "Invalid empty XML to JSON conversion . " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

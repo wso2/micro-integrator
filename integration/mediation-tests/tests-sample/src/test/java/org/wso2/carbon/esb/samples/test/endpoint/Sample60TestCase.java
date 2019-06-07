@@ -42,7 +42,8 @@ public class Sample60TestCase extends ESBSampleIntegrationTest {
     private TCPMonListener listener2;
     private TCPMonListener listener3;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(60);
 
@@ -76,9 +77,9 @@ public class Sample60TestCase extends ESBSampleIntegrationTest {
 
     //This was disabled since it gets  java.net.SocketException: Too many open files error intermittently and need to
     // check the actual implementation
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Routing a Message to a Static List of Recipients", enabled = false) public void testStaticListOfRecipients()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Routing a Message to a Static List of Recipients", enabled = false)
+    public void testStaticListOfRecipients() throws Exception {
 
         axis2Client.sendPlaceOrderRequest(getMainSequenceURL(), null, "WSO2");
         Thread.sleep(5000);
@@ -109,7 +110,8 @@ public class Sample60TestCase extends ESBSampleIntegrationTest {
         Assert.assertTrue(is9003Called, "Service 9003 not called");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
 
         if (axis2Server1.isStarted()) {

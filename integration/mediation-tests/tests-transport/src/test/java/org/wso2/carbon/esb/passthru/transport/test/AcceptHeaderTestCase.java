@@ -37,13 +37,14 @@ import java.util.Map;
  */
 public class AcceptHeaderTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for response when the Accept header is different from request "
-            + "Content-Type, and build the message within the inflow.") public void testAcceptHeader()
-            throws Exception {
+            + "Content-Type, and build the message within the inflow.")
+    public void testAcceptHeader() throws Exception {
 
         verifyAPIExistence("AcceptHeaderTestAPI");
 
@@ -68,7 +69,8 @@ public class AcceptHeaderTestCase extends ESBIntegrationTest {
                 "Error while building the " + "message when the Content-Type is different from Accept header type.");
     }
 
-    @AfterClass public void cleanUp() throws Exception {
+    @AfterClass
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

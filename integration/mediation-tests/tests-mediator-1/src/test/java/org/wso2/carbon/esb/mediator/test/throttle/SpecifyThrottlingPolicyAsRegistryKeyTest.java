@@ -38,14 +38,15 @@ public class SpecifyThrottlingPolicyAsRegistryKeyTest extends ESBIntegrationTest
 
     private static final int THROTTLE_MAX_MSG_COUNT = 4;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         verifyProxyServiceExistence("throttlingPolicyFromRegistryTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Specified throttling policy as a registry key", timeOut = 1000 * 60
-            * 2) public void testThrottlingPolicyFromRegistry() throws Exception {
+    @Test(groups = "wso2.esb", description = "Specified throttling policy as a registry key", timeOut = 1000 * 60 * 2)
+    public void testThrottlingPolicyFromRegistry() throws Exception {
         int throttleCounter = 0;
         OMElement response = null;
 
@@ -70,7 +71,8 @@ public class SpecifyThrottlingPolicyAsRegistryKeyTest extends ESBIntegrationTest
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             clearUploadedResource();
         } finally {

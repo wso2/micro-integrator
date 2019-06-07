@@ -45,7 +45,8 @@ public class EnrichIntegrationReplaceBodyUsingXpathTest extends ESBIntegrationTe
     Deploying Artifacts
      */
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception, ServletException, RemoteException {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception, ServletException, RemoteException {
         init();
         verifyProxyServiceExistence("enrichReplaceBodyUsingXpathTestProxy");
 
@@ -54,8 +55,8 @@ public class EnrichIntegrationReplaceBodyUsingXpathTest extends ESBIntegrationTe
    Test: Define source configurain using xpath expression and use it to replace the body of current message
  */
 
-    @Test(groups = "wso2.esb", description = "Tests-Replace the body of current message using xpath expression") public void testReplaceBodyUsingXpath()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Replace the body of current message using xpath expression")
+    public void testReplaceBodyUsingXpath() throws AxisFault, XMLStreamException {
 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichReplaceBodyUsingXpathTestProxy"), null,
@@ -70,7 +71,8 @@ public class EnrichIntegrationReplaceBodyUsingXpathTest extends ESBIntegrationTe
     /*
     Clean up
      */
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 

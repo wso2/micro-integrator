@@ -35,7 +35,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         log.info("Initializing environment");
         super.init();
         log.info("Uploading registry resources");
@@ -49,8 +50,8 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Logging proxy"
-            + "- Create a proxy service and pick the endpoint from registry (config)") public void testLoggingProxy()
-            throws Exception {
+            + "- Create a proxy service and pick the endpoint from registry (config)")
+    public void testLoggingProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("pickEndpointFromRegLoggingProxy"), null, "WSO2");
@@ -66,12 +67,13 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Logging proxy"
-            + "- Create a proxy service and pick the endpoint from registry (config) -"
-            + " Log", enabled = false) public void testLoggingProxyLogging() throws Exception {
+            + "- Create a proxy service and pick the endpoint from registry (config) -" + " Log", enabled = false)
+    public void testLoggingProxyLogging() throws Exception {
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

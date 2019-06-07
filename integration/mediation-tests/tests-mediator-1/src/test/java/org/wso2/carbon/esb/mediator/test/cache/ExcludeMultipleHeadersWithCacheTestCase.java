@@ -38,13 +38,14 @@ import static org.testng.Assert.assertNotNull;
  */
 public class ExcludeMultipleHeadersWithCacheTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Verify multiple headers can be excluded when hasing") public void testExcludingMultipleHeaders()
-            throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Verify multiple headers can be excluded when hasing")
+    public void testExcludingMultipleHeaders() throws AxisFault {
         OMElement stockResponse;
 
         // Sending a request to SimpleStockQuote Service
@@ -100,7 +101,8 @@ public class ExcludeMultipleHeadersWithCacheTestCase extends ESBIntegrationTest 
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

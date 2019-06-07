@@ -40,7 +40,8 @@ import java.util.Map;
  */
 public class testInfiniteLoopingWithCallMediatorTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/foreach/" + "foreach_test_message_flow_with_call.xml");
@@ -53,8 +54,8 @@ public class testInfiniteLoopingWithCallMediatorTestCase extends ESBIntegrationT
      * @throws MalformedURLException        in case of url is malformed
      * @throws AutomationFrameworkException in case of any other test suite level issue
      */
-    @Test(groups = "wso2.esb", description = "Test call mediator with foreach mediator has expected message flow") public void testForeachMediatorMessageFlow()
-            throws AxisFault, MalformedURLException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Test call mediator with foreach mediator has expected message flow")
+    public void testForeachMediatorMessageFlow() throws AxisFault, MalformedURLException, AutomationFrameworkException {
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "text/xml");
         requestHeader.put("SOAPAction", "urn:mediate");
@@ -68,7 +69,8 @@ public class testInfiniteLoopingWithCallMediatorTestCase extends ESBIntegrationT
                 "Expected response was not" + " received. Got " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

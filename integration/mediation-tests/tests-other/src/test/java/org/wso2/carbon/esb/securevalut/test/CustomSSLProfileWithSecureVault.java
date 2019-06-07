@@ -40,7 +40,8 @@ import static org.testng.Assert.assertTrue;
 public class CustomSSLProfileWithSecureVault extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         //cipher-text.properties file update
@@ -116,9 +117,9 @@ public class CustomSSLProfileWithSecureVault extends ESBIntegrationTest {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests Secure Vault Protected Custom SSL Profiles") public void testCustomSSLProfileWithSecureVaultPasswords()
-            throws InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests Secure Vault Protected Custom SSL Profiles")
+    public void testCustomSSLProfileWithSecureVaultPasswords() throws InterruptedException {
         String logString = "java.io.IOException: Keystore was tampered with, or password was incorrect";
 
         try {
@@ -149,7 +150,8 @@ public class CustomSSLProfileWithSecureVault extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         try {
             super.cleanup();
         } finally {

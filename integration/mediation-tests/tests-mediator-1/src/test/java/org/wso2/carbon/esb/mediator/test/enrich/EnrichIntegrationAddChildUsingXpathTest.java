@@ -36,13 +36,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationAddChildUsingXpathTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         init();
         verifyProxyServiceExistence("enrichAddChildUsingXPathTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Add child to body using xpath") public void testAddChildToBodyUsingXpath()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Add child to body using xpath")
+    public void testAddChildToBodyUsingXpath() throws AxisFault, XMLStreamException {
         OMElement response;
         response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("enrichAddChildUsingXPathTestProxy"), null, "IBM");
@@ -52,7 +53,8 @@ public class EnrichIntegrationAddChildUsingXpathTest extends ESBIntegrationTest 
                         .getText(), "IBM", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

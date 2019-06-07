@@ -36,7 +36,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceEnablingHTTPTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath(
@@ -44,8 +45,8 @@ public class ProxyServiceEnablingHTTPTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Transformer proxy"
-            + "- Proxy service enabling only http") public void testTransformerProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Transformer proxy" + "- Proxy service enabling only http")
+    public void testTransformerProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("enableHttpTransformerProxy"), null, "WSO2");
@@ -64,7 +65,8 @@ public class ProxyServiceEnablingHTTPTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

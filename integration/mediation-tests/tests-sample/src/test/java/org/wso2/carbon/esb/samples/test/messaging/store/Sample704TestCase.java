@@ -37,15 +37,16 @@ public class Sample704TestCase extends ESBSampleIntegrationTest {
     private MessageStoreAdminClient messageStoreAdminClient;
     private final String MESSAGE_STORE_NAME = "MSG_STORE";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(704);
 
         messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = { "wso2.esb" }, description = "RESTful Invocations with Message Forwarding"
-            + " Processor test case") public void messageStoreFIXStoringTest() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "RESTful Invocations with Message Forwarding" + " Processor test case")
+    public void messageStoreFIXStoringTest() throws Exception {
 
         ServiceClient serviceClient = new ServiceClient();
         Options options = new Options();
@@ -62,7 +63,8 @@ public class Sample704TestCase extends ESBSampleIntegrationTest {
         Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0, "Messages are stored");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

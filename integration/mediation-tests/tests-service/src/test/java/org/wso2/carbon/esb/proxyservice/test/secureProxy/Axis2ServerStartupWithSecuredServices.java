@@ -39,7 +39,8 @@ import javax.xml.xpath.XPathExpressionException;
 public class Axis2ServerStartupWithSecuredServices {
     private SampleAxis2Server axis2Server1 = null;
 
-    @BeforeTest(alwaysRun = true) public void deployServices()
+    @BeforeTest(alwaysRun = true)
+    public void deployServices()
             throws IOException, LoginAuthenticationExceptionException, ExceptionException, XPathExpressionException,
             XMLStreamException, SAXException, URISyntaxException, AutomationUtilException {
 
@@ -74,7 +75,8 @@ public class Axis2ServerStartupWithSecuredServices {
         }
     }
 
-    @AfterTest(alwaysRun = true) public void unDeployServices()
+    @AfterTest(alwaysRun = true)
+    public void unDeployServices()
             throws IOException, LoginAuthenticationExceptionException, ExceptionException, XPathExpressionException,
             URISyntaxException, SAXException, XMLStreamException, AutomationUtilException {
         if (TestConfigurationProvider.isIntegration() && axis2Server1 != null && axis2Server1.isStarted()) {

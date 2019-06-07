@@ -41,7 +41,8 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
     String message;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
 
         super.init();
 
@@ -59,9 +60,8 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
      *
      * @throws Exception for any unexpected exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Successfully committing the message", enabled = false) public void testTransactionCommit()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Successfully committing the message", enabled = false)
+    public void testTransactionCommit() throws Exception {
 
         String queueName = "testTransactionCommitQueue";
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
@@ -92,9 +92,8 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Rolling back the failed message to the queue", enabled = false) public void testTransactionRollBack()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Rolling back the failed message to the queue", enabled = false)
+    public void testTransactionRollBack() throws Exception {
 
         String queueName = "testTransactionRollBackQueue";
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
@@ -131,7 +130,8 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
         return poppedMessage == null;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
 
     }

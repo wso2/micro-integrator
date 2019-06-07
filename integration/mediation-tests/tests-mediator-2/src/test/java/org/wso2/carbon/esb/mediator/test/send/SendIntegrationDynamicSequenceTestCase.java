@@ -34,15 +34,15 @@ import static org.testng.Assert.assertNotNull;
 public class SendIntegrationDynamicSequenceTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadResourcesToConfigRegistry();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence dynamic and build message before receive") public void testSequenceDynamicBuildMessage()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Receiving sequence dynamic and build message before receive")
+    public void testSequenceDynamicBuildMessage() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorDynamicReceiveSeqBuildMessageTrueTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -53,9 +53,8 @@ public class SendIntegrationDynamicSequenceTestCase extends ESBIntegrationTest {
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence dynamic and not build message before receive") public void sequenceDynamicBuildMessageNoTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Receiving sequence dynamic and not build message before receive")
+    public void sequenceDynamicBuildMessageNoTest() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorDynamicReceiveSeqBuildMessageFalseTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -75,7 +74,8 @@ public class SendIntegrationDynamicSequenceTestCase extends ESBIntegrationTest {
                                 + "/mediatorconfig/send/endpoints/registry_endpoint.xml"))));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
         super.cleanup();
     }

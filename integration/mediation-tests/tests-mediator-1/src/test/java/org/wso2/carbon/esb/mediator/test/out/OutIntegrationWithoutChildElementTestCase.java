@@ -27,14 +27,14 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class OutIntegrationWithoutChildElementTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void beforeClass() throws Exception {
+    @BeforeClass
+    public void beforeClass() throws Exception {
         init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/out/out_without_children.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Out Mediator: Negative Case 1: Out Mediator without children") public void testOutWithoutChildren()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Out Mediator: Negative Case 1: Out Mediator without children")
+    public void testOutWithoutChildren() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
@@ -46,7 +46,8 @@ public class OutIntegrationWithoutChildElementTestCase extends ESBIntegrationTes
         }
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         cleanup();
     }
 

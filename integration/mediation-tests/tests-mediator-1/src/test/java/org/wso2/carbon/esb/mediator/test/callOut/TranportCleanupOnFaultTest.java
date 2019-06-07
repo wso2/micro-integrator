@@ -28,12 +28,14 @@ import static org.testng.Assert.assertTrue;
 
 public class TranportCleanupOnFaultTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/callout/TranportCleanupOnFaultTest.xml");
     }
 
-    @Test(groups = { "wso2.esb" }) public void transportCleanupOnFaultTest() throws AxisFault {
+    @Test(groups = { "wso2.esb" })
+    public void transportCleanupOnFaultTest() throws AxisFault {
 
         try {
             axis2Client
@@ -66,7 +68,8 @@ public class TranportCleanupOnFaultTest extends ESBIntegrationTest {
         assertTrue(ResponseContainsIBM);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -45,7 +45,8 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
     private SimpleHttpServer httpServerFault;
     private BrokerService broker;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         startBroker();
         /* Make the port available */
         Utils.shutdownFailsafe(PORT);
@@ -85,10 +86,10 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
         log.info("Before Class method completed successfully");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport to JMS endpoint"
-            + " and test whether its getting suspended") public void testJMSEndpointSuspensionViaVFSTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport to JMS endpoint"
+            + " and test whether its getting suspended")
+    public void testJMSEndpointSuspensionViaVFSTest() throws Exception {
 
         addVFSJMSProxy1();
         File outfile = new File(getClass().getResource(
@@ -156,7 +157,8 @@ public class JMSEndpointSuspensionViaVFSTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             super.cleanup();
         } finally {

@@ -60,7 +60,8 @@ public class Sample657TestCase extends ESBSampleIntegrationTest {
     private String datasource1 = "MySqlDS1";
     private String datasource2 = "MySqlDS2";
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
 
         super.init();
         serverManager = new ServerConfigurationManager(context);
@@ -142,9 +143,9 @@ public class Sample657TestCase extends ESBSampleIntegrationTest {
         dataSourceAdminServiceClient.addDataSource(wsDataSourceMetaInfo);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "testDtaSources ", enabled = false) public void testDtaSources()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "testDtaSources ", enabled = false)
+    public void testDtaSources() throws Exception {
 
         AxisServiceClient client = new AxisServiceClient();
 
@@ -204,7 +205,8 @@ public class Sample657TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
 
         mysqlConnection.close();
         super.cleanup();

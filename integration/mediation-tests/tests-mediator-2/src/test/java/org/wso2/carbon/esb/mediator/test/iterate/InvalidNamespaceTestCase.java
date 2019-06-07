@@ -33,7 +33,8 @@ import static org.testng.Assert.assertEquals;
  * and 'iterate expression'
  */
 public class InvalidNamespaceTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
@@ -42,9 +43,8 @@ public class InvalidNamespaceTestCase extends ESBIntegrationTest {
      * error handling by sending stock quote requests. Error in attaching the splitted elements,Unable to get
      * the attach path specified by the expression
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing invalid namespace for 'attachPath' field") public void testInvalidNameSpaceForAttachPath()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Testing invalid namespace for 'attachPath' field")
+    public void testInvalidNameSpaceForAttachPath() throws Exception {
         try {
             axis2Client.sendMultipleQuoteRequest(
                     getProxyServiceURLHttp("iterateWithInvalidNameSpaceForAttachPathTestProxy"), null, "WSO2", 5);
@@ -62,9 +62,8 @@ public class InvalidNamespaceTestCase extends ESBIntegrationTest {
      * it will time out
      */
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing invalid namespace for 'iterate expression' field") public void testInvalidNameSpaceForIterateExpression()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Testing invalid namespace for 'iterate expression' field")
+    public void testInvalidNameSpaceForIterateExpression() throws Exception {
         try {
             axis2Client.sendMultipleQuoteRequest(
                     getProxyServiceURLHttp("iterateWithInvalidNameSpaceForExpressionTestProxy"), null, "WSO2", 5);
@@ -82,8 +81,8 @@ public class InvalidNamespaceTestCase extends ESBIntegrationTest {
      * to see error handling.No exceptions will be thrown but request will time out.
      */
     @Test(groups = {
-            "wso2.esb" }, description = "Testing valid expression which mismatch the original message in 'iterate expression' field") public void testValidIterateExpressionMismatchOriginalMessage()
-            throws Exception {
+            "wso2.esb" }, description = "Testing valid expression which mismatch the original message in 'iterate expression' field")
+    public void testValidIterateExpressionMismatchOriginalMessage() throws Exception {
         try {
             axis2Client.sendMultipleQuoteRequest(
                     getProxyServiceURLHttp("iterateWithValidIterateExpressionMismatchToOriginalMessageTestProxy"), null,
@@ -97,7 +96,8 @@ public class InvalidNamespaceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         super.cleanup();
     }
 }

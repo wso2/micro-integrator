@@ -35,7 +35,8 @@ public class DynamicInlinedWSDLEpTestCase extends ESBIntegrationTest {
     private final String ENDPOINT_PATH_1 = "conf:/DynamicInlineWSDLEndpointConf";
     private final String ENDPOINT_PATH_2 = "gov:/DynamicInlineWSDLEndpointGov";
 
-    @Test(groups = { "wso2.esb" }, enabled = false) public void testDynamicInlineWSDLEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" }, enabled = false)
+    public void testDynamicInlineWSDLEndpoint() throws Exception {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         OMElement endpoint_xml = new ESBTestCaseUtils().loadResource("/artifacts/ESB/endpoint/wsdlTestEp.xml");
         cleanupEndpoints();

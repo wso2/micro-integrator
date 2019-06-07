@@ -25,13 +25,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA2506RuleFetchFromRegistryFailsForTheFirstTime extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
         super.init();
     }
 
     @Test(groups = "wso2.esb", description = "Test whether proxy which has Rule "
-            + "mediator which fetch custom rules from registry in sequence get deployed through capp") public void testRuleMediatorProxyDeployed()
-            throws Exception {
+            + "mediator which fetch custom rules from registry in sequence get deployed through capp")
+    public void testRuleMediatorProxyDeployed() throws Exception {
         org.testng.Assert
                 .assertTrue(esbUtils.isProxyDeployed(contextUrls.getBackEndUrl(), getSessionCookie(), "proxyService2"),
                         "ERROR - ProxyServiceDeployer ProxyService Deployment from the file : "
@@ -39,7 +40,8 @@ public class ESBJAVA2506RuleFetchFromRegistryFailsForTheFirstTime extends ESBInt
                                 + ": Failed");
     }
 
-    @AfterTest(alwaysRun = true) public void cleanupEnvironment() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void cleanupEnvironment() throws Exception {
         super.cleanup();
     }
 }

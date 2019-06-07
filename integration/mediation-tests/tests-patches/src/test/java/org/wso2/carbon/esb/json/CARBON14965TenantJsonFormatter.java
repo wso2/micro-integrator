@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -21,7 +20,8 @@ public class CARBON14965TenantJsonFormatter extends ESBIntegrationTest {
     private JSONClient jsonClient;
     private String serviceUrl;
 
-    @BeforeTest(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         serverManager = new ServerConfigurationManager(context);
@@ -42,13 +42,15 @@ public class CARBON14965TenantJsonFormatter extends ESBIntegrationTest {
         jsonClient = new JSONClient();
     }
 
-    @Test public void testTest() throws IOException, JSONException {
+    @Test
+    public void testTest() throws IOException, JSONException {
         String payload = "{\"test\":\"\"}";
         String expectedResult = "{\"test\":\"\"}";
         String actualResult = jsonClient.sendUserDefineRequest(serviceUrl, payload).toString();
         assertEquals(actualResult, expectedResult, "Tenant Returned incorrectly formatted JSON response.");
     }
 
-    @AfterTest(alwaysRun = true) public void cleanupEnvironment() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void cleanupEnvironment() throws Exception {
     }
 }

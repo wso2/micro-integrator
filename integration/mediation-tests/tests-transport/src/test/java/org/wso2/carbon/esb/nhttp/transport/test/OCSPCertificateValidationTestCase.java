@@ -30,14 +30,16 @@ public class OCSPCertificateValidationTestCase extends ESBIntegrationTest {
 
     private SimpleHttpClient httpClient;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         httpClient = new SimpleHttpClient();
         loadESBConfigurationFromClasspath("/artifacts/ESB/nhttp/transport/certificatevalidation/simple_proxy.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sends https request to the backend with OCSP certificate validation "
-            + "enabled ", enabled = false) public void sendHTTPSRequest() throws Exception {
+            + "enabled ", enabled = false)
+    public void sendHTTPSRequest() throws Exception {
 
         //HttpResponse response = HttpRequestUtil.sendGetRequest(esbServer.getServiceUrl().replace("/services","") + "/slive/echo/WSO2", null);
         String epr = contextUrls.getServiceUrl().replace("/services", "") + "/slive/echo/WSO2";
@@ -47,7 +49,8 @@ public class OCSPCertificateValidationTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"), "Asserting response for string 'WSO2'");
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

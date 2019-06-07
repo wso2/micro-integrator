@@ -41,7 +41,8 @@ public class ESBJAVA3269_StatisticsCloneTestCase extends ESBIntegrationTest {
     private final String carFileName = "TestCloneStatsCappProj_1.0.0";
     private boolean isCarFileUploaded = false;
 
-    @BeforeClass(alwaysRun = true) protected void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void initialize() throws Exception {
         super.init();
         carbonAppUploaderClient = new CarbonAppUploaderClient(contextUrls.getBackEndUrl(), getSessionCookie());
         carbonAppUploaderClient.uploadCarbonAppArtifact("TestCloneStatsCappProj_1.0.0.car", new DataHandler(
@@ -53,9 +54,8 @@ public class ESBJAVA3269_StatisticsCloneTestCase extends ESBIntegrationTest {
         TimeUnit.SECONDS.sleep(5);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "statistics stack clone test", enabled = false) public void statisticsStackCloneTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "statistics stack clone test", enabled = false)
+    public void statisticsStackCloneTest() throws Exception {
         // Test need to be enabled after fixing Statistics Issue with clone mediator
         OMElement response = axis2Client
                 .sendMultipleQuoteRequest(getProxyServiceURLHttp("SplitAggregateProxy"), null, "WSO2", 2);
@@ -64,7 +64,8 @@ public class ESBJAVA3269_StatisticsCloneTestCase extends ESBIntegrationTest {
         Assert.assertTrue(logsFound, "Log entries not found");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupArtifactsIfExist() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupArtifactsIfExist() throws Exception {
         if (isCarFileUploaded) {
             applicationAdminClient.deleteApplication(carFileName);
         }

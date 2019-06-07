@@ -37,7 +37,8 @@ public class EnrichAddCustomHeaderTestCase extends ESBIntegrationTest {
     private SecureServiceClient secureAxisServiceClient;
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config14/custom_header_add.xml");
@@ -46,8 +47,8 @@ public class EnrichAddCustomHeaderTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "This verifies adding custom header with enrich mediator") public void testSecuredProxySecuredService()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "This verifies adding custom header with enrich mediator")
+    public void testSecuredProxySecuredService() throws Exception {
 
         logViewerClient.clearLogs();
         applySecurity(); //only https available
@@ -82,7 +83,8 @@ public class EnrichAddCustomHeaderTestCase extends ESBIntegrationTest {
         return containsProperty;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

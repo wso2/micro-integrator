@@ -43,7 +43,8 @@ public class JMSMapMessageTestCase extends ESBIntegrationTest {
     private static final String IN_QUEUE_NAME = "JMSMapMessageTestIn";
     private static final String OUT_QUEUE_NAME = "JMSMapMessageTestOut";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_map_message_proxy_service.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
@@ -52,8 +53,8 @@ public class JMSMapMessageTestCase extends ESBIntegrationTest {
                 .until(isServiceDeployed(IN_QUEUE_NAME));
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport") public void testJMSProxy()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
+    public void testJMSProxy() throws Exception {
 
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
@@ -96,13 +97,15 @@ public class JMSMapMessageTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 Message msg = consumer.popRawMessage();
                 if (msg instanceof MapMessage) {
                     messages.add(msg);
@@ -114,7 +117,8 @@ public class JMSMapMessageTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isServiceDeployed(final String proxyName) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return isProxySuccesfullyDeployed(proxyName);
             }
         };

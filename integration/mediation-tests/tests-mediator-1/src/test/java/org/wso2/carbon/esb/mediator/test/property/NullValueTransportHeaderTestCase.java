@@ -39,12 +39,13 @@ import java.util.Map;
  */
 public class NullValueTransportHeaderTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Property mediator test with null value set as transport header") public void testRespondMediator()
-            throws AxisFault, MalformedURLException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Property mediator test with null value set as transport header")
+    public void testRespondMediator() throws AxisFault, MalformedURLException, AutomationFrameworkException {
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/json");
         HttpResponse response = HttpRequestUtil
@@ -54,7 +55,8 @@ public class NullValueTransportHeaderTestCase extends ESBIntegrationTest {
                 "Expected response was not" + "received. Got " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

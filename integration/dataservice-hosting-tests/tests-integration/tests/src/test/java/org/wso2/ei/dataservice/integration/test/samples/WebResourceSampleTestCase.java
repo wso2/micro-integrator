@@ -50,7 +50,8 @@ public class WebResourceSampleTestCase extends DSSIntegrationTest {
         this.userMode = userMode;
     }*/
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation;
         resourceFileLocation = getResourceLocation();
@@ -60,16 +61,16 @@ public class WebResourceSampleTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
     //disabled the test since the service referring external api
     @Test(groups = {
-            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment", description = "invoke the service five times", enabled = false) public void selectOperation()
-            throws AxisFault, InterruptedException, XPathExpressionException {
+            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment", description = "invoke the service five times", enabled = false)
+    public void selectOperation() throws AxisFault, InterruptedException, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://www.w3.org/2005/08/addressing", "ns1");
         OMElement payload = fac.createOMElement("getAppInfo", omNs);
@@ -82,8 +83,8 @@ public class WebResourceSampleTestCase extends DSSIntegrationTest {
         log.info("Service invocation success");
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteFaultyService()
-            throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
+    public void deleteFaultyService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

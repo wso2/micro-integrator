@@ -33,15 +33,16 @@ import static org.testng.Assert.assertNotEquals;
 
 public class Sample420TestCase extends ESBSampleIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
         loadSampleESBConfiguration(420);
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Creating simple cache sample 420 Test Case") public void testSimpleCachingNotExists()
-            throws AxisFault, XPathExpressionException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Creating simple cache sample 420 Test Case")
+    public void testSimpleCachingNotExists() throws AxisFault, XPathExpressionException, InterruptedException {
         OMElement response;
 
         long currTime = System.currentTimeMillis();
@@ -67,9 +68,9 @@ public class Sample420TestCase extends ESBSampleIntegrationTest {
         assertNotEquals(firstResponse, response.getFirstElement().toString());
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Creating simple cache sample 420 Test Case") public void testSimpleCachingExists()
-            throws AxisFault, XPathExpressionException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Creating simple cache sample 420 Test Case")
+    public void testSimpleCachingExists() throws AxisFault, XPathExpressionException, InterruptedException {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "", "IBM");
@@ -80,7 +81,8 @@ public class Sample420TestCase extends ESBSampleIntegrationTest {
         assertEquals(firstResponse, response.getFirstElement().toString());
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

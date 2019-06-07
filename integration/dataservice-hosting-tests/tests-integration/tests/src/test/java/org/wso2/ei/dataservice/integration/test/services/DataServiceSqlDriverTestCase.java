@@ -56,7 +56,8 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(DataServiceSqlDriverTestCase.class);
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         resourceFileLocation = getResourceLocation();
         randomId = System.currentTimeMillis();
@@ -73,15 +74,15 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
         serviceEPR = getServiceUrlHttp(serviceName);
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", enabled = false) public void testServiceDeployment()
-            throws RemoteException, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", enabled = false)
+    public void testServiceDeployment() throws RemoteException, XPathExpressionException {
         assertTrue(dssTestCaseUtils
                 .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = "wso2.dss", description = "insert and retrieve records", dependsOnMethods = "testServiceDeployment", enabled = false) public void testInsertRecordsAndGetBack()
-            throws RemoteException {
+    @Test(groups = "wso2.dss", description = "insert and retrieve records", dependsOnMethods = "testServiceDeployment", enabled = false)
+    public void testInsertRecordsAndGetBack() throws RemoteException {
 
         OMElement result = new AxisServiceClient()
                 .sendReceive(insertNewRecord(String.valueOf(randomId)), serviceEPR, "insertop");
@@ -91,8 +92,8 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
         assertTrue(resultDetails.toString().contains(String.valueOf(randomId)));
     }
 
-    @Test(groups = "wso2.dss", description = "update and delete record", dependsOnMethods = "testInsertRecordsAndGetBack", enabled = false) public void testUpdateAndDelete()
-            throws RemoteException {
+    @Test(groups = "wso2.dss", description = "update and delete record", dependsOnMethods = "testInsertRecordsAndGetBack", enabled = false)
+    public void testUpdateAndDelete() throws RemoteException {
 
         OMElement result = new AxisServiceClient()
                 .sendReceive(updateRecord(String.valueOf(randomId)), serviceEPR, "Update");
@@ -183,7 +184,8 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
         return payload;
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         log.info(serviceName + " deleted");
     }

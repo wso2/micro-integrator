@@ -43,7 +43,8 @@ public class ConcurrencyThrottlingMaxAccessOneTest extends ESBIntegrationTest {
     private int grantedRequests;
     private int deniedRequests;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         verifyProxyServiceExistence("throttlingMaxAccessOneProxy");
@@ -57,7 +58,8 @@ public class ConcurrencyThrottlingMaxAccessOneTest extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Concurrency throttling - limit the number of concurrent requests to one", timeOut =
-            1000 * 60 * 2) public void testPolicyWithConcurrentAccessSetToOne() throws InterruptedException {
+            1000 * 60 * 2)
+    public void testPolicyWithConcurrentAccessSetToOne() throws InterruptedException {
         startClients();
         while (clientsDone.getCount() < CONCURRENT_CLIENTS) {
             Thread.sleep(1000);
@@ -76,7 +78,8 @@ public class ConcurrencyThrottlingMaxAccessOneTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         concurrencyThrottleTestClients = null;
         clients = null;
         clientsDone = null;

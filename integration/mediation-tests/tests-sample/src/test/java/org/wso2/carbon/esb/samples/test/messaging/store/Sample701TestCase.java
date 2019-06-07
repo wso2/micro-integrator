@@ -38,15 +38,16 @@ public class Sample701TestCase extends ESBSampleIntegrationTest {
     private MessageStoreAdminClient messageStoreAdminClient;
     private final String MESSAGE_STORE_NAME = "MyStore";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(701);
 
         messageStoreAdminClient = new MessageStoreAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Introduction to Message Sampling Processor "
-            + "test case") public void messageStoreFIXStoringTest() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Introduction to Message Sampling Processor " + "test case")
+    public void messageStoreFIXStoringTest() throws Exception {
 
         // The count should be 0 as soon as the message store is created
         Assert.assertTrue(messageStoreAdminClient.getMessageCount(MESSAGE_STORE_NAME) == 0,
@@ -67,7 +68,8 @@ public class Sample701TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

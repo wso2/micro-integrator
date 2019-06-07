@@ -36,7 +36,8 @@ public class ValidateIntegrationDynamicSchemaChangeTestCase extends ESBIntegrati
     private String toUrl = null;
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         // Initialize ESBMediatorTest
         super.init();
@@ -58,7 +59,8 @@ public class ValidateIntegrationDynamicSchemaChangeTestCase extends ESBIntegrati
      * @throws Exception
      */
 
-    @Test(groups = "wso2.esb") public void validateMediatorDynamicSchemaChangeTest() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void validateMediatorDynamicSchemaChangeTest() throws Exception {
         URL url = new URL(
                 "file:///" + getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "filters"
                         + File.separator + "validate" + File.separator + "schema1.xml");
@@ -96,7 +98,8 @@ public class ValidateIntegrationDynamicSchemaChangeTestCase extends ESBIntegrati
         Assert.assertTrue(response.toString().contains("WSO2 Company"), "GetQuoteResponse not found in response");
     }
 
-    @AfterClass(alwaysRun = true) public void clear() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clear() throws Exception {
         try {
             resourceAdminServiceClient.deleteResource("/_system/config/filters/schema1");
         } finally {

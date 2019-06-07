@@ -40,7 +40,8 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     private SecureServiceClient secureAxisServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         uploadResourcesToConfigRegistry();
@@ -51,14 +52,14 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Proxy service with providing endpoint through url") public void testSecureProxyEndPointThruUri()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service with providing endpoint through url")
+    public void testSecureProxyEndPointThruUri() throws Exception {
 
         OMElement response = secureAxisServiceClient
                 .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy11"), 1, "WSO2");
@@ -73,9 +74,8 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Proxy service with providing endpoint from registry") public void testSecureProxyEndPointFromReg()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service with providing endpoint from registry")
+    public void testSecureProxyEndPointFromReg() throws Exception {
 
         OMElement response = secureAxisServiceClient
                 .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy12"), 1, "WSO2");
@@ -90,8 +90,8 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Proxy service with publishing wsdl inline") public void testSecureProxyWSDLInline() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service with publishing wsdl inline")
+    public void testSecureProxyWSDLInline() throws Exception {
 
         OMElement response = secureAxisServiceClient
                 .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy13"), 1, "WSO2");
@@ -106,9 +106,8 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Proxy service with publishing wsdl source uri") public void testSecureProxyWSDLSourceUri()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service with publishing wsdl source uri")
+    public void testSecureProxyWSDLSourceUri() throws Exception {
 
         OMElement response = secureAxisServiceClient
                 .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy14"), 1, "WSO2");
@@ -123,9 +122,8 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Proxy service with publishing wsdl from registry") public void testSecureProxyWSDLFromReg()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service with publishing wsdl from registry")
+    public void testSecureProxyWSDLFromReg() throws Exception {
 
         OMElement response = secureAxisServiceClient
                 .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy15"), 1, "WSO2");
@@ -140,8 +138,8 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Proxy service Enabling only HTTPS") public void testSecureProxyEnableOnlyHTTPS() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service Enabling only HTTPS")
+    public void testSecureProxyEnableOnlyHTTPS() throws Exception {
 
         OMElement response = secureAxisServiceClient
                 .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttps("StockQuoteProxy16"), 1, "WSO2");
@@ -156,8 +154,8 @@ public class SecureProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Secure proxy"
-            + "- Proxy service Enabling only HTTP") public void testSecureProxyEnableOnlyHTTP() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Proxy service Enabling only HTTP")
+    public void testSecureProxyEnableOnlyHTTP() throws Exception {
 
         OMElement response = secureAxisServiceClient
                 .sendSecuredStockQuoteRequest(userInfo, getProxyServiceURLHttp("StockQuoteProxy17"), 5, "WSO2");

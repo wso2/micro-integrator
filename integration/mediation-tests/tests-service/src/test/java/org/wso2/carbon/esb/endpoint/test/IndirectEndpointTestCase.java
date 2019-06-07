@@ -43,22 +43,24 @@ public class IndirectEndpointTestCase extends ESBIntegrationTest {
     private final String ENDPOINT_NAME = "indirectEP";
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         addIndirectEndpoint();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a Indirect endpoint") public void testSendingToIndirectEndpoint()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a Indirect endpoint")
+    public void testSendingToIndirectEndpoint() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("indirectEndpointTestProxy"), null, "WSO2");
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }

@@ -52,7 +52,8 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(CARBON15261JsonFormatterTest.class);
     ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(dssContext);
         serverConfigurationManager.applyConfiguration(new File(
@@ -70,15 +71,16 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttps("H2JsonSecureServiceTest") + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
         serverConfigurationManager.restartGracefully();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service", dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest") public void performJsonGetWithSecurityAttributesTest()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service", dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest")
+    public void performJsonGetWithSecurityAttributesTest() throws Exception {
         this.secureService();
         headers.clear();
         headers.put("Accept", "application/json");
@@ -92,8 +94,8 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
                 "Response with attributes test failed for secured service");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for unsecured service") public void performJsonGetWithoutSecurityAttributesTest()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for unsecured service")
+    public void performJsonGetWithoutSecurityAttributesTest() throws Exception {
         headers.clear();
         headers.put("Accept", "application/json");
         HttpResponse response = client.doGet(serviceEndPoint + "nullm", headers);
@@ -102,8 +104,8 @@ public class CARBON15261JsonFormatterTest extends DSSIntegrationTest {
                 "Response with attributes test failed for unsecured service");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service", dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest") public void performJsonGetWithSecurityTest()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Invoking Request with GET method for secured service", dependsOnMethods = "performJsonGetWithoutSecurityAttributesTest")
+    public void performJsonGetWithSecurityTest() throws Exception {
         this.secureService();
         headers.clear();
         headers.put("Accept", "application/json");

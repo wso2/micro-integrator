@@ -47,7 +47,8 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
     private Thread[] clients;
     private List list;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         serverConfigurationManagerProp = new ServerConfigurationManager(
@@ -75,9 +76,9 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
         clients = new Thread[CONCURRENT_CLIENTS];
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description = "NHTTP Test Maximum Open Connections") public void testMaximumConnections()
-            throws InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb", description = "NHTTP Test Maximum Open Connections")
+    public void testMaximumConnections() throws InterruptedException {
         initClients();         //initialising Axis2Clients
         startClients();
         int aliveCount = 0;
@@ -132,7 +133,8 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         maxOpenConnectionClients = null;
         clients = null;
         try {

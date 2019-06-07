@@ -61,7 +61,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server3;
     private LoadbalanceFailoverClient lbClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
@@ -104,7 +105,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         uploadResourcesToConfigRegistry();
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         log.info("Tests Are Completed");
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -124,7 +126,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @AfterMethod(groups = "wso2.esb") public void startServersA() throws InterruptedException, IOException {
+    @AfterMethod(groups = "wso2.esb")
+    public void startServersA() throws InterruptedException, IOException {
         if (!axis2Server1.isStarted()) {
             axis2Server1.start();
         }
@@ -137,7 +140,8 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    @BeforeMethod(groups = "wso2.esb") public void startServersB() throws InterruptedException, IOException {
+    @BeforeMethod(groups = "wso2.esb")
+    public void startServersB() throws InterruptedException, IOException {
         if (!axis2Server1.isStarted()) {
             axis2Server1.start();
         }
@@ -150,9 +154,9 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint") public void testSendingFailOverEndpoint()
-            throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint")
+    public void testSendingFailOverEndpoint() throws IOException, InterruptedException {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint"), null, "WSO2");
@@ -208,9 +212,9 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint in Config Registry") public void testSendingFailOverEndpoint_ConfigReg()
-            throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint in Config Registry")
+    public void testSendingFailOverEndpoint_ConfigReg() throws IOException, InterruptedException {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("failoverEndPoint_Config_Reg"), null, "WSO2");
@@ -268,8 +272,9 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }) public void testFailOverEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" })
+    public void testFailOverEndpoint() throws Exception {
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
 
         cleanupEndpoints();
@@ -279,9 +284,9 @@ public class FailoverEndpointTestCase extends ESBIntegrationTest {
         endpointDeletionScenario();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint which Suspend Endpoints to Specific Errors") public void testSendingFailOverEndpoint_With_Specific_Errors()
-            throws IOException, InterruptedException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test sending request to Fail Over Endpoint which Suspend Endpoints to Specific Errors")
+    public void testSendingFailOverEndpoint_With_Specific_Errors() throws IOException, InterruptedException {
         //Check the fail over endpoint is functioning well
         String response = lbClient
                 .sendLoadBalanceRequest(getProxyServiceURLHttp("failoverEndPoint_Specific_Errors"), null);

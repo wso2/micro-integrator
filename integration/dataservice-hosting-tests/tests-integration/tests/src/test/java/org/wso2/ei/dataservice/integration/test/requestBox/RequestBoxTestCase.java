@@ -53,7 +53,8 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
 
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -64,7 +65,8 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
@@ -77,8 +79,8 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
      * @throws Exception
      */
     @Test(groups = {
-            "wso2.dss" }, description = "Send Request box requests which should be successful and check whether they are successful", alwaysRun = true) public void requestBoxSuccessRequests()
-            throws Exception {
+            "wso2.dss" }, description = "Send Request box requests which should be successful and check whether they are successful", alwaysRun = true)
+    public void requestBoxSuccessRequests() throws Exception {
         // **************** test insert to two tables ******************
         OMElement payloadInsertOnly = fac.createOMElement("request_box", omNs);
 
@@ -187,8 +189,8 @@ public class RequestBoxTestCase extends DSSIntegrationTest {
      * @throws Exception
      */
     @Test(groups = {
-            "wso2.dss" }, description = "Send Request box requests which should be failed and check whether they are really failed", alwaysRun = true) public void requestBoxFailRequests()
-            throws Exception {
+            "wso2.dss" }, description = "Send Request box requests which should be failed and check whether they are really failed", alwaysRun = true)
+    public void requestBoxFailRequests() throws Exception {
         // **************** test insert to two tables(table1 entry already exist) ******************
         new AxisServiceClient().sendRobust(generateInsertProducts(100), getServiceUrlHttp(serviceName),
                 "insert_into_products_operation"); //first insert the value to table1 - productCode100

@@ -25,13 +25,15 @@ public class EndpointBindingSecuredProxyTestCase extends ESBIntegrationTest {
 
     private final String serviceName = "SecureStockQuoteProxyEndpointBinding";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/secureProxy/stock_quote_proxy.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         super.cleanup();
     }

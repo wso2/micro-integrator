@@ -34,19 +34,21 @@ import java.io.IOException;
 public class ESBJAVA4760ContentLengthHeaderTest extends ESBIntegrationTest {
     private final int EXPECTED_HTTP_SC = 204;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         verifyAPIExistence("StockQuoteAPIESBJAVA4760");
     }
 
-    @Test(groups = "wso2.esb", description = "Test 204 status code  with disable chunking", enabled = true) public void testContentLengthWithDisableChunking()
-            throws IOException {
+    @Test(groups = "wso2.esb", description = "Test 204 status code  with disable chunking", enabled = true)
+    public void testContentLengthWithDisableChunking() throws IOException {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("StockQuoteAPIESBJAVA4760") + "/view/IBM", null);
         Assert.assertEquals(response.getResponseCode(), EXPECTED_HTTP_SC, "Expected response code didn't match");
     }
 
-    @AfterClass public void cleanUp() throws Exception {
+    @AfterClass
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

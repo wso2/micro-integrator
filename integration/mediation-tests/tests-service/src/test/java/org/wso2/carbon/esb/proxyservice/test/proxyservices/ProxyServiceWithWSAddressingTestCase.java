@@ -30,14 +30,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceWithWSAddressingTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/proxyservice/proxy_with_addressing.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "test proxy service behavior when addressing is sent") public void testProxyWithAddressing()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "test proxy service behavior when addressing is sent")
+    public void testProxyWithAddressing() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("proxyWithAddressing"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
@@ -49,8 +50,8 @@ public class ProxyServiceWithWSAddressingTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "test proxy service behavior when both addressing and endpoint are available") public void testInlineEndpointPriorityWithWSAddressing()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "test proxy service behavior when both addressing and endpoint are available")
+    public void testInlineEndpointPriorityWithWSAddressing() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("proxyWithAddressingPriority"),
@@ -63,7 +64,8 @@ public class ProxyServiceWithWSAddressingTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

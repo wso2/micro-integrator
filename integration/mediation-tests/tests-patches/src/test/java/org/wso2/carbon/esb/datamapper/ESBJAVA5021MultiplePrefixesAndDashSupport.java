@@ -27,9 +27,8 @@ public class ESBJAVA5021MultiplePrefixesAndDashSupport extends DataMapperIntegra
     private final String DM_ARTIFACT_ROOT_PATH = "/artifacts/ESB/mediatorconfig/datamapper/multiplePrefix/";
     private final String DM_REGISTRY_ROOT_PATH = "datamapper/";
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Datamapper : test support for multiple prefixes for same namespace") public void testMultiplePrefixesToSameNamespace()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Datamapper : test support for multiple prefixes for same namespace")
+    public void testMultiplePrefixesToSameNamespace() throws Exception {
         verifyAPIExistence("simpleDataAPI_XMLtoXML2_withDash");
         uploadResourcesToGovernanceRegistry(DM_REGISTRY_ROOT_PATH + "multiplePrefix/", DM_ARTIFACT_ROOT_PATH,
                 "simpleDataAPI_XMLtoXML2_withDash_regConf.dmc",

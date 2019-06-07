@@ -36,16 +36,16 @@ public class LocalEntryMediaTypeTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdmin;
     private final String ENTRY_NAME = "mediaTypeTest";
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         localEntriesAdminClient = new LocalEntriesAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Local Entry media type", enabled = false) public void testLocalEntryMediaType()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Local Entry media type", enabled = false)
+    public void testLocalEntryMediaType() throws Exception {
         OMElement localEntry = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<localEntry xmlns=\"http://ws.apache.org/ns/synapse\" key=\"" + ENTRY_NAME
                 + "\" src=\"file:samples/service-bus/resources/transform/transform.xslt\"/>");
@@ -57,7 +57,8 @@ public class LocalEntryMediaTypeTestCase extends ESBIntegrationTest {
         Assert.assertEquals(metadata.getMediaType(), "text/xml", "Media Type mismatched for proxy service");
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         localEntriesAdminClient.deleteLocalEntry(ENTRY_NAME);
         super.cleanup();
     }

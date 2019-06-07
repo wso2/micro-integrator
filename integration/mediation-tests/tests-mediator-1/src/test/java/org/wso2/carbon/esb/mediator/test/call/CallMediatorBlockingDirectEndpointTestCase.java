@@ -37,23 +37,22 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingDirectEndpointTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("callMediatorBlockingProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Call the direct endpoint with blocking external calls") public void callMediatorBlockingDirectEndpointTest()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Call the direct endpoint with blocking external calls")
+    public void callMediatorBlockingDirectEndpointTest() throws AxisFault {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callMediatorBlockingProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2 Company");
         assertTrue(responseContainsWSO2);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Invoke a backend that returns a 204, empty response") public void callMediatorBlockingNoContentResponseTest()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "Invoke a backend that returns a 204, empty response")
+    public void callMediatorBlockingNoContentResponseTest() throws IOException {
         SimpleHttpClient client = new SimpleHttpClient();
         Map headers = new HashMap(1);
         headers.put("Content-Type", "application/json");
@@ -62,7 +61,8 @@ public class CallMediatorBlockingDirectEndpointTestCase extends ESBIntegrationTe
         assertEquals(response.getStatusLine().getStatusCode(), 204, "Empty response not received");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

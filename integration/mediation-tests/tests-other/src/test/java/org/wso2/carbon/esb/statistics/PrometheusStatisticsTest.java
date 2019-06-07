@@ -31,14 +31,14 @@ import java.util.Map;
 
 public class PrometheusStatisticsTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test if metric data are exposed, when it is enabled in config") public void testPrometheusPublisher()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test if metric data are exposed, when it is enabled in config")
+    public void testPrometheusPublisher() throws Exception {
 
         SimpleHttpClient client = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<>();
@@ -52,7 +52,8 @@ public class PrometheusStatisticsTest extends ESBIntegrationTest {
         Assert.assertFalse(responsePayload.isEmpty(), "Metric response is empty");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
 
         super.cleanup();
     }

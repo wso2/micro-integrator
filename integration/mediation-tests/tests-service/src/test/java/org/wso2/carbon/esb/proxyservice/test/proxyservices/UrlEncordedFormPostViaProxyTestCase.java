@@ -41,16 +41,18 @@ public class UrlEncordedFormPostViaProxyTestCase extends ESBIntegrationTest {
 
     private WireMonitorServer wireMonitorServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         uploadSynapseConfig();
         wireMonitorServer = new WireMonitorServer(8991);
         wireMonitorServer.start();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Patch : ESBJAVA-1696 : Encoded Special characters in the URL is decoded at the Gateway and not re-encoded", enabled = true) public void testEncodingSpecialCharacterViaHttpProxy()
-            throws IOException {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = {
+            "wso2.esb" }, description = "Patch : ESBJAVA-1696 : Encoded Special characters in the URL is decoded at the Gateway and not re-encoded", enabled = true)
+    public void testEncodingSpecialCharacterViaHttpProxy() throws IOException {
         HttpClient client = new HttpClient();
         client.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(0, false));
         client.getParams().setSoTimeout(5000);
@@ -93,7 +95,8 @@ public class UrlEncordedFormPostViaProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         cleanup();
     }
 

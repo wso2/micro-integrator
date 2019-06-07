@@ -44,7 +44,8 @@ public class ResponseAfterNttpEnabledTestCase extends ESBIntegrationTest {
     private String toUrl = null;
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         toUrl = getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE);
@@ -68,9 +69,9 @@ public class ResponseAfterNttpEnabledTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testMessageMediationAfterEnablingNhttp()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb")
+    public void testMessageMediationAfterEnablingNhttp() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), toUrl, "WSO2");
 
         Assert.assertTrue(response.toString().contains("WSO2 Company"),
@@ -84,7 +85,8 @@ public class ResponseAfterNttpEnabledTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         try {
             super.cleanup();
         } finally {

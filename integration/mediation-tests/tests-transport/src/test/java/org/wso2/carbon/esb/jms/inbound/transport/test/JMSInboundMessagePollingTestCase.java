@@ -47,7 +47,8 @@ public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private InboundAdminClient inboundAdminClient;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -60,9 +61,8 @@ public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
 
     //This was disabled since already existing messages are not consumed intermittently when inbound is deployed
     //Should be checked in detail and fix in functionality
-    @Test(groups = {
-            "wso2.esb" }, description = "Polling Message from a Queue", enabled = false) public void testPollingMessages()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Polling Message from a Queue", enabled = false)
+    public void testPollingMessages() throws Exception {
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         String queueName = "localq";
@@ -90,7 +90,8 @@ public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
         Assert.assertTrue(status, "Couldn't Consume messages from Queue");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
@@ -99,8 +100,8 @@ public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }, description = "Test JMS proxy deployment.") public void testDeploymentOrder()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test JMS proxy deployment.")
+    public void testDeploymentOrder() throws Exception {
 
         String message = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\""

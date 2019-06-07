@@ -31,11 +31,13 @@ import static org.testng.Assert.assertEquals;
  * Test case to check whether callout mediator is handling an empty reponse from the endpoint
  */
 public class CalloutMediatorHandlingEmptySuccessResponseTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb") public void testForwardingWithInMemoryStore() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void testForwardingWithInMemoryStore() throws Exception {
         String requestPayload = "{\"hello\":\"world\"}";
         SimpleHttpClient httpClient = new SimpleHttpClient();
         String url = getApiInvocationURL("callouttest");
@@ -45,7 +47,8 @@ public class CalloutMediatorHandlingEmptySuccessResponseTestCase extends ESBInte
                 "Response not matching with the request! Response received is :" + responsePayload);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

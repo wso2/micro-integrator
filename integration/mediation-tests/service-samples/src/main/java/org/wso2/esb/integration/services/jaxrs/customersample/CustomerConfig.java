@@ -27,11 +27,13 @@ import java.util.Arrays;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 public class CustomerConfig {
-    @Bean(destroyMethod = "shutdown") public SpringBus cxf() {
+    @Bean(destroyMethod = "shutdown")
+    public SpringBus cxf() {
         return new SpringBus();
     }
 
-    @Bean public org.apache.cxf.endpoint.Server jaxRsServer() {
+    @Bean
+    public org.apache.cxf.endpoint.Server jaxRsServer() {
         JAXRSServerFactoryBean factory = RuntimeDelegate.getInstance()
                 .createEndpoint(jaxRsApiApplication(), JAXRSServerFactoryBean.class);
         factory.setServiceBeans(Arrays.<Object>asList(customerService()));
@@ -40,15 +42,18 @@ public class CustomerConfig {
         return factory.create();
     }
 
-    @Bean public JaxRsApiApplication jaxRsApiApplication() {
+    @Bean
+    public JaxRsApiApplication jaxRsApiApplication() {
         return new JaxRsApiApplication();
     }
 
-    @Bean public CustomerService customerService() {
+    @Bean
+    public CustomerService customerService() {
         return new CustomerService();
     }
 
-    @Bean public JacksonJsonProvider jsonProvider() {
+    @Bean
+    public JacksonJsonProvider jsonProvider() {
         return new JacksonJsonProvider();
     }
 }

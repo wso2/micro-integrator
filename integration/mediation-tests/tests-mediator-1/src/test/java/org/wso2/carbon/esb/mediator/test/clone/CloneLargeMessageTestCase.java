@@ -43,7 +43,8 @@ public class CloneLargeMessageTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server2;
     private CloneClient client;
 
-    @BeforeClass() public void setEnvironment() throws Exception {
+    @BeforeClass()
+    public void setEnvironment() throws Exception {
         init();
         client = new CloneClient();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CloneAndAggregateTestProxy");
@@ -58,9 +59,9 @@ public class CloneLargeMessageTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests large message ~3MB") public void testLargeMessage()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests large message ~3MB")
+    public void testLargeMessage() throws Exception {
 
         String symbol = FixedSizeSymbolGenerator.generateMessageMB(3);
         String response = client.getResponse(getProxyServiceURLHttp("CloneAndAggregateTestProxy"), symbol);
@@ -81,7 +82,8 @@ public class CloneLargeMessageTestCase extends ESBIntegrationTest {
         response = null;
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         axis2Server1 = null;

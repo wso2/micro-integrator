@@ -37,15 +37,16 @@ public class WebSocketInboundTestCase extends ESBIntegrationTest {
     private WebSocketServer webSocketServer;
     private WebSocketTestClient webSocketTestClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         webSocketServer = new WebSocketServer(7474);
         webSocketServer.run();
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/websocket/synapse-websocket-inbound.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Web Socket transport test", timeOut = 60000) public void webSocketInboundTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Web Socket transport test", timeOut = 60000)
+    public void webSocketInboundTest() throws Exception {
         int latchCountDownInSecs = 30;
         CountDownLatch latch = new CountDownLatch(1);
         webSocketTestClient = new WebSocketTestClient("ws://localhost:9078/", latch);
@@ -56,7 +57,8 @@ public class WebSocketInboundTestCase extends ESBIntegrationTest {
         Assert.assertEquals(webSocketTestClient.getTextReceived(), text);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             if (webSocketTestClient != null) {
                 webSocketTestClient.shutDown();

@@ -39,7 +39,8 @@ public class Sample653TestCase extends ESBSampleIntegrationTest {
 
     private ServerConfigurationManager serverManager = null;
 
-    @BeforeClass(alwaysRun = true) public void startJMSBrokerAndConfigureESB() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void startJMSBrokerAndConfigureESB() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(context);
         //setting <parameter name="priorityConfigFile" locked="false">samples/service-bus/resources/priority/priority-configuration.xml</parameter>
@@ -51,7 +52,8 @@ public class Sample653TestCase extends ESBSampleIntegrationTest {
         loadSampleESBConfiguration(150);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         //reverting the changes done to esb sever
         super.cleanup();
@@ -62,9 +64,9 @@ public class Sample653TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "NHTTP Transport Priority Based Dispatching ") public void testPriorityBasedMessages()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "NHTTP Transport Priority Based Dispatching ")
+    public void testPriorityBasedMessages() throws Exception {
 
         Sender senderIBM = new Sender();
         senderIBM.init("IBM", "1");
@@ -113,7 +115,8 @@ public class Sample653TestCase extends ESBSampleIntegrationTest {
             httpget.setEntity(stringEntity);
         }
 
-        @Override public void run() {
+        @Override
+        public void run() {
             long currentTime = System.currentTimeMillis();
             for (int i = 0; i < 2000; i++) {
                 try {

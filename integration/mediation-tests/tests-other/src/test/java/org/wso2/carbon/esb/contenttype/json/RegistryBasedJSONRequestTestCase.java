@@ -42,14 +42,16 @@ public class RegistryBasedJSONRequestTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
     private Client client = Client.create();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/registrybasedjsonproxy.xml");
         resourceAdminServiceStub = new ResourceAdminServiceClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
         resourceAdminServiceStub.deleteResource("/_system/config/repository/esb/registry/jsonrequest.txt");
@@ -58,8 +60,8 @@ public class RegistryBasedJSONRequestTestCase extends ESBIntegrationTest {
     /**
      * //TODO ESBJAVA-3459  - Test case to amend accordingly
      */
-    @Test(groups = "wso2.esb", description = "Testing json requests with Registry Based scenario") public void testJSONWithRegistryBasedJSONPayloadsScenario()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing json requests with Registry Based scenario")
+    public void testJSONWithRegistryBasedJSONPayloadsScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Mango\",\"singer\":\"MLTR\"}";
 

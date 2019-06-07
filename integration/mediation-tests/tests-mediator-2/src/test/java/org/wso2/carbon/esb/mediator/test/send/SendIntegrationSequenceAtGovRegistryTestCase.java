@@ -34,15 +34,16 @@ import static org.testng.Assert.assertNotNull;
 public class SendIntegrationSequenceAtGovRegistryTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence at governance registry build message before receive message") public void sequenceAtGovRegistryBuildMessageTest()
-            throws Exception {
+            "wso2.esb" }, description = "Receiving sequence at governance registry build message before receive message")
+    public void sequenceAtGovRegistryBuildMessageTest() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorReceiveSeqAtGovBuildMessageTrueTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -54,8 +55,8 @@ public class SendIntegrationSequenceAtGovRegistryTestCase extends ESBIntegration
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Receiving sequence at governance registry not build message before receive message") public void sequenceAtGovRegistryBuildMessageNoTest()
-            throws Exception {
+            "wso2.esb" }, description = "Receiving sequence at governance registry not build message before receive message")
+    public void sequenceAtGovRegistryBuildMessageNoTest() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("sendMediatorReceiveSeqAtGovBuildMessageFalseTestProxy"), null, "WSO2");
         assertNotNull(response, "Response is null");
@@ -82,7 +83,8 @@ public class SendIntegrationSequenceAtGovRegistryTestCase extends ESBIntegration
                                 + "/mediatorconfig/send/sequence/test_sequence_build_message_gov.xml"))));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
         resourceAdminServiceStub.deleteResource("/_system/governance/sequence_conf");
         super.cleanup();

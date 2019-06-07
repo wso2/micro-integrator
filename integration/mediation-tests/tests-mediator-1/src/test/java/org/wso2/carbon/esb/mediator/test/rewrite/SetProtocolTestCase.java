@@ -30,14 +30,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class SetProtocolTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteSetProtocolTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "setting protocol", dataProvider = "addressingUrl") public void setProtocol(
-            String addUrl) throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "setting protocol", dataProvider = "addressingUrl")
+    public void setProtocol(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -46,11 +47,13 @@ public class SetProtocolTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "https://localhost:9000/services/SimpleStockQuoteService" },
                 { "htt://localhost:9000/services/SimpleStockQuoteService" },
                 { "http://localhost:9010/services/SimpleStockQuoteService" },

@@ -30,15 +30,16 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
 
     private CloneClient cloneClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config11/synapse.xml");
         cloneClient = new CloneClient();
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Enrichment of response message") public void enrichMediatorTest()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "Enrichment of response message")
+    public void enrichMediatorTest() throws IOException {
 
         String response = cloneClient.getResponse(getProxyServiceURLHttp("SplitAggregateProxy"), "IBM");
 
@@ -47,15 +48,16 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.contains("urn:AuthInf"), "Header mismatched");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "including two drop mediators") public void dropMediatorTest()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "including two drop mediators")
+    public void dropMediatorTest() throws IOException {
         String response;
 
         response = cloneClient.getResponse(getProxyServiceURLHttp("SplitAggregateProxy"), "IBM");
 
     }
 
-    @AfterClass(alwaysRun = true) public void closeTestArtifacts() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void closeTestArtifacts() throws Exception {
         try {
             super.cleanup();
         } finally {

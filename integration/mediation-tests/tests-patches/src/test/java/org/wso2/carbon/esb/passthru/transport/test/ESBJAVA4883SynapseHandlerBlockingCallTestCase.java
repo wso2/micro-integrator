@@ -38,7 +38,8 @@ public class ESBJAVA4883SynapseHandlerBlockingCallTestCase extends ESBIntegratio
     private ServerConfigurationManager serverConfigurationManager;
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -51,8 +52,8 @@ public class ESBJAVA4883SynapseHandlerBlockingCallTestCase extends ESBIntegratio
         logViewerClient.clearLogs();
     }
 
-    @Test(groups = "wso2.esb", description = "Invoking Synapse handlers in blocking calls test") public void testSynapseHandlerBlockingCall()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoking Synapse handlers in blocking calls test")
+    public void testSynapseHandlerBlockingCall() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SynapseHandlerTestProxy"), null, "WSO2");
         LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
         Assert.assertTrue(stringExistsInLog("Request Out Flow", logs),
@@ -61,7 +62,8 @@ public class ESBJAVA4883SynapseHandlerBlockingCallTestCase extends ESBIntegratio
                 "Synapse Handler not executed in the response in path");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 

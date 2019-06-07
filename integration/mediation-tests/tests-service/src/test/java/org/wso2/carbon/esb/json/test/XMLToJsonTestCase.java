@@ -41,13 +41,15 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
                     + "<text>Maybe he'll finally find his keys. #peterfalk</text>" + "<user>"
                     + "<id_str>819797</id_str>" + "<id>819797</id>" + "</user></xml>";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/json/xml-to-json.xml");
         serverManager = new ServerConfigurationManager(context);
     }
 
-    @Test(groups = "wso2.esb", description = "XML to JSON Test") public void testXMLToJson() throws Exception {
+    @Test(groups = "wso2.esb", description = "XML to JSON Test")
+    public void testXMLToJson() throws Exception {
         //AxisServiceClient client = new AxisServiceClient();
         //OMElement request = getPayload();;
         //OMElement response = client. sendReceive(request, contextUrls.getServiceUrl() + "/response", "application/xml");  
@@ -79,7 +81,8 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
         return payload;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             super.cleanup();
         } finally {

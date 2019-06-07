@@ -31,14 +31,15 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class RegistryEntryXsltTransformationTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
 
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do XSLT transformation  by selecting the xslt file from config registry.") public void xsltTransformationFromConfigRegistry()
-            throws Exception {
+            "wso2.esb" }, description = "Do XSLT transformation  by selecting the xslt file from config registry.")
+    public void xsltTransformationFromConfigRegistry() throws Exception {
         OMElement response;
         uploadResourcesToConfigRegistry();
 
@@ -51,8 +52,8 @@ public class RegistryEntryXsltTransformationTestCase extends ESBIntegrationTest 
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do XSLT transformation by selecting the xslt file from governance registry.y") public void xsltTransformationFromGovernanceRegistry()
-            throws Exception {
+            "wso2.esb" }, description = "Do XSLT transformation by selecting the xslt file from governance registry.y")
+    public void xsltTransformationFromGovernanceRegistry() throws Exception {
         OMElement response;
         uploadResourcesToGovernanceRegistry();
         response = axis2Client
@@ -63,7 +64,8 @@ public class RegistryEntryXsltTransformationTestCase extends ESBIntegrationTest 
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

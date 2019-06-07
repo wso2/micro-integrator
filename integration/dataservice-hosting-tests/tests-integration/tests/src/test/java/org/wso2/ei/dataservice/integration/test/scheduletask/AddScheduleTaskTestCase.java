@@ -55,7 +55,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
     private String serviceEndPoint;
     private DataServiceTaskClient dssTaskClient;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         String resourceLocation = getResourceLocation();
@@ -69,13 +70,13 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
         dssTaskClient = new DataServiceTaskClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = { "testServiceDeployment" }) public void serviceInvocation()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "testServiceDeployment" })
+    public void serviceInvocation() throws AxisFault {
         deleteEmployees();
         addEmployee(employeeId);
         getEmployeeById(employeeId);
@@ -84,8 +85,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("service invocation success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = { "serviceInvocation" }) public void addScheduleTask()
-            throws RemoteException {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "serviceInvocation" })
+    public void addScheduleTask() throws RemoteException {
         DSTaskInfo dsTaskInfo = new DSTaskInfo();
         String[] taskNames = dssTaskClient.getAllTaskNames();
 
@@ -121,8 +122,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = { "addScheduleTask" }) public void startScheduleTask()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "addScheduleTask" })
+    public void startScheduleTask() throws AxisFault {
         //if task count is 4
         for (int i = 0; i < 5; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
@@ -138,8 +139,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
         log.info("ScheduleTask verifying Success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = { "startScheduleTask" }) public void verifyTaskCount()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "startScheduleTask" })
+    public void verifyTaskCount() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
             log.info("current salary after exceeding task count " + currentSalary);
@@ -160,7 +161,8 @@ public class AddScheduleTaskTestCase extends DSSIntegrationTest {
     //        log.info("Task Deleted");
     //    }
 
-    @AfterClass(alwaysRun = true) public void testCleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void testCleanup() throws Exception {
         dssTaskClient.deleteTask(scheduleTaskName);
         log.info("Task Deleted");
         deleteService(serviceName);

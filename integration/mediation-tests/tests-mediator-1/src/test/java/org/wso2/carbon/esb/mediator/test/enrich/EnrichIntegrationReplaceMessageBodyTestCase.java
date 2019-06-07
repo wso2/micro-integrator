@@ -32,13 +32,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationReplaceMessageBodyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         init();
         verifyProxyServiceExistence("enrichReplaceMessageBodyTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Replace the body of the target message") public void testReplacingMessageBody()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Replace the body of the target message")
+    public void testReplacingMessageBody() throws AxisFault, XMLStreamException {
         OMElement response;
         response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("enrichReplaceMessageBodyTestProxy"), null, "IBM");
@@ -48,7 +49,8 @@ public class EnrichIntegrationReplaceMessageBodyTestCase extends ESBIntegrationT
                         .getText(), "wso2", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

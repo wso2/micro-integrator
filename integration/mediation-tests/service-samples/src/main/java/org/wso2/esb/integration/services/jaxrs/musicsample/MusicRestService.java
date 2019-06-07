@@ -32,12 +32,16 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/music") public class MusicRestService {
+@Path("/music")
+public class MusicRestService {
 
-    @Inject private MusicService musicService;
+    @Inject
+    private MusicService musicService;
 
-    @GET @Path("/get") @Produces(MediaType.APPLICATION_JSON) public Music getMusicInJSON(
-            @QueryParam("album") final String albumName) {
+    @GET
+    @Path("/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Music getMusicInJSON(@QueryParam("album") final String albumName) {
         /*            Music music = new Music();
        music.setAlbum("Beat It !!!");
        music.setSinger("Micheal Jackson");*/
@@ -47,7 +51,11 @@ import javax.ws.rs.core.Response;
 
     }
 
-    @POST @Path("/post") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON) public Response createMusicInJSONPOST(
+    @POST
+    @Path("/post")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createMusicInJSONPOST(
             Music music /*@PathParam("album") String album, @PathParam("singer") String singer*/) {
 
         musicService.setMusic(music);
@@ -58,7 +66,11 @@ import javax.ws.rs.core.Response;
 
     }
 
-    @POST @Path("/postjson") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON) public Response createMusicInJSONResponsePOST(
+    @POST
+    @Path("/postjson")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response createMusicInJSONResponsePOST(
             Music music /*@PathParam("album") String album, @PathParam("singer") String singer*/) {
 
         musicService.setMusic(music);
@@ -69,8 +81,11 @@ import javax.ws.rs.core.Response;
 
     }
 
-    @PUT @Path("/put") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON) public Response updateMusicInJSONPUT(
-            Music music) {
+    @PUT
+    @Path("/put")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response updateMusicInJSONPUT(Music music) {
 
         Music musicOne = musicService.getByAlbum(music.getAlbum());
 
@@ -82,8 +97,11 @@ import javax.ws.rs.core.Response;
 
     }
 
-    @POST @Path("/add_singer_details") @Produces(MediaType.APPLICATION_JSON) @Consumes(MediaType.APPLICATION_JSON) public Response addSingerDetailsInJSONPOST(
-            Singer singer) {
+    @POST
+    @Path("/add_singer_details")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addSingerDetailsInJSONPOST(Singer singer) {
 
         musicService.setSinger(singer);
 
@@ -93,8 +111,10 @@ import javax.ws.rs.core.Response;
 
     }
 
-    @GET @Path("/get_singer_details") @Produces(MediaType.APPLICATION_JSON) public Singer getSingerDetailsInJSON(
-            @QueryParam("singer") final String singerName) {
+    @GET
+    @Path("/get_singer_details")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Singer getSingerDetailsInJSON(@QueryParam("singer") final String singerName) {
         /*            Music music = new Music();
        music.setAlbum("Beat It !!!");
        music.setSinger("Micheal Jackson");*/

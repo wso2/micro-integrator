@@ -29,7 +29,8 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceEnablingHTTPSTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/loggingProxy/proxy_service_enabling_only_https.xml");
@@ -37,8 +38,8 @@ public class ProxyServiceEnablingHTTPSTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy"
-            + "- Proxy service enabling only https") public void testLoggingProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy" + "- Proxy service enabling only https")
+    public void testLoggingProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttps("enableHttpsLoggingProxy"), null, "WSO2");
@@ -53,12 +54,13 @@ public class ProxyServiceEnablingHTTPSTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy -Proxy service enabling only https -Log", enabled = false) public void testLoggingProxyLogging()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy -Proxy service enabling only https -Log", enabled = false)
+    public void testLoggingProxyLogging() throws Exception {
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

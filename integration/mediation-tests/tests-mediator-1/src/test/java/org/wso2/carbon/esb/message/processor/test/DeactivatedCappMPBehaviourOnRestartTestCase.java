@@ -51,7 +51,8 @@ public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationT
     private static final String SUCCESS_MESSAGE = "Deploying Carbon Application : CappMPServerRestartTestCApp_1.0.0.car";
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         serverConfigurationManager = new ServerConfigurationManager(context);
@@ -64,8 +65,8 @@ public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationT
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Testing whether a deactivated Message Processor from a capp is deployed successfully upon ESB server restart") public void testDeactivatedMPUponServerRestart()
-            throws Exception {
+            "wso2.esb" }, description = "Testing whether a deactivated Message Processor from a capp is deployed successfully upon ESB server restart")
+    public void testDeactivatedMPUponServerRestart() throws Exception {
 
         // Stopping the axis2 Server before sending the client request.
         axis2Server.stop();
@@ -111,7 +112,8 @@ public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationT
         return placeOrder;
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
         if (axis2Server.isStarted()) {
             axis2Server.stop();

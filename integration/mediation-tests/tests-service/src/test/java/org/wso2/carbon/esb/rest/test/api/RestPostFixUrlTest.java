@@ -20,7 +20,8 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -28,9 +29,8 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via REST with additional resource") public void testRESTURITemplateWithContextURL()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource")
+    public void testRESTURITemplateWithContextURL() throws Exception {
 
         /** To check whether the Context URL part "anotherParam" available.
          *  sending request from Client API with additional resource
@@ -44,9 +44,8 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via REST with additional resource") public void testRESTURITemplateWithAdditionalParam()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource")
+    public void testRESTURITemplateWithAdditionalParam() throws Exception {
 
         /** To check whether the Context URL part "anotherParam" available
          *  sending request from Client API with additional resource - "anotherParam"
@@ -60,7 +59,8 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

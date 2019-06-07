@@ -32,14 +32,14 @@ import static org.testng.Assert.assertNotNull;
 
 /*Test for enrich mediator which is adding  a child to message body*/
 public class EnrichIntegrationAddContentAsChildTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichAddContentAsChildTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Enrich mediator:Add as a child to message body") public void addAsChildToMessageBody()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Enrich mediator:Add as a child to message body")
+    public void addAsChildToMessageBody() throws Exception {
         String payload =
                 "<m:getQuote xmlns:m=\"http://services.samples\">" + "<m:request>" + "</m:request>" + "</m:getQuote>";
         OMElement payloadOM = AXIOMUtil.stringToOM(payload);
@@ -54,7 +54,8 @@ public class EnrichIntegrationAddContentAsChildTestCase extends ESBIntegrationTe
         assertEquals(symbolResponse, "IBM", "Symbol is not match");
     }
 
-    @AfterClass private void destroy() throws Exception {
+    @AfterClass
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -36,7 +36,8 @@ public class RouterMediatorMultipleRoutesTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server1;
     private SampleAxis2Server axis2Server2;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
@@ -48,9 +49,9 @@ public class RouterMediatorMultipleRoutesTestCase extends ESBIntegrationTest {
         verifyProxyServiceExistence("routerMultipleTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests message whether message is routed correctly") public void testRoutes()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests message whether message is routed correctly")
+    public void testRoutes() throws Exception {
 
         //start server one only. Requests to other servers will return null
         axis2Server1.start();
@@ -82,7 +83,8 @@ public class RouterMediatorMultipleRoutesTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
         }

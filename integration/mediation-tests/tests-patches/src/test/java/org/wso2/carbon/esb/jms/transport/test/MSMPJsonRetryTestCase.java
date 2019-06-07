@@ -47,7 +47,8 @@ public class MSMPJsonRetryTestCase extends ESBIntegrationTest {
 
     private TomcatServerManager tomcatServerManager;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
 
         // START THE ESB
         super.init();
@@ -55,9 +56,8 @@ public class MSMPJsonRetryTestCase extends ESBIntegrationTest {
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test JSON retry of message processor") public void testMessageProcessorJSONRetry()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test JSON retry of message processor")
+    public void testMessageProcessorJSONRetry() throws Exception {
 
         // SEND THE REQUEST
         String addUrl = getProxyServiceURLHttp("MSMPRetrytest");
@@ -87,7 +87,8 @@ public class MSMPJsonRetryTestCase extends ESBIntegrationTest {
         assertTrue(logFound, "Message process retry does not work for json");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         tomcatServerManager.stop();
         super.cleanup();
     }

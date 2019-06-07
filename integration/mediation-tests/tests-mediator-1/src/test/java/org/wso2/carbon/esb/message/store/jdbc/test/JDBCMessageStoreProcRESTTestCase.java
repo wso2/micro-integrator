@@ -64,7 +64,8 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest {
     private String DATASOURCE_NAME;
     private String JDBC_DRIVER;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
         DATASOURCE_NAME = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_NAME);
@@ -84,7 +85,8 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @BeforeMethod(alwaysRun = true) public void createDatabase() throws SQLException {
+    @BeforeMethod(alwaysRun = true)
+    public void createDatabase() throws SQLException {
         mySqlDatabaseManager.executeUpdate("DROP DATABASE IF EXISTS WSO2SampleDBForAutomation");
         mySqlDatabaseManager.executeUpdate("Create DATABASE WSO2SampleDBForAutomation");
         mySqlDatabaseManager.executeUpdate("USE WSO2SampleDBForAutomation");
@@ -95,9 +97,8 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "JDBC Message store support for RESTful services.") public void testJMSMessageStoreAndProcessor()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "JDBC Message store support for RESTful services.")
+    public void testJMSMessageStoreAndProcessor() throws Exception {
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jdbc/JDBCMessageStoreREST.xml");
         updateESBConfiguration(synapse);
 
@@ -122,7 +123,8 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             mySqlDatabaseManager.executeUpdate("DROP DATABASE WSO2SampleDBForAutomation");
         } finally {

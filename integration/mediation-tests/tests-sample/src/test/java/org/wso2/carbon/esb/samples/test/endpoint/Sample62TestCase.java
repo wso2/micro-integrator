@@ -43,7 +43,8 @@ public class Sample62TestCase extends ESBSampleIntegrationTest {
     private TCPMonListener listener2;
     private TCPMonListener listener3;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(62);
 
@@ -76,9 +77,10 @@ public class Sample62TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Routing a Message to a Dynamic List of Recipients and Aggregating Responses") public void testRoutingMessagesAndAggregatingResponses()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = {
+            "wso2.esb" }, description = "Routing a Message to a Dynamic List of Recipients and Aggregating Responses")
+    public void testRoutingMessagesAndAggregatingResponses() throws Exception {
 
         OMElement response = axis2Client.sendSimpleQuoteRequest("http://localhost:8480/", null, "WSO2");
         System.out.println(response.toString());
@@ -101,7 +103,8 @@ public class Sample62TestCase extends ESBSampleIntegrationTest {
         listener3.clear();
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
 
         if (axis2Server1.isStarted()) {

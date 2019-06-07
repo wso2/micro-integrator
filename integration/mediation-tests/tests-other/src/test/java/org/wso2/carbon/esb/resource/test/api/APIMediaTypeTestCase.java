@@ -39,16 +39,16 @@ public class APIMediaTypeTestCase extends ESBIntegrationTest {
     private final String API_NAME = "automationApi";
     private boolean isApiExist = false;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         restApiAdminClient = new RestApiAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     //since Registry persistence is no longer available
-    @Test(groups = {
-            "wso2.esb" }, description = "Test API media type - text/xml", enabled = false) public void apiMediaTypeTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test API media type - text/xml", enabled = false)
+    public void apiMediaTypeTest() throws Exception {
 
         OMElement api = AXIOMUtil.stringToOM(
                 "<api xmlns=\"http://ws.apache.org/ns/synapse\" " + "name=\"" + API_NAME + "\" context=\"/automation\">"
@@ -63,7 +63,8 @@ public class APIMediaTypeTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass public void destroy() throws Exception {
+    @AfterClass
+    public void destroy() throws Exception {
         if (isApiExist) {
             Assert.assertTrue(restApiAdminClient.deleteApi(API_NAME), "Api Deletion Failed");
         }

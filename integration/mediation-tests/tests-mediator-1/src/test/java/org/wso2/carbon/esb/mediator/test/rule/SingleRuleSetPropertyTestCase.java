@@ -33,14 +33,15 @@ import static org.testng.Assert.fail;
 
 public class SingleRuleSetPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config_single_rule/synapse.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "scenario with a single rule- Invoke IBM rule") public void testInvokeIBMRule()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "scenario with a single rule- Invoke IBM rule")
+    public void testInvokeIBMRule() throws AxisFault {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 
@@ -54,8 +55,8 @@ public class SingleRuleSetPropertyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "scenario with a single rule- Invoke an invalid rule ") public void testInvokeInvalidRule()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "scenario with a single rule- Invoke an invalid rule ")
+    public void testInvokeInvalidRule() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "SUN");
             fail("Request should throws AxisFault");
@@ -66,7 +67,8 @@ public class SingleRuleSetPropertyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

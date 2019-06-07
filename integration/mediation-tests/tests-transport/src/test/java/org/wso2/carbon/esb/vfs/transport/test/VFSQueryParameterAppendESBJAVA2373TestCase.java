@@ -36,7 +36,8 @@ import java.util.concurrent.TimeUnit;
 
 public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         File outfolder = new File(getClass().getResource(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -45,13 +46,15 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
         outfolder.mkdirs();
     }
 
-    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void restoreServerConfiguration() throws Exception {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Sending a file through VFS Transport : transport.vfs.Append added to FileURI, tests if file gets saved with correct file name") public void testVFSFileURI()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = {
+            "wso2.esb" }, description = "Sending a file through VFS Transport : transport.vfs.Append added to FileURI, tests if file gets saved with correct file name")
+    public void testVFSFileURI() throws Exception {
         //<header name="To" value="vfs:file:///home/ravi/SupportProjects/carbon/4.0.0/platform/trunk/trunk/products/esb/4.5.1/modules/integration/tests/target/test-classes/artifacts/ESB/synapseconfig/vfsTransport/out/vfs-ESBJAVA2373-file?transport.vfs.Append=true"/>
         //System.out.println("<header name=\"To\" value=\"vfs:file://" + getClass().getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator + "vfsTransport" + File.separator).getPath() + "out/vfs-ESBJAVA2373-file?transport.vfs.Append=true" + "\"/>");
         addProxyService(AXIOMUtil.stringToOM(
@@ -164,7 +167,8 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
 
     private Callable<Boolean> isFileSizeEqual(final long fileSize, final long appendedFileSize) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return fileSize == appendedFileSize;
             }
         };
@@ -172,7 +176,8 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
 
     private Callable<Boolean> isFileSizeLarge(final long fileSize, final long appendedFileSize) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return fileSize < appendedFileSize;
             }
         };

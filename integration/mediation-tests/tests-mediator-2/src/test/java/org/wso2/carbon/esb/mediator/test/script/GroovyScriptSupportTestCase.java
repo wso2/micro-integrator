@@ -34,15 +34,17 @@ import static org.testng.Assert.assertNotNull;
 public class GroovyScriptSupportTestCase extends ESBIntegrationTest {
     private JSONClient jsonclient;
 
-    @BeforeClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Script Mediator -Run a Groovy script with the mediator", enabled = false) public void testGroovyScriptMediation()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Script Mediator -Run a Groovy script with the mediator", enabled = false)
+    public void testGroovyScriptMediation() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("scriptMediatorGroovyBasicTestProxy"), null, "IBM");
 
@@ -55,9 +57,10 @@ public class GroovyScriptSupportTestCase extends ESBIntegrationTest {
         assertEquals(symbol, "IBM", "Fault: value 'symbol' mismatched");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Script Mediator -Run a Groovy script with setPayloadJson", enabled = false) public void testGroovySetPayloadJson()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb",
+            "localOnly" }, description = "Script Mediator -Run a Groovy script with setPayloadJson", enabled = false)
+    public void testGroovySetPayloadJson() throws Exception {
 
         String query = "{\"key\":\"value\"}";
         String addUrl = getProxyServiceURLHttps("scriptMediatorGroovySetJsonPayloadTestProxy");
@@ -68,8 +71,9 @@ public class GroovyScriptSupportTestCase extends ESBIntegrationTest {
         assertEquals(actualResult, expectedResult, "Fault: value 'symbol' mismatched");
     }
 
-    @AfterClass(alwaysRun = true) @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

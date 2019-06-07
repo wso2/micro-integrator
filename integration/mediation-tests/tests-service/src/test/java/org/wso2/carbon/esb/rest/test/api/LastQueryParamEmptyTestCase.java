@@ -43,7 +43,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -57,7 +58,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern1WithParameters() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern1WithParameters() throws Exception {
         HttpResponse response = HttpRequestUtil.sendGetRequest(
                 getApiInvocationURL("last-query-param-empty/pattern1?latitude=10&longitude=20&floor=30"), null);
         Assert.assertNotNull(response);
@@ -75,7 +77,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern1WithLastParameterEmpty() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern1WithLastParameterEmpty() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("last-query-param-empty/pattern1?latitude=10&longitude=20&floor="),
                         null);
@@ -94,7 +97,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern1WithFirstParameterEmpty() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern1WithFirstParameterEmpty() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("last-query-param-empty/pattern1?latitude=&longitude=20&floor=30"),
                         null);
@@ -113,7 +117,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern1WithSecondtParameterEmpty() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern1WithSecondtParameterEmpty() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("last-query-param-empty/pattern1?latitude=10&longitude=&floor=30"),
                         null);
@@ -132,7 +137,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern1WithAllParametersEmpty() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern1WithAllParametersEmpty() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("last-query-param-empty/pattern1?latitude=&longitude=&floor="),
                         null);
@@ -152,8 +158,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern1WithLastParameterEmptyAndMissingEqualSign()
-            throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern1WithLastParameterEmptyAndMissingEqualSign() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("last-query-param-empty/pattern1?latitude=10&longitude=20&floor"),
                         null);
@@ -170,7 +176,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern2WithLastParameterEmpty() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern2WithLastParameterEmpty() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("last-query-param-empty/pattern2?latitude=10&longitude=20&floor="),
                         null);
@@ -190,8 +197,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern2WithLastParameterEmptyAndMissingEqualSign()
-            throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern2WithLastParameterEmptyAndMissingEqualSign() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("last-query-param-empty/pattern2?latitude=10&longitude=20&floor"),
                         null);
@@ -211,7 +218,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern3WithLastParameterEmpty() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern3WithLastParameterEmpty() throws Exception {
         HttpResponse response = HttpRequestUtil.sendGetRequest(
                 getApiInvocationURL("last-query-param-empty/pattern3/sample?latitude=10&longitude=20&floor="), null);
         Assert.assertNotNull(response);
@@ -230,8 +238,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void testResourcePattern3WithLastParameterEmptyAndMissingEqualSign()
-            throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testResourcePattern3WithLastParameterEmptyAndMissingEqualSign() throws Exception {
         HttpResponse response = HttpRequestUtil.sendGetRequest(
                 getApiInvocationURL("last-query-param-empty/pattern3/sample?latitude=10&longitude=20&floor"), null);
         Assert.assertNotNull(response);
@@ -248,7 +256,8 @@ public class LastQueryParamEmptyTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

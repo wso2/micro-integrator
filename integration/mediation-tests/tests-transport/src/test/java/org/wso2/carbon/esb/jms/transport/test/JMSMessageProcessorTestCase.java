@@ -37,7 +37,8 @@ public class JMSMessageProcessorTestCase extends ESBIntegrationTest {
 
     private int NUM_OF_MESSAGES = 5;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils
                 .loadResource("/artifacts/ESB/jms/transport/jms_message_store_and_processor_service.xml");
@@ -52,9 +53,8 @@ public class JMSMessageProcessorTestCase extends ESBIntegrationTest {
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test proxy service with jms transport") public void testJMSMessageStoreAndProcessor()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
+    public void testJMSMessageStoreAndProcessor() throws Exception {
         JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
 
@@ -84,13 +84,15 @@ public class JMSMessageProcessorTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return consumer.getMessages().size() == NUM_OF_MESSAGES;
             }
         };

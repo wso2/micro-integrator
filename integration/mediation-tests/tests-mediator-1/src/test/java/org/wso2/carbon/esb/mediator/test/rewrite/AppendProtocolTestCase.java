@@ -31,14 +31,15 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 public class AppendProtocolTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteAppendProtocolTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Append text to protocol", dataProvider = "addressingUrl") public void appendProtocol(
-            String addUrl) throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Append text to protocol", dataProvider = "addressingUrl")
+    public void appendProtocol(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -48,8 +49,9 @@ public class AppendProtocolTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Conditional URL Rewriting") public void invalidUrl() throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Conditional URL Rewriting")
+    public void invalidUrl() throws AxisFault {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("urlRewriteAppendProtocolTestProxy"),
                     "http://localhost:9010/services/SimpleStockQuoteService", "IBM");
@@ -60,11 +62,13 @@ public class AppendProtocolTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "htt://localhost:9010/services/SimpleStockQuoteService" },
                 { "http://localhost:9000/services/SimpleStockQuoteService" },
                 { "https://localhost:9002/services/SimpleStockQuoteService" },

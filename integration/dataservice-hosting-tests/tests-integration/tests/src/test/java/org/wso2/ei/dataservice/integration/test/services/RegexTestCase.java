@@ -46,7 +46,8 @@ public class RegexTestCase extends DSSIntegrationTest {
             .createOMNamespace("http://ws.wso2.org/dataservice/samples/rdbms_sample", "ns1");
     private final String serviceName = "RegexTest";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
@@ -57,13 +58,14 @@ public class RegexTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with sequence operators") public void performRegexTestWithSequenceOperators()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with sequence operators")
+    public void performRegexTestWithSequenceOperators() throws AxisFault, XPathExpressionException {
         OMElement payload = factory.createOMElement("select_regex1", omNs);
         OMElement result = new AxisServiceClient()
                 .sendReceive(payload, getServiceUrlHttp(serviceName), "select_regex1");
@@ -72,8 +74,8 @@ public class RegexTestCase extends DSSIntegrationTest {
         Assert.assertTrue(id, "Regex sequence operators testing is failed.");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with bracket expressions") public void performRegexTestWithBracketExpressions()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with bracket expressions")
+    public void performRegexTestWithBracketExpressions() throws AxisFault, XPathExpressionException {
         OMElement payload = factory.createOMElement("select_regex2", omNs);
         OMElement result = new AxisServiceClient()
                 .sendReceive(payload, getServiceUrlHttp(serviceName), "select_regex2");
@@ -81,8 +83,8 @@ public class RegexTestCase extends DSSIntegrationTest {
         Assert.assertEquals(result.getLocalName(), "Entries");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with character classes") public void performRegexTestWithCharacterClasses()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with character classes")
+    public void performRegexTestWithCharacterClasses() throws AxisFault, XPathExpressionException {
         OMElement payload = factory.createOMElement("select_regex3", omNs);
         OMElement result = new AxisServiceClient()
                 .sendReceive(payload, getServiceUrlHttp(serviceName), "select_regex3");
@@ -92,8 +94,8 @@ public class RegexTestCase extends DSSIntegrationTest {
         Assert.assertTrue(id, "Regex character class testing is failed.");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with nameparams and bracket expressions") public void performRegexTestWithBracketExpressionsAndNameParams()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with nameparams and bracket expressions")
+    public void performRegexTestWithBracketExpressionsAndNameParams() throws AxisFault, XPathExpressionException {
         OMElement payload = factory.createOMElement("select_regex5", omNs);
         OMElement queryElement = factory.createOMElement("name", omNs);
         queryElement.setText("name");
@@ -104,8 +106,8 @@ public class RegexTestCase extends DSSIntegrationTest {
         Assert.assertEquals(result.getLocalName(), "Entries");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with nameparams and sequence operators") public void performRegexTestWithSequenceOperatorsAndNameParams()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Invoking select operation to verify regex support with nameparams and sequence operators")
+    public void performRegexTestWithSequenceOperatorsAndNameParams() throws AxisFault, XPathExpressionException {
         OMElement payload = factory.createOMElement("select_regex4", omNs);
         OMElement queryElement = factory.createOMElement("name", omNs);
         queryElement.setText("name");
@@ -118,8 +120,8 @@ public class RegexTestCase extends DSSIntegrationTest {
         Assert.assertTrue(name, "Regex bracket expressions testing with nameparams is failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking insert operation to verify regex support") public void performInsertQueryWithQMarks()
-            throws XPathExpressionException, AxisFault {
+    @Test(groups = "wso2.dss", description = "Invoking insert operation to verify regex support")
+    public void performInsertQueryWithQMarks() throws XPathExpressionException, AxisFault {
         OMElement payload = factory.createOMElement("insert", omNs);
         OMElement result = new AxisServiceClient().sendReceive(payload, getServiceUrlHttp(serviceName), "insert");
         boolean name = "SUCCESSFUL".equals(result.getText());

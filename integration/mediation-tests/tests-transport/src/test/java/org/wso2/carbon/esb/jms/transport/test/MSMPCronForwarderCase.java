@@ -52,7 +52,8 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
     private LoggingAdminClient logAdmin;
     private final int NUMBER_OF_MESSAGES = 4;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         // START THE ESB
         super.init();
         // START THE SERVER
@@ -65,9 +66,8 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         logAdmin = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Cron Forwarding of message processor") public void testMessageProcessorCronForwader()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor")
+    public void testMessageProcessorCronForwader() throws Exception {
         logAdmin.updateLoggerData("org.apache.synapse", LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
 
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/MSMP_CRON_WITH_FORWARDER.xml");
@@ -96,7 +96,8 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isLogWritten());
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         //undo logger change
         logAdmin.updateLoggerData("org.apache.synapse", LoggingAdminClient.LogLevel.INFO.name(), true, false);
         if (tomcatServerManager != null) {
@@ -107,7 +108,8 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isServerStarted() {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
 
                 return tomcatServerManager.isRunning();
             }
@@ -116,7 +118,8 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isLogWritten() {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
                 LogEvent[] logEvents = logViewerClient.getAllSystemLogs();
 

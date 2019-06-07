@@ -34,13 +34,14 @@ import static org.testng.Assert.assertNotNull;
 public class EnrichIntegrationAddPropertyAsSiblingTest extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         verifyProxyServiceExistence("enrichAddPropertyAsSiblingTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Adding a defined property as a sibling of message") public void testAddPropertyAsSibling()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Adding a defined property as a sibling of message")
+    public void testAddPropertyAsSibling() throws AxisFault, XMLStreamException {
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichAddPropertyAsSiblingTestProxy"), null,
                         "IBM");
@@ -52,7 +53,8 @@ public class EnrichIntegrationAddPropertyAsSiblingTest extends ESBIntegrationTes
                 .getText(), "test", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

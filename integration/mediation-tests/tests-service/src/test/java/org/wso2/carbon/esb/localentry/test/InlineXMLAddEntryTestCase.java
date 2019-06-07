@@ -35,14 +35,15 @@ public class InlineXMLAddEntryTestCase extends ESBIntegrationTest {
 
     private LocalEntriesAdminClient localEntryAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Test adding an inline XML Local Entry") public void testInlineXMLLocalEntryAddition()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test adding an inline XML Local Entry")
+    public void testInlineXMLLocalEntryAddition() throws Exception {
 
         String entryNames = localEntryAdminServiceClient.getEntryNamesString();
 
@@ -72,7 +73,8 @@ public class InlineXMLAddEntryTestCase extends ESBIntegrationTest {
         assertTrue(entryNames.contains(ENTRY_NAME));
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         localEntryAdminServiceClient = null;
         super.cleanup();
     }

@@ -43,7 +43,8 @@ public class RabbitMQReceiverConnectionRecoveryFailureTestCase extends ESBIntegr
     private LogViewerClient logViewer;
     private ServerConfigurationManager configurationManagerAxis2;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
@@ -62,9 +63,8 @@ public class RabbitMQReceiverConnectionRecoveryFailureTestCase extends ESBIntegr
         loadESBConfigurationFromClasspath("/artifacts/ESB/rabbitmq/transport/rabbitmq_consumer_proxy.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with connection recovery - fail case") public void testRabbitMQConsumerRecoveryFailure()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with connection recovery - fail case")
+    public void testRabbitMQConsumerRecoveryFailure() throws Exception {
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         rabbitMQServer.start();
@@ -130,7 +130,8 @@ public class RabbitMQReceiverConnectionRecoveryFailureTestCase extends ESBIntegr
         }
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
         logViewer = null;
         rabbitMQServer.stop();

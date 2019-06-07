@@ -47,7 +47,8 @@ public class InvalidClosingTagUnDeployedServiceTestCase extends DSSIntegrationTe
     private DataServiceFileUploaderClient dataServiceAdminClient;
     private DataHandler dhArtifact;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         resourceFileLocation = getResourceLocation();
         String serviceFilePath =
@@ -67,15 +68,15 @@ public class InvalidClosingTagUnDeployedServiceTestCase extends DSSIntegrationTe
 
     }
 
-    @Test(groups = "wso2.dss", description = "deploy invalid dbs", expectedExceptions = AxisFault.class) public void testDeployService()
-            throws ExceptionException, RemoteException {
+    @Test(groups = "wso2.dss", description = "deploy invalid dbs", expectedExceptions = AxisFault.class)
+    public void testDeployService() throws ExceptionException, RemoteException {
         Assert.assertTrue(dataServiceAdminClient.uploadDataServiceFile(serviceFile, dhArtifact),
                 "Service Deployment Failed while uploading service file");
 
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", dependsOnMethods = "testDeployService") public void isServiceDeployed()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", dependsOnMethods = "testDeployService")
+    public void isServiceDeployed() throws Exception {
         assertFalse(isServiceDeployed(serviceName));
         log.info(serviceName + " is faulty");
     }

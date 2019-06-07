@@ -29,13 +29,15 @@ public class FuncCallWithoutParamsTest extends ESBIntegrationTest {
 
     private String proxyServiceName = "StockQuoteProxy";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config9/synapse.xml");
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sample 750 Call Template Test") public void test() throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Sample 750 Call Template Test")
+    public void test() throws AxisFault {
 
         OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "IBM");
         Assert.assertNotNull(response, "Response message is null");
@@ -45,7 +47,8 @@ public class FuncCallWithoutParamsTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void closeTestArtifacts() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void closeTestArtifacts() throws Exception {
         super.cleanup();
     }
 

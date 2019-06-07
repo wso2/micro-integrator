@@ -43,13 +43,15 @@ public class DynamicAddressEpTestCase extends ESBIntegrationTest {
             + "         <retryDelay>0</retryDelay>\n" + "      </markForSuspension>\n" + "   </address>\n"
             + "</endpoint>";
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
     }
 
-    @Test(groups = { "wso2.esb" }) public void testDynamicAddressEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testDynamicAddressEndpoint() throws Exception {
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_1);
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_2);
 
@@ -57,7 +59,8 @@ public class DynamicAddressEpTestCase extends ESBIntegrationTest {
         dynamicEndpointDeletionScenario(ENDPOINT_PATH_2);
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }

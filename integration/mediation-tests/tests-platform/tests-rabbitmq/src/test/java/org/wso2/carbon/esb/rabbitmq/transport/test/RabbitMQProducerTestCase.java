@@ -34,15 +34,16 @@ import java.util.List;
 
 public class RabbitMQProducerTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "rabbitmq" + File.separator
                         + "transport" + File.separator + "rabbitmq_endpoint_proxy.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer ") public void testRabbitMQProducer()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer ")
+    public void testRabbitMQProducer() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
         RabbitMQConsumerClient consumer = new RabbitMQConsumerClient(RabbitMQServerInstance.getHost());
 
@@ -79,9 +80,8 @@ public class RabbitMQProducerTestCase extends ESBIntegrationTest {
         consumer.disconnect();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with large messages ~10KB ") public void testRabbitMQProducerLargeMessages()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with large messages ~10KB ")
+    public void testRabbitMQProducerLargeMessages() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
         RabbitMQConsumerClient consumer = new RabbitMQConsumerClient(RabbitMQServerInstance.getHost());
 
@@ -130,7 +130,8 @@ public class RabbitMQProducerTestCase extends ESBIntegrationTest {
         return sb.toString();
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
     }
 }

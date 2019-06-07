@@ -29,14 +29,15 @@ import static org.testng.Assert.assertTrue;
 
 //todo - https://wso2.org/jira/browse/ESBJAVA-1002
 public class RemoveReWriteHostNameTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteRemoveHostTestProxy");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Remove and rewrite host name", dataProvider = "addressingUrl", enabled = false) public void removeAndReWriteHostName(
-            String addUrl) throws AxisFault {
+            "wso2.esb" }, description = "Remove and rewrite host name", dataProvider = "addressingUrl", enabled = false)
+    public void removeAndReWriteHostName(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -45,11 +46,13 @@ public class RemoveReWriteHostNameTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "http://10.100.10.9:9000/services/SimpleStockQuoteService" },
                 { "http://test.com:9000/services/SimpleStockQuoteService" }, };
 

@@ -49,7 +49,8 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
     private String DB_USER;
     private String DB_PASSWORD;
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
         DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
@@ -68,7 +69,8 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
         super.init();
     }
 
-    @Test public void testWithEmptyMessage() throws Exception {
+    @Test
+    public void testWithEmptyMessage() throws Exception {
         logViewer.clearLogs();
         String location = getESBResourceLocation() + File.separator + "messageProcessorConfig" + File.separator
                 + "EmptyMsgBodyMessageStoreTest.xml";
@@ -85,7 +87,8 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
                 "Message with empty body not processed!");
     }
 
-    @AfterClass public void cleanup() throws Exception {
+    @AfterClass
+    public void cleanup() throws Exception {
         h2DatabaseManager.disconnect();
         h2DatabaseManager = null;
         super.cleanup();

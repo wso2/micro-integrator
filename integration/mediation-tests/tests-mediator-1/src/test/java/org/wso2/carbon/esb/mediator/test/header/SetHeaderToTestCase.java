@@ -28,14 +28,14 @@ import static org.testng.Assert.assertTrue;
 
 public class SetHeaderToTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("setToHeaderTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sample 6: set To in headers of incoming messages") public void setHeaderTo()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Sample 6: set To in headers of incoming messages")
+    public void setHeaderTo() throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("setToHeaderTestProxy"), null, "IBM");
@@ -43,7 +43,8 @@ public class SetHeaderToTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

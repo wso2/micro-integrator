@@ -31,13 +31,15 @@ public class InjectToProxyTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/scheduledTask/InjectToProxyTestConfig.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = { "wso2.esb" }) public void injectToProxyTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void injectToProxyTest() throws Exception {
         OMElement task = AXIOMUtil.stringToOM(
                 "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n"
                         + "           name=\"SampleInjectToProxyTask\" class=\"org.apache.synapse.startup.tasks.MessageInjector\"\n"
@@ -56,7 +58,8 @@ public class InjectToProxyTestCase extends ESBIntegrationTest {
         assertTrue(invokedLogFound);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

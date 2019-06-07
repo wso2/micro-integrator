@@ -35,7 +35,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class DynamicSequenceNullPointerExceptionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         String filePath = "/artifacts/ESB/mediatorconfig/sequence/synapse_proxy.xml";
         loadESBConfigurationFromClasspath(filePath);
@@ -46,7 +47,8 @@ public class DynamicSequenceNullPointerExceptionTestCase extends ESBIntegrationT
          correctsequence will direct the request to the correct end point.
     */
     @Test(groups = "wso2.esb", description = "When we have a dynamic sequence defined in a " + "proxy "
-            + "service; ESB throws null pointer exception") public void testSequenceMediator() throws AxisFault {
+            + "service; ESB throws null pointer exception")
+    public void testSequenceMediator() throws AxisFault {
 
         OMElement response;
         axis2Client.addHttpHeader("Sequence", "correctsequence");
@@ -62,7 +64,8 @@ public class DynamicSequenceNullPointerExceptionTestCase extends ESBIntegrationT
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

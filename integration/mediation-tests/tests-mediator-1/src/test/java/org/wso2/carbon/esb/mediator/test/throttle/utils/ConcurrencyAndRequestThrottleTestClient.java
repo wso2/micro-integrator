@@ -37,7 +37,8 @@ public class ConcurrencyAndRequestThrottleTestClient implements Runnable {
         axis2Client = new StockQuoteClient();
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
 
         try {
             OMElement response = axis2Client.sendSimpleStockQuoteRequest(proxyServiceURL, null, "WSO2");

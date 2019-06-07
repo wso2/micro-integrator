@@ -31,7 +31,8 @@ public class FilterMediatorTest extends ESBIntegrationTest {
 
     private String toUrl;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         toUrl = getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE);
@@ -43,8 +44,9 @@ public class FilterMediatorTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }) public void filterMediatorWithSourceAndRegexTest() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" })
+    public void filterMediatorWithSourceAndRegexTest() throws Exception {
 
         loadSampleESBConfiguration(1);
 
@@ -62,7 +64,8 @@ public class FilterMediatorTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void filterMediatorWithSourceAndRegexNSTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void filterMediatorWithSourceAndRegexNSTest() throws Exception {
         verifyProxyServiceExistence("filterMediatorWithSourceAndRegexNSTestProxy");
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("filterMediatorWithSourceAndRegexNSTestProxy"),
@@ -77,7 +80,8 @@ public class FilterMediatorTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void filterMediatorWithXpathTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void filterMediatorWithXpathTest() throws Exception {
         verifyProxyServiceExistence("filterMediatorWithXpathTestProxy");
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("filterMediatorWithXpathTestProxy"), null, "IBM");
@@ -91,7 +95,8 @@ public class FilterMediatorTest extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = { "wso2.esb" }) public void filterMediatorXpathWithORTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void filterMediatorXpathWithORTest() throws Exception {
         verifyProxyServiceExistence("filterMediatorXpathWithORTestProxy");
         OMElement response11 = axis2Client
                 .sendSimpleStockQuoteSoap11(getProxyServiceURLHttp("filterMediatorXpathWithORTestProxy"), null, "IBM");
@@ -106,7 +111,8 @@ public class FilterMediatorTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         toUrl = null;
         super.cleanup();
 

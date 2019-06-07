@@ -43,7 +43,8 @@ public class ConcurrencyThrottlingTestCase extends ESBIntegrationTest {
     private int grantedRequests;
     private int deniedRequests;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         verifyProxyServiceExistence("throttlingMxConcurrentAccessTestProxy");
@@ -57,7 +58,8 @@ public class ConcurrencyThrottlingTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Concurrency throttling - limit the number of concurrent requests", timeOut =
-            1000 * 60 * 2) public void testPolicy() throws InterruptedException {
+            1000 * 60 * 2)
+    public void testPolicy() throws InterruptedException {
         startClients();
         while (clientsDone.getCount() < CONCURRENT_CLIENTS) {
             Thread.sleep(1000);
@@ -77,7 +79,8 @@ public class ConcurrencyThrottlingTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         concurrencyThrottleTestClients = null;
         clients = null;
         clientsDone = null;

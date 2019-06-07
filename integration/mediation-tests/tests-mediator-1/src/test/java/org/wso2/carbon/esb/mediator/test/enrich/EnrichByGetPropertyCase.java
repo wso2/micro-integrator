@@ -37,7 +37,8 @@ import static org.testng.Assert.assertTrue;
 public class EnrichByGetPropertyCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -47,8 +48,8 @@ public class EnrichByGetPropertyCase extends ESBIntegrationTest {
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2248*/
-    @Test(groups = { "wso2.esb" }, description = "Enrich by get property") public void enrichGetPropertyTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Enrich by get property")
+    public void enrichGetPropertyTest() throws Exception {
         OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("enrichByGetPropertyTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertNotNull(response, "Response message is null");
@@ -69,7 +70,8 @@ public class EnrichByGetPropertyCase extends ESBIntegrationTest {
                                 + "/mediatorconfig/xslt/transform_back.xslt")));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
         cleanup();
     }

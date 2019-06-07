@@ -38,12 +38,13 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESBJAVA5216CallMediatorPerAPILogTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test PerAPI log print after call mediator") public void perAPILogPrintTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test PerAPI log print after call mediator")
+    public void perAPILogPrintTest() throws Exception {
         String logFileLocation =
                 CarbonBaseUtils.getCarbonHome() + File.separator + "repository" + File.separator + "logs"
                         + File.separator + "api" + File.separator + "test" + File.separator + "LogPrint.log";
@@ -56,6 +57,7 @@ public class ESBJAVA5216CallMediatorPerAPILogTest extends ESBIntegrationTest {
         assertTrue(fileContent.contains("After"));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
     }
 }

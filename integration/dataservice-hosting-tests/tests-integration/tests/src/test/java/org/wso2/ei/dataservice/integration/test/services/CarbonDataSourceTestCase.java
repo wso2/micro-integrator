@@ -61,7 +61,8 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
     private SqlDataSourceUtil sqlDataSource;
     private SampleDataServiceClient client;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         carbonDataSourceName = createDataSource();
@@ -71,27 +72,30 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         client = new SampleDataServiceClient(getServiceUrlHttp(serviceName));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void selectOperation() throws AxisFault {
+    @Test(groups = { "wso2.dss" })
+    public void selectOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.getCustomerInBoston();
         }
         log.info("Select Operation Success");
     }
 
-    @Test(groups = { "wso2.dss" }) public void insertOperation() throws AxisFault {
+    @Test(groups = { "wso2.dss" })
+    public void insertOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.addEmployee(String.valueOf(i));
         }
         log.info("Insert Operation Success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" }) public void selectByNumber()
-            throws AxisFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" })
+    public void selectByNumber() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             OMElement result = client.getEmployeeById(String.valueOf(i));
             Assert.assertTrue(result.toString().contains("<first-name>AAA</first-name>"), "Expected Result Mismatched");
@@ -99,8 +103,8 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         log.info("Select Operation with parameter Success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" }) public void updateOperation()
-            throws AxisFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" })
+    public void updateOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.increaseEmployeeSalary(String.valueOf(i), "10000");
 
@@ -112,8 +116,8 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         log.info("Update Operation success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "updateOperation" }) public void deleteOperation()
-            throws AxisFault {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "updateOperation" })
+    public void deleteOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             client.deleteEmployeeById(String.valueOf(i));
             verifyDeletion(String.valueOf(i));
@@ -121,8 +125,8 @@ public class CarbonDataSourceTestCase extends DSSIntegrationTest {
         log.info("Delete operation success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectOperation" }) public void concurrencyTest()
-            throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "selectOperation" })
+    public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         final OMFactory fac = OMAbstractFactory.getOMFactory();
         final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/rdbms_sample", "ns1");
         ConcurrencyTest concurrencyTest = new ConcurrencyTest(5, 5);

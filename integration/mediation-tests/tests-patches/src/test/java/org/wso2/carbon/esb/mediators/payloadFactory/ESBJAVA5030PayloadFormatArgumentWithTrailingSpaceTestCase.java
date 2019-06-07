@@ -41,16 +41,19 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESBJAVA5030PayloadFormatArgumentWithTrailingSpaceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("trailingSpaceAPI");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "invoke service - Trailing space trim check") public void testPayloadFactoryArgsWithTrailingSpaces()
+    @Test(groups = "wso2.esb", description = "invoke service - Trailing space trim check")
+    public void testPayloadFactoryArgsWithTrailingSpaces()
             throws AxisFault, MalformedURLException, AutomationFrameworkException {
 
         //json request payload.

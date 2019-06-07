@@ -41,13 +41,15 @@ public class DynamicFailOverEpTestCase extends ESBIntegrationTest {
                     + "         <address uri=\"http://webservices.amazon.com/AWSECommerceService/UK/AWSECommerceService.wsdl\"/>\n"
                     + "      </endpoint>\n" + "   </failover>\n" + "</endpoint>";
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         cleanupEndpoints();
     }
 
-    @Test(groups = { "wso2.esb" }) public void testDynamicFailOverEndpoint() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testDynamicFailOverEndpoint() throws Exception {
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_1);
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_2);
 
@@ -55,7 +57,8 @@ public class DynamicFailOverEpTestCase extends ESBIntegrationTest {
         dynamicEndpointDeletionScenario(ENDPOINT_PATH_2);
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         endPointAdminClient = null;
         super.cleanup();
     }

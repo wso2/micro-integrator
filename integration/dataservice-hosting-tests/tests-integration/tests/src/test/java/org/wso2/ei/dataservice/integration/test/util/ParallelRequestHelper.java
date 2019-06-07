@@ -65,7 +65,8 @@ public class ParallelRequestHelper extends Thread {
         }
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         try {
             sender.sendRobust(payload);
             LockHolder.getInstance().updateRequests();

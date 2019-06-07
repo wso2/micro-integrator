@@ -40,7 +40,8 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewer;
     private RabbitMQProducerClient sender;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         //The inbound endpoint cannot be pre-deployed because it will cause unnecessary message polling.
         loadESBConfigurationFromClasspath(
@@ -55,9 +56,8 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
      *
      * @throws Exception if an error occurs while accessing the logViewer client or while publishing messages.
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as a RabbitMQ inbound endpoint ") public void testRabbitMQInboundEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ inbound endpoint ")
+    public void testRabbitMQInboundEndpoint() throws Exception {
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange", "simple_inbound_endpoint_test");
 
         logViewer.clearLogs();
@@ -95,7 +95,8 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
      *                   endpoint.
      */
     @Test(groups = { "wso2.esb" }, description = "Test ESB RabbitMQ inbound endpoint deployment with incorrect server "
-            + "port") public void testRabbitMQInboundEndpointDeploymentWithInvalidServerConfigs() throws Exception {
+            + "port")
+    public void testRabbitMQInboundEndpointDeploymentWithInvalidServerConfigs() throws Exception {
         logViewer.clearLogs();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "inbound" + File.separator
@@ -121,7 +122,8 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
         Assert.assertEquals(retryCount, 3, "The connection retry count is incorrect");
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
         sender.disconnect();
         sender = null;

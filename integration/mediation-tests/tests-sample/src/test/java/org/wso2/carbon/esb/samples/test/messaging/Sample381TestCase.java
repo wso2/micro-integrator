@@ -32,7 +32,8 @@ import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 
 public class Sample381TestCase extends ESBSampleIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void startJMSBrokerAndConfigureESB() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void startJMSBrokerAndConfigureESB() throws Exception {
 
         super.init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
@@ -40,14 +41,15 @@ public class Sample381TestCase extends ESBSampleIntegrationTest {
         loadSampleESBConfiguration(381);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         //reverting the changes done to esb sever
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test JMS broker with topic") public void JMSBrokerTopicTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test JMS broker with topic")
+    public void JMSBrokerTopicTest() throws Exception {
         int numberOfMsgToExpect = 5;
 
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());

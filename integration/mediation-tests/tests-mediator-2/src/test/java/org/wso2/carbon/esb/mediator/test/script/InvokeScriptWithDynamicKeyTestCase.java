@@ -36,14 +36,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class InvokeScriptWithDynamicKeyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
 
     }
 
-    @Test(groups = "wso2.esb", description = "Invoke a script with 'Dynamic' key type.") public void testInvokeAScriptWithDynamicKey()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoke a script with 'Dynamic' key type.")
+    public void testInvokeAScriptWithDynamicKey() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorInvokeXSLTWithDynamicKey"), null, "WSO2");
@@ -61,7 +62,8 @@ public class InvokeScriptWithDynamicKeyTestCase extends ESBIntegrationTest {
                 "Fault response null localpart");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

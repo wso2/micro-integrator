@@ -48,8 +48,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
     private boolean isCarFile1Uploaded = false;
     private boolean isCarFile2Uploaded = false;
 
-    @BeforeClass(alwaysRun = true, description = "Test Car with Mediator deployment") protected void uploadCar1Test()
-            throws Exception {
+    @BeforeClass(alwaysRun = true, description = "Test Car with Mediator deployment")
+    protected void uploadCar1Test() throws Exception {
         super.init();
         carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
@@ -62,9 +62,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
         TimeUnit.SECONDS.sleep(5);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Car with Mediator deployment and invocation") public void capp1DeploymentAndServiceInvocation()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Car with Mediator deployment and invocation")
+    public void capp1DeploymentAndServiceInvocation() throws Exception {
 
         Assert.assertTrue(
                 esbUtils.isProxyDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(), proxyName),
@@ -82,7 +81,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test Car with Mediator un-deployment", dependsOnMethods = {
-            "capp1DeploymentAndServiceInvocation" }) public void capp1UnDeploymentTest() throws Exception {
+            "capp1DeploymentAndServiceInvocation" })
+    public void capp1UnDeploymentTest() throws Exception {
         applicationAdminClient.deleteApplication(car1Name);
         isCarFile1Uploaded = false;
         Assert.assertTrue(isCarFileUnDeployed(car1Name), "Car file undeployment failed");
@@ -94,7 +94,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test Re deploy car file", dependsOnMethods = {
-            "capp1UnDeploymentTest" }) protected void uploadCar2Test() throws Exception {
+            "capp1UnDeploymentTest" })
+    protected void uploadCar2Test() throws Exception {
         super.init();
         carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
@@ -109,7 +110,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test Car with Mediator hot deployment", dependsOnMethods = {
-            "uploadCar2Test" }) public void capp2DeploymentAndServiceInvocation() throws Exception {
+            "uploadCar2Test" })
+    public void capp2DeploymentAndServiceInvocation() throws Exception {
 
         Assert.assertTrue(
                 esbUtils.isProxyDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(), proxyName),
@@ -127,7 +129,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test Car with Mediator un-deployment", dependsOnMethods = {
-            "capp2DeploymentAndServiceInvocation" }) public void capp2UnDeploymentTest() throws Exception {
+            "capp2DeploymentAndServiceInvocation" })
+    public void capp2UnDeploymentTest() throws Exception {
         applicationAdminClient.deleteApplication(car2Name);
         isCarFile2Uploaded = false;
         Assert.assertTrue(isCarFileUnDeployed(car2Name), "Car file undeployment failed");
@@ -138,7 +141,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupArtifactsIfExist() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupArtifactsIfExist() throws Exception {
         if (isCarFile1Uploaded) {
             applicationAdminClient.deleteApplication(car1Name);
         }

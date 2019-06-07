@@ -52,7 +52,8 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
     private String sessionID = null;
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         serviceEndPoint = getServiceUrlHttp(serviceName);
         List<File> sqlFileLis = new ArrayList<>();
@@ -64,9 +65,8 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
                         + File.separator + "BoxcarringTest.dbs", sqlFileLis));
     }
 
-    @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testBoxcarringRollBackOperation") public void testBoxcarringOperation()
-            throws IOException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testBoxcarringRollBackOperation")
+    public void testBoxcarringOperation() throws IOException {
         beginBoxcarring();
         String response = selectOperation();
         Assert.assertTrue(!response.contains("Madhawa"));
@@ -77,7 +77,8 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
         log.info("Begin Boxcarring Operation verified");
     }
 
-    @Test(groups = { "wso2.dss" }) public void testBoxcarringRollBackOperation() throws IOException {
+    @Test(groups = { "wso2.dss" })
+    public void testBoxcarringRollBackOperation() throws IOException {
         beginBoxcarring();
         String response = selectOperation();
         Assert.assertTrue(!response.contains("Madhawa"));
@@ -208,7 +209,8 @@ public class DS937BoxcarringTestCase extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void comQuoServiceDelete() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void comQuoServiceDelete() throws Exception {
         deleteService("BoxcarringTest");
         log.info("CommodityQuote service deleted");
     }

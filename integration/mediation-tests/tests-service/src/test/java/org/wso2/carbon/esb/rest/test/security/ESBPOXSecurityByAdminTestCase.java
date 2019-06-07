@@ -22,7 +22,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.http.client.HttpsResponse;
 import org.wso2.carbon.automation.test.utils.http.client.HttpsURLConnectionClient;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
@@ -47,7 +46,8 @@ public class ESBPOXSecurityByAdminTestCase extends ESBIntegrationTest {
     private static final String studentName = "automationStudent";
     private SecurityAdminServiceClient securityAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         updateESBConfiguration(RestEndpointSetter.setEndpoint(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -55,7 +55,8 @@ public class ESBPOXSecurityByAdminTestCase extends ESBIntegrationTest {
         applySecurity("1", "StudentServiceProxy", getUserRole()[0]);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "POST request by super admin") public void testAddNewStudent()
+    @Test(groups = { "wso2.esb" }, description = "POST request by super admin")
+    public void testAddNewStudent()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -85,8 +86,8 @@ public class ESBPOXSecurityByAdminTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "PUT request by super admin", dependsOnMethods = "testAddNewStudent") public void testUpdateStudent()
+    @Test(groups = { "wso2.esb" }, description = "PUT request by super admin", dependsOnMethods = "testAddNewStudent")
+    public void testUpdateStudent()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -116,7 +117,8 @@ public class ESBPOXSecurityByAdminTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "DELETE request by super admin", dependsOnMethods = "testUpdateStudent") public void testDeleteStudent()
+            "wso2.esb" }, description = "DELETE request by super admin", dependsOnMethods = "testUpdateStudent")
+    public void testDeleteStudent()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -127,7 +129,8 @@ public class ESBPOXSecurityByAdminTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "GET resource after delete by admin", dependsOnMethods = "testDeleteStudent", expectedExceptions = IOException.class) public void testGetResourceAfterDelete()
+            "wso2.esb" }, description = "GET resource after delete by admin", dependsOnMethods = "testDeleteStudent", expectedExceptions = IOException.class)
+    public void testGetResourceAfterDelete()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
 
@@ -154,7 +157,8 @@ public class ESBPOXSecurityByAdminTestCase extends ESBIntegrationTest {
         Thread.sleep(2000);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         securityAdminServiceClient.disableSecurity(SERVICE_NAME);
         super.cleanup();
     }

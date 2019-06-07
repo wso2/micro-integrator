@@ -36,14 +36,15 @@ public class InlineTextEntryRemovalTestCase extends ESBIntegrationTest {
 
     private LocalEntriesAdminClient localEntryAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         localEntryAdminServiceClient = new LocalEntriesAdminClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests the Removal of a Local Entry") public void testInlineTextLocalEntryRemoval()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests the Removal of a Local Entry")
+    public void testInlineTextLocalEntryRemoval() throws Exception {
 
         String entryNames = localEntryAdminServiceClient.getEntryNamesString();
         //If an Entry by the name ENTRY_NAME does not exist
@@ -64,7 +65,8 @@ public class InlineTextEntryRemovalTestCase extends ESBIntegrationTest {
         assertFalse(entryNames.contains(ENTRY_NAME));
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         localEntryAdminServiceClient = null;
         super.cleanup();
     }

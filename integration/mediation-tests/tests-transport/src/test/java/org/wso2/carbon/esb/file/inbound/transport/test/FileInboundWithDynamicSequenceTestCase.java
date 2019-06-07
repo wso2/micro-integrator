@@ -47,7 +47,8 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
     private String pathToDir;
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         pathToDir = getESBResourceLocation() + File.separator + "file" + File.separator + "inbound" + File.separator
                 + "transport";
 
@@ -68,9 +69,9 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests sequences from  the governance registry with inbound endpoint") public void testSequence()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests sequences from  the governance registry with inbound endpoint")
+    public void testSequence() throws Exception {
 
         logViewerClient.clearLogs();
 
@@ -91,7 +92,8 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             FileUtils.deleteDirectory(InboundFileFolder);
         } finally {

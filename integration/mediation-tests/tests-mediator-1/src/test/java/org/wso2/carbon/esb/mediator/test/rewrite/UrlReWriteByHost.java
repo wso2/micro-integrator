@@ -30,14 +30,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class UrlReWriteByHost extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteByHostTestProxy");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Conditional URL Rewriting", dataProvider = "addressingUrl") public void reWriteHostName(
-            String addUrl) throws AxisFault {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Conditional URL Rewriting", dataProvider = "addressingUrl")
+    public void reWriteHostName(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -46,11 +47,13 @@ public class UrlReWriteByHost extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") private Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    private Object[][] addressingUrl() {
         return new Object[][] { { "http://host.name:9000/services/SimpleStockQuoteService" },
                 { "http://localhost:9000/services/SimpleStockQuoteService" },
                 { "http://10.10.0.10:9000/services/SimpleStockQuoteService" }, };

@@ -43,7 +43,8 @@ public class ESBJAVA4469CallMediatorWithOutOnlyTestCase extends ESBIntegrationTe
 
     private String messageBody;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/ESBJAVA4469.xml");
         messageBody = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" "
@@ -56,7 +57,8 @@ public class ESBJAVA4469CallMediatorWithOutOnlyTestCase extends ESBIntegrationTe
 
     }
 
-    @Test(groups = { "wso2.esb" }) public void outOnlyWithoutContentAwareMediatorTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void outOnlyWithoutContentAwareMediatorTest() throws Exception {
         WireMonitorServer wireMonitorServer = new WireMonitorServer(3828);
         Map<String, String> headers = new HashMap<>();
 
@@ -75,7 +77,8 @@ public class ESBJAVA4469CallMediatorWithOutOnlyTestCase extends ESBIntegrationTe
 
     }
 
-    @Test(groups = { "wso2.esb" }) public void outOnlyWithContentAwareMediatorTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void outOnlyWithContentAwareMediatorTest() throws Exception {
         WireMonitorServer wireMonitorServer = new WireMonitorServer(3829);
         Map<String, String> headers = new HashMap<>();
 
@@ -94,7 +97,8 @@ public class ESBJAVA4469CallMediatorWithOutOnlyTestCase extends ESBIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

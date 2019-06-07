@@ -39,7 +39,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
     /**
      * This patch is to test on validate mediator test cases with changing relavent configuration files
      */
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadConfig();
     }
@@ -48,8 +49,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
      * This test case is to test if validate mediator works with dynamic key as schema key
      */
 
-    @Test(groups = { "wso2.esb" }, description = "Specify a dynamic key as schema key") public void TestWithDynamicKey()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Specify a dynamic key as schema key")
+    public void TestWithDynamicKey() throws Exception {
         try {
             axis2Client
                     .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("validateMediatorInvalidDynamicKeyTestProxy"),
@@ -64,8 +65,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
      * This test case is to test if validate mediator works with static key as schema key
      */
 
-    @Test(groups = { "wso2.esb" }, description = "Static key for schema key") public void TestWithStaticKey()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Static key for schema key")
+    public void TestWithStaticKey() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("validateMediatorStaticKeyTestProxy"),
                     getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
@@ -80,8 +81,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
      */
 
     @Test(groups = {
-            "wso2.esb" }, description = "Verify whether validate mediator supports defining external schema definitions like WSDL resources for proxy service") public void TestWithProxy()
-            throws Exception {
+            "wso2.esb" }, description = "Verify whether validate mediator supports defining external schema definitions like WSDL resources for proxy service")
+    public void TestWithProxy() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("validateMediatorTestProxy"),
@@ -95,9 +96,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
     /**
      * These two test cases to test if validate mediator works with additional features turned on and off.
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Test validate mediator without secure processing feature ") public void validateWithSecureProcessingfalse()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test validate mediator without secure processing feature ")
+    public void validateWithSecureProcessingfalse() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("validateMediatorSecureFalseTestProxy"),
                     getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
@@ -107,9 +107,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test validate mediator with secure processing feature") public void validateWithSecureProcessingTrue()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test validate mediator with secure processing feature")
+    public void validateWithSecureProcessingTrue() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("validateMediatorSecureTrueTestProxy"),
@@ -124,8 +123,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
      * This test case shows validate mediator works with additional resources added
      */
     @Test(groups = {
-            "wso2.esb" }, description = "Add additional resources to validate mediator to check whether message is processed accurately") public void testWithResources()
-            throws Exception {
+            "wso2.esb" }, description = "Add additional resources to validate mediator to check whether message is processed accurately")
+    public void testWithResources() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("validateMediatorWithResourcesTestProxy"),
@@ -136,7 +135,8 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

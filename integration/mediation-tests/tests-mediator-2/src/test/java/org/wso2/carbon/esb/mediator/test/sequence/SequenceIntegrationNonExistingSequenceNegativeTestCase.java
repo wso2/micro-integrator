@@ -28,13 +28,15 @@ import static org.testng.Assert.assertEquals;
 
 public class SequenceIntegrationNonExistingSequenceNegativeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
     // give a non existing sequence and handle the exception..
     @Test(groups = "wso2.esb", description = "Give a non-existing sequence name as the '" + "Referring"
-            + " sequence' when using Static key.") public void testEnrichMediator() throws Exception {
+            + " sequence' when using Static key.")
+    public void testEnrichMediator() throws Exception {
         try {
             axis2Client
                     .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("sequenceMediatorNonExistingSequenceTestProxy"),
@@ -47,7 +49,8 @@ public class SequenceIntegrationNonExistingSequenceNegativeTestCase extends ESBI
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

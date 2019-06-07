@@ -29,13 +29,15 @@ import static org.testng.Assert.fail;
 
 public class TestFaultSequenceCalled extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/callout/FaultSeq.xml");
 
     }
 
-    @Test(alwaysRun = true) public void test_faultSeqCalledWhenSoapWhenGotSoapFault() {
+    @Test(alwaysRun = true)
+    public void test_faultSeqCalledWhenSoapWhenGotSoapFault() {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "",
@@ -48,7 +50,8 @@ public class TestFaultSequenceCalled extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void clear() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clear() throws Exception {
         super.cleanup();
 
     }

@@ -28,14 +28,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class RemoveReWriteProtocolTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteRemoveProtocolTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Remove and rewrite protocol", dataProvider = "addressingUrl") public void removeAndReWriteProtocol(
-            String addUrl) throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Remove and rewrite protocol", dataProvider = "addressingUrl")
+    public void removeAndReWriteProtocol(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -45,11 +45,13 @@ public class RemoveReWriteProtocolTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "https://localhost:9000/services/SimpleStockQuoteService" },
                 //               {"jms://localhost:9000/services/SimpleStockQuoteService"},
         };

@@ -27,14 +27,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
 public class Soap12FaultOutSequenceTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap12_fault_out_sequence_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Creating SOAP1.2 fault messages from outMediator sequence") public void testSOAP12FaultFromOutSequence()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.2 fault messages from outMediator sequence")
+    public void testSOAP12FaultFromOutSequence() throws AxisFault {
         try {
             axis2Client.sendSimpleStockQuoteSoap12(getMainSequenceURL(), null, "WSO2");
             fail("This query must throw an Axis Fault.");
@@ -53,7 +53,8 @@ public class Soap12FaultOutSequenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

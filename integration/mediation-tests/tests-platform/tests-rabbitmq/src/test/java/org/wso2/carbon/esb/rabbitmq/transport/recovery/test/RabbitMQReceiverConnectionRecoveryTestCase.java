@@ -43,7 +43,8 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
     private LogViewerClient logViewer;
     private ServerConfigurationManager configurationManagerAxis2;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         rabbitMQServer = RabbitMQTestUtils.getRabbitMQServerInstance();
@@ -63,8 +64,8 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with connection recovery - success case") public void testRabbitMQConsumerRecoverySuccess()
-            throws Exception {
+            "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with connection recovery - success case")
+    public void testRabbitMQConsumerRecoverySuccess() throws Exception {
         int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
 
         rabbitMQServer.start();
@@ -129,7 +130,8 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
         }
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
         logViewer = null;
         rabbitMQServer.stop();

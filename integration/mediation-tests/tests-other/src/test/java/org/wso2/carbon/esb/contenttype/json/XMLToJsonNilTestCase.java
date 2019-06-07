@@ -45,7 +45,8 @@ public class XMLToJsonNilTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -55,8 +56,8 @@ public class XMLToJsonNilTestCase extends ESBIntegrationTest {
         verifyAPIExistence("xmltoJsonNilTestAPI");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON with nil='true'") public void testXmlToJsonNil()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test XML to JSON with nil='true'")
+    public void testXmlToJsonNil() throws Exception {
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-Type", "text/xml");
@@ -67,7 +68,8 @@ public class XMLToJsonNilTestCase extends ESBIntegrationTest {
                 "Invalid XML to JSON transformation. " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
         serverConfigurationManager = null;

@@ -36,7 +36,8 @@ public class AggregateWithJSONAndMaxMinLimits extends ESBIntegrationTest {
 
     String serviceUrl;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         serviceUrl = getApiInvocationURL("devices");
@@ -45,13 +46,15 @@ public class AggregateWithJSONAndMaxMinLimits extends ESBIntegrationTest {
         esbUtils.isApiDeployed(contextUrls.getBackEndUrl(), sessionCookie, "AllDevices");
     }
 
-    @Test public void testAggregateMaximumCountOne() {
+    @Test
+    public void testAggregateMaximumCountOne() {
         String response = sendRequest(serviceUrl + "/getDevices/1");
 
         Assert.assertEquals(response, "{\"rootelement\":{\"deviceId\":\"device\"}}");
     }
 
-    @Test public void testAggregateMaximumCountGreaterThanOne() {
+    @Test
+    public void testAggregateMaximumCountGreaterThanOne() {
         String response = sendRequest(serviceUrl + "/getDevices/2");
 
         Assert.assertEquals(response, "{\"rootelement\":[{\"deviceId\":\"device\"},{\"deviceId\":\"device\"}]}");
@@ -62,7 +65,8 @@ public class AggregateWithJSONAndMaxMinLimits extends ESBIntegrationTest {
                 + "{\"deviceId\":\"device\"},{\"deviceId\":\"device\"},{\"deviceId\":\"device\"}]}");
     }
 
-    @Test public void testAggregateMaximumCountLessThanOne() {
+    @Test
+    public void testAggregateMaximumCountLessThanOne() {
         String response = sendRequest(serviceUrl + "/getDevices/0");
 
         Assert.assertEquals(response, "{\"rootelement\":[{\"deviceId\":\"device\"},{\"deviceId\":\"device\"},"
@@ -87,7 +91,8 @@ public class AggregateWithJSONAndMaxMinLimits extends ESBIntegrationTest {
         return null;
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

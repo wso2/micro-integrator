@@ -45,7 +45,8 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
             + "JMS</ns:symbol></ns:request></ns:getQuote></soapenv:Body></soapenv:Envelope>";
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         /* uploadSynapseConfig (Proxy) */
         OMElement synapse = esbUtils.loadResource("artifacts/ESB/jms/transport/JMSSenderStaleConnectionsTestProxy.xml");
@@ -54,9 +55,8 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test for JMS sender side stale connections handling") public void staleConnectionsTestJMSProxy()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test for JMS sender side stale connections handling")
+    public void staleConnectionsTestJMSProxy() throws Exception {
 
         int beforeLogCount = logViewerClient.getAllSystemLogs().length;
         AxisServiceClient client = new AxisServiceClient();
@@ -88,7 +88,8 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
         Assert.assertFalse(isExceptionThrown, "Sender Side Stale connections handling test failed");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

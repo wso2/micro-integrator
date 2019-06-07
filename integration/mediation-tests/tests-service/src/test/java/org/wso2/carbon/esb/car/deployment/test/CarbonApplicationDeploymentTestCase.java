@@ -41,7 +41,8 @@ public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
     private final String carFileName = "esb-artifacts-car_1.0.0";
     private boolean isCarFileUploaded = false;
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
         super.init();
         carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
@@ -55,9 +56,8 @@ public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
         TimeUnit.SECONDS.sleep(5);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "test endpoint deployment from car file") public void endpointDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test endpoint deployment from car file")
+    public void endpointDeploymentTest() throws Exception {
         Assert.assertTrue(esbUtils.isEndpointDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
                 "addressEndpoint"), "AddressEndpoint Endpoint deployment failed");
         Assert.assertTrue(esbUtils.isEndpointDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
@@ -70,9 +70,8 @@ public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
                 "defaultEndpoint"), "DefaultEndpoint Endpoint deployment failed");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "test sequence deployment from car file") public void sequenceDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test sequence deployment from car file")
+    public void sequenceDeploymentTest() throws Exception {
         Assert.assertTrue(esbUtils.isSequenceDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
                 "sampleSequence"), "sampleSequence deployment failed");
         Assert.assertTrue(esbUtils.isSequenceDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
@@ -82,17 +81,16 @@ public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "test API deployment from car file") public void apiDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test API deployment from car file")
+    public void apiDeploymentTest() throws Exception {
         Assert.assertTrue(
                 esbUtils.isApiDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(), "SampleAPI"),
                 "SampleAPI deployment failed");
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "test LocalEntry deployment from car file") public void localEntryDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test LocalEntry deployment from car file")
+    public void localEntryDeploymentTest() throws Exception {
         Assert.assertTrue(esbUtils.isLocalEntryDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
                 "sampleInLineXMLLocalentry"), "InLine XML Local entry deployment failed");
         Assert.assertTrue(esbUtils.isLocalEntryDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
@@ -102,9 +100,8 @@ public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "test proxy service deployment from car file") public void proxyServiceDeploymentTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test proxy service deployment from car file")
+    public void proxyServiceDeploymentTest() throws Exception {
         Assert.assertTrue(esbUtils.isProxyDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
                 "samplePassThroughProxy"), "Pass Through Proxy service deployment failed");
         Assert.assertTrue(esbUtils.isProxyDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
@@ -116,14 +113,16 @@ public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "test proxy service invocation", dependsOnMethods = {
             "proxyServiceDeploymentTest", "sequenceDeploymentTest", "endpointDeploymentTest",
-            "localEntryDeploymentTest", "apiDeploymentTest" }) public void invokeProxyService() throws Exception {
+            "localEntryDeploymentTest", "apiDeploymentTest" })
+    public void invokeProxyService() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("sampleCustomProxy"), null, "CARDeployment");
         Assert.assertTrue(response.toString().contains("CARDeployment"), "Symbol not found on the response message");
     }
 
     @Test(groups = { "wso2.esb" }, description = "test proxy service invocation", dependsOnMethods = {
-            "invokeProxyService" }) public void deleteCarFileAndArtifactUnDeploymentTest() throws Exception {
+            "invokeProxyService" })
+    public void deleteCarFileAndArtifactUnDeploymentTest() throws Exception {
         applicationAdminClient.deleteApplication(carFileName);
         isCarFileUploaded = false;
         Assert.assertTrue(isCarFileUnDeployed(carFileName));
@@ -134,7 +133,8 @@ public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupArtifactsIfExist() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupArtifactsIfExist() throws Exception {
         if (isCarFileUploaded) {
             applicationAdminClient.deleteApplication(carFileName);
             verifyUndeployment();

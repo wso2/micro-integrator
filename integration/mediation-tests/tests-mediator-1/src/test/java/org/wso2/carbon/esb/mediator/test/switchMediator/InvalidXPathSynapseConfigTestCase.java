@@ -28,14 +28,14 @@ import static org.testng.AssertJUnit.fail;
 
 public class InvalidXPathSynapseConfigTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         super.init();
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Saving Invalid XPath synapse configuration", enabled = false) public void uploadingInvalidXPathSynapse()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Saving Invalid XPath synapse configuration", enabled = false)
+    public void uploadingInvalidXPathSynapse() throws Exception {
         String filePath = "/artifacts/ESB/synapseconfig/filters/switchMediator/Invalid_xpath.xml";
         try {
 
@@ -47,7 +47,8 @@ public class InvalidXPathSynapseConfigTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 

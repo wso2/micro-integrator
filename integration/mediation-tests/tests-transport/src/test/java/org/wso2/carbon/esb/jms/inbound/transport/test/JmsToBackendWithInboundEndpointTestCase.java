@@ -37,7 +37,8 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
 
     private static final String QUEUE_NAME = "jmsQueueToHttpWithInboundEndpointTestCase";
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
 
         verifySequenceExistence("jmsQueueToHttpWithInboundEPSendInSequence");
@@ -55,9 +56,9 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
      *
      * @throws Exception if any error occurred while running tests
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test JMS to HTTP communication with inbound endpoint") public void testJmsQueueToHttpWithInboundEndpoint()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test JMS to HTTP communication with inbound endpoint")
+    public void testJmsQueueToHttpWithInboundEndpoint() throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
 
@@ -71,7 +72,8 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
         Assert.assertTrue(assertValue, "HTTP backend response did not receive with the inbound endpoint.");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 

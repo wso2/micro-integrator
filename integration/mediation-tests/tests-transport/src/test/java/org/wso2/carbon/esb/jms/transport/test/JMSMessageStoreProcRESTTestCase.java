@@ -48,7 +48,8 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
             + "  \"lastName\" : \"Broker\",\n" + "  \"id\" : 10\n" + "}";
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         headers.put("Test-Header-Field", "TestHeaderValue");
         //headers.put("Content-Type", "application/json");
@@ -66,9 +67,8 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "JMS Message store/processor support for RESTful services.") public void testJMSMessageStoreAndProcessor()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "JMS Message store/processor support for RESTful services.")
+    public void testJMSMessageStoreAndProcessor() throws Exception {
         HttpResponse response = httpClient.doPost(url, headers, payload, "application/json");
         Thread.sleep(10000);
         assertEquals(response.getStatusLine().getStatusCode(), 202);
@@ -89,7 +89,8 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

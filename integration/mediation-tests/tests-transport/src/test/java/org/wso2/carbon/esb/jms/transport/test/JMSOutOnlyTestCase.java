@@ -33,7 +33,8 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
 public class JMSOutOnlyTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_out_only_proxy.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
@@ -43,9 +44,8 @@ public class JMSOutOnlyTestCase extends ESBIntegrationTest {
         logViewerClient.clearLogs();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test proxy service with out-only jms transport") public void testJMSProxy()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test proxy service with out-only jms transport")
+    public void testJMSProxy() throws Exception {
 
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<?xml version='1.0' encoding='UTF-8'?>"
@@ -82,7 +82,8 @@ public class JMSOutOnlyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -52,7 +52,8 @@ public class Sample364TestCase extends ESBSampleIntegrationTest {
     private String datasourceBkupPath = null;
     private Connection mysqlConnection = null;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
 
         super.init();
 
@@ -120,8 +121,9 @@ public class Sample364TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.PLATFORM }) @Test(groups = {
-            "wso2.esb" }, description = "testDBMediator ") public void testDBMediator() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.PLATFORM })
+    @Test(groups = { "wso2.esb" }, description = "testDBMediator ")
+    public void testDBMediator() throws Exception {
 
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
@@ -182,7 +184,8 @@ public class Sample364TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true, enabled = false) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false)
+    public void deleteService() throws Exception {
 
         mysqlConnection.close();
         super.cleanup();

@@ -37,13 +37,14 @@ import static org.testng.Assert.assertNotNull;
 public class EnrichIntegrationReplacePartOfMessageByBodyTest extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception, ServletException, RemoteException {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception, ServletException, RemoteException {
         init();
         verifyProxyServiceExistence("enrichReplacePartOfMessageByBodyTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Replace part of the message defined by xpath from message body") public void testReplacePartOfMessageByBody()
-            throws AxisFault, XMLStreamException {
+    @Test(groups = "wso2.esb", description = "Tests-Replace part of the message defined by xpath from message body")
+    public void testReplacePartOfMessageByBody() throws AxisFault, XMLStreamException {
 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichReplacePartOfMessageByBodyTestProxy"), null,
@@ -57,7 +58,8 @@ public class EnrichIntegrationReplacePartOfMessageByBodyTest extends ESBIntegrat
                 "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

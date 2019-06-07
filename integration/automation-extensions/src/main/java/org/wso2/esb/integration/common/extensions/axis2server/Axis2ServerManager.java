@@ -31,7 +31,11 @@ import org.wso2.carbon.automation.extensions.ExtensionUtils;
 import org.wso2.carbon.automation.extensions.servers.axis2server.BackendServer;
 import org.wso2.carbon.utils.ServerConstants;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 public class Axis2ServerManager implements BackendServer {
     private static final Log log = LogFactory

@@ -57,7 +57,8 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
      */
     private SimpleAuthenticationPlugin simpleAuthenticationPlugin;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         String secureVaultConfDir =
@@ -117,8 +118,8 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
      * also includes this configuration, where the password ("manager") has been encrypted with SecureVault.
      * Thus an exception (SecurityException) thrown while connecting to send would indicate a decryption failure.
      */
-    @Test(groups = "wso2.esb", description = "Test JMS transport using parameters secured using SecureVault") public void testJMSTransportWithSecureVault()
-            throws InterruptedException {
+    @Test(groups = "wso2.esb", description = "Test JMS transport using parameters secured using SecureVault")
+    public void testJMSTransportWithSecureVault() throws InterruptedException {
         try {
             simpleAuthenticationPlugin = new SimpleAuthenticationPlugin();
             simpleAuthenticationPlugin.setAnonymousAccessAllowed(false);
@@ -134,7 +135,8 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         try {
             super.cleanup();
         } finally {

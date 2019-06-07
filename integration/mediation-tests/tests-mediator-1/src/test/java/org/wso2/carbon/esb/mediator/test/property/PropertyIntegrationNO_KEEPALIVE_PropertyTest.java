@@ -35,13 +35,15 @@ public class PropertyIntegrationNO_KEEPALIVE_PropertyTest extends ESBIntegration
 
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         wireServer = new WireMonitorServer(8990);
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-Without NO_KEEPALIVE Property") public void testNO_KEEPALIVEPropertyTest() {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-Without NO_KEEPALIVE Property")
+    public void testNO_KEEPALIVEPropertyTest() {
 
         wireServer.start();
         try {
@@ -55,7 +57,8 @@ public class PropertyIntegrationNO_KEEPALIVE_PropertyTest extends ESBIntegration
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

@@ -41,7 +41,8 @@ public class PropertyIntegrationRESTURLPostFixTestCase extends ESBIntegrationTes
     private OMElement response;
     private HttpClientUtil client;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         OMElement config = esbUtils.loadResource("/artifacts/ESB/mediatorconfig/property/REST_URL_postfix.xml");
         config = AXIOMUtil
@@ -50,9 +51,9 @@ public class PropertyIntegrationRESTURLPostFixTestCase extends ESBIntegrationTes
         client = new HttpClientUtil();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-REST URL Postfix") public void testRESTUrlPostFix()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-REST URL Postfix")
+    public void testRESTUrlPostFix() throws Exception {
         response = client
                 .getWithContentType(getProxyServiceURLHttp("REST_URL_POSTFIX_TestProxy") + "/echoString", "in=WSO2",
                         MediaType.APPLICATION_FORM_URLENCODED);
@@ -64,7 +65,8 @@ public class PropertyIntegrationRESTURLPostFixTestCase extends ESBIntegrationTes
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

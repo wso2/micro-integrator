@@ -28,12 +28,14 @@ import static org.testng.Assert.assertTrue;
 
 public class CallMediatorInBothProxyInAndOutSequencesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/synapse2.xml");
     }
 
-    @Test(groups = { "wso2.esb" }) public void callMediatorInBothProxyInAndOutSequencesTestCase() throws AxisFault {
+    @Test(groups = { "wso2.esb" })
+    public void callMediatorInBothProxyInAndOutSequencesTestCase() throws AxisFault {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "WSO2");
@@ -41,7 +43,8 @@ public class CallMediatorInBothProxyInAndOutSequencesTestCase extends ESBIntegra
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

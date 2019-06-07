@@ -48,7 +48,8 @@ public class CARBON15235JsonValueTypeMissMatchTest extends DSSIntegrationTest {
     private final String serviceName = "JsonValueTypes";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("RandomEmployee.sql"));
@@ -60,14 +61,15 @@ public class CARBON15235JsonValueTypeMissMatchTest extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Check whether the service returns with wrong error message", alwaysRun = true) public void jsonInputWithWrongValueTypeTestCase()
-            throws Exception {
+            "wso2.dss" }, description = "Check whether the service returns with wrong error message", alwaysRun = true)
+    public void jsonInputWithWrongValueTypeTestCase() throws Exception {
         HttpResponse response1 = this.getHttpResponse(serviceEndPoint + "_postadd_emp_json", "application/json",
                 "{\"_postadd_emp_json\":{\"ename\":\"xyz\",\"eage\":111, \"eaddress\":123}}");
         assertTrue(responseDataEvaluator(response1.getData(), "Value type miss match, Expected value type", "string",

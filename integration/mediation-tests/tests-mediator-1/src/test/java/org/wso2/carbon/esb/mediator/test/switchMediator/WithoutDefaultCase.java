@@ -32,18 +32,20 @@ import static org.testng.AssertJUnit.assertTrue;
 
 public class WithoutDefaultCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void beforeClass() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void beforeClass() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/synapseconfig/filters/switchMediator/basic_and_without_default_case_synapse.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Without default case scenario") public void testSwitchWithoutDefault()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }, description = "Without default case scenario")
+    public void testSwitchWithoutDefault() throws AxisFault, XPathExpressionException {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("switchSample1"),

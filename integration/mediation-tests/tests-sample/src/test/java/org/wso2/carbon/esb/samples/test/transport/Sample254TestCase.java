@@ -50,7 +50,8 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
 
     private File outfile;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         // Create folders
         pathToVfsDir = getESBResourceLocation() + File.separator + "sample_254" + File.separator;
@@ -98,8 +99,9 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
         synapseConfigAdminClient.updateConfiguration(synapseConfig);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Testing VFS transport") public void testVfsTransport() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Testing VFS transport")
+    public void testVfsTransport() throws Exception {
         File sourceFile = new File(pathToVfsDir + "test.xml");
         File targetFile = new File(inFolder.getAbsolutePath() + File.separator + "test.xml");
         outfile = new File(outFolder.getAbsolutePath() + File.separator + "out.xml");
@@ -115,7 +117,8 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
 
         FileUtils.deleteDirectory(outFolder);

@@ -38,14 +38,15 @@ public class TCPSessionPersistenceSplitBySpecialCharacterTestCase extends ESBInt
     private static String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap"
             + ".org/soap/envelope/\"><soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/tcp/transport/tcpProxy_splitBySpecialCharacter.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tcp proxy service which configured to split by special character") public void tcpTransportSplitBySpecialCharacterProxy()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tcp proxy service which configured to split by special character")
+    public void tcpTransportSplitBySpecialCharacterProxy() throws Exception {
         int messageCount = 3;
         Character aByte = 0x03;
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.BYTE.getDelimiterType(),
@@ -61,7 +62,8 @@ public class TCPSessionPersistenceSplitBySpecialCharacterTestCase extends ESBInt
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

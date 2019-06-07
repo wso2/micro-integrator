@@ -97,7 +97,6 @@ public abstract class ESBIntegrationTest {
     protected User userInfo;
     protected TestUserMode userMode;
 
-
     /**
      * Initialize the context given a tenant domain and a user.
      *
@@ -210,7 +209,7 @@ public abstract class ESBIntegrationTest {
     }
 
     protected void loadESBConfigurationFromClasspath(String relativeFilePath) throws Exception {
-       // DO Nothing
+        // DO Nothing
 
         /*relativeFilePath = relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
 

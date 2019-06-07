@@ -51,7 +51,8 @@ public class ReturnRequestStatusTest extends DSSIntegrationTest {
     private static String serviceEndPoint;
     private DSSTestCaseUtils dssTest;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         dssTest = new DSSTestCaseUtils();
@@ -63,30 +64,28 @@ public class ReturnRequestStatusTest extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed")
+    public void testServiceDeployment() throws Exception {
 
         assertTrue(dssTest.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {
-            "testServiceDeployment" }, description = "add employees") public void requestStatusNameSpaceQualifiedForInsertOperation()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "testServiceDeployment" }, description = "add employees")
+    public void requestStatusNameSpaceQualifiedForInsertOperation() throws AxisFault {
 
         addEmployee(serviceEndPoint, String.valueOf(180));
         log.info("Insert Operation Success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {
-            "requestStatusNameSpaceQualifiedForInsertOperation" }) public void requestStatusNameSpaceQualifiedForDeleteOperation()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "requestStatusNameSpaceQualifiedForInsertOperation" })
+    public void requestStatusNameSpaceQualifiedForDeleteOperation() throws AxisFault {
         deleteEmployeeById(String.valueOf(180));
         log.info("Delete operation success");
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = { "requestStatusNameSpaceQualifiedForDeleteOperation" }, timeOut =
-            1000 * 60 * 2) public void inOperationConcurrencyTest()
-            throws InterruptedException, ConcurrencyTestFailedError {
+            1000 * 60 * 2)
+    public void inOperationConcurrencyTest() throws InterruptedException, ConcurrencyTestFailedError {
 
         final ExceptionHandler handler = new ExceptionHandler();
         final int concurrencyNumber = 50;
@@ -135,7 +134,8 @@ public class ReturnRequestStatusTest extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void testCleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void testCleanup() throws Exception {
         dssTest.deleteService(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName);
     }
 

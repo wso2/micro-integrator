@@ -42,7 +42,8 @@ public class JMSInboundTransportTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private InboundAdminClient inboundAdminClient;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -52,15 +53,14 @@ public class JMSInboundTransportTestCase extends ESBIntegrationTest {
         inboundAdminClient = new InboundAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Adding New JMS Inbound End point") public void testAddingNewJMSInboundEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Adding New JMS Inbound End point")
+    public void testAddingNewJMSInboundEndpoint() throws Exception {
         addInboundEndpoint(addEndpoint1());
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Updating Existing JMS Inbound End point", dependsOnMethods = "testAddingNewJMSInboundEndpoint") public void testUpdatingJMSInboundEndpoint()
-            throws Exception {
+            "wso2.esb" }, description = "Updating Existing JMS Inbound End point", dependsOnMethods = "testAddingNewJMSInboundEndpoint")
+    public void testUpdatingJMSInboundEndpoint() throws Exception {
         updateInboundEndpoint(addEndpoint2());
         InboundEndpointDTO inboundEndpoint = inboundAdminClient
                 .getInboundEndpointbyName(addEndpoint1().getAttributeValue(new QName("name")));
@@ -70,13 +70,14 @@ public class JMSInboundTransportTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Deleting an JMS Inbound End point", dependsOnMethods = "testUpdatingJMSInboundEndpoint") public void testDeletingJMSInboundEndpoint()
-            throws Exception {
+            "wso2.esb" }, description = "Deleting an JMS Inbound End point", dependsOnMethods = "testUpdatingJMSInboundEndpoint")
+    public void testDeletingJMSInboundEndpoint() throws Exception {
         deleteInboundEndpointFromName(addEndpoint1().getAttributeValue(new QName("name")));
         isInboundUndeployed(addEndpoint1().getAttributeValue(new QName("name")));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -35,7 +35,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class PropertyXPATH2FunctionsTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(
@@ -49,12 +50,13 @@ public class PropertyXPATH2FunctionsTestCase extends ESBIntegrationTest {
                         + File.separator + "property" + File.separator + "XPATH2Function.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "XPATH 2.0 functions") public void testRESPONSETEnabledTrue()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "XPATH 2.0 functions")
+    public void testRESPONSETEnabledTrue() throws IOException {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("XPATH2"), null, "WSO2");
 
         assertTrue(response.toString().contains("WSO2"), "XPATH 2.0 function processing");

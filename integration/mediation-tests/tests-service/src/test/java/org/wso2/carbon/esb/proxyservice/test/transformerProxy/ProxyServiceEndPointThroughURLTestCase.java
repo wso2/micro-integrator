@@ -36,7 +36,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath(
@@ -45,8 +46,8 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Transformer proxy"
-            + "- Proxy service with providing endpoint through url") public void testTransformerProxy()
-            throws Exception {
+            + "- Proxy service with providing endpoint through url")
+    public void testTransformerProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("endpointThroughURLTransformerProxy"), null, "WSO2");
@@ -65,7 +66,8 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

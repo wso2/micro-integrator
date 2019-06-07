@@ -41,7 +41,8 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
@@ -54,10 +55,10 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
                 "/artifacts/ESB/mediatorconfig/class/class_property_persistence_three_properties.xml");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = { "wso2.esb",
-            "localOnly" }, description = "Class Mediator "
-            + " -Class mediator property persistence -adding properties") public void testMediationPropertyPersistenceAdding()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb", "localOnly" }, description = "Class Mediator "
+            + " -Class mediator property persistence -adding properties")
+    public void testMediationPropertyPersistenceAdding() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
@@ -119,7 +120,8 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.removeFromComponentLib(CLASS_JAR_FIVE_PROPERTIES);
         serverConfigurationManager = null;

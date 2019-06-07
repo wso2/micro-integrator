@@ -55,7 +55,8 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
     private static final String RABBITMQ_RESULT_QUEUE = "resultQueueSecureVault";
     private static RabbitMQProducerClient sender;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
@@ -125,8 +126,8 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
      * Send message to queueRx in rabbitMQ, which ESB proxy (RabbitMQProxy.xml) listens to it.
      * Then the ESB proxy will put the received message (from exchangeRx) to queueResult in same RabbitMQ
      */
-    @Test(groups = "wso2.esb", description = "Test RabbitMQ listener and sender by securing password parameters secured using secure vault") public void testRabbitMQWithSecureVault()
-            throws InterruptedException, IOException {
+    @Test(groups = "wso2.esb", description = "Test RabbitMQ listener and sender by securing password parameters secured using secure vault")
+    public void testRabbitMQWithSecureVault() throws InterruptedException, IOException {
 
         //Put message to rabbitMQ receiver queue (queueRx)
         String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
@@ -158,7 +159,8 @@ public class TestRabbitMQSecureVaultSupport extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         try {
             super.cleanup();
         } finally {

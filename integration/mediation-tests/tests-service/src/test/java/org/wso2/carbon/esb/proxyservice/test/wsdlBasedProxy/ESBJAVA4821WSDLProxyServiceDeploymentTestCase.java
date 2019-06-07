@@ -44,14 +44,15 @@ public class ESBJAVA4821WSDLProxyServiceDeploymentTestCase extends ESBIntegratio
                     + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
                     + File.separator + "proxy-services" + File.separator + "wsdl-fault-proxy.xml";
 
-    @BeforeClass(alwaysRun = true) public void deployAPI() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployAPI() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/delay-wsdl.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Test the deployment of WSDL proxy which wsdl does not respond until timeout") public void testWSDLBasedProxyDeployment()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test the deployment of WSDL proxy which wsdl does not respond until timeout")
+    public void testWSDLBasedProxyDeployment() throws Exception {
 
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
@@ -82,7 +83,8 @@ public class ESBJAVA4821WSDLProxyServiceDeploymentTestCase extends ESBIntegratio
         Assert.assertTrue(logFound, "Error message not found. Deployment not failed due to read timeout of wsdl");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             File target = new File(targetProxyPath);
             File targetBackup = new File(targetProxyPath + ".back");

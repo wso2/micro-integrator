@@ -33,12 +33,13 @@ import static org.testng.Assert.assertNotNull;
  * This test case verifies that, mediation with invoking NashornJs script as local entry happens correctly.
  */
 public class LocalEntryFunctionTestForNashornTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests changing payload with script referred by local entry") public void testInlineFunction()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests changing payload with script referred by local entry")
+    public void testInlineFunction() throws Exception {
         OMElement response;
         response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorNashornJsLocalEntryTestProxy"), null,
@@ -55,7 +56,8 @@ public class LocalEntryFunctionTestForNashornTestCase extends ESBIntegrationTest
                 "Text does not exist");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

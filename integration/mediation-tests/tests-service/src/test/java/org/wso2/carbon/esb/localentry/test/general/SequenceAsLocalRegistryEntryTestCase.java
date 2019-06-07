@@ -30,14 +30,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class SequenceAsLocalRegistryEntryTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/localEntryConfig/sequence_as_local_registry_entry.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Create an sequence as a local registry entry") public void testSequenceAsLocalRegistryEntry()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Create an sequence as a local registry entry")
+    public void testSequenceAsLocalRegistryEntry() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertNotNull(response, "Response is null");
@@ -48,7 +48,8 @@ public class SequenceAsLocalRegistryEntryTestCase extends ESBIntegrationTest {
         assertEquals(symbolResponse, "IBM", "Symbol is not match");
     }
 
-    @AfterClass private void destroy() throws Exception {
+    @AfterClass
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

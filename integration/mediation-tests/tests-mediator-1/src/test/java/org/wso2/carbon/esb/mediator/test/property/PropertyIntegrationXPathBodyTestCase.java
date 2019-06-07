@@ -33,19 +33,21 @@ public class PropertyIntegrationXPathBodyTestCase extends ESBIntegrationTest {
     private static LogViewerClient logViewer;
     boolean isBody = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/Synapse_XPath_ Variables_Body.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests when connections exist") public void testXpathBodyProperty()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests when connections exist")
+    public void testXpathBodyProperty() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "WSO2");

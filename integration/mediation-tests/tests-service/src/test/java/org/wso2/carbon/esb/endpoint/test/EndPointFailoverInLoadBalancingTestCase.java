@@ -35,7 +35,8 @@ public class EndPointFailoverInLoadBalancingTestCase extends ESBIntegrationTest 
     private SampleAxis2Server axis2Server1;
     private SampleAxis2Server axis2Server2;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
@@ -55,9 +56,9 @@ public class EndPointFailoverInLoadBalancingTestCase extends ESBIntegrationTest 
                 "/artifacts/ESB/synapseconfig/patch_automation/load_balance_failover_synapse.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test sending request to Load Balancing Endpoints With while one endpoint is out of order") public void testLoadbalancerWithFailedEndpoints()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test sending request to Load Balancing Endpoints With while one endpoint is out of order")
+    public void testLoadbalancerWithFailedEndpoints() throws Exception {
         String response;
         lbClient.sendLoadBalanceFailoverRequest(getMainSequenceURL());
         lbClient.sendLoadBalanceFailoverRequest(getMainSequenceURL());
@@ -70,7 +71,8 @@ public class EndPointFailoverInLoadBalancingTestCase extends ESBIntegrationTest 
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         axis2Server1 = null;

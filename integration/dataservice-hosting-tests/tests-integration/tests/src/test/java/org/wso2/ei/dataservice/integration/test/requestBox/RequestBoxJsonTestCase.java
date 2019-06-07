@@ -24,7 +24,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
 import java.io.BufferedReader;
@@ -46,7 +45,8 @@ public class RequestBoxJsonTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(RequestBoxJsonTestCase.class);
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
@@ -57,12 +57,14 @@ public class RequestBoxJsonTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response") public void performJsonInsertWithRequestBoxResponseTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response")
+    public void performJsonInsertWithRequestBoxResponseTest() {
         String postInsertPaymentPayload =
                 "{\"request_box\" : {\n" + "\t\"_postemployee\": {\n" + "    \"employeeNumber\" : 14001,\n"
                         + "    \"lastName\": \"Smith\",\n" + "    \"firstName\": \"Will\",\n"
@@ -71,7 +73,8 @@ public class RequestBoxJsonTestCase extends DSSIntegrationTest {
         Assert.assertTrue(response.contains("DATA_SERVICE_REQUEST_BOX_RESPONSE"), "POST method failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response", dependsOnMethods = "performJsonInsertWithRequestBoxResponseTest") public void performJsonInsertAndUpdateWithRequestBoxResponseTest() {
+    @Test(groups = "wso2.dss", description = "Invoking Insert Request with POST method with request_box response", dependsOnMethods = "performJsonInsertWithRequestBoxResponseTest")
+    public void performJsonInsertAndUpdateWithRequestBoxResponseTest() {
         String postInsertPaymentPayload =
                 "{\"request_box\" : {\n" + "\t\"_postemployee\": {\n" + "    \"employeeNumber\" : 14002,\n"
                         + "    \"lastName\": \"Smith\",\n" + "    \"firstName\": \"Will\",\n"

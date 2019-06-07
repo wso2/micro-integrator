@@ -39,7 +39,8 @@ public class ESBJAVA4631PreserveContentTypeHeaderTestCase extends ESBIntegration
 
     WireMonitorServer wireMonitorServer;
 
-    @BeforeTest(alwaysRun = true) public void init() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         wireMonitorServer = new WireMonitorServer(6770);
@@ -49,7 +50,8 @@ public class ESBJAVA4631PreserveContentTypeHeaderTestCase extends ESBIntegration
     }
 
     @Test(groups = "wso2.esb", description = "Test to check whether the Content-Type header is preserved when sending "
-            + "requests to back end") public void testPreserveContentTypeHeader() throws Exception {
+            + "requests to back end")
+    public void testPreserveContentTypeHeader() throws Exception {
 
         String proxyServiceUrl = getProxyServiceURLHttp("PreserveContentTypeHeaderTest");
 
@@ -78,7 +80,8 @@ public class ESBJAVA4631PreserveContentTypeHeaderTestCase extends ESBIntegration
         Assert.assertTrue(true);
     }
 
-    @AfterTest(alwaysRun = true) public void destroy() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

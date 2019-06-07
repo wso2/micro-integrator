@@ -36,13 +36,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class Sample153TestCase extends ESBSampleIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(153);
     }
 
-    @Test(groups = "wso2.esb", description = "Custom sequences and endpoints with proxy services") public void sample153Test()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Custom sequences and endpoints with proxy services")
+    public void sample153Test() throws Exception {
         String policyPath = FrameworkPathUtil.getSystemResourceLocation() + "security" + File.separator + "policies"
                 + File.separator + "scenario27-policy.xml";
         OMElement response = new SecureStockQuoteClient()
@@ -59,7 +60,8 @@ public class Sample153TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

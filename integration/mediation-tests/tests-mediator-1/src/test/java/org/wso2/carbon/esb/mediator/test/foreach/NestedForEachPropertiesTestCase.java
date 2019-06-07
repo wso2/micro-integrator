@@ -40,12 +40,13 @@ import static org.testng.Assert.assertTrue;
  */
 public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a nested foreach constructs with id specified") public void testNestedForEachPropertiesWithID()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a nested foreach constructs with id specified")
+    public void testNestedForEachPropertiesWithID() throws Exception {
         verifyProxyServiceExistence("foreachNestedPropertiesTestProxy");
 
         LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -222,7 +223,8 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         super.cleanup();
     }
 

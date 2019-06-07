@@ -47,7 +47,8 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
     private int responseCode;
     private static final int PORT = 8089;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         String relativePath = "/artifacts/ESB/synapseconfig/esbjava2283/api.xml";
         ESBTestCaseUtils util = new ESBTestCaseUtils();
@@ -57,8 +58,8 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test whether ESB pass-through responses with different response codes.", dataProvider = "getResponseCodes") public void testReturnResponseCode(
-            int responseCode) throws Exception {
+            "wso2.esb" }, description = "Test whether ESB pass-through responses with different response codes.", dataProvider = "getResponseCodes")
+    public void testReturnResponseCode(int responseCode) throws Exception {
         this.responseCode = responseCode;
         //Starting backend server
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -108,11 +109,13 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), responseCode, "response code doesn't match");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "responseCodeProvider") public Object[][] getResponseCodes() {
+    @DataProvider(name = "responseCodeProvider")
+    public Object[][] getResponseCodes() {
         return new Object[][] { { 200 }, { 400 }, { 403 }, { 404 }, { 500 }, { 501 }, { 503 }, };
     }
 

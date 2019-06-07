@@ -29,15 +29,16 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceEnablingHTTPSTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/proxy_service_enabling_only_https.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "- WSDL based proxy"
-            + "- Proxy service enabling only https") public void testWSDLBasedProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- WSDL based proxy" + "- Proxy service enabling only https")
+    public void testWSDLBasedProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttps("enableHttpsWsdlProxy"), null, "WSO2");
@@ -52,7 +53,8 @@ public class ProxyServiceEnablingHTTPSTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

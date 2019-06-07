@@ -30,7 +30,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class WSDLOptionsSpecifiedInlineTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/loggingProxy/wsdl_options_specified_inline.xml");
@@ -38,8 +39,8 @@ public class WSDLOptionsSpecifiedInlineTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy"
-            + "- Publish WSDL Options - Specified Inline") public void testLoggingProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy" + "- Publish WSDL Options - Specified Inline")
+    public void testLoggingProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromInlineLoggingProxy"), null, "WSO2");
@@ -54,12 +55,13 @@ public class WSDLOptionsSpecifiedInlineTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Specified Inline -Log", enabled = false) public void testLoggingProxyLogging()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Specified Inline -Log", enabled = false)
+    public void testLoggingProxyLogging() throws Exception {
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

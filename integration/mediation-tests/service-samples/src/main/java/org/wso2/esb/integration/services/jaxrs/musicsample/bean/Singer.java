@@ -39,7 +39,8 @@ public class Singer {
         this.age = age;
     }
 
-    @Override public String toString() {
+    @Override
+    public String toString() {
         return "Added New Singer Name " + name + " And Age " + age + " Successfully";
     }
 }

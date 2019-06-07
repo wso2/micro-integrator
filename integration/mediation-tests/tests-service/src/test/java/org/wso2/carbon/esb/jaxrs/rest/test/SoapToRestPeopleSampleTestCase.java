@@ -37,7 +37,8 @@ public class SoapToRestPeopleSampleTestCase extends ESBIntegrationTest {
     String personLastName = "Warusavitharana";
     String personEmail = null;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("artifacts/ESB/jaxrs/putpeopleproxy.xml");
         tomcatServerManager = new TomcatServerManager(AppConfig.class.getName(), "jaxrs", 8080);
@@ -45,9 +46,8 @@ public class SoapToRestPeopleSampleTestCase extends ESBIntegrationTest {
         personEmail = "testName" + RandomStringUtils.randomAlphanumeric(6) + "@wso2.com";
     }
 
-    @Test(groups = {
-            "wso2.esb" }, priority = 1, description = "Tests POST method with application/jason content type") public void addPeople()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, priority = 1, description = "Tests POST method with application/jason content type")
+    public void addPeople() throws Exception {
 
         Thread.sleep(5000);
         if (tomcatServerManager.isRunning()) {
@@ -67,9 +67,8 @@ public class SoapToRestPeopleSampleTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = {
-            "wso2.esb" }, priority = 2, description = "Tests GET method with application/jason content type") public void getPeople()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, priority = 2, description = "Tests GET method with application/jason content type")
+    public void getPeople() throws Exception {
         if (tomcatServerManager.isRunning()) {
             AxisServiceClient axisServiceClient2 = new AxisServiceClient();
             OMElement getRequest = AXIOMUtil.stringToOM(
@@ -88,9 +87,8 @@ public class SoapToRestPeopleSampleTestCase extends ESBIntegrationTest {
     }
 
     //todo: Adding HEAD request Test method
-    @Test(groups = {
-            "wso2.esb" }, priority = 3, description = "Tests PUT method with application/jason content type") public void putPeople()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, priority = 3, description = "Tests PUT method with application/jason content type")
+    public void putPeople() throws Exception {
         String updatedFirstName = "Dharshana";
         String updatedLastName = "Warusavitharana";
         if (tomcatServerManager.isRunning()) {
@@ -113,8 +111,8 @@ public class SoapToRestPeopleSampleTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, priority = 4, description = "Tests Delete method with application/jason content type") public void getOptionsPeople()
-            throws Exception {
+            "wso2.esb" }, priority = 4, description = "Tests Delete method with application/jason content type")
+    public void getOptionsPeople() throws Exception {
 
         if (tomcatServerManager.isRunning()) {
             AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -133,8 +131,8 @@ public class SoapToRestPeopleSampleTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, priority = 5, description = "Tests Delete method with application/jason content type") public void deletePeople()
-            throws Exception {
+            "wso2.esb" }, priority = 5, description = "Tests Delete method with application/jason content type")
+    public void deletePeople() throws Exception {
 
         if (tomcatServerManager.isRunning()) {
             AxisServiceClient axisServiceClient = new AxisServiceClient();
@@ -152,7 +150,8 @@ public class SoapToRestPeopleSampleTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws InterruptedException, LifecycleException {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws InterruptedException, LifecycleException {
         Thread.sleep(5000);
         tomcatServerManager.stop();
     }

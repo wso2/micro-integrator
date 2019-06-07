@@ -56,17 +56,18 @@ public class JsonFormat_IncomingJson_ArgsJsonExpression_WithStream_TestCase exte
                     + "<text>Maybe he'll finally find his keys. #peterfalk</text>" + "<user>"
                     + "<id_str>819797</id_str>" + "<id>819797</id>" + "</user></xml>";
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) public void uploadSynapseConfig()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         //        serverManager = new ServerConfigurationManager(context);
         //        serverManager.applyConfiguration(new File(getClass().getResource("/artifacts/ESB/mediatorconfig/payload/factory/axis2/axis2.xml").getPath()));
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "With Stream B&F, json format, json evaluators, incoming json, "
-            + "outgoing json ") public void incomingJsontransformJsonPayloadByArgsJsonExpressions() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "With Stream B&F, json format, json evaluators, incoming json, "
+            + "outgoing json ")
+    public void incomingJsontransformJsonPayloadByArgsJsonExpressions() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/jsonFormat_JsonExpressiosns.xml");
@@ -75,9 +76,10 @@ public class JsonFormat_IncomingJson_ArgsJsonExpression_WithStream_TestCase exte
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "With Stream B&F, xml format, json evaluators, incoming json, outgoing"
-            + " xml ") public void incomingJsontransformXmlPayloadByArgsJsonExpressions() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "With Stream B&F, xml format, json evaluators, incoming json, outgoing"
+            + " xml ")
+    public void incomingJsontransformXmlPayloadByArgsJsonExpressions() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/xmlFormat_JsonExpressiosns.xml");
@@ -85,10 +87,10 @@ public class JsonFormat_IncomingJson_ArgsJsonExpression_WithStream_TestCase exte
         assertTrue(responsePayload.contains("wso2"), "Symbol wso2 not found in response message"); // fail
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "With Stream B&F, json format, json evaluators, incoming json, "
-            + "outgoing json ") public void incomingJsontransformJsonPayloadByArgsJsonXmlExpressionsValues()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "With Stream B&F, json format, json evaluators, incoming json, "
+            + "outgoing json ")
+    public void incomingJsontransformJsonPayloadByArgsJsonXmlExpressionsValues() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 "artifacts/ESB/mediatorconfig/payload/factory/jsonFormat_JsonXmlExpressions_values.xml");
@@ -96,10 +98,10 @@ public class JsonFormat_IncomingJson_ArgsJsonExpression_WithStream_TestCase exte
         assertTrue(responsePayload.contains("wso2"), "Symbol wso2 not found in response message");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "With Stream B&F, json format, json evaluators, incoming json, "
-            + "outgoing json ") public void incomingXmltransformJsonPayloadByArgsJsonXmlExpressionsValues()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "With Stream B&F, json format, json evaluators, incoming json, "
+            + "outgoing json ")
+    public void incomingXmltransformJsonPayloadByArgsJsonXmlExpressionsValues() throws Exception {
 
         loadESBConfigurationFromClasspath(
                 "artifacts/ESB/mediatorconfig/payload/factory/jsonFormat_JsonXmlExpressions_values.xml");
@@ -107,7 +109,8 @@ public class JsonFormat_IncomingJson_ArgsJsonExpression_WithStream_TestCase exte
         assertTrue(responsePayload.contains("wso2"), "Symbol wso2 not found in response message");
     }
 
-    @AfterMethod(alwaysRun = true) public void undeployProxyService() throws Exception {
+    @AfterMethod(alwaysRun = true)
+    public void undeployProxyService() throws Exception {
         super.cleanup();
         super.init();
     }
@@ -126,8 +129,9 @@ public class JsonFormat_IncomingJson_ArgsJsonExpression_WithStream_TestCase exte
         responsePayload = httpClient.getResponsePayload(httpResponse);*/
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         try {
             cleanup();
         } finally {

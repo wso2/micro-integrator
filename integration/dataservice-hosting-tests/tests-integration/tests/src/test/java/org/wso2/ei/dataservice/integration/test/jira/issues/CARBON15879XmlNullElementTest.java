@@ -48,7 +48,8 @@ public class CARBON15879XmlNullElementTest extends DSSIntegrationTest {
     private final String serviceName = "XmlNullElementTest";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTableXmlNullTest.sql"));
@@ -58,14 +59,15 @@ public class CARBON15879XmlNullElementTest extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Check the service returns success with null element", alwaysRun = true) public void jsonInputWithWrongValueTypeTestCase()
-            throws Exception {
+            "wso2.dss" }, description = "Check the service returns success with null element", alwaysRun = true)
+    public void jsonInputWithWrongValueTypeTestCase() throws Exception {
         HttpResponse response1 = this.getHttpResponse(serviceEndPoint + "_postperson", "application/json",
                 "{\"_postperson\":{\"PersonID\":1,\"LastName\":\"John\",\"City\":null,\"Weight\":null}}");
         assertTrue(202 == response1.getResponseCode());

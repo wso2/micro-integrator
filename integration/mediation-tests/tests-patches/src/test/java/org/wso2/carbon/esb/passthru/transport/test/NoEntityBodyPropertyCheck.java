@@ -31,13 +31,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class NoEntityBodyPropertyCheck extends ESBIntegrationTest {
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("NoEntityBodyPropertyTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = " Checking NO_ENTITY_BODY_PROPERTY", enabled = true) public void testNoEntityBodyPropertyTestCase()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = " Checking NO_ENTITY_BODY_PROPERTY", enabled = true)
+    public void testNoEntityBodyPropertyTestCase() throws Exception {
         String payload = "      <Person>" + "         <ID>12999E105</ID>" + "      </Person>";
 
         HttpResponse response = httpClient
@@ -49,7 +50,8 @@ public class NoEntityBodyPropertyCheck extends ESBIntegrationTest {
         Assert.assertEquals("", exPayload);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

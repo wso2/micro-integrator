@@ -35,14 +35,15 @@ import java.net.URL;
  */
 public class ESBJAVA5098_WSAddressingSupportTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("WSAProxy");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb") public void testWSAddressingSupport()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb")
+    public void testWSAddressingSupport() throws Exception {
         boolean hasWSAddressing = false;
         Reader data = new StringReader("<payload><element>Test</element></payload>");
         Writer writer = new StringWriter();
@@ -66,7 +67,8 @@ public class ESBJAVA5098_WSAddressingSupportTest extends ESBIntegrationTest {
         Assert.assertTrue(hasWSAddressing, "WS-Addressing headers are not available with header mediator");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

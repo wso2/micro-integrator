@@ -77,7 +77,8 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
@@ -92,8 +93,9 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         Thread.sleep(15000);
     }
 
-    @Test(groups = "wso2.esb", description = "VFS absolute path test for sftp") @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) public void test()
+    @Test(groups = "wso2.esb", description = "VFS absolute path test for sftp")
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    public void test()
             throws XMLStreamException, ProxyServiceAdminProxyAdminException, IOException, InterruptedException {
 
         String baseDir;
@@ -141,7 +143,8 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         Assert.assertTrue(files.length > 0);
     }
 
-    @AfterClass(alwaysRun = true) public void stopSFTPServer() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stopSFTPServer() throws Exception {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();
@@ -184,6 +187,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
     /**
      * Starts a SFTP server on port 22
+     *
      * @param carbonHome
      */
     private void setupSftpServer(String carbonHome) {
@@ -221,10 +225,8 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
     /**
      * Copy the given source file to the given destination
      *
-     * @param sourceFile
-     *                 source file
-     * @param destFile
-     *                 destination file
+     * @param sourceFile source file
+     * @param destFile   destination file
      * @throws IOException
      */
     public static void copyFile(File sourceFile, File destFile) throws IOException {

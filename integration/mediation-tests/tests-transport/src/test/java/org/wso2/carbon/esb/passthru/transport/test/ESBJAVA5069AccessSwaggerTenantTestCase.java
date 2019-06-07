@@ -22,7 +22,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -37,15 +36,16 @@ import java.io.IOException;
 
 public class ESBJAVA5069AccessSwaggerTenantTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         String artifactPath =
                 "artifacts" + File.separator + "ESB" + File.separator + "api" + File.separator + "Tenant.xml";
         loadESBConfigurationFromClasspath(artifactPath);
     }
 
-    @Test(groups = "wso2.esb", description = "Passthru  test case for tenant") public void accessSwagerTest()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Passthru  test case for tenant")
+    public void accessSwagerTest() throws AxisFault {
         try {
             String swaggerURL = getApiInvocationURL("testapi").replace("services/", "");
             HttpResponse response = HttpURLConnectionClient.
@@ -56,7 +56,8 @@ public class ESBJAVA5069AccessSwaggerTenantTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

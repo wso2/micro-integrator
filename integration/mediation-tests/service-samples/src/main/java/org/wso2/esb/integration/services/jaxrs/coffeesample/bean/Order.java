@@ -24,7 +24,8 @@ import java.util.Date;
 import java.util.UUID;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "Order") public class Order {
+@XmlRootElement(name = "Order")
+public class Order {
 
     private String orderId;
 

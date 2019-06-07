@@ -32,11 +32,13 @@ import static org.testng.Assert.assertTrue;
 
 public class ValidateMediator2 extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = { "wso2.esb" }) public void TestWithoutXpath() throws XPathExpressionException {
+    @Test(groups = { "wso2.esb" })
+    public void TestWithoutXpath() throws XPathExpressionException {
         OMElement response = null;
         try {
             response = axis2Client
@@ -48,7 +50,8 @@ public class ValidateMediator2 extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

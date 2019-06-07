@@ -50,7 +50,8 @@ public class CAppDeactivateAndRestartTestCase extends ESBIntegrationTest {
     private File outputFolder;
     private FTPServerManager ftpServerManager;
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
 
         //start FTP server
         startFTPServer();
@@ -84,8 +85,8 @@ public class CAppDeactivateAndRestartTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service is inactive") public void testVFSProxyInactiveState()
-            throws AutomationUtilException, IOException, InterruptedException {
+    @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service is inactive")
+    public void testVFSProxyInactiveState() throws AutomationUtilException, IOException, InterruptedException {
 
         //create test file in the ftp server
         FileUtils.copyFile(new File(
@@ -104,7 +105,8 @@ public class CAppDeactivateAndRestartTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void restoreServerConfiguration() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void restoreServerConfiguration() throws Exception {
         try {
             ApplicationAdminClient applicationAdminClient = new ApplicationAdminClient(
                     context.getContextUrls().getBackEndUrl(), getSessionCookie());

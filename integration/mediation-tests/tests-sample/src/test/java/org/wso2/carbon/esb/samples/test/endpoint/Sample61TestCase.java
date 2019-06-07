@@ -42,7 +42,8 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
     private TCPMonListener listener2;
     private TCPMonListener listener3;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadSampleESBConfiguration(61);
 
@@ -74,9 +75,9 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Routing a Message to a Dynamic List of Recipients") public void testRoutingMessagesToDynamicListOfRecipients()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Routing a Message to a Dynamic List of Recipients")
+    public void testRoutingMessagesToDynamicListOfRecipients() throws Exception {
 
         axis2Client.sendPlaceOrderRequest(getMainSequenceURL(), null, "WSO2");
         Thread.sleep(5000);
@@ -105,7 +106,8 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
         Assert.assertTrue(is9003Called, "Service 9003 not called");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
 
         if (axis2Server1.isStarted()) {

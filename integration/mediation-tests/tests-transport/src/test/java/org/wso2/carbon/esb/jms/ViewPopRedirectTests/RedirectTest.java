@@ -45,8 +45,8 @@ public class RedirectTest extends ESBIntegrationTest {
      * Initializing environment variables
      */
 
-    @BeforeClass(alwaysRun = true, description = "Test Message processor Redirect service") protected void setup()
-            throws Exception {
+    @BeforeClass(alwaysRun = true, description = "Test Message processor Redirect service")
+    protected void setup() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("artifacts/ESB/messageProcessorConfig/RedirectTest.xml");
 
@@ -60,7 +60,8 @@ public class RedirectTest extends ESBIntegrationTest {
         isProxySuccesfullyDeployed(PROXY_NAME);
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
@@ -70,9 +71,8 @@ public class RedirectTest extends ESBIntegrationTest {
      * 3. Call the popandRedirect fucntion and verify that browseMessage function is returning is expected message
      */
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Redirect service for Message processor") public void testRedirect()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Redirect service for Message processor")
+    public void testRedirect() throws Exception {
 
         //Initializing Payload
         String inputPayload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
@@ -117,7 +117,8 @@ public class RedirectTest extends ESBIntegrationTest {
 
     private Callable<Boolean> hasMessage(final String PROCESSOR_NAME) throws Exception {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 returnedMessage = messageProcessorClient.browseMessage(PROCESSOR_NAME);
                 if (returnedMessage == null) {
                     return false;
@@ -129,7 +130,8 @@ public class RedirectTest extends ESBIntegrationTest {
 
     private Callable<Boolean> isProcessorDeactivated(final String PROCESSOR_NAME) throws Exception {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 if (messageProcessorClient.isActive(PROCESSOR_NAME)) {
                     return false;
                 }

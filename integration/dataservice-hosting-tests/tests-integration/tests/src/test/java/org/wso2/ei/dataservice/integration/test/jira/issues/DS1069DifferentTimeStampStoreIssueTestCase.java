@@ -75,7 +75,8 @@ public class DS1069DifferentTimeStampStoreIssueTestCase extends DSSIntegrationTe
 
     private AuthenticatorClient loginClient;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
 
@@ -143,7 +144,8 @@ public class DS1069DifferentTimeStampStoreIssueTestCase extends DSSIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         System.setProperty("carbon.home", backupCarbonHome);
         System.setProperty("user.dir", backupUserDir);
         //        deleteService(serviceName);
@@ -151,8 +153,8 @@ public class DS1069DifferentTimeStampStoreIssueTestCase extends DSSIntegrationTe
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "insert timestamp in America/New_York timezone and UTC timezone, retrieve all and compare whether all are same", alwaysRun = true) public void insertAndTestTimeStampValuesInDbTest()
-            throws Exception {
+            "wso2.dss" }, description = "insert timestamp in America/New_York timezone and UTC timezone, retrieve all and compare whether all are same", alwaysRun = true)
+    public void insertAndTestTimeStampValuesInDbTest() throws Exception {
         OMElement payload = fac.createOMElement("getTimeStamps", omNs);
 
         OMElement result = new AxisServiceClient().sendReceive(payload, backendUrl + serviceName, "getTimeStamps");

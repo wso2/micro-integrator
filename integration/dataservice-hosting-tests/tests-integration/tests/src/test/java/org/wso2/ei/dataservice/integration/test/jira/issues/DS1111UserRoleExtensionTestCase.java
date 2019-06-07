@@ -52,7 +52,8 @@ public class DS1111UserRoleExtensionTestCase extends DSSIntegrationTest {
     private String serviceEndPoint;
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(dssContext);
@@ -73,14 +74,15 @@ public class DS1111UserRoleExtensionTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws RemoteException {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws RemoteException {
         //        deleteService(serviceName);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Check whether role extension returns roles correctly", alwaysRun = true) public void invokeRoleExtensionTest()
-            throws Exception {
+            "wso2.dss" }, description = "Check whether role extension returns roles correctly", alwaysRun = true)
+    public void invokeRoleExtensionTest() throws Exception {
         /*
         When invoking the service endpoint, extension should provide required roles.
          */

@@ -32,13 +32,14 @@ import static org.testng.Assert.assertNotNull;
 
 public class InvokingNonExistingProxyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
     }
 
-    @Test(groups = "wso2.esb", description = "Invoking Non existing proxy service") public void testNonExistingProxyInvocation()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoking Non existing proxy service")
+    public void testNonExistingProxyInvocation() throws Exception {
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/customProxy/non_existing_proxy.xml");
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("NonExistingProxyService"), null, "WSO2");
@@ -48,8 +49,8 @@ public class InvokingNonExistingProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Invoking Non existing proxy service when main sequence has endpoint") public void testMainSequenceForNonExistingProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Invoking Non existing proxy service when main sequence has endpoint")
+    public void testMainSequenceForNonExistingProxy() throws Exception {
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/customProxy/non_existing_proxy_route_to_main.xml");
 
@@ -66,7 +67,8 @@ public class InvokingNonExistingProxyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

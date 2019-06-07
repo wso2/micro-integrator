@@ -28,14 +28,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class RemoveReWriteFullUrlTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteRemoveFullUriTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Remove and rewrite full url", dataProvider = "addressingUrl") public void removeAndReWriteFulUrl(
-            String addUrl) throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Remove and rewrite full url", dataProvider = "addressingUrl")
+    public void removeAndReWriteFulUrl(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -44,11 +44,13 @@ public class RemoveReWriteFullUrlTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() {
         return new Object[][] { { "http://localhost:9000/soap/SimpleStockQuoteService" },
                 { "http://localhost:9000/SimpleStockQuoteService" }, { "http://localhost:9000/soap/SimpleStockQuote" },
                 { "http://localhost:9000/soap/service/SimpleStockQuote" },

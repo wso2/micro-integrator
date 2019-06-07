@@ -20,7 +20,8 @@ public class Sample651TestCase extends ESBSampleIntegrationTest {
     private ServerConfigurationManager serverManager = null;
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true) public void startJMSBrokerAndConfigureESB() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void startJMSBrokerAndConfigureESB() throws Exception {
 
         super.init();
         serverManager = new ServerConfigurationManager(context);
@@ -56,9 +57,9 @@ public class Sample651TestCase extends ESBSampleIntegrationTest {
         loadSampleESBConfiguration(100);
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test synapse observer ", enabled = false) public void testSynapseObservers()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test synapse observer ", enabled = false)
+    public void testSynapseObservers() throws Exception {
 
         Thread.sleep(30000);
 
@@ -76,7 +77,8 @@ public class Sample651TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         //reverting the changes done to esb sever
 

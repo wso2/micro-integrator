@@ -28,14 +28,15 @@ public class ESBJAVA3019_ScriptWithNullJson extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         verifyProxyServiceExistence("ScriptWithNullJsonValueTest");
     }
 
-    @Test(groups = "wso2.esb", description = "Test for check http status code can be retrived form HTTP_SC") public void testScriptWithNullJsonValue()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test for check http status code can be retrived form HTTP_SC")
+    public void testScriptWithNullJsonValue() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ScriptWithNullJsonValueTest"), null, "IBM");
@@ -56,7 +57,8 @@ public class ESBJAVA3019_ScriptWithNullJson extends ESBIntegrationTest {
         assertFalse(jsonNullErrorFound);
     }
 
-    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void unDeployService() throws Exception {
         super.cleanup();
     }
 

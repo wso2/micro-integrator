@@ -47,7 +47,8 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     private LogViewerClient logViewerClient;
     private ActiveMQServer activeMQServer = new ActiveMQServer();
 
-    @BeforeClass(alwaysRun = true) public void deployeService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployeService() throws Exception {
         super.init();
         activeMQServer.startJMSBroker();
         loadESBConfigurationFromClasspath(
@@ -56,7 +57,8 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test whether a Message Processor retries sending the message to the EP when the response status code is 500 and MP is configured with 200,202 as non-retry status codes.") public void testMPRetryUponHTTP_SC_500_response_with_200_And_202_AsNonRetrySCs()
+            "wso2.esb" }, description = "Test whether a Message Processor retries sending the message to the EP when the response status code is 500 and MP is configured with 200,202 as non-retry status codes.")
+    public void testMPRetryUponHTTP_SC_500_response_with_200_And_202_AsNonRetrySCs()
             throws RemoteException, InterruptedException {
         boolean isRetriedUpon_500_response = false;
         boolean isRetryCompleted = false;
@@ -89,7 +91,8 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
                 "MP does not retry sending the request upon receiving HTTP SC 500 response");
     }
 
-    @AfterClass(alwaysRun = true) public void UndeployeService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void UndeployeService() throws Exception {
         super.cleanup();
         activeMQServer.stopJMSBroker();
     }

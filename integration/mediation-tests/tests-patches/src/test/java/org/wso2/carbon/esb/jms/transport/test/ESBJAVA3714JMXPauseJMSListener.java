@@ -49,7 +49,8 @@ public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
     private JMXClient jmxClient;
     private MBeanServerConnection mbsc;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils
                 .loadResource("/artifacts/ESB/jms/transport/ESBJAVA3714_JMX_Pause_JMS_Listener.xml");
@@ -59,8 +60,8 @@ public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
         mbsc = jmxClient.connect();
     }
 
-    @Test(groups = "wso2.esb", description = "JMS Consumer Test before pause") public void testJMSListner()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "JMS Consumer Test before pause")
+    public void testJMSListner() throws Exception {
         String msg = "";
         // Put message in queue.
         sendMessage(msgBefore);
@@ -68,8 +69,8 @@ public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
         assertTrue(Utils.checkForLogsWithPriority(logViewerClient, "INFO", msgBefore, 10));
     }
 
-    @Test(groups = "wso2.esb", description = "JMS Consumer Test after pause") public void testJMSPause()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "JMS Consumer Test after pause")
+    public void testJMSPause() throws Exception {
 
         // pause JMS Listener from JMXClient
         Set<ObjectInstance> objSet = mbsc
@@ -89,8 +90,8 @@ public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
     }
 
     //This was disabled since it failed to start JMS listener intermittently
-    @Test(groups = "wso2.esb", description = "JMS Consumer Test after resume", enabled = false) public void testJMSResume()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "JMS Consumer Test after resume", enabled = false)
+    public void testJMSResume() throws Exception {
 
         // redeploy proxy service
         addProxyService(AXIOMUtil.stringToOM(getJMSProxy()));
@@ -154,7 +155,8 @@ public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
                 + "    </proxy>";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         jmxClient.disconnect();
     }

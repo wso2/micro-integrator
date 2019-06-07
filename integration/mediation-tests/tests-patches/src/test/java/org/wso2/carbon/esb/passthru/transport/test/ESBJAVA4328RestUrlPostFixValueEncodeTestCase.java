@@ -34,15 +34,16 @@ public class ESBJAVA4328RestUrlPostFixValueEncodeTestCase extends ESBIntegration
     private OMElement response;
     private HttpClientUtil client;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("Axis2RestServiceEncoded");
         client = new HttpClientUtil();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-REST URL Postfix Encode") public void testRESTUrlPostFix()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-REST URL Postfix Encode")
+    public void testRESTUrlPostFix() throws Exception {
         response = client.get(getProxyServiceURLHttp("Axis2RestServiceEncoded") + "/echoString?in=wso2");
         assertNotNull(response, "Response is null");
         assertEquals(response.getQName().getLocalPart(), "echoStringResponse", "Tag does not match");
@@ -51,7 +52,8 @@ public class ESBJAVA4328RestUrlPostFixValueEncodeTestCase extends ESBIntegration
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

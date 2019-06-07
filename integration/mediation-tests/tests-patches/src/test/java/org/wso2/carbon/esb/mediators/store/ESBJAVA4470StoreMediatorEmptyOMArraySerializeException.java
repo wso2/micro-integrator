@@ -41,7 +41,8 @@ public class ESBJAVA4470StoreMediatorEmptyOMArraySerializeException extends ESBI
     String carFileName = "StoreMediator_1.0.0.car";
     LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadCapp(carFileName, new DataHandler(new FileDataSource(
@@ -50,9 +51,8 @@ public class ESBJAVA4470StoreMediatorEmptyOMArraySerializeException extends ESBI
         log.info(carFileName + " uploaded successfully");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test if Store Mediator Serialize Empty OM Array without Exception") public void testStoreMediatorEmptyOMArrayPropertySerialize()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test if Store Mediator Serialize Empty OM Array without Exception")
+    public void testStoreMediatorEmptyOMArrayPropertySerialize() throws Exception {
         logViewerClient.clearLogs();
         String url = getApiInvocationURL("SerializeProperty") + "/serializeOMArray";
         SimpleHttpClient httpClient = new SimpleHttpClient();
@@ -71,7 +71,8 @@ public class ESBJAVA4470StoreMediatorEmptyOMArraySerializeException extends ESBI
         assertFalse(logFound, "Exception thrown when serializing OM Array property by Store Mediator");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         String carlocation =
                 FrameworkPathUtil.getCarbonHome() + "/repository/deployment/server/carbonapps/" + carFileName;
         File carFile = new File(carlocation);

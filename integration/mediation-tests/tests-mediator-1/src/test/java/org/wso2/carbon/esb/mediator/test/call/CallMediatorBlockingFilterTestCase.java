@@ -33,7 +33,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingFilterTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
@@ -41,15 +42,16 @@ public class CallMediatorBlockingFilterTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Call the endpoint with blocking external calls according to the filter") public void callMediatorBlockingFilterTest()
-            throws AxisFault {
+            "wso2.esb" }, description = "Call the endpoint with blocking external calls according to the filter")
+    public void callMediatorBlockingFilterTest() throws AxisFault {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

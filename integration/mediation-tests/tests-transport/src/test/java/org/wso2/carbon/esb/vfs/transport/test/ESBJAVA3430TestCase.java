@@ -28,7 +28,8 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
     private String pathToFtpDir;
 
-    @BeforeClass(alwaysRun = true) public void runFTPServer() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void runFTPServer() throws Exception {
 
         // Username password for the FTP server to be started
         FTPUsername = "admin";
@@ -70,7 +71,8 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void stopFTPServer() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stopFTPServer() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -80,8 +82,8 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP directly in root directory") public void TestCreateFileInRoot()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP directly in root directory")
+    public void TestCreateFileInRoot() throws Exception {
 
         // To check the timed out exception happened
         boolean timeout = false;
@@ -113,8 +115,8 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
                 " The null check for the replyFile.getParent() in VFSTransportSender is not available");
     }
 
-    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP, in a directory under root") public void TestCreateFileInDirectoryUnderRoot()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP, in a directory under root")
+    public void TestCreateFileInDirectoryUnderRoot() throws Exception {
 
         // To check the timed out exception happened
         boolean timeout = false;

@@ -47,7 +47,8 @@ public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
     private boolean isCarFileUploaded = false;
 
-    @BeforeClass(alwaysRun = true) protected void uploadCarFileTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void uploadCarFileTest() throws Exception {
         super.init();
         carbonAppUploaderClient = new CarbonAppUploaderClient(context.getContextUrls().getBackEndUrl(),
                 getSessionCookie());
@@ -64,9 +65,8 @@ public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "test endpoint deployment from car file") public void artifactDeploymentAndServiceInvocation()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test endpoint deployment from car file")
+    public void artifactDeploymentAndServiceInvocation() throws Exception {
         Assert.assertTrue(esbUtils.isEndpointDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
                 "stockQuoteServiceEndpoint"), "AddressEndpoint Endpoint deployment failed");
         Assert.assertTrue(esbUtils.isProxyDeployed(context.getContextUrls().getBackEndUrl(), getSessionCookie(),
@@ -90,8 +90,8 @@ public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "test proxy service invocation", dependsOnMethods = {
-            "artifactDeploymentAndServiceInvocation" }) public void deleteCarFileAndArtifactUnDeploymentTest()
-            throws Exception {
+            "artifactDeploymentAndServiceInvocation" })
+    public void deleteCarFileAndArtifactUnDeploymentTest() throws Exception {
         applicationAdminClient.deleteApplication(carFileName);
         isCarFileUploaded = false;
         Assert.assertTrue(isCarFileUnDeployed(carFileName), "Car file undeployment failed");
@@ -108,7 +108,8 @@ public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanupArtifactsIfExist() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanupArtifactsIfExist() throws Exception {
         if (isCarFileUploaded) {
             applicationAdminClient.deleteApplication(carFileName);
         }

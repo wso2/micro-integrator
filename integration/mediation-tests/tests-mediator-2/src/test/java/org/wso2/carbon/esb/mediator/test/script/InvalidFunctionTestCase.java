@@ -32,18 +32,21 @@ import javax.xml.xpath.XPathExpressionException;
 
 public class InvalidFunctionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "Try to invoke a non-existing function in a script. it throws an AxisFault.", expectedExceptions = {
-            AxisFault.class }) public void testInvokeNonExistingFunc() throws AxisFault {
+            AxisFault.class })
+    public void testInvokeNonExistingFunc() throws AxisFault {
         axis2Client.sendCustomQuoteRequest(
                 getProxyServiceURLHttp("scriptMediatorJSStoredInRegistryInvalidFunctionTestProxy"), null, "WSO2");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

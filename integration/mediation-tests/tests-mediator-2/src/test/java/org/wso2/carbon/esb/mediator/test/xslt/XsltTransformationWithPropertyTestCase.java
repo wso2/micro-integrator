@@ -28,13 +28,14 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class XsltTransformationWithPropertyTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do XSLT transformation by Passing a value through the property element to the xslt") public void xsltTransformationWithProperty()
-            throws AxisFault {
+            "wso2.esb" }, description = "Do XSLT transformation by Passing a value through the property element to the xslt")
+    public void xsltTransformationWithProperty() throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -47,7 +48,8 @@ public class XsltTransformationWithPropertyTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -36,18 +36,20 @@ import static org.testng.Assert.assertNotNull;
  */
 public class PropertyIntegrationSystemDatePropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("SYSTEM_DATE_TestProxy");
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Test return of the current date") public void testSystemDate()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test return of the current date")
+    public void testSystemDate() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SYSTEM_DATE_TestProxy"), null, "MSFT");

@@ -32,7 +32,8 @@ import javax.xml.xpath.XPathExpressionException;
 
 public class InvalidXSLTTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/transformerProxy/invalid_xslt_test.xml");
@@ -40,12 +41,13 @@ public class InvalidXSLTTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Transformer proxy"
-            + "- Invalid XSLT referred, AxisFault Expected", expectedExceptions = AxisFault.class) public void testTransformerProxy()
-            throws Exception {
+            + "- Invalid XSLT referred, AxisFault Expected", expectedExceptions = AxisFault.class)
+    public void testTransformerProxy() throws Exception {
         axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("invalidXsltTransformerProxy"), null, "WSO2");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

@@ -53,7 +53,8 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
     private final String GERONIMO_JMS = "geronimo-jms_1.1_spec-1.1.1.jar";
     private final String JAR_LOCATION = "/artifacts/ESB/jar";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -75,13 +76,14 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Test Inbound EP in clustered environment "
-            + "when the clustering pattern is nonWorkerManager") public void testInboundEPWithNonWorkerManager()
-            throws Exception {
+            + "when the clustering pattern is nonWorkerManager")
+    public void testInboundEPWithNonWorkerManager() throws Exception {
         Assert.assertFalse("Check whether the node is considered as manager or not when the clustering pattern"
                 + " is nonWorkerManager", this.stringExistsInLog(INBOUND_EP_MESSAGE_FOR_MANAGER));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
         serverConfigurationManager = null;

@@ -45,16 +45,16 @@ public class JMSInboundMessageSupportTestCase extends ESBIntegrationTest {
     private int numberOfMessagesReceived = 0;
     private long startTime;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         jmsQueueMessageProducer = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "JMS Inbound Endpoint Polling BytesMessages from a Queue") public void testBytesMessageType()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "JMS Inbound Endpoint Polling BytesMessages from a Queue")
+    public void testBytesMessageType() throws Exception {
         endpointName = "BytesMessageEndpoint";
         queueName = "BytesMessageQueue";
         logViewerClient.clearLogs();
@@ -92,9 +92,8 @@ public class JMSInboundMessageSupportTestCase extends ESBIntegrationTest {
                 "JMS Inbound Endpoint couldn't consume" + " BytesMessages from Queue");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "JMS Inbound Endpoint Polling MapMessages from a Queue") public void testMapMessageType()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "JMS Inbound Endpoint Polling MapMessages from a Queue")
+    public void testMapMessageType() throws Exception {
         endpointName = "MapMessageEndpoint";
         queueName = "MapMessageQueue";
         logViewerClient.clearLogs();
@@ -126,7 +125,8 @@ public class JMSInboundMessageSupportTestCase extends ESBIntegrationTest {
                 "JMS Inbound Endpoint couldn't consume" + " MapMessages from Queue");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

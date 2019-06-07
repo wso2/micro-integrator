@@ -40,20 +40,21 @@ public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationT
 
     private static LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATH_URL_PROPERTY.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test getting the  URI element of a request URL") public void testXpathURLProperty()
-            throws IOException, XMLStreamException, LogViewerLogViewerException {
+    @Test(groups = { "wso2.esb" }, description = "Test getting the  URI element of a request URL")
+    public void testXpathURLProperty() throws IOException, XMLStreamException, LogViewerLogViewerException {
         boolean isUri = false;
         logViewer.clearLogs();
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("editing") + "/edit?a=wso2&b=2.4", null);

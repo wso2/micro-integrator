@@ -33,15 +33,15 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingAPITestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("CallBlockingPayloadAPI");
         verifyAPIExistence("replyAPI");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test invoking dynamic endpoint with blocking call") public void callMediatorBlockingAPITest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test invoking dynamic endpoint with blocking call")
+    public void callMediatorBlockingAPITest() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getApiInvocationURL("testBlockingApi"), null, "WSO2");
         assertNotNull(response, "Empty response received");
@@ -49,7 +49,8 @@ public class CallMediatorBlockingAPITestCase extends ESBIntegrationTest {
         assertTrue(responseContainsWSO2, "Response does not contain expected output.Received: " + response);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

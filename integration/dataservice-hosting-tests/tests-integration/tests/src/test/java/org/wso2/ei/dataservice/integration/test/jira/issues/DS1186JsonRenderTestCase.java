@@ -49,7 +49,8 @@ public class DS1186JsonRenderTestCase extends DSSIntegrationTest {
     private String serviceEndPoint;
     Map<String, String> headers;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         addResource();
         deployService(serviceName, new DataHandler(
@@ -58,15 +59,16 @@ public class DS1186JsonRenderTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttps(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         deleteResource();
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Check whether the JSON render service works when there is '&'", alwaysRun = true) public void jsonRenderWithSecurity()
-            throws Exception {
+            "wso2.dss" }, description = "Check whether the JSON render service works when there is '&'", alwaysRun = true)
+    public void jsonRenderWithSecurity() throws Exception {
         HttpResponse response = this.getHttpResponse(serviceEndPoint + "status", "application/json");
         String receivedResult = response.getData();
         String expectedResult = "{\"Entries\":{\"Entry\":[{\"status\":\"1 & 2\"}]}}";

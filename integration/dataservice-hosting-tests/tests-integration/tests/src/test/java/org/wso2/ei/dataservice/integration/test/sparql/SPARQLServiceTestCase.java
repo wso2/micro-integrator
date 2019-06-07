@@ -53,7 +53,8 @@ public class SPARQLServiceTestCase extends DSSIntegrationTest {
     private final String serviceName = "SPARQLDataService";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         serviceEndPoint = getServiceUrlHttp(serviceName);
         String resourceFileLocation = getResourceLocation();
@@ -63,13 +64,14 @@ public class SPARQLServiceTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = { "wso2.dss" }) public void getAllBookmarkData() throws IOException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void getAllBookmarkData() throws IOException, XPathExpressionException {
         if (isExternalEndpointAvailable()) {
             String endpoint = serviceEndPoint + ".SOAP11Endpoint/";
             String content =
@@ -141,8 +143,8 @@ public class SPARQLServiceTestCase extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteService()
-            throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

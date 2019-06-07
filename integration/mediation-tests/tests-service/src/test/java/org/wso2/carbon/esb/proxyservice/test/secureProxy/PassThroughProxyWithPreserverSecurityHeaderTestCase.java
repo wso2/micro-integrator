@@ -38,20 +38,22 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
             TestConfigurationProvider.getSecurityPolicyLocation() + File.separator + "custom" + File.separator;
     private final String proxyName = "StockQuoteProxyPreserveHeaderScenario";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         updateESBConfiguration(SecureEndpointSetter
                 .setEndpoint("artifacts/ESB/proxyconfig/proxy/secureProxy/passthrough_proxy_with_secueBackEnd.xml"));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario1()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario1() throws Exception {
         applySecurity("UTSecureStockQuoteProxy", 1, getUserRole());
         addProxy();
         OMElement response = new SecureStockQuoteClient()
@@ -68,8 +70,8 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario2()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario2() throws Exception {
 
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest(null, null, getProxyServiceURLHttp(proxyName + "2"),
@@ -85,8 +87,8 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario3()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario3() throws Exception {
 
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest(null, null, getProxyServiceURLHttp(proxyName + "3"),
@@ -102,8 +104,8 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario4()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario4() throws Exception {
 
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest(null, null, getProxyServiceURLHttp(proxyName + "4"),
@@ -119,8 +121,8 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario5()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario5() throws Exception {
 
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest(null, null, getProxyServiceURLHttp(proxyName + "5"),
@@ -136,8 +138,8 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario6()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario6() throws Exception {
 
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest(null, null, getProxyServiceURLHttp(proxyName + "6"),
@@ -153,8 +155,8 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario7()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario7() throws Exception {
 
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest("bob", "password", getProxyServiceURLHttp(proxyName + "7"),
@@ -170,8 +172,8 @@ public class PassThroughProxyWithPreserverSecurityHeaderTestCase extends ESBInte
 
     }
 
-    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service") public void secureRequestScenario8()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "secure Request to a pass through proxy refer secure backend service")
+    public void secureRequestScenario8() throws Exception {
 
         OMElement response = new SecureStockQuoteClient()
                 .sendSecuredSimpleStockQuoteRequest("bob", "password", getProxyServiceURLHttp(proxyName + "8"),

@@ -31,15 +31,16 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class DynamicKeyXsltTransformationTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         uploadResourcesToRegistry();
     }
 
     @Test(groups = { "wso2.esb" }, description =
             "Do XSLT transformation by Select the key type as dynamic key and retrieve"
-                    + " the transformation from that.") public void xsltTransformationFromDynamicKey()
-            throws Exception {
+                    + " the transformation from that.")
+    public void xsltTransformationFromDynamicKey() throws Exception {
         OMElement response;
         response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("xsltDynamicKeySequenceTestProxy"), null, "IBM");
@@ -49,7 +50,8 @@ public class DynamicKeyXsltTransformationTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         try {
             clearRegistry();
         } finally {

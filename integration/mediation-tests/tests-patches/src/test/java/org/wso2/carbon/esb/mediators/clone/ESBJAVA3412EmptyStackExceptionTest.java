@@ -22,7 +22,8 @@ import java.rmi.RemoteException;
 public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true) public void deployService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployService() throws Exception {
         /* initializing server configuration */
         super.init();
         /* deploying the artifact defined in the proxy_service.xml */
@@ -40,8 +41,8 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
      * @throws InterruptedException
      * @throws RemoteException
      */
-    @Test(groups = "wso2.esb", description = "Checking for Empty Stack Exception when clone mediators are used with continue parent attribute set to true") public void testForEmptyStackAfterCloned_With_ContinueParent()
-            throws InterruptedException, RemoteException {
+    @Test(groups = "wso2.esb", description = "Checking for Empty Stack Exception when clone mediators are used with continue parent attribute set to true")
+    public void testForEmptyStackAfterCloned_With_ContinueParent() throws InterruptedException, RemoteException {
         final String expectedErrorMsg = "Unexpected error executing task/async inject";
         final String expectedStackTrace = "java.util.Stack.peek";
 
@@ -81,7 +82,8 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
         Assert.assertTrue(!isEmptyStackError, "Empty Stack ERROR message was found in the LOG stream.");
     }
 
-    @AfterClass(alwaysRun = true) public void unDeployService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void unDeployService() throws Exception {
         /* undeploying deployed artifact */
         super.cleanup();
     }

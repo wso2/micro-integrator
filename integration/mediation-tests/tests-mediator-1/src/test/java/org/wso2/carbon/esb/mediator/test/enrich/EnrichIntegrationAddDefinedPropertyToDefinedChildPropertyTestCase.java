@@ -30,14 +30,15 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationAddDefinedPropertyToDefinedChildPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichAddChildFromPropertyTestProxy");
     }
 
     //add a child to the response body, and check whether those child elements are contained in the response.
-    @Test(groups = "wso2.esb", description = "Add defined property as a child of envelop (of out going message) ") public void testEnrichMediator()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Add defined property as a child of envelop (of out going message) ")
+    public void testEnrichMediator() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -52,7 +53,8 @@ public class EnrichIntegrationAddDefinedPropertyToDefinedChildPropertyTestCase e
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

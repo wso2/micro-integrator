@@ -39,13 +39,15 @@ import static org.testng.Assert.assertNotNull;
  * invoking the script with the given 'key'.
  */
 public class MediationWithNashornJsScriptStoredInRegistryTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "Mediate with NashornJs script which is stored in registry by "
-            + "invoking it with the given 'key'") public void testJSMediatorWithTheGivenKey() throws Exception {
+            + "invoking it with the given 'key'")
+    public void testJSMediatorWithTheGivenKey() throws Exception {
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorNashornJsRetrieveFromRegistryTestProxy"),
@@ -60,7 +62,8 @@ public class MediationWithNashornJsScriptStoredInRegistryTestCase extends ESBInt
                 "Fault " + "response null localpart");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         clearUploadedResource();
     }

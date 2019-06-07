@@ -31,20 +31,21 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class RouterMediatorContinueAfterPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void setEnvironment() throws Exception {
+    @BeforeClass
+    public void setEnvironment() throws Exception {
         init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests with continueAfter=true") public void testContinueAfterTrue()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests with continueAfter=true")
+    public void testContinueAfterTrue() throws Exception {
         verifyProxyServiceExistence("routerContinueAfterTrueTestProxy");
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("routerContinueAfterTrueTestProxy"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @Test(groups = "wso2.esb", description = "Tests with continueAfter=false") public void testContinueAfterFalse()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests with continueAfter=false")
+    public void testContinueAfterFalse() throws Exception {
         verifyProxyServiceExistence("routerContinueAfterFalseTestProxy");
         OMElement response = null;
         try {
@@ -58,7 +59,8 @@ public class RouterMediatorContinueAfterPropertyTestCase extends ESBIntegrationT
         Assert.assertTrue(response == null, "Response should be null");
     }
 
-    @AfterClass public void close() throws Exception {
+    @AfterClass
+    public void close() throws Exception {
         super.cleanup();
     }
 

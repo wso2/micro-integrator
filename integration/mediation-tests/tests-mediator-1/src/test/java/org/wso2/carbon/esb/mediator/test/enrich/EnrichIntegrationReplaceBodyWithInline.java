@@ -31,13 +31,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationReplaceBodyWithInline extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichReplaceBodyWithInlineTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Replace body with inline") public void testEnrichMediator()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Replace body with inline")
+    public void testEnrichMediator() throws Exception {
         OMElement response1, response2;
 
         response1 = axis2Client
@@ -75,7 +76,8 @@ public class EnrichIntegrationReplaceBodyWithInline extends ESBIntegrationTest {
         return method;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

@@ -41,7 +41,8 @@ public class ESBJAVA4931PreserveContentTypeHeaderCharSetTestCase extends ESBInte
 
     WireMonitorServer wireMonitorServer;
 
-    @BeforeTest(alwaysRun = true) public void init() throws Exception {
+    @BeforeTest(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         wireMonitorServer = new WireMonitorServer(6780);
@@ -58,8 +59,8 @@ public class ESBJAVA4931PreserveContentTypeHeaderCharSetTestCase extends ESBInte
     }
 
     @Test(groups = "wso2.esb", description =
-            "Test to check whether the Content-Type header charset is preserved when sending "
-                    + "requests to back end") public void testPreserveContentTypeHeader() throws Exception {
+            "Test to check whether the Content-Type header charset is preserved when sending " + "requests to back end")
+    public void testPreserveContentTypeHeader() throws Exception {
 
         String proxyServiceUrl = getProxyServiceURLHttp("PreserveContentTypeHeaderCharSetTestProxy");
 
@@ -91,7 +92,8 @@ public class ESBJAVA4931PreserveContentTypeHeaderCharSetTestCase extends ESBInte
         Assert.assertTrue(isCharSetPreserved, "Charset has been dropped from Content-Type header");
     }
 
-    @AfterTest(alwaysRun = true) public void destroy() throws Exception {
+    @AfterTest(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

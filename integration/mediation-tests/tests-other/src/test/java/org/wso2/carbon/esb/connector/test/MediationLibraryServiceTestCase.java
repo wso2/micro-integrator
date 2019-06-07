@@ -66,7 +66,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
@@ -89,8 +90,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test connector deploying, enabling and deleting.") public void deployEnableDeleteConnectorTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test connector deploying, enabling and deleting.")
+    public void deployEnableDeleteConnectorTest() throws Exception {
 
         String expectedImport =
                 "<import xmlns=\"http://ws.apache.org/ns/synapse\" name=\"amazons3\" package=\"org.wso2.carbon"
@@ -123,8 +124,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test add, get and delete functionality for imports.") public void importsFunctionalityTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test add, get and delete functionality for imports.")
+    public void importsFunctionalityTest() throws Exception {
 
         String expectedImport = "<import xmlns=\"http://ws.apache.org/ns/synapse\" name=\"hello\" package=\"org.wso2"
                 + ".carbon.connector\" status=\"enabled\"/>";
@@ -167,8 +168,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test retrieving library information.") public void libraryInfoTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test retrieving library information.")
+    public void libraryInfoTest() throws Exception {
 
         LibraryInfo[] allLibraryInfo = getAllLibraryInfo();
         LibraryInfo helloLibraryInfo = null;
@@ -206,8 +207,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test retrieving libraries list.") public void getLibrariesTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test retrieving libraries list.")
+    public void getLibrariesTest() throws Exception {
 
         String[] libraries = getAllLibraries();
         boolean isHelloExists = false;
@@ -230,8 +231,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test connector upload and invoke.") public void invokeConnectorTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test connector upload and invoke.")
+    public void invokeConnectorTest() throws Exception {
 
         String apiURI = "http://localhost:8480/library-service/get-message";
         String expectedOutput = "<message>Bob</message>";
@@ -259,8 +260,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test faulty connector.") public void faultyConnectorTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test faulty connector.")
+    public void faultyConnectorTest() throws Exception {
 
         //upload a faulty connector
         try {
@@ -292,8 +293,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test downloading connector archive.") public void downloadConnectorArchiveTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test downloading connector archive.")
+    public void downloadConnectorArchiveTest() throws Exception {
 
         //try to download the hello connector
         try {
@@ -371,7 +372,8 @@ public class MediationLibraryServiceTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         deleteLibrary(HELLO_CONNECTOR_LIB_QNAME);
         Thread.sleep(5000);
     }

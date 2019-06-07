@@ -37,14 +37,16 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationBodyToSiblingOfBodyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichBodyToSiblingOfBodyTest");
     }
 
     //get the body of request and add it as a sibling of response.
     @Test(groups = "wso2.esb", description = "Add custom content as a child to the part of message"
-            + " specified by xpath expression ") public void testEnrichMediator() throws Exception {
+            + " specified by xpath expression ")
+    public void testEnrichMediator() throws Exception {
         String soapResponse = getResponse();
 
         assertNotNull(soapResponse, "Response message null");
@@ -63,7 +65,8 @@ public class EnrichIntegrationBodyToSiblingOfBodyTestCase extends ESBIntegration
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

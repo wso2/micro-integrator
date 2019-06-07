@@ -21,15 +21,16 @@ import static org.testng.Assert.assertNotNull;
 
 public class PayloadFactoryWithDynamicKeyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/payload_factory_dynamic_key.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Payload Factory invocation with a key which its format can be saved as a local entry or registry resource") public void testInvokeAScriptWithDynamicKey()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Payload Factory invocation with a key which its format can be saved as a local entry or registry resource")
+    public void testInvokeAScriptWithDynamicKey() throws Exception {
 
         OMElement response = axis2Client.sendSimpleQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
@@ -42,7 +43,8 @@ public class PayloadFactoryWithDynamicKeyTestCase extends ESBIntegrationTest {
                 "Fault response : doesn't contain element \'Code\'");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

@@ -47,7 +47,8 @@ public class ESBJAVA4630RabbitMQMultipleListenerTestCase extends ESBIntegrationT
     private RabbitMQServer rabbitMQServer;
     private ServerConfigurationManager configurationManagerAxis2;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         configurationManagerAxis2 = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -83,9 +84,8 @@ public class ESBJAVA4630RabbitMQMultipleListenerTestCase extends ESBIntegrationT
         Assert.fail("Could not connect to RabbitMQ broker");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test for multiple message listners per proxy") public void testRabbitMQMultipleMessageListners()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test for multiple message listners per proxy")
+    public void testRabbitMQMultipleMessageListners() throws Exception {
 
         proxyServiceAdminClient.stopProxyService(RABBIT_MQ_MULTIPLE_LISTNER_PROXY);
         RabbitMQConsumerClient consumer = new RabbitMQConsumerClient("localhost");
@@ -134,7 +134,8 @@ public class ESBJAVA4630RabbitMQMultipleListenerTestCase extends ESBIntegrationT
         }
     }
 
-    @AfterClass(alwaysRun = true) public void end() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void end() throws Exception {
         super.cleanup();
         try {
             rabbitMQServer.stop();

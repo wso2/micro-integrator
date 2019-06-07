@@ -47,7 +47,8 @@ public class ConcurrentAccessLargeRequestCountSmallValueTest extends ESBIntegrat
     private int deniedRequests;
     private ThrottleTestCounter requestThrottledClients;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         verifyProxyServiceExistence("throttlingConcurrentAccessLargeRequestCountTestProxy");
@@ -62,8 +63,8 @@ public class ConcurrentAccessLargeRequestCountSmallValueTest extends ESBIntegrat
     }
 
     @Test(groups = "wso2.esb", description = "Concurrency throttling and request rate based throttling "
-            + "-MaximumConcurrentAccess = 100 and MaximumCount=2 (very small value)", timeOut = 1000 * 60
-            * 2) public void testConcurrencyAndRequestBasedPolicyThrottling() throws InterruptedException {
+            + "-MaximumConcurrentAccess = 100 and MaximumCount=2 (very small value)", timeOut = 1000 * 60 * 2)
+    public void testConcurrencyAndRequestBasedPolicyThrottling() throws InterruptedException {
         startClients();
         while (clientsDone.getCount() < CONCURRENT_CLIENTS) {
             Thread.sleep(1000);
@@ -82,7 +83,8 @@ public class ConcurrentAccessLargeRequestCountSmallValueTest extends ESBIntegrat
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         concurrencyAndRequestThrottleTestClients = null;
         clients = null;
         clientsDone = null;

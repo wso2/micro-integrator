@@ -35,21 +35,23 @@ public class RabbitMQStoreTestCase extends ESBIntegrationTest {
     private static LogViewerClient logViewer;
     private AxisServiceClient client = new AxisServiceClient();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/store/rabbitmqStoreTest.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.esb", description = "Testing store and forward mechanism using RabbitMQ message store") public void testRMQStoreAndForward()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing store and forward mechanism using RabbitMQ message store")
+    public void testRMQStoreAndForward() throws Exception {
         logViewer.clearLogs();
         client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("rmqstoreTestProxy"), "getQuote");
         assertTrue(Utils.checkForLog(logViewer, "RMQ Company", 1000),
                 "Message not dispatched from the store and sent to the backend!");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             //Empty try block just to make sure the deployed artifacts are removed regardless of test passing or failing
         } finally {

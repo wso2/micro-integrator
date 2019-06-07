@@ -70,11 +70,13 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
     private String modifiedTime;
     private String feedURL;
 
-    @Factory(dataProvider = "userModeDataProvider") public EventingSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public EventingSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true, enabled = false)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation;
         feedURL = "https://mail.google.com/mail/feed/atom";
@@ -97,19 +99,20 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @AfterClass(alwaysRun = true, enabled = false) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false)
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false) public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = false)
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = "wso2.dss", description = "Add new product", dependsOnMethods = "testServiceDeployment", enabled = false) public void testAddProduct()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = "wso2.dss", description = "Add new product", dependsOnMethods = "testServiceDeployment", enabled = false)
+    public void testAddProduct() throws RemoteException, DataServiceFault {
         //        eventingSampleStub.addProduct(productCode, "Line1", "BVK-Name", 100, 123.00);
         //        getProductByCode();
         new AxisServiceClient().sendRobust(getAddPayload(), serverEpr, "addProduct");
@@ -119,8 +122,8 @@ public abstract class EventingSampleTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.dss", description = "update product quantity", dependsOnMethods = "testAddProduct", enabled = false) public void testUpdateQuantity()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = "wso2.dss", description = "update product quantity", dependsOnMethods = "testAddProduct", enabled = false)
+    public void testUpdateQuantity() throws RemoteException, DataServiceFault {
         //        eventingSampleStub.updateProductQuantity(productCode, 1);
         //        getProductByCode();
         new AxisServiceClient().sendRobust(updateProductPayload(), serverEpr, "updateProductQuantity");

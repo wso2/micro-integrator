@@ -39,18 +39,20 @@ public class PropertyIntegrationMessageFormatPropertyTestCase extends ESBIntegra
     private HttpClientUtil clientUtil;
     private String proxyName = "MESSAGE_FORMAT_TestProxy";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("MESSAGE_FORMAT_TestProxy");
         clientUtil = new HttpClientUtil();
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing with POX message format") public void testMessageFormatPOXTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with POX message format")
+    public void testMessageFormatPOXTest() throws Exception {
 
         for (int x = 0; x < 4; x++) {
             OMElement response = clientUtil.get(getProxyServiceURLHttp(proxyName));
@@ -60,8 +62,8 @@ public class PropertyIntegrationMessageFormatPropertyTestCase extends ESBIntegra
 
     }
 
-    @Test(groups = "wso2.esb", description = "Testing with SOAP 1.1 message format", dependsOnMethods = "testMessageFormatPOXTest") public void testMessageFormatSOAP11Test()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Testing with SOAP 1.1 message format", dependsOnMethods = "testMessageFormatPOXTest")
+    public void testMessageFormatSOAP11Test() throws Exception {
 
         AxisServiceClient axisServiceClient = new AxisServiceClient();
 

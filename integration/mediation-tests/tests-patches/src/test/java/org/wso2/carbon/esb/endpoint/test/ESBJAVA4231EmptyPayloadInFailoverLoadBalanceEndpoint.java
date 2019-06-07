@@ -39,7 +39,8 @@ public class ESBJAVA4231EmptyPayloadInFailoverLoadBalanceEndpoint extends ESBInt
     private SampleAxis2Server axis2Server2;
     private LoadbalanceFailoverClient lbClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
@@ -49,7 +50,8 @@ public class ESBJAVA4231EmptyPayloadInFailoverLoadBalanceEndpoint extends ESBInt
         lbClient = new LoadbalanceFailoverClient();
     }
 
-    @Test(groups = "wso2.esb", description = "Test sending request to LoadBalancing Endpoint") public void testSendingToLoaBalancingEndpoint()
+    @Test(groups = "wso2.esb", description = "Test sending request to LoadBalancing Endpoint")
+    public void testSendingToLoaBalancingEndpoint()
             throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
             XMLStreamException {
         String response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalanceproxy"), null);
@@ -57,7 +59,8 @@ public class ESBJAVA4231EmptyPayloadInFailoverLoadBalanceEndpoint extends ESBInt
         Assert.assertTrue(response.toString().contains("Response from server: Server_2"));
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         axis2Server1 = null;

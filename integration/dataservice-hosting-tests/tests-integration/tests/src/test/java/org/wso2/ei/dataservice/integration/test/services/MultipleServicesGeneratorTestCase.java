@@ -50,7 +50,8 @@ public class MultipleServicesGeneratorTestCase extends DSSIntegrationTest {
     private String serviceEPR_1;
     private String serviceEPR_2;
 
-    @BeforeClass(alwaysRun = true) public void initializeTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initializeTest() throws Exception {
         super.init();
         dssTestCaseUtils = new DSSTestCaseUtils();
         dataServiceAdminClient = new DataServiceAdminClient(dssContext.getContextUrls().getBackEndUrl(),
@@ -60,7 +61,8 @@ public class MultipleServicesGeneratorTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test() public void testServiceGeneration() throws Exception {
+    @Test()
+    public void testServiceGeneration() throws Exception {
         String[] datasourceNames = dataServiceAdminClient.getCarbonDataSources();
         String[] serviceList = new String[0];
         for (String datasourceName : datasourceNames) {
@@ -108,8 +110,8 @@ public class MultipleServicesGeneratorTestCase extends DSSIntegrationTest {
         assertTrue(serviceCount == 2, "two services not deployed");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", dependsOnMethods = "testServiceGeneration") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", dependsOnMethods = "testServiceGeneration")
+    public void testServiceDeployment() throws Exception {
         assertTrue(dssTestCaseUtils
                 .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, SERVICE_NAME_1));
         assertTrue(dssTestCaseUtils
@@ -117,8 +119,8 @@ public class MultipleServicesGeneratorTestCase extends DSSIntegrationTest {
         log.info(SERVICE_NAME_1 + "and" + SERVICE_NAME_2 + " are deployed");
     }
 
-    @Test(groups = "wso2.dss", description = "invoke the generated service", dependsOnMethods = "testServiceDeployment") public void testRequest()
-            throws RemoteException {
+    @Test(groups = "wso2.dss", description = "invoke the generated service", dependsOnMethods = "testServiceDeployment")
+    public void testRequest() throws RemoteException {
 
         OMElement result = new AxisServiceClient()
                 .sendReceive(getPayloadService1(), serviceEPR_1, "select_all_REG_PATH_operation");
@@ -131,7 +133,8 @@ public class MultipleServicesGeneratorTestCase extends DSSIntegrationTest {
         assertTrue(result2.toString().contains("<REG_ID>1</REG_ID>"));
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         deleteService(SERVICE_NAME_1);
         deleteService(SERVICE_NAME_2);
         log.info(SCHEMA_NAME + " deleted");

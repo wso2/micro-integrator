@@ -38,14 +38,15 @@ public class DistributedCachingHeaderSerializationTestcase extends ESBIntegratio
 
     private LogViewerClient logViewerClient = null;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         verifyProxyServiceExistence("RespondProxy");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "cache meditor test enabling axis2 clustering.") public void testDistributedCachingHeaderSerialization()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "cache meditor test enabling axis2 clustering.")
+    public void testDistributedCachingHeaderSerialization() throws Exception {
 
         String requestXml = "<a>ABC</a>";
 
@@ -84,7 +85,8 @@ public class DistributedCachingHeaderSerializationTestcase extends ESBIntegratio
         return logFound;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             super.cleanup();
         } finally {

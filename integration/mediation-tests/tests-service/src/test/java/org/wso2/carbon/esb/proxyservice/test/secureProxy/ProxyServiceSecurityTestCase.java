@@ -25,7 +25,8 @@ public class ProxyServiceSecurityTestCase extends ESBIntegrationTest {
 
     private final String serviceName = "SecureStockQuoteProxy";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -33,7 +34,8 @@ public class ProxyServiceSecurityTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         super.cleanup();
     }

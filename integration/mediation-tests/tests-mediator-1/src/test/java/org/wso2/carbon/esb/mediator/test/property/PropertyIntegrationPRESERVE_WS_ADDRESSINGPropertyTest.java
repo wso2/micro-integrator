@@ -36,15 +36,17 @@ public class PropertyIntegrationPRESERVE_WS_ADDRESSINGPropertyTest extends ESBIn
 
     private WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/PRESERVE_WS_ADDRESSING.xml");
         wireServer = new WireMonitorServer(8991);
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-PRESERVE_WS_ADDRESSING Property") public void testPRESERVE_WS_ADDRESSINGProperty() {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-PRESERVE_WS_ADDRESSING Property")
+    public void testPRESERVE_WS_ADDRESSINGProperty() {
 
         wireServer.start();
         try {
@@ -60,7 +62,8 @@ public class PropertyIntegrationPRESERVE_WS_ADDRESSINGPropertyTest extends ESBIn
                 "Faulty out going message addressing header");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 

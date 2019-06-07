@@ -37,12 +37,13 @@ public class XSLTonEmptySoapBodyWithSourceXPath extends ESBIntegrationTest {
 
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "xslt mediator should be able to transform empty soap body messages when the source xpath is specified") public void testXSLTMediatorForEmptySOAPBody()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "xslt mediator should be able to transform empty soap body messages when the source xpath is specified")
+    public void testXSLTMediatorForEmptySOAPBody() throws Exception {
 
         Map<String, String> requestHeaders = new HashMap<String, String>();
         requestHeaders.put("accept", "text/xml");
@@ -59,7 +60,8 @@ public class XSLTonEmptySoapBodyWithSourceXPath extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

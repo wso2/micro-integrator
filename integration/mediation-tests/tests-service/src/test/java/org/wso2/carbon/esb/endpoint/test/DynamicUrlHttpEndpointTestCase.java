@@ -31,7 +31,8 @@ import static org.testng.Assert.assertEquals;
 public class DynamicUrlHttpEndpointTestCase extends ESBIntegrationTest {
     private JSONClient jsonclient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
         verifyProxyServiceExistence("IterateDynamicProxy");
@@ -44,9 +45,8 @@ public class DynamicUrlHttpEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Http Endpoint test with dynamic url values") public void testRelativeLocationHeader()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Http Endpoint test with dynamic url values")
+    public void testRelativeLocationHeader() throws Exception {
         String addUrl = getProxyServiceURLHttp("IterateDynamicProxy");
         String request = "{\n" + " \"request\": {\n" + "\"terms\": {\n" + "\"term\": [\n" + "\"OrderOneProxy\",\n"
                 + "\"OrderTwoProxy\",\n" + "\"OrderThreeProxy\",\n" + "\"OrderFourProxy\",\n" + "\"OrderFiveProxy\",\n"
@@ -76,7 +76,8 @@ public class DynamicUrlHttpEndpointTestCase extends ESBIntegrationTest {
         assertEquals(result, 6, "Did not receive response from all six endpoints");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

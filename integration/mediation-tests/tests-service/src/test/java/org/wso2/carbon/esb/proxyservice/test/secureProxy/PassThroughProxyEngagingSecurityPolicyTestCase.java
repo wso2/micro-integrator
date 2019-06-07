@@ -39,7 +39,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
             TestConfigurationProvider.getSecurityPolicyLocation() + File.separator + "custom" + File.separator;
     private final String proxyName = "StockQuoteProxyEngagingScenario";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
@@ -55,7 +56,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
                 "artifacts/ESB/proxyconfig/proxy/secureProxy/passthrough_proxy_engaging_security_with_secueBackEnd.xml"));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         ResourceAdminServiceClient resourceAdmin = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 sessionCookie);
         try {
@@ -68,8 +70,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 1", enabled = false) public void secureRequestScenario1()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 1", enabled = false)
+    public void secureRequestScenario1() throws Exception {
         applySecurity("UTSecureStockQuoteProxyForSecurityEngaging", 1, getUserRole());
 
         OMElement response = axis2Client
@@ -85,8 +87,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 2") public void secureRequestScenario2()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 2")
+    public void secureRequestScenario2() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName + "2"), null, "Secured");
@@ -101,8 +103,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 3") public void secureRequestScenario3()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 3")
+    public void secureRequestScenario3() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName + "3"), null, "Secured");
@@ -117,8 +119,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 4") public void secureRequestScenario4()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 4")
+    public void secureRequestScenario4() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName + "4"), null, "Secured");
@@ -133,8 +135,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 5") public void secureRequestScenario5()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 5")
+    public void secureRequestScenario5() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName + "5"), null, "Secured");
@@ -149,8 +151,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 6") public void secureRequestScenario6()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 6")
+    public void secureRequestScenario6() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName + "6"), null, "Secured");
@@ -165,8 +167,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 7") public void secureRequestScenario7()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 7")
+    public void secureRequestScenario7() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName + "7"), null, "Secured");
@@ -181,8 +183,8 @@ public class PassThroughProxyEngagingSecurityPolicyTestCase extends ESBIntegrati
 
     }
 
-    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 8") public void secureRequestScenario8()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Request to a pass through proxy engaging security and refer secure backend service by policy 8")
+    public void secureRequestScenario8() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyName + "8"), null, "Secured");

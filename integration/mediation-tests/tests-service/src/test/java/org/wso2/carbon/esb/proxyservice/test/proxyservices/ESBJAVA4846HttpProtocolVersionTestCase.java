@@ -37,14 +37,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA4846HttpProtocolVersionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/proxyservice/proxyConfig.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "Sending HTTP1.0 message") public void sendingHTTP10Message()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Sending HTTP1.0 message")
+    public void sendingHTTP10Message() throws Exception {
         PostMethod post = new PostMethod(getProxyServiceURLHttp("StockQuoteProxyTestHTTPVersion"));
         RequestEntity entity = new StringRequestEntity(getPayload(), "text/xml", "UTF-8");
         post.setRequestEntity(entity);
@@ -66,8 +67,8 @@ public class ESBJAVA4846HttpProtocolVersionTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Sending HTTP1.1 message") public void sendingHTTP11Message()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Sending HTTP1.1 message")
+    public void sendingHTTP11Message() throws Exception {
         PostMethod post = new PostMethod(getProxyServiceURLHttp("StockQuoteProxyTestHTTPVersion"));
         RequestEntity entity = new StringRequestEntity(getPayload(), "text/xml", "UTF-8");
         post.setRequestEntity(entity);
@@ -88,7 +89,8 @@ public class ESBJAVA4846HttpProtocolVersionTestCase extends ESBIntegrationTest {
         Assert.assertEquals(httpVersion, HttpVersion.HTTP_1_1.toString(), "Http version mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanArtifacts() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanArtifacts() throws Exception {
         super.cleanup();
     }
 

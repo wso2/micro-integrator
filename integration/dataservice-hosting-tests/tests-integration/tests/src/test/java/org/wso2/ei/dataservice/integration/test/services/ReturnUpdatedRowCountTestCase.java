@@ -45,7 +45,8 @@ public class ReturnUpdatedRowCountTestCase extends DSSIntegrationTest {
             .createOMNamespace("http://ws.wso2.org/dataservice/samples/returnUpdatedRowCountSample", "ns1");
     private final String serviceName = "H2ReturnUpdatedRowCountTest";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
@@ -55,13 +56,14 @@ public class ReturnUpdatedRowCountTestCase extends DSSIntegrationTest {
                         + File.separator + "H2ReturnUpdatedRowCountTest.dbs", sqlFileLis));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Invoking update operation with Return Updated Row Count") public void performUpdateWithReturnUpdatedRowCountTest()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Invoking update operation with Return Updated Row Count")
+    public void performUpdateWithReturnUpdatedRowCountTest() throws AxisFault, XPathExpressionException {
         OMElement payload = fac.createOMElement("update_Accounts", omNs);
         OMElement newBalanceElement = fac.createOMElement("newBalance", omNs);
         newBalanceElement.setText("22.184");
@@ -76,7 +78,8 @@ public class ReturnUpdatedRowCountTestCase extends DSSIntegrationTest {
         Assert.assertTrue(id, "Update operation with return update row count is failed");
     }
 
-    @Test(groups = "wso2.dss", description = "Concurrency Test for Return Updated Row Count", dependsOnMethods = "performUpdateWithReturnUpdatedRowCountTest") public void performConcurrencyTest()
+    @Test(groups = "wso2.dss", description = "Concurrency Test for Return Updated Row Count", dependsOnMethods = "performUpdateWithReturnUpdatedRowCountTest")
+    public void performConcurrencyTest()
             throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         ConcurrencyTest concurrencyTest = new ConcurrencyTest(5, 5);
         OMElement payload = fac.createOMElement("update_Accounts", omNs);

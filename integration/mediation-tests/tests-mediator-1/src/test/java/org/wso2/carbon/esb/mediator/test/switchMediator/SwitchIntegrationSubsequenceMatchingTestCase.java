@@ -37,15 +37,15 @@ import static org.testng.AssertJUnit.fail;
  */
 public class SwitchIntegrationSubsequenceMatchingTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/switch_conf/switch_mediator_subsequence_matching.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Using switch mediator matching the part of the input at regex") public void testMatchSubSequenceAtRegexSwitchMediator1()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Using switch mediator matching the part of the input at regex")
+    public void testMatchSubSequenceAtRegexSwitchMediator1() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
         assertNotNull(response, "Response is null");
         assertEquals(response.getLocalName(), "getQuoteResponse", "getQuoteResponse mismatch");
@@ -55,9 +55,8 @@ public class SwitchIntegrationSubsequenceMatchingTestCase extends ESBIntegration
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Using switch mediator matching the part of the input at regex") public void testMatchSubSequenceAtRegexSwitchMediator2()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Using switch mediator matching the part of the input at regex")
+    public void testMatchSubSequenceAtRegexSwitchMediator2() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
             fail("Request must throw a Axis fault");
@@ -68,9 +67,8 @@ public class SwitchIntegrationSubsequenceMatchingTestCase extends ESBIntegration
         }
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Using switch mediator matching the part of the input at regex") public void testMatchSubSequenceAtRegexSwitchMediator3()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Using switch mediator matching the part of the input at regex")
+    public void testMatchSubSequenceAtRegexSwitchMediator3() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "MSFT");
             fail("Request must throw a Axis fault");
@@ -81,7 +79,8 @@ public class SwitchIntegrationSubsequenceMatchingTestCase extends ESBIntegration
         }
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

@@ -28,11 +28,13 @@ public class Axis2ServerTestExtension extends TestListenerExtension {
     private Axis2ServerManager serverManager;
     private static final Log log = LogFactory.getLog(Axis2ServerTestExtension.class);
 
-    @Override public void initiate() {
+    @Override
+    public void initiate() {
 
     }
 
-    @Override public void onTestStart() {
+    @Override
+    public void onTestStart() {
         try {
             serverManager = new Axis2ServerManager();
             serverManager.start();
@@ -48,27 +50,33 @@ public class Axis2ServerTestExtension extends TestListenerExtension {
         }
     }
 
-    @Override public void onTestSuccess() {
+    @Override
+    public void onTestSuccess() {
         serverManager.stop();
     }
 
-    @Override public void onTestFailure() {
+    @Override
+    public void onTestFailure() {
         serverManager.stop();
     }
 
-    @Override public void onTestSkipped() {
+    @Override
+    public void onTestSkipped() {
         serverManager.stop();
     }
 
-    @Override public void onTestFailedButWithinSuccessPercentage() {
+    @Override
+    public void onTestFailedButWithinSuccessPercentage() {
         serverManager.stop();
     }
 
-    @Override public void onStart(ITestContext iTestContext) {
+    @Override
+    public void onStart(ITestContext iTestContext) {
 
     }
 
-    @Override public void onFinish(ITestContext iTestContext) {
+    @Override
+    public void onFinish(ITestContext iTestContext) {
 
     }
 }

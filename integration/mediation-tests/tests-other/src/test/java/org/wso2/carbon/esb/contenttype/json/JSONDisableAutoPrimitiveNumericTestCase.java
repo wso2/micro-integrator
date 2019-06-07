@@ -44,7 +44,8 @@ public class JSONDisableAutoPrimitiveNumericTestCase extends ESBIntegrationTest 
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
     ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         //Need to apply the configuration here since this changes default synapse properties which could affect other
@@ -56,10 +57,10 @@ public class JSONDisableAutoPrimitiveNumericTestCase extends ESBIntegrationTest 
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb", description =
-            "disabling auto primitive option with a given regex pattern in synapse "
-                    + "properties  ") public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb", description = "disabling auto primitive option with a given regex pattern in synapse "
+            + "properties  ")
+    public void testDisablingAutoConversionToScientificNotationInJsonStreamFormatter() throws Exception {
         String payload = "<coordinates>\n" + "   <location>\n" + "       <name>Bermuda Triangle</name>\n"
                 + "       <n>25e1</n>\n" + "       <w>7.1e1</w>\n" + "   </location>\n" + "   <location>\n"
                 + "       <name>Eiffel Tower</name>\n" + "       <n>4.8e3</n>\n" + "       <e>1.8e2</e>\n"
@@ -75,7 +76,8 @@ public class JSONDisableAutoPrimitiveNumericTestCase extends ESBIntegrationTest 
         Assert.assertEquals(actualResult, expectedPayload);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

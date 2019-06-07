@@ -28,13 +28,13 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class InLineLocalEntryXsltTransformationTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Do XSLT transformation by selecting the xslt inline local entry") public void xsltTransformationWithInlineLocalEntry()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Do XSLT transformation by selecting the xslt inline local entry")
+    public void xsltTransformationWithInlineLocalEntry() throws AxisFault {
         OMElement response;
 
         response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("xsltLocalEntryTestProxy"), null, "IBM");
@@ -44,7 +44,8 @@ public class InLineLocalEntryXsltTransformationTestCase extends ESBIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

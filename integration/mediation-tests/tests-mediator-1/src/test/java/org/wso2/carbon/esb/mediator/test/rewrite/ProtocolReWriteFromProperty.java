@@ -31,14 +31,14 @@ import javax.xml.xpath.XPathExpressionException;
 import static org.testng.Assert.assertTrue;
 
 public class ProtocolReWriteFromProperty extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteReplaceFromPropertyTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Conditional URL Rewriting", dataProvider = "addressingUrl") public void reWriteProtocol(
-            String addUrl) throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Conditional URL Rewriting", dataProvider = "addressingUrl")
+    public void reWriteProtocol(String addUrl) throws AxisFault {
         OMElement response;
 
         response = axis2Client
@@ -48,11 +48,13 @@ public class ProtocolReWriteFromProperty extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() throws XPathExpressionException {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() throws XPathExpressionException {
         return new Object[][] {
                 { getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE).replace("http", "https") },
                 //               {"jms://localhost:9000/services/SimpleStockQuoteService"},

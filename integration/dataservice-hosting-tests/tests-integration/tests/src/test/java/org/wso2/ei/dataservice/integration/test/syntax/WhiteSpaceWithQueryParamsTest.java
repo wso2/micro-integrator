@@ -51,7 +51,8 @@ public class WhiteSpaceWithQueryParamsTest extends DSSIntegrationTest {
     private static String serviceEndPoint;
     private DSSTestCaseUtils dssTest;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         dssTest = new DSSTestCaseUtils();
@@ -63,32 +64,29 @@ public class WhiteSpaceWithQueryParamsTest extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed")
+    public void testServiceDeployment() throws Exception {
         assertTrue(dssTest.isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {
-            "testServiceDeployment" }, description = "add employee records") public void testInsertOperation()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "testServiceDeployment" }, description = "add employee records")
+    public void testInsertOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             addEmployee(serviceEndPoint, String.valueOf(i));
         }
         log.info("Insert Operation Success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {
-            "testInsertOperation" }, description = "get employee by Id") public void testSelectByNumber()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "testInsertOperation" }, description = "get employee by Id")
+    public void testSelectByNumber() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             getEmployeeById(String.valueOf(i));
         }
         log.info("Select operation with parameter success");
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {
-            "testSelectByNumber" }, description = "delete employees by id") public void deleteOperation()
-            throws AxisFault {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "testSelectByNumber" }, description = "delete employees by id")
+    public void deleteOperation() throws AxisFault {
         for (int i = 0; i < 5; i++) {
             deleteEmployeeById(String.valueOf(i));
             verifyDeletion(String.valueOf(i));
@@ -96,7 +94,8 @@ public class WhiteSpaceWithQueryParamsTest extends DSSIntegrationTest {
         log.info("Delete operation success");
     }
 
-    @AfterClass(alwaysRun = true) public void testCleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void testCleanup() throws Exception {
         dssTest.deleteService(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName);
     }
 

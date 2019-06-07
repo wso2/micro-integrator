@@ -43,11 +43,13 @@ public class ExcelSampleTestCase extends DSSIntegrationTest {
     private final String serviceName = "ExcelSampleService";
     private String serverEpr;
 
-    @Factory(dataProvider = "userModeDataProvider") public ExcelSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public ExcelSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
@@ -58,15 +60,15 @@ public class ExcelSampleTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
     @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testServiceDeployment", description = "invoke excel sample service") public void testGetProducts()
-            throws RemoteException, DataServiceFault {
+            "wso2.dss" }, dependsOnMethods = "testServiceDeployment", description = "invoke excel sample service")
+    public void testGetProducts() throws RemoteException, DataServiceFault {
 
         log.info("Running ExcelSampleServiceTestCase#testGetProducts");
         ExcelSampleService stub = new ExcelSampleServiceStub(serverEpr);
@@ -74,16 +76,16 @@ public class ExcelSampleTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testGetProducts", description = "Get product classifications", enabled = false) public void testGetProductClassifications()
-            throws RemoteException, DataServiceFault {
+            "wso2.dss" }, dependsOnMethods = "testGetProducts", description = "Get product classifications", enabled = false)
+    public void testGetProductClassifications() throws RemoteException, DataServiceFault {
 
         ExcelSampleService stub = new ExcelSampleServiceStub(serverEpr);
         assertTrue(stub.getProductClassifications().length > 0,
                 "No of product classifications should be greater than zero");
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteService()
-            throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

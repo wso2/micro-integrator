@@ -51,7 +51,8 @@ public class SftpCommandFactory extends ScpCommandFactory {
     private static void connect(final String name, final InputStream in, final OutputStream out,
             final ExitCallback callback) {
         final Thread thread = new Thread(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 int code = 0;
                 try {
                     final byte buffer[] = new byte[1024];
@@ -85,31 +86,37 @@ public class SftpCommandFactory extends ScpCommandFactory {
      *
      * @param command The command which needs to be executed
      */
-    @Override public Command createCommand(final String command) {
+    @Override
+    public Command createCommand(final String command) {
         return new Command() {
             public ExitCallback callback = null;
             public OutputStream out = null;
             public OutputStream err = null;
             public InputStream in = null;
 
-            @Override public void setInputStream(final InputStream in) {
+            @Override
+            public void setInputStream(final InputStream in) {
                 this.in = in;
             }
 
-            @Override public void setOutputStream(final OutputStream out) {
+            @Override
+            public void setOutputStream(final OutputStream out) {
                 this.out = out;
             }
 
-            @Override public void setErrorStream(final OutputStream err) {
+            @Override
+            public void setErrorStream(final OutputStream err) {
                 this.err = err;
             }
 
-            @Override public void setExitCallback(final ExitCallback callback) {
+            @Override
+            public void setExitCallback(final ExitCallback callback) {
                 this.callback = callback;
 
             }
 
-            @Override public void start(final Environment env) throws IOException {
+            @Override
+            public void start(final Environment env) throws IOException {
                 int code = 0;
                 if (command.equals("id -G") || command.equals("id -u")) {
                     new PrintStream(out).println(1001);
@@ -146,7 +153,8 @@ public class SftpCommandFactory extends ScpCommandFactory {
                 callback.onExit(code);
             }
 
-            @Override public void destroy() {
+            @Override
+            public void destroy() {
             }
         };
     }

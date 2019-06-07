@@ -33,13 +33,14 @@ import static org.testng.Assert.assertEquals;
  */
 public class ContentEncodingPostWithoutMessageBodyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Testing POST request sent without message body with content-encoding header set to gzip") public void sendingPOSTRequestWithContentEncodingGzipTest()
-            throws Exception {
+            "wso2.esb" }, description = "Testing POST request sent without message body with content-encoding header set to gzip")
+    public void sendingPOSTRequestWithContentEncodingGzipTest() throws Exception {
         String url = getApiInvocationURL("contentapi");
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpPost post = new HttpPost(url);
@@ -49,7 +50,8 @@ public class ContentEncodingPostWithoutMessageBodyTestCase extends ESBIntegratio
         assertEquals(response.getStatusLine().getStatusCode(), 202, "Unable to process the post request!");
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 

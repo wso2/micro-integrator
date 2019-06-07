@@ -30,14 +30,14 @@ import javax.xml.xpath.XPathExpressionException;
 import static org.testng.Assert.assertTrue;
 
 public class AppendPathTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("urlRewriteAppendPathTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Append text to path", dataProvider = "addressingUrl") public void appendPath(
-            String addUrl) throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }, description = "Append text to path", dataProvider = "addressingUrl")
+    public void appendPath(String addUrl) throws AxisFault, XPathExpressionException {
         OMElement response;
 
         //log.info("appendPath : " + getProxyServiceURLHttp("urlRewriteProxy"));
@@ -49,11 +49,13 @@ public class AppendPathTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 
-    @DataProvider(name = "addressingUrl") public Object[][] addressingUrl() throws XPathExpressionException {
+    @DataProvider(name = "addressingUrl")
+    public Object[][] addressingUrl() throws XPathExpressionException {
         return new Object[][] { { getBackEndServiceUrl("").substring(0, (getBackEndServiceUrl("").length() - 1)) },
                 { getBackEndServiceUrl("").substring(0, (getBackEndServiceUrl("").length() - 1)).replace("http",
                         "https") }, };

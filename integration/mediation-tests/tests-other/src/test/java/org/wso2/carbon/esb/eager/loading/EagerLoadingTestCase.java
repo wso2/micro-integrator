@@ -24,7 +24,6 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
@@ -37,7 +36,8 @@ public class EagerLoadingTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverManager = null;
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) protected void startServerWithEagerLoading() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void startServerWithEagerLoading() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(context);
         AutomationContext autoContext = new AutomationContext();
@@ -53,8 +53,8 @@ public class EagerLoadingTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", enabled = true, description = "Test server start up with Eager loading") public void testStartupLogs()
-            throws Exception {
+    @Test(groups = "wso2.esb", enabled = true, description = "Test server start up with Eager loading")
+    public void testStartupLogs() throws Exception {
         LogEvent[] logs = this.logViewerClient.getAllSystemLogs();
         Assert.assertNotNull(logs, "No logs found");
         Assert.assertTrue(logs.length > 0, "No logs found");
@@ -73,7 +73,8 @@ public class EagerLoadingTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterTest public void restoreSettings() throws Exception {
+    @AfterTest
+    public void restoreSettings() throws Exception {
         serverManager.restoreToLastConfiguration();
     }
 

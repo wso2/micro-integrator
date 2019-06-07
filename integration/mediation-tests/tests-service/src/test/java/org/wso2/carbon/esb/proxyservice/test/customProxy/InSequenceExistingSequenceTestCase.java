@@ -30,15 +30,16 @@ import static org.testng.Assert.assertNotNull;
 
 public class InSequenceExistingSequenceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/customProxy/insequence_existing_sequence.xml");
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Custom proxy -In sequence from existing sequence") public void testCustomProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -In sequence from existing sequence")
+    public void testCustomProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("inSeqExistingSeqCustomProxy"), null, "WSO2");
@@ -53,7 +54,8 @@ public class InSequenceExistingSequenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

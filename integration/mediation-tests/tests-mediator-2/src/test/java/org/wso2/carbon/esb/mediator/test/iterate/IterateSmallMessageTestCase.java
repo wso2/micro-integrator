@@ -30,12 +30,13 @@ import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 
 public class IterateSmallMessageTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20") public void testSmallNumbers()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
+    public void testSmallNumbers() throws Exception {
 
         String symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
         OMElement response;
@@ -48,8 +49,8 @@ public class IterateSmallMessageTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100") public void testLargeNumbers()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
+    public void testLargeNumbers() throws Exception {
         String symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
         OMElement response = null;
         for (int i = 0; i < 25; i++) {
@@ -61,7 +62,8 @@ public class IterateSmallMessageTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

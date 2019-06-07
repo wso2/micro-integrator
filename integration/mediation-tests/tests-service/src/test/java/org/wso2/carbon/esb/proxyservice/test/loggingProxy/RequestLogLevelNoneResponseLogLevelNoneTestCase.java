@@ -25,7 +25,8 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class RequestLogLevelNoneResponseLogLevelNoneTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/loggingProxy/request_log_level_none_response_log_level_none.xml");
@@ -33,15 +34,16 @@ public class RequestLogLevelNoneResponseLogLevelNoneTestCase extends ESBIntegrat
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy -Request log level none response log level none", enabled = false) public void testLoggingProxyLoggingLevel()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy -Request log level none response log level none", enabled = false)
+    public void testLoggingProxyLoggingLevel() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("reqLogNoneResLogNoneLoggingProxy"), null, "WSO2");
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

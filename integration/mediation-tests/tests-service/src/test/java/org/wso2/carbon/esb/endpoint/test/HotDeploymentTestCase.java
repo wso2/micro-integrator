@@ -41,7 +41,8 @@ public class HotDeploymentTestCase extends ESBIntegrationTest {
     private final String ENDPOINT_NAME = "hotUnDeploymentEp";
     private EndPointAdminClient endPointAdminClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
 
         endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
@@ -49,7 +50,8 @@ public class HotDeploymentTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             cleanupEndpoints();
             endPointAdminClient = null;
@@ -59,8 +61,8 @@ public class HotDeploymentTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb",
-            "localonly" }, enabled = false, description = "Test un-deployment of end point form file system delete. Check for the issue at CARBON-8044") public void testHotDeployment()
-            throws Exception {
+            "localonly" }, enabled = false, description = "Test un-deployment of end point form file system delete. Check for the issue at CARBON-8044")
+    public void testHotDeployment() throws Exception {
         /*   cleanupEndpoints();*/
         endpointAddition();
         Thread.sleep(5000);
@@ -68,8 +70,8 @@ public class HotDeploymentTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb",
-            "localonly" }, enabled = false, description = "Test un-deployment of end point form file system delete. Check for the issue at CARBON-8044") public void testHotUnDeployment()
-            throws Exception {
+            "localonly" }, enabled = false, description = "Test un-deployment of end point form file system delete. Check for the issue at CARBON-8044")
+    public void testHotUnDeployment() throws Exception {
         deleteEndpoint();
         Thread.sleep(6000);
         int i = 0;

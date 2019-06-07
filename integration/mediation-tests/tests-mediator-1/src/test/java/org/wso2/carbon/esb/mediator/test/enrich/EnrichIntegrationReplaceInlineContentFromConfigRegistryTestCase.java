@@ -39,7 +39,8 @@ import static org.testng.Assert.assertTrue;
 public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase extends ESBIntegrationTest {
     ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -51,7 +52,8 @@ public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase ext
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "This test is to replace a part of a message from resgistry file content") public void replaceMessageContentFromRegistryFileContentTest()
+            "wso2.esb" }, description = "This test is to replace a part of a message from resgistry file content")
+    public void replaceMessageContentFromRegistryFileContentTest()
             throws IOException, XMLStreamException, XPathExpressionException {
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("enrichReplaceInlineContentFromConfigRegistryTestProxy"),
@@ -84,7 +86,8 @@ public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase ext
                                 + "/mediatorconfig/xslt/transform_back.xslt")));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
 
         resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
         resourceAdminServiceStub.deleteResource("/_system/config/required");

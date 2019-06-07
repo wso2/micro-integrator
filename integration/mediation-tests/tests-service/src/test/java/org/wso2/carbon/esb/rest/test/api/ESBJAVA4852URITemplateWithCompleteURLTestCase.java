@@ -36,16 +36,16 @@ import java.io.File;
  */
 
 public class ESBJAVA4852URITemplateWithCompleteURLTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                         + File.separator + "rest" + File.separator + "ESBJAVA4852APIConfig.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending complete URL to API and for dispatching") public void testCompleteURLWithHTTPMethod()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending complete URL to API and for dispatching")
+    public void testCompleteURLWithHTTPMethod() throws Exception {
 
         DeleteMethod delete = new DeleteMethod(getApiInvocationURL(
                 "myApi1/order/21441/item/17440079" + "?message_id=41ec2ec4-e629-4e04-9fdf-c32e97b35bd1"));
@@ -73,7 +73,8 @@ public class ESBJAVA4852URITemplateWithCompleteURLTestCase extends ESBIntegratio
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

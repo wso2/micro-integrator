@@ -35,7 +35,8 @@ import static org.testng.Assert.assertNotNull;
 public class SendIntegrationEndpointAtConfigRegistryTestCase extends ESBIntegrationTest {
     ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -44,9 +45,8 @@ public class SendIntegrationEndpointAtConfigRegistryTestCase extends ESBIntegrat
         loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/send_mediator/synapse_config.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "End point in config registry") public void endPointFromConfigRegistryTest()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "End point in config registry")
+    public void endPointFromConfigRegistryTest() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
         assertNotNull(response, "Response is null");
         assertEquals(response.getLocalName(), "getQuoteResponse", "getQuoteResponse mismatch");
@@ -68,7 +68,8 @@ public class SendIntegrationEndpointAtConfigRegistryTestCase extends ESBIntegrat
                                 + "/synapseconfig/send_mediator/endpoints/registry_endpoint.xml"))));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
         super.cleanup();
     }

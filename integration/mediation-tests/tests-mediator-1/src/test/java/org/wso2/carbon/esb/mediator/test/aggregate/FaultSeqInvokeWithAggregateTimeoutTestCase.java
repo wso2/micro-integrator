@@ -41,7 +41,8 @@ import java.util.Map;
  */
 public class FaultSeqInvokeWithAggregateTimeoutTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
@@ -49,8 +50,8 @@ public class FaultSeqInvokeWithAggregateTimeoutTestCase extends ESBIntegrationTe
     }
 
     @Test(groups = "wso2.esb", description = "Add a non-existing mediator and check if fault sequence is hit upon "
-            + "onComplete of aggregate mediator with timeout condition") public void testFaultResponseIsReceived()
-            throws AxisFault, MalformedURLException, AutomationFrameworkException {
+            + "onComplete of aggregate mediator with timeout condition")
+    public void testFaultResponseIsReceived() throws AxisFault, MalformedURLException, AutomationFrameworkException {
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/xml");
         String message = "<marketDetail>\n" + "    <market>\n" + "        <id>100</id>\n"
@@ -69,7 +70,8 @@ public class FaultSeqInvokeWithAggregateTimeoutTestCase extends ESBIntegrationTe
                 "Expected response was not" + " received. Got " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

@@ -73,24 +73,29 @@ public class ThriftServer implements Runnable {
     public void start(int receiverPort) throws DataBridgeException, StreamDefinitionStoreException {
         KeyStoreUtil.setKeyStoreParams();
         DataBridge databridge = new DataBridge(new AuthenticationHandler() {
-            @Override public boolean authenticate(String userName, String password) {
+            @Override
+            public boolean authenticate(String userName, String password) {
                 // Always authenticate to true.
                 return true;
             }
 
-            @Override public String getTenantDomain(String userName) {
+            @Override
+            public String getTenantDomain(String userName) {
                 return "admin";
             }
 
-            @Override public int getTenantId(String s) throws UserStoreException {
+            @Override
+            public int getTenantId(String s) throws UserStoreException {
                 return -1234;
             }
 
-            @Override public void initContext(AgentSession agentSession) {
+            @Override
+            public void initContext(AgentSession agentSession) {
 
             }
 
-            @Override public void destroyContext(AgentSession agentSession) {
+            @Override
+            public void destroyContext(AgentSession agentSession) {
 
             }
 
@@ -104,15 +109,18 @@ public class ThriftServer implements Runnable {
 
         databridge.subscribe(new AgentCallback() {
 
-            @Override public void definedStream(StreamDefinition streamDefinition, int tenantId) {
+            @Override
+            public void definedStream(StreamDefinition streamDefinition, int tenantId) {
                 log.info("Added StreamDefinition " + streamDefinition);
             }
 
-            @Override public void removeStream(StreamDefinition streamDefinition, int tenantId) {
+            @Override
+            public void removeStream(StreamDefinition streamDefinition, int tenantId) {
                 log.info("Removed StreamDefinition " + streamDefinition);
             }
 
-            @Override public void receive(List<Event> eventList, Credentials credentials) {
+            @Override
+            public void receive(List<Event> eventList, Credentials credentials) {
                 log.info(
                         "eventListSize=" + eventList.size() + " eventList " + eventList + " for username " + credentials
                                 .getUsername());
@@ -138,7 +146,8 @@ public class ThriftServer implements Runnable {
         log.info("Test Server Stopped.");
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         try {
             startServer();
         } catch (DataBridgeException e) {

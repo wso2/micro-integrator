@@ -34,7 +34,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingSecurityTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig"
@@ -43,9 +44,8 @@ public class CallMediatorBlockingSecurityTestCase extends ESBIntegrationTest {
         verifyLocalEntryExistence("sec_policy_3");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Call the security endpoint with blocking external calls") public void callMediatorBlockingSecurityTest()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }, description = "Call the security endpoint with blocking external calls")
+    public void callMediatorBlockingSecurityTest() throws AxisFault, XPathExpressionException {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callMediatorBlockingEndpointSecurityProxy"), "",
                         "WSO2");
@@ -53,7 +53,8 @@ public class CallMediatorBlockingSecurityTestCase extends ESBIntegrationTest {
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

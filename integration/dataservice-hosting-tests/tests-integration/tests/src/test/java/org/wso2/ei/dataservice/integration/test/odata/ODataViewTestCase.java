@@ -37,7 +37,8 @@ public class ODataViewTestCase extends DSSIntegrationTest {
     private final String serviceName = "ODataSampleSuperTenantService";
     private String webAppUrl;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
@@ -48,13 +49,14 @@ public class ODataViewTestCase extends DSSIntegrationTest {
         webAppUrl = dssContext.getContextUrls().getWebAppURL();
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }, description = "OData View Test") public void validateViewTestCase()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, description = "OData View Test")
+    public void validateViewTestCase() throws Exception {
         String configId = "default";
         String viewName = "USACUSTOMERS";
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/" + viewName;

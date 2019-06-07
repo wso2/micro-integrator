@@ -32,9 +32,8 @@ public class NestedElementsWithSameNameTest extends DataMapperIntegrationTest {
     private final String DM_ARTIFACT_ROOT_PATH = "/artifacts/ESB/mediatorconfig/datamapper/nestedElements/";
     private final String DM_REGISTRY_ROOT_PATH = "datamapper/";
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Datamapper : test nested elements with same name") public void testNestedElementsWithSameName()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Datamapper : test nested elements with same name")
+    public void testNestedElementsWithSameName() throws Exception {
         loadESBConfigurationFromClasspath(DM_ARTIFACT_ROOT_PATH + File.separator + "synapse.xml");
         uploadResourcesToGovernanceRegistry(DM_REGISTRY_ROOT_PATH, DM_ARTIFACT_ROOT_PATH, "NestedElementConfig.dmc",
                 "NestedElementConfig_inputSchema.json", "NestedElementConfig_outputSchema.json");

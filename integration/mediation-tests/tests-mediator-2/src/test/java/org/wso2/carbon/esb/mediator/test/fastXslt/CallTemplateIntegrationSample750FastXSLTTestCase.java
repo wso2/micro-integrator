@@ -15,15 +15,16 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class CallTemplateIntegrationSample750FastXSLTTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception, IOException {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception, IOException {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/fast_xslt/calltemplate_integration_fastxslt_sample750_synapse.xml");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Stereotyping Fast XSLT Transformations with Templates :Test using sample 750") public void testFastXSLTTransformationWithTemplates()
-            throws IOException, XMLStreamException {
+            "wso2.esb" }, description = "Stereotyping Fast XSLT Transformations with Templates :Test using sample 750")
+    public void testFastXSLTTransformationWithTemplates() throws IOException, XMLStreamException {
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "WSO2");
         assertNotNull(response, "Response message is null");
@@ -35,7 +36,8 @@ public class CallTemplateIntegrationSample750FastXSLTTestCase extends ESBIntegra
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

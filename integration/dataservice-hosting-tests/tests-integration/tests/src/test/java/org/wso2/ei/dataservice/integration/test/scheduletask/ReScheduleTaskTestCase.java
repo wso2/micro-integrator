@@ -61,7 +61,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     private String serviceEndPoint;
     private DataServiceTaskClient dssTaskClient;
 
-    @BeforeClass(alwaysRun = true, enabled = false) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true, enabled = false)
+    public void initialize() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         String resourceLocation = getResourceLocation();
@@ -75,14 +76,13 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
         dssTaskClient = new DataServiceTaskClient(dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed", enabled = false) public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed", enabled = false)
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
     }
 
-    @Test(groups = "wso2.dss", dependsOnMethods = {
-            "testServiceDeployment" }, enabled = false) public void serviceInvocation()
-            throws AxisFault, InterruptedException {
+    @Test(groups = "wso2.dss", dependsOnMethods = { "testServiceDeployment" }, enabled = false)
+    public void serviceInvocation() throws AxisFault, InterruptedException {
         deleteEmployees();
         addEmployee(employeeId);
         getEmployeeById(employeeId);
@@ -93,8 +93,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "serviceInvocation" }, description = "schedule a task", enabled = false) public void addScheduleTask()
-            throws RemoteException, InterruptedException {
+            "serviceInvocation" }, description = "schedule a task", enabled = false)
+    public void addScheduleTask() throws RemoteException, InterruptedException {
         dsTaskInfo = new DSTaskInfo();
 
         String[] taskNames = dssTaskClient.getAllTaskNames();
@@ -126,8 +126,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "addScheduleTask" }, description = "Verify the task execution", enabled = false) public void startScheduleTask()
-            throws AxisFault, InterruptedException {
+            "addScheduleTask" }, description = "Verify the task execution", enabled = false)
+    public void startScheduleTask() throws AxisFault, InterruptedException {
         //if task count is 9
         for (int i = 0; i < 4; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
@@ -144,8 +144,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "startScheduleTask" }, description = "Task repeat count set to zero - This method has been added to avoid task repetition", enabled = false) public void testSetRepeatCountToZero()
-            throws RemoteException, InterruptedException {
+            "startScheduleTask" }, description = "Task repeat count set to zero - This method has been added to avoid task repetition", enabled = false)
+    public void testSetRepeatCountToZero() throws RemoteException, InterruptedException {
         dsTaskInfo.setTaskCount(0);
         dsTaskInfo.setTaskInterval(5000);
         assertTrue(dssTaskClient.rescheduleTask(dsTaskInfo));
@@ -163,8 +163,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "testSetRepeatCountToZero" }, description = "reschedule the task", enabled = false) public void reScheduleTask()
-            throws RemoteException {
+            "testSetRepeatCountToZero" }, description = "reschedule the task", enabled = false)
+    public void reScheduleTask() throws RemoteException {
         Calendar startTime = Calendar.getInstance();
         startTime.set(Calendar.SECOND, startTime.get(Calendar.SECOND) + 40);
         dsTaskInfo.setTaskCount(9);
@@ -184,8 +184,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "reScheduleTask" }, description = "Check whether the task has been stopped properly", enabled = false) public void stopScheduleTask()
-            throws AxisFault, InterruptedException {
+            "reScheduleTask" }, description = "Check whether the task has been stopped properly", enabled = false)
+    public void stopScheduleTask() throws AxisFault, InterruptedException {
         for (int i = 0; i < 5; i++) {
             double currentSalary = getEmployeeSalary(getEmployeeById(employeeId));
             log.info("current salary after rescheduling task #######" + currentSalary);
@@ -197,8 +197,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", dependsOnMethods = {
-            "stopScheduleTask" }, description = "Recheck the task invocation", enabled = false) public void reStartScheduleTask()
-            throws AxisFault, InterruptedException {
+            "stopScheduleTask" }, description = "Recheck the task invocation", enabled = false)
+    public void reStartScheduleTask() throws AxisFault, InterruptedException {
         while (dsTaskInfo.getStartTime().getTimeInMillis() >= Calendar.getInstance().getTimeInMillis()) {
             Thread.sleep(1000);
         }
@@ -227,7 +227,8 @@ public class ReScheduleTaskTestCase extends DSSIntegrationTest {
     //        log.info(scheduleTaskName + " deleted");
     //    }
 
-    @AfterClass(alwaysRun = true, enabled = false) public void testCleanup() throws Exception {
+    @AfterClass(alwaysRun = true, enabled = false)
+    public void testCleanup() throws Exception {
         dssTaskClient.deleteTask(scheduleTaskName);
         log.info(scheduleTaskName + " deleted");
         deleteService(serviceName);

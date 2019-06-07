@@ -36,7 +36,8 @@ public class AggregationWithoutMaxValueTestCase extends ESBIntegrationTest {
     private AggregatedRequestClient aggregatedRequestClient;
     private int no_of_requests = 0;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("aggregateMediatorMaxValueTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -45,9 +46,8 @@ public class AggregationWithoutMaxValueTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "less number of messages than minimum count") public void testLessThanMinimum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "less number of messages than minimum count")
+    public void testLessThanMinimum() throws IOException, XMLStreamException {
         int responseCount = 0;
 
         no_of_requests = 20;
@@ -68,9 +68,8 @@ public class AggregationWithoutMaxValueTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "number of messages is equal to the minimum") public void testEqualtoMinimum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "number of messages is equal to the minimum")
+    public void testEqualtoMinimum() throws IOException, XMLStreamException {
         int responseCount = 0;
         no_of_requests = 50;
         aggregatedRequestClient.setNoOfIterations(no_of_requests);
@@ -90,9 +89,8 @@ public class AggregationWithoutMaxValueTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "higher number of messages than minimum count") public void testMoreNumberThanMinimum()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "higher number of messages than minimum count")
+    public void testMoreNumberThanMinimum() throws IOException, XMLStreamException {
         int responseCount = 0;
 
         no_of_requests = 80;
@@ -113,7 +111,8 @@ public class AggregationWithoutMaxValueTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }

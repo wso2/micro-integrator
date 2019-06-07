@@ -23,20 +23,22 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA4201ProxyServiceWithPinnedServerTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) protected void deployProxyService() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void deployProxyService() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("artifacts/ESB/proxyconfig/proxy/proxywithpinnedserver/TestProxy.xml");
 
     }
 
-    @Test(groups = "wso2.esb", enabled = false, description = "Test whether proxy service get deployed") public void testProxyIsDeployed()
-            throws Exception {
+    @Test(groups = "wso2.esb", enabled = false, description = "Test whether proxy service get deployed")
+    public void testProxyIsDeployed() throws Exception {
         isProxyDeployed("TestProxy");
         isProxyNotDeployed("TestProxyWithPinnedServer");
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 }

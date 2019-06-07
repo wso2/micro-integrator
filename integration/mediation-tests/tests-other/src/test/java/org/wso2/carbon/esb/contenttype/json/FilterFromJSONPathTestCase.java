@@ -36,19 +36,21 @@ public class FilterFromJSONPathTestCase extends ESBIntegrationTest {
 
     private Client client = Client.create();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonfilterfromjsonpath.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Tests with filter mediator - JSON path Scenario - Filter condition true") public void testJSONFilterFromJSONPathConditionTrueTestScenario()
-            throws Exception {
+            "wso2.esb" }, description = "Tests with filter mediator - JSON path Scenario - Filter condition true")
+    public void testJSONFilterFromJSONPathConditionTrueTestScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Hello\",\"singer\":\"Peter\"}";
 
@@ -68,8 +70,8 @@ public class FilterFromJSONPathTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Tests with filter mediator - JSON path Scenario Filter condition False", dependsOnMethods = "testJSONFilterFromJSONPathConditionTrueTestScenario") public void testJSONFilterFromJSONPathConditionFalseTestScenario()
-            throws Exception {
+            "wso2.esb" }, description = "Tests with filter mediator - JSON path Scenario Filter condition False", dependsOnMethods = "testJSONFilterFromJSONPathConditionTrueTestScenario")
+    public void testJSONFilterFromJSONPathConditionFalseTestScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Moon\",\"singer\":\"Peter\"}";
 

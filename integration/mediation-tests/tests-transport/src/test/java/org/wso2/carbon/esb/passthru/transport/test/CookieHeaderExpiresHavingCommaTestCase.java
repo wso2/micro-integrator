@@ -34,12 +34,13 @@ import java.io.IOException;
  */
 public class CookieHeaderExpiresHavingCommaTestCase extends ESBIntegrationTest {
 
-    @BeforeClass public void init() throws Exception {
+    @BeforeClass
+    public void init() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test SetCookieHeader With Expires having a comma") public void testSetCookieHeaderWithExpires()
-            throws IOException {
+    @Test(groups = "wso2.esb", description = "Test SetCookieHeader With Expires having a comma")
+    public void testSetCookieHeaderWithExpires() throws IOException {
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpGet httpGet = new HttpGet(getApiInvocationURL("cookieHeaderTestAPI"));
         HttpResponse httpResponse = httpclient.execute(httpGet);
@@ -47,7 +48,8 @@ public class CookieHeaderExpiresHavingCommaTestCase extends ESBIntegrationTest {
                 "Request failed. Response received is : " + httpResponse.toString());
     }
 
-    @AfterClass public void cleanUp() throws Exception {
+    @AfterClass
+    public void cleanUp() throws Exception {
         super.cleanup();
     }
 }

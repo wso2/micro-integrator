@@ -46,7 +46,8 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "jmsTypeHeaderInboundEndpointTestCase";
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
 
         verifySequenceExistence("jmsTypeHeaderInboundEPSendInSequence");
@@ -64,9 +65,9 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
      *
      * @throws Exception if any error occurred while running tests
      */
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Test JMSType header with inbound endpoint") public void testJmsTypeHeaderWithInboundEndpoint()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Test JMSType header with inbound endpoint")
+    public void testJmsTypeHeaderWithInboundEndpoint() throws Exception {
         LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
 
@@ -81,7 +82,8 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
         Assert.assertTrue(Utils.isQueueEmpty(QUEUE_NAME), "Queue should be empty if message was properly received");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 

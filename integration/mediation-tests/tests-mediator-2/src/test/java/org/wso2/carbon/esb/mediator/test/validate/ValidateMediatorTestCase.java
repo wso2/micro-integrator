@@ -34,7 +34,8 @@ public class ValidateMediatorTestCase extends ESBIntegrationTest {
 
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         // Initialize ESBMediatorTest
         super.init();
@@ -49,7 +50,8 @@ public class ValidateMediatorTestCase extends ESBIntegrationTest {
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2297*/
-    @Test(groups = "wso2.esb") public void validateMediatorDynamicSchemaTest() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void validateMediatorDynamicSchemaTest() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("validateMediatorDynamicSchemaFromConfigRegTestProxy"),
@@ -59,7 +61,8 @@ public class ValidateMediatorTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2 Company"), "GetQuoteResponse not found in response");
     }
 
-    @AfterClass(alwaysRun = true) public void clear() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clear() throws Exception {
         try {
             resourceAdminServiceClient.deleteResource("/_system/config/schema");
         } finally {

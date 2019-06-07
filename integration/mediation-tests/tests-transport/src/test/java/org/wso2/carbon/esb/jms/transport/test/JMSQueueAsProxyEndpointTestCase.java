@@ -37,7 +37,8 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
 
     private int NUM_OF_MESSAGES = 5;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_endpoint_proxy_service.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
@@ -45,8 +46,8 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test sending message to jms endpoint with pox format from proxy service") public void testJMSEndpointPox()
-            throws Exception {
+            "wso2.esb" }, description = "Test sending message to jms endpoint with pox format from proxy service")
+    public void testJMSEndpointPox() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
 
         JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
@@ -76,8 +77,8 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test sending message to jms endpoint with soap11 format from proxy service") public void testJMSEndpointSoap11()
-            throws Exception {
+            "wso2.esb" }, description = "Test sending message to jms endpoint with soap11 format from proxy service")
+    public void testJMSEndpointSoap11() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
 
         JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
@@ -108,8 +109,8 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test sending message to jms endpoint with soap12 format from proxy service") public void testJMSEndpointSoap12()
-            throws Exception {
+            "wso2.esb" }, description = "Test sending message to jms endpoint with soap12 format from proxy service")
+    public void testJMSEndpointSoap12() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
 
         JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
@@ -137,13 +138,15 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return consumer.getMessages().size() == NUM_OF_MESSAGES;
             }
         };

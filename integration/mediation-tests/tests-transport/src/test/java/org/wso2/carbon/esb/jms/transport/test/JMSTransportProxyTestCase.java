@@ -29,14 +29,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 
 public class JMSTransportProxyTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_transport_proxy_service.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport") public void testJMSProxy()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
+    public void testJMSProxy() throws Exception {
 
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
@@ -72,7 +73,8 @@ public class JMSTransportProxyTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

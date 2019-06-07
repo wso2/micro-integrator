@@ -44,7 +44,8 @@ public class TestFaultSequenceExecutionForMalformedResponse extends ESBIntegrati
     private static final String targetApiName = "simpleApiToTestResponsePayload";
     private SimpleHTTPServer simpleHTTPServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence(targetApiName);
 
@@ -55,8 +56,8 @@ public class TestFaultSequenceExecutionForMalformedResponse extends ESBIntegrati
         simpleHTTPServer.start();//start server
     }
 
-    @Test(groups = "wso2.esb", description = "Testcase to test whether the the fault sequence get executed when malformed payload received from BE") public void testFaultSeqExecutionForMalformedPayload()
-            throws IOException {
+    @Test(groups = "wso2.esb", description = "Testcase to test whether the the fault sequence get executed when malformed payload received from BE")
+    public void testFaultSeqExecutionForMalformedPayload() throws IOException {
         //Send request to ESB
         String contentType = "text/xml";
         String payload = "<Request><Message>This is request message</Message></Request>";
@@ -74,7 +75,8 @@ public class TestFaultSequenceExecutionForMalformedResponse extends ESBIntegrati
                 "Fault sequence did not execute due to malformed response");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         simpleHTTPServer.stop();//shutdown mock BE server
         super.cleanup();
     }
@@ -84,7 +86,8 @@ public class TestFaultSequenceExecutionForMalformedResponse extends ESBIntegrati
      */
     private static class malformedResponseBEHandler implements HttpHandler {
 
-        @Override public void handle(HttpExchange httpExchange) throws IOException {
+        @Override
+        public void handle(HttpExchange httpExchange) throws IOException {
             Headers headers = httpExchange.getResponseHeaders();
             headers.add("Content-Type", "text/xml");
 

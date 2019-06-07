@@ -48,7 +48,8 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
     private ApplicationAdminClient applicationAdminClient;
     private static String cAppName = "templateEndpointInRegistryTestCapp_1.0.0";
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         //Deploy CAPP
         carbonAppUploaderClient = new CarbonAppUploaderClient(contextUrls.getBackEndUrl(), getSessionCookie());
@@ -63,8 +64,8 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Test invoking EP which cause timeout and verify whether Endpoint "
-            + "template has been marked for suspension") public void testTemplateEndpointSuspension()
-            throws IOException, LogViewerLogViewerException, InterruptedException {
+            + "template has been marked for suspension")
+    public void testTemplateEndpointSuspension() throws IOException, LogViewerLogViewerException, InterruptedException {
 
         String contentType = "text/xml";//Content-Type
         Map<String, String> headers = new HashMap<String, String>();//For HTTP Headers
@@ -114,7 +115,8 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanUp() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanUp() throws Exception {
         applicationAdminClient.deleteApplication(cAppName);
         super.cleanup();
     }

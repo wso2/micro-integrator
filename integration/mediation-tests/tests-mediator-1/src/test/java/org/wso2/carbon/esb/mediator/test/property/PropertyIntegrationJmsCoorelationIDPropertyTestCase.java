@@ -49,12 +49,14 @@ public class PropertyIntegrationJmsCoorelationIDPropertyTestCase extends ESBInte
     private MessageConsumer consumer;
     private Connection connection;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             if (consumer != null) {
                 consumer.close();
@@ -69,8 +71,8 @@ public class PropertyIntegrationJmsCoorelationIDPropertyTestCase extends ESBInte
         }
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test adding of JMS_COORELATION_ID - "
-            + "hard coded method") public void testAddingJMSCoorelationID() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test adding of JMS_COORELATION_ID - " + "hard coded method")
+    public void testAddingJMSCoorelationID() throws Exception {
 
         super.init();
 

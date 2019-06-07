@@ -37,20 +37,21 @@ public class PropertyIntegrationXpathAxis2PropertyTestCase extends ESBIntegratio
     private static LogViewerClient logViewer;
     private Boolean isBody = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATHAXIS2.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test getting the property value at the axis2 scope") public void testRESPONSETEnabledTrue()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "Test getting the property value at the axis2 scope")
+    public void testRESPONSETEnabledTrue() throws IOException {
 
         int beforeLogSize = logViewer.getAllSystemLogs().length;
 

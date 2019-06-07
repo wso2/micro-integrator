@@ -39,7 +39,8 @@ public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
     private File InboundFileFolder;
     private String pathToFtpDir;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         pathToFtpDir = getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "vfsTransport";
 
@@ -57,13 +58,14 @@ public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Inbound endpoint Reading file with Content type Plain Test Case") public void testInboundEnpointReadFileContentTypePlain()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Inbound endpoint Reading file with Content type Plain Test Case")
+    public void testInboundEnpointReadFileContentTypePlain() throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + "test.txt");
         File targetFolder = new File(InboundFileFolder + File.separator + "in");

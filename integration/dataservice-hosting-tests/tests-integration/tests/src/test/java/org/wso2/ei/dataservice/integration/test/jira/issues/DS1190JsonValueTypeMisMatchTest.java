@@ -49,7 +49,8 @@ public class DS1190JsonValueTypeMisMatchTest extends DSSIntegrationTest {
     private final String serviceName = "JsonValueTypeMismatchTest";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTableJsonTest.sql"));
@@ -60,14 +61,15 @@ public class DS1190JsonValueTypeMisMatchTest extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
     @Test(groups = {
-            "wso2.dss" }, description = "Check whether the service returns with wrong error message", alwaysRun = true) public void jsonInputWithWrongValueTypeTestCase()
-            throws Exception {
+            "wso2.dss" }, description = "Check whether the service returns with wrong error message", alwaysRun = true)
+    public void jsonInputWithWrongValueTypeTestCase() throws Exception {
         HttpResponse response1 = this.getHttpResponse(serviceEndPoint + "_postpersons", "application/json",
                 "{\"_postpersons\": {\"PersonID\" : 14,\"LastName\": \"Smith\",\"FirstName\": \"Will\","
                         + "\"Address\": \"will@google.com\",\"Image\": \"iVBORw0KGgoAAAANSUhEUgAAAyEAAAD\"}}");

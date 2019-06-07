@@ -35,13 +35,14 @@ import static org.testng.Assert.assertNotNull;
 public class EnrichIntegrationReplaceEnvelopTestCase extends ESBIntegrationTest {
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         verifyProxyServiceExistence("enrichReplaceEnvelopTestProxy");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests-Replace out going message envelop") public void testReplaceEnvelop()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Tests-Replace out going message envelop")
+    public void testReplaceEnvelop() throws AxisFault {
 
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enrichReplaceEnvelopTestProxy"), null, "WSO2");
@@ -52,7 +53,8 @@ public class EnrichIntegrationReplaceEnvelopTestCase extends ESBIntegrationTest 
                 .getText(), "WSO2", "Tag does not match");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

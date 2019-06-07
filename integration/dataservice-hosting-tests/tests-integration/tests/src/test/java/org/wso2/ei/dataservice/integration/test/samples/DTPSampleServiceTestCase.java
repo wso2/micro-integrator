@@ -44,11 +44,13 @@ public class DTPSampleServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(DTPSampleServiceTestCase.class);
     private String serverEpr;
 
-    @Factory(dataProvider = "userModeDataProvider") public DTPSampleServiceTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public DTPSampleServiceTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         serverEpr = getServiceUrlHttp(serviceName);
         String resourceFileLocation;
@@ -59,19 +61,20 @@ public class DTPSampleServiceTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testServiceDeployment") public void testGetProducts()
-            throws DataServiceFault, RemoteException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testServiceDeployment")
+    public void testGetProducts() throws DataServiceFault, RemoteException {
         DTPSampleServiceStub stub = new DTPSampleServiceStub(serverEpr);
         stub._getServiceClient().getOptions().setManageSession(true);
         stub._getServiceClient().getOptions()

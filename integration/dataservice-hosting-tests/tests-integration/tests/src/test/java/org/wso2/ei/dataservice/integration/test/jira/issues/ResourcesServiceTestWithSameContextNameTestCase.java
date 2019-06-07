@@ -18,13 +18,15 @@ public class ResourcesServiceTestWithSameContextNameTestCase extends DSSIntegrat
     private final String serviceName = "ResourcesServiceTestWithSameContextName";
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         serviceEndPoint = getServiceUrlHttp(serviceName);
         Assert.assertTrue(isServiceDeployed(serviceName), "Data service not deployed");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         cleanup();
     }
 
@@ -62,20 +64,21 @@ public class ResourcesServiceTestWithSameContextNameTestCase extends DSSIntegrat
         }
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void addRequest() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void addRequest() throws Exception {
         addProduct();
         log.info("Verified POST successfully");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addRequest" }, enabled = false) public void getRequest()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addRequest" }, enabled = false)
+    public void getRequest() throws Exception {
         getProduct("1");
         log.info("Verified GET /product/{id} successfully");
 
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addRequest" }, enabled = false) public void getAllRequest()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addRequest" }, enabled = false)
+    public void getAllRequest() throws Exception {
         getProducts();
         log.info("Verified GET /product successfully");
     }

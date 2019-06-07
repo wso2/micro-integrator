@@ -41,7 +41,8 @@ public class CloneSOAPActionTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server2;
     private AxisServiceClient axisServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         axisServiceClient = new AxisServiceClient();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_SOAP_Action.xml");
@@ -54,16 +55,17 @@ public class CloneSOAPActionTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests SOAP Action") public void testSOAPAction()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests SOAP Action")
+    public void testSOAPAction() throws Exception {
 
         OMElement response = axisServiceClient
                 .sendReceive(createSimpleQuoteRequestBody("WSO2"), getMainSequenceURL(), "");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         axis2Server2 = null;

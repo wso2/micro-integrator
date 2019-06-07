@@ -45,7 +45,8 @@ public class SendMailWithSecondaryAccountThroughESBTestCase extends ESBIntegrati
 
     private static GreenMailUser receiver;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         super.reloadSessionCookie();
 
@@ -60,8 +61,8 @@ public class SendMailWithSecondaryAccountThroughESBTestCase extends ESBIntegrati
         GreenMailServer.deleteAllEmails("imap", receiver);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test email sender with secondary account ") public void testEmailTransport()
+    @Test(groups = { "wso2.esb" }, description = "Test email sender with secondary account ")
+    public void testEmailTransport()
             throws ESBMailTransportIntegrationTestException, XMLStreamException, AxisFault, MessagingException {
         Date date = new Date();
         String message = "Send Mail With Secondary" + new Timestamp(date.getTime());
@@ -75,7 +76,8 @@ public class SendMailWithSecondaryAccountThroughESBTestCase extends ESBIntegrati
         assertTrue(GreenMailServer.isMailReceived("imap", receiver, message), "Mail not received");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
     }
 

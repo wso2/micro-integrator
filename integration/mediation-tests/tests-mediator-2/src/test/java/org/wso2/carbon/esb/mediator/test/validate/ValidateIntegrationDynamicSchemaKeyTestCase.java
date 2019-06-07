@@ -12,7 +12,8 @@ import java.io.File;
 
 public class ValidateIntegrationDynamicSchemaKeyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
@@ -33,7 +34,8 @@ public class ValidateIntegrationDynamicSchemaKeyTestCase extends ESBIntegrationT
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb") public void validateMediatorDynamicSchemaChangeTest() throws Exception {
+    @Test(groups = "wso2.esb")
+    public void validateMediatorDynamicSchemaChangeTest() throws Exception {
         String requestPayload1 = "<level1><a><b>222</b></a></level1>";
         String requestPayload2 = "<level1><c><d>333</d></c></level1>";
 
@@ -49,7 +51,8 @@ public class ValidateIntegrationDynamicSchemaKeyTestCase extends ESBIntegrationT
         Assert.assertTrue(response2.toString().contains("ValidateSuccess"), "Validate failed with schema b.");
     }
 
-    @AfterClass(alwaysRun = true) public void clear() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void clear() throws Exception {
         super.cleanup();
     }
 }

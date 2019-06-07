@@ -30,12 +30,13 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class ESBJAVA4936SwaggerGenerationJsonYamlTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test API definition for JSON is generated correctly") public void jsonDefinitionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test API definition for JSON is generated correctly")
+    public void jsonDefinitionTest() throws Exception {
         String restURL = getMainSequenceURL() + "swaggerGenerationTestApi?swagger.json";
         SimpleHttpClient httpClient = new SimpleHttpClient();
         HttpResponse response = httpClient.doGet(restURL, null);
@@ -46,8 +47,8 @@ public class ESBJAVA4936SwaggerGenerationJsonYamlTestCase extends ESBIntegration
                 payload.contains("API Definition of swaggerGenerationTestApi"));
     }
 
-    @Test(groups = "wso2.esb", description = "Test API definition for Yaml is generated correctly") public void yamlDefinitionTest()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Test API definition for Yaml is generated correctly")
+    public void yamlDefinitionTest() throws Exception {
         String restURL = getMainSequenceURL() + "swaggerGenerationTestApi?swagger.json";
         SimpleHttpClient httpClient = new SimpleHttpClient();
         HttpResponse response = httpClient.doGet(restURL, null);
@@ -58,7 +59,8 @@ public class ESBJAVA4936SwaggerGenerationJsonYamlTestCase extends ESBIntegration
                 payload.contains("API Definition of swaggerGenerationTestApi"));
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

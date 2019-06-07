@@ -42,7 +42,8 @@ public class ESBJAVA4468ContentTypeCharsetInResponseTestCase extends ESBIntegrat
 
     private String messagePayload;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/ESBJAVA4468.xml");
@@ -55,8 +56,8 @@ public class ESBJAVA4468ContentTypeCharsetInResponseTestCase extends ESBIntegrat
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for charset value in the Content-Type header "
-            + "in response once message is built in out out sequence") public void charsetTestWithInComingContentType()
-            throws Exception {
+            + "in response once message is built in out out sequence")
+    public void charsetTestWithInComingContentType() throws Exception {
 
         Map<String, String> headers = new HashMap<>();
 
@@ -76,8 +77,8 @@ public class ESBJAVA4468ContentTypeCharsetInResponseTestCase extends ESBIntegrat
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for charset value in the Content-Type header "
-            + "in response once message is built in out out sequence "
-            + "with messageType") public void charsetTestByChangingContentType() throws Exception {
+            + "in response once message is built in out out sequence " + "with messageType")
+    public void charsetTestByChangingContentType() throws Exception {
 
         Map<String, String> headers = new HashMap<>();
 
@@ -97,9 +98,8 @@ public class ESBJAVA4468ContentTypeCharsetInResponseTestCase extends ESBIntegrat
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for charset value in the Content-Type header "
-            + "in response once message is built in out out sequence "
-            + "with messageType with charset") public void charsetTestByChangingContentTypeWithCharset()
-            throws Exception {
+            + "in response once message is built in out out sequence " + "with messageType with charset")
+    public void charsetTestByChangingContentTypeWithCharset() throws Exception {
 
         Map<String, String> headers = new HashMap<>();
 
@@ -118,7 +118,8 @@ public class ESBJAVA4468ContentTypeCharsetInResponseTestCase extends ESBIntegrat
                 "charset repeated in Content-Type header " + contentType);
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

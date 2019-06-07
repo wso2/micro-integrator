@@ -40,7 +40,8 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
         try {
             getParameters().putIfAbsent(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND, "0");
             serverManager = new TestServerManager(getAutomationContext(), null, getParameters()) {
-                @Override public void configureServer() {
+                @Override
+                public void configureServer() {
                     if ("ESB".equalsIgnoreCase(System.getProperty("server.list"))) {
                         //copying the files before server start. Ex: synapse artifacts, conf, etc...
 

@@ -44,7 +44,8 @@ public class CARBON15612RESTRequestURLTestCase extends DSSIntegrationTest {
     OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
     private String serviceEndPoint;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -56,7 +57,8 @@ public class CARBON15612RESTRequestURLTestCase extends DSSIntegrationTest {
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
@@ -64,7 +66,8 @@ public class CARBON15612RESTRequestURLTestCase extends DSSIntegrationTest {
     /*
     This testcase is disabled as the fix is on axis2.
      */
-    @Test(groups = { "wso2.dss" }, enabled = false) public void getRequestAsQueryParam() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void getRequestAsQueryParam() throws Exception {
         listEmployeesAsQueryParam();
         log.info("GET Request verified");
     }
@@ -72,7 +75,8 @@ public class CARBON15612RESTRequestURLTestCase extends DSSIntegrationTest {
     /*
     This testcase is disabled as the fix is on axis2.
      */
-    @Test(groups = { "wso2.dss" }, enabled = false) public void getRequestAsURLParam() throws Exception {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void getRequestAsURLParam() throws Exception {
         listEmployeesAsURLParam();
         log.info("GET Request verified");
     }

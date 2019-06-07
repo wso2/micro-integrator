@@ -50,11 +50,13 @@ public class SecureDataServiceSampleTestCase extends DSSIntegrationTest {
 
     private final String serviceName = "SecureDataService";
 
-    @Factory(dataProvider = "userModeDataProvider") public SecureDataServiceSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public SecureDataServiceSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         deployService(serviceName, new DataHandler(
@@ -63,16 +65,15 @@ public class SecureDataServiceSampleTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.dss", description = "check whether the service is deployed") public void testServiceDeployment()
-            throws RemoteException, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "check whether the service is deployed")
+    public void testServiceDeployment() throws RemoteException, XPathExpressionException {
         DSSTestCaseUtils dssTestCaseUtils = new DSSTestCaseUtils();
         assertTrue(dssTestCaseUtils
                 .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
     }
 
-    @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testServiceDeployment", enabled = false) public void listOffices()
-            throws DataServiceFault, RemoteException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testServiceDeployment", enabled = false)
+    public void listOffices() throws DataServiceFault, RemoteException, XPathExpressionException {
         SecureDataServiceStub stub = new SecureDataServiceStub(getServiceUrlHttps(serviceName));
         for (int i = 0; i < 5; i++) {
             Office[] offices = stub.showAllOffices();
@@ -84,8 +85,8 @@ public class SecureDataServiceSampleTestCase extends DSSIntegrationTest {
 
     @Test(groups = { "wso2.dss" }, dependsOnMethods = { "listOffices" }, description =
             "Service invocation after security engaged."
-                    + "Provides Authentication. Clients have Username Tokens", enabled = false) public void securedListOffices()
-            throws Exception {
+                    + "Provides Authentication. Clients have Username Tokens", enabled = false)
+    public void securedListOffices() throws Exception {
 
         secureServiceWithUT();
         SecureAxisServiceClient secureAxisServiceClient = new SecureAxisServiceClient();
@@ -104,7 +105,8 @@ public class SecureDataServiceSampleTestCase extends DSSIntegrationTest {
         log.info("Select Operation Success");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

@@ -48,7 +48,8 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
     private String pathToFtpDir;
 
-    @BeforeClass(alwaysRun = true) public void runFTPServerForInboundTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void runFTPServerForInboundTest() throws Exception {
 
         // Username password for the FTP server to be started
         FTPUsername = "admin";
@@ -99,7 +100,8 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void stopFTPServerForInboundTest() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stopFTPServerForInboundTest() throws Exception {
 
         try {
             super.cleanup();
@@ -112,9 +114,9 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Inbound endpoint Reading file in FTP Test Case") public void testInboundEnpointReadFileinFTP()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Inbound endpoint Reading file in FTP Test Case")
+    public void testInboundEnpointReadFileinFTP() throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + "test.xml");
         File targetFolder = new File(FTPFolder + File.separator + "ftpin");
@@ -155,9 +157,9 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Inbound endpoint invalid FTP username Test Case") public void testInboundInvalidFtpUsername()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Inbound endpoint invalid FTP username Test Case")
+    public void testInboundInvalidFtpUsername() throws Exception {
 
         File sourceFile = new File(pathToFtpDir + File.separator + "test.xml");
         File targetFile = new File(FTPFolder + File.separator + "ftpin" + File.separator + "test.xml");
@@ -241,7 +243,8 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
 
     private Callable<Boolean> isFileExist(final File file) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return file.exists();
             }
         };
@@ -249,7 +252,8 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
 
     private Callable<Boolean> isFileNotExist(final File file) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return !file.exists();
             }
         };

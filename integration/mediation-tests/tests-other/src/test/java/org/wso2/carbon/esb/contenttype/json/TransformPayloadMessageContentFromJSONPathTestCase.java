@@ -36,18 +36,20 @@ public class TransformPayloadMessageContentFromJSONPathTestCase extends ESBInteg
 
     private Client client = Client.create();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/transformmessagecontentjsonpath.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "Transform Message content inside payload factory using JSON path") public void testTransformMessageFromJSONPathScenario()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Transform Message content inside payload factory using JSON path")
+    public void testTransformMessageFromJSONPathScenario() throws Exception {
 
         String FirstJSON_PAYLOAD = "{\"album\":\"Tulip\",\"singer\":\"LevisM\"}";
         String SecondJSON_PAYLOAD = "{\"album\":\"Fire in the sky\",\"singer\":\"Tulip\"}";

@@ -41,14 +41,15 @@ public class IterateRegistryAsTargetTestCase extends ESBIntegrationTest {
     private IterateClient client;
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         client = new IterateClient();
         resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for sequence from governors registry ") public void testGovernersSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for sequence from governors registry ")
+    public void testGovernersSequence() throws Exception {
         URL url = new URL(
                 "file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateLogAndSendSequence.xml");
         resourceAdminServiceClient.addResource("/_system/governance/sequences/iterate/iterateLogAndSendSequence",
@@ -69,8 +70,8 @@ public class IterateRegistryAsTargetTestCase extends ESBIntegrationTest {
         resourceAdminServiceClient.deleteResource("/_system/governance/sequences/iterate/iterateLogAndSendSequence");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for sequence from configuration registry") public void testConfigurationSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for sequence from configuration registry")
+    public void testConfigurationSequence() throws Exception {
         URL url = new URL(
                 "file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateLogAndSendSequence.xml");
         resourceAdminServiceClient.addResource("/_system/config/sequences/iterate/iterateLogAndSendSequence",
@@ -91,7 +92,8 @@ public class IterateRegistryAsTargetTestCase extends ESBIntegrationTest {
         resourceAdminServiceClient.deleteResource("/_system/config/sequences/iterate/iterateLogAndSendSequence");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         client = null;
         resourceAdminServiceClient = null;
         super.cleanup();

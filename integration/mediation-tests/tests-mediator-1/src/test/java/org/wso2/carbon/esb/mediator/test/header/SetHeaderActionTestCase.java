@@ -34,14 +34,14 @@ import static org.testng.Assert.assertTrue;
 
 public class SetHeaderActionTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("setActionHeaderTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "set action in headers of incoming messages") public void setHeaderAction()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "set action in headers of incoming messages")
+    public void setHeaderAction() throws AxisFault {
         OMElement response;
 
         response = sendReceive(getProxyServiceURLHttp("setActionHeaderTestProxy"), "IBM");
@@ -49,7 +49,8 @@ public class SetHeaderActionTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

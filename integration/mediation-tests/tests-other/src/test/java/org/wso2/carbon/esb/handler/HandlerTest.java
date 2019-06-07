@@ -48,7 +48,8 @@ public class HandlerTest extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         copyToComponentConf(getClass().getResource(LOCATION + "/" + CONF_NAME).getPath(), CONF_NAME);
@@ -58,9 +59,8 @@ public class HandlerTest extends ESBIntegrationTest {
         logViewerClient.clearLogs();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via proxy to check synapse handler logs") public void testSynapseHandlerExecution()
-            throws IOException, LogViewerLogViewerException {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via proxy to check synapse handler logs")
+    public void testSynapseHandlerExecution() throws IOException, LogViewerLogViewerException {
         boolean requestInStatus = false;
         boolean requestOutStatus = false;
         boolean responseInStatus = false;
@@ -98,7 +98,8 @@ public class HandlerTest extends ESBIntegrationTest {
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending a message via proxy to check whether Synapse Handlers get "
-            + "invoked when a SoapFault come as a response") public void testSynapseHandlerExecutionWhenSoapFaultRecieved()
+            + "invoked when a SoapFault come as a response")
+    public void testSynapseHandlerExecutionWhenSoapFaultRecieved()
             throws IOException, LogViewerLogViewerException, InterruptedException {
         boolean responseInStatus = false;
         boolean errorOnSoapFaultStatus = false;
@@ -131,7 +132,8 @@ public class HandlerTest extends ESBIntegrationTest {
         FileManager.deleteFile(filePath);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         removeFromComponentConf(getClass().getResource(LOCATION + "/" + CONF_NAME).getPath());
         super.cleanup();
     }

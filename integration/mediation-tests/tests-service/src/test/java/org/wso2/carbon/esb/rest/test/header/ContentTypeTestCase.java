@@ -51,7 +51,8 @@ public class ContentTypeTestCase extends ESBIntegrationTest {
     private static final int HTTP_STATUS_OK = 200;
     private static final int PORT = 8089;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         String relativePath = "/artifacts/ESB/synapseconfig/esbjava2283/api.xml";
@@ -61,9 +62,8 @@ public class ContentTypeTestCase extends ESBIntegrationTest {
         addApi(apiConfig);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test different content types", dataProvider = "contentTypeProvider") public void testReturnContentType(
-            String dataProviderContentType) throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test different content types", dataProvider = "contentTypeProvider")
+    public void testReturnContentType(String dataProviderContentType) throws Exception {
 
         contentType = dataProviderContentType;
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -103,12 +103,14 @@ public class ContentTypeTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         super.cleanup();
     }
 
-    @DataProvider(name = "contentTypeProvider") public Object[][] getContentTypes() {
+    @DataProvider(name = "contentTypeProvider")
+    public Object[][] getContentTypes() {
 
         return new Object[][] { { "application/xml" }, { "text/plain" }, { "application/json" }, { "text/xml" },
                 { "application/x-www-form-urlencoded" }, { "multipart/form-data" }, { "text/xml" }, };

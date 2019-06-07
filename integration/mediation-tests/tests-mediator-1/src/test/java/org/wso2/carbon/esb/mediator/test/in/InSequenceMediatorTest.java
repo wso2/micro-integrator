@@ -31,7 +31,8 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class InSequenceMediatorTest extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
 
@@ -39,7 +40,8 @@ public class InSequenceMediatorTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }) public void inSequenceTest() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void inSequenceTest() throws Exception {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 
@@ -48,7 +50,8 @@ public class InSequenceMediatorTest extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

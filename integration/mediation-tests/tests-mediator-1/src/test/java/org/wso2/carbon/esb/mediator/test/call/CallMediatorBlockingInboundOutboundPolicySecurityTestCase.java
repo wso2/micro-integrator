@@ -33,15 +33,16 @@ import static org.testng.Assert.assertTrue;
  */
 public class CallMediatorBlockingInboundOutboundPolicySecurityTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("callMediatorBlockingInboundPolicyProxy");
         verifyLocalEntryExistence("sec_policy_3");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Call the inbound & outbound security endpoint with blocking external calls") public void CallMediatorBlockingInboundOutboundPolicySecurityTest()
-            throws AxisFault, XPathExpressionException {
+            "wso2.esb" }, description = "Call the inbound & outbound security endpoint with blocking external calls")
+    public void CallMediatorBlockingInboundOutboundPolicySecurityTest() throws AxisFault, XPathExpressionException {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("callMediatorBlockingInboundPolicyProxy"), "",
                         "WSO2");
@@ -49,7 +50,8 @@ public class CallMediatorBlockingInboundOutboundPolicySecurityTestCase extends E
         assertTrue(responseContainsWSO2);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

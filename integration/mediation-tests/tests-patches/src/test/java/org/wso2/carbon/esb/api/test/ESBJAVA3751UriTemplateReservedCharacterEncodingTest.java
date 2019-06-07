@@ -31,14 +31,16 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         verifyAPIExistence("ClientApi");
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved character : ") public void testURITemplateExpandWithPercentEncoding() throws Exception {
+            + " reserved character : ")
+    public void testURITemplateExpandWithPercentEncoding() throws Exception {
         boolean isPercentEncoded = false;
         logViewerClient.clearLogs();
         HttpResponse response = HttpRequestUtil
@@ -57,8 +59,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of reserved "
-            + "character : with percent encoding escaped at uri-template expansion") public void testURITemplateExpandWithEscapedPercentEncoding()
-            throws Exception {
+            + "character : with percent encoding escaped at uri-template expansion")
+    public void testURITemplateExpandWithEscapedPercentEncoding() throws Exception {
         boolean isPercentEncoded = false;
         logViewerClient.clearLogs();
         HttpResponse response = HttpRequestUtil
@@ -77,8 +79,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a path param consist of"
-            + " reserved character : ") public void testURITemplateExpandWithPercentEncodingPathParamCase()
-            throws Exception {
+            + " reserved character : ")
+    public void testURITemplateExpandWithPercentEncodingPathParamCase() throws Exception {
         boolean isPercentEncoded = false;
         logViewerClient.clearLogs();
         HttpResponse response = HttpRequestUtil
@@ -97,8 +99,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a path param consist of reserved "
-            + "character : with percent encoding escaped at uri-template expansion") public void testURITemplateExpandWithEscapedPercentEncodingPathParam()
-            throws Exception {
+            + "character : with percent encoding escaped at uri-template expansion")
+    public void testURITemplateExpandWithEscapedPercentEncodingPathParam() throws Exception {
         boolean isPercentEncoded = false;
         logViewerClient.clearLogs();
         HttpResponse response = HttpRequestUtil
@@ -117,8 +119,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved space character ") public void testURITemplateParameterDecodingSpaceCharacterCase()
-            throws Exception {
+            + " reserved space character ")
+    public void testURITemplateParameterDecodingSpaceCharacterCase() throws Exception {
         boolean isPercentEncoded = false;
         boolean isMessageContextPropertyPercentDecoded = false;
         logViewerClient.clearLogs();
@@ -144,8 +146,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved + character ") public void testURITemplateParameterDecodingPlusCharacterCase()
-            throws Exception {
+            + " reserved + character ")
+    public void testURITemplateParameterDecodingPlusCharacterCase() throws Exception {
         boolean isPercentEncoded = false;
         boolean isMessageContextPropertyPercentDecoded = false;
         logViewerClient.clearLogs();
@@ -171,8 +173,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved + character ") public void testURITemplateParameterDecodingWithPercentEncodingEscapedAtExpansion()
-            throws Exception {
+            + " reserved + character ")
+    public void testURITemplateParameterDecodingWithPercentEncodingEscapedAtExpansion() throws Exception {
         boolean isPercentEncoded = false;
         boolean isMessageContextPropertyPercentDecoded = false;
         logViewerClient.clearLogs();
@@ -205,8 +207,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a path param consist of"
-            + " whole URL including protocol , host , port etc. ") public void testURITemplateSpecialCaseVariableWithFullURL()
-            throws Exception {
+            + " whole URL including protocol , host , port etc. ")
+    public void testURITemplateSpecialCaseVariableWithFullURL() throws Exception {
         boolean isPercentEncoded = false;
         logViewerClient.clearLogs();
         HttpResponse response = HttpRequestUtil.sendGetRequest(
@@ -225,7 +227,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

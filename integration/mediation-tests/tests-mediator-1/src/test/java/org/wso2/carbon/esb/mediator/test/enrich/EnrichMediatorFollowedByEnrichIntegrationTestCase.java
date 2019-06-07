@@ -36,7 +36,8 @@ import static org.testng.Assert.assertTrue;
 public class EnrichMediatorFollowedByEnrichIntegrationTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
@@ -45,9 +46,8 @@ public class EnrichMediatorFollowedByEnrichIntegrationTestCase extends ESBIntegr
         verifyProxyServiceExistence("enrichTwiceTestProxy");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Enrich mediator followed by enrich mediator") public void enrichMediatorFollowedByEnrichMediator()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Enrich mediator followed by enrich mediator")
+    public void enrichMediatorFollowedByEnrichMediator() throws Exception {
         OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("enrichTwiceTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertNotNull(response, "Response message is null");
@@ -70,7 +70,8 @@ public class EnrichMediatorFollowedByEnrichIntegrationTestCase extends ESBIntegr
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
 
         resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
         cleanup();

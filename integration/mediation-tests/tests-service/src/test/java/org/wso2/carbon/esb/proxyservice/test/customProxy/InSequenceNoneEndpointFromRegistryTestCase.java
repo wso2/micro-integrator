@@ -36,7 +36,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class InSequenceNoneEndpointFromRegistryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath(
@@ -44,8 +45,8 @@ public class InSequenceNoneEndpointFromRegistryTestCase extends ESBIntegrationTe
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Custom proxy -In sequence none endpoint from registry") public void testCustomProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Custom proxy -In sequence none endpoint from registry")
+    public void testCustomProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("inSeqNonEndpointFromRegCustomProxy"), null,
@@ -61,7 +62,8 @@ public class InSequenceNoneEndpointFromRegistryTestCase extends ESBIntegrationTe
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

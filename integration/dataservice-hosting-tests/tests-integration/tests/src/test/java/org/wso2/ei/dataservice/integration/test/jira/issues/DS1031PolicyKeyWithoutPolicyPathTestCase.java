@@ -46,7 +46,8 @@ public class DS1031PolicyKeyWithoutPolicyPathTestCase extends DSSIntegrationTest
     OMFactory fac = OMAbstractFactory.getOMFactory();
     OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         DataServiceFileUploaderClient dataServiceAdminClient = new DataServiceFileUploaderClient(
@@ -58,19 +59,20 @@ public class DS1031PolicyKeyWithoutPolicyPathTestCase extends DSSIntegrationTest
 
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void isFaultyService()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void isFaultyService() throws Exception {
         assertTrue(isServiceFaulty(serviceName));
         log.info(serviceName + " is faulty");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether service is listed as a deployed service") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether service is listed as a deployed service")
+    public void testServiceDeployment() throws Exception {
         assertFalse(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @AfterClass public void clean() throws Exception {
+    @AfterClass
+    public void clean() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

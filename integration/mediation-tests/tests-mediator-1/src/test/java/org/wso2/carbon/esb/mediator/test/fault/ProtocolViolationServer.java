@@ -39,7 +39,8 @@ public class ProtocolViolationServer implements Runnable {
             this.theRequest = theRequest;
         }
 
-        @Override public void run() {
+        @Override
+        public void run() {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(this.theRequest.getInputStream()));
 
@@ -61,7 +62,8 @@ public class ProtocolViolationServer implements Runnable {
         }
     }
 
-    @Override public void run() {
+    @Override
+    public void run() {
         try {
             ServerSocket ss = new ServerSocket(this.port);
             while (true) {

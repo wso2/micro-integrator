@@ -46,7 +46,8 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
     private ServerConfigurationManager serverConfigurationManager;
     private String nhttpLogDir;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
@@ -86,9 +87,9 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.ALL }) @Test(groups = "wso2.esb") public void testNhttpAccessLogLocation()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @Test(groups = "wso2.esb")
+    public void testNhttpAccessLogLocation() throws Exception {
 
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("NhttpLogsTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
@@ -130,7 +131,8 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
      *
      * @throws Exception
      */
-    @AfterClass(alwaysRun = true) public void atEnd() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void atEnd() throws Exception {
         try {
             super.cleanup();
         } finally {
@@ -144,7 +146,8 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
     private Callable<Boolean> isServiceDeployed(final String proxyName) {
 
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
 
                 return isProxySuccesfullyDeployed(proxyName);
             }

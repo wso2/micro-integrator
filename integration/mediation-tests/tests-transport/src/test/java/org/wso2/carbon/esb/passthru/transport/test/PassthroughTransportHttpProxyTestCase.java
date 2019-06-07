@@ -36,7 +36,8 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private LogViewerClient logViewer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -48,8 +49,8 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Passthrough Transport Http.proxy test case") public void passthroughTransportHttpProxy()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Passthrough Transport Http.proxy test case")
+    public void passthroughTransportHttpProxy() throws Exception {
         int beforeLogSize = logViewer.getAllSystemLogs().length;
 
         try {
@@ -70,7 +71,8 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
         assertTrue(proxyhostEntryFound);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

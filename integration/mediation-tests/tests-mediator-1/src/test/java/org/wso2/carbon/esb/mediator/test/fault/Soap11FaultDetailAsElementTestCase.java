@@ -32,15 +32,15 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
 public class Soap11FaultDetailAsElementTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/fault/soap11_fault_detail_as_element_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Creating SOAP1.1 fault details as Element") public void testSOAP11FaultDetailAsElement()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault details as Element")
+    public void testSOAP11FaultDetailAsElement() throws AxisFault {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
@@ -64,7 +64,8 @@ public class Soap11FaultDetailAsElementTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

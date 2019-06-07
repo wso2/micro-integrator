@@ -38,7 +38,8 @@ public class ESBJAVA4721PIWithCacheTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
 
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         serverConfigurationManager.applyConfiguration(new File(
@@ -47,8 +48,8 @@ public class ESBJAVA4721PIWithCacheTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Test cache mediator with  Json response having a single element array with PI enabled") public void testJsonResponseWithCacheMediator()
-            throws IOException, AutomationFrameworkException {
+    @Test(groups = "wso2.esb", description = "Test cache mediator with  Json response having a single element array with PI enabled")
+    public void testJsonResponseWithCacheMediator() throws IOException, AutomationFrameworkException {
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/json");
@@ -65,7 +66,8 @@ public class ESBJAVA4721PIWithCacheTestCase extends ESBIntegrationTest {
                 "Expected response was not" + " received. Got " + response.getData());
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         try {
             super.cleanup();
         } finally {

@@ -41,11 +41,13 @@ public class NestedQuerySampleTestCase extends DSSIntegrationTest {
     private final String serviceName = "NestedQuerySample";
     private NestedQuerySampleStub stub;
 
-    @Factory(dataProvider = "userModeDataProvider") public NestedQuerySampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public NestedQuerySampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         deployService(serviceName, new DataHandler(
@@ -55,12 +57,14 @@ public class NestedQuerySampleTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void getCustomerOrdersNestedQuery() throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" })
+    public void getCustomerOrdersNestedQuery() throws RemoteException, DataServiceFault {
         for (int i = 1; i < 6; i++) {
             Order[] orders = stub.customerOrders();
             Assert.assertNotNull(orders, "Orders Object null");
@@ -69,8 +73,8 @@ public class NestedQuerySampleTestCase extends DSSIntegrationTest {
         log.info("Customer Orders Nested Query verified");
     }
 
-    @Test(groups = { "wso2.dss" }) public void listOfficeNestedQueryOperation()
-            throws RemoteException, DataServiceFault {
+    @Test(groups = { "wso2.dss" })
+    public void listOfficeNestedQueryOperation() throws RemoteException, DataServiceFault {
         for (int i = 1; i < 6; i++) {
             Office[] offices = stub.listOffices();
             Assert.assertNotNull(offices, "Offices Object null");

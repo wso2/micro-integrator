@@ -55,13 +55,14 @@ public class CARBON15379XMLExternalEntityAttacksTestCase extends DSSIntegrationT
             + "<validationQuery>SELECT 1</validationQuery><validationInterval>30000</validationInterval>"
             + "</configuration>";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
     }
 
     @Test(groups = { "wso2.dss" }, description = "Do XML External entity attack on ndatasource admin service "
-            + "test datasource method and see whether it rejects the requests", alwaysRun = true) public void xmlExternalEntityAttackOnTestDataSourceTest()
-            throws Exception {
+            + "test datasource method and see whether it rejects the requests", alwaysRun = true)
+    public void xmlExternalEntityAttackOnTestDataSourceTest() throws Exception {
 
         NDataSourceAdminServiceClient nDataSourceAdminServiceClient = new NDataSourceAdminServiceClient(
                 dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
@@ -86,8 +87,8 @@ public class CARBON15379XMLExternalEntityAttacksTestCase extends DSSIntegrationT
     }
 
     @Test(groups = { "wso2.dss" }, description = "Do XML External entity attack on ndatasource admin service add "
-            + "datasource call and see whether it rejects the requests", alwaysRun = true) public void xmlExternalEntityAttackOnAddDataSourceTest()
-            throws Exception {
+            + "datasource call and see whether it rejects the requests", alwaysRun = true)
+    public void xmlExternalEntityAttackOnAddDataSourceTest() throws Exception {
 
         NDataSourceAdminServiceClient nDataSourceAdminServiceClient = new NDataSourceAdminServiceClient(
                 dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
@@ -115,7 +116,8 @@ public class CARBON15379XMLExternalEntityAttacksTestCase extends DSSIntegrationT
         }
     }
 
-    @AfterClass public void clean() throws Exception {
+    @AfterClass
+    public void clean() throws Exception {
         cleanup();
     }
 

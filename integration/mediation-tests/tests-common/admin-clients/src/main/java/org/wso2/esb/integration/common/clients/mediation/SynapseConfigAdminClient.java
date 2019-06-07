@@ -145,10 +145,9 @@ public class SynapseConfigAdminClient {
      *
      * @param configuration synapse configuration
      * @return configuration update status
-     * @throws java.rmi.RemoteException       throwable exception
-     * @throws javax.servlet.ServletException throwable exception
-     * @throws javax.xml.stream.XMLStreamException
-     *                                        throwable exception
+     * @throws java.rmi.RemoteException            throwable exception
+     * @throws javax.servlet.ServletException      throwable exception
+     * @throws javax.xml.stream.XMLStreamException throwable exception
      */
     public boolean updateConfiguration(String configuration)
             throws XMLStreamException, ServletException, RemoteException {
@@ -180,10 +179,9 @@ public class SynapseConfigAdminClient {
      *
      * @param configuration synapse configuration
      * @return configuration update status
-     * @throws java.rmi.RemoteException       throwable exception
-     * @throws javax.servlet.ServletException throwable exception
-     * @throws javax.xml.stream.XMLStreamException
-     *                                        throwable exception
+     * @throws java.rmi.RemoteException            throwable exception
+     * @throws javax.servlet.ServletException      throwable exception
+     * @throws javax.xml.stream.XMLStreamException throwable exception
      */
     public boolean updateConfiguration(OMElement configuration)
             throws XMLStreamException, ServletException, RemoteException {

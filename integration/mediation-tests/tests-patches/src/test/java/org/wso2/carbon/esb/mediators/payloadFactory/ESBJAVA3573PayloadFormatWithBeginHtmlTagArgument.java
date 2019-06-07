@@ -47,16 +47,19 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESBJAVA3573PayloadFormatWithBeginHtmlTagArgument extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("deepCheckAPI");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = "wso2.esb", description = "invoke service - EvaluatorCheck") public void testPayloadFactoryArgsWithXmlBeginAndEndTags()
+    @Test(groups = "wso2.esb", description = "invoke service - EvaluatorCheck")
+    public void testPayloadFactoryArgsWithXmlBeginAndEndTags()
             throws AxisFault, MalformedURLException, AutomationFrameworkException {
 
         // json request payload.

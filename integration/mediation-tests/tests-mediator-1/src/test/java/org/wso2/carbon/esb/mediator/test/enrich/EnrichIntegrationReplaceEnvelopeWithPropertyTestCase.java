@@ -37,14 +37,16 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationReplaceEnvelopeWithPropertyTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichReplaceEnvelopeWithPropertyTestProxy");
     }
 
     //test wether the rresponse contains the replaced payload.
     @Test(groups = "wso2.esb", description = "Add custom content as a child to the part of message"
-            + " specified by xpath expression ") public void testEnrichMediator() throws Exception {
+            + " specified by xpath expression ")
+    public void testEnrichMediator() throws Exception {
         String soapResponse = getResponse();
 
         assertNotNull(soapResponse, "Response message null");
@@ -72,7 +74,8 @@ public class EnrichIntegrationReplaceEnvelopeWithPropertyTestCase extends ESBInt
         assertEquals(headerContent, "Test", "envelope header not changed");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

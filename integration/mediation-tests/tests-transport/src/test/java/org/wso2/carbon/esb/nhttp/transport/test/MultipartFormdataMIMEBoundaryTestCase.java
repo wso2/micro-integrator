@@ -30,13 +30,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import java.io.File;
 
 /**
- *This test class is to check the presence of MIMEBoundary value in Content-Type header
+ * This test class is to check the presence of MIMEBoundary value in Content-Type header
  * when converting JSON payload to multipart/form-data
  * (https://github.com/wso2/product-ei/issues/780)
  */
 public class MultipartFormdataMIMEBoundaryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "artifacts" + File.separator + "ESB" + File.separator + "nhttp" + File.separator + "transport"
@@ -44,8 +45,8 @@ public class MultipartFormdataMIMEBoundaryTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test for MIMEBoundary value in Content-Type header for multipart/form-data") public void testReturnContentType()
-            throws Exception {
+            "wso2.esb" }, description = "Test for MIMEBoundary value in Content-Type header for multipart/form-data")
+    public void testReturnContentType() throws Exception {
 
         String boundary = "boundary";
         String jsonPayload = "{\"action\":\"ping\"}";
@@ -68,7 +69,8 @@ public class MultipartFormdataMIMEBoundaryTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

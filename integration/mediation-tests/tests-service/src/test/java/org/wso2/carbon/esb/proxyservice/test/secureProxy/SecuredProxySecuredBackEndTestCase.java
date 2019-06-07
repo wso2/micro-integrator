@@ -37,7 +37,8 @@ public class SecuredProxySecuredBackEndTestCase extends ESBIntegrationTest {
 
     private SecureServiceClient secureAxisServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
 
         super.init();
         loadESBConfigurationFromClasspath(
@@ -47,8 +48,8 @@ public class SecuredProxySecuredBackEndTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Secure proxy" + "- Secured service secured proxy"
-            + "- used scenario1-policy(UsernameToken) to secure proxy and scenario3-policy(Integrity) to secure backend") public void testSecuredProxySecuredService()
-            throws Exception {
+            + "- used scenario1-policy(UsernameToken) to secure proxy and scenario3-policy(Integrity) to secure backend")
+    public void testSecuredProxySecuredService() throws Exception {
 
         OMElement response;
         String lastPrice;
@@ -70,7 +71,8 @@ public class SecuredProxySecuredBackEndTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

@@ -35,15 +35,16 @@ import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
 public class TransportHeaderTestCase extends ESBIntegrationTest {
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         wireServer = new WireMonitorServer(8991);
         wireServer.start();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/callout/transport_headers.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.1") public void testContentTypeSoap11()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.1")
+    public void testContentTypeSoap11() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SimpleStockQuote"), null,
                     "transport_header_test");
@@ -55,8 +56,8 @@ public class TransportHeaderTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.contains("Authorization: Basic cHVubmFkaTpwYXNzd29yZA=="));
     }
 
-    @Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.2") public void testContentTypeSoap12()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Transport header is set in request for soap 1.2")
+    public void testContentTypeSoap12() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SimpleStockQuote"), null,
                     "transport_header_test");
@@ -68,7 +69,8 @@ public class TransportHeaderTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.contains("Authorization: Basic cHVubmFkaTpwYXNzd29yZA=="));
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

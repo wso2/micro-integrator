@@ -39,7 +39,8 @@ public class APIMANAGER1838RequestHashGeneratorTestCase extends ESBIntegrationTe
 
     TomcatServerManager tomcatServerManager;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         verifyAPIExistence("APIM1838addPerson");
         verifyAPIExistence("APIM1838getPerson");
@@ -47,9 +48,8 @@ public class APIMANAGER1838RequestHashGeneratorTestCase extends ESBIntegrationTe
         tomcatServerManager.startServer();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Adding people to PeopleRestService", enabled = false) public void addPeople()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Adding people to PeopleRestService", enabled = false)
+    public void addPeople() throws Exception {
         if (isTomcatServerRunning(tomcatServerManager, 5000)) {
             HttpResponse response1 = HttpRequestUtil.sendGetRequest(getApiInvocationURL("APIM1838addPerson")
                     + "/person?email=john@wso2.com&firstName=John&lastName=Doe", null);
@@ -64,8 +64,8 @@ public class APIMANAGER1838RequestHashGeneratorTestCase extends ESBIntegrationTe
     }
 
     @Test(groups = {
-            "wso2.esb" }, dependsOnMethods = "addPeople", description = "Retrieving people from PeopleRestService") public void getPeople()
-            throws Exception {
+            "wso2.esb" }, dependsOnMethods = "addPeople", description = "Retrieving people from PeopleRestService")
+    public void getPeople() throws Exception {
 
         if (isTomcatServerRunning(tomcatServerManager, 5000)) {
             HttpResponse response1 = HttpRequestUtil
@@ -84,7 +84,8 @@ public class APIMANAGER1838RequestHashGeneratorTestCase extends ESBIntegrationTe
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         tomcatServerManager.stop();
         super.cleanup();
     }

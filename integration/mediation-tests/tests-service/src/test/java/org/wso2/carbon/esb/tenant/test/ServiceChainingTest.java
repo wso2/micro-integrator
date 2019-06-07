@@ -40,12 +40,14 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  * Created by shameera on 7/8/14.
  */
 public class ServiceChainingTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void createTenant() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void createTenant() throws Exception {
         super.init();
 
     }
 
-    @Test(groups = { "wso2.esb" }) public void testTenantIDInTenantResponsePath() throws Exception {
+    @Test(groups = { "wso2.esb" })
+    public void testTenantIDInTenantResponsePath() throws Exception {
         // create a tenant
         TenantManagementServiceClient tenantMgtAdminServiceClient = new TenantManagementServiceClient(
                 contextUrls.getBackEndUrl(), sessionCookie);
@@ -70,7 +72,8 @@ public class ServiceChainingTest extends ESBIntegrationTest {
         Assert.assertNotNull(receiveSeqLog_2);
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 

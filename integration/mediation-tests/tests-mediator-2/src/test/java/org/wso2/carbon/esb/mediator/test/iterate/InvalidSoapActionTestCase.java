@@ -42,7 +42,8 @@ import static org.testng.Assert.assertTrue;
 public class InvalidSoapActionTestCase extends ESBIntegrationTest {
     private AxisServiceClient axisServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         axisServiceClient = new AxisServiceClient();
     }
@@ -53,9 +54,8 @@ public class InvalidSoapActionTestCase extends ESBIntegrationTest {
      * not get mediated due to the inaccessibility of the endpoint reference.
      */
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests an invalid 'soapAction' in the iterate mediator") public void testInvalidSoapActionInvalidPayloadFirstElement()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests an invalid 'soapAction' in the iterate mediator")
+    public void testInvalidSoapActionInvalidPayloadFirstElement() throws Exception {
         try {
             axisServiceClient.sendReceive(createCustomQuoteRequest("WSO2"),
                     getProxyServiceURLHttp("iterateInvalidSoapActionInvalidPayloadTestProxy"), "");
@@ -77,9 +77,8 @@ public class InvalidSoapActionTestCase extends ESBIntegrationTest {
      * to check the given attribute name is available as operation in WSDL if this gets satisfied then the invocation
      * works properly . Therefore in this test case we get the mediated message.
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests an invalid 'soapAction' in the iterate mediator") public void testInvalidSoapActionValidPayloadFirstElement()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests an invalid 'soapAction' in the iterate mediator")
+    public void testInvalidSoapActionValidPayloadFirstElement() throws Exception {
         OMElement response;
         response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("iterateInvalidSoapActionValidPayloadTestProxy"),
@@ -97,7 +96,8 @@ public class InvalidSoapActionTestCase extends ESBIntegrationTest {
         return chkPrice;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         axisServiceClient = null;
         super.cleanup();
     }

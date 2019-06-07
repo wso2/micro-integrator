@@ -39,16 +39,17 @@ public class IterateNamedEndpointsTest extends ESBIntegrationTest {
 
     private SampleAxis2Server axis2Server1;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server1.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
         axis2Server1.start();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests for named endpoints") public void testNamedEndpoints()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests for named endpoints")
+    public void testNamedEndpoints() throws Exception {
 
         IterateClient client = new IterateClient();
         String response = client
@@ -66,7 +67,8 @@ public class IterateNamedEndpointsTest extends ESBIntegrationTest {
         Assert.assertEquals(i, 2, "Child Element count mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         axis2Server1.stop();
         axis2Server1 = null;
         super.cleanup();

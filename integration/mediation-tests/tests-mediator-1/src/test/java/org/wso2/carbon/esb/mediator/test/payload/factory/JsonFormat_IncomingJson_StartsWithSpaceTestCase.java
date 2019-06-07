@@ -36,14 +36,16 @@ import static org.testng.Assert.assertEquals;
  */
 public class JsonFormat_IncomingJson_StartsWithSpaceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setup() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setup() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "artifacts" + File.separator + "ESB" + File.separator + "mediatorconfig" + File.separator + "payload"
                         + File.separator + "factory" + File.separator + "jsonFormat_JsonStartsWithSpace.xml");
     }
 
-    @Test public void testJsonStringStartsWithWhiteSpace() throws Exception {
+    @Test
+    public void testJsonStringStartsWithWhiteSpace() throws Exception {
 
         String jsonStringStartingWithSpace = " {\"hello\":\"world\"}"; // note that there is whitespace before the {
 
@@ -52,7 +54,8 @@ public class JsonFormat_IncomingJson_StartsWithSpaceTestCase extends ESBIntegrat
         assertEquals(responseJsonString, "{\"hello\":\"world\"}", "Response is escaped incorrectly");
     }
 
-    @Test public void testJsonStringStartsWithNewLine() throws Exception {
+    @Test
+    public void testJsonStringStartsWithNewLine() throws Exception {
 
         String jsonStringStartingWithSpace = "\n{\"hello\":\"world\"}";
 

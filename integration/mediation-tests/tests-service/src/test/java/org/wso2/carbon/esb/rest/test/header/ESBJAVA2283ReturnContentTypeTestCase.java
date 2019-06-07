@@ -46,7 +46,8 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
     private static final int HTTP_STATUS_OK = 200;
     private static final int PORT = 8089;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
 
         super.init();
         String relativePath = "/artifacts/ESB/synapseconfig/esbjava2283/api.xml";
@@ -56,8 +57,8 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
         addApi(apiConfig);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "test return content type") public void testReturnContentType()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test return content type")
+    public void testReturnContentType() throws Exception {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
         String contentType = "text/xml";
@@ -97,7 +98,8 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
 
         super.cleanup();
     }

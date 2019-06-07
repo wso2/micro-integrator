@@ -31,13 +31,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class XQueryCustomVariableAsLong extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value and variable as Long") public void testXQueryTransformationWithLongValue()
-            throws AxisFault {
+            "wso2.esb" }, description = "Do XQuery transformation with target attribute specified as XPath value and variable as Long")
+    public void testXQueryTransformationWithLongValue() throws AxisFault {
         OMElement response;
         RequestUtil getQuoteCustomRequest = new RequestUtil();
         response = getQuoteCustomRequest
@@ -48,7 +49,8 @@ public class XQueryCustomVariableAsLong extends ESBIntegrationTest {
                 "9223322036854775801", "Symbol name mismatched");
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

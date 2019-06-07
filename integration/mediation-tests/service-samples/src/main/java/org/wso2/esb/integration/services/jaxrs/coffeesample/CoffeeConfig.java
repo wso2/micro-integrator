@@ -29,11 +29,13 @@ import java.util.List;
 import javax.ws.rs.ext.RuntimeDelegate;
 
 public class CoffeeConfig {
-    @Bean(destroyMethod = "shutdown") public SpringBus cxf() {
+    @Bean(destroyMethod = "shutdown")
+    public SpringBus cxf() {
         return new SpringBus();
     }
 
-    @Bean public org.apache.cxf.endpoint.Server jaxRsServer() {
+    @Bean
+    public org.apache.cxf.endpoint.Server jaxRsServer() {
         JAXRSServerFactoryBean factory = RuntimeDelegate.getInstance()
                 .createEndpoint(jaxRsApiApplication(), JAXRSServerFactoryBean.class);
         factory.setServiceBeans(Arrays.<Object>asList(starbucksOutletService()));
@@ -46,15 +48,18 @@ public class CoffeeConfig {
         return factory.create();
     }
 
-    @Bean public JaxRsApiApplication jaxRsApiApplication() {
+    @Bean
+    public JaxRsApiApplication jaxRsApiApplication() {
         return new JaxRsApiApplication();
     }
 
-    @Bean public StarbucksOutletService starbucksOutletService() {
+    @Bean
+    public StarbucksOutletService starbucksOutletService() {
         return new StarbucksOutletServiceImpl();
     }
 
-    @Bean public JacksonJsonProvider jsonProvider() {
+    @Bean
+    public JacksonJsonProvider jsonProvider() {
         return new JacksonJsonProvider();
     }
 }

@@ -36,7 +36,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
         loadESBConfigurationFromClasspath(
@@ -45,8 +46,8 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy"
-            + "- Publish WSDL Options - Picked from registry") public void testLoggingProxy() throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy" + "- Publish WSDL Options - Picked from registry")
+    public void testLoggingProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromRegLoggingProxy"), null, "WSO2");
@@ -61,12 +62,13 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Picked from registry -Log", enabled = false) public void testLoggingProxyLogging()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Picked from registry -Log", enabled = false)
+    public void testLoggingProxyLogging() throws Exception {
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception, InterruptedException, RemoteException {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception, InterruptedException, RemoteException {
         clearUploadedResource();
         super.cleanup();
     }

@@ -38,15 +38,15 @@ public class ESBJAVA2824MissingResponseTestCase extends ESBIntegrationTest {
 
     private static final String logLine0 = "Did not receive a JMS response within 30000 ms to destination : queue://bip_reply";
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_wait_response.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test Sending message to a jms endpoint and check for response") public void testJmsResponse()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test Sending message to a jms endpoint and check for response")
+    public void testJmsResponse() throws Exception {
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
 
@@ -63,7 +63,8 @@ public class ESBJAVA2824MissingResponseTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

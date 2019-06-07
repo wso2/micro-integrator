@@ -34,15 +34,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertFalse;
 
 public class FormatPayloadWithOMTypeArgsExpressionTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/om_arg_payload_factory_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Do transformation with a Payload Format that has OM type arguments") public void transformPayloadByArgsValue()
-            throws AxisFault {
+    @Test(groups = { "wso2.esb" }, description = "Do transformation with a Payload Format that has OM type arguments")
+    public void transformPayloadByArgsValue() throws AxisFault {
         sendRobust(getMainSequenceURL(), "IBM");
     }
 
@@ -79,7 +79,8 @@ public class FormatPayloadWithOMTypeArgsExpressionTestCase extends ESBIntegratio
         return method;
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

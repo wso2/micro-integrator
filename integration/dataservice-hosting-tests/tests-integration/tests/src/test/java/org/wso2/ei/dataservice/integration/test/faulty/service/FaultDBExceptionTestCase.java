@@ -42,7 +42,8 @@ public class FaultDBExceptionTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(FaultDBExceptionTestCase.class);
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation = null;
         serverEpr = getServiceUrlHttp(serviceName);
@@ -55,15 +56,15 @@ public class FaultDBExceptionTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
     @Test(groups = { "wso2.dss" }, description = "Checking the Exception returned from DSS when Database/table"
-            + " does not exist for the data service", dependsOnMethods = "testServiceDeployment") public void testExceptionForUnavailableDB()
-            throws RemoteException {
+            + " does not exist for the data service", dependsOnMethods = "testServiceDeployment")
+    public void testExceptionForUnavailableDB() throws RemoteException {
         log.info("Running faultServiceTestCase#testExceptionForUnavailableDB");
         FaultDBServiceStub faultDBServiceStub = new FaultDBServiceStub(serverEpr);
         try {
@@ -74,8 +75,8 @@ public class FaultDBExceptionTestCase extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteFaultyService()
-            throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
+    public void deleteFaultyService() throws Exception {
         deleteService(serviceName);
     }
 }

@@ -43,7 +43,8 @@ public class InputParametersValidationTestCase extends DSSIntegrationTest {
     private final OMFactory fac = OMAbstractFactory.getOMFactory();
     private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples", "ns1");
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -55,31 +56,33 @@ public class InputParametersValidationTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void validateFieldLengthMin()
-            throws XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void validateFieldLengthMin() throws XPathExpressionException {
         validateLastName("BB");
         log.info("Field minimum length verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void validateFieldLengthMax()
-            throws XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void validateFieldLengthMax() throws XPathExpressionException {
         validateLastName("BBBBBBBBBBBB CCCCCCCC");
         log.info("Field maximum length verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void validateEmail() throws XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void validateEmail() throws XPathExpressionException {
         validateEmail("aaabbb.com");
         validateEmail("aaa@bbb");
         log.info("Email address pattern verified");
     }
 
-    @Test(groups = { "wso2.dss" }, enabled = false) public void validatePrimaryKey()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, enabled = false)
+    public void validatePrimaryKey() throws AxisFault, XPathExpressionException {
         addEmployee("1");
         boolean validatePrimaryKey = false;
         try {

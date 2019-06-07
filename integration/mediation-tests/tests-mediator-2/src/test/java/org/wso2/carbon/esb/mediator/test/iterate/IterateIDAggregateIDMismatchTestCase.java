@@ -35,7 +35,8 @@ import java.io.File;
 public class IterateIDAggregateIDMismatchTestCase extends ESBIntegrationTest {
     private String symbol;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         symbol = FileUtils
                 .readFileToString(new File(getESBResourceLocation() + "/mediatorconfig/iterate/iterate1.txt"));
@@ -45,9 +46,8 @@ public class IterateIDAggregateIDMismatchTestCase extends ESBIntegrationTest {
      * This is a negative test under iterator mediator.Defining an  id as the iterate ID that does not
      * match with the aggregate ID and verify aggregation does not happen
      */
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests iterator ID that does not match with aggregate ID") public void testIterateIDAggregateIDMismatch()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests iterator ID that does not match with aggregate ID")
+    public void testIterateIDAggregateIDMismatch() throws Exception {
 
         try {
             axis2Client.sendMultipleQuoteRequest(getProxyServiceURLHttp("IterateIDAggregateIDMismatchTestProxy"), null,
@@ -59,7 +59,8 @@ public class IterateIDAggregateIDMismatchTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(groups = "wso2.esb", alwaysRun = true) public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb", alwaysRun = true)
+    public void close() throws Exception {
         symbol = null;
         super.cleanup();
     }

@@ -47,8 +47,9 @@ public class ESBJAVA1897HttpHeadMethodTestCase extends ESBIntegrationTest {
     private static final String SERVICE_NAME = "RestServiceProxy";
     private SampleAxis2Server axis2Server1 = null;
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         // start the axis2 server and deploy the Student Service
 
         //    	if (FrameworkFactory.getFrameworkProperties(ProductConstant.ESB_SERVER_NAME).getEnvironmentSettings().is_builderEnabled()) {
@@ -71,8 +72,8 @@ public class ESBJAVA1897HttpHeadMethodTestCase extends ESBIntegrationTest {
                 .until(isDeployed(proxyConfig));
     }
 
-    @Test(groups = "wso2.esb", description = "test to verify that the HTTP HEAD method works with PTT.") public void testHttpHeadMethod()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "test to verify that the HTTP HEAD method works with PTT.")
+    public void testHttpHeadMethod() throws Exception {
         String restURL = (getProxyServiceURLHttp(SERVICE_NAME)) + "/students";
         DefaultHttpClient httpclient = new DefaultHttpClient();
         HttpHead httpHead = new HttpHead(restURL);
@@ -85,7 +86,8 @@ public class ESBJAVA1897HttpHeadMethodTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         if (axis2Server1 != null && axis2Server1.isStarted()) {
             axis2Server1.stop();
         }
@@ -94,7 +96,8 @@ public class ESBJAVA1897HttpHeadMethodTestCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isDeployed(final OMElement omElement) {
         return new Callable<Boolean>() {
-            @Override public Boolean call() throws Exception {
+            @Override
+            public Boolean call() throws Exception {
                 return isProxyDeployed(omElement);
             }
         };

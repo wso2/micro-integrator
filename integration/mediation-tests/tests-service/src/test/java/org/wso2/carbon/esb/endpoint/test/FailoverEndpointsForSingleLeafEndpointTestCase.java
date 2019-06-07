@@ -28,14 +28,15 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class FailoverEndpointsForSingleLeafEndpointTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapse() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapse() throws Exception {
         super.init();
         uploadSynapseConfig();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Patch:SYNAPSE-820:Failover Endpoint does not work"
-            + " properly when using a single endpoint", expectedExceptions = AxisFault.class) public void testFailoverEndpoints()
-            throws AxisFault {
+            + " properly when using a single endpoint", expectedExceptions = AxisFault.class)
+    public void testFailoverEndpoints() throws AxisFault {
         try {
             axis2Client.sendSimpleStockQuoteRequest("http://localhost:8280/services/test_failover",
                     "http://localhost:9001/services/SimpleStockQuoteService", "IBM");
@@ -47,7 +48,8 @@ public class FailoverEndpointsForSingleLeafEndpointTestCase extends ESBIntegrati
         }
     }
 
-    @AfterClass(alwaysRun = true) public void afterClass() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void afterClass() throws Exception {
         super.cleanup();
     }
 

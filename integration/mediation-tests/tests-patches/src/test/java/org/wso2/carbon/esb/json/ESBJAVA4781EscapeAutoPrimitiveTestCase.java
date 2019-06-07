@@ -27,7 +27,8 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA4781EscapeAutoPrimitiveTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("FormatterEscapePrimitiveSequenceAPI");
 
@@ -36,7 +37,8 @@ public class ESBJAVA4781EscapeAutoPrimitiveTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description =
             "Check whether JSON field value auto primitive is escaped if field value starting region "
                     + "is matched with replace regex after flowing through Staxon formatter in passthrough transport | matched starting region"
-                    + "will be replaced") public void testJSONEmptyArrayMissingNHTTPTransport() throws Exception {
+                    + "will be replaced")
+    public void testJSONEmptyArrayMissingNHTTPTransport() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("formatterEscapePrimitiveSequenceAPI/escapePrimitive"), null);
         String expected =
@@ -50,7 +52,8 @@ public class ESBJAVA4781EscapeAutoPrimitiveTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

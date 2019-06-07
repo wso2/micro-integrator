@@ -38,7 +38,8 @@ public class NestedAggregatesTestCase extends ESBIntegrationTest {
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 4;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         //  loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config13/synapse.xml");
         aggregatedRequestClient = new AggregatedRequestClient();
@@ -48,8 +49,8 @@ public class NestedAggregatesTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sending request for aggregation") public void test()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Sending request for aggregation")
+    public void test() throws IOException, XMLStreamException {
         int responseCount = 0;
 
         OMElement response = AXIOMUtil.stringToOM(aggregatedRequestClient.getResponse());
@@ -65,8 +66,8 @@ public class NestedAggregatesTestCase extends ESBIntegrationTest {
         Assert.assertEquals(no_of_requests, responseCount, "Response Aggregation not as expected");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "sending nested aggregate request") public void testNestedAggregate()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "sending nested aggregate request")
+    public void testNestedAggregate() throws IOException, XMLStreamException {
 
         String response = aggregatedRequestClient.getResponse(createNestedQuoteRequestBody("WSO2", no_of_requests));
         OMElement response2 = AXIOMUtil.stringToOM(response);
@@ -84,9 +85,8 @@ public class NestedAggregatesTestCase extends ESBIntegrationTest {
     }
 
     /*   https://wso2.org/jira/browse/ESBJAVA-2152   */
-    @Test(groups = {
-            "wso2.esb" }, description = "sending nested aggregate request > request iterator count 2500") public void testNestedAggregateWithLargeMessage()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "sending nested aggregate request > request iterator count 2500")
+    public void testNestedAggregateWithLargeMessage() throws IOException, XMLStreamException {
         int messageItr = 15;
         String response = aggregatedRequestClient.getResponse(createNestedQuoteRequestBody("WSO2", messageItr));
         OMElement response2 = AXIOMUtil.stringToOM(response);
@@ -103,7 +103,8 @@ public class NestedAggregatesTestCase extends ESBIntegrationTest {
         Assert.assertEquals(responseCount, messageItr * messageItr, "Response count Mismatched");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         aggregatedRequestClient = null;
         super.cleanup();
     }

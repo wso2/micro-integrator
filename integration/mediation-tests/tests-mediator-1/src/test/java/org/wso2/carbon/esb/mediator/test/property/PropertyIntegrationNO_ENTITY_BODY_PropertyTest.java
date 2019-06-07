@@ -42,7 +42,8 @@ public class PropertyIntegrationNO_ENTITY_BODY_PropertyTest extends ESBIntegrati
     private OMElement response;
     private HttpClientUtil client;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         OMElement config = esbUtils.loadResource("/artifacts/ESB/mediatorconfig/property/NO_ENTITY_BODY.xml");
         config = AXIOMUtil
@@ -51,23 +52,24 @@ public class PropertyIntegrationNO_ENTITY_BODY_PropertyTest extends ESBIntegrati
         client = new HttpClientUtil();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property") public void testWithoutNoEntityBodyPropertTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property")
+    public void testWithoutNoEntityBodyPropertTest() throws Exception {
         response = client.getWithContentType(getProxyServiceURLHttp("Axis2ProxyService1") + "/echoString?in=IBM", "",
                 MediaType.APPLICATION_FORM_URLENCODED);
         assertNotNull(response, "Response is null");
         assertEquals(response.getFirstElement().getText(), "IBM", "Text does not match");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", expectedExceptions = OMException.class, description = "Test-With NO_ENTITY_BODY") public void testWithNoEntityBodyPropertTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", expectedExceptions = OMException.class, description = "Test-With NO_ENTITY_BODY")
+    public void testWithNoEntityBodyPropertTest() throws Exception {
         client.getWithContentType(getProxyServiceURLHttp("Axis2ProxyService2") + "/echoString", "in=IBM",
                 MediaType.APPLICATION_FORM_URLENCODED);
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

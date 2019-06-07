@@ -46,7 +46,8 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     private TaskAdminClient taskAdminClient;
     private ServerConfigurationManager serverManager = null;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
 
         super.init();
         serverManager = new ServerConfigurationManager(context);
@@ -83,9 +84,9 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
         taskAdminClient = new TaskAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Send sample request") public void testSendingToDefinedProxies()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Send sample request")
+    public void testSendingToDefinedProxies() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "IBM");
@@ -116,31 +117,32 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test End points") public void testEndPoints()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test End points")
+    public void testEndPoints() throws Exception {
         assertTrue(endPointAdminClient.getEndpointCount() == 1, "End points not added");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test local entries") public void testLocalEntries()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test local entries")
+    public void testLocalEntries() throws Exception {
         assertTrue(localEntriesAdminClient.getEntryDataCount() > 1, "local entries not added");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test Sequences") public void testSequences()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test Sequences")
+    public void testSequences() throws Exception {
         assertTrue(sequenceAdminServiceClient.getSequences().length > 3, "Sequences not added");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test tasks") public void testTasks()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test tasks")
+    public void testTasks() throws Exception {
         assertTrue(taskAdminClient.getScheduleTaskList().size() == 1, "tasks not added");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         Thread.sleep(5000);
         if (serverManager != null) {

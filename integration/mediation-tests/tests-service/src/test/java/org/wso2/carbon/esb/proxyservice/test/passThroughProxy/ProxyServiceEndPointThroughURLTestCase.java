@@ -30,7 +30,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/proxyconfig/proxy/passThroughProxy/proxy_service_with_end_point_through_url.xml");
@@ -38,8 +39,8 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Pass through proxy"
-            + "- Proxy service with providing endpoint through url") public void testPassThroughProxy()
-            throws Exception {
+            + "- Proxy service with providing endpoint through url")
+    public void testPassThroughProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("endpointThroughURLPassthroughProxy"), null,
@@ -55,7 +56,8 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

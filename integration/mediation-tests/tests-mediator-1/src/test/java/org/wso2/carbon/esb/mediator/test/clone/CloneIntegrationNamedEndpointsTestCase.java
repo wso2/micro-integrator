@@ -42,7 +42,8 @@ public class CloneIntegrationNamedEndpointsTestCase extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server2;
     private CloneClient client;
 
-    @BeforeClass(groups = "wso2.esb") public void setEnvironment() throws Exception {
+    @BeforeClass(groups = "wso2.esb")
+    public void setEnvironment() throws Exception {
         super.init();
         client = new CloneClient();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_named_endpoints.xml");
@@ -55,9 +56,9 @@ public class CloneIntegrationNamedEndpointsTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Tests http address") public void testSequence()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Tests http address")
+    public void testSequence() throws Exception {
 
         String response = client.getResponse(getMainSequenceURL(), "WSO2");
         Assert.assertNotNull(response, "Response Message is null");
@@ -73,7 +74,8 @@ public class CloneIntegrationNamedEndpointsTestCase extends ESBIntegrationTest {
         Assert.assertEquals(i, 2, "Child Element mismatched");
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         axis2Server1.stop();
         axis2Server2.stop();
         axis2Server1 = null;

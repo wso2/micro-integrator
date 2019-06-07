@@ -44,11 +44,13 @@ public class GSpreadSampleTestCase extends DSSIntegrationTest {
     private final String serviceName = "GSpreadSample";
     private String serverEpr;
 
-    @Factory(dataProvider = "userModeDataProvider") public GSpreadSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public GSpreadSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
@@ -59,15 +61,15 @@ public class GSpreadSampleTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = true) public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not", enabled = true)
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
     @Test(groups = {
-            "wso2.dss" }, dependsOnMethods = "testServiceDeployment", description = "invoke GSspread sheet test", enabled = true) public void testGSpreadQuery()
-            throws DataServiceFault, RemoteException {
+            "wso2.dss" }, dependsOnMethods = "testServiceDeployment", description = "invoke GSspread sheet test", enabled = true)
+    public void testGSpreadQuery() throws DataServiceFault, RemoteException {
 
         if (this.isOnlineTestsEnabled()) {
             log.info("Running GSpreadSampleTestCase#testGSpreadQuery");
@@ -77,8 +79,8 @@ public class GSpreadSampleTestCase extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteFaultyService()
-            throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
+    public void deleteFaultyService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

@@ -37,14 +37,14 @@ import static org.testng.Assert.fail;
 
 public class ValidateIntegrationNegativeTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadConfig();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Provide invalid dynamic key as shema location") public void TestWithInvalidDynamicKey()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Provide invalid dynamic key as shema location")
+    public void TestWithInvalidDynamicKey() throws Exception {
         OMElement response = null;
         try {
             response = axis2Client
@@ -58,8 +58,8 @@ public class ValidateIntegrationNegativeTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Create validate mediator and specifying an invalid "
             + "XPath expression using \"source\" attribute "
-            + "Check how mediator operates on the elements of SOAP body") public void TestWithInvalidXpath()
-            throws Exception {
+            + "Check how mediator operates on the elements of SOAP body")
+    public void TestWithInvalidXpath() throws Exception {
         final String expectedErrorMsg = "Error occurred while accessing source element: //m0:requestElement/m0:getQuote";
         try {
             axis2Client
@@ -70,7 +70,8 @@ public class ValidateIntegrationNegativeTestCase extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

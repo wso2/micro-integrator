@@ -47,7 +47,8 @@ public class URIWSDLEndpointTestCase extends ESBIntegrationTest {
     private EndPointAdminClient endPointAdminClient;
     private ResourceAdminServiceClient resourceAdminServiceClient;
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "endpoint" + File.separator
@@ -62,25 +63,24 @@ public class URIWSDLEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(groups = "wso2.esb") public void close() throws Exception {
+    @AfterClass(groups = "wso2.esb")
+    public void close() throws Exception {
         resourceAdminServiceClient.deleteResource("/_system/config/test_ep_config");
         resourceAdminServiceClient = null;
         endPointAdminClient = null;
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test endpoint addition, deletion & stats") public void testWSDLEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test endpoint addition, deletion & stats")
+    public void testWSDLEndpoint() throws Exception {
         cleanupEndpoints();
         endpointAdditionScenario();
         endpointStatisticsScenario();
         endpointDeletionScenario();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a WSDL endpoint") public void testSendingToWSDLEndpoint()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a WSDL endpoint")
+    public void testSendingToWSDLEndpoint() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlEndPoint"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         Assert.assertNotNull(response);
@@ -88,9 +88,8 @@ public class URIWSDLEndpointTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message to a WSDL endpoint in Config Reg") public void testSendingToWSDLEndpoint_ConfigReg()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a WSDL endpoint in Config Reg")
+    public void testSendingToWSDLEndpoint_ConfigReg() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlEndPoint_Config_Reg"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         Assert.assertNotNull(response);

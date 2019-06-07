@@ -33,7 +33,8 @@ public class EndPointFailOver extends ESBIntegrationTest {
     private SampleAxis2Server axis2Server2;
     private OMElement response;
 
-    @BeforeClass(alwaysRun = true) public void initiateTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initiateTest() throws Exception {
         init();
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");              // initializing 2 axis2servers
@@ -47,8 +48,9 @@ public class EndPointFailOver extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb") public void TestFailOver() throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb")
+    public void TestFailOver() throws Exception {
 
         // send the requests to each servers.
 
@@ -59,7 +61,8 @@ public class EndPointFailOver extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         try {
             axis2Server1.stop();
             axis2Server2.stop();//stopping the started services

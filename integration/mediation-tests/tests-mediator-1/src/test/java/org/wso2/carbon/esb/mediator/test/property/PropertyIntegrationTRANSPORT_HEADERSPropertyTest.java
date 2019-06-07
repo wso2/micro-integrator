@@ -34,15 +34,16 @@ import static org.testng.Assert.assertFalse;
 public class PropertyIntegrationTRANSPORT_HEADERSPropertyTest extends ESBIntegrationTest {
     public WireMonitorServer wireServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         wireServer = new WireMonitorServer(8996);
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/TRANSPORT_HEADERS.xml");
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test-Without TRANSPORT_HEADERS Property") public void testTRANSPORT_HEADERSPropertTest()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test-Without TRANSPORT_HEADERS Property")
+    public void testTRANSPORT_HEADERSPropertTest() throws Exception {
 
         wireServer.start();
         try {
@@ -56,7 +57,8 @@ public class PropertyIntegrationTRANSPORT_HEADERSPropertyTest extends ESBIntegra
         assertFalse(response.contains("Test-TRANSPORT_HEADERS: test"), "Property not set");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         cleanup();
     }
 }

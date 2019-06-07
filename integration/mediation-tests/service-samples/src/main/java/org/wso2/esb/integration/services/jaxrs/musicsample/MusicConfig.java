@@ -28,12 +28,15 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Arrays;
 import javax.ws.rs.ext.RuntimeDelegate;
 
-@Configuration public class MusicConfig {
-    @Bean(destroyMethod = "shutdown") public SpringBus cxf() {
+@Configuration
+public class MusicConfig {
+    @Bean(destroyMethod = "shutdown")
+    public SpringBus cxf() {
         return new SpringBus();
     }
 
-    @Bean public Server jaxRsServer() {
+    @Bean
+    public Server jaxRsServer() {
         JAXRSServerFactoryBean factory = RuntimeDelegate.getInstance()
                 .createEndpoint(jaxRsApiApplication(), JAXRSServerFactoryBean.class);
         factory.setServiceBeans(Arrays.<Object>asList(musicRestService()));
@@ -42,19 +45,23 @@ import javax.ws.rs.ext.RuntimeDelegate;
         return factory.create();
     }
 
-    @Bean public JaxRsApiApplication jaxRsApiApplication() {
+    @Bean
+    public JaxRsApiApplication jaxRsApiApplication() {
         return new JaxRsApiApplication();
     }
 
-    @Bean public MusicRestService musicRestService() {
+    @Bean
+    public MusicRestService musicRestService() {
         return new MusicRestService();
     }
 
-    @Bean public MusicService musicService() {
+    @Bean
+    public MusicService musicService() {
         return new MusicService();
     }
 
-    @Bean public JacksonJsonProvider jsonProvider() {
+    @Bean
+    public JacksonJsonProvider jsonProvider() {
         return new JacksonJsonProvider();
     }
 }

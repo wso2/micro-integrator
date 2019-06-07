@@ -35,7 +35,8 @@ import static org.testng.Assert.assertNotNull;
 
 public class DynamicSequenceTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
     }
 
@@ -43,8 +44,8 @@ public class DynamicSequenceTestCase extends ESBIntegrationTest {
         create a http header with name "Sequence" and value "correctsequence" and send a request. The
          correctsequence will direct the request to the correct end point.
     */
-    @Test(groups = "wso2.esb", description = "Define a dynamic sequence defined in a proxy service") public void testSequenceMediator()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Define a dynamic sequence defined in a proxy service")
+    public void testSequenceMediator() throws AxisFault {
 
         OMElement response;
         axis2Client.addHttpHeader("Sequence", "sendToStockQuoteServiceSequence");
@@ -62,7 +63,8 @@ public class DynamicSequenceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

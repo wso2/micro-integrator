@@ -45,7 +45,8 @@ public class BatchRequestTestCase extends DSSIntegrationTest {
     private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
     private final String serviceName = "BatchRequestTest";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         List<File> sqlFileLis = new ArrayList<File>();
@@ -56,12 +57,14 @@ public class BatchRequestTestCase extends DSSIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void insertOperation() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void insertOperation() throws AxisFault, XPathExpressionException {
         for (int i = 1; i < 6; i++) {
             addEmployee(i);
         }
@@ -71,8 +74,8 @@ public class BatchRequestTestCase extends DSSIntegrationTest {
         log.info("Insert Operation verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" }) public void deleteOperation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertOperation" })
+    public void deleteOperation() throws AxisFault, XPathExpressionException {
         for (int i = 1; i < 6; i++) {
             deleteEmployee(i);
         }
@@ -82,7 +85,8 @@ public class BatchRequestTestCase extends DSSIntegrationTest {
         log.info("Delete Operation Success");
     }
 
-    @Test(groups = { "wso2.dss" }) public void insertBatchRequest() throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" })
+    public void insertBatchRequest() throws AxisFault, XPathExpressionException {
         addEmployeeBatchRequest();
         for (int i = 10; i < 36; i++) {
             Assert.assertEquals("1", employeeExists(i + ""), "Employee Not Found");
@@ -90,8 +94,8 @@ public class BatchRequestTestCase extends DSSIntegrationTest {
         log.info("Insert Batch Request verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertBatchRequest" }) public void deleteBatchRequest()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "insertBatchRequest" })
+    public void deleteBatchRequest() throws AxisFault, XPathExpressionException {
         deleteEmployeeBatchRequest();
 
         for (int i = 10; i < 36; i++) {

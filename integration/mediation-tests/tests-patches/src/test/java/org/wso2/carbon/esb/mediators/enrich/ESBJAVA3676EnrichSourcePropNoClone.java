@@ -36,13 +36,14 @@ import java.io.InputStreamReader;
 public class ESBJAVA3676EnrichSourcePropNoClone extends ESBIntegrationTest {
     private static final String PROXY_NAME = "ESBJAVA3676TestProxy";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence(PROXY_NAME);
     }
 
-    @Test(groups = "wso2.esb", description = "Tests Enrich Source OM Property without clone") public void testEnrichSourceTypePropertyAndCloneFalse()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests Enrich Source OM Property without clone")
+    public void testEnrichSourceTypePropertyAndCloneFalse() throws Exception {
 
         String endpoint = getProxyServiceURLHttp(PROXY_NAME);
 
@@ -70,7 +71,8 @@ public class ESBJAVA3676EnrichSourcePropNoClone extends ESBIntegrationTest {
         Assert.assertTrue(!result.contains("payload"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

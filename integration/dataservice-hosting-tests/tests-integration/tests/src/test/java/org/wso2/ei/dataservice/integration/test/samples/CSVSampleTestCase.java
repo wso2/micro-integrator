@@ -42,11 +42,13 @@ public class CSVSampleTestCase extends DSSIntegrationTest {
     private final String serviceName = "CSVSampleService";
     private String serverEpr;
 
-    @Factory(dataProvider = "userModeDataProvider") public CSVSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public CSVSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         String resourceFileLocation;
         serverEpr = getServiceUrlHttp(serviceName);
@@ -57,21 +59,21 @@ public class CSVSampleTestCase extends DSSIntegrationTest {
         log.info(serviceName + " uploaded");
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws Exception {
         assertTrue(isServiceDeployed(serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testServiceDeployment") public void testGetProducts()
-            throws DataServiceFault, RemoteException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = "testServiceDeployment")
+    public void testGetProducts() throws DataServiceFault, RemoteException {
         log.info("Running CSVSampleServiceTestCase#testGetProducts");
         CSVSampleService stub = new CSVSampleServiceStub(serverEpr);
         assert stub.getProducts().length > 0 : "No of products should be greater than zero";
     }
 
-    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service") public void deleteFaultyService()
-            throws Exception {
+    @AfterClass(alwaysRun = true, groups = "wso2.dss", description = "delete service")
+    public void deleteFaultyService() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

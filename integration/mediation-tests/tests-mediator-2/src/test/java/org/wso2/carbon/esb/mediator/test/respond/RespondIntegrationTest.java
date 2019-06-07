@@ -34,12 +34,13 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.fail;
 
 public class RespondIntegrationTest extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void deployArtifacts() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void deployArtifacts() throws Exception {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Respond mediator test") public void testRespondMediator()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Respond mediator test")
+    public void testRespondMediator() throws AxisFault {
         OMElement stockQuoteResponse1 = null;
         OMElement stockQuoteResponse2 = null;
         OMElement stockQuoteResponse3 = null;
@@ -75,7 +76,8 @@ public class RespondIntegrationTest extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 }

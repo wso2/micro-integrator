@@ -35,20 +35,21 @@ public class PropertyIntegrationXPathTrpPropertyTestCase extends ESBIntegrationT
     private static LogViewerClient logViewer;
     boolean isBody = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATHTRP.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Get transport header named "
-            + "Content-Type of the current message") public void testRESPONSETEnabledTrue()
-            throws IOException, XMLStreamException {
+    @Test(groups = { "wso2.esb" }, description = "Get transport header named " + "Content-Type of the current message")
+    public void testRESPONSETEnabledTrue() throws IOException, XMLStreamException {
 
         int beforeLogSize = logViewer.getAllSystemLogs().length;
 

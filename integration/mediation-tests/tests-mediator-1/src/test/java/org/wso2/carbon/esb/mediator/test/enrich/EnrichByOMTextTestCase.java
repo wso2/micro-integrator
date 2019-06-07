@@ -36,7 +36,8 @@ import static org.testng.Assert.assertTrue;
 public class EnrichByOMTextTestCase extends ESBIntegrationTest {
     private ResourceAdminServiceClient resourceAdminServiceStub;
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
         uploadResourcesToGovernanceRegistry();
@@ -44,7 +45,8 @@ public class EnrichByOMTextTestCase extends ESBIntegrationTest {
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2248*/
-    @Test(groups = { "wso2.esb" }, description = "Enrich by OMText") public void enrichByOMText() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Enrich by OMText")
+    public void enrichByOMText() throws Exception {
         OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("enrichByOMTextTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertNotNull(response, "Response message is null");
@@ -66,7 +68,8 @@ public class EnrichByOMTextTestCase extends ESBIntegrationTest {
                                 + "/mediatorconfig/xslt/transform_back.xslt")));
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
 
         resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
         cleanup();

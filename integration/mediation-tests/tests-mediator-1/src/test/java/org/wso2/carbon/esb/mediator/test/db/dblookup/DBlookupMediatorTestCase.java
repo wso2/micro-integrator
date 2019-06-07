@@ -42,7 +42,8 @@ public class DBlookupMediatorTestCase extends ESBIntegrationTest {
     private String DB_PASSWORD;
     private final double WSO2_PRICE = 200.0;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
         DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
@@ -57,9 +58,9 @@ public class DBlookupMediatorTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test dblookup mediator with more than one resultsets") public void dbLookupMediatorTestWithMultipleResults()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test dblookup mediator with more than one resultsets")
+    public void dbLookupMediatorTestWithMultipleResults() throws Exception {
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(100.0,'ABC')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(2000.0,'XYZ')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(" + WSO2_PRICE + ",'WSO2')");
@@ -84,9 +85,9 @@ public class DBlookupMediatorTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test dblookup mediator with multiple SQL statements") public void dbLookupMediatorTestMultipleStatements()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test dblookup mediator with multiple SQL statements")
+    public void dbLookupMediatorTestMultipleStatements() throws Exception {
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(100.0,'IBM')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(2000.0,'XYZ')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(" + WSO2_PRICE + ",'WSO2')");
@@ -102,9 +103,9 @@ public class DBlookupMediatorTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Select rows from DB table while mediating messages.") public void dbLookupTestSelectRows()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Select rows from DB table while mediating messages.")
+    public void dbLookupTestSelectRows() throws Exception {
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(100.0,'ABC')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(2000.0,'XYZ')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(" + WSO2_PRICE + ",'WSO2')");
@@ -118,9 +119,9 @@ public class DBlookupMediatorTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test dblookup mediator with stored functions") public void dbLookupTestStoredFunctions()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test dblookup mediator with stored functions")
+    public void dbLookupTestStoredFunctions() throws Exception {
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(100.0,'ABC')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(2000.0,'XYZ')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(" + WSO2_PRICE + ",'WSO2')");
@@ -142,9 +143,9 @@ public class DBlookupMediatorTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @SetEnvironment(executionEnvironments = {
-            ExecutionEnvironment.STANDALONE }) @Test(groups = "wso2.esb", description = "Test dblookup mediator with stored procedures") public void dbLookupTestStoredProcedures()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = "wso2.esb", description = "Test dblookup mediator with stored procedures")
+    public void dbLookupTestStoredProcedures() throws Exception {
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(100.0,'ABC')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(2000.0,'XYZ')");
         h2DatabaseManager.executeUpdate("INSERT INTO company VALUES(" + WSO2_PRICE + ",'WSO2')");
@@ -167,7 +168,8 @@ public class DBlookupMediatorTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         h2DatabaseManager.disconnect();
         h2DatabaseManager = null;
         super.cleanup();

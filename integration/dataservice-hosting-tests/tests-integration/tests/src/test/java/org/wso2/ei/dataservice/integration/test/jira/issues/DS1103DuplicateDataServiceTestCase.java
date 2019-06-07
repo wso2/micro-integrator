@@ -36,7 +36,8 @@ public class DS1103DuplicateDataServiceTestCase extends DSSIntegrationTest {
     private final String serviceName = "DuplicateDataServiceTest";
     private List<File> sqlFileList;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         sqlFileList = new ArrayList<>();
         sqlFileList.add(selectSqlFile("CreateTables.sql"));
@@ -46,8 +47,8 @@ public class DS1103DuplicateDataServiceTestCase extends DSSIntegrationTest {
         dataSource.createDataSource("duplicate_test", sqlFileList);
     }
 
-    @Test(groups = "wso2.dss", description = "Testing the duplicate data service deployment fail test case.") public void testForDuplicateDataServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Testing the duplicate data service deployment fail test case.")
+    public void testForDuplicateDataServiceDeployment() throws Exception {
         DataHandler dssConfig = createArtifact(
                 getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
                         + File.separator + "H2SimpleJsonTestDuplicate.dbs", sqlFileList);
@@ -57,7 +58,8 @@ public class DS1103DuplicateDataServiceTestCase extends DSSIntegrationTest {
         Assert.assertTrue(isServiceFaulty("H2SimpleJsonTestDuplicate"), "Service is Found");
     }
 
-    @AfterClass public void clean() throws Exception {
+    @AfterClass
+    public void clean() throws Exception {
         cleanup();
     }
 

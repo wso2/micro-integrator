@@ -34,15 +34,16 @@ import static org.testng.Assert.assertTrue;
 
 public class JsonFormat_IncomingJson_ArgsXmlExpression_WithOutStream_TestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/jsonFormat_XmlExpressiosns.xml");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "WithoutStream B&F, json format, xml evaluators, incoming json, outgoing json ") public void transformPayloadByArgsValue()
-            throws Exception {
+            "wso2.esb" }, description = "WithoutStream B&F, json format, xml evaluators, incoming json, outgoing json ")
+    public void transformPayloadByArgsValue() throws Exception {
 
         SimpleHttpClient httpClient = new SimpleHttpClient();
         String payload =
@@ -67,7 +68,8 @@ public class JsonFormat_IncomingJson_ArgsXmlExpression_WithOutStream_TestCase ex
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

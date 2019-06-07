@@ -17,9 +17,12 @@ import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.Provider;
 
-@Provider @Consumes(MediaType.APPLICATION_JSON) public class OrderReader implements MessageBodyReader<Order> {
+@Provider
+@Consumes(MediaType.APPLICATION_JSON)
+public class OrderReader implements MessageBodyReader<Order> {
 
-    @Override public Order readFrom(Class<Order> type, Type type1, Annotation[] antns, MediaType mt,
+    @Override
+    public Order readFrom(Class<Order> type, Type type1, Annotation[] antns, MediaType mt,
             MultivaluedMap<String, String> mm, InputStream in) throws IOException, WebApplicationException {
 
         Order order = new Order();
@@ -48,7 +51,8 @@ import javax.ws.rs.ext.Provider;
         return order;
     }
 
-    @Override public boolean isReadable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
+    @Override
+    public boolean isReadable(Class<?> type, Type type1, Annotation[] antns, MediaType mt) {
         return Order.class.isAssignableFrom(type);
     }
 

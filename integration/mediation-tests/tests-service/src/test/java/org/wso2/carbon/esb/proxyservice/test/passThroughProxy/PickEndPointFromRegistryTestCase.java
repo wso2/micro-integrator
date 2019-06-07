@@ -38,14 +38,15 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "- Pass through proxy"
-            + "- Create a proxy service and pick the endpoint from registry (config)") public void testPassThroughProxy()
-            throws Exception {
+            + "- Create a proxy service and pick the endpoint from registry (config)")
+    public void testPassThroughProxy() throws Exception {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("pickEndpointFromRegTestProxy"), null, "WSO2");
@@ -64,7 +65,8 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         clearUploadedResource();
         super.cleanup();
     }

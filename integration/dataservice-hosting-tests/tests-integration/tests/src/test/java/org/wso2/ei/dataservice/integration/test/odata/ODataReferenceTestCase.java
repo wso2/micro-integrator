@@ -43,7 +43,8 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
     private final String configId = "default";
     private String webAppUrl;
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
         super.init();
         List<File> sqlFileLis = new ArrayList<>();
         sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
@@ -55,13 +56,14 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
         webAppUrl = dssContext.getContextUrls().getWebAppURL();
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = "wso2.dss", description = "testing the entity navigation references retrieval") public void validateNavigationPropertyReferencesTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "testing the entity navigation references retrieval")
+    public void validateNavigationPropertyReferencesTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES('WSO2DSS')/FILERECORDS/$ref";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
@@ -77,8 +79,8 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
                 "Navigation property reference retrieval failed");
     }
 
-    @Test(groups = "wso2.dss", description = "testing the the entity navigation property retrieval") public void validateNavigationPropertyTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "testing the the entity navigation property retrieval")
+    public void validateNavigationPropertyTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES('WSO2DSS')/FILERECORDS";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
@@ -87,8 +89,8 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
     }
 
     @Test(groups = "wso2.dss", description = "testing the update operation of the entity navigation property", dependsOnMethods = {
-            "validateNavigationPropertyReferencesTestCase",
-            "validateNavigationPropertyTestCase" }) public void validateUpdateReferenceTestCase() throws Exception {
+            "validateNavigationPropertyReferencesTestCase", "validateNavigationPropertyTestCase" })
+    public void validateUpdateReferenceTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES('WSO2DSS')/FILERECORDS/$ref";
         Map<String, String> headers = new HashMap<>();
         String content =
@@ -114,8 +116,8 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
                 "Navigation property reference retrieval failed");
     }
 
-    @Test(groups = "wso2.dss", description = "testing the delete operation of the entity navigation property", dependsOnMethods = "validateUpdateReferenceTestCase") public void validateDeleteReferenceTestCase()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "testing the delete operation of the entity navigation property", dependsOnMethods = "validateUpdateReferenceTestCase")
+    public void validateDeleteReferenceTestCase() throws Exception {
         String endpoint =
                 webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES('WSO2DSS')/FILERECORDS/$ref" + "?$id="
                         + webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS(5)";
@@ -133,9 +135,8 @@ public class ODataReferenceTestCase extends DSSIntegrationTest {
         Assert.assertEquals(response[0], ODataTestUtils.NO_CONTENT);
     }
 
-    @Test(groups = {
-            "wso2.dss" }, description = "testing the add entity with navigation bindings ") public void validateAddEntityWithReferenceTestCase()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, description = "testing the add entity with navigation bindings ")
+    public void validateAddEntityWithReferenceTestCase() throws Exception {
         String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILERECORDS";
         String content = "{\n" + "\"FILERECORDID\":11,\n" + "\"DATA\":\"AEIATABPAEIAMQ==\",\n"
                 + "\"FILES@odata.bind\" : \"http://localhost:10963/odata/ODataSampleService/default/FILES('WSO2DSS')\"\n"

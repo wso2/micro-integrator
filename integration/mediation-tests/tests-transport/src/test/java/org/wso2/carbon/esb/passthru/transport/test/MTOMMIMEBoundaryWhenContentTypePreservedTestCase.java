@@ -40,15 +40,16 @@ public class MTOMMIMEBoundaryWhenContentTypePreservedTestCase extends ESBIntegra
     private final String MIME_PROXY = "MTOMMIMEBoundaryWithDisableChunking";
     private final String RESPOND_PROXY = "respondBE";
 
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence(MIME_PROXY);
         verifyProxyServiceExistence(RESPOND_PROXY);
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test MIME boundary correctness when Content-Type preserved and "
-            + "built before sending to backend", enabled = true) public void buildBeforeSendingToBackendTest()
-            throws Exception {
+            + "built before sending to backend", enabled = true)
+    public void buildBeforeSendingToBackendTest() throws Exception {
         String proxyHttpUrl = getProxyServiceURLHttp("MTOMMIMEBoundaryWhenContentTypePreservedTestProxy");
 
         SimpleHttpClient simpleHttpClient = new SimpleHttpClient();
@@ -69,8 +70,8 @@ public class MTOMMIMEBoundaryWhenContentTypePreservedTestCase extends ESBIntegra
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test MIME boundary correctness when Disable Chunking Used"
-            + "Refer https://github.com/wso2/product-ei/issues/3624 ") public void testMIMEWithDisableChunking()
-            throws Exception {
+            + "Refer https://github.com/wso2/product-ei/issues/3624 ")
+    public void testMIMEWithDisableChunking() throws Exception {
 
         String proxyHttpUrl = getProxyServiceURLHttp(MIME_PROXY);
 
@@ -90,7 +91,8 @@ public class MTOMMIMEBoundaryWhenContentTypePreservedTestCase extends ESBIntegra
                 "Actual MIME Boundaries may not have been matched with the boundaries set in Content-Type header");
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 }

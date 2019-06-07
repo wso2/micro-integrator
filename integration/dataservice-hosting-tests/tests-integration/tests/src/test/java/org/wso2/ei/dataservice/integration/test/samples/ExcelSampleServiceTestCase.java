@@ -46,7 +46,8 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(ExcelSampleServiceTestCase.class);
     private final String serviceName = "ExcelSampleService";
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
 
@@ -55,17 +56,16 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
                         + "ExcelSampleService.dbs")));
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not") public void testServiceDeployment()
-            throws RemoteException, XPathExpressionException {
+    @Test(groups = "wso2.dss", description = "Check whether fault service deployed or not")
+    public void testServiceDeployment() throws RemoteException, XPathExpressionException {
         DSSTestCaseUtils dssTestCaseUtils = new DSSTestCaseUtils();
         assertTrue(dssTestCaseUtils
                 .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
         log.info(serviceName + " is deployed");
     }
 
-    @Test(groups = {
-            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment") public void selectOperation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, invocationCount = 5, dependsOnMethods = "testServiceDeployment")
+    public void selectOperation() throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
         OMElement payload = fac.createOMElement("getProducts", omNs);
@@ -78,9 +78,8 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
         log.info("Service invocation success");
     }
 
-    @Test(groups = {
-            "wso2.dss" }, invocationCount = 5, dependsOnMethods = "selectOperation") public void xsltTransformation()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, invocationCount = 5, dependsOnMethods = "selectOperation")
+    public void xsltTransformation() throws AxisFault, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
         OMElement payload = fac.createOMElement("getProductClassifications", omNs);
@@ -97,9 +96,8 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
         log.info("XSLT Transformation Success");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "xsltTransformation" }, timeOut = 1000 * 60
-            * 1) public void concurrencyTest()
-            throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "xsltTransformation" }, timeOut = 1000 * 60 * 1)
+    public void concurrencyTest() throws ConcurrencyTestFailedError, InterruptedException, XPathExpressionException {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
         OMElement payload = fac.createOMElement("getProducts", omNs);
@@ -107,7 +105,8 @@ public class ExcelSampleServiceTestCase extends DSSIntegrationTest {
         concurrencyTest.run(getServiceUrlHttp(serviceName), payload, "getProducts");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }

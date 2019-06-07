@@ -32,7 +32,8 @@ import static org.testng.Assert.assertTrue;
  */
 public class Soap11FaultMessageTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void init() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/fault/soap11_fault_response_validate_synapse.xml");
@@ -45,7 +46,8 @@ public class Soap11FaultMessageTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", enabled = false) public void testSoap11FaultMessage() throws Exception {
+    @Test(groups = "wso2.esb", enabled = false)
+    public void testSoap11FaultMessage() throws Exception {
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
@@ -64,7 +66,8 @@ public class Soap11FaultMessageTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) public void cleanup() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void cleanup() throws Exception {
         super.cleanup();
     }
 

@@ -41,7 +41,8 @@ public class ESBJAVA3656MSMPTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverManager = null;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         // START THE ESB
         super.init();
         OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/ESBJAVA-3656_MessageStore.xml");
@@ -51,9 +52,8 @@ public class ESBJAVA3656MSMPTestCase extends ESBIntegrationTest {
         serverManager = new ServerConfigurationManager(context);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test if Message Processor is bound to the server") public void testMPBindingToServer()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Test if Message Processor is bound to the server")
+    public void testMPBindingToServer() throws Exception {
 
         String url = getProxyServiceURLHttp("ESBJAVA3656Proxy");
         Map<String, String> headers = new HashMap<String, String>(1);
@@ -94,7 +94,8 @@ public class ESBJAVA3656MSMPTestCase extends ESBIntegrationTest {
         assertTrue(logFound);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

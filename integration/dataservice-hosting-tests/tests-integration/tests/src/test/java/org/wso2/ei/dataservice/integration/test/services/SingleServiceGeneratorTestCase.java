@@ -45,7 +45,8 @@ public class SingleServiceGeneratorTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(SingleServiceGeneratorTestCase.class);
     private String serviceEPR;
 
-    @BeforeClass(alwaysRun = true) public void initializeTest() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initializeTest() throws Exception {
         super.init();
         dssTestCaseUtils = new DSSTestCaseUtils();
         dataServiceAdminClient = new DataServiceAdminClient(dssContext.getContextUrls().getBackEndUrl(),
@@ -54,7 +55,8 @@ public class SingleServiceGeneratorTestCase extends DSSIntegrationTest {
 
     }
 
-    @Test() public void testServiceGeneration() throws Exception {
+    @Test()
+    public void testServiceGeneration() throws Exception {
         String[] dataSourceNames = dataServiceAdminClient.getCarbonDataSources();
         String status = null;
         for (String dataSourceName : dataSourceNames) {
@@ -84,22 +86,23 @@ public class SingleServiceGeneratorTestCase extends DSSIntegrationTest {
         assertEquals(status, SERVICE_NAME);
     }
 
-    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", dependsOnMethods = "testServiceGeneration") public void testServiceDeployment()
-            throws Exception {
+    @Test(groups = "wso2.dss", description = "Check whether the service is deployed or not", dependsOnMethods = "testServiceGeneration")
+    public void testServiceDeployment() throws Exception {
         assertTrue(dssTestCaseUtils
                 .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, SERVICE_NAME));
         log.info(SERVICE_NAME + " is deployed");
     }
 
-    @Test(groups = "wso2.dss", description = "invoke the generated service", dependsOnMethods = "testServiceDeployment") public void testRequest()
-            throws RemoteException {
+    @Test(groups = "wso2.dss", description = "invoke the generated service", dependsOnMethods = "testServiceDeployment")
+    public void testRequest() throws RemoteException {
 
         OMElement result = new AxisServiceClient()
                 .sendReceive(getPayload(), serviceEPR, "select_all_REG_PATH_operation");
         assertTrue(result.toString().contains("<REG_PATH_VALUE>/_system/config</REG_PATH_VALUE>"));
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         deleteService(SERVICE_NAME);
         log.info(SCHEMA_NAME + " deleted");
     }

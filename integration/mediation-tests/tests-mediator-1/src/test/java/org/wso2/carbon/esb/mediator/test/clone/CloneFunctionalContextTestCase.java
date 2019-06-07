@@ -38,14 +38,15 @@ public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
 
-    @BeforeClass(groups = "wso2.esb") public void setEnvironment() throws Exception {
+    @BeforeClass(groups = "wso2.esb")
+    public void setEnvironment() throws Exception {
         super.init();
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_functional_context.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry") public void testSequence()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry")
+    public void testSequence() throws Exception {
         logViewer.clearLogs();
 
         OMElement response = axis2Client
@@ -57,7 +58,8 @@ public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
                 .until(AvailabilityPollingUtils.isMessageRecived(logViewer));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 }

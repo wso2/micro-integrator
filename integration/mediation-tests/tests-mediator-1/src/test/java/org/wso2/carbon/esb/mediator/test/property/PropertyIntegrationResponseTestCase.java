@@ -33,18 +33,20 @@ import static org.testng.Assert.assertTrue;
 
 public class PropertyIntegrationResponseTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("RESPONSE_PropertyTestProxy");
 
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "RESPONSETEnabledTrue scenario") public void testRESPONSETEnabledTrue()
-            throws IOException {
+    @Test(groups = { "wso2.esb" }, description = "RESPONSETEnabledTrue scenario")
+    public void testRESPONSETEnabledTrue() throws IOException {
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("RESPONSE_PropertyTestProxy"), null,

@@ -30,15 +30,16 @@ import static org.testng.Assert.assertNotNull;
 
 public class EnrichIntegrationSourceXpathAsChildTargetXpath extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         verifyProxyServiceExistence("enrichSourceXpathAsChildTargetXpathTestProxy");
     }
 
     // Test whether 'name' element contains the child element 'symbol'
     @Test(groups = "wso2.esb", description = "Specify the source message using xpath expression "
-            + "and add it as a child of custom xpath value "
-            + "defined in target configuration") public void testEnrichMediator() throws Exception {
+            + "and add it as a child of custom xpath value " + "defined in target configuration")
+    public void testEnrichMediator() throws Exception {
         OMElement response;
 
         response = axis2Client
@@ -54,7 +55,8 @@ public class EnrichIntegrationSourceXpathAsChildTargetXpath extends ESBIntegrati
 
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

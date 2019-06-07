@@ -36,19 +36,20 @@ public class HTTPPOSTOnJsonPayloadsTestCase extends ESBIntegrationTest {
 
     private Client client = Client.create();
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonHTTPPostProxy.xml");
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         client.destroy();
         super.cleanup();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Tests POST method with application/json content type") public void testHTTPPostRequestJSONScenario()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Tests POST method with application/json content type")
+    public void testHTTPPostRequestJSONScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"Hotel California\",\"singer\":\"Eagles\"}";
 

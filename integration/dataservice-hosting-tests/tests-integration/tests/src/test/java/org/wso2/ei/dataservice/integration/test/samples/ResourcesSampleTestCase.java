@@ -40,11 +40,13 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
     private String serviceEndPoint;
     private int productId;
 
-    @Factory(dataProvider = "userModeDataProvider") public ResourcesSampleTestCase(TestUserMode userMode) {
+    @Factory(dataProvider = "userModeDataProvider")
+    public ResourcesSampleTestCase(TestUserMode userMode) {
         this.userMode = userMode;
     }
 
-    @BeforeClass(alwaysRun = true) public void serviceDeployment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void serviceDeployment() throws Exception {
 
         super.init();
         deployService(serviceName, new DataHandler(
@@ -61,23 +63,26 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         deleteService(serviceName);
         cleanup();
     }
 
-    @Test(groups = { "wso2.dss" }) public void postRequest() throws Exception {
+    @Test(groups = { "wso2.dss" })
+    public void postRequest() throws Exception {
         addProduct();
         log.info("POST Request verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "postRequest" }) public void getRequest() throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "postRequest" })
+    public void getRequest() throws Exception {
         listProduct();
         log.info("GET Request verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "getRequest" }) public void getRequestWithParam()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "getRequest" })
+    public void getRequestWithParam() throws Exception {
         OMElement response;
         for (int i = productId; i < productId + 10; i++) {
             response = getProductByCode(i + "");
@@ -89,8 +94,8 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
         log.info("GET Request with parameter verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "getRequestWithParam" }) public void putRequest()
-            throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "getRequestWithParam" })
+    public void putRequest() throws Exception {
         editProduct();
         OMElement response;
         for (int i = productId; i < productId + 10; i++) {
@@ -102,7 +107,8 @@ public class ResourcesSampleTestCase extends DSSIntegrationTest {
         log.info("PUT Request verified");
     }
 
-    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "putRequest" }) public void deleteRequest() throws Exception {
+    @Test(groups = { "wso2.dss" }, dependsOnMethods = { "putRequest" })
+    public void deleteRequest() throws Exception {
         deleteProduct();
         log.info("DELETE Request verified");
     }

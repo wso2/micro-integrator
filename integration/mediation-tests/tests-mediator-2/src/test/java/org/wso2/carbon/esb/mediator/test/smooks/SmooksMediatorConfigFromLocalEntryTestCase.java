@@ -35,14 +35,15 @@ import java.nio.file.StandardCopyOption;
 public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTest {
     private boolean isProxyDeployed = false;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         addSmooksProxy();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE }) @Test(groups = {
-            "wso2.esb" }, description = "Transform from a Smook mediator config from a local entry") public void testSendingToSmooks()
-            throws Exception {
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Transform from a Smook mediator config from a local entry")
+    public void testSendingToSmooks() throws Exception {
         String smooksResourceDirstr = getClass().getResource("/artifacts/ESB/synapseconfig/smooks/").getFile();
         File fileSmook = new File(smooksResourceDirstr);
         String smooksResourceDir = fileSmook.getAbsolutePath();
@@ -89,7 +90,8 @@ public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTe
         isProxyDeployed = true;
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         try {
             if (isProxyDeployed) {
                 deleteProxyService("SmooksProxy");

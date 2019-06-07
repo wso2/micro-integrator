@@ -22,7 +22,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.File;
@@ -31,7 +30,8 @@ import javax.xml.stream.XMLStreamException;
 
 public class HttpInboundTransportTenantTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
 
         addSequence(getArtifactConfig("TestIn.xml"));
@@ -42,22 +42,23 @@ public class HttpInboundTransportTenantTestCase extends ESBIntegrationTest {
         addInboundEndpoint(getArtifactConfig("apidispatch.xml"));
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound Http  test case for tenant") public void inboundHttpTest()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Inbound Http  test case for tenant")
+    public void inboundHttpTest() throws AxisFault {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:8081/t/wso2.com/", null, "IBM");
         Assert.assertNotNull(response);
         Assert.assertEquals("getQuoteResponse", response.getLocalName());
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound Http  test case for tenant API dispatching") public void inboundHttpAPITest()
-            throws AxisFault {
+    @Test(groups = "wso2.esb", description = "Inbound Http  test case for tenant API dispatching")
+    public void inboundHttpAPITest() throws AxisFault {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest("http://localhost:8082/t/wso2.com/test/map", null, "IBM");
         Assert.assertNotNull(response);
         Assert.assertEquals("getQuoteResponse", response.getLocalName());
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

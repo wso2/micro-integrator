@@ -42,15 +42,15 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) protected void init() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    protected void init() throws Exception {
         super.init();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Sending a JSON message Via REST and manipulate with NashornJS") public void testSendingPayloadJson()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Sending a JSON message Via REST and manipulate with NashornJS")
+    public void testSendingPayloadJson() throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
@@ -66,9 +66,8 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Serialize JSON payload with NashornJS") public void testSerializingJson()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with NashornJS")
+    public void testSerializingJson() throws Exception {
         logViewerClient.clearLogs();
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
@@ -86,9 +85,8 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Parsing serialized JSON payload with NashornJS") public void testParsingSerializedJson()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Parsing serialized JSON payload with NashornJS")
+    public void testParsingSerializedJson() throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
@@ -103,9 +101,8 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Handling null JSON objects with NashornJS") public void testHandlingNullJsonObjects()
-            throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "Handling null JSON objects with NashornJS")
+    public void testHandlingNullJsonObjects() throws Exception {
 
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
@@ -140,7 +137,8 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
         return containsProperty;
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 }

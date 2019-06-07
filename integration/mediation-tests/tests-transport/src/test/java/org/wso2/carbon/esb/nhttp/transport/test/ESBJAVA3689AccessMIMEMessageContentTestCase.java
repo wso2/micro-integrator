@@ -44,7 +44,8 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
     private LogViewerClient logViewer;
     private final String API_NAME = "MimeAttachmentAPI";
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
         serverConfigurationManager.applyConfiguration(new File(
@@ -55,8 +56,8 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
         logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    @Test(groups = "wso2.esb", description = "Access content of MIME in NHTTP transport") public void accessMIMEMessages()
-            throws Exception {
+    @Test(groups = "wso2.esb", description = "Access content of MIME in NHTTP transport")
+    public void accessMIMEMessages() throws Exception {
 
         HttpClient httpclient = new DefaultHttpClient();
         HttpPost httppost = new HttpPost(getApiInvocationURL(API_NAME));
@@ -96,7 +97,8 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
         assertTrue(LogFound, "MIME message build was not successful.");
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
     }

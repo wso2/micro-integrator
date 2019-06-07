@@ -30,15 +30,15 @@ import javax.xml.xpath.XPathExpressionException;
 import static org.testng.Assert.assertTrue;
 
 public class TransformPayloadWhenNoArgsTestCase extends ESBIntegrationTest {
-    @BeforeClass(alwaysRun = true) public void uploadSynapseConfig() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void uploadSynapseConfig() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 "/artifacts/ESB/mediatorconfig/payload/factory/no_arg_payload_factory_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Do transformation with a Payload Format that has no arguments") public void transformUsingPayloadFactory()
-            throws AxisFault, XPathExpressionException {
+    @Test(groups = { "wso2.esb" }, description = "Do transformation with a Payload Format that has no arguments")
+    public void transformUsingPayloadFactory() throws AxisFault, XPathExpressionException {
         OMElement response;
 
         response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
@@ -47,7 +47,8 @@ public class TransformPayloadWhenNoArgsTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true) private void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    private void destroy() throws Exception {
         super.cleanup();
     }
 

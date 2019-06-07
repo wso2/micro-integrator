@@ -32,7 +32,8 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class RouterMediatorEndPointProtocolTestCase extends ESBIntegrationTest {
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         init();
         addProxy();
         OMElement config = esbUtils.loadResource("/artifacts/ESB/mediatorconfig/router/router_https_endpoint.xml");
@@ -41,12 +42,14 @@ public class RouterMediatorEndPointProtocolTestCase extends ESBIntegrationTest {
         updateESBConfiguration(config);
     }
 
-    @Test(groups = "wso2.esb", description = "Tests for https") public void testHTTPS() throws Exception {
+    @Test(groups = "wso2.esb", description = "Tests for https")
+    public void testHTTPS() throws Exception {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
-    @AfterClass(alwaysRun = true) public void close() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void close() throws Exception {
         super.cleanup();
     }
 

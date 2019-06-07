@@ -37,7 +37,8 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
 
     private static LogViewerClient logViewerClient;
 
-    @BeforeClass(alwaysRun = true) public void initialize() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void initialize() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
@@ -51,14 +52,15 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test email transport with invalid address parameter and pop3 protocol") public void testEmailTransportInvalidAddress()
-            throws Exception {
+            "wso2.esb" }, description = "Test email transport with invalid address parameter and pop3 protocol")
+    public void testEmailTransportInvalidAddress() throws Exception {
         logViewerClient.clearLogs();
         assertTrue(Utils.checkForLog(logViewerClient, "Error connecting to mail server for address", 10000),
                 "Couldn't find the error message in log");
     }
 
-    @AfterClass(alwaysRun = true) public void deleteService() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void deleteService() throws Exception {
         super.cleanup();
 
     }

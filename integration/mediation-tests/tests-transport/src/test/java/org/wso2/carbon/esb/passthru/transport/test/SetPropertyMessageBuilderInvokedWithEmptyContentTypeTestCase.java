@@ -39,13 +39,15 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
     private LogViewerClient logViewerClient;
     private SimpleSocketServer simpleSocketServer;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test whether the msg builder invoked property is set when the content"
-            + " type is empty") public void testMsgBuilderInvokedPropertyWhenContentTypeisEmpty() throws Exception {
+            + " type is empty")
+    public void testMsgBuilderInvokedPropertyWhenContentTypeisEmpty() throws Exception {
         boolean isErrorFound = false;
 
         int port = 8090;
@@ -76,7 +78,8 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
         Assert.assertFalse(isErrorFound);
     }
 
-    @AfterClass(alwaysRun = true) public void destroy() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         super.cleanup();
     }
 

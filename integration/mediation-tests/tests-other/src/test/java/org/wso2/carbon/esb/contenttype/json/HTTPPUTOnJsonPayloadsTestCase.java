@@ -36,19 +36,21 @@ public class HTTPPUTOnJsonPayloadsTestCase extends ESBIntegrationTest {
 
     private Client client;
 
-    @BeforeClass(alwaysRun = true) public void setEnvironment() throws Exception {
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/jaxrs/jsonHTTPPutProxy.xml");
         client = Client.create();
     }
 
-    @AfterClass(alwaysRun = true) public void stop() throws Exception {
+    @AfterClass(alwaysRun = true)
+    public void stop() throws Exception {
         super.cleanup();
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Tests Get method for by default album with application/json content type") public void testHTTPGetRequestByDefaultAlbumJSONScenario()
-            throws Exception {
+            "wso2.esb" }, description = "Tests Get method for by default album with application/json content type")
+    public void testHTTPGetRequestByDefaultAlbumJSONScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"THE ENDLESS RIVER\",\"singer\":\"UB40\"}";
 
@@ -63,8 +65,8 @@ public class HTTPPUTOnJsonPayloadsTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Tests PUT method with application/json content type", dependsOnMethods = "testHTTPGetRequestByDefaultAlbumJSONScenario") public void testHTTPPutRequestUpdatedAlbumJSONScenario()
-            throws Exception {
+            "wso2.esb" }, description = "Tests PUT method with application/json content type", dependsOnMethods = "testHTTPGetRequestByDefaultAlbumJSONScenario")
+    public void testHTTPPutRequestUpdatedAlbumJSONScenario() throws Exception {
 
         String JSON_PAYLOAD = "{\"album\":\"THE ENDLESS RIVER\",\"singer\":\"MichaelJ\"}";
 
