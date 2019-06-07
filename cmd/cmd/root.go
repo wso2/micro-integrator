@@ -40,7 +40,7 @@ var rootCmdLongDesc = dedent.Dedent(`
 var rootCmdValidArgs = []string{"init", "show", "version", "help"}
 
 // rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:       programName,
 	Short:     rootCmdShortDesc,
 	Long:      rootCmdLongDesc,
@@ -50,7 +50,7 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	if err := RootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
@@ -58,7 +58,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
+	RootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
 
 	// Init ServerConfigVars
 	err := utils.SetConfigVars(utils.ServerConfigFilePath)

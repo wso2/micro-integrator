@@ -69,6 +69,6 @@ var showCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(showCmd)
+	RootCmd.AddCommand(showCmd)
 	showCmd.SetHelpTemplate(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
 }
