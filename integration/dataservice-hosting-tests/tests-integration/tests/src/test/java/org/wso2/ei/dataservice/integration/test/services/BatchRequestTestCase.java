@@ -25,18 +25,12 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.xpath.XPathExpressionException;
-
-import static org.testng.Assert.assertNotNull;
 
 public class BatchRequestTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(BatchRequestTestCase.class);
@@ -47,20 +41,7 @@ public class BatchRequestTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
-
         super.init();
-        List<File> sqlFileLis = new ArrayList<File>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
-                        + File.separator + "BatchRequestTest.dbs", sqlFileLis));
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = { "wso2.dss" })
@@ -124,7 +105,6 @@ public class BatchRequestTestCase extends DSSIntegrationTest {
 
         OMElement response = new AxisServiceClient()
                 .sendReceive(payload, getServiceUrlHttp(serviceName), "employeeExists");
-        assertNotNull("Response null " + response);
         return response.getFirstElement().getFirstElement().getText();
     }
 
