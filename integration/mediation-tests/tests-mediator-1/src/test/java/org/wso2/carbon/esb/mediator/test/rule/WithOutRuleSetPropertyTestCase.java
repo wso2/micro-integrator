@@ -25,6 +25,8 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
+import static org.testng.Assert.assertEquals;
+
 public class WithOutRuleSetPropertyTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
