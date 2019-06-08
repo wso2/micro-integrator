@@ -30,6 +30,7 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.fail;
+import static org.testng.AssertJUnit.assertEquals;
 
 /**
  * This class will test cacheMediator mediator which has a collector type cacheMediator mediator in 'in'
