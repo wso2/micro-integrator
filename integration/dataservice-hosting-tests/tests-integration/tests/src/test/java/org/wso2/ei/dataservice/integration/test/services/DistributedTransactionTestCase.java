@@ -17,12 +17,10 @@
  */
 package org.wso2.ei.dataservice.integration.test.services;
 
-import org.apache.axiom.attachments.ByteArrayDataSource;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
 import org.apache.axis2.client.Options;
@@ -30,49 +28,23 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.test.utils.common.FileManager;
-import org.wso2.ei.dataservice.integration.common.utils.SqlDataSourceUtil;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import javax.activation.DataHandler;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
 
 public class DistributedTransactionTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(DistributedTransactionTestCase.class);
 
-    private final String serviceFile = "DTPServiceTest.dbs";
-
     private final OMFactory fac = OMAbstractFactory.getOMFactory();
     private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice/samples/dtp_sample", "ns1");
 
-    private String databaseNameNew = "testDatabase2";
-
     private final String serviceName = "DTPServiceTest";
-    private final int userId = 2;
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        DataHandler dhArtifact;
-        dhArtifact = getArtifactWithDTP(serviceFile);
-        deployService(serviceName, dhArtifact);
-        log.info(serviceName + " uploaded");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = { "wso2.dss" })
@@ -360,90 +332,6 @@ public class DistributedTransactionTestCase extends DSSIntegrationTest {
         Assert.assertEquals(getBalanceFromResponse(sender.sendReceive(getAccountBalanceFromBank2(id4))), 3000.0,
                 "Expected not same");
 
-    }
-
-    private DataHandler getArtifactWithDTP(String serviceFile) throws Exception {
-        SqlDataSourceUtil dataSource1;
-        SqlDataSourceUtil dataSource2;
-        String dtpDriver;
-        dataSource1 = new SqlDataSourceUtil(sessionCookie, dssContext.getContextUrls().getBackEndUrl());
-        dataSource2 = new SqlDataSourceUtil(sessionCookie, dssContext.getContextUrls().getBackEndUrl());
-        dataSource1.createDataSource(getSqlScript());
-        dataSource2.createDataSource(databaseNameNew, getSqlScript());
-
-        //this should be set according to tha database server
-        if (dataSource1.getDriver().contains("h2")) {
-            dtpDriver = "org.h2.jdbcx.JdbcDataSource";
-        } else if (dataSource1.getDriver().contains("mysql")) {
-            dtpDriver = "com.mysql.jdbc.jdbc2.optional.MysqlXADataSource";
-        } else {
-            dtpDriver = "Not.Defined";
-        }
-
-        try {
-            OMElement dbsFile = AXIOMUtil.stringToOM(FileManager.readFile(
-                    getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
-                            + File.separator + serviceFile).trim());
-            OMElement dbsConfig;
-
-            Iterator config = dbsFile.getChildrenWithName(new QName("config"));
-            while (config.hasNext()) {
-                String jdbc;
-                String user;
-                String passwd;
-                dbsConfig = (OMElement) config.next();
-                if (dbsConfig.getAttributeValue(new QName("id")).equals("MySqlDataSource1")) {
-                    jdbc = dataSource1.getJdbcUrl();
-                    user = dataSource1.getDatabaseUser();
-                    passwd = dataSource1.getDatabasePassword();
-                } else {
-                    jdbc = dataSource2.getJdbcUrl();
-                    user = dataSource2.getDatabaseUser();
-                    passwd = dataSource2.getDatabasePassword();
-                }
-                Iterator configElement = dbsConfig.getChildElements();
-                while (configElement.hasNext()) {
-                    OMElement properties = (OMElement) configElement.next();
-                    String datasource = properties.getAttributeValue(new QName("name"));
-                    if (datasource.equals("org.wso2.ws.dataservice.xa_datasource_properties")) {
-
-                        Iterator dbPropertyElement = properties.getChildElements();
-                        while (dbPropertyElement.hasNext()) {
-                            OMElement property = (OMElement) dbPropertyElement.next();
-                            String value = property.getAttributeValue(new QName("name"));
-
-                            if ("URL".equals(value)) {
-                                property.setText(jdbc);
-                            } else if ("user".equals(value)) {
-                                property.setText(user);
-
-                            } else if ("password".equals(value)) {
-                                property.setText(passwd);
-                            }
-                        }
-                    } else if (datasource.equals("org.wso2.ws.dataservice.xa_datasource_class")) {
-                        properties.setText(dtpDriver);
-                    }
-                }
-
-            }
-            log.debug(dbsFile);
-            ByteArrayDataSource dbs = new ByteArrayDataSource(dbsFile.toString().getBytes());
-            return new DataHandler(dbs);
-
-        } catch (XMLStreamException e) {
-            log.error("XMLStreamException when Reading Service File", e);
-            throw new XMLStreamException("XMLStreamException when Reading Service File", e);
-        } catch (IOException e) {
-            log.error("IOException when Reading Service File", e);
-            throw new IOException("IOException  when Reading Service File", e);
-        }
-    }
-
-    private List<File> getSqlScript() throws XPathExpressionException {
-        ArrayList<File> list = new ArrayList<File>();
-        list.add(selectSqlFile("CreateTablesAccount.sql"));
-        return list;
     }
 
 }
