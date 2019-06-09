@@ -25,7 +25,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
@@ -33,19 +32,13 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.xpath.XPathExpressionException;
-
-import static org.testng.Assert.assertNotNull;
 
 public class InOnlyRequestsServiceTestCase extends DSSIntegrationTest {
     private static final Log log = LogFactory.getLog(InOnlyRequestsServiceTestCase.class);
     private final OMFactory fac = OMAbstractFactory.getOMFactory();
     private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
     private final String serviceName = "InOnlyRequestsServiceTest";
-    private String serverEpr;
 
     @Factory(dataProvider = "userModeDataProvider")
     public InOnlyRequestsServiceTestCase(TestUserMode userMode) {
@@ -56,21 +49,6 @@ public class InOnlyRequestsServiceTestCase extends DSSIntegrationTest {
     public void serviceDeployment() throws Exception {
 
         super.init();
-        List<File> sqlFileLis = new ArrayList<File>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        String resourceFileLocation;
-        serverEpr = getServiceUrlHttp(serviceName);
-        resourceFileLocation = getResourceLocation();
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
-                        + File.separator + "InOnlyRequestsServiceTest.dbs", sqlFileLis));
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = { "wso2.dss" })
@@ -111,7 +89,6 @@ public class InOnlyRequestsServiceTestCase extends DSSIntegrationTest {
 
         OMElement response = new AxisServiceClient()
                 .sendReceive(payload, getServiceUrlHttp(serviceName), "getStudentCount");
-        assertNotNull("Response null " + response);
         return response.getFirstElement().getFirstElement().getText();
     }
 
