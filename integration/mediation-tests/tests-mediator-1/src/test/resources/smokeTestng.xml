@@ -29,9 +29,8 @@
 
     <test name="smoke-sample-tests" preserve-order="true" verbose="1">
         <classes>
-            <class name="org.wso2.carbon.esb.samples.test.endpoint.Sample60TestCase"/>
-            <class name="org.wso2.carbon.esb.samples.test.mediation.Sample400TestCase"/>
-            <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample650TestCase"/>
+            <class name="org.wso2.carbon.esb.mediator.test.aggregate.NestedAggregatesTestCase"/>
+            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorHttpStatusResponseTestCase"/>
         </classes>
     </test>
 

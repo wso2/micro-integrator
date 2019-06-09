@@ -52,12 +52,6 @@
                 <module>coverage-report</module>
             </modules>
         </profile>
-        <profile>
-            <id>smoke-tests</id>
-            <modules>
-                <module>tests-sample</module>
-            </modules>
-        </profile>
     </profiles>
 
 </project>

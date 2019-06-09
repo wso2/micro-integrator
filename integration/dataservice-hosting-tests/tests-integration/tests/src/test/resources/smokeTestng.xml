@@ -31,9 +31,9 @@
 
     <test name="dss-smoke-tests" preserve-order="true" verbose="1">
         <classes>
-            <class name="org.wso2.ei.dataservice.integration.test.datasource.DataSourceInitializationAtStartUpTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.scheduletask.AddScheduleTaskTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.odata.ODataViewTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.services.NestedQueryTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.services.BatchRequestTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.services.RegexTestCase"/>
         </classes>
     </test>
 
