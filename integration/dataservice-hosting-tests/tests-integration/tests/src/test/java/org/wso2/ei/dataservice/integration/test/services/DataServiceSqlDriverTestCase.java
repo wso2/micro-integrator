@@ -62,14 +62,14 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
         resourceFileLocation = getResourceLocation();
         randomId = System.currentTimeMillis();
         dssTestCaseUtils = new DSSTestCaseUtils();
-        DataServiceFileUploaderClient dataServiceAdminClient = new DataServiceFileUploaderClient(
+        /*DataServiceFileUploaderClient dataServiceAdminClient = new DataServiceFileUploaderClient(
                 dssContext.getContextUrls().getBackEndUrl(), sessionCookie);
 
         DataHandler dataHandler = modifyExcelURL(
                 resourceFileLocation + File.separator + "dbs" + File.separator + "sqldriver" + File.separator
                         + "sqlparsertest.dbs");
 
-        dataServiceAdminClient.uploadDataServiceFile("sqlparsertest.dbs", dataHandler);
+        dataServiceAdminClient.uploadDataServiceFile("sqlparsertest.dbs", dataHandler);*/
         log.info(serviceName + " uploaded");
         serviceEPR = getServiceUrlHttp(serviceName);
     }
@@ -182,12 +182,6 @@ public class DataServiceSqlDriverTestCase extends DSSIntegrationTest {
         payload.addChild(id);
 
         return payload;
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void deleteService() throws Exception {
-        deleteService(serviceName);
-        log.info(serviceName + " deleted");
     }
 
 }
