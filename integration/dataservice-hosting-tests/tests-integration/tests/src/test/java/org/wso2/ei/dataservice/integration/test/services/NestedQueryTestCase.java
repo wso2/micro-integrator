@@ -25,17 +25,13 @@ import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 import org.wso2.ei.dataservice.integration.test.odata.ODataTestUtils;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -50,25 +46,7 @@ public class NestedQueryTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
-
         super.init();
-        List<File> sqlFileLis = new ArrayList<File>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        sqlFileLis.add(selectSqlFile("Offices.sql"));
-        sqlFileLis.add(selectSqlFile("Customers.sql"));
-        sqlFileLis.add(selectSqlFile("Employees.sql"));
-        sqlFileLis.add(selectSqlFile("Orders.sql"));
-        sqlFileLis.add(selectSqlFile("NestedQueryEmptyResult.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
-                        + File.separator + "NestedQueryTest.dbs", sqlFileLis));
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = { "wso2.dss" })
@@ -97,21 +75,6 @@ public class NestedQueryTestCase extends DSSIntegrationTest {
         Assert.assertTrue(response[1].toString().contains("\"Employees\":{}"), "Invalid result received");
     }
 
-    private void getCustomerName() throws AxisFault, XPathExpressionException {
-
-        OMElement payload = fac.createOMElement("customerName", omNs);
-
-        OMElement customerNumber = fac.createOMElement("customerNumber", omNs);
-        customerNumber.setText("103");
-        payload.addChild(customerNumber);
-
-        OMElement result = new AxisServiceClient().sendReceive(payload, getServiceUrlHttp(serviceName), "customerName");
-        Assert.assertNotNull(result, "Response message null ");
-        log.debug(result);
-        Assert.assertTrue(result.toString().contains("<Name>Atelier graphique</Name>"), "Expected not same");
-
-    }
-
     private void getCustomerOrders() throws AxisFault, XPathExpressionException {
         OMElement payload = fac.createOMElement("customerOrders", omNs);
 
@@ -122,23 +85,6 @@ public class NestedQueryTestCase extends DSSIntegrationTest {
         Assert.assertTrue(result.toString().contains("<Order><Order-number>"), "Expected not same");
         Assert.assertTrue(result.toString().contains("<Customer><Name>"), "Expected not same");
         Assert.assertTrue(result.toString().contains("</Customer>"), "Expected not same");
-    }
-
-    private void getEmployeesInOffice() throws AxisFault, XPathExpressionException {
-        OMElement payload = fac.createOMElement("employeesInOffice", omNs);
-
-        OMElement officeCode = fac.createOMElement("officeCode", omNs);
-        officeCode.setText("1");
-        payload.addChild(officeCode);
-
-        OMElement result = new AxisServiceClient()
-                .sendReceive(payload, getServiceUrlHttp(serviceName), "employeesInOffice");
-        Assert.assertNotNull(result, "Response message null ");
-        log.debug(result);
-        Assert.assertNotNull(result.getFirstElement(), "First Chilled null ");
-        log.debug(result.getFirstElement());
-        Assert.assertTrue(result.getFirstElement().toString().contains("<employeeNumber>1002</employeeNumber>"),
-                "Expected not same");
     }
 
     private void getOffices() throws AxisFault, XPathExpressionException {
