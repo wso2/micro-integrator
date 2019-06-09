@@ -24,17 +24,12 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Factory;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
@@ -46,8 +41,6 @@ public class DataTypesTestCase extends DSSIntegrationTest {
     private final OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
     private final String serviceName = "Developer";
 
-    private String serviceEndPoint;
-
     @Factory(dataProvider = "userModeDataProvider")
     public DataTypesTestCase(TestUserMode userMode) {
         this.userMode = userMode;
@@ -56,12 +49,6 @@ public class DataTypesTestCase extends DSSIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        List<File> sqlFileLis = new ArrayList<File>();
-        sqlFileLis.add(selectSqlFile("DataTypes.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + "Developer.dbs", sqlFileLis));
-        serviceEndPoint = getServiceUrlHttp(serviceName);
     }
 
     /**
@@ -138,11 +125,5 @@ public class DataTypesTestCase extends DSSIntegrationTest {
         assertNotNull(responseProduct, "Response null " + responseProduct);
         assertTrue(responseProduct.toString().contains("<devdob"), "'devdob' should have exist in the response");
         log.info("Insert TimeStamp Operation Success");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 }
