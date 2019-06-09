@@ -50,16 +50,16 @@ public class InputParametersValidationTestCase extends DSSIntegrationTest {
         List<File> sqlFileLis = new ArrayList<File>();
         sqlFileLis.add(selectSqlFile("CreateTables.sql"));
 
-        deployService(serviceName, createArtifact(
+       /* deployService(serviceName, createArtifact(
                 getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
-                        + File.separator + "InputParamsValidationTest.dbs", sqlFileLis));
+                        + File.separator + "InputParamsValidationTest.dbs", sqlFileLis));*/
 
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
+       /* deleteService(serviceName);
+        cleanup();*/
     }
 
     @Test(groups = { "wso2.dss" }, enabled = false)
