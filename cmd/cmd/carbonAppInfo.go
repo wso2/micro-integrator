@@ -119,7 +119,7 @@ func printCarbonAppInfo(app utils.CarbonApp) {
 
 func executeListCarbonAppsCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixCarbonApps
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.CarbonAppList{})
 

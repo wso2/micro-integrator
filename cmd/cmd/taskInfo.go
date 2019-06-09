@@ -109,7 +109,7 @@ func printTask(task utils.Task) {
 
 func executeListTasksCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixTasks
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixTasks
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.TaskList{})
 

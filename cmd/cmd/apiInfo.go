@@ -132,7 +132,7 @@ func printAPIInfo(api utils.API) {
 
 func executeListAPIsCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixAPIs
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.APIList{})
 

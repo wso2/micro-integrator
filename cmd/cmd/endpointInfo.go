@@ -107,7 +107,7 @@ func printEndpoint(endpoint utils.Endpoint) {
 
 func executeListEndpointsCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixEndpoints
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.EndpointList{})
 

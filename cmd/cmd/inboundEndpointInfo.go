@@ -121,7 +121,7 @@ func printInboundEndpoint(inbound utils.InboundEndpoint) {
 }
 
 func executeListInboundEndpointsCmd() {
-	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixInboundEndpoints
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.InboundEndpointList{})
 

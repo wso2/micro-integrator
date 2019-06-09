@@ -118,7 +118,7 @@ func printSequenceInfo(sequence utils.Sequence) {
 
 func executeListSequencesCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixSequences
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixSequences
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.SequenceList{})
 

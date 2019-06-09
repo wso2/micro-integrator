@@ -56,17 +56,33 @@ Command Line tool for managing the WSO2 Micro Integrator
 ```
 
 ### Commands
-   * #### init
+   * #### remote
 ```bash
         Usage:
-            mi init
+            mi remote [command] [arguments]
+                       
+        Available Commands:
+            add [nick-name] [host] [port]        Add a Micro Integrator
+            remove [nick-name]                   Remove a Micro Integrator
+            update [nick-name] [host] [port]     Update a Micro Integrator
+            select [nick-name]                   Select a Micro Integrator on which commands are executed
+            show                                 Show available Micro Integrators
 
         Examples:
-            mi init
-            Enter following parameters to configure the cli
-            Host name(default localhost): abc.com
-            Port number(default 9164): 9595
-            CLI configuration is successful
+            # To add a Micro Integrator
+            mi remote add TestServer 192.168.1.15 9164
+            
+            # To remove a Micro Integrator
+            mi remote remove TestServer
+            
+            # To update a Micro Integrator
+            mi remote update TestServer 192.168.1.17 9164
+            
+            # To select a Micro Integrator
+            mi remote select TestServer
+            
+            # To show available Micro Integrators
+            mi remote show
 ```
 
 * #### show
