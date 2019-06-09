@@ -26,17 +26,13 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import javax.xml.xpath.XPathExpressionException;
 
 public class FileServiceTestCase extends DSSIntegrationTest {
@@ -52,20 +48,7 @@ public class FileServiceTestCase extends DSSIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
-
         super.init();
-        List<File> sqlFileLis = new ArrayList<File>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
-                        + File.separator + "FileServiceTest.dbs", sqlFileLis));
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = { "wso2.dss" })
@@ -121,7 +104,7 @@ public class FileServiceTestCase extends DSSIntegrationTest {
     @Test(groups = { "wso2.dss" }, dependsOnMethods = { "createNewFile" })
     public void addRecord() throws IOException, XPathExpressionException {
         OMElement payload = fac.createOMElement("_postappenddatatofile", omNs);
-        String recordsExpected = "";
+        StringBuilder recordsExpected = new StringBuilder();
 
         OMElement fileName = fac.createOMElement("fileName", omNs);
         fileName.setText(txtFileName);
@@ -136,21 +119,21 @@ public class FileServiceTestCase extends DSSIntegrationTest {
             String record = "TestFileRecord" + i;
             fileRecord.setText(new String(encoder.encode(record.getBytes())));
             payload.addChild(fileRecord);
-            recordsExpected = recordsExpected + record + ";";
+            recordsExpected.append(record).append(";");
             axisClient.sendRobust(payload, getServiceUrlHttp(serviceName), "_postappenddatatofile");
 
         }
         log.info("Records Added");
         OMElement response = getRecord();
         Iterator file = response.getChildrenWithLocalName("File");
-        String recordData = "";
+        StringBuilder recordData = new StringBuilder();
         while (file.hasNext()) {
             OMElement data = (OMElement) file.next();
-            recordData = recordData + new String(encoder.decode(data.getFirstElement().getText().getBytes())) + ";";
+            recordData.append(new String(encoder.decode(data.getFirstElement().getText().getBytes()))).append(";");
 
         }
-        Assert.assertNotSame("", recordsExpected, "No Record added to file. add records to file");
-        Assert.assertEquals(recordData, recordsExpected, "Record Data Mismatched");
+        Assert.assertNotSame("", recordsExpected.toString(), "No Record added to file. add records to file");
+        Assert.assertEquals(recordData.toString(), recordsExpected.toString(), "Record Data Mismatched");
     }
 
     @Test(groups = { "wso2.dss" }, dependsOnMethods = { "addRecord" })
@@ -210,7 +193,7 @@ public class FileServiceTestCase extends DSSIntegrationTest {
         OMElement result = new AxisServiceClient()
                 .sendReceive(payload, getServiceUrlHttp(serviceName), "_getcheckfileexists");
         Assert.assertNotNull(result, "Response message null ");
-        Assert.assertTrue(result.toString().indexOf("Files") == 1, "Expected not same");
+        Assert.assertEquals(result.toString().indexOf("Files"), 1, "Expected not same");
         return result;
 
     }
