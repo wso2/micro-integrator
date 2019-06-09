@@ -59,9 +59,9 @@ public class SecureDataServiceTestCase extends DSSIntegrationTest {
                 (getResourceLocation() + File.separator + "sql" + File.separator + "MySql" + File.separator
                         + "Offices.sql")));
 
-        deployService(serviceName, createArtifact(
+        /*deployService(serviceName, createArtifact(
                 getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "MySql"
-                        + File.separator + "SecureDataService.dbs", sqlFileLis));
+                        + File.separator + "SecureDataService.dbs", sqlFileLis));*/
 
         assertTrue(dssTestCaseUtils
                 .isServiceDeployed(dssContext.getContextUrls().getBackEndUrl(), sessionCookie, serviceName));
