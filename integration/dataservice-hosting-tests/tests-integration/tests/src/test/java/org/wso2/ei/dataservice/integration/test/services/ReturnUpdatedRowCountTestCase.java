@@ -22,7 +22,6 @@ import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
@@ -30,9 +29,6 @@ import org.wso2.carbon.automation.test.utils.concurrency.test.ConcurrencyTest;
 import org.wso2.carbon.automation.test.utils.concurrency.test.exception.ConcurrencyTestFailedError;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -48,18 +44,6 @@ public class ReturnUpdatedRowCountTestCase extends DSSIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        List<File> sqlFileLis = new ArrayList<>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        sqlFileLis.add(selectSqlFile("Accounts.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + "H2ReturnUpdatedRowCountTest.dbs", sqlFileLis));
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = "wso2.dss", description = "Invoking update operation with Return Updated Row Count")
