@@ -204,11 +204,11 @@
                             <goal>copy-resources</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${basedir}/target/integration/</outputDirectory>
+                            <outputDirectory>${basedir}/target/h2DataBase/</outputDirectory>
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/src/test/resources/integrationDBs/
+                                        ${basedir}/src/test/resources/h2DataBase/
                                     </directory>
                                     <includes>
                                         <include>**</include>
