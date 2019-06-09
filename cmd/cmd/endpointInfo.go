@@ -80,9 +80,9 @@ func printEndpointHelp() {
 
 func executeGetEndpointCmd(endpointname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixEndpoints + "?endpointName=" + endpointname
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixEndpoints, "endpointName", endpointname)
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.Endpoint{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Endpoint{})
 
 	if err == nil {
 		// Printing the details of the Endpoint

@@ -20,10 +20,6 @@
 package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.http.NameValuePair;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.endpoints.EndpointSerializer;
@@ -31,32 +27,17 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.endpoints.EndpointDefinition;
+import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-
-import static org.wso2.carbon.micro.integrator.management.apis.Utils.getQueryParameters;
 
 public class EndpointResource extends APIResource {
-
-    private static Log log = LogFactory.getLog(EndpointResource.class);
-
-    private static final String ROOT_ELEMENT_ENDPOINTS = "<Endpoints></Endpoints>";
-    private static final String COUNT_ELEMENT = "<Count></Count>";
-    private static final String LIST_ELEMENT = "<List></List>";
-
-    private static final String ROOT_ELEMENT_ENDPOINT = "<Endpoint></Endpoint>";
-    private static final String NAME_ELEMENT = "<Name></Name>";
-    private static final String TYPE_ELEMENT = "<Type></Type>";
-    private static final String METHOD_ELEMENT = "<Method></Method>";
-    private static final String URL_ELEMENT = "<Url></Url>";
-    private static final String STAT_ELEMENT = "<Stats></Stats>";
 
     public EndpointResource(String urlTemplate){
         super(urlTemplate);
@@ -65,7 +46,7 @@ public class EndpointResource extends APIResource {
     @Override
     public Set<String> getMethods() {
 
-        Set<String> methods = new HashSet<String>();
+        Set<String> methods = new HashSet<>();
         methods.add("GET");
         methods.add("POST");
         return methods;
@@ -75,33 +56,23 @@ public class EndpointResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-//        log.info("Message : " + messageContext.getEnvelope());
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        List<NameValuePair> queryParameter = getQueryParameters(axis2MessageContext);
+        String param = Utils.getQueryParameter(messageContext, "endpointName");
 
-        try {
-            // if query params exists retrieve data about specific endpoint
-            if (null != queryParameter) {
-                for (NameValuePair nvPair : queryParameter) {
-                    if (nvPair.getName().equals("endpointName")) {
-                        populateEndpointData(messageContext, nvPair.getValue());
-                    }
-                }
-            } else {
-                populateEndpointList(messageContext);
-            }
-
-            axis2MessageContext.removeProperty("NO_ENTITY_BODY");
-        } catch (XMLStreamException e) {
-            log.error("Error occurred while processing response", e);
+        if (Objects.nonNull(param)) {
+            populateEndpointData(messageContext, param);
+        } else {
+            populateEndpointList(messageContext);
         }
+
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
-    private void populateEndpointList(MessageContext messageContext) throws XMLStreamException {
+    private void populateEndpointList(MessageContext messageContext) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
@@ -111,108 +82,83 @@ public class EndpointResource extends APIResource {
         Map<String, Endpoint> namedEndpointMap = configuration.getDefinedEndpoints();
         Collection<Endpoint> namedEndpointCollection = namedEndpointMap.values();
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINTS);
-        OMElement countElement = AXIOMUtil.stringToOM(COUNT_ELEMENT);
-        OMElement listElement = AXIOMUtil.stringToOM(LIST_ELEMENT);
-
-        countElement.setText(String.valueOf(namedEndpointCollection.size()));
-        rootElement.addChild(countElement);
-
-        rootElement.addChild(listElement);
+        JSONObject jsonBody = Utils.createJSONList(namedEndpointCollection.size());
 
         for (Endpoint ep : namedEndpointCollection) {
 
-            OMElement endpointElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINT);
-            OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-            OMElement typeElement = AXIOMUtil.stringToOM(TYPE_ELEMENT);
-            OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
-            OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
+            JSONObject endpointObject = new JSONObject();
 
             String epName = ep.getName();
-            nameElement.setText(epName);
-            endpointElement.addChild(nameElement);
+            endpointObject.put(Constants.NAME, epName);
 
             OMElement element = EndpointSerializer.getElementFromEndpoint(ep);
             OMElement firstElement = element.getFirstElement();
 
             String type = firstElement.getLocalName();
-            typeElement.setText(type);
-            endpointElement.addChild(typeElement);
+            endpointObject.put(Constants.TYPE, type);
 
-            String method = firstElement.getAttributeValue(new QName("method"));
-            methodElement.setText(method);
-            endpointElement.addChild(methodElement);
+            String method = firstElement.getAttributeValue(new QName(Constants.METHOD));
+            endpointObject.put(Constants.METHOD, method);
 
             String url = firstElement.getAttributeValue(new QName("uri-template"));
-            urlElement.setText(url);
-            endpointElement.addChild(urlElement);
+            endpointObject.put(Constants.URL, url);
 
-            listElement.addChild(endpointElement);
+            jsonBody.getJSONArray(Constants.LIST).put(endpointObject);
         }
-        axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 
-    private void populateEndpointData(MessageContext messageContext, String endpointName) throws XMLStreamException {
+    private void populateEndpointData(MessageContext messageContext, String endpointName) {
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        OMElement rootElement = getEndpointByName(messageContext, endpointName);
+        JSONObject jsonBody = getEndpointByName(messageContext, endpointName);
 
-        if (null != rootElement) {
-            axis2MessageContext.getEnvelope().getBody().addChild(rootElement);
+        if (Objects.nonNull(jsonBody)) {
+            Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
-            axis2MessageContext.setProperty("HTTP_SC", "404");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
         }
     }
 
-    private OMElement getEndpointByName(MessageContext messageContext, String endpointName) throws XMLStreamException {
+    private JSONObject getEndpointByName(MessageContext messageContext, String endpointName) {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         Endpoint ep = configuration.getEndpoint(endpointName);
         return convertEndpointToOMElement(ep);
     }
 
-    private OMElement convertEndpointToOMElement(Endpoint endpoint) throws XMLStreamException{
+    private JSONObject convertEndpointToOMElement(Endpoint endpoint) {
 
-        if (null == endpoint) {
+        if (Objects.isNull(endpoint)) {
             return null;
         }
 
-        OMElement rootElement = AXIOMUtil.stringToOM(ROOT_ELEMENT_ENDPOINT);
-        OMElement nameElement = AXIOMUtil.stringToOM(NAME_ELEMENT);
-        OMElement typeElement = AXIOMUtil.stringToOM(TYPE_ELEMENT);
-        OMElement methodElement = AXIOMUtil.stringToOM(METHOD_ELEMENT);
-        OMElement urlElement = AXIOMUtil.stringToOM(URL_ELEMENT);
-        OMElement statsElement = AXIOMUtil.stringToOM(STAT_ELEMENT);
+        JSONObject endpointObject = new JSONObject();
 
-        nameElement.setText(endpoint.getName());
-        rootElement.addChild(nameElement);
+        endpointObject.put(Constants.NAME, endpoint.getName());
 
         OMElement epElement = EndpointSerializer.getElementFromEndpoint(endpoint);
         OMElement firstElement = epElement.getFirstElement();
 
         String type = firstElement.getLocalName();
-        typeElement.setText(type);
-        rootElement.addChild(typeElement);
+        endpointObject.put(Constants.TYPE, type);
 
-        String method = firstElement.getAttributeValue(new QName("method"));
-        methodElement.setText(method);
-        rootElement.addChild(methodElement);
+        String method = firstElement.getAttributeValue(new QName(Constants.METHOD));
+        endpointObject.put(Constants.METHOD, method);
 
         String url = firstElement.getAttributeValue(new QName("uri-template"));
-        urlElement.setText(url);
-        rootElement.addChild(urlElement);
+        endpointObject.put(Constants.URL, url);
 
         EndpointDefinition def = ((AbstractEndpoint) endpoint).getDefinition();
-        if (null != def) {
+        if (Objects.nonNull(def)) {
             if (def.isStatisticsEnable()) {
-                statsElement.setText("enabled");
+                endpointObject.put(Constants.STATS, Constants.ENABLED);
             } else {
-                statsElement.setText("disabled");
+                endpointObject.put(Constants.STATS, Constants.DISABLED);
             }
         }
-        rootElement.addChild(statsElement);
-        return rootElement;
+        return endpointObject;
     }
 }

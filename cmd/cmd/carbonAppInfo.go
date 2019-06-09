@@ -80,9 +80,9 @@ func printAppHelp() {
 
 func executeGetCarbonAppCmd(appname string) {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps + "?carbonAppName=" + appname
+	finalUrl, params := utils.GetUrlAndParams(utils.PrefixCarbonApps, "carbonAppName", appname)
 
-	resp, err := utils.UnmarshalData(finalUrl, &utils.CarbonApp{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &utils.CarbonApp{})
 
 	if err == nil {
 		// Printing the details of the Carbon App
