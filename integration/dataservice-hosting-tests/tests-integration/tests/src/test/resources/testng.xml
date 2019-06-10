@@ -108,7 +108,6 @@
             <class name="org.wso2.ei.dataservice.integration.test.services.InOnlyRequestsServiceTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.InputParametersValidationTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.JSONContentTypeHandlerTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.services.MultipleServicesGeneratorTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.NestedQueryTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.OutputMappingAsAttributeDataServiceTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.RegexTestCase"/>
@@ -117,7 +116,9 @@
             <class name="org.wso2.ei.dataservice.integration.test.services.ReturnUpdatedRowCountTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.SecureDataServiceTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.SecurityVerificationTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.services.SingleServiceGeneratorTestCase"/>
+            <!--N/A https://github.com/wso2/micro-integrator/issues/261
+            <class name="org.wso2.ei.dataservice.integration.test.services.MultipleServicesGeneratorTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.services.SingleServiceGeneratorTestCase"/>-->
             <class name="org.wso2.ei.dataservice.integration.test.services.SQLDriverGspreadSheetTestCase"/>
         </classes>
     </test>
