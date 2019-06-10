@@ -16,7 +16,6 @@
  * under the License.
  */
 
-
 package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.axis2.AxisFault;
@@ -45,6 +44,7 @@ public class Utils {
 
         try {
             JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(),  true, true);
+
         } catch (AxisFault axisFault) {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
             log.error("Error occurred while setting json payload", axisFault);
@@ -65,5 +65,12 @@ public class Utils {
         JSONObject errorObject =  new JSONObject();
         errorObject.put("Error", error);
         return errorObject;
+    }
+
+    public static boolean isDoingPOST(org.apache.axis2.context.MessageContext axis2MessageContext) {
+        if (Constants.HTTP_POST.equals(axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY))) {
+            return true;
+        }
+        return false;
     }
 }
