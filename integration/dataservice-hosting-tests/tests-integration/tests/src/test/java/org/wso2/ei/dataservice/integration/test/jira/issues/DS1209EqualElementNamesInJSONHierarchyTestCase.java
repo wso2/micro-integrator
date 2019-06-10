@@ -19,36 +19,25 @@
 package org.wso2.ei.dataservice.integration.test.jira.issues;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DS1209EqualElementNamesInJSONHierarchyTestCase extends DSSIntegrationTest {
     private String serviceEndPoint;
-    private final String serviceName = "EqualNamedJSONElements";
     private SimpleHttpClient client;
-    Map<String, String> headers;
+    private Map<String, String> headers;
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        List<File> sqlFileList = new ArrayList<>();
-        sqlFileList.add(selectSqlFile("CreateTables.sql"));
-        sqlFileList.add(selectSqlFile("Students.sql"));
         client = new SimpleHttpClient();
         headers = new HashMap<>();
-
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "samples" + File.separator + "dbs" + File.separator + "rdbms"
-                        + File.separator + "EqualNamedJSONElements.dbs", sqlFileList));
+        String serviceName = "EqualNamedJSONElements";
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
     }
 
@@ -57,12 +46,6 @@ public class DS1209EqualElementNamesInJSONHierarchyTestCase extends DSSIntegrati
         headers.put("Accept", "application/json");
         org.apache.http.HttpResponse response = client.doGet(serviceEndPoint + "getstudent", headers);
         Assert.assertEquals(response.getStatusLine().getStatusCode(), 200);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
 }
