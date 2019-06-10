@@ -20,23 +20,16 @@ package org.wso2.ei.dataservice.integration.test.jira.issues;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
@@ -47,37 +40,13 @@ import static org.testng.Assert.assertTrue;
 public class DS1111UserRoleExtensionTestCase extends DSSIntegrationTest {
 
     private static final Log log = LogFactory.getLog(DS1111UserRoleExtensionTestCase.class);
-
-    private final String serviceName = "RoleExtension";
     private String serviceEndPoint;
-    private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
-
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(dssContext);
-        serverConfigurationManager.copyToComponentLib(
-                new File(getResourceLocation() + File.separator + "jar" + File.separator + "roleRetriever-1.0.0.jar"));
-        serverConfigurationManager.restartForcefully();
-
-        LoginLogoutClient loginLogoutClient = new LoginLogoutClient(dssContext);
-        sessionCookie = loginLogoutClient.login();
-
-        List<File> sqlFileLis = new ArrayList<File>();
-        sqlFileLis.add(selectSqlFile("CreateEmailUsersTable.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + serviceName + ".dbs", sqlFileLis));
-
+        String serviceName = "RoleExtension";
         serviceEndPoint = getServiceUrlHttp(serviceName);
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws RemoteException {
-        //        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = {
@@ -101,8 +70,7 @@ public class DS1111UserRoleExtensionTestCase extends DSSIntegrationTest {
     private HttpResponse getHttpResponse(String endpoint) throws Exception {
 
         if (endpoint.startsWith("http://")) {
-            String urlStr = endpoint;
-            URL url = new URL(urlStr);
+            URL url = new URL(endpoint);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setDoOutput(true);
@@ -111,18 +79,12 @@ public class DS1111UserRoleExtensionTestCase extends DSSIntegrationTest {
             conn.connect();
             // Get the response
             StringBuilder sb = new StringBuilder();
-            BufferedReader rd = null;
-            try {
-                rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            try (BufferedReader rd = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
                 String line;
                 while ((line = rd.readLine()) != null) {
                     sb.append(line);
                 }
             } catch (FileNotFoundException ignored) {
-            } finally {
-                if (rd != null) {
-                    rd.close();
-                }
             }
             return new HttpResponse(sb.toString(), conn.getResponseCode());
         }
