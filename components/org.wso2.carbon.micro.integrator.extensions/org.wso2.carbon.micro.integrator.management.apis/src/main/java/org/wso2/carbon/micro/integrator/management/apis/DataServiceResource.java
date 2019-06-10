@@ -23,12 +23,12 @@ import com.google.gson.Gson;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.description.query.Query;
@@ -42,7 +42,7 @@ import org.wso2.carbon.service.mgt.ServiceAdmin;
 import org.wso2.carbon.service.mgt.ServiceMetaData;
 
 public class DataServiceResource extends APIResource {
-    private final Log log = LogFactory.getLog(DataService.class);
+    private static final Logger log = LoggerFactory.getLogger(DataServiceResource.class);
 
     public DataServiceResource(String urlTemplate) {
         super(urlTemplate);
@@ -70,7 +70,8 @@ public class DataServiceResource extends APIResource {
                 populateDataServiceList(msgCtx);
             }
         } catch (AxisFault axisFault) {
-            log.error(axisFault.getStackTrace());
+            log.error("Error while populating service: ", axisFault);
+            msgCtx.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         }
 
         org.apache.axis2.context.MessageContext axis2MessageContext =
@@ -143,7 +144,7 @@ public class DataServiceResource extends APIResource {
         if (axisService != null) {
             dataService = (DataService) axisService.getParameter(DBConstants.DATA_SERVICE_OBJECT).getValue();
         } else {
-            log.error(String.format("DataService %s is null.", serviceName));
+            log.debug("DataService {} is null.", serviceName);
         }
         return dataService;
     }
