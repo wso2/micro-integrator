@@ -19,42 +19,23 @@
 package org.wso2.ei.dataservice.integration.test.jira.issues;
 
 import junit.framework.Assert;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 import org.wso2.ei.dataservice.integration.test.odata.ODataTestUtils;
 
-import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DS1081NullValuesTest extends DSSIntegrationTest {
 
-    private static final Log log = LogFactory.getLog(DS1081NullValuesTest.class);
-
-    private final String serviceName = "NullTest_DataService";
     private String serviceEndPoint;
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        List<File> sqlFileLis = new ArrayList<File>();
-        sqlFileLis.add(selectSqlFile("CreateTableNullTest.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + serviceName + ".dbs", sqlFileLis));
+        String serviceName = "NullTest_DataService";
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = "wso2.dss", description = "validate retrieval of null values")
