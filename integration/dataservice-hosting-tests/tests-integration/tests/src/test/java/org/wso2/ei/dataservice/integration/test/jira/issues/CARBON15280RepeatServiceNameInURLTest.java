@@ -19,20 +19,15 @@ package org.wso2.ei.dataservice.integration.test.jira.issues;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This test is written to verify the fix for https://wso2.org/jira/browse/DS-1058
@@ -41,38 +36,26 @@ import java.util.List;
  * need carbon 4.4.2
  */
 public class CARBON15280RepeatServiceNameInURLTest extends DSSIntegrationTest {
-    private final String serviceName = "H2ServiceNameTest";
-    private String serviceEndPoint;
 
+    private String serviceEndPoint;
     private static final Log log = LogFactory.getLog(CARBON15280RepeatServiceNameInURLTest.class);
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        List<File> sqlFileLis = new ArrayList<>();
-        sqlFileLis.add(selectSqlFile("CreateTables.sql"));
-        sqlFileLis.add(selectSqlFile("Offices.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + "H2ServiceNameTest.dbs", sqlFileLis));
+        String serviceName = "H2ServiceNameTest";
         serviceEndPoint = getServiceUrlHttp(serviceName) + "/";
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteService(serviceName);
-        cleanup();
     }
 
     @Test(groups = "wso2.dss", description = "Invoking a GET Request with repeating the SerivceName in URL")
     public void performJsonPutMethodTest() {
         String endpoint = serviceEndPoint
                 + "insert/OfficeCode/Colombo/telephone/address1/address2/H2SimpleJsonTes/LK/postalCode/Western";
-        String response = getHttpResponse(endpoint, "GET", null);
+        String response = getHttpResponse(endpoint);
         Assert.assertTrue(response.contains("SUCCESSFUL"), "GET method failed with repeating the SerivceName in URL");
     }
 
-    private String getHttpResponse(String endpoint, String requestMethod, String payload) {
+    private String getHttpResponse(String endpoint) {
         StringBuilder jsonString = new StringBuilder();
         BufferedReader br = null;
         try {
@@ -83,15 +66,8 @@ public class CARBON15280RepeatServiceNameInURLTest extends DSSIntegrationTest {
             connection.setDoOutput(true);
             connection.setRequestProperty("charset", "UTF-8");
             connection.setReadTimeout(10000);
-            connection.setRequestMethod(requestMethod);
+            connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept", "application/json");
-            if (null != payload) {
-                connection.setRequestProperty("Content-Type", "application/json");
-                connection.setRequestProperty("Content-Length", String.valueOf(payload.length()));
-                OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream(), "UTF-8");
-                writer.write(payload);
-                writer.close();
-            }
             br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
             while (null != (line = br.readLine())) {
                 jsonString.append(line);
