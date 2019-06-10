@@ -16,51 +16,40 @@
 
 package org.wso2.ei.dataservice.integration.test.jira.issues;
 
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.ei.dataservice.integration.common.utils.DSSTestCaseUtils;
-import org.wso2.ei.dataservice.integration.common.utils.SqlDataSourceUtil;
+import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import javax.activation.DataHandler;
 
 /**
  * This test was written to verify the fix for https://wso2.org/jira/browse/DS-1103.
  */
 public class DS1103DuplicateDataServiceTestCase extends DSSIntegrationTest {
-    private final String serviceName = "DuplicateDataServiceTest";
-    private List<File> sqlFileList;
 
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        sqlFileList = new ArrayList<>();
-        sqlFileList.add(selectSqlFile("CreateTables.sql"));
-        sqlFileList.add(selectSqlFile("Students.sql"));
-        SqlDataSourceUtil dataSource = new SqlDataSourceUtil(sessionCookie,
-                dssContext.getContextUrls().getBackEndUrl());
-        dataSource.createDataSource("duplicate_test", sqlFileList);
     }
 
     @Test(groups = "wso2.dss", description = "Testing the duplicate data service deployment fail test case.")
-    public void testForDuplicateDataServiceDeployment() throws Exception {
-        DataHandler dssConfig = createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "rdbms" + File.separator + "h2"
-                        + File.separator + "H2SimpleJsonTestDuplicate.dbs", sqlFileList);
-        DSSTestCaseUtils dssTest = new DSSTestCaseUtils();
-        Assert.assertTrue(dssTest.uploadArtifact(dssContext.getContextUrls().getBackEndUrl(), sessionCookie,
-                "H2SimpleJsonTestDuplicate", dssConfig), "Service File Uploading failed");
-        Assert.assertTrue(isServiceFaulty("H2SimpleJsonTestDuplicate"), "Service is Found");
-    }
+    public void testForDuplicateDataServiceDeployment() {
 
-    @AfterClass
-    public void clean() throws Exception {
-        cleanup();
+        OMFactory fac = OMAbstractFactory.getOMFactory();
+        OMNamespace omNs = fac.createOMNamespace("http://ws.wso2.org/dataservice", "ns1");
+        OMElement payload = fac.createOMElement("select_all_Customers_operation", omNs);
+        try {
+            String serviceNameSecond = "H2SimpleJsonTestDuplicate";
+            new AxisServiceClient()
+                    .sendReceive(payload, getServiceUrlHttp(serviceNameSecond), "select_all_Customers_operation");
+            Assert.fail();
+        } catch (Exception e) {
+            Assert.assertTrue(e.getLocalizedMessage().contains("Transport error: 404 Error: Not Found"),
+                    "Duplicate " + "service got deployed");
+        }
     }
-
 }
