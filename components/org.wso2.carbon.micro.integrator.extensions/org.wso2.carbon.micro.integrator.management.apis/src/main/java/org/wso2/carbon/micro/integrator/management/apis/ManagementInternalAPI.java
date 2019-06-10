@@ -35,10 +35,9 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.REST_AP
 
 public class ManagementInternalAPI implements InternalAPI {
 
-    private String name;
+    private APIResource[] resources;
 
-    public APIResource[] getResources() {
-
+    public ManagementInternalAPI() {
         ArrayList<APIResource> resourcesList = new ArrayList<>();
         resourcesList.add(new ApiResource(PREFIX_APIS));
         resourcesList.add(new EndpointResource(PREFIX_ENDPOINTS));
@@ -49,18 +48,21 @@ public class ManagementInternalAPI implements InternalAPI {
         resourcesList.add(new SequenceResource(PREFIX_SEQUENCES));
         resourcesList.add(new DataServiceResource(PREFIX_DATA_SERVICES));
 
-        APIResource[] resources = new APIResource[resourcesList.size()];
+        resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);
+    }
+
+    private String name;
+
+    public APIResource[] getResources() {
         return resources;
     }
 
     public String getContext() {
-
         return REST_API_CONTEXT;
     }
 
     public String getName() {
-
         return name;
     }
 
