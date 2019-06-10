@@ -132,7 +132,8 @@
 
     <test name="DSS-faulty-service-tests" parallel="false" verbose="2">
         <classes>
-            <class name="org.wso2.ei.dataservice.integration.test.faulty.service.FaultyDataServiceTestCase"/>
+            <!--commenting out since this test uses admin service to fix the faulty service which cannot be done with MI
+            <class name="org.wso2.ei.dataservice.integration.test.faulty.service.FaultyDataServiceTestCase"/>-->
             <class name="org.wso2.ei.dataservice.integration.test.faulty.service.FaultDBExceptionTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.faulty.service.InvalidClosingTagUnDeployedServiceTestCase"/>
         </classes>
