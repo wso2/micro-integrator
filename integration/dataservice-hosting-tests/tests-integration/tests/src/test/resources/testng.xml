@@ -208,7 +208,8 @@
 
     <test name="DSS-requestBox-tests" parallel="false" verbose="2">
         <classes>
-            <class name="org.wso2.ei.dataservice.integration.test.requestBox.RequestBoxTenantUserTestCase"/>
+            <!--commenting out since this is tenant related and N/A to MI
+            <class name="org.wso2.ei.dataservice.integration.test.requestBox.RequestBoxTenantUserTestCase"/>-->
             <class name="org.wso2.ei.dataservice.integration.test.requestBox.RequestBoxTestCase"/>
         </classes>
     </test>
