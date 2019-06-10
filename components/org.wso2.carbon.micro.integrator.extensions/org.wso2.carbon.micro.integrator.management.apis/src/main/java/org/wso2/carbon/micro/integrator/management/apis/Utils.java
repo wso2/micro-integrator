@@ -60,4 +60,10 @@ public class Utils {
         jsonBody.put(Constants.LIST, list);
         return jsonBody;
     }
+
+    public static JSONObject createJsonErrorObject(String error) {
+        JSONObject errorObject =  new JSONObject();
+        errorObject.put("Error", error);
+        return errorObject;
+    }
 }
