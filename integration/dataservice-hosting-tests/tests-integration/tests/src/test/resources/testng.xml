@@ -235,7 +235,8 @@
         </test>-->
     <test name="DSS-JIRA-issues" parallel="false" verbose="2">
         <classes>
-            <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS954UseExcelFromRegistryTestCase"/>
+            <!--Uncomment after fixing https://github.com/wso2/micro-integrator/issues/258
+            <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS954UseExcelFromRegistryTestCase"/>-->
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1083BoxcarringParallelInsertTestCase">
                 <methods>
                     <exclude name="boxcarringParallelInsertsTest"/>
