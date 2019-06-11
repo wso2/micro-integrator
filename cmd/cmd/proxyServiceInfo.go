@@ -109,7 +109,7 @@ func executeListProxyServicesCmd() {
 
 	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.ProxyServiceList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.ProxyServiceList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints

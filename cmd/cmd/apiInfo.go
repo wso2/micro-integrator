@@ -134,7 +134,7 @@ func executeListAPIsCmd() {
 
 	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.APIList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.APIList{})
 
 	if err == nil {
 		// Printing the list of available APIs

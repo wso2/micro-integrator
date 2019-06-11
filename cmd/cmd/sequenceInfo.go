@@ -120,7 +120,7 @@ func executeListSequencesCmd() {
 
 	finalUrl := utils.RESTAPIBase + utils.PrefixSequences
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.SequenceList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.SequenceList{})
 
 	if err == nil {
 		// Printing the list of available Sequences
