@@ -31,6 +31,7 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_TASKS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 
 public class ManagementInternalAPI implements InternalAPI {
@@ -47,6 +48,7 @@ public class ManagementInternalAPI implements InternalAPI {
         resourcesList.add(new TaskResource(PREFIX_TASKS));
         resourcesList.add(new SequenceResource(PREFIX_SEQUENCES));
         resourcesList.add(new DataServiceResource(PREFIX_DATA_SERVICES));
+        resourcesList.add(new TemplateResource(PREFIX_TEMPLATES));
 
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);

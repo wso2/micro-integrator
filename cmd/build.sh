@@ -62,6 +62,16 @@ while getopts :t:v:f FLAG; do
   esac
 done
 
+strSkipTest="test.skip"
+
+for arg in "$@"
+do
+    if [ "$arg" == "$strSkipTest" ]
+    then
+        skipTest=true
+    fi
+done
+
 if [ ! -e "$target" ]; then
   echo "Target file is needed. "
   showUsageAndExit
@@ -106,6 +116,24 @@ if [[ -x "$go_executable" ]] ; then
 else
     echo "Go not found in \$PATH"
     exit 1
+fi
+
+if [ ! $skipTest ] ; then
+    echo "-------------------------------------------------------"
+    echo "Go TESTS"
+    echo "-------------------------------------------------------"
+
+    go test ./...
+
+    rc=$?
+    if [ $rc -ne 0 ]; then
+    echo "Testing failed!"
+    exit $rc
+    else
+        echo "Testing Successful!"
+    fi
+else
+    echo "Skipping Go Tests..."
 fi
 
 for platform in ${platforms}
