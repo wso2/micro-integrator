@@ -1,6 +1,5 @@
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -11,6 +10,7 @@ import org.json.JSONObject;
 
 import java.util.Enumeration;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 public class LoggingResource extends ApiResource {
@@ -37,55 +37,71 @@ public class LoggingResource extends ApiResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+
         JSONObject jsonPayload = new JSONObject(JsonUtil.jsonPayloadToString(axis2MessageContext));
 
-        String logLevel = jsonPayload.getString("loggingLevel");
+        String logLevel="";
+        String loggerName="";
+        JSONObject jsonBody = new JSONObject();
 
-        updateSystemLog(messageContext, logLevel);
-
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
+        if (Objects.nonNull(jsonPayload.getString("loggingLevel"))) {
+            logLevel = jsonPayload.getString("loggingLevel");
+            if (!isALogLevel(logLevel)) {
+                jsonBody.put(Constants.MESSAGE, "Invalid log level " + logLevel);
+                axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+            } else {
+                if (Objects.nonNull(jsonPayload.getString("loggerName"))) {
+                    // update the specific logger
+                    logLevel = jsonPayload.getString("loggerName");
+                    jsonBody = updateLoggerData(axis2MessageContext, loggerName, logLevel);
+                } else {
+                    // update root logger
+                    jsonBody = updateSystemLog(logLevel);
+                }
+            }
+        } else {
+            // 400 loggingLevel need
+            jsonBody.put(Constants.MESSAGE, "Logging level is missing");
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+        }
+        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         return true;
     }
 
-    private void updateSystemLog(MessageContext messageContext, String logLevel) {
-
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+    private JSONObject updateSystemLog(String logLevel) {
 
         JSONObject jsonBody = new JSONObject();
 
-        if (!isALogLevel(logLevel)) {
-            jsonBody.put(Constants.MESSAGE, "Invalid log level " + logLevel);
-            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
-        } else {
-            Set<Appender> appenderSet = new HashSet<>();
+        // update root logger details
+        Logger rootLogger = Logger.getRootLogger();
+        rootLogger.setLevel(Level.toLevel(logLevel));
 
-            // update root logger details
-            Logger rootLogger = Logger.getRootLogger();
-            rootLogger.setLevel(Level.toLevel(logLevel));
-            addAppendersToSet(rootLogger.getAllAppenders(), appenderSet);
-
-            // update logger and appender data, following are set
-            Enumeration loggersEnum = LogManager.getCurrentLoggers();
-            Level systemLevel = Level.toLevel(logLevel);
-            while (loggersEnum.hasMoreElements()) {
-                Logger logger = (Logger) loggersEnum.nextElement();
-                addAppendersToSet(logger.getAllAppenders(), appenderSet);
-                logger.setLevel(systemLevel);
-            }
-            jsonBody.put(Constants.MESSAGE, "Successfully updated log level to " + rootLogger.getLevel().toString());
+        // update logger and appender data, following are set
+        Enumeration loggersEnum = LogManager.getCurrentLoggers();
+        Level systemLevel = Level.toLevel(logLevel);
+        while (loggersEnum.hasMoreElements()) {
+            Logger logger = (Logger) loggersEnum.nextElement();
+            logger.setLevel(systemLevel);
         }
-        Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
+        jsonBody.put(Constants.MESSAGE, "Successfully updated log level to " + rootLogger.getLevel().toString());
+        return jsonBody;
     }
 
-    private void addAppendersToSet(Enumeration appenders, Set<Appender> appenderSet) {
-        Appender appender;
-        while (appenders.hasMoreElements()) {
-            appender = (Appender) appenders.nextElement();
-            if (appender.getName() != null) {
-                appenderSet.add(appender);
-            }
+    public JSONObject updateLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName, String loggerLevel) {
+
+        JSONObject jsonBody = new JSONObject();
+        //update logger data in current system
+        Logger logger = LogManager.getLogger(loggerName);
+
+        if (Objects.nonNull(logger)) {
+            logger.setLevel(Level.toLevel(loggerLevel));
+            jsonBody.put(Constants.MESSAGE, "Successfully updated " + loggerName + " level to " + logger.getLevel().toString());
+        } else {
+            jsonBody.put(Constants.MESSAGE, "Invalid logger " + loggerName);
+            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
         }
+        return jsonBody;
     }
 
     private boolean isALogLevel(String logLevelToTest) {
