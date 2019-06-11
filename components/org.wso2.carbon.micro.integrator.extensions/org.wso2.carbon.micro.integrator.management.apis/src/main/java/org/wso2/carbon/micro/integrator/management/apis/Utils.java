@@ -32,7 +32,7 @@ import java.util.Objects;
 
 public class Utils {
 
-    private static Log log = LogFactory.getLog(Utils.class);
+    private static Log LOG = LogFactory.getLog(Utils.class);
 
     public static String getQueryParameter(MessageContext messageContext, String key){
         if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key))){
@@ -47,7 +47,7 @@ public class Utils {
             JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(),  true, true);
         } catch (AxisFault axisFault) {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
-            log.error("Error occurred while setting json payload", axisFault);
+            LOG.error("Error occurred while setting json payload", axisFault);
         }
         axis2MessageContext.setProperty("messageType", "application/json");
         axis2MessageContext.setProperty("ContentType", "application/json");

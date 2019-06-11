@@ -33,14 +33,14 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 
-public class ManagementInternalAPI implements InternalAPI {
+public class ManagementInternalApi implements InternalAPI {
 
     private String name;
 
-    private static Log log = LogFactory.getLog(ManagementInternalAPI.class);
+    private static Log LOG = LogFactory.getLog(ManagementInternalApi.class);
 
-    public ManagementInternalAPI(){
-        log.warn("Management Api has been enabled");
+    public ManagementInternalApi(){
+        LOG.warn("Management Api has been enabled");
     }
 
     public APIResource[] getResources() {
