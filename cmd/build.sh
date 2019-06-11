@@ -136,6 +136,9 @@ else
     echo "Skipping Go Tests..."
 fi
 
+completion_script="tools/completion.go"
+go run -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH $completion_script
+
 for platform in ${platforms}
 do
     split=(${platform//\// })
@@ -159,6 +162,10 @@ do
 
     cp -r "${baseDir}/server_config.yaml" $mi_archive_dir > /dev/null 2>&1
     cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
+
+    if [[ "linux" == "$goos" ]]; then
+        cp -r "${baseDir}/shell-completions/mi_bash_completion.sh" $mi_archive_dir > /dev/null 2>&1
+    fi
 
     # set destination path for binary
     destination="$mi_archive_dir/$output"
