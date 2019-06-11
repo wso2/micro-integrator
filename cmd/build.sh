@@ -163,7 +163,7 @@ do
     cp -r "${baseDir}/server_config.yaml" $mi_archive_dir > /dev/null 2>&1
     cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
 
-    if [[ "linux" == "$goos" ]]; then
+    if [[ "windows" != "$goos" ]]; then
         cp -r "${baseDir}/shell-completions/mi_bash_completion.sh" $mi_archive_dir > /dev/null 2>&1
     fi
 
