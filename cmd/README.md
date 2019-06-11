@@ -20,9 +20,6 @@ Command Line tool for managing the WSO2 Micro Integrator
 
     Created Command Line tool packages will be available at cmd/build directory
 
-- #### Generating Autocompletion scripts
-    After changing commands run following to generate shell completions `go run tools/completion.go`
-
 - ### Running
     Extract the compressed archive generated to a desired location.
     
@@ -33,7 +30,7 @@ Command Line tool for managing the WSO2 Micro Integrator
     NOTE: To execute the tool from anywhere, append the location of the executable (mi) to your $PATH variable.
 
 - ### Command Autocompletion (For Bash Only)
-    Copy the file `mi_bash_completion.sh` in `shell-completions` directory to `/etc/bash_completion.d/` and source it with source `/etc/bash_completion.d/mi_bash_completion.sh` to enable bash auto-completion.
+    Copy the file `mi_bash_completion.sh` to `/etc/bash_completion.d/` and source it with `source /etc/bash_completion.d/mi_bash_completion.sh` to enable bash auto-completion.
 
 ### Configuration 
 
