@@ -69,7 +69,7 @@
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../../../../distribution/target/wso2ei-${product.ei.version}.zip
+                            ${basedir}/../../../../distribution/target/wso2ei-${product.mi.version}.zip
                         </carbon.zip>
                         <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
@@ -132,7 +132,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.ei</groupId>
                                     <artifactId>wso2ei</artifactId>
-                                    <version>${product.ei.version}</version>
+                                    <version>${product.mi.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
@@ -173,7 +173,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.ei.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -194,7 +194,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.ei.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -215,7 +215,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.ei.version}/samples/service-bus/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/samples/service-bus/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -236,7 +236,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.ei.version}/repository/deployment/client/modules
+                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/deployment/client/modules
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
@@ -257,7 +257,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.ei.version}/samples/service-bus/
+                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/samples/service-bus/
                                     </directory>
                                     <includes>
                                         <include>**/*.xml</include>
