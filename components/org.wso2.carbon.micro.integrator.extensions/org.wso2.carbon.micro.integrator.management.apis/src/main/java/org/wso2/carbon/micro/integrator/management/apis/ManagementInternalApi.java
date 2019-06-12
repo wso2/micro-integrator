@@ -19,6 +19,8 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import java.util.ArrayList;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
@@ -34,11 +36,16 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 
-public class ManagementInternalAPI implements InternalAPI {
+public class ManagementInternalApi implements InternalAPI {
 
+    private String name;
+    private static Log LOG = LogFactory.getLog(ManagementInternalApi.class);
     private APIResource[] resources;
 
-    public ManagementInternalAPI() {
+    public ManagementInternalApi() {
+
+        LOG.warn("Micro Integrator Management REST API is enabled");
+
         ArrayList<APIResource> resourcesList = new ArrayList<>();
         resourcesList.add(new ApiResource(PREFIX_APIS));
         resourcesList.add(new EndpointResource(PREFIX_ENDPOINTS));
@@ -53,8 +60,6 @@ public class ManagementInternalAPI implements InternalAPI {
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);
     }
-
-    private String name;
 
     public APIResource[] getResources() {
         return resources;
