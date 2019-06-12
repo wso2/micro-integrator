@@ -1,7 +1,7 @@
 ## WSO2 Micro Integrator CLI Commands
-
-![Diagram](images/mi-cli-command-tree.png)
-
+<p align="center">
+  <img src="images/mi-cli-command-tree.png" width="60%">
+</p>
 ### Available commands
 
 #### show
