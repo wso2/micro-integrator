@@ -24,3 +24,10 @@ remote update [nick-name] [host] [port]
 remote select [nick-name]
 remote show
 ```
+
+#### set
+```
+set loglevel [logger-name] [logging-level]
+set loglevel [logging-level]
+remote show
+```
