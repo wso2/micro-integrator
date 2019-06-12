@@ -170,7 +170,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/../../../samples/
+                                        ${basedir}/../../samples/
                                     </directory>
                                     <includes>
                                         <include>**</include>
