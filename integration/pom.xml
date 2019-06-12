@@ -790,6 +790,8 @@
                 <module>automation-extensions</module>
                 <module>tests-common</module>
 <!--                <module>mediation-tests/tests-mediator-1</module>-->
+                <module>dataservice-hosting-tests/samples</module>
+                <module>dataservice-hosting-tests/tests-common</module>
                 <module>dataservice-hosting-tests/tests-integration/tests</module>
             </modules>
         </profile>
