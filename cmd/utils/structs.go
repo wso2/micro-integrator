@@ -23,6 +23,10 @@ type ServerConfig struct {
 	Port string `yaml:"server_port"`
 }
 
+type LoggerResponse struct {
+	Message string `json:"message"`
+}
+
 type CarbonAppList struct {
 	Count      int32              `json:"count"`
 	CarbonApps []CarbonAppSummary `json:"list"`

@@ -51,9 +51,10 @@ func InvokeGETRequest(url string, headers map[string]string, params map[string]s
 }
 
 // Invoke http-put request using go-resty
-func InvokeUPDATERequest(url string, headers map[string]string, body string) (*resty.Response, error) {
+func InvokeUPDATERequest(url string, headers map[string]string, body map[string]string) (*resty.Response, error) {
 
-	resp, err := resty.R().SetHeaders(headers).SetBody(body).Put(url)
+	AllowInsecureSSLConnection()
+	resp, err := resty.R().SetHeaders(headers).SetBody(body).Patch(url)
 
 	return resp, err
 }
@@ -177,6 +178,31 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 	} else {
 		return nil, errors.New(resp.Status())
 	}
+}
+
+func UpdateMILogger(loggerName, loggingLevel string) string {
+
+	url := RESTAPIBase + PrefixLogging
+	Logln(LogPrefixInfo+"URL:", url)
+	headers := make(map[string]string)
+	body := make(map[string]string)
+	body["loggerName"] = loggerName
+	body["loggingLevel"] = loggingLevel
+
+	resp, err := InvokeUPDATERequest(url, headers, body)
+
+	if err != nil {
+		HandleErrorAndExit("Unable to connect to host", nil)
+	}
+
+	Logln(LogPrefixInfo+"Response:", resp.Status())
+	data := &LoggerResponse{}
+	unmarshalError := json.Unmarshal([]byte(resp.Body()), data)
+
+	if unmarshalError != nil {
+		HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
+	}
+	return data.Message
 }
 
 func GetUrlAndParams(urlPrefix, key, value string) (string, map[string]string) {
