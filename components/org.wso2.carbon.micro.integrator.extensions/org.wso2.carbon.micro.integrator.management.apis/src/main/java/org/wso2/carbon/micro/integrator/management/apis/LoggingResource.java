@@ -41,19 +41,20 @@ public class LoggingResource extends ApiResource {
 
         JSONObject jsonPayload = new JSONObject(JsonUtil.jsonPayloadToString(axis2MessageContext));
 
-        String logLevel="";
-        String loggerName="";
+        String logLevel;
+        String loggerName;
         JSONObject jsonBody = new JSONObject();
 
-        if (Objects.nonNull(jsonPayload.getString("loggingLevel"))) {
+        if (jsonPayload.has("loggingLevel")) {
             logLevel = jsonPayload.getString("loggingLevel");
             if (!isALogLevel(logLevel)) {
+                // 400-Bad Request Invalid loggingLevel
                 jsonBody.put(Constants.MESSAGE, "Invalid log level " + logLevel);
                 axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
             } else {
-                if (Objects.nonNull(jsonPayload.getString("loggerName"))) {
+                if (jsonPayload.has("loggerName")) {
                     // update the specific logger
-                    logLevel = jsonPayload.getString("loggerName");
+                    loggerName = jsonPayload.getString("loggerName");
                     jsonBody = updateLoggerData(axis2MessageContext, loggerName, logLevel);
                 } else {
                     // update root logger
@@ -61,7 +62,7 @@ public class LoggingResource extends ApiResource {
                 }
             }
         } else {
-            // 400 loggingLevel need
+            // 400-Bad Request loggingLevel is missing
             jsonBody.put(Constants.MESSAGE, "Logging level is missing");
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
         }
@@ -84,7 +85,7 @@ public class LoggingResource extends ApiResource {
             Logger logger = (Logger) loggersEnum.nextElement();
             logger.setLevel(systemLevel);
         }
-        jsonBody.put(Constants.MESSAGE, "Successfully updated log level to " + rootLogger.getLevel().toString());
+        jsonBody.put(Constants.MESSAGE, "Successfully updated system log level to " + rootLogger.getLevel().toString());
         return jsonBody;
     }
 
@@ -92,7 +93,7 @@ public class LoggingResource extends ApiResource {
 
         JSONObject jsonBody = new JSONObject();
         //update logger data in current system
-        Logger logger = LogManager.getLogger(loggerName);
+        Logger logger = LogManager.exists(loggerName);
 
         if (Objects.nonNull(logger)) {
             logger.setLevel(Level.toLevel(loggerLevel));
