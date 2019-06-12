@@ -41,7 +41,7 @@ public class ManagementInternalApi implements InternalAPI {
     private static Log LOG = LogFactory.getLog(ManagementInternalApi.class);
 
     public ManagementInternalApi(){
-        LOG.warn("Management Api has been enabled");
+        LOG.warn("Micro Integrator Management REST API is enabled");
     }
 
     public APIResource[] getResources() {
