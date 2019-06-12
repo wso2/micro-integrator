@@ -1,0 +1,14 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="fastXSLTMediatorSequence" onError="fault">
+        <in>
+            <fastXSLT xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:ns="http://org.apache.synapse/xsd" key="{get-property('registry','conf:localEntries/request_transformation.txt/@resourceName')}"/>
+            <send>
+                <endpoint>
+                    <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+                </endpoint>
+            </send>
+        </in>
+        <out>
+            <fastXSLT xmlns:soapenv="http://www.w3.org/2003/05/soap-envelope" xmlns:ns="http://org.apache.synapse/xsd" key="{get-property('registry','gov:localEntries/response_transformation_back.txt/@resourceName')}"/>
+            <send/>
+        </out>
+    </sequence>

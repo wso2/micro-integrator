@@ -1,0 +1,11 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="foreachSequentialExecutionTestProxy" transports="https http" startOnLoad="true" trace="disable">
+		<description/>
+		<target>
+			<inSequence>
+				<sequence key="iterateMessagesSeq567"/>
+			</inSequence>
+			<outSequence>
+				<sequence key="aggregateMessagesSeq567"/>
+			</outSequence>
+		</target>
+	</proxy>

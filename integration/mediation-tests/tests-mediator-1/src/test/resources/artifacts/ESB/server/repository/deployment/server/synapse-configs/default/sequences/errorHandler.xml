@@ -1,0 +1,13 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="errorHandler">
+
+        <log>
+            <property name="FAULT" value="true"/>
+                </log>
+        <makefault>
+            <code xmlns:tns="http://www.w3.org/2003/05/soap-envelope" value="tns:Receiver"/>
+            <reason value="COULDN'T SEND THE MESSAGE TO THE SERVER."/>
+        </makefault>
+        <property name="RESPONSE" value="true"/>
+        <header name="To" action="remove"/>
+        <send/>
+    </sequence>

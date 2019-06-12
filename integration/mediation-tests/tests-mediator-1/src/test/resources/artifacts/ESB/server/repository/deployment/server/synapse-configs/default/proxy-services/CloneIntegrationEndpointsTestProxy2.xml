@@ -1,0 +1,11 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="CloneIntegrationEndpointsTestProxy2" transports="https http" startOnLoad="true" trace="disable">
+        <description/>
+        <target>
+            <inSequence>
+                <sequence key="cloningMessages"/>
+            </inSequence>
+            <outSequenc>
+                <sequence key="aggregateMessages"/>
+            </outSequenc>
+        </target>
+    </proxy>

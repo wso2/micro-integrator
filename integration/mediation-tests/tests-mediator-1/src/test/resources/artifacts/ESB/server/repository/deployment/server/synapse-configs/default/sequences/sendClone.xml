@@ -1,0 +1,7 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="sendClone">
+        <send>
+            <endpoint>
+                <address uri="http://localhost:9001/services/LBServiceWithSleep"/>
+            </endpoint>
+        </send>
+    </sequence>

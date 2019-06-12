@@ -1,0 +1,15 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="VFSProxyDefault" statistics="disable" trace="disable" transports="http">
+        <target>
+            <log level="full"/>
+            <inSequence>
+                <property action="set" value="default.xml" name="transport.vfs.ReplyFileName" scope="transport" type="STRING"/>
+                <property action="set" name="OUT_ONLY" scope="default" type="STRING" value="true"/>
+                <send>
+                    <endpoint>
+                        <address uri="vfs:ftp://admin:admin@localhost:8086/in"/>
+                    </endpoint>
+                </send>
+                <drop/>
+            </inSequence>
+        </target>
+    </proxy>

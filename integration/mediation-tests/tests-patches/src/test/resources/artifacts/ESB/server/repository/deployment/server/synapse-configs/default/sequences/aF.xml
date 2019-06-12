@@ -1,0 +1,6 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="aF">
+        <log level="custom">
+            <property name="aF" value="A Fault"/>
+        </log>
+        <drop/>
+    </sequence>

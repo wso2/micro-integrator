@@ -1,0 +1,6 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="faultSeq">
+        <property name="SET_ROLLBACK_ONLY" value="true"/>
+        <log level="custom">
+            <property name="Transaction Action" value="Rollbacked"/>
+        </log>
+    </sequence>
