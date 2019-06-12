@@ -1,3 +1,0 @@
-<endpoint xmlns="http://ws.apache.org/ns/synapse" name="EP">
-      <address uri="http://www.mocky.io/v2/561c9209110000de121cb4c6"/>
-   </endpoint>
