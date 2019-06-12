@@ -185,32 +185,6 @@
         cluster instance details to be used to platform test execution
         -->
         <productGroup name="DSS" clusteringEnabled="false" default="true">
-
-            <!--<instance name="lbw001" type="lb_worker_manager" nonBlockingTransportEnabled="true">
-                <hosts>
-                    <host type="worker">dss.wso2con.com</host>
-                    <host type="manager">mgt.dss.wso2con.com</host>
-                </hosts>
-                <ports>
-                    <port type="nhttps">9443</port>
-                    <port type="nhttp">9480</port>
-                </ports>
-                <properties>
-
-                </properties>
-            </instance>-->
-            <!--<instance name="dss001" type="manager" nonBlockingTransportEnabled="false">
-                <hosts>
-                    <host type="default">localhost</host>
-                </hosts>
-                <ports>
-                    <port type="https">9644</port>
-                    <port type="http">9964</port>
-                </ports>
-                <properties>
-                </properties>
-            </instance>-->
-
             <instance name="dss002" type="standalone" nonBlockingTransportEnabled="false">
                 <hosts>
                     <host type="default">localhost</host>
@@ -223,17 +197,6 @@
 
                 </properties>
             </instance>
-            <!--<instance name="dss003" type="worker" nonBlockingTransportEnabled="false">
-                <hosts>
-                    <host type="default">localhost</host>
-                </hosts>
-                <ports>
-                    <port type="https">9645</port>
-                    <port type="http">9965</port>
-                </ports>
-                <properties>
-                </properties>
-            </instance>-->
         </productGroup>
     </platform>
 
