@@ -154,7 +154,8 @@ do
     echo -en "\t - $goos/$goarch..."
 
     mi_archive_name="wso2$filename-cli-$build_version-$pos-$parch"
-    mi_archive_dir="${buildPath}/$filename"
+    mi_dir_name="wso2$filename-cli-$build_version"
+    mi_archive_dir="${buildPath}/${mi_dir_name}"
     mkdir -p $mi_archive_dir
 
     cp -r "${baseDir}/server_config.yaml" $mi_archive_dir > /dev/null 2>&1
@@ -172,11 +173,11 @@ do
     pwd=`pwd`
     cd $buildPath
     if [[ "windows" == "$goos" ]]; then
-        zip -r "$mi_archive_name.zip" $filename > /dev/null 2>&1
+        zip -r "$mi_archive_name.zip" $mi_dir_name > /dev/null 2>&1
     else
-        tar czf "$mi_archive_name.tar.gz" $filename > /dev/null 2>&1
+        tar czf "$mi_archive_name.tar.gz" $mi_dir_name > /dev/null 2>&1
     fi
-    rm -rf $filename
+    rm -rf $mi_dir_name
     cd $pwd
     echo -en $'✔ '
     echo
