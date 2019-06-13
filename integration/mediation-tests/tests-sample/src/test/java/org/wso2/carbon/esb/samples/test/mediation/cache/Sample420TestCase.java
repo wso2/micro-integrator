@@ -19,41 +19,40 @@ package org.wso2.carbon.esb.samples.test.mediation.cache;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
 
-import javax.xml.xpath.XPathExpressionException;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotEquals;
 
 public class Sample420TestCase extends ESBSampleIntegrationTest {
 
+    private String serviceEp;
+
     @BeforeClass(alwaysRun = true)
     public void deployArtifacts() throws Exception {
         super.init();
-        loadSampleESBConfiguration(420);
+        serviceEp = getProxyServiceURLHttp("Sample420TestCaseProxy");
 
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Creating simple cache sample 420 Test Case")
-    public void testSimpleCachingNotExists() throws AxisFault, XPathExpressionException, InterruptedException {
+    public void testSimpleCachingNotExists() throws AxisFault, InterruptedException {
         OMElement response;
 
         long currTime = System.currentTimeMillis();
         long timeDiff = 0;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "", "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(serviceEp, "", "IBM");
         String firstResponse = response.getFirstElement().toString();
 
         while (timeDiff < 20000) {
 
-            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "", "IBM");
+            response = axis2Client.sendSimpleStockQuoteRequest(serviceEp, "", "IBM");
 
             assertEquals(firstResponse, response.getFirstElement().toString(), "Caching is less than 20 seconds");
 
@@ -63,26 +62,22 @@ public class Sample420TestCase extends ESBSampleIntegrationTest {
             timeDiff = System.currentTimeMillis() - currTime;
         }
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "", "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(serviceEp, "", "IBM");
 
         assertNotEquals(firstResponse, response.getFirstElement().toString());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Creating simple cache sample 420 Test Case")
-    public void testSimpleCachingExists() throws AxisFault, XPathExpressionException, InterruptedException {
+    public void testSimpleCachingExists() throws AxisFault {
         OMElement response;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "", "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(serviceEp, "", "IBM");
         String firstResponse = response.getFirstElement().toString();
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "", "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(serviceEp, "", "IBM");
 
         assertEquals(firstResponse, response.getFirstElement().toString());
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
 }
