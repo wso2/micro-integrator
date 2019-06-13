@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.samples.test.mediation.jason;
 
 import org.json.JSONObject;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
@@ -31,7 +30,6 @@ public class Sample440TestCase extends ESBSampleIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadSampleESBConfiguration(440);
     }
 
     @Test(groups = "wso2.esb", description = "JSON to SOAP conversion using sample 440")
@@ -45,8 +43,4 @@ public class Sample440TestCase extends ESBSampleIntegrationTest {
         assertEquals(returnElement.getJSONObject("return").getString("symbol"), "IBM", "Symbol is mismatch");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }
