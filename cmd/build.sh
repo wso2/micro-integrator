@@ -161,7 +161,9 @@ do
     cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
 
     # set destination path for binary
-    destination="$mi_archive_dir/$output"
+    mi_bin_dir="${mi_archive_dir}/bin"
+    mkdir -p $mi_bin_dir
+    destination="$mi_bin_dir/$output"
 
     GOOS=$goos GOARCH=$goarch go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH -ldflags  \
     "-X github.com/wso2/micro-integrator/cmd/cmd.version=$build_version -X 'mi.buildDate=$(date -u '+%Y-%m-%d
