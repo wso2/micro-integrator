@@ -107,7 +107,7 @@ func printProxyServiceInfo(proxyService utils.Proxy) {
 
 func executeListProxyServicesCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixProxyServices
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.ProxyServiceList{})
 
