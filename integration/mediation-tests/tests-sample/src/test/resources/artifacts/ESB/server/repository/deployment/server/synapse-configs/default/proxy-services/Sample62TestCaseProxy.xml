@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<proxy xmlns="http://ws.apache.org/ns/synapse"
+       name="Sample62TestCaseProxy"
+       transports="https http"
+       startOnLoad="true"
+       trace="disable">
+    <description/>
+    <target>
+        <inSequence>
+            <sequence key="Sample62Main"/>
+        </inSequence>
+        <outSequence>
+        </outSequence>
+    </target>
+</proxy>

@@ -37,7 +37,7 @@ public class CarbonLogReader {
 
     public CarbonLogReader() {
 
-        init();
+        init(true);
     }
 
     /**
@@ -47,15 +47,15 @@ public class CarbonLogReader {
      */
     public CarbonLogReader(boolean startReadingFromEndOfFile) {
 
-        init();
-        this.startReadingFromEndOfFile = startReadingFromEndOfFile;
+        init(startReadingFromEndOfFile);
     }
 
-    private void init() {
+    private void init(boolean startReadingFromEndOfFile) {
         carbonLogTailer = new CarbonLogTailer();
         carbonLogFile = new File(
                 System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "logs"
                         + File.separator + "wso2carbon.log");
+        this.startReadingFromEndOfFile = startReadingFromEndOfFile;
     }
 
     /**

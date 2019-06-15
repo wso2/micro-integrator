@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sequence xmlns="http://ws.apache.org/ns/synapse"
           name="Sample61Main"
-          onError="Sample61errorHandler">
+          onError="errorHandler">
    <in>
       <property name="EP_LIST"
                 value="http://localhost:9100/services/SimpleStockQuoteService,http://localhost:9200/services/SimpleStockQuoteService,http://localhost:9300/services/SimpleStockQuoteService"/>

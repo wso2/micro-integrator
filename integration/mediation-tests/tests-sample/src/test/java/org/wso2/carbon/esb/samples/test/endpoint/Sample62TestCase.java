@@ -27,7 +27,6 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.tcpmon.client.ConnectionData;
 import org.wso2.carbon.automation.test.utils.tcpmon.client.TCPMonListener;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-import org.wso2.esb.integration.common.clients.mediation.SynapseConfigAdminClient;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 /**
@@ -46,7 +45,6 @@ public class Sample62TestCase extends ESBSampleIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadSampleESBConfiguration(62);
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
@@ -64,13 +62,6 @@ public class Sample62TestCase extends ESBSampleIntegrationTest {
         listener2 = new TCPMonListener(9200, "localhost", 9002);
         listener3 = new TCPMonListener(9300, "localhost", 9003);
 
-        SynapseConfigAdminClient synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(),
-                getSessionCookie());
-        String config = synapseConfigAdminClient.getConfiguration();
-        config = config.replace("9001", "9100").replace("9002", "9200").replace("9003", "9300");
-        config = config.replace("//m0:getQuoteResponse", "//m0:getSimpleQuoteResponse");
-        synapseConfigAdminClient.updateConfiguration(config);
-
         listener1.start();
         listener2.start();
         listener3.start();
@@ -82,8 +73,8 @@ public class Sample62TestCase extends ESBSampleIntegrationTest {
             "wso2.esb" }, description = "Routing a Message to a Dynamic List of Recipients and Aggregating Responses")
     public void testRoutingMessagesAndAggregatingResponses() throws Exception {
 
-        OMElement response = axis2Client.sendSimpleQuoteRequest("http://localhost:8480/", null, "WSO2");
-        System.out.println(response.toString());
+        String endpoint = getProxyServiceURLHttp("Sample62TestCaseProxy");
+        OMElement response = axis2Client.sendSimpleQuoteRequest(endpoint, null, "WSO2");
 
         Assert.assertTrue(response.toString().contains("getSimpleQuoteResponse"), "GetSimpleQuoteResponse not found");
         Assert.assertTrue(response.toString().contains("WSO2 Company"), "WSO2 Company not found");
@@ -105,7 +96,6 @@ public class Sample62TestCase extends ESBSampleIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void close() throws Exception {
-        super.cleanup();
 
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
