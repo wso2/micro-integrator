@@ -22,7 +22,7 @@ import org.apache.commons.io.input.TailerListenerAdapter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class CarbonLogTailer extends TailerListenerAdapter {
+class CarbonLogTailer extends TailerListenerAdapter {
 
     private StringBuilder stringBuilder;
     private static final Log LOG = LogFactory.getLog(CarbonLogTailer.class);

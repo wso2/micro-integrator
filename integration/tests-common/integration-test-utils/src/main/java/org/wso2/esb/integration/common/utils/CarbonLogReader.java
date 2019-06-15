@@ -24,40 +24,73 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
+/**
+ * The class which facilitates tailing the logs from wso2carbon.log file.
+ */
 public class CarbonLogReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CarbonLogReader.class);
     private CarbonLogTailer carbonLogTailer;
     private Tailer tailer;
     private File carbonLogFile;
+    private boolean startReadingFromEndOfFile = true;
 
     public CarbonLogReader() {
 
+        init();
+    }
+
+    /**
+     * Class initializer.
+     *
+     * @param startReadingFromEndOfFile - specify whether you want to tail from the end of file or not.
+     */
+    public CarbonLogReader(boolean startReadingFromEndOfFile) {
+
+        init();
+        this.startReadingFromEndOfFile = startReadingFromEndOfFile;
+    }
+
+    private void init() {
         carbonLogTailer = new CarbonLogTailer();
         carbonLogFile = new File(
                 System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "logs"
                         + File.separator + "wso2carbon.log");
     }
 
+    /**
+     * Start tailer thread.
+     */
     public void start() {
 
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Starting to tail carbon logs from : " + carbonLogFile.getPath());
         }
-        tailer = new Tailer(carbonLogFile, carbonLogTailer, 1);
+        tailer = new Tailer(carbonLogFile, carbonLogTailer, 1, startReadingFromEndOfFile);
         Thread thread = new Thread(tailer);
         thread.setDaemon(true);
         thread.start();
     }
 
+    /**
+     * Get the tailed logs from the start until now.
+     *
+     * @return - tailed logs as string.
+     */
     public String getLogs() {
         return carbonLogTailer.getCarbonLogs();
     }
 
+    /**
+     * Clears the tail log container.
+     */
     public void clearLogs() {
         carbonLogTailer.clearLogs();
     }
 
+    /**
+     * Stops the thread which started tailing the logs.
+     */
     public void stop() {
         LOGGER.debug("Stopped tailing carbon logs.");
         tailer.stop();

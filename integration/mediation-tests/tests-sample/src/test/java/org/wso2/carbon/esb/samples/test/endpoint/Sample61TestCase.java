@@ -26,7 +26,6 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.test.utils.tcpmon.client.ConnectionData;
 import org.wso2.carbon.automation.test.utils.tcpmon.client.TCPMonListener;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-import org.wso2.esb.integration.common.clients.mediation.SynapseConfigAdminClient;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 /**
@@ -45,7 +44,6 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadSampleESBConfiguration(61);
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
@@ -63,12 +61,6 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
         listener2 = new TCPMonListener(9200, "localhost", 9002);
         listener3 = new TCPMonListener(9300, "localhost", 9003);
 
-        SynapseConfigAdminClient synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(),
-                getSessionCookie());
-        String config = synapseConfigAdminClient.getConfiguration();
-        config = config.replace("9001", "9100").replace("9002", "9200").replace("9003", "9300");
-        synapseConfigAdminClient.updateConfiguration(config);
-
         listener1.start();
         listener2.start();
         listener3.start();
@@ -79,7 +71,8 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Routing a Message to a Dynamic List of Recipients")
     public void testRoutingMessagesToDynamicListOfRecipients() throws Exception {
 
-        axis2Client.sendPlaceOrderRequest(getMainSequenceURL(), null, "WSO2");
+        String endpoint = getProxyServiceURLHttp("Sample61TestCaseProxy");
+        axis2Client.sendPlaceOrderRequest(endpoint, null, "WSO2");
         Thread.sleep(5000);
 
         boolean is9001Called = isAxisServiceCalled(listener1);
@@ -94,7 +87,7 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
         listener2.clear();
         listener3.clear();
 
-        axis2Client.sendPlaceOrderRequest(getMainSequenceURL(), null, "WSO2");
+        axis2Client.sendPlaceOrderRequest(endpoint, null, "WSO2");
         Thread.sleep(5000);
 
         is9001Called = isAxisServiceCalled(listener1);
@@ -108,7 +101,6 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void close() throws Exception {
-        super.cleanup();
 
         if (axis2Server1.isStarted()) {
             axis2Server1.stop();
@@ -127,13 +119,13 @@ public class Sample61TestCase extends ESBSampleIntegrationTest {
     }
 
     private boolean isAxisServiceCalled(TCPMonListener listener) throws Exception {
+
         for (ConnectionData connectionData : listener.getConnectionData().values()) {
             System.out.print(connectionData.getOutputText().toString());
             if (connectionData.getOutputText().toString().contains("HTTP/1.1 202 OK")) {
                 return true;
             }
         }
-
         return false;
     }
 }
