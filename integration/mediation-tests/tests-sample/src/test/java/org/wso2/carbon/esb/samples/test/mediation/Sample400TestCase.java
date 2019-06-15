@@ -18,12 +18,9 @@
 package org.wso2.carbon.esb.samples.test.mediation;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-
-import java.nio.file.Paths;
 
 import static org.testng.Assert.assertTrue;
 
@@ -36,17 +33,11 @@ public class Sample400TestCase extends ESBSampleIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Tests with continue parent=true")
     public void testContinueParentTrue() throws Exception, InterruptedException {
-        loadESBConfigurationFromClasspath(
-                Paths.get("artifacts", "ESB", "samples", "synapse_sample_400.xml").toString());
+
         OMElement response = axis2Client
                 .sendMultipleQuoteRequest(getProxyServiceURLHttp("SplitAggregateProxy"), null, "WSO2", 4);
-
         assertTrue(response.toString().contains("WSO2"));
 
     }
 
-    @AfterClass
-    public void close() throws Exception {
-        super.cleanup();
-    }
 }
