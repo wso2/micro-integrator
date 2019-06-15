@@ -39,7 +39,7 @@ public class CarbonLogTailer extends TailerListenerAdapter {
 
     @Override
     public void fileNotFound() {
-        LOG.error("The carbon log file is not presented in the location to read logs.");
+        LOG.error("The carbon log file is not present to read logs.");
     }
 
     @Override
@@ -49,6 +49,10 @@ public class CarbonLogTailer extends TailerListenerAdapter {
 
     String getCarbonLogs() {
         return stringBuilder.toString();
+    }
+
+    void clearLogs() {
+        this.stringBuilder = new StringBuilder();
     }
 
 }

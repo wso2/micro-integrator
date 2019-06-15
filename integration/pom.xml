@@ -721,7 +721,6 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <scope>test</scope>
                 <version>${commons-io.version}</version>
             </dependency>
         </dependencies>

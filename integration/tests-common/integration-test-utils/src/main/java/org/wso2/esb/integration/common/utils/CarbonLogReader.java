@@ -54,6 +54,10 @@ public class CarbonLogReader {
         return carbonLogTailer.getCarbonLogs();
     }
 
+    public void clearLogs() {
+        carbonLogTailer.clearLogs();
+    }
+
     public void stop() {
         LOGGER.debug("Stopped tailing carbon logs.");
         tailer.stop();
