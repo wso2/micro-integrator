@@ -17,51 +17,38 @@
 
 package org.wso2.carbon.esb.samples.test.mediation;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.fail;
 
 /**
  * Sample 18: Transforming a Message Using ForEachMediator
  */
 public class Sample18TestCase extends ESBSampleIntegrationTest {
 
-    private String endpoint ;
-    private CarbonLogReader carbonLogReader;
+    private String endpoint;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
-
-        ServerConfigurationManager serverManager = new ServerConfigurationManager(context);
-
-
         super.init();
         endpoint = getProxyServiceURLHttp("Sample18TestCaseProxy");
-        carbonLogReader = new CarbonLogReader();
-       // loadSampleESBConfiguration(18);
     }
 
     @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using ForEachMediator")
     public void testTransformWithForEachMediator() throws Exception {
 
-      //  LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        //logViewer.clearLogs();
-
-        carbonLogReader.startLogReading();
+        CarbonLogReader logReader = new CarbonLogReader();
+        logReader.start();
 
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
@@ -70,83 +57,39 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
                         + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
                         + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
                         + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
-        sendRequest( endpoint , request);
 
-        String logs = carbonLogReader.getLogs();
-
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-        System.out.println( logs );
-        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-
-
-     /*   LogEvent[] getLogsInfo = logViewer.getAllRemoteSystemLogs();
-        for (LogEvent event : getLogsInfo) {
-
-            if (event.getMessage().contains("<m0:getQuote>")) {
-                assertTrue(true, "Payload not found");
-
-                String payload = event.getMessage();
-                String search = "<m0:getQuote>(.*)</m0:getQuote>";
-                Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(payload);
-                boolean matchFound = matcher.find();
-
-                assertTrue(matchFound, "getQuote element not found");
-                if (matchFound) {
-                    int start = matcher.start();
-                    int end = matcher.end();
-                    String quote = payload.substring(start, end);
-
-                    assertTrue(quote.contains("<m0:checkPriceRequest><m0:code>IBM</m0:code></m0:checkPriceRequest>"),
-                            "IBM Element not found");
-                    assertTrue(quote.contains("<m0:checkPriceRequest><m0:code>WSO2</m0:code></m0:checkPriceRequest>"),
-                            "WSO2 Element not found");
-                    assertTrue(quote.contains("<m0:checkPriceRequest><m0:code>MSFT</m0:code></m0:checkPriceRequest>"),
-                            "MSTF Element not found");
-
-                }
-            }
-        }*/
-
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-//        super.cleanup();
-        carbonLogReader.stop();
-    }
-
-    private void sendRequest(String addUrl, String query) throws IOException {
+        SimpleHttpClient client = new SimpleHttpClient();
         String charset = "UTF-8";
-        URLConnection connection = new URL(addUrl).openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", "application/xml;charset=" + charset);
-        OutputStream output = null;
-        try {
-            output = connection.getOutputStream();
-            output.write(query.getBytes(charset));
-        } finally {
-            if (output != null) {
-                try {
-                    output.close();
-                } catch (IOException logOrIgnore) {
-                    log.error("Error while closing the connection");
-                }
-            }
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept-Charset", charset);
+
+        client.doPost(endpoint, headers, request, "application/xml;charset=" + charset);
+
+        String logs = logReader.getLogs();
+        logReader.stop();
+
+        if (logs.contains("<m0:getQuote>")) {
+
+            String search = "<m0:getQuote>(.*)</m0:getQuote>";
+            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(logs);
+            boolean matchFound = matcher.find();
+
+            assertTrue(matchFound, "getQuote element not found");
+            int start = matcher.start();
+            int end = matcher.end();
+            String quote = logs.substring(start, end);
+
+            assertTrue(quote.contains("<m0:checkPriceRequest><m0:code>IBM</m0:code></m0:checkPriceRequest>"),
+                    "IBM Element not found");
+            assertTrue(quote.contains("<m0:checkPriceRequest><m0:code>WSO2</m0:code></m0:checkPriceRequest>"),
+                    "WSO2 Element not found");
+            assertTrue(quote.contains("<m0:checkPriceRequest><m0:code>MSFT</m0:code></m0:checkPriceRequest>"),
+                    "MSTF Element not found");
+
+        } else {
+            fail("Expected logs not found.");
         }
-        InputStream response = connection.getInputStream();
-        String out = "[Fault] No Response.";
-        if (response != null) {
-            StringBuilder sb = new StringBuilder();
-            byte[] bytes = new byte[1024];
-            int len;
-            while ((len = response.read(bytes)) != -1) {
-                sb.append(new String(bytes, 0, len));
-            }
-            out = sb.toString();
-        }
-        response.close();
     }
+
 }

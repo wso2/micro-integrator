@@ -27,13 +27,13 @@ import java.io.File;
 public class CarbonLogReader {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CarbonLogReader.class);
-    private CarbonLogTailer tailerListener;
+    private CarbonLogTailer carbonLogTailer;
     private Tailer tailer;
     private File carbonLogFile;
 
     public CarbonLogReader() {
 
-        tailerListener = new CarbonLogTailer();
+        carbonLogTailer = new CarbonLogTailer();
         carbonLogFile = new File(
                 System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "logs"
                         + File.separator + "wso2carbon.log");
@@ -44,14 +44,14 @@ public class CarbonLogReader {
         if (LOGGER.isDebugEnabled()) {
             LOGGER.debug("Starting to tail carbon logs from : " + carbonLogFile.getPath());
         }
-        tailer = new Tailer(carbonLogFile, tailerListener, 1);
+        tailer = new Tailer(carbonLogFile, carbonLogTailer, 1);
         Thread thread = new Thread(tailer);
         thread.setDaemon(true);
         thread.start();
     }
 
     public String getLogs() {
-        return tailerListener.getCarbonLogs();
+        return carbonLogTailer.getCarbonLogs();
     }
 
     public void stop() {

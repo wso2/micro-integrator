@@ -718,11 +718,18 @@
                 <artifactId>org.jacoco.report</artifactId>
                 <version>${jacoco.agent.version}</version>
             </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <scope>test</scope>
+                <version>${commons-io.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <!--All the integration test dependency versions which doesn't intercept with product build are defined here-->
     <properties>
+        <commons-io.version>2.6</commons-io.version>
         <neethi.orbit.version>2.0.4.wso2v4</neethi.orbit.version>
         <andes.version>3.2.98</andes.version>
         <org.apache.geronimo.specs.version>1.0.1</org.apache.geronimo.specs.version>
