@@ -21,8 +21,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,17 +40,28 @@ import static org.testng.Assert.assertTrue;
  */
 public class Sample18TestCase extends ESBSampleIntegrationTest {
 
+    private String endpoint ;
+    private CarbonLogReader carbonLogReader;
+
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
+
+        ServerConfigurationManager serverManager = new ServerConfigurationManager(context);
+
+
         super.init();
-        loadSampleESBConfiguration(18);
+        endpoint = getProxyServiceURLHttp("Sample18TestCaseProxy");
+        carbonLogReader = new CarbonLogReader();
+       // loadSampleESBConfiguration(18);
     }
 
     @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using ForEachMediator")
     public void testTransformWithForEachMediator() throws Exception {
 
-        LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewer.clearLogs();
+      //  LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        //logViewer.clearLogs();
+
+        carbonLogReader.startLogReading();
 
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
@@ -58,9 +70,16 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
                         + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
                         + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
                         + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
-        sendRequest(getMainSequenceURL(), request);
+        sendRequest( endpoint , request);
 
-        LogEvent[] getLogsInfo = logViewer.getAllRemoteSystemLogs();
+        String logs = carbonLogReader.getLogs();
+
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        System.out.println( logs );
+        System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
+
+     /*   LogEvent[] getLogsInfo = logViewer.getAllRemoteSystemLogs();
         for (LogEvent event : getLogsInfo) {
 
             if (event.getMessage().contains("<m0:getQuote>")) {
@@ -87,12 +106,15 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
 
                 }
             }
-        }
+        }*/
+
+
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+//        super.cleanup();
+        carbonLogReader.stop();
     }
 
     private void sendRequest(String addUrl, String query) throws IOException {
