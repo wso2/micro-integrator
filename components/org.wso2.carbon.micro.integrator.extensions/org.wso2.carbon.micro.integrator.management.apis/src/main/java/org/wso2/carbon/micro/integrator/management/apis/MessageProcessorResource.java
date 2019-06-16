@@ -66,16 +66,18 @@ public class MessageProcessorResource extends APIResource {
     private static final String PARAMETER_PROPERTY = "parameters";
     private static final String MESSAGE_STORE_PROPERTY = "messageStore";
     private static final String STATUS_PROPERTY = "status";
+    //HTTP method types supported by the resource
+    Set<String> methods;
 
     public MessageProcessorResource(String urlTemplate) {
         super(urlTemplate);
+        methods = new HashSet<>();
+        methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
     }
 
     @Override
     public Set<String> getMethods() {
-        Set<String> methods = new HashSet<>();
-        methods.add("GET");
-        methods.add("POST");
         return methods;
     }
 
@@ -102,6 +104,8 @@ public class MessageProcessorResource extends APIResource {
                 JsonObject payload = getJsonPayload(messageContext);
                 if (payload.has(PROCESSOR_NAME_PARAM) && payload.has(STATUS_PROPERTY)) {
                      changeProcessorStatus(messageContext, payload);
+                } else {
+                    Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Missing parameters in payload"));
                 }
             } catch (IOException e) {
                 LOG.error("Error when parsing JSON payload", e);
@@ -114,7 +118,7 @@ public class MessageProcessorResource extends APIResource {
     /**
      * Create a JSON response with all available message processors
      *
-     * @param messageContext
+     * @param messageContext synapse message context
      **/
     private void populateMessageProcessorList(MessageContext messageContext) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
@@ -145,7 +149,7 @@ public class MessageProcessorResource extends APIResource {
 
     /**
      * Adds the specified message processor to a JSON list
-     * @param messageProcessor
+     * @param messageProcessor reference to message processor
      * @param processorList JSON list of processors
      * */
     private void addToJSONList(MessageProcessor messageProcessor, JSONArray processorList) {
@@ -159,7 +163,7 @@ public class MessageProcessorResource extends APIResource {
     /**
      * Returns the JSON representation of a message processor
      *
-     * @param messageProcessor
+     * @param messageProcessor reference to message processor
      * @return JSONObject MessageProcessor
      **/
     private JSONObject getMessageProcessorAsJson(MessageProcessor messageProcessor) {
@@ -177,7 +181,7 @@ public class MessageProcessorResource extends APIResource {
 
     /**
      * Returns the type of the message processor
-     * @param messageProcessor
+     * @param messageProcessor reference to message processor
      * @return String type of the message processor
      * */
     private String getMessageProcessorType(MessageProcessor messageProcessor) {
@@ -209,16 +213,14 @@ public class MessageProcessorResource extends APIResource {
             JSONObject jsonResponse = new JSONObject();
             if (PROCESSOR_INACTIVE_STATUS.equalsIgnoreCase(status)) {
                 messageProcessor.deactivate();
-                jsonResponse.put("Message", processorName + " : is deactivated");
-                Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
-                return;
-            }
-            if (PROCESSOR_ACTIVE_STATUS.equalsIgnoreCase(status)) {
+                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, processorName + " : is deactivated");
+            } else if (PROCESSOR_ACTIVE_STATUS.equalsIgnoreCase(status)) {
                 messageProcessor.activate();
-                jsonResponse.put("Message", processorName + " : is activated");
-                Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
-                return;
+                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, processorName + " : is activated");
+            } else {
+                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Provided state is not valid");
             }
+            Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
         } else {
             LOG.warn("Specified message processor does not exist");
             Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Message processor does not exist"));
@@ -240,7 +242,7 @@ public class MessageProcessorResource extends APIResource {
 
     /**
      * Returns the state of the MessageProcessor
-     * @param isDeactivated
+     * @param isDeactivated state of the message processor
      * @return String state
      * */
     private String getProcessorState(Boolean isDeactivated) {

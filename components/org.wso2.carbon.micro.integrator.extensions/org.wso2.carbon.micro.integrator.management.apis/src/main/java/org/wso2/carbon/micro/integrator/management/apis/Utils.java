@@ -43,9 +43,6 @@ public class Utils {
 
         try {
             JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(), true, true);
-
-            JsonUtil.getNewJsonPayload(axis2MessageContext, payload.toString(), true, true);
-
         } catch (AxisFault axisFault) {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
             LOG.error("Error occurred while setting json payload", axisFault);
