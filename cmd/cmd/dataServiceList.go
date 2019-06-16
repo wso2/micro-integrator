@@ -42,28 +42,15 @@ func init() {
 }
 
 func executeDataServiceListCmd() {
-	finalUrl := utils.RESTAPIBase + utils.PrefixDataServices
+	finalURL := utils.RESTAPIBase + utils.PrefixDataServices
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.DataServicesList{})
+	resp, err := utils.GetArtifactList(finalURL, &utils.DataServicesList{})
 
 	if err == nil {
 		// print the list of available data services
 		list := resp.(*utils.DataServicesList)
-		printDataServiceList(*list)
-	}
-}
-
-func printDataServiceList(list utils.DataServicesList) {
-	if list.Count > 0 {
-		table := utils.GetTableWriter()
-
-		data := []string{"NAME", "WSDL 1.1", "WSDL 2.0"}
-		table.Append(data)
-
-		for _, dataService := range list.List {
-			data := []string{dataService.ServiceName, dataService.Wsdl11, dataService.Wsdl20}
-			table.Append(data)
-		}
-		table.Render()
+		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No dataservices found")
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting List of Dataservices", err)
 	}
 }

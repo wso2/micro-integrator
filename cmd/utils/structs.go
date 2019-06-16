@@ -116,6 +116,22 @@ type ProxyServiceList struct {
 	Proxies []ProxySummary `json:"list"`
 }
 
+func (data *ProxyServiceList) GetDataIterator() <-chan []string {
+	ch := make(chan []string)
+
+	go func() {
+		for _, proxy := range data.Proxies {
+			ch <- []string{proxy.Name, proxy.WSDL1_1, proxy.WSDL2_0}
+		}
+	}()
+
+	return ch
+}
+
+func (data *ProxyServiceList) GetCount() int32 {
+	return data.Count
+}
+
 type ProxySummary struct {
 	Name    string `json:"name"`
 	WSDL1_1 string `json:"wsdl1_1"`
@@ -194,6 +210,27 @@ type TokenResponse struct {
 type DataServicesList struct {
 	Count int32                `json:"count"`
 	List  []DataServiceSummary `json:"list"`
+}
+
+func (data *DataServicesList) GetDataIterator() <-chan []string {
+	ch := make(chan []string)
+
+	go func() {
+		for _, val := range data.List {
+			ch <- []string{val.ServiceName, val.Wsdl11, val.Wsdl20}
+		}
+	}()
+
+	return ch
+}
+
+func (data *DataServicesList) GetCount() int32 {
+	return data.Count
+}
+
+type IterableStringArray interface {
+	GetCount() int32
+	GetDataIterator() <-chan []string
 }
 
 type DataServiceInfo struct {

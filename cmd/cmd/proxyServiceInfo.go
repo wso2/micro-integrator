@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
+
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
 )
 
 var proxyServiceName string
@@ -107,36 +106,15 @@ func printProxyServiceInfo(proxyService utils.Proxy) {
 
 func executeListProxyServicesCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
+	finalURL := utils.RESTAPIBase + utils.PrefixProxyServices
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.ProxyServiceList{})
+	resp, err := utils.GetArtifactList(finalURL, &utils.ProxyServiceList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints
 		list := resp.(*utils.ProxyServiceList)
-		printProxyList(*list)
+		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No proxies found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Proxies", err)
-	}
-}
-
-func printProxyList(proxyList utils.ProxyServiceList) {
-
-	if proxyList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "WSDL 1.1", "WSDL 2.0"}
-		table.Append(data)
-
-		for _, proxy := range proxyList.Proxies {
-			data = []string{proxy.Name, proxy.WSDL1_1, proxy.WSDL2_0}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No proxies found")
 	}
 }
