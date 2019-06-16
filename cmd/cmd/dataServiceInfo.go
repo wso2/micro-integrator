@@ -26,8 +26,8 @@ import (
 var dataServiceNameInput string
 
 const showDataServiceCmdLiteral = "dataservice"
-const showDataServiceCmdShortDesc = ""
-const showDataServiceCmdLongDesc = ""
+const showDataServiceCmdShortDesc = "Show details about a specific data service"
+const showDataServiceCmdLongDesc = "Show details about a data service specified by the name"
 
 var showDataServiceCmdExmaples = "Example:\n" +
 	"To get details about a specific data-service\n" +
