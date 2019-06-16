@@ -221,7 +221,27 @@
                             </resources>
                         </configuration>
                     </execution>
-
+                    <execution>
+                        <id>copy-samples-jar</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/artifacts/ESB/server/dropins
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/../../samples/product/target/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*samples*.jar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
 
                     <!--<execution>
                         <id>copy-axis2-server</id>

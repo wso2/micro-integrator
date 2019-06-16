@@ -43,9 +43,9 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void startJMSBrokerAndConfigureESB() throws Exception {
         super.init();
-        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
-        super.init();
-        loadSampleESBConfiguration(705);
+//        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
+//        super.init();
+//       loadSampleESBConfiguration(705);
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
@@ -65,18 +65,12 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
 
-        try {
             //reverting the changes done to esb sever
             Thread.sleep(10000); //let server to clear the artifact undeployment
 
             axis2Server1.stop();
             axis2Server2.stop();
             axis2Server3.stop();
-
-        } finally {
-            super.cleanup();
-        }
-
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -85,7 +79,7 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
 
         ServiceClient serviceClient = new ServiceClient();
         Options options = new Options();
-        options.setTo(new EndpointReference(getProxyServiceURLHttp("StockQuoteProxy")));
+        options.setTo(new EndpointReference(getProxyServiceURLHttp("Sample705StockQuoteProxy")));
         options.setAction("urn:placeOrder");
         serviceClient.setOptions(options);
 

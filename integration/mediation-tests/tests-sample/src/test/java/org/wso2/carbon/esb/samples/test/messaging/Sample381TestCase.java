@@ -18,17 +18,13 @@
 package org.wso2.carbon.esb.samples.test.messaging;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.esb.samples.test.messaging.utils.MDDProducer;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 
 public class Sample381TestCase extends ESBSampleIntegrationTest {
 
@@ -36,26 +32,16 @@ public class Sample381TestCase extends ESBSampleIntegrationTest {
     public void startJMSBrokerAndConfigureESB() throws Exception {
 
         super.init();
-        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
-        super.init();
-        loadSampleESBConfiguration(381);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        //reverting the changes done to esb sever
-        super.cleanup();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Test JMS broker with topic")
     public void JMSBrokerTopicTest() throws Exception {
+
         int numberOfMsgToExpect = 5;
 
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewerClient.clearLogs();
-
-        Thread.sleep(5000);
+        CarbonLogReader logReader = new CarbonLogReader(true);
+        logReader.start();
 
         MDDProducer mddProducerMSTF = new MDDProducer();
 
@@ -64,20 +50,9 @@ public class Sample381TestCase extends ESBSampleIntegrationTest {
         }
 
         Thread.sleep(5000);
-
-        boolean isRequestLogFound = false;
-
-        LogEvent[] logEvents = logViewerClient.getAllSystemLogs();
-
-        for (LogEvent event : logEvents) {
-            if (event.getMessage().contains("MSTF")) {
-
-                isRequestLogFound = true;
-                break;
-            }
-        }
-
-        Assert.assertTrue(isRequestLogFound, "Request log not found");
+        String logs = logReader.getLogs();
+        logReader.stop();
+        Assert.assertTrue(logs.contains("MSTF"), "Request log not found");
 
     }
 

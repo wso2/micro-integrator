@@ -723,6 +723,11 @@
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.synapse</groupId>
+                <artifactId>synapse-commons</artifactId>
+                <version>${synapse.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -784,6 +789,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
+                <module>samples/product</module>
                 <module>automation-extensions</module>
                 <module>tests-common</module>
                 <module>mediation-tests</module>
@@ -796,6 +802,7 @@
                 <testng.suiteXml.location>src/test/resources/smokeTestng.xml</testng.suiteXml.location>
             </properties>
             <modules>
+                <module>samples/product</module>
                 <module>automation-extensions</module>
                 <module>tests-common</module>
                 <module>mediation-tests/service-samples</module>
