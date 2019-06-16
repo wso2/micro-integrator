@@ -28,6 +28,7 @@ public class Constants {
     public static final String PREFIX_PROXY_SERVICES = "/proxy-services";
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
+    public static final String PREFIX_DATA_SERVICES = "/data-services";
     public static final String PREFIX_TEMPLATES = "/templates";
     public static final String PREFIX_MESSAGE_PROCESSORS = "/message-processors";
 
@@ -52,4 +53,6 @@ public class Constants {
     public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
     public static final String HTTP_POST = "POST";
     public static final String HTTP_GET = "GET";
+
+    public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
 }

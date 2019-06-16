@@ -121,10 +121,10 @@ public class ApiResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         API api = configuration.getAPI(apiName);
-        return convertApiToOMElement(api, messageContext);
+        return convertApiToJsonObject(api, messageContext);
     }
 
-    private JSONObject convertApiToOMElement(API api, MessageContext messageContext) {
+    private JSONObject convertApiToJsonObject(API api, MessageContext messageContext) {
 
         if (Objects.isNull(api)) {
             return null;
