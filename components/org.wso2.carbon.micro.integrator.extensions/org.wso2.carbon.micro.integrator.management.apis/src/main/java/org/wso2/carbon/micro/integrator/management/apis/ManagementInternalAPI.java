@@ -26,6 +26,7 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_ENDPOINTS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_INBOUND_ENDPOINTS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_TASKS;
@@ -38,7 +39,7 @@ public class ManagementInternalAPI implements InternalAPI {
 
     public APIResource[] getResources() {
 
-        APIResource[] resources = new APIResource[8];
+        APIResource[] resources = new APIResource[9];
         resources[0] = new ApiResource(PREFIX_APIS);
         resources[1] = new EndpointResource(PREFIX_ENDPOINTS);
         resources[2] = new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS);
@@ -47,6 +48,7 @@ public class ManagementInternalAPI implements InternalAPI {
         resources[5] = new TaskResource(PREFIX_TASKS);
         resources[6] = new SequenceResource(PREFIX_SEQUENCES);
         resources[7] = new TemplateResource(PREFIX_TEMPLATES);
+        resources[8] = new MessageStoreResource(PREFIX_MESSAGE_STORE);
         return resources;
     }
 
