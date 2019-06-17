@@ -136,8 +136,12 @@ else
     echo "Skipping Go Tests..."
 fi
 
-completion_script="tools/completion.go"
-go run -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH $completion_script
+# run the completion.go file to get the bash completion script
+# To do the string replace first build the script so that we have a consistent name
+go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH tools/completion.go
+./completion
+sed -i -e "s=./completion=mi=g" ./shell-completions/mi_bash_completion.sh
+rm completion
 
 for platform in ${platforms}
 do
