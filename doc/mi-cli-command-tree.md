@@ -1,20 +1,47 @@
 ## WSO2 Micro Integrator CLI Commands
-<p align="center">
-  <img src="images/mi-cli-command-tree.png" width="60%">
-</p>
+
+![Command-tree-diagram](images/mi-cli-command-tree.png)
 
 ### Available commands
 
-#### show
+#### api
 ```
-show api(s) <apiname>
-show carbonapp(s) <appname>
-show endpoint(s) <endpointname>
-show inboundendpoint(s) <endpointname>
-show proxyservice(s) <proxyname>
-show sequence(s) <sequencename>
-show task(s) <taskname>
-show dataservice(s) <dataservicename>
+api show [api-name]
+```
+
+#### compositeapp
+```
+compositeapp show [app-name]
+```
+
+#### endpoint
+```
+endpoint show [endpoint-name]
+```
+
+#### inboundendpoint
+```
+inboundendpoint show [inboundendpoint-name]
+```
+
+#### proxyservice
+```
+proxyservice show [proxyservice-name]
+```
+
+#### sequence
+```
+sequence show [sequence-name]
+```
+
+#### task
+```
+task show [task-name]
+```
+
+#### dataservice
+```
+dataservice show [dataservice-name]
 ```
 
 #### remote
@@ -26,9 +53,8 @@ remote select [nick-name]
 remote show
 ```
 
-#### set
+#### log-level
 ```
-set loglevel [logger-name] [logging-level]
-set loglevel [logging-level]
-remote show
+log-level show [logger-name]
+log-level update [logger-name] [logging-level]
 ```
