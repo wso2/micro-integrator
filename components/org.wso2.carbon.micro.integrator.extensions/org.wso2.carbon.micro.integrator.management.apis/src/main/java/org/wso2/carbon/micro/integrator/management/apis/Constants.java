@@ -29,6 +29,8 @@ public class Constants {
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
     public static final String PREFIX_LOGGING = "/logging";
+    public static final String PREFIX_DATA_SERVICES = "/data-services";
+    public static final String PREFIX_TEMPLATES = "/templates";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";
@@ -56,4 +58,5 @@ public class Constants {
     public static final String NOT_FOUND = "404";
     public static final String INTERNAL_SERVER_ERROR = "500";
     public static final String BAD_REQUEST = "400";
+    public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
 }

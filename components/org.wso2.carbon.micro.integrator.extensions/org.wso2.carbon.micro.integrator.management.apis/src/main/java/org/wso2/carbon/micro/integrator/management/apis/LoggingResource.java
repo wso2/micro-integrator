@@ -44,7 +44,7 @@ public class LoggingResource extends ApiResource {
 
         String logLevel;
         String loggerName;
-        JSONObject jsonBody = new JSONObject();
+        JSONObject jsonBody;
 
         String httpMethod = axis2MessageContext.getProperty("HTTP_METHOD").toString();
 
@@ -54,7 +54,7 @@ public class LoggingResource extends ApiResource {
                 jsonBody = getLoggerData(axis2MessageContext, param);
             } else {
                 // 400-Bad Request loggerName is missing
-                jsonBody.put(Constants.MESSAGE, "Logger Name is missing");
+                jsonBody = Utils.createJsonErrorObject("Logger Name is missing");
                 axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
             }
         } else {
@@ -62,7 +62,7 @@ public class LoggingResource extends ApiResource {
                 logLevel = jsonPayload.getString(Constants.LOGGING_LEVEL);
                 if (!isALogLevel(logLevel)) {
                     // 400-Bad Request Invalid loggingLevel
-                    jsonBody.put(Constants.MESSAGE, "Invalid log level " + logLevel);
+                    jsonBody = Utils.createJsonErrorObject("Invalid log level " + logLevel);
                     axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
                 } else {
                     if (jsonPayload.has(Constants.LOGGER_NAME)) {
@@ -76,7 +76,7 @@ public class LoggingResource extends ApiResource {
                 }
             } else {
                 // 400-Bad Request loggingLevel is missing
-                jsonBody.put(Constants.MESSAGE, "Logging level is missing");
+                jsonBody = Utils.createJsonErrorObject("Logging level is missing");
                 axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
             }
         }
@@ -113,7 +113,7 @@ public class LoggingResource extends ApiResource {
             logger.setLevel(Level.toLevel(loggerLevel));
             jsonBody.put(Constants.MESSAGE, "Successfully updated " + loggerName + " level to " + logger.getLevel().toString());
         } else {
-            jsonBody.put(Constants.MESSAGE, "Invalid logger " + loggerName);
+            jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
         }
         return jsonBody;
@@ -131,7 +131,7 @@ public class LoggingResource extends ApiResource {
             jsonBody.put(Constants.LEVEL, logLevel);
             jsonBody.put(Constants.PARENT, parentName);
         } else {
-            jsonBody.put(Constants.MESSAGE, "Invalid logger " + loggerName);
+            jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
         }
         return jsonBody;

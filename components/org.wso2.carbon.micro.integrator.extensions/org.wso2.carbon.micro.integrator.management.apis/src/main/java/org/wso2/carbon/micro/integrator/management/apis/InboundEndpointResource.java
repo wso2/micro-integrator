@@ -107,10 +107,10 @@ public class InboundEndpointResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         InboundEndpoint ep = configuration.getInboundEndpoint(inboundEndpointName);
-        return convertInboundEndpointToOMElement(ep);
+        return convertInboundEndpointToJsonObject(ep);
     }
 
-    private JSONObject convertInboundEndpointToOMElement(InboundEndpoint inboundEndpoint) {
+    private JSONObject convertInboundEndpointToJsonObject(InboundEndpoint inboundEndpoint) {
 
         if (Objects.isNull(inboundEndpoint)) {
             return null;

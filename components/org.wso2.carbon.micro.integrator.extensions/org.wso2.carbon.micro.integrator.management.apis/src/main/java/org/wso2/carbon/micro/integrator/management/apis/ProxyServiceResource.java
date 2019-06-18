@@ -37,7 +37,7 @@ import java.util.Set;
 
 public class ProxyServiceResource extends APIResource {
 
-    private static Log log = LogFactory.getLog(ProxyServiceResource.class);
+    private static Log LOG = LogFactory.getLog(ProxyServiceResource.class);
 
     public ProxyServiceResource(String urlTemplate){
         super(urlTemplate);
@@ -95,7 +95,7 @@ public class ProxyServiceResource extends APIResource {
                 proxyObject.put("wsdl2_0", wsdlUrls[1]);
 
             } catch (Exception e) {
-                log.error("Error occurred while processing service data", e);
+                LOG.error("Error occurred while processing service data", e);
             }
 
             jsonBody.getJSONArray(Constants.LIST).put(proxyObject);
@@ -122,10 +122,10 @@ public class ProxyServiceResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         ProxyService proxyService = configuration.getProxyService(proxyServiceName);
-        return convertProxyServiceToOMElement(proxyService);
+        return convertProxyServiceToJsonObject(proxyService);
     }
 
-    private JSONObject convertProxyServiceToOMElement(ProxyService proxyService) {
+    private JSONObject convertProxyServiceToJsonObject(ProxyService proxyService) {
 
         if (Objects.isNull(proxyService)) {
             return null;
@@ -143,7 +143,7 @@ public class ProxyServiceResource extends APIResource {
             proxyObject.put("wsdl1_1", wsdlUrls[0]);
             proxyObject.put("wsdl2_0", wsdlUrls[1]);
         } catch (Exception e) {
-            log.error("Error occurred while processing service data", e);
+            LOG.error("Error occurred while processing service data", e);
         }
 
         String statisticState = proxyService.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;

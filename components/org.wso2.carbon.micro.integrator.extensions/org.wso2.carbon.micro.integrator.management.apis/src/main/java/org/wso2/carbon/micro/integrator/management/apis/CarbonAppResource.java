@@ -113,13 +113,13 @@ public class CarbonAppResource extends APIResource {
 
         for (CarbonApplication app: appList) {
             if (app.getAppName().equals(carbonAppName)) {
-                return convertCarbonAppToOMElement(app);
+                return convertCarbonAppToJsonObject(app);
             }
         }
         return null;
     }
 
-    private JSONObject convertCarbonAppToOMElement(CarbonApplication carbonApp) {
+    private JSONObject convertCarbonAppToJsonObject(CarbonApplication carbonApp) {
 
         if (Objects.isNull(carbonApp)) {
             return null;

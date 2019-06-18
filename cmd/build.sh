@@ -62,6 +62,16 @@ while getopts :t:v:f FLAG; do
   esac
 done
 
+strSkipTest="test.skip"
+
+for arg in "$@"
+do
+    if [ "$arg" == "$strSkipTest" ]
+    then
+        skipTest=true
+    fi
+done
+
 if [ ! -e "$target" ]; then
   echo "Target file is needed. "
   showUsageAndExit
@@ -108,6 +118,24 @@ else
     exit 1
 fi
 
+if [ ! $skipTest ] ; then
+    echo "-------------------------------------------------------"
+    echo "Go TESTS"
+    echo "-------------------------------------------------------"
+
+    go test ./...
+
+    rc=$?
+    if [ $rc -ne 0 ]; then
+    echo "Testing failed!"
+    exit $rc
+    else
+        echo "Testing Successful!"
+    fi
+else
+    echo "Skipping Go Tests..."
+fi
+
 for platform in ${platforms}
 do
     split=(${platform//\// })
@@ -125,15 +153,18 @@ do
 
     echo -en "\t - $goos/$goarch..."
 
-    mi_archive_name="wso2$filename-cli-$build_version-$pos-$parch"
-    mi_archive_dir="${buildPath}/$filename"
+    mi_dir_name="wso2$filename-cli-$build_version"
+    mi_archive_name="$mi_dir_name-$pos-$parch"
+    mi_archive_dir="${buildPath}/${mi_dir_name}"
     mkdir -p $mi_archive_dir
 
     cp -r "${baseDir}/server_config.yaml" $mi_archive_dir > /dev/null 2>&1
     cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
 
     # set destination path for binary
-    destination="$mi_archive_dir/$output"
+    mi_bin_dir="${mi_archive_dir}/bin"
+    mkdir -p $mi_bin_dir
+    destination="$mi_bin_dir/$output"
 
     GOOS=$goos GOARCH=$goarch go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH -ldflags  \
     "-X github.com/wso2/micro-integrator/cmd/cmd.version=$build_version -X 'mi.buildDate=$(date -u '+%Y-%m-%d
@@ -142,11 +173,11 @@ do
     pwd=`pwd`
     cd $buildPath
     if [[ "windows" == "$goos" ]]; then
-        zip -r "$mi_archive_name.zip" $filename > /dev/null 2>&1
+        zip -r "$mi_archive_name.zip" $mi_dir_name > /dev/null 2>&1
     else
-        tar czf "$mi_archive_name.tar.gz" $filename > /dev/null 2>&1
+        tar czf "$mi_archive_name.tar.gz" $mi_dir_name > /dev/null 2>&1
     fi
-    rm -rf $filename
+    rm -rf $mi_dir_name
     cd $pwd
     echo -en $'✔ '
     echo
