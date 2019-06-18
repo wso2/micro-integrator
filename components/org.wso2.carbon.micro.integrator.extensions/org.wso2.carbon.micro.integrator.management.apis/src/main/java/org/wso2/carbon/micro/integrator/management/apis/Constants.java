@@ -43,6 +43,10 @@ public class Constants {
     public static final String ENABLED = "enabled";
     public static final String DISABLED = "disabled";
     public static final String MESSAGE = "message";
+    public static final String LEVEL = "level";
+    public static final String PARENT = "parent";
+    public static final String LOGGER_NAME = "loggerName";
+    public static final String LOGGING_LEVEL = "loggingLevel";
 
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String HTTP_STATUS_CODE = "HTTP_SC";
