@@ -24,7 +24,13 @@ type ServerConfig struct {
 }
 
 type LoggerResponse struct {
-	Message string `json:"message"`
+	Message string `json:"Error" json:"message"`
+}
+
+type Logger struct {
+	Name       string `json:"name"`
+	ParentName string `json:"parent"`
+	LogLevel   string `json:"level"`
 }
 
 type CarbonAppList struct {
