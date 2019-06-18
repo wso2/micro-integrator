@@ -176,7 +176,17 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 		}
 		return response, nil
 	} else {
-		return nil, errors.New(resp.Status())
+		if resp.Body() == nil {
+			return nil, errors.New(resp.Status())
+		} else {
+			data := &LoggerResponse{}
+			unmarshalError := json.Unmarshal([]byte(resp.Body()), data)
+
+			if unmarshalError != nil {
+				HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
+			}
+			return data.Message, errors.New(resp.Status())
+		}
 	}
 }
 
