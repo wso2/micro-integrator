@@ -22,16 +22,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// completionCmd represents the completion command
-var completionCmd = &cobra.Command{
-	Use:   "completion",
-	Short: "Generates bash completion scripts",
-	Long:  `This command will generate a bash completion script`,
-	Run: func(cmd *cobra.Command, args []string) {
-		rootCmd.GenBashCompletionFile("mi_bash_completion.sh")
-	},
+// Composite App command related usage info
+const appCmdLiteral = "compositeapp"
+const appCmdShortDesc = "Manage deployed Composite Apps"
+const appCmdLongDesc = "Manage the Composite Apps deployed in the Micro Integrator"
+
+// compositeAppCmd represents the composite app command
+var compositeAppCmd = &cobra.Command{
+	Use:   appCmdLiteral,
+	Short: appCmdShortDesc,
+	Long:  appCmdLongDesc,
 }
 
 func init() {
-	rootCmd.AddCommand(completionCmd)
+	rootCmd.AddCommand(compositeAppCmd)
 }

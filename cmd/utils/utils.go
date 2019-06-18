@@ -196,8 +196,8 @@ func GetCmdFlags(cmd string) string {
 
 func GetCmdUsage(program, cmd, subcmd, arg string) string {
 	var showCmdUsage = "Usage:\n" +
-		"  " + program + " " + cmd + " " + subcmd + "(s)\n" +
-		"  " + program + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
+		"  " + program + " " + cmd + " " + subcmd + "\n" +
+		"  " + program + " " + cmd + " " + subcmd + " " + arg + "\n\n"
 	return showCmdUsage
 }
 

@@ -29,16 +29,16 @@ import (
 var sequenceName string
 
 // Show Sequence command related usage info
-const showSequenceCmdLiteral = "sequence"
+const showSequenceCmdLiteral = "show"
 const showSequenceCmdShortDesc = "Get information about sequences"
 
-var showSequenceCmdLongDesc = "Get information about the Sequence specified by command line argument [sequence-name] If not specified, list all the sequences\n"
+const showSequenceCmdLongDesc = "Get information about the Sequence specified by command line argument [sequence-name] If not specified, list all the sequences\n"
 
 var showSequenceCmdExamples = "Example:\n" +
 	"To get details about a specific sequence\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + " SampleSequence\n\n" +
+	"  " + programName + " " + sequenceCmdLiteral + " " + showSequenceCmdLiteral + " SampleSequence\n\n" +
 	"To list all the sequences\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showSequenceCmdLiteral + "\n\n"
+	"  " + programName + " " + sequenceCmdLiteral + " " + showSequenceCmdLiteral + "\n\n"
 
 // sequenceShowCmd represents the show sequence command
 var sequenceShowCmd = &cobra.Command{
@@ -51,9 +51,9 @@ var sequenceShowCmd = &cobra.Command{
 }
 
 func init() {
-	showCmd.AddCommand(sequenceShowCmd)
-	sequenceShowCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
+	sequenceCmd.AddCommand(sequenceShowCmd)
+	sequenceShowCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, sequenceCmdLiteral,
+		showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags(sequenceCmdLiteral))
 }
 
 func handleSequenceCmdArguments(args []string) {
@@ -74,8 +74,8 @@ func handleSequenceCmdArguments(args []string) {
 }
 
 func printSequenceHelp() {
-	fmt.Print(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showSequenceCmdLiteral,
-		"[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
+	fmt.Print(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, sequenceCmdLiteral, showSequenceCmdLiteral,
+		"[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags(sequenceCmdLiteral))
 }
 
 func executeGetSequenceCmd(sequencename string) {
