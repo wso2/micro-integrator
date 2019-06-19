@@ -1,0 +1,22 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="PayloadFormatWithNoArgumentTestCaseProxy">
+    <target>
+        <inSequence>
+            <payloadFactory>
+                <format>
+                    <ser:echoString xmlns:ser="http://service.carbon.wso2.org">
+                        <ser:s>wso2testautomation@wso2.com</ser:s>
+                    </ser:echoString>
+                </format>
+            </payloadFactory>
+            <log level="full">
+                <property name="LOG" value="==========================================" />
+            </log>
+            <send>
+                <endpoint>
+                    <!--<address uri="http://localhost:8282/services/Axis2Service" />-->
+                    <address uri="http://localhost:9000/services/Axis2Service"/>
+                </endpoint>
+            </send>
+        </inSequence>
+    </target>
+</proxy>

@@ -20,7 +20,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -37,13 +36,6 @@ public class PayloadFormatWithArgumentsTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        // applying changes to esb - source view
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/payloadmediatype/" + "value_argument.xml");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "invoke service - operation echoString")
@@ -51,7 +43,7 @@ public class PayloadFormatWithArgumentsTestCase extends ESBIntegrationTest {
 
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement response = axisServiceClient
-                .sendReceive(createPayload(), contextUrls.getServiceUrl() + "/ProxyPF", "echoString");
+                .sendReceive(createPayload(), getProxyServiceURLHttp("PayloadFormatWithArgumentsTestCaseProxy"), "echoString");
         assertTrue(response.toString().contains("Wso2 Test Automation"),
                 "Response mismatch. " + "Actual Response " + response.toString());
     }
