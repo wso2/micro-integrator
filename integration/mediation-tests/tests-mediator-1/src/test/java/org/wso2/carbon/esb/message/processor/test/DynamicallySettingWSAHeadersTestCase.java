@@ -18,26 +18,25 @@
 package org.wso2.carbon.esb.message.processor.test;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Test case to test whether message processor is able to handle messages when their WSA headers are set dynamically.
  */
 public class DynamicallySettingWSAHeadersTestCase extends ESBIntegrationTest {
-
-    private LogViewerClient logViewer;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
@@ -45,21 +44,30 @@ public class DynamicallySettingWSAHeadersTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Testing message Processor handling message when setting wsa headers dynamically")
-    public void testForwardingWithInMemoryStore() throws Exception {
-
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewer.clearLogs();
+    public void testForwardingWithInMemoryStore()
+            throws InterruptedException, MalformedURLException, AutomationFrameworkException {
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
         Reader data = new StringReader("<request><element>Test</element></request>");
         Writer writer = new StringWriter();
+        carbonLogReader.start();
         HttpURLConnectionClient
-                .sendPostRequestAndReadResponse(data, new URL(getProxyServiceURLHttp("MessageProcessorWSATestProxy")),
+                .sendPostRequestAndReadResponse(data,new URL(getProxyServiceURLHttp("MessageProcessorWSATestProxy")),
                         writer, "application/xml");
-        Assert.assertTrue(Utils.checkForLog(logViewer, "MessageProcessorWSAProxy Request Received", 20),
+        Assert.assertTrue(checkForLog(carbonLogReader, "MessageProcessorWSAProxy Request Received", 20),
                 "Message processor unable to handle the message!");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
+    private static boolean checkForLog(CarbonLogReader carbonLogReader, String expected, int timeout)
+            throws InterruptedException {
+        boolean logExists = false;
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (carbonLogReader.getLogs().contains(expected)) {
+                logExists = true;
+                break;
+            }
+        }
+        carbonLogReader.stop();
+        return logExists;
     }
 }
