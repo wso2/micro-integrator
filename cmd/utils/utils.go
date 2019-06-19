@@ -179,13 +179,13 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 		if resp.Body() == nil {
 			return nil, errors.New(resp.Status())
 		} else {
-			data := &LoggerResponse{}
-			unmarshalError := json.Unmarshal([]byte(resp.Body()), data)
+			var data map[string]interface{}
+			unmarshalError := json.Unmarshal([]byte(resp.Body()), &data)
 
 			if unmarshalError != nil {
 				HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
 			}
-			return data.Message, errors.New(resp.Status())
+			return data["Error"], errors.New(resp.Status())
 		}
 	}
 }
@@ -205,14 +205,18 @@ func UpdateMILogger(loggerName, loggingLevel string) string {
 		HandleErrorAndExit("Unable to connect to host", nil)
 	}
 
-	Logln(LogPrefixInfo+"Response:", resp.Status())
-	data := &LoggerResponse{}
-	unmarshalError := json.Unmarshal([]byte(resp.Body()), data)
+	Logln(LogPrefixInfo+"Response:", string(resp.Status()))
+	var data map[string]interface{}
+	unmarshalError := json.Unmarshal([]byte(resp.Body()), &data)
 
 	if unmarshalError != nil {
 		HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
 	}
-	return data.Message
+	if resp.StatusCode() == http.StatusOK {
+		return data["message"].(string)
+	} else {
+		return data["Error"].(string)
+	}
 }
 
 func GetUrlAndParams(urlPrefix, key, value string) (string, map[string]string) {

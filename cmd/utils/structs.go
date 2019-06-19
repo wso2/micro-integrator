@@ -23,10 +23,6 @@ type ServerConfig struct {
 	Port string `yaml:"server_port"`
 }
 
-type LoggerResponse struct {
-	Message string `json:"Error" json:"message"`
-}
-
 type Logger struct {
 	Name       string `json:"name"`
 	ParentName string `json:"parent"`
