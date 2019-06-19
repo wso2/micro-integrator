@@ -169,6 +169,22 @@ public class Utils {
         return matchFound;
     }
 
+    /**
+     * Check if the log contains the expected string. The search will be done for maximum 10 seconds.
+     *
+     * @param carbonLogReader carbon log reader
+     * @param expected        expected string
+     * @return true if a match found, false otherwise
+     */
+    public static boolean assertIfSystemLogContains(CarbonLogReader carbonLogReader, String expected) {
+        boolean matchFound = false;
+        long startTime = System.currentTimeMillis();
+        while (!matchFound && (System.currentTimeMillis() - startTime) < 10000) {
+            matchFound = assertIfLogExists(carbonLogReader, expected);
+        }
+        return matchFound;
+    }
+
     private static boolean assertIfLogExists(LogViewerClient logViewerClient, String expected)
             throws RemoteException, LogViewerLogViewerException {
 
@@ -184,6 +200,17 @@ public class Utils {
                     matchFound = true;
                     break;
                 }
+            }
+        }
+        return matchFound;
+    }
+
+    private static boolean assertIfLogExists(CarbonLogReader carbonLogReader, String expected) {
+        boolean matchFound = false;
+        if (carbonLogReader != null) {
+            if (carbonLogReader.getLogs().contains(expected)) {
+                carbonLogReader.stop();
+                matchFound = true;
             }
         }
         return matchFound;
