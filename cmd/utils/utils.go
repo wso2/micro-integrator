@@ -176,7 +176,7 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 		}
 		return response, nil
 	} else {
-		if resp.Body() == nil {
+		if len(resp.Body()) == 0 {
 			return nil, errors.New(resp.Status())
 		} else {
 			var data map[string]interface{}
