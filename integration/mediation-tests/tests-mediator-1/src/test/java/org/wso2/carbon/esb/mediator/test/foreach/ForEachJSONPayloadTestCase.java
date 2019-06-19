@@ -22,6 +22,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
@@ -38,18 +39,19 @@ import static org.testng.Assert.assertTrue;
  * Test foreach mediator with json payload.
  */
 public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("foreachJSONTestProxy");
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test ForEach mediator with JSON payload")
     public void testForEachMediatorWithJSONPayload() throws Exception {
 
-        LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         String request = "{\"getQuote\":{\"request\":[{\"symbol\":\"IBM\"},{\"symbol\":\"WSO2\"},{\"symbol\":\"MSFT\"}]}}";
 
@@ -57,39 +59,36 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
 
         boolean reachedEnd = false;
 
-        LogEvent[] getLogsInfo = logViewer.getAllRemoteSystemLogs();
-        for (LogEvent event : getLogsInfo) {
-            if (event.getMessage().contains("STATE = END")) {
-                reachedEnd = true;
-                String payload = event.getMessage();
-                String search = "<jsonObject><getQuote>(.*)</getQuote></jsonObject>";
-                Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(payload);
-                boolean matchFound = matcher.find();
+        String logs = carbonLogReader.getLogs();
 
-                assertTrue(matchFound, "getQuote element not found");
+        carbonLogReader.stop();
 
-                int start = matcher.start();
-                int end = matcher.end();
-                String quote = payload.substring(start, end);
+        if (logs.contains("STATE = END")) {
+            reachedEnd = true;
+            String payload = logs;
+            String search = "<jsonObject><getQuote>(.*)</getQuote></jsonObject>";
+            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(payload);
+            boolean matchFound = matcher.find();
 
-                assertTrue(quote.contains(
-                        "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>IBM</code></checkPriceRequest>"),
-                        "IBM Element not found");
-                assertTrue(quote.contains(
-                        "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>WSO2</code></checkPriceRequest>"),
-                        "WSO2 Element not found");
-                assertTrue(quote.contains(
-                        "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>MSFT</code></checkPriceRequest>"),
-                        "MSTF Element not found");
-            }
+            assertTrue(matchFound, "getQuote element not found");
+
+            int start = matcher.start();
+            int end = matcher.end();
+            String quote = payload.substring(start, end);
+
+            assertTrue(quote.contains(
+                    "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>IBM</code></checkPriceRequest>"),
+                    "IBM Element not found");
+            assertTrue(quote.contains(
+                    "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>WSO2</code></checkPriceRequest>"),
+                    "WSO2 Element not found");
+            assertTrue(quote.contains(
+                    "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>MSFT</code></checkPriceRequest>"),
+                    "MSTF Element not found");
         }
-        assertTrue(reachedEnd, "Transformed json payload");
-    }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
+        assertTrue(reachedEnd, "Transformed json payload");
     }
 
     private void sendRequest(String addUrl, String query) throws IOException {
