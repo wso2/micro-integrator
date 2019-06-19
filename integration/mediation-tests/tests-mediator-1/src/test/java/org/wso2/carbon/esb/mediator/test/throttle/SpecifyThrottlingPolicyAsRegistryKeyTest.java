@@ -41,8 +41,6 @@ public class SpecifyThrottlingPolicyAsRegistryKeyTest extends ESBIntegrationTest
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
-        verifyProxyServiceExistence("throttlingPolicyFromRegistryTestProxy");
     }
 
     @Test(groups = "wso2.esb", description = "Specified throttling policy as a registry key", timeOut = 1000 * 60 * 2)
@@ -69,42 +67,5 @@ public class SpecifyThrottlingPolicyAsRegistryKeyTest extends ESBIntegrationTest
                     "Fault: value mismatched, should be '**Access Denied**'");
         }
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        try {
-            clearUploadedResource();
-        } finally {
-            super.cleanup();
-        }
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/policy");
-        resourceAdminServiceStub.addCollection("/_system/config/", "policy", "", "Contains throttle policy files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/policy/throttle_policy.xml", "application/xml", "throttle policy files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/policy/throttle_policy.xml")));
-
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/policy");
-        Thread.sleep(1000);
     }
 }

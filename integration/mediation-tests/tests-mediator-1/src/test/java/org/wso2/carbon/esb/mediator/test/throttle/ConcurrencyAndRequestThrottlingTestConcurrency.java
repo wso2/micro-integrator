@@ -47,11 +47,7 @@ public class ConcurrencyAndRequestThrottlingTestConcurrency extends ESBIntegrati
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
-
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/synapseconfig/throttle/ConcurrencyAndRequestBasedThrottlingConcurrency.xml");
-
         list = Collections.synchronizedList(new ArrayList());
         clients = new Thread[CONCURRENT_CLIENTS];
         clientsDone = new ThrottleTestCounter();
@@ -88,12 +84,12 @@ public class ConcurrencyAndRequestThrottlingTestConcurrency extends ESBIntegrati
         clientsDone = null;
         requestThrottledClients = null;
         list = null;
-        super.cleanup();
     }
 
     private void initClients() {
         for (int i = 0; i < CONCURRENT_CLIENTS; i++) {
-            clients[i] = new Thread(new ConcurrencyAndRequestThrottleTestClient(getMainSequenceURL(), list, clientsDone,
+            clients[i] = new Thread(new ConcurrencyAndRequestThrottleTestClient(
+                    getProxyServiceURLHttp("ConcurrencyAndRequestBasedThrottlingConcurrencyProxy"), list, clientsDone,
                     requestThrottledClients, THROTTLE_MAX_MSG_COUNT));
         }
     }
