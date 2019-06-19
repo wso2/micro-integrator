@@ -67,6 +67,7 @@ public class CarbonServerManager {
     private static int defaultHttpPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTP_PORT);
     private static int defaultHttpsPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTPS_PORT);
     private String scriptName;
+    private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
 
     public CarbonServerManager(AutomationContext context) {
         this.automationContext = context;
@@ -77,7 +78,7 @@ public class CarbonServerManager {
         if (process != null) { // An instance of the server is running
             return;
         }
-        portOffset = checkPortAvailability(commandMap);
+        portOffset = getPortOffsetFromCommandMap(commandMap);
         Process tempProcess;
 
         try {
@@ -136,39 +137,24 @@ public class CarbonServerManager {
             //register shutdown hook
             Runtime.getRuntime().addShutdownHook(new Thread(() -> {
                 try {
-                    serverShutdown(portOffset);
+                    serverShutdown(portOffset , false);
                 } catch (Exception e) {
                     log.error("Error while server shutdown ..", e);
                 }
             }));
 
-            ClientConnectionUtil.waitForPort(defaultHttpPort + portOffset, DEFAULT_START_STOP_WAIT_MS, false,
-                    automationContext.getInstance().getHosts().get("default"));
+            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 60, TimeUnit.SECONDS);
+
+            if (!inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE)) {
+                throw new RuntimeException("Server initialization failed");
+            }
 
             log.info("Server started successfully ...");
 
-        } catch (IOException | XPathExpressionException e) {
+        } catch (IOException | InterruptedException e) {
             throw new IllegalStateException("Unable to start server", e);
         }
         process = tempProcess;
-    }
-
-    private int checkPortAvailability(Map<String, String> commandMap) throws AutomationFrameworkException {
-        final int portOffset = getPortOffsetFromCommandMap(commandMap);
-
-        //check whether http port is already occupied
-        if (ClientConnectionUtil.isPortOpen(defaultHttpPort + portOffset)) {
-            throw new AutomationFrameworkException(
-                    "Unable to start carbon server on port " + (defaultHttpPort + portOffset)
-                            + " : Port already in use");
-        }
-        //check whether https port is already occupied
-        if (ClientConnectionUtil.isPortOpen(defaultHttpsPort + portOffset)) {
-            throw new AutomationFrameworkException(
-                    "Unable to start carbon server on port " + (defaultHttpsPort + portOffset)
-                            + " : Port already in use");
-        }
-        return portOffset;
     }
 
     private String[] mergePropertiesToCommandArray(String[] parameters, String[] cmdArray) {
@@ -242,7 +228,7 @@ public class CarbonServerManager {
         log.info("Completed copying resources");
     }
 
-    public synchronized void serverShutdown(int portOffset) throws AutomationFrameworkException {
+    public synchronized void serverShutdown(int portOffset, boolean isRestart) throws AutomationFrameworkException {
         if (process != null) {
             log.info("Shutting down server ...");
 
@@ -250,6 +236,7 @@ public class CarbonServerManager {
 
                 startProcess(carbonHome, getStartScriptCommand("stop"));
                 waitTill(() -> isRemotePortInUse("localhost", 8280 + portOffset), 60, TimeUnit.SECONDS);
+
                 log.info("Server stopped successfully ...");
 
             } catch (IOException | InterruptedException e) {
@@ -260,8 +247,8 @@ public class CarbonServerManager {
             errorStreamHandler.stop();
             process.destroy();
             process = null;
-            //generate coverage report
-            if (isCoverageEnable) {
+
+            if (!isRestart && isCoverageEnable) {
                 try {
                     log.info("Generating Jacoco code coverage...");
                     generateCoverageReport(new File(
@@ -276,7 +263,6 @@ public class CarbonServerManager {
                 System.clearProperty(ExtensionConstants.CARBON_HOME);
             }
         }
-
     }
 
     private Process startProcess(String workingDirectory, String[] cmdArray) throws IOException {

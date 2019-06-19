@@ -34,12 +34,13 @@ import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
 public class TestServerManager {
-    protected CarbonServerManager carbonServer;
+
+    protected static CarbonServerManager carbonServer;
     protected String carbonZip;
-    protected int portOffset;
-    protected Map<String, String> commandMap = new HashMap<>();
+    protected static int portOffset;
+    protected static Map<String, String> commandMap = new HashMap<>();
     private static final Log log = LogFactory.getLog(TestServerManager.class);
-    protected String carbonHome;
+    protected static String carbonHome;
     protected String runtimePath;
 
     public TestServerManager(AutomationContext context) {
@@ -159,7 +160,15 @@ public class TestServerManager {
      * @throws AutomationFrameworkException If an error occurs while shutting down the server
      */
     public void stopServer() throws AutomationFrameworkException {
-        carbonServer.serverShutdown(portOffset);
+        carbonServer.serverShutdown(portOffset , false );
+    }
+
+    public static void restartServer() throws AutomationFrameworkException {
+
+        log.info("Preparing to restart the server ...");
+        carbonServer.serverShutdown(portOffset, true);
+        carbonServer.startServerUsingCarbonHome(carbonHome, commandMap);
+        log.info("Server restarted successfully ...");
     }
 
 }
