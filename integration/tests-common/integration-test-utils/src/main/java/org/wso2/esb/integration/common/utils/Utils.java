@@ -243,6 +243,18 @@ public class Utils {
         return logExists;
     }
 
+    public static boolean logExists(CarbonLogReader logReader, String expected, int timeout) throws InterruptedException {
+        boolean logExists = false;
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (logReader.getLogs().contains(expected)) {
+                logExists = true;
+                logReader.stop();
+                break;
+            }
+        }
+        return logExists;
+    }
     /**
      * Check for the existence of a given log message of given priority within the given timeout
      *
