@@ -1,0 +1,20 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="CallTemplateIntegrationParamsWithValuesTestCaseProxy" transports="https http">
+    <target>
+        <inSequence>
+            <call-template target="test_func">
+                <with-param name="test_key" value="REQUEST PARAM VALUE"/>
+            </call-template>
+            <send>
+                <endpoint>
+                    <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <call-template target="test_func">
+                <with-param name="test_key" value="RESPONSE PARAM VALUE"/>
+            </call-template>
+            <send/>
+        </outSequence>
+    </target>
+</proxy>
