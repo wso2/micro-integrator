@@ -1,0 +1,25 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="CollectorTypeCacheMediatorProxy" startOnLoad="true" statistics="disable" trace="disable" transports="http,https">
+    <target>
+        <inSequence>
+            <cache id="" scope="per-host" collector="true"/>
+            <send>
+                <endpoint name="inlined">
+                    <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <cache id="id1" scope="per-host" collector="true"/>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <log level="full">
+                <property name="MESSAGE" value="Executing default &quot;fault&quot; sequence"/>
+                <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
+                <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+            </log>
+            <drop/>
+        </faultSequence>
+    </target>
+    <description/>
+</proxy>

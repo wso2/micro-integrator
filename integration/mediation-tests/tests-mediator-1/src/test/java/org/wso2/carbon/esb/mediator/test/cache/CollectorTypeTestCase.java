@@ -30,7 +30,7 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.fail;
-import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.Assert.assertEquals;
 
 /**
  * This class will test cacheMediator mediator which has a collector type cacheMediator mediator in 'in'
@@ -38,10 +38,11 @@ import static org.testng.AssertJUnit.assertEquals;
  */
 public class CollectorTypeTestCase extends ESBIntegrationTest {
 
+    private static final String PROXY_NAME = "CollectorTypeCacheMediatorProxy";
+
     @BeforeClass(alwaysRun = true)
     public void deployArtifacts() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/cache/CollectorTypeCacheMediator.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -49,17 +50,17 @@ public class CollectorTypeTestCase extends ESBIntegrationTest {
     public void testCollectorTypeMediator() throws AxisFault, XPathExpressionException {
         OMElement response;
         try {
-            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(PROXY_NAME),
                     getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
             //            String changeValue = response.getFirstElement().getFirstChildWithName(new QName
             //                                                                                  ("http://services.samples/xsd", "change")).getText();
 
-            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(PROXY_NAME),
                     getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
             //            String change1Value = response.getFirstElement().getFirstChildWithName(new QName
             //                                                                                   ("http://services.samples/xsd", "change")).getText();
 
-            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(PROXY_NAME),
                     getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
             //            String change2Value = response.getFirstElement().getFirstChildWithName(new QName
             //                                                                                   ("http://services.samples/xsd", "change")).getText();
