@@ -80,6 +80,7 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
 
     private void copyResources(String carbonHome, String destCarbonHome) {
         String repository = carbonHome + File.separator + "repository";
+        File registrySource  = new File(carbonHome + File.separator + "registry");
         File deploymentSource = new File(repository + File.separator + "deployment");
         File confSource = new File(carbonHome + File.separator + "conf");
         File libDirectorySource = new File(carbonHome + File.separator + "lib");
@@ -87,6 +88,7 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
                 destCarbonHome + File.separator + "repository" + File.separator + "deployment");
         File confDestination = new File(destCarbonHome + File.separator + "conf");
         File libDestination = new File(destCarbonHome + File.separator + "lib");
+        File registryDestination = new File(destCarbonHome + File.separator + "registry");
         if (confSource.exists() && confSource.isDirectory()) {
             try {
                 log.info("Copying " + confSource.getPath() + " to " + confDestination.getPath());
@@ -109,6 +111,14 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
                 FileUtils.copyDirectory(libDirectorySource, libDestination);
             } catch (IOException e) {
                 log.error("Error while copying lib directory.", e);
+            }
+        }
+        if (registrySource.exists() && registrySource.isDirectory()) {
+            try {
+                log.info("Copying " + registrySource.getPath() + " to " + registryDestination.getPath());
+                FileUtils.copyDirectory(registrySource, registryDestination);
+            } catch (IOException e) {
+                log.error("Error while copying registry directory.", e);
             }
         }
     }
