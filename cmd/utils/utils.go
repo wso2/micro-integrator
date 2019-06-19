@@ -24,12 +24,14 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"golang.org/x/crypto/ssh/terminal"
-	"gopkg.in/resty.v1"
 	"net/http"
 	"os"
 	"runtime"
 	"strings"
+
+	"github.com/olekukonko/tablewriter"
+	"golang.org/x/crypto/ssh/terminal"
+	"gopkg.in/resty.v1"
 )
 
 // Invoke http-post request using go-resty
@@ -168,4 +170,31 @@ func GetCmdUsage(program, cmd, subcmd, arg string) string {
 		"  " + program + " " + cmd + " " + subcmd + "(s)\n" +
 		"  " + program + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
 	return showCmdUsage
+}
+
+func GetTableWriter() *tablewriter.Table {
+	table := tablewriter.NewWriter(os.Stdout)
+	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table.SetBorder(false)
+	table.SetColumnSeparator(" ")
+	return table
+}
+
+func printTable(columnData []string, dataChannel <-chan []string) {
+	table := GetTableWriter()
+
+	table.Append(columnData)
+
+	for v := range dataChannel {
+		table.Append(v)
+	}
+	table.Render()
+}
+
+func PrintItemList(itemList IterableStringArray, columnData []string, emptyWarning string) {
+	if itemList.GetCount() > 0 {
+		printTable(columnData, itemList.GetDataIterator())
+	} else {
+		fmt.Println(emptyWarning)
+	}
 }
