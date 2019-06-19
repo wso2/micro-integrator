@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.payload.factory;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.mediator.test.payload.factory.util.RequestUtil;
@@ -35,23 +34,16 @@ public class TransformPayloadWhenArgsExpressionTestCase extends ESBIntegrationTe
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/payload/factory/expression_arg_payload_factory_synapse.xml");
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Do transformation with a Payload Format that has arguments - Argument Type : Value")
+    @Test(groups = {"wso2.esb"},
+            description = "Do transformation with a Payload Format that has arguments - Argument Type : Value")
     public void transformPayloadByArgsValue() throws AxisFault, XPathExpressionException {
         OMElement response;
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                "TransformPayloadWhenArgsExpressionTestCaseProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), RequestUtil.getCustomPayload("IBM"));
         assertTrue(response.toString().contains("IBM"), "Symbol IBM not found in response message");
 
     }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }

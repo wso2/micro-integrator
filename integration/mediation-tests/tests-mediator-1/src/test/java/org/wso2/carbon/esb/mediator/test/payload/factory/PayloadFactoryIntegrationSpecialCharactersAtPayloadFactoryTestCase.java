@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.payload.factory;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -37,23 +36,16 @@ public class PayloadFactoryIntegrationSpecialCharactersAtPayloadFactoryTestCase 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/payload/factory/special_chractors_at_payload_factory.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test for containing special characters at payload factory")
+    @Test(groups = {"wso2.esb"}, description = "Test for containing special characters at payload factory")
     public void testSpecialCharactersAtPayloadFactory() throws AxisFault, XPathExpressionException {
         OMElement response;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                "SpecialCharactersAtPayloadFactoryTestCaseProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         assertTrue(response.toString().contains("$WSO2$"), "Symbol $WSO2$ not found in response message");
 
     }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }
