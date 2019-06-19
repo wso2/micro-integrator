@@ -23,44 +23,34 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class CallTemplateIntegrationParamsWithValuesTestCase extends ESBIntegrationTest {
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
+    private String proxyServiceName = "CallTemplateIntegrationParamsWithValuesTestCaseProxy";
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call_template/synapse_param_with_values.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Call Template Mediator Sample Parameters with"
             + " values assigned test")
     public void testTemplatesParameter() throws Exception {
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewer.clearLogs();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "IBM");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "IBM");
         boolean requestLog = false;
         boolean responseLog = false;
-        long startTime = System.currentTimeMillis();
-        while (startTime + 30000 > System.currentTimeMillis()) {
-            LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-            for (LogEvent log : logs) {
-                if (log.getMessage().contains("REQUEST PARAM VALUE")) {
-                    requestLog = true;
-                    continue;
-                } else if (log.getMessage().contains("RESPONSE PARAM VALUE")) {
-                    responseLog = true;
-                    continue;
-
-                }
-            }
-            if (requestLog && requestLog) {
-                break;
-            }
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.stop();
+        if (logs.contains("REQUEST PARAM VALUE")) {
+            requestLog = true;
+        }
+        if (logs.contains("RESPONSE PARAM VALUE")) {
+            responseLog = true;
         }
         Assert.assertTrue((requestLog && responseLog), "Relevant log not found in carbon logs");
     }

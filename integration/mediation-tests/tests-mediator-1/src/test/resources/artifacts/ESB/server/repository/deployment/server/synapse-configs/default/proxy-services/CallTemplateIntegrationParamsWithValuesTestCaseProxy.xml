@@ -16,28 +16,23 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="CollectorTypeCacheMediatorProxy" startOnLoad="true" statistics="disable" trace="disable" transports="http,https">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="CallTemplateIntegrationParamsWithValuesTestCaseProxy" transports="https http">
     <target>
         <inSequence>
-            <cache id="" scope="per-host" collector="true"/>
+            <call-template target="test_func">
+                <with-param name="test_key" value="REQUEST PARAM VALUE"/>
+            </call-template>
             <send>
-                <endpoint name="inlined">
+                <endpoint>
                     <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
                 </endpoint>
             </send>
         </inSequence>
         <outSequence>
-            <cache id="id1" scope="per-host" collector="true"/>
+            <call-template target="test_func">
+                <with-param name="test_key" value="RESPONSE PARAM VALUE"/>
+            </call-template>
             <send/>
         </outSequence>
-        <faultSequence>
-            <log level="full">
-                <property name="MESSAGE" value="Executing default &quot;fault&quot; sequence"/>
-                <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
-                <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
-            </log>
-            <drop/>
-        </faultSequence>
     </target>
-    <description/>
 </proxy>
