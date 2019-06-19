@@ -20,25 +20,20 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
-// List Seqeunces command related usage info
-const listSequenceCmdLiteral = "sequences"
+// Proxy Service command related usage info
+const proxyServiceCmdLiteral = "proxyservice"
+const proxyServiceCmdShortDesc = "Manage deployed Proxy Services"
+const proxyServiceCmdLongDesc = "Manage the Proxy Services deployed in the Micro Integrator"
 
-// sequencesListCmd represents the list sequences command
-var sequencesListCmd = &cobra.Command{
-	Use:   listSequenceCmdLiteral,
-	Short: showSequenceCmdShortDesc,
-	Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		// defined in seqeunceInfo.go
-		handleSequenceCmdArguments(args)
-	},
+// proxyServicesListCmd represents the proxyServices command
+var proxyServiceCmd = &cobra.Command{
+	Use:   proxyServiceCmdLiteral,
+	Short: proxyServiceCmdShortDesc,
+	Long:  proxyServiceCmdLongDesc,
 }
 
 func init() {
-	showCmd.AddCommand(sequencesListCmd)
-	sequencesListCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
+	rootCmd.AddCommand(proxyServiceCmd)
 }

@@ -84,32 +84,111 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To show available Micro Integrators
             mi remote show
 ```
-
-* #### show
+   * #### api
 ```bash
         Usage:
-            mi show [command] [argument] [flag]
-               
+            mi api [command] [argument]
+
         Available Commands:
-            api [api-name]                  Get information about one or more Apis
-            carbonapp [app-name]            Get information about one or more Carbon Apps
-            endpoint [endpoint-name]        Get information about one or more Endpoints
-            inboundendpoint [inbound-name]  Get information about one or more Inbounds
-            proxyservice [proxy-name]       Get information about one or more Proxies 
-            sequence [sequence-name]        Get information about one or more Sequences
-            task [task-name]                Get information about one or more Task
-        
+            show [api-name]                      Get information about one or more Apis
+
         Examples:
-            # To list all the apis
-            mi show api
+            # To List all the apis
+            mi api show
 
-            # To get details about specific proxy service
-            mi show proxyService SampleProxyService
-
-        Flags:
-            -h, --help   Display information and example usage of the command
+            # To get details about a specific api
+            mi api show sampleApi
 ```
+   * #### compositeapp
+```bash
+        Usage:
+            mi compositeapp [command] [argument]
 
+        Available Commands:
+            show [app-name]                      Get information about one or more Composite apps
+
+        Examples:
+            # To List all the composite apps
+            mi compositeapp show
+
+            # To get details about a specific composite app
+            mi compositeapp show sampleApp
+```
+   * #### endpoint
+```bash
+        Usage:
+            mi endpoint [command] [argument]
+
+        Available Commands:
+            show [endpoint-name]                 Get information about one or more Endpoints
+
+        Examples:
+            # To List all the endpoints
+            mi endpoint show
+
+            # To get details about a specific endpoint
+            mi endpoint show sampleEndpoint
+```
+   * #### inboundendpoint
+```bash
+        Usage:
+            mi inboundendpoint [command] [argument]
+
+        Available Commands:
+            show [inboundendpoint-name]          Get information about one or more Inbounds
+
+        Examples:
+            # To List all the inbound endpoints
+            mi inboundendpoint show
+
+            # To get details about a specific inbound endpoint
+            mi inboundendpoint show sampleEndpoint
+```
+   * #### proxyservice
+```bash
+        Usage:
+            mi proxyservice [command] [argument]
+
+        Available Commands:
+            show [proxyservice-name]             Get information about one or more Proxies
+
+        Examples:
+            # To List all the proxy services
+            mi proxyservice show
+
+            # To get details about a specific proxy service
+            mi proxyservice show sampleProxy
+```
+   * #### sequence
+```bash
+        Usage:
+            mi sequence [command] [argument]
+
+        Available Commands:
+            show [sequence-name]                 Get information about one or more Sequences
+
+        Examples:
+            # To List all the sequences
+            mi sequence show
+
+            # To get details about a specific sequence
+            mi sequence show sampleProxy
+```
+   * #### task
+```bash
+        Usage:
+            mi task [command] [argument]
+
+        Available Commands:
+            show [task-name]                     Get information about one or more Tasks
+
+        Examples:
+            # To List all the tasks
+            mi task show
+
+            # To get details about a specific task
+            mi task show sampleProxy
+```
 * #### version
 ```bash
         mi version 

@@ -29,16 +29,16 @@ import (
 var proxyServiceName string
 
 // Show ProxyService command related usage info
-const showProxyServiceCmdLiteral = "proxyservice"
+const showProxyServiceCmdLiteral = "show"
 const showProxyServiceCmdShortDesc = "Get information about proxy services"
 
-var showProxyServiceCmdLongDesc = "Get information about the Proxy Service specified by command line argument [proxy-name] If not specified, list all the proxy services\n"
+const showProxyServiceCmdLongDesc = "Get information about the Proxy Service specified by command line argument [proxy-name] If not specified, list all the proxy services\n"
 
 var showProxyServiceCmdExamples = "Example:\n" +
 	"To get details about a specific prxoy\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + " SampleProxy\n\n" +
+	"  " + programName + " " + proxyServiceCmdLiteral + " " + showProxyServiceCmdLiteral + " SampleProxy\n\n" +
 	"To list all the proxies\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + "\n\n"
+	"  " + programName + " " + proxyServiceCmdLiteral + " " + showProxyServiceCmdLiteral + "\n\n"
 
 // proxyServiceShowCmd represents the proxyService command
 var proxyServiceShowCmd = &cobra.Command{
@@ -51,9 +51,9 @@ var proxyServiceShowCmd = &cobra.Command{
 }
 
 func init() {
-	showCmd.AddCommand(proxyServiceShowCmd)
-	proxyServiceShowCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showProxyServiceCmdLiteral, "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
+	proxyServiceCmd.AddCommand(proxyServiceShowCmd)
+	proxyServiceShowCmd.SetHelpTemplate(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, proxyServiceCmdLiteral,
+		showProxyServiceCmdLiteral, "[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags(proxyServiceCmdLiteral))
 }
 
 func handleProxyServiceCmdArguments(args []string) {
@@ -74,8 +74,8 @@ func handleProxyServiceCmdArguments(args []string) {
 }
 
 func printProxyServiceHelp() {
-	fmt.Print(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showProxyServiceCmdLiteral,
-		"[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags("proxyservice(s)"))
+	fmt.Print(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, proxyServiceCmdLiteral, showProxyServiceCmdLiteral,
+		"[proxy-name]") + showProxyServiceCmdExamples + utils.GetCmdFlags(proxyServiceCmdLiteral))
 }
 
 func executeGetProxyServiceCmd(proxyServiceName string) {

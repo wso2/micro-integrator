@@ -20,25 +20,20 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
-// List APIs command related usage info
-const listAPICmdLiteral = "apis"
+// Seqeunce command related usage info
+const sequenceCmdLiteral = "sequence"
+const sequenceCmdShortDesc = "Manage deployed Seqeunces"
+const sequenceCmdLongDesc = "Manage the Seqeunces deployed in the Micro Integrator"
 
-// apisListCmd represents the list apis command
-var apisListCmd = &cobra.Command{
-	Use:   listAPICmdLiteral,
-	Short: showAPICmdShortDesc,
-	Long:  showAPICmdLongDesc + showAPICmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		// defined in apiInfo.go
-		handleAPICmdArguments(args)
-	},
+// sequencesListCmd represents the list sequences command
+var sequenceCmd = &cobra.Command{
+	Use:   sequenceCmdLiteral,
+	Short: sequenceCmdShortDesc,
+	Long:  sequenceCmdLongDesc,
 }
 
 func init() {
-	showCmd.AddCommand(apisListCmd)
-	apisListCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showAPICmdLiteral, "[apiname]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
+	rootCmd.AddCommand(sequenceCmd)
 }

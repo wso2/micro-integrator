@@ -29,16 +29,16 @@ import (
 var inboundEndpointName string
 
 // Show InboundEndpoint command related usage info
-const showInboundEndpointCmdLiteral = "inboundendpoint"
+const showInboundEndpointCmdLiteral = "show"
 const showInboundEndpointCmdShortDesc = "Get information about inbound endpoints"
 
-var showInboundEndpointCmdLongDesc = "Get information about the InboundEndpoint specified by command line argument [inbound-name] If not specified, list all the Inbound Endpoints\n"
+const showInboundEndpointCmdLongDesc = "Get information about the InboundEndpoint specified by command line argument [inbound-name] If not specified, list all the Inbound Endpoints\n"
 
 var showInboundEndpointCmdExamples = "Example:\n" +
 	"To get details about a specific inbound endpoint\n" +
-	"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + " TestInboundEndpoint\n\n" +
+	"  " + utils.ProjectName + " " + inboundEndpointCmdLiteral + " " + showInboundEndpointCmdLiteral + " TestInboundEndpoint\n\n" +
 	"To list all the inbound endpoints\n" +
-	"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + "\n\n"
+	"  " + utils.ProjectName + " " + inboundEndpointCmdLiteral + " " + showInboundEndpointCmdLiteral + "\n\n"
 
 // InboundEndpointShowCmd represents the Show inboundEndpoint command
 var inboundEndpointShowCmd = &cobra.Command{
@@ -51,9 +51,9 @@ var inboundEndpointShowCmd = &cobra.Command{
 }
 
 func init() {
-	showCmd.AddCommand(inboundEndpointShowCmd)
-	inboundEndpointShowCmd.SetHelpTemplate(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showInboundEndpointCmdLiteral, "[inbound-name]") + showInboundEndpointCmdExamples + utils.GetCmdFlags("inboundendpoint(s)"))
+	inboundEndpointCmd.AddCommand(inboundEndpointShowCmd)
+	inboundEndpointShowCmd.SetHelpTemplate(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(programName, inboundEndpointCmdLiteral,
+		showInboundEndpointCmdLiteral, "[inbound-name]") + showInboundEndpointCmdExamples + utils.GetCmdFlags(inboundEndpointCmdLiteral))
 }
 
 func handleInboundCmdArguments(args []string) {
@@ -74,8 +74,8 @@ func handleInboundCmdArguments(args []string) {
 }
 
 func printInboundHelp() {
-	fmt.Print(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showInboundEndpointCmdLiteral,
-		"[inbound-name]") + showInboundEndpointCmdExamples + utils.GetCmdFlags("inboundendpoint(s)"))
+	fmt.Print(showInboundEndpointCmdLongDesc + utils.GetCmdUsage(programName, inboundEndpointCmdLiteral, showInboundEndpointCmdLiteral,
+		"[inbound-name]") + showInboundEndpointCmdExamples + utils.GetCmdFlags(inboundEndpointCmdLiteral))
 }
 
 func executeGetInboundEndpointCmd(inboundEndpointname string) {
