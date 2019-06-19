@@ -22,7 +22,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -39,11 +38,7 @@ public class AggregateWithJSONAndMaxMinLimits extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-
         serviceUrl = getApiInvocationURL("devices");
-        esbUtils.isApiDeployed(contextUrls.getBackEndUrl(), sessionCookie, "Devices");
-        esbUtils.isApiDeployed(contextUrls.getBackEndUrl(), sessionCookie, "DeviceID");
-        esbUtils.isApiDeployed(contextUrls.getBackEndUrl(), sessionCookie, "AllDevices");
     }
 
     @Test
@@ -89,10 +84,5 @@ public class AggregateWithJSONAndMaxMinLimits extends ESBIntegrationTest {
             e.printStackTrace();
         }
         return null;
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
-        super.cleanup();
     }
 }
