@@ -26,7 +26,7 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import static org.testng.Assert.assertTrue;
 
-public class CallMediatorInMainScenario2TestCase extends ESBIntegrationTest {
+public class CallMediatorInSequenceScenario2TestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
@@ -37,7 +37,8 @@ public class CallMediatorInMainScenario2TestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" })
     public void callMediatorInMainScenario2TestCase() throws AxisFault {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
+                getProxyServiceURLHttp("CallMediatorInSequenceScenario2TestProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
     }

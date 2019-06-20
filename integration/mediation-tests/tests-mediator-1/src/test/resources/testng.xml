@@ -96,7 +96,7 @@
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInFaultSeqTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInFilterTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInIterateTestCase"/>
-            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInMainScenario2TestCase"/>
+            <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInSequenceScenario2TestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInMainTestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInNestedFilterSwitchScenario2TestCase"/>
             <class name="org.wso2.carbon.esb.mediator.test.call.CallMediatorInNestedFilterSwitchTestCase"/>
