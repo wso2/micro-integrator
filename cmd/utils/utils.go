@@ -118,37 +118,6 @@ func AllowInsecureSSLConnection() {
 	resty.SetTLSClientConfig(&tls.Config{InsecureSkipVerify: true})
 }
 
-// Get Artifact List depending on the @param url and unmarshal it
-// @param url: url of rest api
-// @param model: struct object
-// @return struct object
-// @return error
-func GetArtifactList(url string, model interface{}) (interface{}, error) {
-	Logln(LogPrefixInfo+"URL:", url)
-
-	headers := make(map[string]string)
-
-	resp, err := InvokeGETRequest(url, headers, nil)
-
-	if err != nil {
-		HandleErrorAndExit("Unable to connect to host", nil)
-	}
-
-	Logln(LogPrefixInfo+"Response:", resp.Status())
-
-	if resp.StatusCode() == http.StatusOK {
-		response := model
-		unmarshalError := json.Unmarshal([]byte(resp.Body()), &response)
-
-		if unmarshalError != nil {
-			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
-		}
-		return response, nil
-	} else {
-		return nil, errors.New(resp.Status())
-	}
-}
-
 // Unmarshal Data from the response to the respective struct
 // @param url: url of rest api
 // @param model: struct object
@@ -173,7 +142,7 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 		unmarshalError := json.Unmarshal([]byte(resp.Body()), &response)
 
 		if unmarshalError != nil {
-			HandleErrorAndExit(LogPrefixError+"invalid XML response", unmarshalError)
+			HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
 		}
 		return response, nil
 	} else {

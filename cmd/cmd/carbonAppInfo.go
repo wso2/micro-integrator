@@ -121,7 +121,7 @@ func executeListCarbonAppsCmd() {
 
 	finalUrl := utils.RESTAPIBase + utils.PrefixCarbonApps
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.CarbonAppList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.CarbonAppList{})
 
 	if err == nil {
 		// Printing the list of available Carbon apps

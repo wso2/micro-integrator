@@ -44,7 +44,7 @@ func init() {
 func executeDataServiceListCmd() {
 	finalURL := utils.RESTAPIBase + utils.PrefixDataServices
 
-	resp, err := utils.GetArtifactList(finalURL, &utils.DataServicesList{})
+	resp, err := utils.UnmarshalData(finalURL, nil, &utils.DataServicesList{})
 
 	if err == nil {
 		// print the list of available data services

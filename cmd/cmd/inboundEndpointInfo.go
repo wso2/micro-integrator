@@ -36,9 +36,9 @@ var showInboundEndpointCmdLongDesc = "Get information about the InboundEndpoint 
 
 var showInboundEndpointCmdExamples = "Example:\n" +
 	"To get details about a specific inbound endpoint\n" +
-	"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + " TestInboundEndpoint\n\n" +
+	"  " + programName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + " TestInboundEndpoint\n\n" +
 	"To list all the inbound endpoints\n" +
-	"  " + utils.ProjectName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + "\n\n"
+	"  " + programName + " " + showCmdLiteral + " " + showInboundEndpointCmdLiteral + "\n\n"
 
 // InboundEndpointShowCmd represents the Show inboundEndpoint command
 var inboundEndpointShowCmd = &cobra.Command{
@@ -123,7 +123,7 @@ func printInboundEndpoint(inbound utils.InboundEndpoint) {
 func executeListInboundEndpointsCmd() {
 	finalUrl := utils.RESTAPIBase + utils.PrefixInboundEndpoints
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.InboundEndpointList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.InboundEndpointList{})
 
 	if err == nil {
 		// Printing the list of available Inbound endpoints

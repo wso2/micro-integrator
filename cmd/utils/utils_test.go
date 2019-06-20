@@ -112,7 +112,7 @@ func TestGetArtifactListOK(t *testing.T) {
 	}))
 	defer server.Close()
 
-	resp, err := GetArtifactList(server.URL, &APIList{})
+	resp, err := UnmarshalData(server.URL, nil, &APIList{})
 	list := resp.(*APIList)
 
 	if list.Count != 2 {

@@ -58,7 +58,7 @@ var initCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(initCmd)
+	RootCmd.AddCommand(initCmd)
 	initCmd.SetHelpTemplate(initCmdLongDesc + initCmdUsage + initCmdExample + utils.GetCmdFlags("init"))
 }
 
