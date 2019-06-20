@@ -1,0 +1,1 @@
+Property mediator test resources
