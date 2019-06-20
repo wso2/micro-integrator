@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.mediator.test.clone;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -38,7 +37,6 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_unmaching_aggregate.xml");
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
 
@@ -48,14 +46,12 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.esb", description = "Tests clone ID that does not match with the aggregate ID")
-    public void testAggregateID() throws Exception {
+    public void testAggregateID() {
 
-        OMElement response = null;
         try {
-            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
-
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneNegativeTestCaseProxy"), null, "WSO2");
             Assert.fail(
                     "This Request must throws AxisFault"); // This will not executed if the exception thrown as expected
         } catch (AxisFault e) {
@@ -64,16 +60,16 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress")
-    public void testSOAPAction() throws Exception {
+    public void testSOAPAction() {
         //TODO QA test has failed
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress")
-    public void testAddress() throws Exception {
+    public void testAddress() {
         //TODO not yet tested
 
     }
@@ -84,7 +80,6 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
         axis2Server2.stop();
         axis2Server1 = null;
         axis2Server2 = null;
-        super.cleanup();
     }
 
 }
