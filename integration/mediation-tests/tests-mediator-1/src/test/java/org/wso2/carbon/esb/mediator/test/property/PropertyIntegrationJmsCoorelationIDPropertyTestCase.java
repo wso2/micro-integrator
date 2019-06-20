@@ -21,8 +21,6 @@ package org.wso2.carbon.esb.mediator.test.property;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
@@ -52,7 +50,6 @@ public class PropertyIntegrationJmsCoorelationIDPropertyTestCase extends ESBInte
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
     }
 
     @AfterClass(alwaysRun = true)
@@ -94,7 +91,7 @@ public class PropertyIntegrationJmsCoorelationIDPropertyTestCase extends ESBInte
 
         Context ctx = new InitialContext(props);
         ConnectionFactory connectionFactory = (ConnectionFactory) ctx.lookup("ConnectionFactory");
-        connection = connectionFactory.createConnection(userInfo.getUserName(), userInfo.getPassword());
+        connection = connectionFactory.createConnection("guest", "guest");
         connection.start();
 
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -108,4 +105,3 @@ public class PropertyIntegrationJmsCoorelationIDPropertyTestCase extends ESBInte
         assertEquals(message.getJMSCorrelationID(), ("1234"), "Correlation ID mismatch");
     }
 }
-
