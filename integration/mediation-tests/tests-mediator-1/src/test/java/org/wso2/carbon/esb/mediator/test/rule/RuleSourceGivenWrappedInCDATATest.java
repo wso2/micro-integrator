@@ -17,34 +17,28 @@
  */
 package org.wso2.carbon.esb.mediator.test.rule;
 
+import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import javax.xml.namespace.QName;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.fail;
 
-public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
+public class RuleSourceGivenWrappedInCDATATest extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config_rule_s3/synapse.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA -Invoke IBM rule")
     public void testInvokeIBMRule() throws AxisFault {
-        OMElement response;
-
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
+        OMElement response = sendRequest("IBM");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -53,13 +47,12 @@ public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
         String symbol = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "IBM", "Fault: value 'symbol' mismatched");
-
     }
 
     @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke SUN rule ")
     public void testInvokeSUNRule() throws Exception {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "SUN");
+            sendRequest("SUN");
             fail("Response message not expected. AxisFault expected");
         } catch (AxisFault axisFault) {
             assertEquals(axisFault.getMessage(), ESBTestConstant.READ_TIME_OUT,
@@ -68,31 +61,29 @@ public class RuleSourceGivenWrappedInCDATA extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke MFST rule ")
-    public void testInvokeMSFTRule() throws Exception {
+    public void testInvokeMSFTRule() {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "MFST");
+            sendRequest("MFST");
             fail("Response message not expected. AxisFault expected");
         } catch (AxisFault axisFault) {
             assertEquals(axisFault.getMessage(), ESBTestConstant.READ_TIME_OUT,
                     "Fault: value mismatched, should be 'Read timed out'");
         }
-
     }
 
     @Test(groups = "wso2.esb", description = "The rule source is given wrapped in CDATA- Invoke an invalid rule ")
-    public void testInvokeInvalidRule() throws Exception {
+    public void testInvokeInvalidRule() {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "Invalid");
+            sendRequest("Invalid");
             fail("Response message not expected. AxisFault expected");
         } catch (AxisFault axisFault) {
             assertEquals(axisFault.getMessage(), ESBTestConstant.INCOMING_MESSAGE_IS_NULL,
                     "Fault: value mismatched, should be 'The input stream for an incoming message is null.'");
         }
-
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
+    private OMElement sendRequest(String symbol) throws AxisFault {
+        return axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("RuleSourceGivenWrappedInCDATATestProxy"), null, symbol);
     }
 }
+
