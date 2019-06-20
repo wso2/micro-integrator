@@ -1,0 +1,18 @@
+<template xmlns="http://ws.apache.org/ns/synapse" name="EnrichAndDoubleDropIntegrationTestIterTemplate">
+    <parameter name="iter_expr"/>
+    <parameter name="attach_path"/>
+    <sequence>
+
+        <iterate xmlns:m0="http://services.samples" preservePayload="true" attachPath="$func:attach_path" expression="$func:iter_expr">
+            <target>
+                <sequence>
+                    <send>
+                        <endpoint>
+                            <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+                        </endpoint>
+                    </send>
+                </sequence>
+            </target>
+        </iterate>
+    </sequence>
+</template>
