@@ -22,23 +22,19 @@ import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-
-import static org.testng.Assert.assertEquals;
 
 public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
 
@@ -50,14 +46,9 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
     public void init() throws Exception {
 
         super.init();
-        String relativePath = "/artifacts/ESB/synapseconfig/esbjava2283/api.xml";
-        ESBTestCaseUtils util = new ESBTestCaseUtils();
-        relativePath = relativePath.replaceAll("[\\\\/]", "/");
-        OMElement apiConfig = util.loadResource(relativePath);
-        addApi(apiConfig);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "test return content type")
+    @Test(groups = {"wso2.esb"}, description = "test return content type")
     public void testReturnContentType() throws Exception {
 
         HttpServer server = HttpServer.create(new InetSocketAddress(PORT), 0);
@@ -78,7 +69,7 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
         log.info(response.getStatusLine().getStatusCode());
 
         assertEquals(response.getFirstHeader("Content-Type").getValue(), contentType,
-                "Expected content type doesn't match");
+                     "Expected content type doesn't match");
         assertEquals(response.getStatusLine().getStatusCode(), HTTP_STATUS_OK, "response code doesn't match");
 
         server.stop(5);
@@ -96,11 +87,5 @@ public class ESBJAVA2283ReturnContentTypeTestCase extends ESBIntegrationTest {
             os.write(response.getBytes());
             os.close();
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-
-        super.cleanup();
     }
 }
