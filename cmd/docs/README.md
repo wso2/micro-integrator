@@ -1,41 +1,39 @@
-# WSO2 Micro Integrator Command Line tool (MI-CLI)
+# WSO2 Micro Integrator Command Line tool
 
-View and manage the micro integrator runtime using the “mi” command line tool. Some of the usages of the command line tool include,
-1. Get a list of deployment runtime artifacts
+You can view and manage the Micro Integrator instances using the “mi” command line tool. Some of the usages of the command line tool include,
+1. Get a list of deployment runtime artifacts.
 2. Inspect details of each runtime artifact such as a proxy service or an API.
-3. Get the invocation endpoint of an artifact
+3. Get the invocation endpoint of an artifact.
 
 ### Running
 
-Extract the compressed archive generated to the desired location.
+1. Add the MI CLI bin folder to PATH in UNIX-based Operating System (Linux, Solaris, and Mac OS X)
 
-Add the MI CLI bin folder to PATH in unix-based Operating System (Linux, Solaris and Mac OS X)
+    `$ export PATH=/path/to/mi/cli/directory/bin:$PATH`
 
-`export PATH=/path/to/mi/cli/directory/bin:$PATH`
+2. Then execute,
 
-Then execute, 
-
-`$ mi`
+    `$ mi`
 
 Execute mi --help for further instructions.
 
-### Add Command Autocompletion
+### Add Command Autocompletion (Only for UNIX-based Operating System)
 
-`$ source /path/to/mi/cli/directory/mi_bash_completion.sh`
+    `$ source /path/to/mi/cli/directory/mi_bash_completion.sh`
 
 ### Configuration
 
-##### Q. How to Enable the Management API
+##### Enabling the Management API
 
 By default the Management API is disabled. To use the Management API you must use the system property `-DenableManagementApi` when starting the micro integrator
 
-**NOTE: These APIs are not protected, do not enable this in production. Take extra measures to secure this port if you are enabling this in production.**
+**NOTE: These APIs are not protected using an authorization mechanism. Therefore take extra measures to secure this port if you are enabling this in production.**
 
-##### Q. Management API Address and Port
+##### Changing Management API Address and Port
 
 To configure the address and the port of the Management API in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
 
-NOTE: The default address is https://localhost and the port is 9164
+NOTE: The default hostname is localhost and the port is 9164.
 
 ### Usage
 ```bash
