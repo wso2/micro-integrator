@@ -17,21 +17,27 @@
   ~  under the License.
   ~
   -->
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="TransformPayloadWhenArgsValueTestCaseProxy">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="TransformPayloadWhenArgsValueAndExpressionProxy">
     <target>
         <inSequence>
             <log level="full"/>
             <!-- using payloadFactory mediator to transform the request message -->
             <payloadFactory>
                 <format>
-                    <m:getQuote xmlns:m="http://services.samples">
-                        <m:request>
-                            <m:symbol>$1</m:symbol>
-                        </m:request>
-                    </m:getQuote>
+                    <ser:placeOrder xmlns:ser="http://services.samples"
+                                    xmlns:xsd="http://services.samples/xsd">
+                        <ser:order>
+                            <xsd:price>100.00</xsd:price>
+                            <xsd:quantity>$1</xsd:quantity>
+                            <xsd:symbol>$2</xsd:symbol>
+                        </ser:order>
+                    </ser:placeOrder>
                 </format>
                 <args>
-                    <arg value="WSO2"/>
+                    <arg value="2000"/>
+                    <arg xmlns:xsd="http://services.samples/xsd"
+                         xmlns:ser="http://services.samples"
+                         expression="//ser:placeOrder/ser:order/xsd:symbol/text()"/>
                 </args>
             </payloadFactory>
             <log level="full"/>

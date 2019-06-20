@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.payload.factory;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -33,23 +32,18 @@ public class TransformPayloadWhenNoArgsTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/payload/factory/no_arg_payload_factory_synapse.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Do transformation with a Payload Format that has no arguments")
+    @Test(groups = {"wso2.esb"}, description = "Do transformation with a Payload Format that has no arguments")
     public void transformUsingPayloadFactory() throws AxisFault, XPathExpressionException {
         OMElement response;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                "TransformPayloadWhenNoArgsTestCaseProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertTrue(response.toString().contains("automation"), "Symbol automation not found in response message");
 
     }
 
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
-    }
 
 }
