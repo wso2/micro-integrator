@@ -22,12 +22,10 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.mediator.test.iterate.IterateClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 /**
@@ -36,42 +34,39 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
 
     private IterateClient client;
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
         client = new IterateClient();
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach inline sequence to sequentially transform payload")
     public void testSequentialExecution() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple.xml");
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         String response = client
                 .send(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), createMultipleSymbolPayLoad(10),
                         "urn:getQuote");
         Assert.assertNotNull(response);
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int forEachCount = 0;
+        carbonLogReader.stop();
+        String logs = carbonLogReader.getLogs();
 
         // Verify logs to check that the order of symbols is same as in the payload. The symbols should be as SYM[1-10]
         // as in payload. Since loop iterates from the last log onwards, verifying whether the symbols are in SYM[10-1] order
-        for (int i = (logs.length - 1); i >= 0; i--) {
-            String message = logs[i].getMessage();
-            if (message.contains("foreach = in")) {
-                if (!message.contains("SYM" + forEachCount)) {
-                    Assert.fail("Incorrect message entered ForEach scope. Could not find symbol SYM" + forEachCount
-                            + " Found : " + message);
+        for (int i = 0; i < 10; i++) {
+            if (logs.contains("foreach = in")) {
+                if (!logs.contains("SYM" + i)) {
+                    Assert.fail("Incorrect message entered ForEach scope. Could not find symbol SYM" + i);
                 }
-                forEachCount++;
             }
         }
+        String[] splittedElements = logs.split("SYM");
 
-        Assert.assertEquals(forEachCount, 10, "Count of messages entered ForEach scope is incorrect");
+        Assert.assertEquals(splittedElements.length - 1, 10, "Count of messages entered ForEach scope is incorrect");
 
     }
 
@@ -88,11 +83,5 @@ public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
             method.addChild(chkPrice);
         }
         return method;
-    }
-
-    @AfterClass
-    public void close() throws Exception {
-        client = null;
-        super.cleanup();
     }
 }

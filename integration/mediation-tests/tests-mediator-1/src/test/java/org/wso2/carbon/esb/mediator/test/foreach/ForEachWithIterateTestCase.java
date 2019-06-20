@@ -19,12 +19,10 @@ package org.wso2.carbon.esb.mediator.test.foreach;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.mediator.test.iterate.IterateClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.util.Iterator;
@@ -37,38 +35,33 @@ import javax.xml.namespace.QName;
 public class ForEachWithIterateTestCase extends ESBIntegrationTest {
 
     private IterateClient client;
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
         client = new IterateClient();
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators")
     public void testForEachInlineSequenceWithIterateEndpoint() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple.xml");
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         String response = client
                 .getMultipleCustomResponse(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), "IBM", 2);
         Assert.assertNotNull(response);
+        carbonLogReader.stop();
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.clearLogs();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int forEachCount = 0;
-
-        for (LogEvent log : logs) {
-            String message = log.getMessage();
-            if (message.contains("foreach = in")) {
-                if (!message.contains("IBM")) {
-                    Assert.fail("Incorrect message entered ForEach scope");
-                }
-                forEachCount++;
+        if (logs.contains("foreach = in")) {
+            if (!logs.contains("IBM")) {
+                Assert.fail("Incorrect message entered ForEach scope");
             }
         }
 
-        Assert.assertEquals(forEachCount, 2, "Count of messages entered ForEach scope is incorrect");
+        Assert.assertEquals(logs.split("foreach = in").length - 1, 2, "Count of messages entered ForEach scope is incorrect");
 
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
@@ -85,26 +78,19 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and aggregate mediators")
     public void testForEachSequenceRefWithIterateEndpoint() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/foreach_simple_sequenceref.xml");
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
-        String response = client.getMultipleCustomResponse(getMainSequenceURL(), "IBM", 2);
+        String response = client.getMultipleCustomResponse(getProxyServiceURLHttp("foreach_simple_sequenceref"), "IBM", 2);
         Assert.assertNotNull(response);
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int forEachCount = 0;
-
-        for (LogEvent log : logs) {
-            String message = log.getMessage();
-            if (message.contains("foreach = in")) {
-                if (!message.contains("IBM")) {
-                    Assert.fail("Incorrect message entered ForEach scope");
-                }
-                forEachCount++;
+        String logs = carbonLogReader.getLogs();
+        if (logs.contains("foreach = in")) {
+            if (!logs.contains("IBM")) {
+                Assert.fail("Incorrect message entered ForEach scope");
             }
         }
 
-        Assert.assertEquals(forEachCount, 2, "Count of messages entered ForEach scope is incorrect");
+        Assert.assertEquals(logs.split("foreach = in").length - 1, 2, "Count of messages entered ForEach scope is incorrect");
 
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
@@ -118,9 +104,4 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
         Assert.assertEquals(i, 2, "Message count mismatched in response");
     }
 
-    @AfterClass
-    public void close() throws Exception {
-        client = null;
-        super.cleanup();
-    }
 }
