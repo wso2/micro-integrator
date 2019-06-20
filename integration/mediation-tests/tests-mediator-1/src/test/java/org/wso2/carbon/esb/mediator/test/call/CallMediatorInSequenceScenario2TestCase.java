@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.call;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -41,11 +40,6 @@ public class CallMediatorInSequenceScenario2TestCase extends ESBIntegrationTest 
                 getProxyServiceURLHttp("CallMediatorInSequenceScenario2TestProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 
 }
