@@ -1,0 +1,19 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="TransformPayloadWhenNoArgsTestCaseProxy">
+    <target>
+        <inSequence>
+            <log level="full"/>
+            <!-- using payloadFactory mediator to transform the request message -->
+            <payloadFactory>
+                <format>
+                    <m:getQuote xmlns:m="http://services.samples">
+                        <m:request>
+                            <m:symbol>automation</m:symbol>
+                        </m:request>
+                    </m:getQuote>
+                </format>
+            </payloadFactory>
+            <log level="full"/>
+            <respond/>
+        </inSequence>
+    </target>
+</proxy>
