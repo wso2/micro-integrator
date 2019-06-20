@@ -133,6 +133,10 @@ do
     cp -r "${baseDir}/docs/README.md" $mi_archive_dir > /dev/null 2>&1
     cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
 
+    if [[ "windows" != "$goos" ]]; then
+        cp -r "${baseDir}/mi_bash_completion.sh" $mi_archive_dir > /dev/null 2>&1
+    fi
+
     # set destination path for binary
     mi_bin_dir="${mi_archive_dir}/bin"
     mkdir -p $mi_bin_dir

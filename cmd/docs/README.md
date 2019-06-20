@@ -21,15 +21,7 @@ Execute mi --help for further instructions.
 
 ### Add Command Autocompletion
 
-Run via curl:
-`$ sh -c "$(curl -fsSL https://raw.githubusercontent.com/wso2/micro-integrator/1.0.x/cmd/mi_bash_completion.sh)"`
-
-or wget:
-`$ sh -c "$(wget -qO- https://raw.githubusercontent.com/wso2/micro-integrator/1.0.x/cmd/mi_bash_completion.sh)"`
-
-Then, 
-
-`$ source <your path>/mi_bash_completion.sh`
+`$ source /path/to/mi/cli/directory/mi_bash_completion.sh`
 
 ### Configuration
 
