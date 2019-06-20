@@ -33,7 +33,7 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config11/synapse.xml");
+        //loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config11/synapse.xml");
         cloneClient = new CloneClient();
 
     }
@@ -41,7 +41,7 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Enrichment of response message")
     public void enrichMediatorTest() throws IOException {
 
-        String response = cloneClient.getResponse(getProxyServiceURLHttp("SplitAggregateProxy"), "IBM");
+        String response = cloneClient.getResponse(getProxyServiceURLHttp("EnrichAndDoubleDropIntegrationTestProxy"), "IBM");
 
         Assert.assertTrue(response.contains("<urn:userName>foo</urn:userName>"), "Header mismatched");
         Assert.assertTrue(response.contains("<urn:password>bar</urn:password>"), "Header mismatched");
@@ -52,18 +52,14 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
     public void dropMediatorTest() throws IOException {
         String response;
 
-        response = cloneClient.getResponse(getProxyServiceURLHttp("SplitAggregateProxy"), "IBM");
+        response = cloneClient.getResponse(getProxyServiceURLHttp("EnrichAndDoubleDropIntegrationTestProxy"), "IBM");
 
     }
 
     @AfterClass(alwaysRun = true)
     public void closeTestArtifacts() throws Exception {
-        try {
-            super.cleanup();
-        } finally {
             cloneClient.destroy();
             cloneClient = null;
-        }
 
     }
 
