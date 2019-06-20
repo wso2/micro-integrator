@@ -138,10 +138,10 @@ fi
 
 # run the completion.go file to get the bash completion script
 # To do the string replace first build the script so that we have a consistent name
-go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH tools/completion.go
-./completion
-sed -i -e "s=./completion=mi=g" ./shell-completions/mi_bash_completion.sh
-rm completion
+go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH tools/generate_bash_completion_script.go
+./generate_bash_completion_script
+sed -i -e "s=./generate_bash_completion_script=mi=g" ./shell-completions/mi_bash_completion.sh
+rm generate_bash_completion_script
 
 for platform in ${platforms}
 do
