@@ -17,16 +17,13 @@
   ~  under the License.
   ~
 -->
-<proxy xmlns="http://ws.apache.org/ns/synapse"
-       name="CloneIntegrationEndpointsTestProxy2"
-       startOnLoad="true"
-       statistics="disable"
-       trace="disable"
-       transports="http,https">
-    <target outSequence="CloneIntegrationEndpointsSeqAggregate">
-        <inSequence>
-            <sequence key="CloneIntegrationEndpointsSeqCloneHttps"/>
-        </inSequence>
+<proxy name="CloneIntegrationEndpointsHttpsProxy" xmlns="http://ws.apache.org/ns/synapse" transports="https">
+    <target>
+        <endpoint>
+            <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+        </endpoint>
+        <outSequence>
+            <send/>
+        </outSequence>
     </target>
-    <description/>
 </proxy>
