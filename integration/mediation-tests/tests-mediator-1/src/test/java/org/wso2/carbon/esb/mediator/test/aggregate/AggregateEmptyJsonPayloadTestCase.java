@@ -18,11 +18,10 @@
 package org.wso2.carbon.esb.mediator.test.aggregate;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.net.URL;
@@ -37,13 +36,10 @@ import static org.wso2.esb.integration.common.utils.Utils.assertIfSystemLogConta
 public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
 
     private static final String PROXY_NAME = "aggregateEmptyJsonPayloadTestProxy";
-    private LogViewerClient logViewerClient;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        isProxyDeployed(PROXY_NAME);
     }
 
     /**
@@ -68,14 +64,11 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
         requestHeader.put("Content-type", "text/xml");
         requestHeader.put("SOAPAction", "urn:mediate");
         requestHeader.put("Accept", "application/json");
+        CarbonLogReader logReader = new CarbonLogReader();
+        logReader.start();
         HttpRequestUtil.doPost(new URL(getProxyServiceURLHttp(PROXY_NAME)), inputPayload, requestHeader);
 
-        Assert.assertTrue(assertIfSystemLogContains(logViewerClient, expectedOutput),
+        Assert.assertTrue(assertIfSystemLogContains(logReader, expectedOutput),
                 "No content 204 responses are not properly aggregated at the aggregate mediator.");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 }

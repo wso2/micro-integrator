@@ -17,11 +17,9 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
@@ -30,7 +28,6 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -38,19 +35,19 @@ import static org.testng.Assert.assertTrue;
  */
 public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Test multiple foreach constructs with property mediator in flow")
     public void testForEachPropertyMediator() throws Exception {
         verifyProxyServiceExistence("foreachPropertyTestProxy");
 
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
@@ -61,60 +58,43 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
                         + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
         sendRequest(getProxyServiceURLHttp("foreachPropertyTestProxy"), request);
+        carbonLogReader.stop();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
+        String logs = carbonLogReader.getLogs();
 
-        int verifyCount = 0;
-
-        for (LogEvent log : logs) {
-            String message = log.getMessage();
-
-            if (message.contains("fe_1_verify_in_1")) {
-                assertTrue(message.contains("fe_1_verify_in_1 = first property insequence"));
-                verifyCount++;
-            }
-            if (message.contains("in_2_verify_fe_1")) {
-                assertTrue(message.contains("in_2_verify_fe_1 = property in first foreach"));
-                verifyCount++;
-            }
-            if (message.contains("fe_2_verify_in_1")) {
-                assertTrue(message.contains("fe_2_verify_in_1 = first property insequence"));
-                verifyCount++;
-            }
-            if (message.contains("fe_2_verify_fe_1")) {
-                assertTrue(message.contains("fe_2_verify_fe_1 = property in first foreach"));
-                verifyCount++;
-            }
-            if (message.contains("fe_2_verify_in_2")) {
-                assertTrue(message.contains("fe_2_verify_in_2 = second property insequence"));
-                verifyCount++;
-            }
-            if (message.contains("in_3_verify_fe_2")) {
-                assertTrue(message.contains("in_3_verify_fe_2 = property in second foreach"));
-                verifyCount++;
-            }
-            if (message.contains("in_3_verify_in_1")) {
-                assertTrue(message.contains("in_3_verify_in_1 = first property insequence"));
-                verifyCount++;
-            }
-            if (message.contains("in_3_verify_fe_1")) {
-                assertTrue(message.contains("in_3_verify_fe_1 = property in first foreach"));
-                verifyCount++;
-            }
-            if (message.contains("in_3_verify_in_2")) {
-                assertTrue(message.contains("in_3_verify_in_2 = second property insequence"));
-                verifyCount++;
-            }
+        if (logs.contains("fe_1_verify_in_1")) {
+            assertTrue(logs.contains("fe_1_verify_in_1 = first property insequence"));
+        }
+        if (logs.contains("in_2_verify_fe_1")) {
+            assertTrue(logs.contains("in_2_verify_fe_1 = property in first foreach"));
+        }
+        if (logs.contains("fe_2_verify_in_1")) {
+            assertTrue(logs.contains("fe_2_verify_in_1 = first property insequence"));
+        }
+        if (logs.contains("fe_2_verify_fe_1")) {
+            assertTrue(logs.contains("fe_2_verify_fe_1 = property in first foreach"));
+        }
+        if (logs.contains("fe_2_verify_in_2")) {
+            assertTrue(logs.contains("fe_2_verify_in_2 = second property insequence"));
+        }
+        if (logs.contains("in_3_verify_fe_2")) {
+            assertTrue(logs.contains("in_3_verify_fe_2 = property in second foreach"));
+        }
+        if (logs.contains("in_3_verify_in_1")) {
+            assertTrue(logs.contains("in_3_verify_in_1 = first property insequence"));
+        }
+        if (logs.contains("in_3_verify_fe_1")) {
+            assertTrue(logs.contains("in_3_verify_fe_1 = property in first foreach"));
+        }
+        if (logs.contains("in_3_verify_in_2")) {
+            assertTrue(logs.contains("in_3_verify_in_2 = second property insequence"));
         }
 
-        assertEquals(verifyCount, 20, "Property log count mismatched");
     }
 
     @Test(groups = "wso2.esb", description = "Test nested foreach constructs with property mediator in flow")
     public void testNestedForEachPropertiesWithID() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/nested_foreach_property_mediator.xml");
-
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
@@ -124,56 +104,36 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
                         + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
                         + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
-        sendRequest(getMainSequenceURL(), request);
+        sendRequest(getProxyServiceURLHttp("NestedForEachPropertiesWithID"), request);
+        carbonLogReader.stop();
 
-        int verifyCount = 0;
+        String logs = carbonLogReader.getLogs();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-
-        for (LogEvent log : logs) {
-            String message = log.getMessage();
-
-            if (message.contains("fe_outer_verify_in")) {
-                assertTrue(message.contains("fe_outer_verify_in = property insequence"));
-                verifyCount++;
-            }
-            if (message.contains("fe_inner_verify_in")) {
-                assertTrue(message.contains("fe_inner_verify_in = property insequence"));
-                verifyCount++;
-            }
-            if (message.contains("fe_inner_verify_fe_outer")) {
-                assertTrue(message.contains("fe_inner_verify_fe_outer = property outer foreach"));
-                verifyCount++;
-            }
-            if (message.contains("fe_outer_verify_fe_outer")) {
-                assertTrue(message.contains("fe_outer_verify_fe_outer = property outer foreach"));
-                verifyCount++;
-            }
-            if (message.contains("fe_outer_fe_inner")) {
-                assertTrue(message.contains("fe_outer_fe_inner = property inner foreach"));
-                verifyCount++;
-            }
-            if (message.contains("in_verify_in")) {
-                assertTrue(message.contains("in_verify_in = property insequence"));
-                verifyCount++;
-            }
-            if (message.contains("in_fe_outer")) {
-                assertTrue(message.contains("in_fe_outer = property outer foreach"));
-                verifyCount++;
-            }
-            if (message.contains("in_fe_inner")) {
-                assertTrue(message.contains("in_fe_inner = property inner foreach"));
-                verifyCount++;
-            }
+        if (logs.contains("fe_outer_verify_in")) {
+            assertTrue(logs.contains("fe_outer_verify_in = property insequence"));
+        }
+        if (logs.contains("fe_inner_verify_in")) {
+            assertTrue(logs.contains("fe_inner_verify_in = property insequence"));
+        }
+        if (logs.contains("fe_inner_verify_fe_outer")) {
+            assertTrue(logs.contains("fe_inner_verify_fe_outer = property outer foreach"));
+        }
+        if (logs.contains("fe_outer_verify_fe_outer")) {
+            assertTrue(logs.contains("fe_outer_verify_fe_outer = property outer foreach"));
+        }
+        if (logs.contains("fe_outer_fe_inner")) {
+            assertTrue(logs.contains("fe_outer_fe_inner = property inner foreach"));
+        }
+        if (logs.contains("in_verify_in")) {
+            assertTrue(logs.contains("in_verify_in = property insequence"));
+        }
+        if (logs.contains("in_fe_outer")) {
+            assertTrue(logs.contains("in_fe_outer = property outer foreach"));
+        }
+        if (logs.contains("in_fe_inner")) {
+            assertTrue(logs.contains("in_fe_inner = property inner foreach"));
         }
 
-        assertEquals(verifyCount, 27, "Property log count mismatched");
-
-    }
-
-    @AfterClass
-    public void close() throws Exception {
-        super.cleanup();
     }
 
     private void sendRequest(String addUrl, String query) throws IOException {

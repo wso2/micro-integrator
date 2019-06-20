@@ -18,11 +18,9 @@
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import static org.testng.Assert.assertTrue;
@@ -33,17 +31,17 @@ import static org.testng.Assert.assertTrue;
  */
 public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESBIntegrationTest {
 
-    private static LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (default scope)")
     public void testIntVal() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -53,7 +51,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (default scope)")
     public void testStringVal() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -64,7 +62,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (default scope)")
     public void testFloatVal() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -74,7 +72,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (default scope)")
     public void testLongVal() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyLongDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -84,7 +82,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (default scope)")
     public void testShortVal() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -94,7 +92,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (default scope)")
     public void testOMVal() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyOMDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -106,26 +104,14 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
      * The method that checks whether the particular
      * match string is available in the sysytem logs
      */
-    private boolean isMatchFound(String matchStr) throws Exception {
+    private boolean isMatchFound(String matchStr) {
         boolean isSet = false;
-        LogEvent[] logs = logViewer.getAllSystemLogs();
-        int size = logs.length;
-        for (int i = size - 1; i >= 0; i--) {
-            if (logs[i].getMessage().contains(matchStr)) {
-                for (int j = i; j >= 0; j--) {
-                    if (logs[j].getMessage().contains("symbol = null")) {
-                        isSet = true;
-                        break;
-                    }
-                }
-                break;
-            }
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.stop();
+
+        if (logs.contains(matchStr) && logs.contains("symbol = null")) {
+            isSet = true;
         }
         return isSet;
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        cleanup();
     }
 }

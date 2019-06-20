@@ -22,9 +22,9 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
 import static org.testng.Assert.assertTrue;
@@ -40,35 +40,15 @@ public class CalloutJMSHeadersTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Callout JMS headers test case")
     public void testCalloutJMSHeaders() throws Exception {
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewerClient.clearLogs();
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<payload/>";
         AXIOMUtil.stringToOM(payload);
+        carbonLogReader.start();
         client.sendRobust(AXIOMUtil.stringToOM(payload), getProxyServiceURLHttp("JMCalloutClientProxy"), "urn:mediate");
-
-        long startTime = System.currentTimeMillis();
-        boolean logFound = false;
-        while (!logFound && (startTime + 60000 > System.currentTimeMillis())) {
-            Thread.sleep(1000);
-            LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
-            if (logs == null) {
-                continue;
-            }
-            for (LogEvent item : logs) {
-                if (item == null) {
-                    continue;
-                } else if (item.getPriority().equals("INFO")) {
-                    String message = item.getMessage();
-                    if (message.contains("RequestHeaderVal")) {
-                        logFound = true;
-                        break;
-                    }
-                }
-            }
-        }
+        boolean logFound = Utils.assertIfSystemLogContains(carbonLogReader, "RequestHeaderVal");
         assertTrue(logFound, "Required log entry not found");
-
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)

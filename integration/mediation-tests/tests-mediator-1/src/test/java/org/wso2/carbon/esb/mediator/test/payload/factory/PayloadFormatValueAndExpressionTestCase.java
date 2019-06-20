@@ -24,7 +24,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -38,14 +37,6 @@ public class PayloadFormatValueAndExpressionTestCase extends ESBIntegrationTest 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        // applying changes to esb - source view
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/synapseconfig/payloadmediatype/" + "valueandexpression_arguments.xml");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "invoke service - operation placeOrder")
@@ -59,7 +50,8 @@ public class PayloadFormatValueAndExpressionTestCase extends ESBIntegrationTest 
         options.setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
         options.setAction("urn:placeOrder");
 
-        options.setProperty(Constants.Configuration.TRANSPORT_URL, getProxyServiceURLHttps("ProxyPF"));
+        options.setProperty(Constants.Configuration.TRANSPORT_URL,
+                getProxyServiceURLHttps("PayloadFormatValueAndExpressionProxy"));
 
         sender.setOptions(options);
 

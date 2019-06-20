@@ -32,14 +32,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class SendMediatorEndpointFromRegistryTestCase extends ESBIntegrationTest {
-    ResourceAdminServiceClient resourceAdminServiceStub;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadResourcesToRegistry();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/send/synapse_endpoint_registry.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "End point in config registry")
@@ -79,38 +75,4 @@ public class SendMediatorEndpointFromRegistryTestCase extends ESBIntegrationTest
 
     }
 
-    private void uploadResourcesToRegistry() throws Exception {
-        new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        resourceAdminServiceStub.deleteResource("/_system/config/endpointConfig");
-        resourceAdminServiceStub
-                .addCollection("/_system/config/", "endpointConfig", "", "Contains test endpoint files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/endpointConfig/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/synapseconfig/send_mediator/endpoints/registry_endpoint.xml"))));
-
-        resourceAdminServiceStub.deleteResource("/_system/local/endpointConfig");
-        resourceAdminServiceStub.addCollection("/_system/local/", "endpointConfig", "", "Contains test endpoint files");
-        resourceAdminServiceStub
-                .addResource("/_system/local/endpointConfig/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/synapseconfig/send_mediator/endpoints/registry_endpoint.xml"))));
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/endpointConfig");
-        resourceAdminServiceStub
-                .addCollection("/_system/governance/", "endpointConfig", "", "Contains test endpoint files");
-        resourceAdminServiceStub
-                .addResource("/_system/governance/endpointConfig/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/synapseconfig/send_mediator/endpoints/registry_endpoint.xml"))));
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpointConfig");
-        resourceAdminServiceStub.deleteResource("/_system/local/endpointConfig");
-        resourceAdminServiceStub.deleteResource("/_system/governance/endpointConfig");
-        super.cleanup();
-    }
 }

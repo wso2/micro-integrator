@@ -19,14 +19,10 @@ package org.wso2.carbon.esb.mediator.test.callOut;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.net.URL;
-import javax.activation.DataHandler;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertTrue;
@@ -36,7 +32,6 @@ public class DynamicEndpointTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToRegistry();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie,
                 "DynamicEndpointWithCallMediatorProxy");
     }
@@ -47,30 +42,6 @@ public class DynamicEndpointTestCase extends ESBIntegrationTest {
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("DynamicEndpointWithCallMediatorProxy"), "", "IBM");
         boolean ResponseContainsIBM = response.getFirstElement().toString().contains("IBM");
         assertTrue(ResponseContainsIBM);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        try {
-            clearRegistry();
-        } finally {
-            super.cleanup();
-        }
-    }
-
-    private void uploadResourcesToRegistry() throws Exception {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.addResource("/_system/config/SimpleStockQuoteServiceEndpoint", "application/xml",
-                "Endpoint Configuration", setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                        + "/endpoint/addressEndpointConfig/addressEP_Test.xml"))));
-        Thread.sleep(3000);
-    }
-
-    private void clearRegistry() throws Exception {
-        new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie())
-                .deleteResource("/_system/config/SimpleStockQuoteServiceEndpoint");
     }
 
 }

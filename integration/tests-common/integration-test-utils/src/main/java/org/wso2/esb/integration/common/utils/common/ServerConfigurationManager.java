@@ -22,6 +22,7 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension;
 import org.wso2.carbon.integration.common.admin.client.ServerAdminClient;
 import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 import org.wso2.carbon.integration.common.utils.FileManager;
@@ -326,8 +327,9 @@ public class ServerConfigurationManager {
      *
      * @throws AutomationUtilException - throws if server restart fails
      */
-    public void restartGracefully() throws AutomationUtilException {
-        serverRestart();
+    public  void restartGracefully() throws AutomationUtilException {
+
+        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
     /**
@@ -337,43 +339,8 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if server restart fails
      */
     public void restartGracefully(long timeout) throws AutomationUtilException {
-        try {
-            sessionCookie = loginLogoutClient.login();
-            ServerAdminClient serverAdmin = new ServerAdminClient(backEndUrl, sessionCookie);
-            serverAdmin.restartGracefully();
-            try {
-                Thread.sleep(25000); //force wait until server gracefully shutdown
-                ClientConnectionUtil.waitForPort(port, timeout, true, hostname);
-                Thread.sleep(5000); //forceful wait until server is ready to be served
-            } catch (InterruptedException e) {
-                /* ignored */
-            }
-            ClientConnectionUtil.waitForLogin(autoCtx);
 
-        } catch (RemoteException | ServerAdminException | MalformedURLException | LoginAuthenticationExceptionException e) {
-            throw new AutomationUtilException("Error while gracefully restarting the server ", e);
-        }
-    }
-
-    public synchronized void serverRestart() throws AutomationUtilException {
-
-       /* try {
-
-            log.info("Restarting the server..");
-
-            String miCarbonHome = System.getProperty(MI_HOME_SYSTEM_PROPERTY);
-
-            Process tempProcess = startProcess(miCarbonHome, getStartScriptCommand("restart"));
-
-            ServerLogReader inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
-            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 120, TimeUnit.SECONDS);
-
-            log.info("Server re started successfully...");
-
-        } catch (IOException | InterruptedException e) {
-            throw new AutomationUtilException("Failed to stop server ", e);
-        }*/
-
+        this.restartGracefully();
     }
 
     private Process startProcess(String workingDirectory, String[] cmdArray) throws IOException {
@@ -416,20 +383,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if server restart fails
      */
     public void restartGracefully(String sessionCookie) throws AutomationUtilException {
-        try {
-            ServerAdminClient serverAdmin = new ServerAdminClient(backEndUrl, sessionCookie);
-            serverAdmin.restartGracefully();
-            try {
-                Thread.sleep(20000); //force wait until server gracefully restarts
-                ClientConnectionUtil.waitForPort(port, TIME_OUT, true, hostname);
-                Thread.sleep(5000); //forceful wait until server is ready to be served
-            } catch (InterruptedException e) {
-                //ignored
-            }
-            ClientConnectionUtil.waitForLogin(autoCtx);
-        } catch (RemoteException | ServerAdminException | MalformedURLException | LoginAuthenticationExceptionException e) {
-            throw new AutomationUtilException("Error while gracefully restarting the server ", e);
-        }
+      this.restartGracefully();
     }
 
     /**
@@ -438,7 +392,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if forceful restart fails
      */
     public void restartForcefully() throws AutomationUtilException {
-        serverRestart();
+        this.restartGracefully();
     }
 
     /**
@@ -468,20 +422,6 @@ public class ServerConfigurationManager {
         fileName = fileName.replace(".jar", "_1.0.0.jar");
         removeFromComponentDropins(fileName);
     }
-
-    /**
-     * /**
-     * Copy Jar file to server component/dropins
-     *
-     * @param jar jar file
-     * @throws IOException
-     * @throws URISyntaxException
-     */
-    /*public void copyToComponentDropins(File jar) throws IOException, URISyntaxException {
-        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        String lib = Paths.get(carbonHome, "dropins").toString();
-        FileManager.copyJarFile(jar, lib);
-    }*/
 
     /**
      * @param fileName file name

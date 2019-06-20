@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~  Copyright (c) 2005-2010, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~  Copyright (c) 2019, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~  WSO2 Inc. licenses this file to you under the Apache License,
   ~  Version 2.0 (the "License"); you may not use this file except
@@ -17,30 +17,26 @@
   ~  under the License.
   ~
   -->
-
-<!-- Introduction to Payload-factory mediator  -->
-<definitions xmlns="http://ws.apache.org/ns/synapse">
-
-    <sequence name="main">
-        <in>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="FormatPayloadWithOMTypeArgsExpressionProxy">
+    <target>
+        <inSequence>
             <log level="full"/>
             <!-- using payloadFactory mediator to transform the request message -->
+            <header name="To" action="remove"/>
+            <property name="RESPONSE" value="true"/>
+            <property name="NO_ENTITY_BODY" scope="axis2" action="remove"/>
+            <property xmlns:ns="http://services.samples" name="request" expression="//ns:payload/ns:request"
+                      scope="default" type="OM"/>
             <payloadFactory>
                 <format>
-                    <m:getQuote xmlns:m="http://services.samples">
-                        <m:request>
-                            <m:symbol>automation</m:symbol>
-                        </m:request>
-                    </m:getQuote>
+                    <ns:getQuote xmlns:ns="http://services.samples">$1</ns:getQuote>
                 </format>
+                <args>
+                    <arg expression="get-property('request')"/>
+                </args>
             </payloadFactory>
             <log level="full"/>
-        </in>
-
-        <out>
-
-        </out>
-        <send/>
-    </sequence>
-
-</definitions>
+            <respond/>
+        </inSequence>
+    </target>
+</proxy>

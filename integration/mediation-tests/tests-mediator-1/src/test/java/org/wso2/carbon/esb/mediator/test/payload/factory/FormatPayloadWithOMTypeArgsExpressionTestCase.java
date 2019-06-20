@@ -26,7 +26,6 @@ import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.client.Options;
 import org.apache.axis2.client.ServiceClient;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -37,13 +36,11 @@ public class FormatPayloadWithOMTypeArgsExpressionTestCase extends ESBIntegratio
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/payload/factory/om_arg_payload_factory_synapse.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Do transformation with a Payload Format that has OM type arguments")
+    @Test(groups = {"wso2.esb"}, description = "Do transformation with a Payload Format that has OM type arguments")
     public void transformPayloadByArgsValue() throws AxisFault {
-        sendRobust(getMainSequenceURL(), "IBM");
+        sendRobust(getProxyServiceURLHttp("FormatPayloadWithOMTypeArgsExpressionProxy"), "IBM");
     }
 
     private void sendRobust(String trpUrl, String symbol) throws AxisFault {
@@ -77,10 +74,5 @@ public class FormatPayloadWithOMTypeArgsExpressionTestCase extends ESBIntegratio
         method.addChild(value1);
 
         return method;
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 }

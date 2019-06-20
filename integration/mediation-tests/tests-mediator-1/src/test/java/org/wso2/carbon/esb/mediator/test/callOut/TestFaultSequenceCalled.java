@@ -29,18 +29,18 @@ import static org.testng.Assert.fail;
 
 public class TestFaultSequenceCalled extends ESBIntegrationTest {
 
+    String proxyServiceName = "TestFaultSequenceCalledProxy";
+
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/callout/FaultSeq.xml");
-
     }
 
     @Test(alwaysRun = true)
     public void test_faultSeqCalledWhenSoapWhenGotSoapFault() {
 
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "",
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), "",
                     "IBM");    // send the simplestockquote request. service url is set at the synapse
             fail("Must throw AxisFault");
         } catch (AxisFault axisFault) {

@@ -17,6 +17,7 @@
  */
 package org.wso2.carbon.esb.mediator.test.fault;
 
+import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axis2.AxisFault;
@@ -24,8 +25,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -35,15 +34,13 @@ public class Soap11FaultDetailAsElementTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/fault/soap11_fault_detail_as_element_synapse.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault details as Element")
-    public void testSOAP11FaultDetailAsElement() throws AxisFault {
+    public void testSOAP11FaultDetailAsElement() {
 
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("Soap11FaultDetailAsElementProxy"), null, "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());
@@ -59,9 +56,7 @@ public class Soap11FaultDetailAsElementTestCase extends ESBIntegrationTest {
                     .getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "message", "axis2ns1"));
             assertNotNull(messageOME, "Fault detail element message null");
             assertEquals(messageOME.getText(), "fault details by automation", "Fault detail message mismatched");
-
         }
-
     }
 
     @AfterClass(alwaysRun = true)

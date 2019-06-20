@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.context.ContextXpathConstants;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.ExtensionConstants;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 
 public class CarbonServerExtension extends ExecutionListenerExtension {
-    private TestServerManager serverManager;
+    private static TestServerManager serverManager;
     private static final Log log = LogFactory.getLog(CarbonServerExtension.class);
     private String executionEnvironment;
 
@@ -147,5 +148,14 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
     private static void handleException(String msg, Exception e) {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
+    }
+
+    public static void restartServer()  {
+
+        try {
+            serverManager.restartServer();
+        } catch (AutomationFrameworkException e) {
+            throw new RuntimeException("Exception occurred while restarting the server" , e);
+        }
     }
 }
