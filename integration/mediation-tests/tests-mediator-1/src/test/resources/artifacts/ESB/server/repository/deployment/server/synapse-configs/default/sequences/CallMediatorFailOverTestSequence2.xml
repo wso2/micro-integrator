@@ -16,6 +16,14 @@
   ~  under the License.
   ~
   -->
-<endpoint xmlns="http://ws.apache.org/ns/synapse" name="CallMediatorInSequenceScenario2TestEndpoint">
-    <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
-</endpoint>
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="CallMediatorFailOverTestSequence2" onError="fault">
+    <log level="custom">
+        <property name="STATE" value="SEQ2 S1"/>
+    </log>
+    <call>
+        <endpoint key="SimpleStockQuoteServiceEndpoint"/>
+    </call>
+    <log level="custom">
+        <property name="STATE" value="SEQ2 S2"/>
+    </log>
+</sequence>

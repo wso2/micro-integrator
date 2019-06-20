@@ -40,7 +40,7 @@
                 <args/>
             </payloadFactory>
             <send>
-                <endpoint key="CallMediatorInSequenceScenario2TestEndpoint"/>
+                <endpoint key="SimpleStockQuoteServiceEndpoint"/>
             </send>
         </inSequence>
         <outSequence>
@@ -59,7 +59,7 @@
                 <args/>
             </payloadFactory>
             <call>
-                <endpoint key="CallMediatorInSequenceScenario2TestEndpoint"/>
+                <endpoint key="SimpleStockQuoteServiceEndpoint"/>
             </call>
             <log level="custom">
                 <property name="STATE" value="MAIN OUT S2"/>
