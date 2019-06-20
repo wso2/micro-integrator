@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The class which facilitates tailing the logs from wso2carbon.log file.
@@ -96,4 +97,34 @@ public class CarbonLogReader {
         tailer.stop();
     }
 
+    /**
+     * Check for the existence of the given log message.
+     *
+     * @param expected expected log string
+     * @return true if the log is found, false otherwise
+     */
+    public boolean assertIfLogExists(String expected) {
+        return this.getLogs().contains(expected);
+    }
+
+    /**
+     * Check for the existence of the given log message. The polling will happen in one second intervals.
+     *
+     * @param expected expected log string
+     * @param timeout  max time to do polling in seconds
+     * @return true if the log is found with given timeout, false otherwise
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public boolean checkForLog(String expected, int timeout)
+            throws InterruptedException {
+        boolean logExists = false;
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (assertIfLogExists(expected)) {
+                logExists = true;
+                break;
+            }
+        }
+        return logExists;
+    }
 }
