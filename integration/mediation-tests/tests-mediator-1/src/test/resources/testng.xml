@@ -67,6 +67,12 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
+            <!-- Disable the testcase as config files are getting dynamically changed -->
+            <class name="org.wso2.carbon.esb.mediator.test.callOut.ValidPathAxis2XmlTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 
