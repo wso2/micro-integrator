@@ -17,16 +17,14 @@
   ~  under the License.
   ~
 -->
-<proxy xmlns="http://ws.apache.org/ns/synapse"
-       name="CloneIntegrationEndpointsTestProxy2"
-       startOnLoad="true"
-       statistics="disable"
-       trace="disable"
-       transports="http,https">
-    <target outSequence="CloneIntegrationEndpointsSeqAggregate">
-        <inSequence>
-            <sequence key="CloneIntegrationEndpointsSeqCloneHttps"/>
-        </inSequence>
-    </target>
-    <description/>
-</proxy>
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="CloneIntegrationEndpointsSeqAggregate">
+    <aggregate>
+        <completeCondition>
+            <messageCount min="-1" max="-1"/>
+        </completeCondition>
+        <onComplete xmlns:ns="http://org.apache.synapse/xsd" xmlns:ns3="http://org.apache.synapse/xsd"
+                    xmlns:m0="http://services.samples" expression="//m0:getQuoteResponse">
+            <send/>
+        </onComplete>
+    </aggregate>
+</sequence>
