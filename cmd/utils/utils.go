@@ -192,7 +192,7 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 
 func UpdateMILogger(loggerName, loggingLevel string) string {
 
-	url := RESTAPIBase + PrefixLogging
+	url := GetRESTAPIBase() + PrefixLogging
 	Logln(LogPrefixInfo+"URL:", url)
 	headers := make(map[string]string)
 	body := make(map[string]string)
