@@ -29,16 +29,16 @@ import (
 var taskName string
 
 // Show Task command related usage info
-const showTaskCmdLiteral = "task"
+const showTaskCmdLiteral = "show"
 const showTaskCmdShortDesc = "Get information about tasks"
 
-var showTaskCmdLongDesc = "Get information about the Task specified by command line argument [task-name] If not specified, list all the tasks\n"
+const showTaskCmdLongDesc = "Get information about the Task specified by command line argument [task-name] If not specified, list all the tasks\n"
 
 var showTaskCmdExamples = "Example:\n" +
 	"To get details about a specific task\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
+	"  " + programName + " " + taskCmdLiteral + " " + showTaskCmdLiteral + " SampleTask\n\n" +
 	"To list all the tasks\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
+	"  " + programName + " " + taskCmdLiteral + " " + showTaskCmdLiteral + "\n\n"
 
 // taskShowCmd represents the task command
 var taskShowCmd = &cobra.Command{
@@ -51,9 +51,9 @@ var taskShowCmd = &cobra.Command{
 }
 
 func init() {
-	showCmd.AddCommand(taskShowCmd)
-	taskShowCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
+	taskCmd.AddCommand(taskShowCmd)
+	taskShowCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, taskCmdLiteral,
+		showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags(taskCmdLiteral))
 }
 
 func handleTaskCmdArguments(args []string) {
@@ -74,8 +74,8 @@ func handleTaskCmdArguments(args []string) {
 }
 
 func printTaskHelp() {
-	fmt.Print(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showTaskCmdLiteral,
-		"[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
+	fmt.Print(showTaskCmdLongDesc + utils.GetCmdUsage(programName, taskCmdLiteral, showTaskCmdLiteral,
+		"[task-name]") + showTaskCmdExamples + utils.GetCmdFlags(taskCmdLiteral))
 }
 
 func executeGetTaskCmd(taskname string) {
@@ -109,7 +109,7 @@ func printTask(task utils.Task) {
 
 func executeListTasksCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixTasks
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixTasks
 
 	resp, err := utils.GetArtifactList(finalUrl, &utils.TaskList{})
 

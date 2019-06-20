@@ -220,7 +220,7 @@ func UpdateMILogger(loggerName, loggingLevel string) string {
 }
 
 func GetUrlAndParams(urlPrefix, key, value string) (string, map[string]string) {
-	url := RESTAPIBase + urlPrefix
+	url := GetRESTAPIBase() + urlPrefix
 	params := make(map[string]string)
 	params[key] = value
 	return url, params
@@ -236,7 +236,37 @@ func GetCmdFlags(cmd string) string {
 
 func GetCmdUsage(program, cmd, subcmd, arg string) string {
 	var showCmdUsage = "Usage:\n" +
-		"  " + program + " " + cmd + " " + subcmd + "(s)\n" +
-		"  " + program + " " + cmd + " " + subcmd + "(s) " + arg + "\n\n"
+		"  " + program + " " + cmd + " " + subcmd + "\n" +
+		"  " + program + " " + cmd + " " + subcmd + " " + arg + "\n\n"
 	return showCmdUsage
+}
+
+func InitRemoteConfigData() {
+
+	filePath := GetServerConfigFilePath()
+	if IsFileExist(filePath) {
+		RemoteConfigData.Load(filePath)
+	} else {
+		Logln(LogPrefixWarning + "RemoteConfig: file not found at: " + filePath +
+			" Adding the default config file.")
+		RemoteConfigData.Reset()
+		_ = RemoteConfigData.AddRemote(DefaultRemoteName, DefaultHost, DefaultPort)
+		_ = RemoteConfigData.SelectRemote(DefaultRemoteName)
+		RemoteConfigData.Persist(filePath)
+	}
+}
+
+func GetRESTAPIBase() string {
+
+	var restAPIBase string
+	if RemoteConfigData.CurrentServer != "" {
+		restAPIBase = HTTPSProtocol + RemoteConfigData.Remotes[RemoteConfigData.CurrentServer].Url + ":" +
+			RemoteConfigData.Remotes[RemoteConfigData.CurrentServer].Port + "/" + Context + "/"
+	} else {
+		// this cannot happen usually
+		errMessage := `micro integrator is not specified. Please run "` + ProjectName + ` remote" command`
+		HandleErrorAndExit(LogPrefixError, errors.New(errMessage))
+	}
+
+	return restAPIBase
 }

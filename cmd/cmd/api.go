@@ -16,24 +16,24 @@
 * under the License.
  */
 
-package utils
+package cmd
 
 import (
-	"testing"
+	"github.com/spf13/cobra"
 )
 
-// test case 1 - for a file that does not exist
-func TestIsFileExist1(t *testing.T) {
-	isFileExist := IsFileExist("random-string")
-	if isFileExist {
-		t.Errorf("Expected '%t' for a file that does not exist, got '%t' instead\n", false, true)
-	}
+// API command related usage info
+const apiCmdLiteral = "api"
+const apiCmdShortDesc = "Manage deployed Apis"
+const apiCmdLongDesc = "Manage the Apis deployed in the Micro Integrator"
+
+// apiCmd represents the api command
+var apiCmd = &cobra.Command{
+	Use:   apiCmdLiteral,
+	Short: apiCmdShortDesc,
+	Long:  apiCmdLongDesc,
 }
 
-// test for a file that does exist
-func TestIsFileExist2(t *testing.T) {
-	isFileExist := IsFileExist("./fileIOUtils.go")
-	if !isFileExist {
-		t.Errorf("Expected '%t' for a file that does exist,  got '%t' instead\n", true, false)
-	}
+func init() {
+	rootCmd.AddCommand(apiCmd)
 }

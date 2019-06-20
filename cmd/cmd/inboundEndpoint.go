@@ -16,24 +16,24 @@
 * under the License.
  */
 
-package utils
+package cmd
 
 import (
-	"testing"
+	"github.com/spf13/cobra"
 )
 
-// test case 1 - for a file that does not exist
-func TestIsFileExist1(t *testing.T) {
-	isFileExist := IsFileExist("random-string")
-	if isFileExist {
-		t.Errorf("Expected '%t' for a file that does not exist, got '%t' instead\n", false, true)
-	}
+// Inbound Endpoint command related usage info
+const inboundEndpointCmdLiteral = "inboundendpoint"
+const inboundEndpointCmdShortDesc = "Manage deployed Inbound Endpoints"
+const inboundEndpointCmdLongDesc = "Manage the Inbound Endpoints deployed in the Micro Integrator"
+
+// inboundEndpointCmd represents the inboundEndpoint command
+var inboundEndpointCmd = &cobra.Command{
+	Use:   inboundEndpointCmdLiteral,
+	Short: inboundEndpointCmdShortDesc,
+	Long:  inboundEndpointCmdLongDesc,
 }
 
-// test for a file that does exist
-func TestIsFileExist2(t *testing.T) {
-	isFileExist := IsFileExist("./fileIOUtils.go")
-	if !isFileExist {
-		t.Errorf("Expected '%t' for a file that does exist,  got '%t' instead\n", true, false)
-	}
+func init() {
+	rootCmd.AddCommand(inboundEndpointCmd)
 }

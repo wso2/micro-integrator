@@ -20,25 +20,20 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
-// List Tasks command related usage info
-const listTaskCmdLiteral = "tasks"
+// Task command related usage info
+const taskCmdLiteral = "task"
+const taskCmdShortDesc = "Manage deployed Tasks"
+const taskCmdLongDesc = "Manage the Tasks deployed in the Micro Integrator"
 
-// taskListCmd represents the list tasks command
-var taskListCmd = &cobra.Command{
-	Use:   listTaskCmdLiteral,
-	Short: showTaskCmdShortDesc,
-	Long:  showTaskCmdLongDesc + showTaskCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		// defined in taskInfo.go
-		handleTaskCmdArguments(args)
-	},
+// taskCmd represents the task command
+var taskCmd = &cobra.Command{
+	Use:   taskCmdLiteral,
+	Short: taskCmdShortDesc,
+	Long:  taskCmdLongDesc,
 }
 
 func init() {
-	showCmd.AddCommand(taskListCmd)
-	taskListCmd.SetHelpTemplate(showTaskCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showTaskCmdLiteral, "[task-name]") + showTaskCmdExamples + utils.GetCmdFlags("task(s)"))
+	rootCmd.AddCommand(taskCmd)
 }
