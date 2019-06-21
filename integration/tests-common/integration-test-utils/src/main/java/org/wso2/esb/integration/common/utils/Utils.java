@@ -277,6 +277,14 @@ public class Utils {
         return logExists;
     }
 
+    /**
+     * Checks if the expected string is available in the tailed logs of carbon log reader. Stops the log reader once found.
+     * The polling will happen in one second intervals
+     * @param logReader Carbon log reader
+     * @param expected  expected log string
+     * @param timeout max time to do polling
+     * @throws InterruptedException        if interrupted while sleeping
+     * */
     public static boolean logExists(CarbonLogReader logReader, String expected, int timeout) throws InterruptedException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
@@ -284,6 +292,26 @@ public class Utils {
             if (logReader.getLogs().contains(expected)) {
                 logExists = true;
                 logReader.stop();
+                break;
+            }
+        }
+        return logExists;
+    }
+
+    /**
+     * Check for the existence of the given log message. Does not stop the log reader
+     * The polling will happen in one second intervals
+     * @param logReader Carbon log reader
+     * @param expected  expected log string
+     * @param timeout max time to do polling
+     * @throws InterruptedException        if interrupted while sleeping
+     * */
+    public static boolean checkForLog(CarbonLogReader logReader, String expected, int timeout) throws InterruptedException {
+        boolean logExists = false;
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (logReader.getLogs().contains(expected)) {
+                logExists = true;
                 break;
             }
         }
