@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.fault;
 
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -30,14 +29,13 @@ public class Soap11FaultWithAttributeResponseFalseWithAddressingTestCase extends
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/fault/soap11_fault_set_response_attribute_false_with_addressing_synapse.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault messages as Response property false")
     public void testSOAP11FaultAttributeResponseFalseWithAddressing() throws AxisFault {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+            String proxyServiceName = "Soap11FaultWithAttributeResponseFalseWithAddressingTestCaseProxy";
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName),
                     "http://localhost:9070/services/NonExistingServiceFromAddressing", "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
@@ -47,11 +45,6 @@ public class Soap11FaultWithAttributeResponseFalseWithAddressingTestCase extends
 
         }
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
 }

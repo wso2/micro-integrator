@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.fault;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -35,14 +34,13 @@ public class Soap12FaultDetailAsElementTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/fault/soap12_fault_detail_as_element_synapse.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.2 fault details as Element")
     public void testSOAP12FaultDetailAsElement() throws AxisFault {
+        String proxyServiceName = "Soap12FaultDetailAsElementTestCaseProxy";
         try {
-            axis2Client.sendSimpleStockQuoteSoap12(getMainSequenceURL(),
+            axis2Client.sendSimpleStockQuoteSoap12(getProxyServiceURLHttp(proxyServiceName),
                     "http://localhost:9010/services/NonExistingService", "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
@@ -65,8 +63,4 @@ public class Soap12FaultDetailAsElementTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
-    }
 }
