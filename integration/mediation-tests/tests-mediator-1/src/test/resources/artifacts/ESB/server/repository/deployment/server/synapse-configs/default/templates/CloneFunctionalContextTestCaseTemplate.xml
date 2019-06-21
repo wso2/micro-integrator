@@ -17,16 +17,18 @@
   ~  under the License.
   ~
 -->
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="CloneFunctionalContextTestProxy" transports="https http">
-    <target>
-        <inSequence>
-            <call-template target="CloneFunctionalContextTestCaseTemplate">
-                <with-param name="test_key" value="REQUEST PARAM VALUE"/>
-            </call-template>
-            <respond/>
-        </inSequence>
-        <outSequence>
-            <send/>
-        </outSequence>
-    </target>
-</proxy>
+<template xmlns="http://ws.apache.org/ns/synapse" name="CloneFunctionalContextTestCaseTemplate">
+    <parameter name="test_key"/>
+    <sequence>
+        <clone continueParent="true">
+            <target>
+                <sequence>
+                    <log level="custom">
+                        <property name="PARAM" expression="$func:test_key"/>
+                    </log>
+                    <drop/>
+                </sequence>
+            </target>
+        </clone>
+    </sequence>
+</template>

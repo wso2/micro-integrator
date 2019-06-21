@@ -19,15 +19,12 @@
 package org.wso2.carbon.esb.mediator.test.clone;
 
 import org.apache.axiom.om.OMElement;
-import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.util.concurrent.TimeUnit;
 
 /*
  * This tests tests endpoints from governors registry and configuration registry
@@ -36,26 +33,25 @@ import java.util.concurrent.TimeUnit;
 
 public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(groups = "wso2.esb")
     public void setEnvironment() throws Exception {
         super.init();
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_functional_context.xml");
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry")
     public void testSequence() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneFunctionalContextTestProxy"), null, "IBM");
         Assert.assertNotNull(response);
 
-        //Added to ensure that carbon log is updated with required entries
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(300, TimeUnit.SECONDS)
-                .until(AvailabilityPollingUtils.isMessageRecived(logViewer));
+        String logs = carbonLogReader.getLogs();
+        Assert.assertTrue(logs.contains("REQUEST PARAM VALUE"));
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
@@ -63,4 +59,3 @@ public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 }
-
