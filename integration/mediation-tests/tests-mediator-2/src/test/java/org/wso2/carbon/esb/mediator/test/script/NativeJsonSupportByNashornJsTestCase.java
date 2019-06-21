@@ -25,6 +25,7 @@ import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.net.URL;
@@ -40,13 +41,12 @@ import static org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil.
  */
 public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending a JSON message Via REST and manipulate with NashornJS")
@@ -68,7 +68,7 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with NashornJS")
     public void testSerializingJson() throws Exception {
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
         String payload = "{\n" + "\"name\": \"John Doe\",\n" + "\"dob\": \"1990-03-19\",\n" + "\"ssn\": " + "\"234-23"
@@ -124,16 +124,13 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
      * @param property required property which needs to be validate if exists or not.
      * @return A Boolean
      */
-    private boolean isPropertyContainedInLog(String property) throws LogViewerLogViewerException, RemoteException {
-        LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
+    private boolean isPropertyContainedInLog(String property) {
         boolean containsProperty = false;
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(property)) {
+            String log = carbonLogReader.getLogs();
+            if (log.contains(property)) {
                 containsProperty = true;
-                break;
             }
-        }
+            carbonLogReader.stop();
         return containsProperty;
     }
 
