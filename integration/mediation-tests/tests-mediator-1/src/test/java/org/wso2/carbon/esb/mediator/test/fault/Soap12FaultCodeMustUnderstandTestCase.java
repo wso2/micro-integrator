@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.fault;
 
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -30,29 +29,20 @@ public class Soap12FaultCodeMustUnderstandTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/fault/soap12_fault_code_MustUnderstand_synapse.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.2 fault code MustUnderstand")
     public void testSOAP12FaultCodeMustUnderstand() throws AxisFault {
-
+        String proxyServiceName = "Soap12FaultCodeMustUnderstandTestCaseProxy";
         try {
-            axis2Client.sendSimpleStockQuoteSoap12(getMainSequenceURL(), null, "WSO2");
+            axis2Client.sendSimpleStockQuoteSoap12(getProxyServiceURLHttp(proxyServiceName), null, "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());
             assertEquals(expected.getReason(), "Soap12FaultCodeMustUnderstandTestCase", "Fault Reason Mismatched");
             assertEquals(expected.getFaultCode().getLocalPart(), "MustUnderstand", "Fault code value mismatched");
             assertEquals(expected.getFaultCode().getPrefix(), "soap12Env", "Fault code prefix mismatched");
-
         }
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
 }

@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.fault;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -31,15 +30,15 @@ public class Soap11FaultWithAttributeResponseTrueTestCase extends ESBIntegration
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/fault/soap11_fault_set_response_true_synapse.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault messages as Response true")
     public void testSOAP11FaultAttributeResponseTrue() throws AxisFault {
+        String proxyServiceName = "Soap11FaultWithAttributeResponseTrueTestCaseProxy";
         OMElement response;
         try {
-            response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null,
+                    "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());
@@ -53,11 +52,6 @@ public class Soap11FaultWithAttributeResponseTrueTestCase extends ESBIntegration
 
         }
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
 }
