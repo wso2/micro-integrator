@@ -118,7 +118,7 @@
                                                 <includeArtifactIds>SecVerifier</includeArtifactIds>
                                                 <stripVersion>true</stripVersion>
                                             </configuration>
-                                        </execution>
+                                        </execution>-->
                                         <execution>
                                             <id>unpack-mar-jks</id>
                                             <phase>compile</phase>
@@ -129,7 +129,7 @@
                                                 <artifactItems>
                                                     <artifactItem>
                                                         <groupId>org.wso2.ei</groupId>
-                                                        <artifactId>wso2ei</artifactId>
+                                                        <artifactId>wso2mi</artifactId>
                                                         <version>${product.mi.version}</version>
                                                         <type>zip</type>
                                                         <overWrite>true</overWrite>
@@ -139,7 +139,7 @@
                                                 </artifactItems>
                                             </configuration>
                                         </execution>
-                    -->
+
 
                 </executions>
             </plugin>
@@ -204,9 +204,7 @@
                         </configuration>
                     </execution>-->
 
-                </executions>
-            </plugin>
-            <!--
+
                 <execution>
                     <id>copy-resources-jks</id>
                     <phase>compile</phase>
@@ -219,7 +217,7 @@
                         <resources>
                             <resource>
                                 <directory>
-                                    ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/resources/security/
+                                    ${basedir}/target/tobeCopied/wso2mi-${product.mi.version}/repository/resources/security/
                                 </directory>
                                 <includes>
                                     <include>**/*.jks</include>
@@ -240,7 +238,7 @@
                         <resources>
                             <resource>
                                 <directory>
-                                    ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/resources/security/
+                                    ${basedir}/target/tobeCopied/wso2mi-${product.mi.version}/repository/resources/security/
                                 </directory>
                                 <includes>
                                     <include>**/*.jks</include>
@@ -249,7 +247,7 @@
                         </resources>
                     </configuration>
                 </execution>
-                <execution>
+                <!--<execution>
                     <id>copy-sample-jks</id>
                     <phase>compile</phase>
                     <goals>
@@ -311,10 +309,10 @@
                             </resource>
                         </resources>
                     </configuration>
-                </execution>
+                </execution>-->
             </executions>
         </plugin>
--->
+
         </plugins>
     </build>
 
