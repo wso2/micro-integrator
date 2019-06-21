@@ -1,5 +1,5 @@
 /*
- *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *WSO2 Inc. licenses this file to you under the Apache License,
  *Version 2.0 (the "License"); you may not use this file except
@@ -39,8 +39,6 @@ public class InvokeScriptWithDynamicKeyTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
-
     }
 
     @Test(groups = "wso2.esb", description = "Invoke a script with 'Dynamic' key type.")
@@ -65,43 +63,5 @@ public class InvokeScriptWithDynamicKeyTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         super.cleanup();
-        clearUploadedResource();
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_xslt");
-        resourceAdminServiceStub.addCollection("/_system/config/", "script_xslt", "", "Contains test xslt files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_xslt/transform.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform.xslt")));
-
-        Thread.sleep(1000);
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_xslt/transform_back.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform_back.xslt")));
-
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_xslt");
-
-        Thread.sleep(1000);
     }
 }
-
