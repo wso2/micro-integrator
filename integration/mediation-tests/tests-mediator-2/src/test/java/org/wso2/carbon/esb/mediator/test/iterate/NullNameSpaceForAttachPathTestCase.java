@@ -18,22 +18,20 @@
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
+import java.io.File;
+
 import org.apache.axis2.AxisFault;
 import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
-
-import java.io.File;
-
 import static org.testng.Assert.assertEquals;
 
 /**
- * This tests Iterator Mediator, when no name space is specified for 'attachPath' field  and
- * mediate the messages and verify error handling
+ * This tests Iterator Mediator, when no name space is specified for 'attachPath' field  and mediate the messages and
+ * verify error handling
  */
 public class NullNameSpaceForAttachPathTestCase extends ESBIntegrationTest {
     private String symbol;
@@ -46,31 +44,25 @@ public class NullNameSpaceForAttachPathTestCase extends ESBIntegrationTest {
     }
 
     /**
-     * These tests set no name space specified for 'AttachPath' field and mediate the messages
-     * and verify error handling by sending stock quote requests. Evaluation of the XPath expression will result
-     * in an error
+     * These tests set no name space specified for 'AttachPath' field and mediate the messages and verify error handling
+     * by sending stock quote requests. Evaluation of the XPath expression will result in an error
      */
-    @Test(groups = { "wso2.esb" }, description = "Testing null namespace for 'attachPath' field")
+    @Test(groups = {"wso2.esb"}, description = "Testing null namespace for 'attachPath' field")
     public void testNullNameSpaceForAttachPath() throws Exception {
 
         try {
             axis2Client
                     .sendMultipleQuoteRequest(getProxyServiceURLHttp("iterateWithNullNamespaceForAttachPathTestProxy"),
-                            symbol, "WSO2", 5);
+                                              symbol, "WSO2", 5);
             Assert.fail(
-                    "This Request must throw AxisFault"); // This will execute when the exception is not thrown as expected
+                    "This Request must throw AxisFault"); // This will execute when the exception is not thrown as
+            // expected
         } catch (AxisFault message) {
             System.out.print(message.getReason());
             assertEquals(message.getReason(), ESBTestConstant.UNEXPECTED_SENDING_OUT,
-                    "Iterator mediator worked even with an null name space for 'attachPath' field.");
+                         "Iterator mediator worked even with an null name space for 'attachPath' field.");
         }
 
-    }
-
-    @AfterClass(groups = "wso2.esb", alwaysRun = true)
-    public void close() throws Exception {
-        symbol = null;
-        super.cleanup();
     }
 }
 
