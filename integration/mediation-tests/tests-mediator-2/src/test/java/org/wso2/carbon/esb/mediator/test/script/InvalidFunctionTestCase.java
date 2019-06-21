@@ -21,21 +21,14 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
-import javax.xml.xpath.XPathExpressionException;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class InvalidFunctionTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "Try to invoke a non-existing function in a script. it throws an AxisFault.", expectedExceptions = {
@@ -48,36 +41,7 @@ public class InvalidFunctionTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         super.cleanup();
-        clearUploadedResource();
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_js");
-        resourceAdminServiceStub.addCollection("/_system/config/", "script_js", "", "Contains test js files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_js/stockquoteTransform.js", "application/x-javascript", "js files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/script_js/stockquoteTransform.js")));
-
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_js");
-
-        Thread.sleep(1000);
-    }
 
 }
