@@ -45,7 +45,6 @@ public class CloneSOAPActionTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         init();
         axisServiceClient = new AxisServiceClient();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_SOAP_Action.xml");
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
 
@@ -55,12 +54,12 @@ public class CloneSOAPActionTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.esb", description = "Tests SOAP Action")
     public void testSOAPAction() throws Exception {
 
         OMElement response = axisServiceClient
-                .sendReceive(createSimpleQuoteRequestBody("WSO2"), getMainSequenceURL(), "");
+                .sendReceive(createSimpleQuoteRequestBody("WSO2"), getProxyServiceURLHttp("CloneSOAPActionTestCaseProxy"), "");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 
@@ -70,7 +69,6 @@ public class CloneSOAPActionTestCase extends ESBIntegrationTest {
         axis2Server2.stop();
         axis2Server2 = null;
         axis2Server1 = null;
-        super.cleanup();
     }
 
     private OMElement createSimpleQuoteRequestBody(String symbol) {

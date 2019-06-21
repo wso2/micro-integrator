@@ -23,12 +23,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.net.URL;
 import java.util.Iterator;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
 /*
@@ -38,27 +35,18 @@ import javax.xml.namespace.QName;
 
 public class CloneIntegrationSequenceTestCase extends ESBIntegrationTest {
 
-    private ResourceAdminServiceClient resourceAdminServiceClient;
     private CloneClient client;
 
     @BeforeClass(groups = "wso2.esb")
     public void setEnvironment() throws Exception {
         init();
         client = new CloneClient();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        URL url = new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/clone/cloneLogAndSendSequence.xml");
-        resourceAdminServiceClient.addResource("/_system/governance/sequences/clone/cloneLogAndSendSequence",
-                "application/vnd.wso2.sequence", "configuration", setEndpoints(new DataHandler(url)));
-        resourceAdminServiceClient
-                .addResource("/_system/config/sequences/clone/cloneLogAndSendSequence", "application/vnd.wso2.sequence",
-                        "configuration", setEndpoints(new DataHandler(url)));
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_sequence.xml");
     }
 
     @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry")
     public void testSequence() throws Exception {
 
-        String response = client.getResponse(getMainSequenceURL(), "WSO2");
+        String response = client.getResponse(getProxyServiceURLHttp("CloneIntegrationSequenceProxy"), "WSO2");
         Assert.assertNotNull(response);
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
@@ -75,12 +63,8 @@ public class CloneIntegrationSequenceTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void close() throws Exception {
-        resourceAdminServiceClient.deleteResource("/_system/governance/sequences/clone/cloneLogAndSendSequence");
-        resourceAdminServiceClient.deleteResource("/_system/config/sequences/clone/cloneLogAndSendSequence");
-        resourceAdminServiceClient = null;
         client.destroy();
         client = null;
-        super.cleanup();
     }
 
 }
