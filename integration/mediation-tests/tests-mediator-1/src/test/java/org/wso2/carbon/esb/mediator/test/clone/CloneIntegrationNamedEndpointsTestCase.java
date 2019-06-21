@@ -46,7 +46,6 @@ public class CloneIntegrationNamedEndpointsTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         super.init();
         client = new CloneClient();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/clone/clone_named_endpoints.xml");
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
 
@@ -56,11 +55,11 @@ public class CloneIntegrationNamedEndpointsTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     @Test(groups = "wso2.esb", description = "Tests http address")
     public void testSequence() throws Exception {
 
-        String response = client.getResponse(getMainSequenceURL(), "WSO2");
+        String response = client.getResponse(getProxyServiceURLHttp("CloneIntegrationNamedEndpointsProxy"), "WSO2");
         Assert.assertNotNull(response, "Response Message is null");
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
@@ -82,8 +81,6 @@ public class CloneIntegrationNamedEndpointsTestCase extends ESBIntegrationTest {
         axis2Server2 = null;
         client.destroy();
         client = null;
-        super.cleanup();
-
     }
 
 }
