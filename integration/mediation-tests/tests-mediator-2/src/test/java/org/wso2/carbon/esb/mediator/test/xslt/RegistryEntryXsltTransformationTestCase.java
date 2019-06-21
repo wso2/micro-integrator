@@ -41,8 +41,6 @@ public class RegistryEntryXsltTransformationTestCase extends ESBIntegrationTest 
             "wso2.esb" }, description = "Do XSLT transformation  by selecting the xslt file from config registry.")
     public void xsltTransformationFromConfigRegistry() throws Exception {
         OMElement response;
-        uploadResourcesToConfigRegistry();
-
         response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("xsltInConfRegistryTestProxy"), null, "IBM");
         assertNotNull(response, "Response message null");
@@ -55,52 +53,11 @@ public class RegistryEntryXsltTransformationTestCase extends ESBIntegrationTest 
             "wso2.esb" }, description = "Do XSLT transformation by selecting the xslt file from governance registry.y")
     public void xsltTransformationFromGovernanceRegistry() throws Exception {
         OMElement response;
-        uploadResourcesToGovernanceRegistry();
         response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("xsltInGovRegistryTestProxy"), null, "IBM");
         assertNotNull(response, "Response message null");
         assertTrue(response.toString().contains("Code"), "Response does not contain the key word: Code");
         assertTrue(response.toString().contains("IBM"), "Response does not contain the key word: IBM");
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/xslt");
-        resourceAdminServiceStub.addCollection("/_system/config/", "xslt", "", "Contains test XSLT files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/xslt/transform_back.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform_back.xslt")));
-        Thread.sleep(1000);
-        resourceAdminServiceStub.addResource("/_system/config/xslt/transform.xslt", "application/xml", "xslt files",
-                new DataHandler(
-                        new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/xslt/transform.xslt")));
-
-    }
-
-    private void uploadResourcesToGovernanceRegistry() throws Exception {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
-        resourceAdminServiceStub.addCollection("/_system/governance/", "xslt", "", "Contains test XSLT files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/governance/xslt/transform_back.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform_back.xslt")));
-        Thread.sleep(1000);
-        resourceAdminServiceStub.addResource("/_system/governance/xslt/transform.xslt", "application/xml", "xslt files",
-                new DataHandler(
-                        new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/xslt/transform.xslt")));
     }
 }
