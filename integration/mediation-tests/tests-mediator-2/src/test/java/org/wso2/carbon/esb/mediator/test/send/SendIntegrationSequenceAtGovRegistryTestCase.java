@@ -32,13 +32,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class SendIntegrationSequenceAtGovRegistryTestCase extends ESBIntegrationTest {
-    private ResourceAdminServiceClient resourceAdminServiceStub;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = {
@@ -65,28 +62,5 @@ public class SendIntegrationSequenceAtGovRegistryTestCase extends ESBIntegration
         String symbolResponse = omElement.getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
                 .getText();
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        resourceAdminServiceStub.addCollection("/_system/config/", "endpoints", "", "Contains test endpoint files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/endpoints/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/send/endpoints/registry_endpoint.xml"))));
-        resourceAdminServiceStub.deleteResource("/_system/governance/sequence_conf");
-        resourceAdminServiceStub
-                .addCollection("/_system/governance/", "sequence_conf", "", "Contains receiving sequence files");
-        resourceAdminServiceStub.addResource("/_system/governance/sequence_conf/test_sequence_build_message_gov.xml",
-                "application/vnd.wso2.sequence", "xml files", setEndpoints(new DataHandler(
-                        new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/send/sequence/test_sequence_build_message_gov.xml"))));
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        resourceAdminServiceStub.deleteResource("/_system/governance/sequence_conf");
-        super.cleanup();
     }
 }
