@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.fault;
 
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -33,13 +32,13 @@ public class Soap11FaultOutSequenceTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/fault/soap11_fault_out_sequence_synapse.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.1 fault messages from from outMediator sequence")
     public void testSOAP11FaultFromOutSequence() throws AxisFault, XPathExpressionException {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+            String proxyServiceName = "Soap11FaultOutSequenceTestCaseProxy";
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName),
                     getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
@@ -54,11 +53,6 @@ public class Soap11FaultOutSequenceTestCase extends ESBIntegrationTest {
 
         }
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
 }

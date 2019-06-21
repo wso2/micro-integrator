@@ -40,16 +40,12 @@ public class ForceErrorOnSoapFaultPropertyTest extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Checking Force Error Property")
     public void testForceErrorOnSoapFault() throws AxisFault {
         try {
+            String proxyServiceName = "ForceErrorOnSoapFaultPropertyTestProxy";
             axis2Client
-                    .send(getProxyServiceURLHttp("ForceErrorTestProxy"), null, "getQuote", createFaultRequest("IBM"));
+                    .send(getProxyServiceURLHttp(proxyServiceName), null, "getQuote", createFaultRequest("IBM"));
         } catch (AxisFault expected) {
             assertEquals(expected.getFaultCode().getLocalPart(), "500000", "Fault code value mismatched");
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
     private OMElement createFaultRequest(String symbol) {
