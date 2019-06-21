@@ -31,13 +31,20 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
+import javax.wsdl.Output;
+import javax.xml.stream.XMLStreamException;
 
 public class Utils {
 
@@ -361,5 +368,22 @@ public class Utils {
 
         }
         return isCarFileDeployed;
+    }
+
+    public static void deploySynapseConfiguration(OMElement config, String location, boolean restart) {
+
+        String base = System.getProperty("carbon.home") + File.separator+ "repository"+File.separator+"deployment"+File.separator+"server"+File.separator+"synapse-configs"+File.separator+"default"+File.separator;
+        location = base + location;
+        try (OutputStream outputStream = new FileOutputStream(location)) {
+            config.serialize(outputStream);
+            config.serialize(System.out);
+            if (restart) {
+                CarbonServerExtension.restartServer();
+            }
+        } catch (IOException exception) {
+            log.error("Error when creating file", exception);
+        } catch (XMLStreamException e) {
+            log.error("Error when serializing synapse config", e);
+        }
     }
 }
