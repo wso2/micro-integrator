@@ -24,35 +24,29 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBIntegrationTest {
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         verifyAPIExistence("ClientApi");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
             + " reserved character : ")
     public void testURITemplateExpandWithPercentEncoding() throws Exception {
         boolean isPercentEncoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded?queryParam=ESB:WSO2"), null);
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("ESB%3AWSO2")) {
-                isPercentEncoded = true;
-                break;
-            }
-        }
+        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%3AWSO2");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertTrue(isPercentEncoded,
                 "Reserved character should be percent encoded while uri-template expansion");
 
@@ -62,17 +56,12 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
             + "character : with percent encoding escaped at uri-template expansion")
     public void testURITemplateExpandWithEscapedPercentEncoding() throws Exception {
         boolean isPercentEncoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/escapeUrlEncoded?queryParam=ESB:WSO2"), null);
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("ESB%3AWSO2")) {
-                isPercentEncoded = true;
-                break;
-            }
-        }
+        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%3AWSO2");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertFalse(isPercentEncoded,
                 "Reserved character should not be percent encoded while uri-template expansion as escape enabled");
 
@@ -82,17 +71,12 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
             + " reserved character : ")
     public void testURITemplateExpandWithPercentEncodingPathParamCase() throws Exception {
         boolean isPercentEncoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded/ESB:WSO2"), null);
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("To: /services/test_2/ESB%3AWSO2")) {
-                isPercentEncoded = true;
-                break;
-            }
-        }
+        isPercentEncoded = carbonLogReader.assertIfLogExists("To: /services/test_2/ESB%3AWSO2");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertTrue(isPercentEncoded,
                 "Reserved character should be percent encoded while uri-template expansion");
 
@@ -102,17 +86,12 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
             + "character : with percent encoding escaped at uri-template expansion")
     public void testURITemplateExpandWithEscapedPercentEncodingPathParam() throws Exception {
         boolean isPercentEncoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/escapeUrlEncoded/ESB:WSO2"), null);
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("To: /services/test_2/ESB%3AWSO2")) {
-                isPercentEncoded = true;
-                break;
-            }
-        }
+        isPercentEncoded = carbonLogReader.assertIfLogExists("To: /services/test_2/ESB%3AWSO2");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertFalse(isPercentEncoded,
                 "Reserved character should not be percent encoded while uri-template expansion as escape enabled");
 
@@ -123,22 +102,14 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     public void testURITemplateParameterDecodingSpaceCharacterCase() throws Exception {
         boolean isPercentEncoded = false;
         boolean isMessageContextPropertyPercentDecoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded?queryParam=ESB%20WSO2"), null);
         String decodedMessageContextProperty = "decodedQueryParamValue = ESB WSO2";
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(decodedMessageContextProperty)) {
-                isMessageContextPropertyPercentDecoded = true;
-                continue;
-            }
-            if (message.contains("ESB%20WSO2")) {
-                isPercentEncoded = true;
-                continue;
-            }
-        }
+        isMessageContextPropertyPercentDecoded = carbonLogReader.assertIfLogExists(decodedMessageContextProperty);
+        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%20WSO2");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertTrue(isMessageContextPropertyPercentDecoded,
                 "Uri-Template parameters should be percent decoded at message context property");
         Assert.assertTrue(isPercentEncoded,
@@ -150,22 +121,14 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     public void testURITemplateParameterDecodingPlusCharacterCase() throws Exception {
         boolean isPercentEncoded = false;
         boolean isMessageContextPropertyPercentDecoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded?queryParam=ESB+WSO2"), null);
         String decodedMessageContextProperty = "decodedQueryParamValue = ESB+WSO2";
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(decodedMessageContextProperty)) {
-                isMessageContextPropertyPercentDecoded = true;
-                continue;
-            }
-            if (message.contains("ESB%2BWSO2")) {
-                isPercentEncoded = true;
-                continue;
-            }
-        }
+        isMessageContextPropertyPercentDecoded = carbonLogReader.assertIfLogExists(decodedMessageContextProperty);
+        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%2BWSO2");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertTrue(isMessageContextPropertyPercentDecoded,
                 "Uri-Template parameters should be percent decoded at message context property");
         Assert.assertTrue(isPercentEncoded,
@@ -177,29 +140,14 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     public void testURITemplateParameterDecodingWithPercentEncodingEscapedAtExpansion() throws Exception {
         boolean isPercentEncoded = false;
         boolean isMessageContextPropertyPercentDecoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/escapeUrlEncoded?queryParam=ESB+WSO2"), null);
         String decodedMessageContextProperty = "decodedQueryParamValue = ESB+WSO2";
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-
-        //introduced since clearLogs() is not clearing previoues URL call logs, and need to stop
-        // searching after 4 messages
-        int count = 0;
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (count++ >= 4) {
-                break;
-            }
-            if (message.contains(decodedMessageContextProperty)) {
-                isMessageContextPropertyPercentDecoded = true;
-                continue;
-            }
-            if (message.contains("ESB%2BWSO2")) {
-                isPercentEncoded = true;
-                continue;
-            }
-        }
+        isMessageContextPropertyPercentDecoded = carbonLogReader.assertIfLogExists(decodedMessageContextProperty);
+        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%2BWSO2");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertTrue(isMessageContextPropertyPercentDecoded,
                 "Uri-Template parameters should be percent decoded at message context property");
         Assert.assertFalse(isPercentEncoded,
@@ -210,18 +158,13 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
             + " whole URL including protocol , host , port etc. ")
     public void testURITemplateSpecialCaseVariableWithFullURL() throws Exception {
         boolean isPercentEncoded = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         HttpResponse response = HttpRequestUtil.sendGetRequest(
                 getApiInvocationURL("services/client/special_case/http://localhost:8480/services/test_2/special_case"),
                 null);
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("To: /services/test_2/special_case")) {
-                isPercentEncoded = true;
-                break;
-            }
-        }
+        isPercentEncoded = carbonLogReader.assertIfLogExists("To: /services/test_2/special_case");
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         Assert.assertTrue(isPercentEncoded,
                 "The Special case of of Full URL expansion should be identified and should not percent encode full URL");
 
