@@ -22,9 +22,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.net.URL;
@@ -40,12 +39,12 @@ import static org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil.
  */
 public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
 
     }
 
@@ -68,7 +67,7 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with JS")
     public void testSerializingJson() throws Exception {
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
         String payload = "{\n" + "\"name\": \"John Doe\",\n" + "\"dob\": \"1990-03-19\",\n" + "\"ssn\": " + "\"234-23"
@@ -131,15 +130,13 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
      * @return A Boolean
      */
     private boolean isPropertyContainedInLog(String property) throws LogViewerLogViewerException, RemoteException {
-        LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
+
+        String log = carbonLogReader.getLogs();
         boolean containsProperty = false;
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(property)) {
-                containsProperty = true;
-                break;
-            }
+        if (log.contains(property)) {
+            containsProperty = true;
         }
+        carbonLogReader.stop();
         return containsProperty;
     }
 }
