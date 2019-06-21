@@ -125,15 +125,22 @@ do
 
     echo -en "\t - $goos/$goarch..."
 
-    zipfile="$filename-$build_version-$pos-$parch"
-    zipdir="${buildPath}/$filename"
-    mkdir -p $zipdir
+    mi_dir_name="wso2$filename-cli-$build_version"
+    mi_archive_name="$mi_dir_name-$pos-$parch"
+    mi_archive_dir="${buildPath}/${mi_dir_name}"
+    mkdir -p $mi_archive_dir
 
-    cp -r "${baseDir}/server_config.yaml" $zipdir > /dev/null 2>&1
-    cp -r "${baseDir}/LICENSE" $zipdir > /dev/null 2>&1
+    cp -r "${baseDir}/docs/README.md" $mi_archive_dir > /dev/null 2>&1
+    cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
+
+    if [[ "windows" != "$goos" ]]; then
+        cp -r "${baseDir}/mi_bash_completion.sh" $mi_archive_dir > /dev/null 2>&1
+    fi
 
     # set destination path for binary
-    destination="$zipdir/$output"
+    mi_bin_dir="${mi_archive_dir}/bin"
+    mkdir -p $mi_bin_dir
+    destination="$mi_bin_dir/$output"
 
     GOOS=$goos GOARCH=$goarch go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH -ldflags  \
     "-X github.com/wso2/micro-integrator/cmd/cmd.version=$build_version -X 'mi.buildDate=$(date -u '+%Y-%m-%d
@@ -141,8 +148,12 @@ do
 
     pwd=`pwd`
     cd $buildPath
-    tar czf "$zipfile.tar.gz" $filename > /dev/null 2>&1
-    rm -rf $filename
+    if [[ "windows" == "$goos" ]]; then
+        zip -r "$mi_archive_name.zip" $mi_dir_name > /dev/null 2>&1
+    else
+        tar czf "$mi_archive_name.tar.gz" $mi_dir_name > /dev/null 2>&1
+    fi
+    rm -rf $mi_dir_name
     cd $pwd
     echo -en $'✔ '
     echo
