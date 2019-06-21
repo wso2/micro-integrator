@@ -21,16 +21,10 @@ import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.esb.integration.common.clients.logging.LoggingAdminClient;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -41,7 +35,6 @@ public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrat
     public void setEnvironment() throws Exception {
         super.init();
         enableDebugLogging();
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "custom mediator with JS and store it in registry and invoke it with the given 'key'")
@@ -68,39 +61,11 @@ public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrat
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         super.cleanup();
-        clearUploadedResource();
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_js");
-        resourceAdminServiceStub.addCollection("/_system/config/", "script_js", "", "Contains test js files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_js/stockquoteTransform.js", "application/x-javascript", "js files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/script_js/stockquoteTransform.js")));
-
-    }
 
     private void enableDebugLogging() throws Exception {
         LoggingAdminClient logAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logAdminClient.updateLoggerData("org.apache.synapse", "DEBUG", true, false);
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_js");
-        Thread.sleep(1000);
     }
 }
