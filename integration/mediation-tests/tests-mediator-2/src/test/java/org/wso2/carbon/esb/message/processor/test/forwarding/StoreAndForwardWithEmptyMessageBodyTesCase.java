@@ -27,7 +27,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
@@ -43,7 +43,7 @@ import java.util.Random;
 public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTest {
 
     private H2DataBaseManager h2DatabaseManager;
-    private static LogViewerClient logViewer;
+    private static CarbonLogReader carbonLogReader;
 
     private String JDBC_URL;
     private String DB_USER;
@@ -65,25 +65,25 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
                 "CREATE TABLE IF NOT EXISTS JDBC_MESSAGE_STORE(\n" + "indexId BIGINT(20) NOT NULL AUTO_INCREMENT,\n"
                         + "msg_id VARCHAR(200) NOT NULL ,\n" + "message BLOB NOT NULL,\n" + "PRIMARY KEY ( indexId )\n"
                         + ")");
-        logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         super.init();
     }
 
     @Test
     public void testWithEmptyMessage() throws Exception {
-        logViewer.clearLogs();
+
         String location = getESBResourceLocation() + File.separator + "messageProcessorConfig" + File.separator
                 + "EmptyMsgBodyMessageStoreTest.xml";
         String proxyContent = FileUtils.readFileToString(new File(location));
         proxyContent = this.updateDatabaseInfo(proxyContent);
-        addMessageStore(AXIOMUtil.stringToOM(proxyContent));
-        loadESBConfigurationFromClasspath(
-                "artifacts" + File.separator + "ESB" + File.separator + "messageProcessorConfig" + File.separator
-                        + "EmptyMsgBodyTest.xml");
+
+        String storeLocation = "message-stores/EmptyMsgBodyMessageStoreTest.xml";
+        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(proxyContent), storeLocation, true);
         String proxyServiceUrl = getProxyServiceURLHttp("EmptyMsgBodyTestProxy");
         AxisServiceClient client = new AxisServiceClient();
         client.fireAndForget(null, proxyServiceUrl, "");
-        Assert.assertTrue(Utils.checkForLog(logViewer, "REPLY = MESSAGE", 10),
+        Assert.assertTrue(Utils.logExists(carbonLogReader, "REPLY = MESSAGE", 10),
                 "Message with empty body not processed!");
     }
 
