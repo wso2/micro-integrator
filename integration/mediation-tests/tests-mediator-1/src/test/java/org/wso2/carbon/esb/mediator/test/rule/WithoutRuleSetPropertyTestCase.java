@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.rule;
 
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -27,30 +26,21 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import static org.testng.Assert.assertEquals;
 
-public class WithOutRuleSetPropertyTestCase extends ESBIntegrationTest {
+public class WithoutRuleSetPropertyTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-
     }
 
     @Test(groups = "wso2.esb", description = "scenario without rules")
-    public void testSequenceWithOutRuleSet() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config_without_rule/synapse.xml");
+    public void testSequenceWithOutRuleSet() {
         try {
-
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("WithoutRuleSetPropertyTestCaseProxy"), null, "IBM");
             Assert.fail("This Configuration can not be saved successfully due to empty rule set");
         } catch (AxisFault expected) {
             assertEquals(expected.getMessage(), ESBTestConstant.INCOMING_MESSAGE_IS_NULL,
                     "Fault: value mismatched, should be 'The input stream for an incoming message is null.'");
         }
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }

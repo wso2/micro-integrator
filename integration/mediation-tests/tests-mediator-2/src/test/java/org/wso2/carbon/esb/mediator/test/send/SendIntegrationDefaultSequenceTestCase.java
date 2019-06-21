@@ -37,8 +37,6 @@ public class SendIntegrationDefaultSequenceTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = {
@@ -69,18 +67,4 @@ public class SendIntegrationDefaultSequenceTestCase extends ESBIntegrationTest {
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        resourceAdminServiceStub.addCollection("/_system/config/", "endpoints", "", "Contains test endpoint files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/endpoints/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/send/endpoints/registry_endpoint.xml"))));
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        super.cleanup();
-    }
 }

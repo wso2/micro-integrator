@@ -18,27 +18,23 @@
 
 package org.wso2.carbon.esb.rest.test.header;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-
 import static org.testng.Assert.assertEquals;
 
 public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
@@ -50,15 +46,11 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        String relativePath = "/artifacts/ESB/synapseconfig/esbjava2283/api.xml";
-        ESBTestCaseUtils util = new ESBTestCaseUtils();
-        relativePath = relativePath.replaceAll("[\\\\/]", "/");
-        OMElement apiConfig = util.loadResource(relativePath);
-        addApi(apiConfig);
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test whether ESB pass-through responses with different response codes.", dataProvider = "getResponseCodes")
+            "wso2.esb"}, description = "Test whether ESB pass-through responses with different response codes.",
+          dataProvider = "responseCodeProvider")
     public void testReturnResponseCode(int responseCode) throws Exception {
         this.responseCode = responseCode;
         //Starting backend server
@@ -68,14 +60,14 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
         server.start();
         //Invoke API deployed in ESB
         switch (responseCode) {
-        case 404:
-            String contentType = "text/html";
-            String url = getApiInvocationURL("/serviceTest/notfound");
-            sendRequest(url, contentType);
-        default:
-            contentType = "text/xml";
-            url = getApiInvocationURL("/serviceTest/test");
-            sendRequest(url, contentType);
+            case 404:
+                String contentType = "text/html";
+                String url = getApiInvocationURL("/serviceTest/notfound");
+                sendRequest(url, contentType);
+            default:
+                contentType = "text/xml";
+                url = getApiInvocationURL("/serviceTest/test");
+                sendRequest(url, contentType);
         }
 
         server.stop(5);
@@ -109,14 +101,9 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), responseCode, "response code doesn't match");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
     @DataProvider(name = "responseCodeProvider")
     public Object[][] getResponseCodes() {
-        return new Object[][] { { 200 }, { 400 }, { 403 }, { 404 }, { 500 }, { 501 }, { 503 }, };
+        return new Object[][]{{200}, {400}, {403}, {404}, {500}, {501}, {503},};
     }
 
 }

@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.call;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -31,21 +30,15 @@ public class CallMediatorFailOverTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/synapse18.xml");
     }
 
     @Test(groups = { "wso2.esb" })
     public void callMediatorFailOverTestCase() throws AxisFault {
 
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TestCallProxy"), null, "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CallMediatorFailOverTestProxy"), null, "WSO2");
         boolean responseContainsFO = response.getFirstElement().toString().contains("FO");
         assertTrue(responseContainsFO);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 
 }

@@ -19,11 +19,9 @@ package org.wso2.carbon.esb.mediator.test.foreach;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 
@@ -34,20 +32,19 @@ import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
 
     private String symbol;
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
-        verifyProxyServiceExistence("foreachSmallMessageTestProxy");
         symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
 
     }
 
     @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
     public void testSmallNumbers() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         OMElement response = null;
         for (int i = 0; i < 20; i++) {
@@ -58,26 +55,24 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
             response = null;
         }
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int afterLogSize = logs.length;
-        int forEachCount = 0;
+        carbonLogReader.stop();
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.clearLogs();
 
-        for (LogEvent log : logs) {
-            String message = log.getMessage();
-            if (message.contains("foreach = in")) {
-                if (!message.contains("IBM")) {
-                    Assert.fail("Incorrect message entered ForEach scope. Could not find symbol IBM ..");
-                }
-                forEachCount++;
+        if (logs.contains("foreach = in")) {
+            if (!logs.contains("IBM")) {
+                Assert.fail("Incorrect message entered ForEach scope. Could not find symbol IBM ..");
             }
         }
 
-        Assert.assertEquals(forEachCount, 20, "Count of messages entered ForEach scope is incorrect");
+        String[] splittedElements = logs.split("foreach = in");
+
+        Assert.assertEquals(splittedElements.length - 1, 20, "Count of messages entered ForEach scope is incorrect");
     }
 
     @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
     public void testLargeNumbers() throws Exception {
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         OMElement response = null;
         for (int i = 0; i < 100; i++) {
@@ -88,28 +83,16 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
                     "Incorrect symbol in response. Could not find symbol MSFT ..");
             response = null;
         }
-
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int afterLogSize = logs.length;
-        int forEachCount = 0;
-
-        for (LogEvent log : logs) {
-            String message = log.getMessage();
-            if (message.contains("foreach = in")) {
-                if (!message.contains("MSFT")) {
-                    Assert.fail("Incorrect message entered ForEach scope");
-                }
-                forEachCount++;
+        carbonLogReader.stop();
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.clearLogs();
+        if (logs.contains("foreach = in")) {
+            if (!logs.contains("MSFT")) {
+                Assert.fail("Incorrect message entered ForEach scope");
             }
         }
 
-        Assert.assertEquals(forEachCount, 100, "Count of messages entered ForEach scope is incorrect");
+        String[] splittedElements = logs.split("foreach = in");
+        Assert.assertEquals(splittedElements.length - 1, 100, "Count of messages entered ForEach scope is incorrect");
     }
-
-    @AfterClass
-    public void close() throws Exception {
-        symbol = null;
-        super.cleanup();
-    }
-
 }

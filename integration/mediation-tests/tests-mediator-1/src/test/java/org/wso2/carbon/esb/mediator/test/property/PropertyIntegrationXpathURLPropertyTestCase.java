@@ -17,18 +17,14 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
-import javax.xml.stream.XMLStreamException;
 
 import static org.testng.Assert.assertTrue;
 
@@ -38,26 +34,20 @@ import static org.testng.Assert.assertTrue;
 
 public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationTest {
 
-    private static LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATH_URL_PROPERTY.xml");
-        logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
+        carbonLogReader = new CarbonLogReader();
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test getting the  URI element of a request URL")
-    public void testXpathURLProperty() throws IOException, XMLStreamException, LogViewerLogViewerException {
+    public void testXpathURLProperty() throws IOException {
         boolean isUri = false;
-        logViewer.clearLogs();
-        HttpRequestUtil.sendGetRequest(getApiInvocationURL("editing") + "/edit?a=wso2&b=2.4", null);
+        carbonLogReader.start();
+        HttpRequestUtil.sendGetRequest(getApiInvocationURL("XpathURLPropertyApi") + "/edit?a=wso2&b=2.4", null);
 
         try {
             TimeUnit.SECONDS.sleep(10);
@@ -67,13 +57,11 @@ public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationT
 
         String msg = "SYMBOL = wso2, VALUE = 2.4";
         // after sending the message reading the log file
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(msg)) {
-                isUri = true;
-                break;
-            }
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.stop();
+
+        if (logs.contains(msg)) {
+            isUri = true;
         }
 
         assertTrue(isUri, "Message expected (SYMBOL = wso2, VALUE = 2.4) Not found");

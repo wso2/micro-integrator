@@ -37,8 +37,6 @@ public class SendIntegrationSequenceAtConfigRegistryTestCase extends ESBIntegrat
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Receiving sequence at config registry build message")
@@ -65,28 +63,5 @@ public class SendIntegrationSequenceAtConfigRegistryTestCase extends ESBIntegrat
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        resourceAdminServiceStub
-                .addCollection("/_system/config/", "endpoints", "", "Contains test receiving sequencr files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/endpoints/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/send/endpoints/registry_endpoint.xml"))));
-        resourceAdminServiceStub.deleteResource("/_system/config/sequence_conf");
-        resourceAdminServiceStub
-                .addCollection("/_system/config/", "sequence_conf", "", "Contains receiving sequence files");
-        resourceAdminServiceStub.addResource("/_system/config/sequence_conf/test_sequence_build_message_conf.xml",
-                "application/vnd.wso2.sequence", "xml files", setEndpoints(new DataHandler(
-                        new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/send/sequence/test_sequence_build_message_conf.xml"))));
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        resourceAdminServiceStub.deleteResource("/_system/config/sequence_conf");
-        super.cleanup();
-    }
 
 }

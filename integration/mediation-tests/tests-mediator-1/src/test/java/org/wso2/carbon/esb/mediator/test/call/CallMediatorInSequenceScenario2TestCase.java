@@ -19,32 +19,27 @@ package org.wso2.carbon.esb.mediator.test.call;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import static org.testng.Assert.assertTrue;
 
-public class CallMediatorInMainTestCase extends ESBIntegrationTest {
+public class CallMediatorInSequenceScenario2TestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/synapse12.xml");
+        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/call/synapse13.xml");
     }
 
     @Test(groups = { "wso2.esb" })
-    public void callMediatorInMainTestCase() throws AxisFault {
+    public void callMediatorInMainScenario2TestCase() throws AxisFault {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
+                getProxyServiceURLHttp("CallMediatorInSequenceScenario2TestProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 
 }

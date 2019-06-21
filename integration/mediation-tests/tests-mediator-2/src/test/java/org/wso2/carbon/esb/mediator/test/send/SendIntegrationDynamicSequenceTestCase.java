@@ -32,13 +32,10 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 
 public class SendIntegrationDynamicSequenceTestCase extends ESBIntegrationTest {
-    private ResourceAdminServiceClient resourceAdminServiceStub;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Receiving sequence dynamic and build message before receive")
@@ -63,20 +60,5 @@ public class SendIntegrationDynamicSequenceTestCase extends ESBIntegrationTest {
         String symbolResponse = omElement.getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
                 .getText();
         assertEquals(symbolResponse, "WSO2", "Symbol is not match");
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        resourceAdminServiceStub.addCollection("/_system/config/", "endpoints", "", "Contains test endpoint files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/endpoints/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/send/endpoints/registry_endpoint.xml"))));
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/endpoints");
-        super.cleanup();
     }
 }
