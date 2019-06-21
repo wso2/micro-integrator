@@ -329,7 +329,7 @@ public class ServerConfigurationManager {
      */
     public  void restartGracefully() throws AutomationUtilException {
 
-        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
+//        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
     /**
