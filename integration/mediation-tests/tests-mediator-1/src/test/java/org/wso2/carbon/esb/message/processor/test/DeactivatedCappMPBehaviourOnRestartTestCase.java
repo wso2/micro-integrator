@@ -29,45 +29,38 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.integration.common.utils.mgt.ServerConfigurationManager;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
-
-import java.io.File;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 
 /**
  * Testing whether a Capp with a deactivated Message Processor is deployed successfully upon ESB server restart.
  */
 public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationTest {
-    private ServerConfigurationManager serverConfigurationManager;
     private SampleAxis2Server axis2Server;
-    private static String carFileName = "CappMPServerRestartTestCApp_1.0.0.car";
     private static final String PROXY_SERVICE_NAME = "CappMPServerRestartTestProxy";
     private static final String EXPECTED_ERROR_MESSAGE = "Error occurred while deploying Carbon Application";
-    private static final String SUCCESS_MESSAGE = "Deploying Carbon Application : CappMPServerRestartTestCApp_1.0.0.car";
-    private LogViewerClient logViewerClient;
+    private static final String SUCCESS_MESSAGE =
+            "Successfully Deployed Carbon Application : CappMPServerRestartTestCApp_1.0.0";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
-        serverConfigurationManager = new ServerConfigurationManager(context);
         axis2Server = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
         axis2Server.start();
-        uploadCapp(carFileName, new DataHandler(new FileDataSource(
-                new File(getESBResourceLocation() + File.separator + "car" + File.separator + carFileName))));
-        isProxyDeployed(PROXY_SERVICE_NAME);
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Testing whether a deactivated Message Processor from a capp is deployed successfully upon ESB server restart")
+    @Test(groups = {"wso2.esb"},
+            description = "Testing whether a deactivated Message Processor from a capp is deployed successfully " +
+                    "upon ESB server restart")
     public void testDeactivatedMPUponServerRestart() throws Exception {
 
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         // Stopping the axis2 Server before sending the client request.
         axis2Server.stop();
         AxisServiceClient client = new AxisServiceClient();
@@ -80,14 +73,13 @@ public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationT
         axis2Server.start();
 
         // Restart the ESB Server after the MP is deactivated.
-        serverConfigurationManager.restartGracefully();
+        CarbonServerExtension.restartServer();
 
         super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
 
-        Assert.assertFalse(Utils.checkForLog(logViewerClient, EXPECTED_ERROR_MESSAGE, 10),
+        Assert.assertFalse(Utils.logExists(carbonLogReader, EXPECTED_ERROR_MESSAGE, 10),
                 "Error occurred while deploying Carbon Application!");
-        Assert.assertTrue(Utils.checkForLog(logViewerClient, SUCCESS_MESSAGE, 10),
+        Assert.assertTrue(Utils.logExists(carbonLogReader, SUCCESS_MESSAGE, 10),
                 "Unable to deploy Carbon Application!");
     }
 
@@ -113,8 +105,7 @@ public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationT
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
-        super.cleanup();
+    public void cleanup() {
         if (axis2Server.isStarted()) {
             axis2Server.stop();
         }
