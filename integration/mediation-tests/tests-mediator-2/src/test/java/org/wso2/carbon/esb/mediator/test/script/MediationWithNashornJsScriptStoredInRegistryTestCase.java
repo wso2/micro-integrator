@@ -42,7 +42,6 @@ public class MediationWithNashornJsScriptStoredInRegistryTestCase extends ESBInt
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "Mediate with NashornJs script which is stored in registry by "
@@ -65,30 +64,6 @@ public class MediationWithNashornJsScriptStoredInRegistryTestCase extends ESBInt
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         super.cleanup();
-        clearUploadedResource();
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_js");
-        resourceAdminServiceStub.addCollection("/_system/config/", "script_js", "", "Contains test js files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_js/stockquoteTransformNashorn.js", "application/x-javascript",
-                        "js files", new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/script_js/stockquoteTransformNashorn.js")));
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-        resourceAdminServiceStub.deleteResource("/_system/config/script_js");
-    }
 }
