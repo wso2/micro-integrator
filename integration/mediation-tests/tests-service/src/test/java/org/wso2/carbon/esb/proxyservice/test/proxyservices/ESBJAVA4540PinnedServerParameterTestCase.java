@@ -17,7 +17,10 @@
  */
 package org.wso2.carbon.esb.proxyservice.test.proxyservices;
 
-import org.apache.axiom.om.OMElement;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.HttpResponse;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -26,9 +29,10 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.ProxyData;
 import org.wso2.esb.integration.common.clients.proxy.admin.ProxyServiceAdminClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
-import java.io.File;
 
 /**
  * This test class will test the Proxy Service deployment  when pinnedService parameter value does
@@ -43,38 +47,26 @@ public class ESBJAVA4540PinnedServerParameterTestCase extends ESBIntegrationTest
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/proxyservice/editProxyWithPinnedServer.xml");
     }
 
     @Test(groups = "wso2.esb", description = "Deploying proxy when the pinnedServer is having another instance name")
     public void deployProxyService() throws Exception {
-        OMElement proxyConfig = esbUtils.loadResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "proxyconfig" + File.separator
-                        + "proxy" + File.separator + "proxyservice" + File.separator + "proxyWithPinnedServer.xml");
-        ProxyServiceAdminClient proxyAdmin = new ProxyServiceAdminClient(contextUrls.getBackEndUrl(),
-                getSessionCookie());
-        proxyAdmin.addProxyService(proxyConfig);
+        CarbonLogReader logReader = new CarbonLogReader();
+        logReader.start();
 
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        LogEvent[] logEvents = logViewerClient.getAllRemoteSystemLogs();
-        boolean isLogMessageFound = false;
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        String endpoint = "https://localhost:9354/management/proxy-services?proxyServiceName=proxyWithPinnedServer";
 
-        for (LogEvent log : logEvents) {
-            if (log != null && log.getMessage()
-                    .contains("not in pinned servers list. Not deploying " + "Proxy service : pinnedServerProxy")) {
-                isLogMessageFound = true;
-                break;
-            }
-        }
-        Assert.assertTrue(isLogMessageFound, "Log message not found in the console log");
-        //proxy service should not be deployed since the pinnedServer does not contain this server name
-        Assert.assertFalse(esbUtils.isProxyDeployed(contextUrls.getBackEndUrl(), getSessionCookie(), proxyServiceName),
-                "Proxy service deployed successfully");
+        HttpResponse response = client.doGet(endpoint, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 404, "Proxy service got deployed");
+
+        logReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Editing a proxy service when the pinnedServer is having"
-            + " another instance name")
+            + " another instance name", enabled = false)
     public void modifyProxyService() throws Exception {
         ProxyServiceAdminClient proxyAdmin = new ProxyServiceAdminClient(contextUrls.getBackEndUrl(),
                 getSessionCookie());
@@ -101,12 +93,4 @@ public class ESBJAVA4540PinnedServerParameterTestCase extends ESBIntegrationTest
         Assert.assertFalse(esbUtils.isProxyDeployed(contextUrls.getBackEndUrl(), getSessionCookie(), proxyServiceName),
                 "Proxy service deployed successfully");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        deleteProxyService(proxyServiceName);
-        deleteProxyService(proxyServiceNameEditProxy);
-        super.cleanup();
-    }
-
 }

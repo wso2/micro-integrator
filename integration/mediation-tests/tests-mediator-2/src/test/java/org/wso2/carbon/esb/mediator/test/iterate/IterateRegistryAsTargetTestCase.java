@@ -18,42 +18,31 @@
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
-import org.apache.axiom.om.OMElement;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.net.URL;
 import java.util.Iterator;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
+import org.apache.axiom.om.OMElement;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 /**
- * Tests a sequence with a iterate mediator that calls sequences of Governors
- * and configuration registers
+ * Tests a sequence with a iterate mediator that calls sequences of Governors and configuration registers
  */
 
 public class IterateRegistryAsTargetTestCase extends ESBIntegrationTest {
 
     private IterateClient client;
-    private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
         client = new IterateClient();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", description = "Tests for sequence from governors registry ")
     public void testGovernersSequence() throws Exception {
-        URL url = new URL(
-                "file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateLogAndSendSequence.xml");
-        resourceAdminServiceClient.addResource("/_system/governance/sequences/iterate/iterateLogAndSendSequence",
-                "application/vnd.wso2.sequence", "configuration", setEndpoints(new DataHandler(url)));
         String response = client
                 .getMultipleResponse(getProxyServiceURLHttp("iterateWithTargetGovernanceTestProxy"), "WSO2", 2);
         Assert.assertNotNull(response);
@@ -67,15 +56,10 @@ public class IterateRegistryAsTargetTestCase extends ESBIntegrationTest {
             Assert.assertTrue(getQuote.toString().contains("WSO2"));
         }
         Assert.assertEquals(i, 2, "Child Element count mismatched");
-        resourceAdminServiceClient.deleteResource("/_system/governance/sequences/iterate/iterateLogAndSendSequence");
     }
 
     @Test(groups = "wso2.esb", description = "Tests for sequence from configuration registry")
     public void testConfigurationSequence() throws Exception {
-        URL url = new URL(
-                "file:///" + getESBResourceLocation() + "/mediatorconfig/iterate/iterateLogAndSendSequence.xml");
-        resourceAdminServiceClient.addResource("/_system/config/sequences/iterate/iterateLogAndSendSequence",
-                "application/vnd.wso2.sequence", "configuration", setEndpoints(new DataHandler(url)));
         String response = client
                 .getMultipleResponse(getProxyServiceURLHttp("iterateWithTargetConfigurationTestProxy"), "WSO2", 2);
         Assert.assertNotNull(response);
@@ -89,14 +73,5 @@ public class IterateRegistryAsTargetTestCase extends ESBIntegrationTest {
             Assert.assertTrue(getQuote.toString().contains("WSO2"));
         }
         Assert.assertTrue(i == 2);
-        resourceAdminServiceClient.deleteResource("/_system/config/sequences/iterate/iterateLogAndSendSequence");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        client = null;
-        resourceAdminServiceClient = null;
-        super.cleanup();
-    }
-
 }
