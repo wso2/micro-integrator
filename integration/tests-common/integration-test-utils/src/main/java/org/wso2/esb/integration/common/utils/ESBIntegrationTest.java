@@ -22,6 +22,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpResponse;
 import org.testng.Assert;
 import org.wso2.carbon.application.mgt.synapse.stub.ExceptionException;
 import org.wso2.carbon.application.mgt.synapse.stub.types.carbon.SynapseApplicationMetadata;
@@ -48,6 +49,7 @@ import org.wso2.carbon.sequences.stub.types.SequenceEditorException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.clients.application.mgt.SynapseApplicationAdminClient;
 import org.wso2.esb.integration.common.clients.mediation.SynapseConfigAdminClient;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 import org.wso2.esb.integration.common.utils.clients.stockquoteclient.StockQuoteClient;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 import org.xml.sax.SAXException;
@@ -62,9 +64,10 @@ import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.Map;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
@@ -887,6 +890,22 @@ public abstract class ESBIntegrationTest {
     protected void verifySequenceExistence(String sequenceName) throws RemoteException, SequenceEditorException {
        /* Assert.assertTrue(esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, sequenceName),
                 "Sequence not found. " + sequenceName);*/
+    }
+
+    protected boolean isSequenceExists(String sequenceName) throws IOException {
+
+        String response = checkArtifactUsingManagementApi("sequences");
+        return response.contains(sequenceName);
+    }
+
+    private String checkArtifactUsingManagementApi(String artifactType) throws IOException {
+
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+
+        HttpResponse response = client.doGet("https://localhost:9354/management/" + artifactType, headers);
+        return client.getResponsePayload(response);
     }
 
     protected void verifyAPIExistence(String apiName) throws RestApiAdminAPIException, RemoteException {

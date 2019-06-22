@@ -18,15 +18,10 @@
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.http.HttpResponse;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 /**
  * This class will test Iterator Mediator, when there is no iterator expression specified.
@@ -43,17 +38,11 @@ public class IterateExpressionLessTestCase extends ESBIntegrationTest {
      * a sequence.A sequence cannot be created because  SequenceMediator Sequence named Value cannot be found.
      */
 
-    @Test(groups = {"wso2.esb"}, description = "Testing when there is no iterate expression is specified")
+    @Test(groups = { "wso2.esb" }, description = "Testing when there is no iterate expression is specified")
     public void testIterateExpressionLessSequenceAdding() throws Exception {
 
-        SimpleHttpClient client = new SimpleHttpClient();
-        Map<String, String> headers = new HashMap<>();
-        headers.put("Accept", "application/json");
-        String endpoint = "https://localhost:9354/management/sequences?sequenceName=invalidIterateMessages";
-
-        HttpResponse response = client.doGet(endpoint, headers);
-        Assert.assertEquals(response.getStatusLine().getStatusCode(), 404,
-                            "This Configuration can not be saved successfully");
+        Assert.assertFalse(isSequenceExists("invalidIterateMessages"),
+                           "Sequence with invalid iterate mediator deployed.");
 
     }
 }
