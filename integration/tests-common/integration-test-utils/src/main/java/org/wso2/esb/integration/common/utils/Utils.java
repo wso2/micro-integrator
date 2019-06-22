@@ -35,7 +35,6 @@ import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExten
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -43,7 +42,6 @@ import java.io.OutputStream;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
-import javax.wsdl.Output;
 import javax.xml.stream.XMLStreamException;
 
 public class Utils {
@@ -398,14 +396,17 @@ public class Utils {
         return isCarFileDeployed;
     }
 
-    public static void deploySynapseConfiguration(OMElement config, String location, boolean restart) {
+    public static void deploySynapseConfiguration(OMElement config, String artifactName, String artifactType,
+            boolean isRestartRequired) {
 
-        String base = System.getProperty("carbon.home") + File.separator+ "repository"+File.separator+"deployment"+File.separator+"server"+File.separator+"synapse-configs"+File.separator+"default"+File.separator;
-        location = base + location;
-        try (OutputStream outputStream = new FileOutputStream(location)) {
+        String path = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+                + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
+                + File.separator + artifactType + File.separator + artifactName + ".xml";
+
+        try (OutputStream outputStream = new FileOutputStream(path)) {
             config.serialize(outputStream);
             config.serialize(System.out);
-            if (restart) {
+            if (isRestartRequired) {
                 CarbonServerExtension.restartServer();
             }
         } catch (IOException exception) {
@@ -414,4 +415,5 @@ public class Utils {
             log.error("Error when serializing synapse config", e);
         }
     }
+
 }

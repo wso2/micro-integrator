@@ -46,27 +46,24 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
     private static CarbonLogReader carbonLogReader;
 
     private String JDBC_URL;
-    private String DB_USER;
-    private String DB_PASSWORD;
 
     @BeforeClass
     public void init() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
-        DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
+        String dbPassword = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
         JDBC_URL = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
-        DB_USER = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_USER_NAME);
+        String dbUser = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_USER_NAME);
         String databaseName =
                 System.getProperty("basedir") + File.separator + "target" + File.separator + "testdb_store"
                         + new Random().nextInt();
         JDBC_URL = JDBC_URL + databaseName + ";AUTO_SERVER=TRUE";
-        h2DatabaseManager = new H2DataBaseManager(JDBC_URL, DB_USER, DB_PASSWORD);
+        h2DatabaseManager = new H2DataBaseManager(JDBC_URL, dbUser, dbPassword);
         h2DatabaseManager.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS JDBC_MESSAGE_STORE(\n" + "indexId BIGINT(20) NOT NULL AUTO_INCREMENT,\n"
                         + "msg_id VARCHAR(200) NOT NULL ,\n" + "message BLOB NOT NULL,\n" + "PRIMARY KEY ( indexId )\n"
                         + ")");
         carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         super.init();
     }
 
@@ -78,10 +75,12 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
         String proxyContent = FileUtils.readFileToString(new File(location));
         proxyContent = this.updateDatabaseInfo(proxyContent);
 
-        String storeLocation = "message-stores/EmptyMsgBodyMessageStoreTest.xml";
-        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(proxyContent), storeLocation, true);
+        String artifactName = "EmptyMsgBodyMessageStoreTest";
+        String artifactType = "message-stores";
+        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(proxyContent), artifactName, artifactType, true);
         String proxyServiceUrl = getProxyServiceURLHttp("EmptyMsgBodyTestProxy");
         AxisServiceClient client = new AxisServiceClient();
+        carbonLogReader.start();
         client.fireAndForget(null, proxyServiceUrl, "");
         Assert.assertTrue(Utils.logExists(carbonLogReader, "REPLY = MESSAGE", 10),
                 "Message with empty body not processed!");

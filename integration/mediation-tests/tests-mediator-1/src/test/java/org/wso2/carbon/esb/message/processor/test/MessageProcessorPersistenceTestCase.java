@@ -43,8 +43,8 @@ public class MessageProcessorPersistenceTestCase extends ESBIntegrationTest {
     public void init() throws Exception {
 
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(contextUrls.getBackEndUrl(),
-                TestUserMode.SUPER_TENANT_ADMIN);
+       /* serverConfigurationManager = new ServerConfigurationManager(contextUrls.getBackEndUrl(),
+                TestUserMode.SUPER_TENANT_ADMIN);*/
         synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
