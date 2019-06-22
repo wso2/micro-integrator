@@ -18,15 +18,15 @@
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
-import org.apache.axis2.AxisFault;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.http.HttpResponse;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.ESBTestConstant;
-
-import static org.testng.Assert.assertTrue;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 /**
  * This class will test Iterator Mediator, when there is no iterator expression specified.
@@ -36,7 +36,6 @@ public class IterateExpressionLessTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-
     }
 
     /**
@@ -44,21 +43,17 @@ public class IterateExpressionLessTestCase extends ESBIntegrationTest {
      * a sequence.A sequence cannot be created because  SequenceMediator Sequence named Value cannot be found.
      */
 
-    @Test(groups = { "wso2.esb" }, description = "Testing when there is no iterate expression is specified")
+    @Test(groups = {"wso2.esb"}, description = "Testing when there is no iterate expression is specified")
     public void testIterateExpressionLessSequenceAdding() throws Exception {
-        try {
-            loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/iterate/iterator_expressionLess.xml");
-            Assert.fail(
-                    "This Configuration can not be saved successfully"); // This will execute when the exception is not thrown as expected
-        } catch (AxisFault message) {
-            assertTrue(message.getMessage().contains(ESBTestConstant.ERROR_ADDING_SEQUENCE),
-                    "Error adding sequence : null not contain in Error Message");
-        }
-    }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        String endpoint = "https://localhost:9354/management/sequences?sequenceName=invalidIterateMessages";
 
+        HttpResponse response = client.doGet(endpoint, headers);
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 404,
+                            "This Configuration can not be saved successfully");
+
+    }
 }
