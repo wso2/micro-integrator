@@ -22,14 +22,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -126,11 +122,11 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
      */
     private boolean isPropertyContainedInLog(String property) {
         boolean containsProperty = false;
-            String log = carbonLogReader.getLogs();
-            if (log.contains(property)) {
-                containsProperty = true;
-            }
-            carbonLogReader.stop();
+        String log = carbonLogReader.getLogs();
+        if (log.contains(property)) {
+            containsProperty = true;
+        }
+        carbonLogReader.stop();
         return containsProperty;
     }
 

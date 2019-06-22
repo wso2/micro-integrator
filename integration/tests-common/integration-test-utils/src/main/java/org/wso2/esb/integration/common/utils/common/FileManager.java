@@ -143,37 +143,6 @@ public class FileManager {
         return file;
     }
 
-    public void copyJarFile(String sourceFileLocationWithFileName, String destinationDirectory)
-            throws IOException, URISyntaxException {
-        File sourceFile = new File(getClass().getResource(sourceFileLocationWithFileName).toURI());
-        File destinationFileDirectory = new File(destinationDirectory);
-        JarFile jarFile = new JarFile(sourceFile);
-        String fileName = jarFile.getName();
-        String fileNameLastPart = fileName.substring(fileName.lastIndexOf(File.separator));
-        File destinationFile = new File(destinationFileDirectory, fileNameLastPart);
-
-        JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(destinationFile));
-        Enumeration<JarEntry> entries = jarFile.entries();
-
-        while (entries.hasMoreElements()) {
-            JarEntry jarEntry = entries.nextElement();
-            InputStream inputStream = jarFile.getInputStream(jarEntry);
-
-            //jarOutputStream.putNextEntry(jarEntry);
-            //create a new jarEntry to avoid ZipException: invalid jarEntry compressed size
-            jarOutputStream.putNextEntry(new JarEntry(jarEntry.getName()));
-            byte[] buffer = new byte[4096];
-            int bytesRead = 0;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                jarOutputStream.write(buffer, 0, bytesRead);
-            }
-            inputStream.close();
-            jarOutputStream.flush();
-            jarOutputStream.closeEntry();
-        }
-        jarOutputStream.close();
-    }
-
     public static void copyJarFile(File sourceFile, String destinationDirectory) throws IOException {
         File destinationFileDirectory = new File(destinationDirectory);
         JarFile jarFile = new JarFile(sourceFile);
@@ -239,6 +208,37 @@ public class FileManager {
 
         is.close();
         return bytes;
+    }
+
+    public void copyJarFile(String sourceFileLocationWithFileName, String destinationDirectory)
+            throws IOException, URISyntaxException {
+        File sourceFile = new File(getClass().getResource(sourceFileLocationWithFileName).toURI());
+        File destinationFileDirectory = new File(destinationDirectory);
+        JarFile jarFile = new JarFile(sourceFile);
+        String fileName = jarFile.getName();
+        String fileNameLastPart = fileName.substring(fileName.lastIndexOf(File.separator));
+        File destinationFile = new File(destinationFileDirectory, fileNameLastPart);
+
+        JarOutputStream jarOutputStream = new JarOutputStream(new FileOutputStream(destinationFile));
+        Enumeration<JarEntry> entries = jarFile.entries();
+
+        while (entries.hasMoreElements()) {
+            JarEntry jarEntry = entries.nextElement();
+            InputStream inputStream = jarFile.getInputStream(jarEntry);
+
+            //jarOutputStream.putNextEntry(jarEntry);
+            //create a new jarEntry to avoid ZipException: invalid jarEntry compressed size
+            jarOutputStream.putNextEntry(new JarEntry(jarEntry.getName()));
+            byte[] buffer = new byte[4096];
+            int bytesRead = 0;
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                jarOutputStream.write(buffer, 0, bytesRead);
+            }
+            inputStream.close();
+            jarOutputStream.flush();
+            jarOutputStream.closeEntry();
+        }
+        jarOutputStream.close();
     }
 }
 

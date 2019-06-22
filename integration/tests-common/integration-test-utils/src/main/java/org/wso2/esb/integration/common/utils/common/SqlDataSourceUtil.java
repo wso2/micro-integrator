@@ -46,7 +46,7 @@ import javax.xml.xpath.XPathExpressionException;
 public class SqlDataSourceUtil {
 
     private static final Log log = LogFactory.getLog(SqlDataSourceUtil.class);
-
+    private final String userPrivilegeGroupName = "automation";
     private String jdbcUrl = null;
     private String jdbcDriver = null;
     private String databaseName;
@@ -58,7 +58,6 @@ public class SqlDataSourceUtil {
     //    private RSSManagerAdminServiceClient rssAdminClient;
     private String rssEnvironment;
     private String rssInstanceName;
-    private final String userPrivilegeGroupName = "automation";
 
     public SqlDataSourceUtil(String sessionCookie, String backEndUrl) {
         this.sessionCookie = sessionCookie;

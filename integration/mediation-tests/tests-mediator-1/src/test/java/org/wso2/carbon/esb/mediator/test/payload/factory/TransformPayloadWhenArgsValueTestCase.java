@@ -35,11 +35,12 @@ public class TransformPayloadWhenArgsValueTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb"}, description = "Do transformation with a Payload Format that has arguments - Argument Type : Value")
+            "wso2.esb" }, description = "Do transformation with a Payload Format that has arguments - Argument Type : Value")
     public void transformPayloadByArgsValue() throws AxisFault, XPathExpressionException {
         OMElement response;
-        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TransformPayloadWhenArgsValueTestCaseProxy"),
-                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TransformPayloadWhenArgsValueTestCaseProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertTrue(response.toString().contains("WSO2"), "Symbol WSO2 not found in response message");
 
     }

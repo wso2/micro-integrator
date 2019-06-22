@@ -29,7 +29,7 @@ public class Soap12FaultActorTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-   }
+    }
 
     @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.2 fault Actor test")
     public void testSOAP12FaultActor() throws AxisFault {

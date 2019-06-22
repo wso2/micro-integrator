@@ -26,6 +26,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 import static org.testng.Assert.assertTrue;
 
 public class APIHeadMethod extends ESBIntegrationTest {
@@ -45,7 +46,6 @@ public class APIHeadMethod extends ESBIntegrationTest {
 
         HttpHead httpHead = new HttpHead(restURL);
         HttpResponse response = httpclient.execute(httpHead);
-
 
         Assert.assertTrue(logReader.getLogs().contains("API_HIT"));
 

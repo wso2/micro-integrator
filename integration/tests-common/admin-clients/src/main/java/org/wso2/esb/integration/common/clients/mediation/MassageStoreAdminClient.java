@@ -37,10 +37,10 @@ import javax.xml.stream.XMLStreamReader;
 
 public class MassageStoreAdminClient {
 
+    private static final Log log = LogFactory.getLog(MassageStoreAdminClient.class);
     String backendUrl = null;
     String SessionCookie = null;
     MessageStoreAdminServiceStub messageStoreAdminServiceStub;
-    private static final Log log = LogFactory.getLog(MassageStoreAdminClient.class);
 
     public MassageStoreAdminClient(String backendUrl, String sessionCookie) {
         this.backendUrl = backendUrl;

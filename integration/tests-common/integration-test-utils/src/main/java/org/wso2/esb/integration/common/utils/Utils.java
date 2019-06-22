@@ -232,7 +232,8 @@ public class Utils {
      * @throws LogViewerLogViewerException
      */
     private static boolean assertIfLogExistsWithGivenPriority(LogViewerClient logViewerClient, String priority,
-            String expected) throws RemoteException, LogViewerLogViewerException {
+                                                              String expected)
+            throws RemoteException, LogViewerLogViewerException {
 
         LogEvent[] systemLogs;
         systemLogs = logViewerClient.getAllRemoteSystemLogs();
@@ -278,12 +279,14 @@ public class Utils {
     /**
      * Checks if the expected string is available in the tailed logs of carbon log reader. Stops the log reader once found.
      * The polling will happen in one second intervals
+     *
      * @param logReader Carbon log reader
      * @param expected  expected log string
-     * @param timeout max time to do polling
-     * @throws InterruptedException        if interrupted while sleeping
-     * */
-    public static boolean logExists(CarbonLogReader logReader, String expected, int timeout) throws InterruptedException {
+     * @param timeout   max time to do polling
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public static boolean logExists(CarbonLogReader logReader, String expected, int timeout)
+            throws InterruptedException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
@@ -299,12 +302,14 @@ public class Utils {
     /**
      * Check for the existence of the given log message. Does not stop the log reader
      * The polling will happen in one second intervals
+     *
      * @param logReader Carbon log reader
      * @param expected  expected log string
-     * @param timeout max time to do polling
-     * @throws InterruptedException        if interrupted while sleeping
-     * */
-    public static boolean checkForLog(CarbonLogReader logReader, String expected, int timeout) throws InterruptedException {
+     * @param timeout   max time to do polling
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public static boolean checkForLog(CarbonLogReader logReader, String expected, int timeout)
+            throws InterruptedException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
@@ -315,6 +320,7 @@ public class Utils {
         }
         return logExists;
     }
+
     /**
      * Check for the existence of a given log message of given priority within the given timeout
      *
@@ -328,7 +334,8 @@ public class Utils {
      * @throws RemoteException
      */
     public static boolean checkForLogsWithPriority(LogViewerClient logViewerClient, String priority, String expected,
-            int timeout) throws InterruptedException, LogViewerLogViewerException, RemoteException {
+                                                   int timeout)
+            throws InterruptedException, LogViewerLogViewerException, RemoteException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
@@ -349,7 +356,8 @@ public class Utils {
      * @return true if the expected message count found, false otherwise
      */
     public static boolean waitForMessageCount(MessageStoreAdminClient messageStoreAdminClient, String messageStoreName,
-            int expectedCount, long timeout) throws InterruptedException, RemoteException {
+                                              int expectedCount, long timeout)
+            throws InterruptedException, RemoteException {
         long elapsedTime = 0;
         boolean messageCountFound = false;
         while (elapsedTime < timeout && !messageCountFound) {
@@ -369,7 +377,7 @@ public class Utils {
      * @return true if the car file deployed successfully else, false
      */
     public static boolean isCarFileDeployed(String carFileName, ApplicationAdminClient applicationAdminClient,
-            int timeout) throws Exception {
+                                            int timeout) throws Exception {
 
         log.info("waiting " + timeout + " millis for car deployment " + carFileName);
         boolean isCarFileDeployed = false;
@@ -397,7 +405,7 @@ public class Utils {
     }
 
     public static void deploySynapseConfiguration(OMElement config, String artifactName, String artifactType,
-            boolean isRestartRequired) {
+                                                  boolean isRestartRequired) {
 
         String path = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
                 + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"

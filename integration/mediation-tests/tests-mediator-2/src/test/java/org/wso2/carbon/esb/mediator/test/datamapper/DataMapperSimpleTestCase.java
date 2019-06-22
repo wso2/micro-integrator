@@ -31,7 +31,7 @@ public class DataMapperSimpleTestCase extends DataMapperIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Datamapper simple one to one xml to xml conversion")
+    @Test(groups = { "wso2.esb" }, description = "Datamapper simple one to one xml to xml conversion")
     public void testOneToOneXmlToXml() throws Exception {
         String request = "   <company>\n" + "      <name>WSO2</name>\n" + "      <usoffice>\n" + "         <address>\n"
                 + "            <no>787</no>\n" + "            <street>Castro Street,Mountain View</street>\n"
@@ -63,7 +63,7 @@ public class DataMapperSimpleTestCase extends DataMapperIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Datamapper simple one to one json to json conversion")
+    @Test(groups = { "wso2.esb" }, description = "Datamapper simple one to one json to json conversion")
     public void testOneToOneJsonToJson() throws Exception {
         String request = "{\n" + "    \"name\": \"WSO2\",\n" + "    \"usoffice\": {\n" + "      \"address\": {\n"
                 + "        \"no\": \"787\",\n" + "        \"street\": \"Castro Street,Mountain View\",\n"
@@ -94,7 +94,7 @@ public class DataMapperSimpleTestCase extends DataMapperIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = {"wso2.esb"}, description = "Data-mapper conversion of input xml messages with underscore "
+    @Test(groups = { "wso2.esb" }, description = "Data-mapper conversion of input xml messages with underscore "
             + "element names for xml messages with element names with underscore")
     public void testXmlWithUnderscoreToXmlWithUnderscore() throws Exception {
         String expectedResponse = "<test xmlns:sf=\"urn:sobject.partner.soap.sforce.com\""
@@ -121,7 +121,7 @@ public class DataMapperSimpleTestCase extends DataMapperIntegrationTest {
     /**
      * @throws Exception exceptions during execution
      */
-    @Test(groups = {"wso2.esb"}, description = "Datamapper simple one to one xml to xml "
+    @Test(groups = { "wso2.esb" }, description = "Datamapper simple one to one xml to xml "
             + "conversion using xslt transformation")
     public void testOneToOneXmlToXmlUsingXSLT() throws Exception {
         String request = "   <company>\n" + "      <name>WSO2</name>\n" + "      <usoffice>\n" + "         <address>\n"
@@ -151,7 +151,7 @@ public class DataMapperSimpleTestCase extends DataMapperIntegrationTest {
     /**
      * @throws Exception exceptions during execution
      */
-    @Test(groups = {"wso2.esb"}, description = "Datamapper simple one to one xml to xml conversion when xslt "
+    @Test(groups = { "wso2.esb" }, description = "Datamapper simple one to one xml to xml conversion when xslt "
             + "stylesheet available but not xslt compatible")
     public void testOneToOneXmlToXmlNotXSLTCompatible() throws Exception {
         String request = "   <company>\n" + "      <name>WSO2</name>\n" + "      <usoffice>\n" + "         <address>\n"

@@ -25,7 +25,6 @@ import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-
 /**
  * Related to Patch Automation https://wso2.org/jira/browse/ESBJAVA-3260 This
  * class test Target URL not appending the Context URL in REST_URL_POSTFIX.
@@ -53,7 +52,7 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("services/client/anotherParam"), null);
 
         Assert.assertFalse(logReader.checkForLog("anotherParam", 10),
-                        " Target URL is wrong. It appends the context URL part also.");
+                " Target URL is wrong. It appends the context URL part also.");
 
         logReader.stop();
     }

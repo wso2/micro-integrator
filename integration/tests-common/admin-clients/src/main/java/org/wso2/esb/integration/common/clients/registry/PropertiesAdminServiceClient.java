@@ -32,9 +32,8 @@ import java.rmi.RemoteException;
 public class PropertiesAdminServiceClient {
 
     private static final Log log = LogFactory.getLog(PropertiesAdminServiceClient.class);
-
-    private PropertiesAdminServiceStub propertiesAdminServiceStub;
     private final String serviceName = "PropertiesAdminService";
+    private PropertiesAdminServiceStub propertiesAdminServiceStub;
 
     public PropertiesAdminServiceClient(String backendURL, String sessionCookie) throws AxisFault {
 

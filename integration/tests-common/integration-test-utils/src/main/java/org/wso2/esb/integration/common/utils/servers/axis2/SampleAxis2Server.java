@@ -51,10 +51,10 @@ public class SampleAxis2Server implements BackendServer {
     public static final String STUDENT_REST_SERVICE = "StudentService";
 
     private static final Log log = LogFactory.getLog(SampleAxis2Server.class);
+    String repositoryPath = null;
     private ConfigurationContext cfgCtx;
     private ListenerManager listenerManager;
     private boolean started;
-    String repositoryPath = null;
 
     public SampleAxis2Server() {
         this("test_axis2_server_9000.xml");

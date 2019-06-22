@@ -41,7 +41,8 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Enrichment of response message")
     public void enrichMediatorTest() throws IOException {
 
-        String response = cloneClient.getResponse(getProxyServiceURLHttp("EnrichAndDoubleDropIntegrationTestProxy"), "IBM");
+        String response = cloneClient
+                .getResponse(getProxyServiceURLHttp("EnrichAndDoubleDropIntegrationTestProxy"), "IBM");
 
         Assert.assertTrue(response.contains("<urn:userName>foo</urn:userName>"), "Header mismatched");
         Assert.assertTrue(response.contains("<urn:password>bar</urn:password>"), "Header mismatched");
@@ -58,8 +59,8 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void closeTestArtifacts() throws Exception {
-            cloneClient.destroy();
-            cloneClient = null;
+        cloneClient.destroy();
+        cloneClient = null;
 
     }
 

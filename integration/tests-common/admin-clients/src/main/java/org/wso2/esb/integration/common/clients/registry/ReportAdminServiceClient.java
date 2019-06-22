@@ -30,9 +30,8 @@ import javax.activation.DataHandler;
 public class ReportAdminServiceClient {
 
     private static final Log log = LogFactory.getLog(ReportAdminServiceClient.class);
-
-    private ReportingAdminServiceStub reportingAdminServiceStub;
     private final String serviceName = "ReportingAdminService";
+    private ReportingAdminServiceStub reportingAdminServiceStub;
 
     public ReportAdminServiceClient(String backendURL, String sessionCookie) throws AxisFault {
         String endPoint = backendURL + serviceName;

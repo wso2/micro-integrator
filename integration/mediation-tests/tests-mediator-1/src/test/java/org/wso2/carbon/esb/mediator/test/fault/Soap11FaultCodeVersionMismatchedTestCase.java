@@ -35,8 +35,7 @@ public class Soap11FaultCodeVersionMismatchedTestCase extends ESBIntegrationTest
     public void testSOAP11FaultCodeVersionMismatched() throws AxisFault {
         String proxyServiceName = "Soap11FaultCodeVersionMismatchedTestCaseProxy";
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null,
-                    "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());

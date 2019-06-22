@@ -54,7 +54,7 @@ public class ClassMediationWithLoadOfPropertiesTestCase extends ESBIntegrationTe
             + " -Class mediator which has a load of properties to be passed and mediation")
     public void testMediationWithLoadOfProperties()
             throws IOException, PropertiesAdminServiceRegistryExceptionException,
-            ResourceAdminServiceExceptionException, XMLStreamException, InterruptedException {
+                   ResourceAdminServiceExceptionException, XMLStreamException, InterruptedException {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
 

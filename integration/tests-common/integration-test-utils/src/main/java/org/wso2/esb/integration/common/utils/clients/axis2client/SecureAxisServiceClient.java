@@ -45,6 +45,11 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 public class SecureAxisServiceClient implements CallbackHandler {
     private static final Log log = LogFactory.getLog(SecureAxisServiceClient.class);
 
+    private static OMElement buildResponse(OMElement omElement) {
+        omElement.build();
+        return omElement;
+    }
+
     /**
      * This will send request by getting keyStore wso2carbon.jks
      *
@@ -59,7 +64,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
      */
 
     public OMElement sendReceive(String userName, String password, String endpointReference, String operation,
-            OMElement payload, int securityScenarioNo) throws Exception {
+                                 OMElement payload, int securityScenarioNo) throws Exception {
         if (securityScenarioNo == 1) {
             Assert.assertTrue(endpointReference.startsWith("https:"), "Endpoint reference should be https");
         }
@@ -71,7 +76,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
                         + "policies" + "scenario" + securityScenarioNo + "-policy.xml";
 
         ServiceClient sc = getServiceClient(userName, password, endpointReference, operation, securityPolicyPath,
-                "wso2carbon", "wso2carbon", keyPath, "wso2carbon");
+                                            "wso2carbon", "wso2carbon", keyPath, "wso2carbon");
         OMElement result;
         if (log.isDebugEnabled()) {
             log.debug("payload :" + payload);
@@ -114,10 +119,10 @@ public class SecureAxisServiceClient implements CallbackHandler {
      */
 
     public OMElement sendReceive(String userName, String password, String endpointReference, String operation,
-            OMElement payload, String securityPolicyPath, String userCertAlias, String encryptionUser,
-            String keyStorePath, String keyStorePassword) throws Exception {
+                                 OMElement payload, String securityPolicyPath, String userCertAlias,
+                                 String encryptionUser, String keyStorePath, String keyStorePassword) throws Exception {
         ServiceClient sc = getServiceClient(userName, password, endpointReference, operation, securityPolicyPath,
-                userCertAlias, encryptionUser, keyStorePath, keyStorePassword);
+                                            userCertAlias, encryptionUser, keyStorePath, keyStorePassword);
         OMElement result;
         if (log.isDebugEnabled()) {
             log.debug("payload :" + payload);
@@ -157,7 +162,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
      */
 
     public void sendRobust(String userName, String password, String endpointReference, String operation,
-            OMElement payload, int securityScenarioNo) throws Exception {
+                           OMElement payload, int securityScenarioNo) throws Exception {
         if (securityScenarioNo == 1) {
             Assert.assertTrue(endpointReference.startsWith("https:"), "Endpoint reference should be https");
         }
@@ -168,7 +173,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
                 FrameworkPathUtil.getSystemResourceLocation() + File.separator + "security" + File.separator
                         + "policies" + "scenario" + securityScenarioNo + "-policy.xml";
         ServiceClient sc = getServiceClient(userName, password, endpointReference, operation, securityPolicyPath,
-                "wso2carbon", "wso2carbon", keyPath, "wso2carbon");
+                                            "wso2carbon", "wso2carbon", keyPath, "wso2carbon");
         try {
             sc.sendRobust(payload);
             log.info("Request Sent");
@@ -195,10 +200,10 @@ public class SecureAxisServiceClient implements CallbackHandler {
      */
 
     public void sendRobust(String userName, String password, String endpointReference, String operation,
-            OMElement payload, String securityPolicyPath, String userCertAlias, String encryptionUser,
-            String keyStorePath, String keyStorePassword) throws Exception {
+                           OMElement payload, String securityPolicyPath, String userCertAlias, String encryptionUser,
+                           String keyStorePath, String keyStorePassword) throws Exception {
         ServiceClient sc = getServiceClient(userName, password, endpointReference, operation, securityPolicyPath,
-                userCertAlias, encryptionUser, keyStorePath, keyStorePassword);
+                                            userCertAlias, encryptionUser, keyStorePath, keyStorePassword);
         if (log.isDebugEnabled()) {
             log.debug("payload :" + payload);
             log.debug("Security Policy Path :" + securityPolicyPath);
@@ -220,7 +225,7 @@ public class SecureAxisServiceClient implements CallbackHandler {
     }
 
     private Policy loadPolicy(String userName, String securityPolicyPath, String keyStorePath, String keyStorePassword,
-            String userCertAlias, String encryptionUser) throws Exception {
+                              String userCertAlias, String encryptionUser) throws Exception {
 
         Policy policy = null;
         StAXOMBuilder builder = null;
@@ -273,8 +278,8 @@ public class SecureAxisServiceClient implements CallbackHandler {
     }
 
     private ServiceClient getServiceClient(String userName, String password, String endpointReference, String operation,
-            String securityPolicyPath, String userCertAlias, String encryptionUser, String keyStorePath,
-            String keyStorePassword) throws Exception {
+                                           String securityPolicyPath, String userCertAlias, String encryptionUser,
+                                           String keyStorePath, String keyStorePassword) throws Exception {
 
         if (log.isDebugEnabled()) {
             log.debug("Key_Path :" + keyStorePath);
@@ -306,8 +311,8 @@ public class SecureAxisServiceClient implements CallbackHandler {
             try {
                 if (securityPolicyPath != null) {
                     opts.setProperty(RampartMessageData.KEY_RAMPART_POLICY,
-                            loadPolicy(userName, securityPolicyPath, keyStorePath, keyStorePassword, userCertAlias,
-                                    encryptionUser));
+                                     loadPolicy(userName, securityPolicyPath, keyStorePath, keyStorePassword,
+                                                userCertAlias, encryptionUser));
                 }
 
             } catch (Exception e) {
@@ -359,10 +364,5 @@ public class SecureAxisServiceClient implements CallbackHandler {
 
             }
         }
-    }
-
-    private static OMElement buildResponse(OMElement omElement) {
-        omElement.build();
-        return omElement;
     }
 }

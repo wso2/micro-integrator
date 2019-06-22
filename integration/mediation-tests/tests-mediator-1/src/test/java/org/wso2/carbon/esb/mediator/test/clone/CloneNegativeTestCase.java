@@ -46,7 +46,7 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Tests clone ID that does not match with the aggregate ID")
     public void testAggregateID() {
 
@@ -60,14 +60,14 @@ public class CloneNegativeTestCase extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress")
     public void testSOAPAction() {
         //TODO QA test has failed
 
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Tests against a invalid SOAP adress")
     public void testAddress() {
         //TODO not yet tested

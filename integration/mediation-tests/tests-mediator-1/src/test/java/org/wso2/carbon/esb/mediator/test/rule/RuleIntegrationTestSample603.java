@@ -17,13 +17,14 @@
  */
 package org.wso2.carbon.esb.mediator.test.rule;
 
-import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+
+import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -88,6 +89,7 @@ public class RuleIntegrationTestSample603 extends ESBIntegrationTest {
     }
 
     private OMElement sendRequest(String symbol) throws AxisFault {
-        return axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("RuleIntegrationTestSample603Proxy"), null, symbol);
+        return axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("RuleIntegrationTestSample603Proxy"), null, symbol);
     }
 }

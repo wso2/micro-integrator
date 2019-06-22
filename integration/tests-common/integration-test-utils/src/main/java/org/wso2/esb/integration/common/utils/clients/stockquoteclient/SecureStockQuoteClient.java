@@ -36,24 +36,26 @@ public class SecureStockQuoteClient {
     }
 
     public OMElement sendSecuredSimpleStockQuoteRequest(String userName, String password, String trpUrl,
-            String securityPolicyPath, String symbol) throws Exception {
+                                                        String securityPolicyPath, String symbol) throws Exception {
 
         return secureClient
                 .sendReceive(userName, password, trpUrl, "getQuote", createStandardRequest(symbol), securityPolicyPath,
-                        "alice", "bob",
-                        FrameworkPathUtil.getSystemResourceLocation() + "keystores" + File.separator + "products"
-                                + File.separator + "store.jks", "password");
+                             "alice", "bob",
+                             FrameworkPathUtil.getSystemResourceLocation() + "keystores" + File.separator + "products"
+                                     + File.separator + "store.jks", "password");
 
     }
 
     public OMElement sendSecuredSimpleStockQuoteRequest(String userName, String password, String trpUrl,
-            int securityScenarioId, String symbol) throws Exception {
+                                                        int securityScenarioId, String symbol) throws Exception {
 
         return secureClient.sendReceive(userName, password, trpUrl, "getQuote", createStandardRequest(symbol),
-                FrameworkPathUtil.getSystemResourceLocation() + File.separator + "security" + File.separator
-                        + "policies" + File.separator + "scenario" + securityScenarioId + "-policy.xml", "alice", "bob",
-                FrameworkPathUtil.getSystemResourceLocation() + File.separator + "keystores" + File.separator
-                        + "products" + File.separator + "store.jks", "password");
+                                        FrameworkPathUtil.getSystemResourceLocation() + File.separator + "security"
+                                                + File.separator + "policies" + File.separator + "scenario"
+                                                + securityScenarioId + "-policy.xml", "alice", "bob",
+                                        FrameworkPathUtil.getSystemResourceLocation() + File.separator + "keystores"
+                                                + File.separator + "products" + File.separator + "store.jks",
+                                        "password");
 
     }
 

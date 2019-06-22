@@ -31,7 +31,7 @@ public class Soap12FaultFullTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.2 fault messages with all fault values")
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.2 fault messages with all fault values")
     public void testSOAP12FullFaultMessage() throws AxisFault {
 
         try {

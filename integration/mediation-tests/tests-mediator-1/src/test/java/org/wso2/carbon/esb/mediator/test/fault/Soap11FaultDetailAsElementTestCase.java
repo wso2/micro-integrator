@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.fault;
 
-import javax.xml.namespace.QName;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axis2.AxisFault;
@@ -25,6 +24,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
+import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -40,7 +41,8 @@ public class Soap11FaultDetailAsElementTestCase extends ESBIntegrationTest {
     public void testSOAP11FaultDetailAsElement() {
 
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("Soap11FaultDetailAsElementProxy"), null, "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("Soap11FaultDetailAsElementProxy"), null,
+                    "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());

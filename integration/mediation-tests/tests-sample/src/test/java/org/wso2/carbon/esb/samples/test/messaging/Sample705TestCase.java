@@ -29,8 +29,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
@@ -43,9 +41,9 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void startJMSBrokerAndConfigureESB() throws Exception {
         super.init();
-//        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
-//        super.init();
-//       loadSampleESBConfiguration(705);
+        //        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
+        //        super.init();
+        //       loadSampleESBConfiguration(705);
 
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
@@ -65,12 +63,12 @@ public class Sample705TestCase extends ESBSampleIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
 
-            //reverting the changes done to esb sever
-            Thread.sleep(10000); //let server to clear the artifact undeployment
+        //reverting the changes done to esb sever
+        Thread.sleep(10000); //let server to clear the artifact undeployment
 
-            axis2Server1.stop();
-            axis2Server2.stop();
-            axis2Server3.stop();
+        axis2Server1.stop();
+        axis2Server2.stop();
+        axis2Server3.stop();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })

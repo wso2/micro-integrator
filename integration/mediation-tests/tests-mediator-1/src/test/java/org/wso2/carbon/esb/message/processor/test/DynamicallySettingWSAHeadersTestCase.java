@@ -51,7 +51,7 @@ public class DynamicallySettingWSAHeadersTestCase extends ESBIntegrationTest {
         Writer writer = new StringWriter();
         carbonLogReader.start();
         HttpURLConnectionClient
-                .sendPostRequestAndReadResponse(data,new URL(getProxyServiceURLHttp("MessageProcessorWSATestProxy")),
+                .sendPostRequestAndReadResponse(data, new URL(getProxyServiceURLHttp("MessageProcessorWSATestProxy")),
                         writer, "application/xml");
         Assert.assertTrue(checkForLog(carbonLogReader, "MessageProcessorWSAProxy Request Received", 20),
                 "Message processor unable to handle the message!");

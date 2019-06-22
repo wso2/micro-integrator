@@ -17,12 +17,8 @@
  */
 package org.wso2.carbon.esb.proxyservice.test.proxyservices;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.apache.http.HttpResponse;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
@@ -33,6 +29,8 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This test class will test the Proxy Service deployment  when pinnedService parameter value does

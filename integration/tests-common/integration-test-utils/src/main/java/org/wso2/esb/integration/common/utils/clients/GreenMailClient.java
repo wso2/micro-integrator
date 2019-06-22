@@ -33,9 +33,9 @@ import javax.mail.internet.MimeMessage;
  * Client class for GreenMail Server.
  */
 public class GreenMailClient {
-    private GreenMailUser greenMailUser;
     private static final String FROM_ADDRESS = "some@mail.com";
     private static final String TO_ADDRESS = "wso2@localhost";
+    private GreenMailUser greenMailUser;
 
     public GreenMailClient(GreenMailUser greenMailUser) {
         this.greenMailUser = greenMailUser;

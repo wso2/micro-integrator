@@ -36,11 +36,10 @@ import javax.xml.stream.XMLStreamReader;
 public class PriorityMediationAdminClient {
 
     private static final Log log = LogFactory.getLog(PriorityMediationAdminClient.class);
-    private String serviceName = "PriorityMediationAdmin";
-
     String backendUrl = null;
     String SessionCookie = null;
     PriorityMediationAdminStub priorityMediationAdmin;
+    private String serviceName = "PriorityMediationAdmin";
 
     public PriorityMediationAdminClient(String backendUrl, String sessionCookie) throws AxisFault {
         this.backendUrl = backendUrl;

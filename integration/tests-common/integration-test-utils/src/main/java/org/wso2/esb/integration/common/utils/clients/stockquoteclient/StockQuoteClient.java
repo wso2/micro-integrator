@@ -53,6 +53,16 @@ public class StockQuoteClient {
 //        serviceClient.addStringHeader(new QName(ns, localName), value);
     }*/
 
+    private static OMElement buildResponse(OMElement omElement) {
+        omElement.build();
+        return omElement;
+    }
+
+    private static double getRandom(double base, double varience, boolean onlypositive) {
+        double rand = Math.random();
+        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand)) * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
+    }
+
     public void addHttpHeader(String name, String value) {
         httpHeaders.add(new Header(name, value));
     }
@@ -244,7 +254,7 @@ public class StockQuoteClient {
 
         if (addUrl != null && !"null".equals(addUrl)) {
             serviceClient = new ServiceClient(ConfigurationContextProvider.getInstance().getConfigurationContext(),
-                    null);
+                                              null);
             serviceClient.engageModule("addressing");
             options.setTo(new EndpointReference(addUrl));
         } else {
@@ -347,11 +357,6 @@ public class StockQuoteClient {
         return method;
     }
 
-    private static OMElement buildResponse(OMElement omElement) {
-        omElement.build();
-        return omElement;
-    }
-
     /**
      * Send place order request
      *
@@ -369,11 +374,6 @@ public class StockQuoteClient {
         } finally {
             serviceClient.cleanupTransport();
         }
-    }
-
-    private static double getRandom(double base, double varience, boolean onlypositive) {
-        double rand = Math.random();
-        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand)) * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
     }
 
     /**

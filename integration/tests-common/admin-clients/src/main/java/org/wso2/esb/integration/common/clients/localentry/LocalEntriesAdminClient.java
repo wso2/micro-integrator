@@ -37,9 +37,8 @@ import javax.xml.stream.XMLStreamReader;
 public class LocalEntriesAdminClient {
 
     private static final Log log = LogFactory.getLog(LocalEntriesAdminClient.class);
-
-    private LocalEntryAdminServiceStub localEntryAdminServiceStub;
     private final String serviceName = "LocalEntryAdmin";
+    private LocalEntryAdminServiceStub localEntryAdminServiceStub;
 
     /**
      * creation of  LocalEntriesAdminClient using sessionCokkie

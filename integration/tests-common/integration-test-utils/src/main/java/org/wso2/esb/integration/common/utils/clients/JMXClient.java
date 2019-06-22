@@ -36,17 +36,15 @@ import javax.management.remote.JMXServiceURL;
  */
 public class JMXClient {
 
+    private static final Log log = LogFactory.getLog(JMXClient.class);
     private MBeanServerConnection mbsc = null;
-
     private String userName;
     private String password;
     private ObjectName objectName;
     private String hostName;
     private String rmiServerPort;
     private String rmiRegistryPort;
-
     private JMXConnector jmxc;
-    private static final Log log = LogFactory.getLog(JMXClient.class);
 
     /**
      * @param connectionName full name of the service with the connection
@@ -56,7 +54,7 @@ public class JMXClient {
      * @throws MalformedObjectNameException - throws if the connection unsuccessful
      */
     public JMXClient(String connectionName, String hostName, String rmiServerPort, String rmiRegistryPort,
-            String userName, String password) throws MalformedObjectNameException {
+                     String userName, String password) throws MalformedObjectNameException {
         this.objectName = new ObjectName(connectionName);
         this.userName = userName;
         this.password = password;

@@ -36,7 +36,7 @@ public class AvailabilityPollingUtils {
      * @return Whether the proxy is un-deployed or not
      */
     public static Callable<Boolean> isProxyNotAvailable(final String proxyName, final String backEndUrl,
-            final String sessionCookie) {
+                                                        final String sessionCookie) {
         return new Callable<Boolean>() {
             @Override
             public Boolean call() {

@@ -231,6 +231,19 @@ public class ThriftServer implements Runnable {
         return relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
     }
 
+    public void waitToReceiveEvents(int maxWaitTime, int expectedCount) {
+        for (int i = 0; i < maxWaitTime; i = i + 5000) {
+            if (msgCount.get() >= expectedCount) {
+                break;
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                //ignored
+            }
+        }
+    }
+
     // Inner class, generic extension filter
     public class GenericExtFilter implements FilenameFilter {
 
@@ -242,19 +255,6 @@ public class ThriftServer implements Runnable {
 
         public boolean accept(File dir, String name) {
             return (name.endsWith(ext));
-        }
-    }
-
-    public void waitToReceiveEvents(int maxWaitTime, int expectedCount) {
-        for (int i = 0; i < maxWaitTime; i = i + 5000) {
-            if (msgCount.get() >= expectedCount) {
-                break;
-            }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                //ignored
-            }
         }
     }
 }

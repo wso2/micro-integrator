@@ -56,9 +56,8 @@ import javax.xml.stream.XMLStreamReader;
 
 public class ProxyServiceAdminClient {
     private static final Log log = LogFactory.getLog(ProxyServiceAdminClient.class);
-
-    private ProxyServiceAdminStub proxyServiceAdminStub;
     private final String serviceName = "ProxyServiceAdmin";
+    private ProxyServiceAdminStub proxyServiceAdminStub;
 
     /**
      * Authenticate stub
@@ -99,7 +98,7 @@ public class ProxyServiceAdminClient {
         data.setStartOnLoad(true);
         //data.setEndpointKey("http://localhost:9000/services/SimpleStockQuoteService");
         data.setEndpointXML("<endpoint xmlns=\"http://ws.apache.org/ns/synapse\"><address uri=\"" + serviceEndPoint
-                + "\" /></endpoint>");
+                                    + "\" /></endpoint>");
         data.setEnableSecurity(true);
         try {
             proxyServiceAdminStub.addProxy(data);
@@ -229,7 +228,7 @@ public class ProxyServiceAdminClient {
                 bytes = proxyString.getBytes("UTF8");
             } catch (UnsupportedEncodingException e) {
                 log.error("Unable to extract bytes in UTF-8 encoding. "
-                        + "Extracting bytes in the system default encoding" + e.getMessage());
+                                  + "Extracting bytes in the system default encoding" + e.getMessage());
                 bytes = proxyString.getBytes();
             }
             OMElement elem = new StAXOMBuilder(new ByteArrayInputStream(bytes)).getDocumentElement();

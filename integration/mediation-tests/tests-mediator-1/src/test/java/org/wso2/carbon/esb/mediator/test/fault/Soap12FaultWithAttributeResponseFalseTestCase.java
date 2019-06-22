@@ -39,8 +39,8 @@ public class Soap12FaultWithAttributeResponseFalseTestCase extends ESBIntegratio
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());
-            assertEquals(expected.getMessage(), "Proxy Fault sequence Executed instead of " +
-                            "Soap12FaultWithAttributeResponseFalseTestCaseErrorSeq","Error Message mismatched");
+            assertEquals(expected.getMessage(), "Proxy Fault sequence Executed instead of "
+                    + "Soap12FaultWithAttributeResponseFalseTestCaseErrorSeq", "Error Message mismatched");
 
         }
 

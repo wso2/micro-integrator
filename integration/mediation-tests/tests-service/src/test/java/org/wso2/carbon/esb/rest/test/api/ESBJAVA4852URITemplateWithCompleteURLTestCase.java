@@ -40,7 +40,7 @@ public class ESBJAVA4852URITemplateWithCompleteURLTestCase extends ESBIntegratio
         logReader = new CarbonLogReader();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sending complete URL to API and for dispatching")
+    @Test(groups = { "wso2.esb" }, description = "Sending complete URL to API and for dispatching")
     public void testCompleteURLWithHTTPMethod() throws Exception {
         logReader.start();
 
@@ -56,7 +56,7 @@ public class ESBJAVA4852URITemplateWithCompleteURLTestCase extends ESBIntegratio
         }
 
         Assert.assertTrue(logReader.assertIfLogExists("order API INVOKED"),
-                          "Request Not Dispatched to API when HTTP method having full url");
+                "Request Not Dispatched to API when HTTP method having full url");
 
         logReader.stop();
     }

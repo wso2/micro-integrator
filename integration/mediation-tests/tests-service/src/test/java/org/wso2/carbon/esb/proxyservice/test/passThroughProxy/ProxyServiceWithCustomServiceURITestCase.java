@@ -65,6 +65,15 @@ public class ProxyServiceWithCustomServiceURITestCase extends ESBIntegrationTest
  * This test case will deploy a proxy service with 'ServiceURI' parameter
  * over https and see weather it can be invoked using the customized url
  * @throws org.apache.axis2.AxisFault
+ * <p>
+ * This configuration contains CustomURIBasedDispatcher in Dispatch phase of
+ * "InFlow"
+ * <p>
+ * Custom URI Fragment defined in Proxy definition
+ * <p>
+ * This test case will deploy a proxy service with 'ServiceURI' parameter
+ * over https and see weather it can be invoked using the customized url
+ * @throws org.apache.axis2.AxisFault
  *//*
 
     private final String PROXY_DEFINITION_HTTPS_CUSTOM_URI =

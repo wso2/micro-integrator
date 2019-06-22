@@ -43,7 +43,8 @@ public class PayloadFormatWithArgumentsTestCase extends ESBIntegrationTest {
 
         AxisServiceClient axisServiceClient = new AxisServiceClient();
         OMElement response = axisServiceClient
-                .sendReceive(createPayload(), getProxyServiceURLHttp("PayloadFormatWithArgumentsTestCaseProxy"), "echoString");
+                .sendReceive(createPayload(), getProxyServiceURLHttp("PayloadFormatWithArgumentsTestCaseProxy"),
+                        "echoString");
         assertTrue(response.toString().contains("Wso2 Test Automation"),
                 "Response mismatch. " + "Actual Response " + response.toString());
     }

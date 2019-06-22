@@ -30,7 +30,6 @@ import java.net.URLConnection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -42,7 +41,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
-        carbonLogReader= new CarbonLogReader();
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct")
@@ -79,12 +78,11 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 int end = matcher.end();
                 String quote = payload.substring(start, end);
 
-                assertTrue(logs.contains("<m0:getQuote>" +
-                        "            <m0:group>Group1</m0:group>" +
-                        "            <m0:request><m0:code>IBM</m0:code></m0:request>" +
-                        "            <m0:request><m0:code>WSO2</m0:code></m0:request>" +
-                        "            <m0:request><m0:code>MSFT</m0:code></m0:request>" +
-                        "        </m0:getQuote>"), "original payload is incorrect");
+                assertTrue(logs.contains("<m0:getQuote>" + "            <m0:group>Group1</m0:group>"
+                                + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
+                                + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
+                                + "            <m0:request><m0:code>MSFT</m0:code></m0:request>" + "        </m0:getQuote>"),
+                        "original payload is incorrect");
             }
         }
 
@@ -95,8 +93,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
         if (logs.contains("in_count")) {
             //counter at the end of foreach in insequence
-            assertTrue(logs.contains("in_count = " + 3),
-                    "Final counter mismatch, expected 3 found = " + logs);
+            assertTrue(logs.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + logs);
         }
 
         if (logs.contains("in_payload")) {
@@ -158,11 +155,11 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 int end = matcher.end();
                 String quote = payload.substring(start, end);
 
-                assertTrue(quote.contains( "<m0:getQuote>\n" + "            <m0:group>Group1</m0:group>"
-                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
-                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
-                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>"
-                        + "        </m0:getQuote>"), "original payload is incorrect");
+                assertTrue(quote.contains("<m0:getQuote>\n" + "            <m0:group>Group1</m0:group>"
+                                + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
+                                + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
+                                + "            <m0:request><m0:code>MSFT</m0:code></m0:request>" + "        </m0:getQuote>"),
+                        "original payload is incorrect");
             }
         }
 
@@ -173,8 +170,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
         if (message.contains("1_in_count")) {
             //counter at the end of foreach in insequence
-            assertTrue(message.contains("in_count = " + 3),
-                    "Final counter mismatch, expected 3 found = " + message);
+            assertTrue(message.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + message);
         }
 
         if (message.contains("1_in_payload")) {
@@ -289,10 +285,10 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 String quote = payload.substring(start, end);
 
                 assertTrue(quote.contains("<m0:getQuote>" + "            <m0:group>Group1</m0:group>"
-                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
-                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
-                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>"
-                        + "        </m0:getQuote>"), "original payload is incorrect");
+                                + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
+                                + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
+                                + "            <m0:request><m0:code>MSFT</m0:code></m0:request>" + "        </m0:getQuote>"),
+                        "original payload is incorrect");
             }
         }
 
@@ -303,8 +299,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
         if (message.contains("1_in_count")) {
             //counter at the end of foreach in insequence
-            assertTrue(message.contains("in_count = " + 3),
-                    "Final counter mismatch, expected 3 found = " + message);
+            assertTrue(message.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + message);
         }
 
         if (message.contains("1_in_payload")) {
@@ -361,8 +356,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
 
         if (message.contains("2_in_count")) {
             //counter at the end of foreach in insequence
-            assertTrue(message.contains("in_count = " + 4),
-                    "Final counter mismatch, expected 4 found = " + message);
+            assertTrue(message.contains("in_count = " + 4), "Final counter mismatch, expected 4 found = " + message);
         }
 
         if (message.contains("2_in_payload")) {

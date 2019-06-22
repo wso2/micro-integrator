@@ -61,7 +61,8 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
             }
         }
 
-        Assert.assertEquals(logs.split("foreach = in").length - 1, 2, "Count of messages entered ForEach scope is incorrect");
+        Assert.assertEquals(logs.split("foreach = in").length - 1, 2,
+                "Count of messages entered ForEach scope is incorrect");
 
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
@@ -80,7 +81,8 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
     public void testForEachSequenceRefWithIterateEndpoint() throws Exception {
         carbonLogReader.start();
 
-        String response = client.getMultipleCustomResponse(getProxyServiceURLHttp("foreach_simple_sequenceref"), "IBM", 2);
+        String response = client
+                .getMultipleCustomResponse(getProxyServiceURLHttp("foreach_simple_sequenceref"), "IBM", 2);
         Assert.assertNotNull(response);
 
         String logs = carbonLogReader.getLogs();
@@ -90,7 +92,8 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
             }
         }
 
-        Assert.assertEquals(logs.split("foreach = in").length - 1, 2, "Count of messages entered ForEach scope is incorrect");
+        Assert.assertEquals(logs.split("foreach = in").length - 1, 2,
+                "Count of messages entered ForEach scope is incorrect");
 
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();

@@ -115,8 +115,7 @@ public class CarbonLogReader {
      * @return true if the log is found with given timeout, false otherwise
      * @throws InterruptedException if interrupted while sleeping
      */
-    public boolean checkForLog(String expected, int timeout)
-            throws InterruptedException {
+    public boolean checkForLog(String expected, int timeout) throws InterruptedException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);

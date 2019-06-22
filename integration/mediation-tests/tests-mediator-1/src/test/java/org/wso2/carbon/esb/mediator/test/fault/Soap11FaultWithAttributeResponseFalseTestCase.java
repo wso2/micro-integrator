@@ -35,13 +35,12 @@ public class Soap11FaultWithAttributeResponseFalseTestCase extends ESBIntegratio
     public void testSOAP11FaultAttributeResponseFalse() throws AxisFault {
         String proxyServiceName = "Soap11FaultWithAttributeResponseFalseTestCaseProxy";
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null,
-                    "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());
-            assertEquals(expected.getMessage(), "Proxy Fault sequence Executed instead of " +
-                            "Soap11FaultWithAttributeResponseFalseTestCaseErrorSeq", "Error Message mismatched");
+            assertEquals(expected.getMessage(), "Proxy Fault sequence Executed instead of "
+                    + "Soap11FaultWithAttributeResponseFalseTestCaseErrorSeq", "Error Message mismatched");
 
         }
 

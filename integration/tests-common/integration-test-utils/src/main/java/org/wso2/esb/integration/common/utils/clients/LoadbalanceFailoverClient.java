@@ -52,6 +52,9 @@ import javax.xml.namespace.QName;
 
 public class LoadbalanceFailoverClient {
     private static final Log log = LogFactory.getLog(LoadbalanceFailoverClient.class);
+    private final static String COOKIE = "Cookie";
+    private final static String SET_COOKIE = "Set-Cookie";
+    private final static String DEFAULT_CLIENT_REPO = "client_repo";
     private ConfigurationContext cfgCtx;
     private ServiceClient serviceClient;
 
@@ -73,10 +76,13 @@ public class LoadbalanceFailoverClient {
         }
     }
 
-    private final static String COOKIE = "Cookie";
-    private final static String SET_COOKIE = "Set-Cookie";
-
-    private final static String DEFAULT_CLIENT_REPO = "client_repo";
+    private static String getProperty(String name, String def) {
+        String result = System.getProperty(name);
+        if (result == null || result.length() == 0) {
+            result = def;
+        }
+        return result;
+    }
 
     public void sendLoadBalanceRequests() throws Exception {
 
@@ -341,8 +347,8 @@ public class LoadbalanceFailoverClient {
             String repoLocationProperty = System.getProperty("repository");
             String repo = repoLocationProperty != null ? repoLocationProperty : DEFAULT_CLIENT_REPO;
             ConfigurationContext configContext = ConfigurationContextFactory
-                    .createConfigurationContextFromFileSystem(repo,
-                            repo + File.separator + "conf" + File.separator + "axis2.xml");
+                    .createConfigurationContextFromFileSystem(repo, repo + File.separator + "conf" + File.separator
+                            + "axis2.xml");
 
             ServiceClient client = new ServiceClient(configContext, null);
 
@@ -421,7 +427,7 @@ public class LoadbalanceFailoverClient {
                                     " ") + " " + vElement.getText());
                 } catch (AxisFault axisFault) {
                     System.out.println("Request with session id " + (httpSession ? cookie : sessionNumber) + " "
-                            + "- Get a Fault : " + axisFault.getMessage());
+                                               + "- Get a Fault : " + axisFault.getMessage());
                 }
             }
 
@@ -498,14 +504,6 @@ public class LoadbalanceFailoverClient {
         body.addChild(valueElement);
 
         return envelope;
-    }
-
-    private static String getProperty(String name, String def) {
-        String result = System.getProperty(name);
-        if (result == null || result.length() == 0) {
-            result = def;
-        }
-        return result;
     }
 
 }

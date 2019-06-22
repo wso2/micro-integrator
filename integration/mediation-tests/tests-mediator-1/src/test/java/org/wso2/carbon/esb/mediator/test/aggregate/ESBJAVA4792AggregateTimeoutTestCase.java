@@ -26,7 +26,6 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
@@ -65,7 +64,8 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         logReader.stop();
         Assert.assertEquals(countLoadElement(response), 2, "Response must have two aggregated responses");
         //wait a last response to come to aggregator
-        boolean logFound = Utils.logExists(logReader, "On Complete Triggered in Iterator for ESBJAVA4792AggregateTimeoutTestCase", 10);
+        boolean logFound = Utils
+                .logExists(logReader, "On Complete Triggered in Iterator for ESBJAVA4792AggregateTimeoutTestCase", 10);
         Assert.assertTrue(logFound, "OnComplete has been triggered more than expecting");
     }
 
@@ -78,7 +78,8 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         OMElement response = axis2Client.send(getProxyServiceURLHttps("timeoutClone"), null, "sleepOperation", payload);
         Assert.assertEquals(countLoadElement(response), 2, "Response must have two aggregated responses");
         //wait a last response to come to aggregator
-        boolean logFound = Utils.logExists(logReader, "On Complete Triggered in Clone for ESBJAVA4792AggregateTimeoutTestCase",10 );
+        boolean logFound = Utils
+                .logExists(logReader, "On Complete Triggered in Clone for ESBJAVA4792AggregateTimeoutTestCase", 10);
         Assert.assertTrue(logFound, "OnComplete has been triggered more than expecting");
     }
 

@@ -23,7 +23,6 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -41,8 +40,7 @@ public class ForceErrorOnSoapFaultPropertyTest extends ESBIntegrationTest {
     public void testForceErrorOnSoapFault() throws AxisFault {
         try {
             String proxyServiceName = "ForceErrorOnSoapFaultPropertyTestProxy";
-            axis2Client
-                    .send(getProxyServiceURLHttp(proxyServiceName), null, "getQuote", createFaultRequest("IBM"));
+            axis2Client.send(getProxyServiceURLHttp(proxyServiceName), null, "getQuote", createFaultRequest("IBM"));
         } catch (AxisFault expected) {
             assertEquals(expected.getFaultCode().getLocalPart(), "500000", "Fault code value mismatched");
         }

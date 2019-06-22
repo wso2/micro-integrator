@@ -18,10 +18,6 @@
 
 package org.wso2.carbon.esb.rest.test.header;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -35,6 +31,11 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetSocketAddress;
+
 import static org.testng.Assert.assertEquals;
 
 public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
@@ -49,8 +50,7 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb"}, description = "Test whether ESB pass-through responses with different response codes.",
-          dataProvider = "responseCodeProvider")
+            "wso2.esb" }, description = "Test whether ESB pass-through responses with different response codes.", dataProvider = "responseCodeProvider")
     public void testReturnResponseCode(int responseCode) throws Exception {
         this.responseCode = responseCode;
         //Starting backend server
@@ -60,14 +60,14 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
         server.start();
         //Invoke API deployed in ESB
         switch (responseCode) {
-            case 404:
-                String contentType = "text/html";
-                String url = getApiInvocationURL("/serviceTest/notfound");
-                sendRequest(url, contentType);
-            default:
-                contentType = "text/xml";
-                url = getApiInvocationURL("/serviceTest/test");
-                sendRequest(url, contentType);
+        case 404:
+            String contentType = "text/html";
+            String url = getApiInvocationURL("/serviceTest/notfound");
+            sendRequest(url, contentType);
+        default:
+            contentType = "text/xml";
+            url = getApiInvocationURL("/serviceTest/test");
+            sendRequest(url, contentType);
         }
 
         server.stop(5);
@@ -103,7 +103,7 @@ public class HTTPResponseCodeTestCase extends ESBIntegrationTest {
 
     @DataProvider(name = "responseCodeProvider")
     public Object[][] getResponseCodes() {
-        return new Object[][]{{200}, {400}, {403}, {404}, {500}, {501}, {503},};
+        return new Object[][] { { 200 }, { 400 }, { 403 }, { 404 }, { 500 }, { 501 }, { 503 }, };
     }
 
 }

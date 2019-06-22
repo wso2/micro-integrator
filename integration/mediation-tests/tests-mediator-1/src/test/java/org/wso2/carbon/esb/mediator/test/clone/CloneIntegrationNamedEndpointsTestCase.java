@@ -55,7 +55,7 @@ public class CloneIntegrationNamedEndpointsTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Tests http address")
     public void testSequence() throws Exception {
 

@@ -34,11 +34,16 @@ import java.net.Socket;
 
 public class ResponsePushingSocketServer extends Thread {
 
+    public String response = "";
     private Log log = LogFactory.getLog(ResponsePushingSocketServer.class);
     private int port;
     private ServerSocket providerSocket;
     private Socket connection = null;
-    public String response = "";
+
+    public ResponsePushingSocketServer(int listenPort, String response) {
+        port = listenPort;
+        this.response = response;
+    }
 
     public void run() {
         if (response != null) {
@@ -66,10 +71,5 @@ public class ResponsePushingSocketServer extends Thread {
             }
         }
 
-    }
-
-    public ResponsePushingSocketServer(int listenPort, String response) {
-        port = listenPort;
-        this.response = response;
     }
 }

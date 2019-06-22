@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
-import java.io.File;
-
 import org.apache.axis2.AxisFault;
 import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
@@ -27,6 +25,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+
+import java.io.File;
+
 import static org.testng.Assert.assertEquals;
 
 /**
@@ -47,20 +48,19 @@ public class NullNameSpaceForAttachPathTestCase extends ESBIntegrationTest {
      * These tests set no name space specified for 'AttachPath' field and mediate the messages and verify error handling
      * by sending stock quote requests. Evaluation of the XPath expression will result in an error
      */
-    @Test(groups = {"wso2.esb"}, description = "Testing null namespace for 'attachPath' field")
+    @Test(groups = { "wso2.esb" }, description = "Testing null namespace for 'attachPath' field")
     public void testNullNameSpaceForAttachPath() throws Exception {
 
         try {
             axis2Client
                     .sendMultipleQuoteRequest(getProxyServiceURLHttp("iterateWithNullNamespaceForAttachPathTestProxy"),
-                                              symbol, "WSO2", 5);
-            Assert.fail(
-                    "This Request must throw AxisFault"); // This will execute when the exception is not thrown as
+                            symbol, "WSO2", 5);
+            Assert.fail("This Request must throw AxisFault"); // This will execute when the exception is not thrown as
             // expected
         } catch (AxisFault message) {
             System.out.print(message.getReason());
             assertEquals(message.getReason(), ESBTestConstant.UNEXPECTED_SENDING_OUT,
-                         "Iterator mediator worked even with an null name space for 'attachPath' field.");
+                    "Iterator mediator worked even with an null name space for 'attachPath' field.");
         }
 
     }

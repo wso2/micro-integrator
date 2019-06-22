@@ -31,9 +31,8 @@ import java.rmi.RemoteException;
 
 public class RestApiAdminClient {
     private static final Log log = LogFactory.getLog(RestApiAdminClient.class);
-
-    private RestApiAdminStub restApiAdminStub;
     private final String serviceName = "RestApiAdmin";
+    private RestApiAdminStub restApiAdminStub;
 
     public RestApiAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;

@@ -35,8 +35,7 @@ public class Soap11FaultDetailsTestCase extends ESBIntegrationTest {
     public void testSOAP11FaultDetail() throws AxisFault {
         String proxyServiceName = "Soap11FaultDetailsTestCaseProxy";
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null,
-                    "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());

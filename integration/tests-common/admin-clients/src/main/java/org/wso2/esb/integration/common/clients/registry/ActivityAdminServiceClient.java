@@ -29,16 +29,14 @@ import org.wso2.esb.integration.common.clients.client.utils.AuthenticateStub;
 import java.rmi.RemoteException;
 
 public class ActivityAdminServiceClient {
-    private static final Log log = LogFactory.getLog(ActivityAdminServiceClient.class);
-
-    private final String serviceName = "ActivityAdminService";
-    private ActivityAdminServiceStub activityAdminServiceStub;
-    private String endPoint;
-
     public final static String FILTER_ALL = "All";
     public final static String FILTER_ASSOCIATE_ASPECT = "Associate Aspect";
     public final static String FILTER_RESOURCE_ADDED = "Resource Add";
     public final static String FILTER_RESOURCE_UPDATE = "Resource Update";
+    private static final Log log = LogFactory.getLog(ActivityAdminServiceClient.class);
+    private final String serviceName = "ActivityAdminService";
+    private ActivityAdminServiceStub activityAdminServiceStub;
+    private String endPoint;
 
     public ActivityAdminServiceClient(String backEndUrl, String sessionCookie) throws AxisFault {
         this.endPoint = backEndUrl + serviceName;
@@ -63,7 +61,8 @@ public class ActivityAdminServiceClient {
     }
 
     public ActivityBean getActivities(String sessionCookie, String userName, String resourcePath, String fromDate,
-            String toDate, String filter, int page) throws RemoteException, RegistryExceptionException {
+                                      String toDate, String filter, int page)
+            throws RemoteException, RegistryExceptionException {
         try {
             return activityAdminServiceStub
                     .getActivities(userName, resourcePath, fromDate, toDate, filter, page + "", sessionCookie);

@@ -38,7 +38,7 @@ public class FormatPayloadWithOMTypeArgsExpressionTestCase extends ESBIntegratio
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Do transformation with a Payload Format that has OM type arguments")
+    @Test(groups = { "wso2.esb" }, description = "Do transformation with a Payload Format that has OM type arguments")
     public void transformPayloadByArgsValue() throws AxisFault {
         sendRobust(getProxyServiceURLHttp("FormatPayloadWithOMTypeArgsExpressionProxy"), "IBM");
     }

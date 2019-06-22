@@ -36,7 +36,8 @@ public class WithoutRuleSetPropertyTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "scenario without rules")
     public void testSequenceWithOutRuleSet() {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("WithoutRuleSetPropertyTestCaseProxy"), null, "IBM");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("WithoutRuleSetPropertyTestCaseProxy"), null,
+                    "IBM");
             Assert.fail("This Configuration can not be saved successfully due to empty rule set");
         } catch (AxisFault expected) {
             assertEquals(expected.getMessage(), ESBTestConstant.INCOMING_MESSAGE_IS_NULL,

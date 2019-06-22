@@ -21,8 +21,9 @@ public class PayloadFactoryWithDynamicKeyTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Payload Factory invocation with a key which its format can be saved as a local entry or registry resource")
     public void testInvokeAScriptWithDynamicKey() throws Exception {
 
-        OMElement response = axis2Client.sendSimpleQuoteRequest(getProxyServiceURLHttp(
-                "PayloadFactoryWithDynamicKeyTestCaseProxy"), null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleQuoteRequest(getProxyServiceURLHttp("PayloadFactoryWithDynamicKeyTestCaseProxy"), null,
+                        "WSO2");
 
         assertEquals(response.getFirstElement().getText(), "IBM", "Fault value mismatched");
         assertNotEquals(response.getFirstElement().getText(), "WSO2", "Fault value mismatched");

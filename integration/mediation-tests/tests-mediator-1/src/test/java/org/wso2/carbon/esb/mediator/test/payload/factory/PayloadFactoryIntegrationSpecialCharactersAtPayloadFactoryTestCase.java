@@ -38,13 +38,13 @@ public class PayloadFactoryIntegrationSpecialCharactersAtPayloadFactoryTestCase 
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test for containing special characters at payload factory")
+    @Test(groups = { "wso2.esb" }, description = "Test for containing special characters at payload factory")
     public void testSpecialCharactersAtPayloadFactory() throws AxisFault, XPathExpressionException {
         OMElement response;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
-                "SpecialCharactersAtPayloadFactoryTestCaseProxy"),
-                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SpecialCharactersAtPayloadFactoryTestCaseProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         assertTrue(response.toString().contains("$WSO2$"), "Symbol $WSO2$ not found in response message");
 
     }

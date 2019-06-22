@@ -18,14 +18,14 @@
 
 package org.wso2.carbon.esb.mediator.test.iterate;
 
-import java.util.Iterator;
-import javax.xml.namespace.QName;
-
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
+import java.util.Iterator;
+import javax.xml.namespace.QName;
 
 /**
  * Tests a sequence with a iterate mediator that calls sequences of Governors and configuration registers

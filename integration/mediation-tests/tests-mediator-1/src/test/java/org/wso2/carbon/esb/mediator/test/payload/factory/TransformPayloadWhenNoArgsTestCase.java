@@ -34,16 +34,15 @@ public class TransformPayloadWhenNoArgsTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Do transformation with a Payload Format that has no arguments")
+    @Test(groups = { "wso2.esb" }, description = "Do transformation with a Payload Format that has no arguments")
     public void transformUsingPayloadFactory() throws AxisFault, XPathExpressionException {
         OMElement response;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
-                "TransformPayloadWhenNoArgsTestCaseProxy"),
-                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TransformPayloadWhenNoArgsTestCaseProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertTrue(response.toString().contains("automation"), "Symbol automation not found in response message");
 
     }
-
 
 }

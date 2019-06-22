@@ -54,8 +54,7 @@ public class NativeTCPClient {
             fullMessage.append(this.message);
             if (DelimiterTypeEnum.BYTE.getDelimiterType().equalsIgnoreCase(this.delimiterType)) {
                 fullMessage.append(this.byteDelimiter);
-            } else if (DelimiterTypeEnum.CHARACTER.getDelimiterType()
-                    .equalsIgnoreCase(this.delimiterType)) {
+            } else if (DelimiterTypeEnum.CHARACTER.getDelimiterType().equalsIgnoreCase(this.delimiterType)) {
                 fullMessage.append(this.characterDelimiter);
             } else {
                 fullMessage.append(this.stringDelimiter);
@@ -72,8 +71,7 @@ public class NativeTCPClient {
         ByteArrayOutputStream bos = null;
         if (DelimiterTypeEnum.BYTE.getDelimiterType().equalsIgnoreCase(this.delimiterType)) {
             delimiter = this.byteDelimiter;
-        } else if (DelimiterTypeEnum.CHARACTER.getDelimiterType()
-                .equalsIgnoreCase(this.delimiterType)) {
+        } else if (DelimiterTypeEnum.CHARACTER.getDelimiterType().equalsIgnoreCase(this.delimiterType)) {
             delimiter = this.characterDelimiter.charAt(0);
         }
 

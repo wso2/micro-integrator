@@ -24,8 +24,8 @@ import org.apache.commons.logging.LogFactory;
 
 class CarbonLogTailer extends TailerListenerAdapter {
 
-    private StringBuilder stringBuilder;
     private static final Log LOG = LogFactory.getLog(CarbonLogTailer.class);
+    private StringBuilder stringBuilder;
 
     CarbonLogTailer() {
         super();

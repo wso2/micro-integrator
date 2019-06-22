@@ -31,7 +31,7 @@ public class Soap12FaultDetailsTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Creating SOAP1.2 fault details")
+    @Test(groups = { "wso2.esb" }, description = "Creating SOAP1.2 fault details")
     public void testSOAP12FaultDetail() throws AxisFault {
         try {
             String proxyServiceName = "Soap12FaultDetailsTestCaseProxy";

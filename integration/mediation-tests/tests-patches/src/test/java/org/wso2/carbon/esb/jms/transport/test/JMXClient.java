@@ -45,7 +45,7 @@ public class JMXClient {
      * connect to org.wso2.carbon for JMX monitoring
      *
      * @return - return MBeanServerConnection
-     * @throws IOException                           - error in making connection
+     * @throws IOException                  - error in making connection
      * @throws MalformedObjectNameException - error in making connection
      */
     public MBeanServerConnection connect() throws IOException, MalformedObjectNameException {

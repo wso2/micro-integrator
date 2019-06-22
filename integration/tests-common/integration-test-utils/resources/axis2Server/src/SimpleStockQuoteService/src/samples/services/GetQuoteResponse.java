@@ -56,6 +56,11 @@ public class GetQuoteResponse {
         this.name = symbol + " Company";
     }
 
+    private static double getRandom(double base, double varience, boolean onlypositive) {
+        double rand = Math.random();
+        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand)) * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
+    }
+
     public String getSymbol() {
         return symbol;
     }
@@ -166,11 +171,6 @@ public class GetQuoteResponse {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    private static double getRandom(double base, double varience, boolean onlypositive) {
-        double rand = Math.random();
-        return (base + ((rand > 0.5 ? 1 : -1) * varience * base * rand)) * (onlypositive ? 1 : (rand > 0.5 ? 1 : -1));
     }
 
 }

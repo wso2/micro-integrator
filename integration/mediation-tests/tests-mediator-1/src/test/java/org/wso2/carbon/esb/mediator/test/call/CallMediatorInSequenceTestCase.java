@@ -35,8 +35,8 @@ public class CallMediatorInSequenceTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" })
     public void callMediatorInMainTestCase() throws AxisFault {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
-                getProxyServiceURLHttp("CallMediatorInSequenceTestProxy"), null, "WSO2");
+        OMElement response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CallMediatorInSequenceTestProxy"), null, "WSO2");
         boolean responseContainsWSO2 = response.getFirstElement().toString().contains("WSO2");
         assertTrue(responseContainsWSO2);
     }

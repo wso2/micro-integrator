@@ -72,12 +72,19 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
 
 public abstract class ESBIntegrationTest {
+    private static final String synapsePathFormBaseUri =
+            File.separator + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator
+                    + "synapse-configs" + File.separator + "default" + File.separator + "synapse.xml";
     protected Log log = LogFactory.getLog(getClass());
     protected StockQuoteClient axis2Client;
     protected ContextUrls contextUrls = new ContextUrls();
     protected String sessionCookie;
     protected OMElement synapseConfiguration = null;
     protected ESBTestCaseUtils esbUtils;
+    protected AutomationContext context;
+    protected Tenant tenantInfo;
+    protected User userInfo;
+    protected TestUserMode userMode;
     private List<String> proxyServicesList = null;
     private List<String> sequencesList = null;
     private List<String> endpointsList = null;
@@ -89,13 +96,6 @@ public abstract class ESBIntegrationTest {
     private List<String> priorityExecutorList = null;
     private List<String[]> scheduledTaskList = null;
     private List<String> inboundEndpointList = null;
-    private static final String synapsePathFormBaseUri =
-            File.separator + "repository" + File.separator + "deployment" + File.separator + "server" + File.separator
-                    + "synapse-configs" + File.separator + "default" + File.separator + "synapse.xml";
-    protected AutomationContext context;
-    protected Tenant tenantInfo;
-    protected User userInfo;
-    protected TestUserMode userMode;
 
     /**
      * Initialize the context given a tenant domain and a user.
@@ -313,7 +313,7 @@ public abstract class ESBIntegrationTest {
 
     protected void isProxyNotDeployed(String proxyServiceName) throws Exception {
         Assert.assertFalse(esbUtils.isProxyDeployed(contextUrls.getBackEndUrl(), sessionCookie, proxyServiceName),
-                "Proxy Deployment failed or time out");
+                           "Proxy Deployment failed or time out");
     }
 
     private void deleteInboundEndpoints() throws Exception {
@@ -324,7 +324,7 @@ public abstract class ESBIntegrationTest {
                 try {
                     if (esbUtils.isInboundEndpointExist(contextUrls.getBackEndUrl(), sessionCookie, inboundEPName)) {
                         esbUtils.deleteInboundEndpointDeployed(contextUrls.getBackEndUrl(), sessionCookie,
-                                inboundEPName);
+                                                               inboundEPName);
                     }
                 } catch (Exception e) {
                     Assert.fail("while undeploying Inbound Endpoint. " + e.getMessage());
@@ -337,7 +337,7 @@ public abstract class ESBIntegrationTest {
     protected void deleteInboundEndpoint(String name) throws Exception {
         esbUtils.deleteInboundEndpointDeployed(contextUrls.getBackEndUrl(), sessionCookie, name);
         Assert.assertTrue(esbUtils.isInboundEndpointUndeployed(contextUrls.getBackEndUrl(), sessionCookie, name),
-                "Inbound Deletion failed");
+                          "Inbound Deletion failed");
         if (inboundEndpointList != null && inboundEndpointList.contains(name)) {
             inboundEndpointList.remove(name);
         }
@@ -354,7 +354,7 @@ public abstract class ESBIntegrationTest {
 
     protected void isProxyDeployed(String proxyServiceName) throws Exception {
         Assert.assertTrue(esbUtils.isProxyDeployed(contextUrls.getBackEndUrl(), sessionCookie, proxyServiceName),
-                "Proxy Deployment failed or time out");
+                          "Proxy Deployment failed or time out");
     }
 
     protected boolean isProxyDeployed(OMElement omElement) throws Exception {
@@ -368,7 +368,7 @@ public abstract class ESBIntegrationTest {
 
     protected void isEndpointDeployed(String endpointName) throws Exception {
         Assert.assertTrue(esbUtils.isEndpointDeployed(contextUrls.getBackEndUrl(), sessionCookie, endpointName),
-                "Endpoint Deployment failed or time out");
+                          "Endpoint Deployment failed or time out");
     }
 
     protected boolean isEndpointDeployed(OMElement omElement) throws Exception {
@@ -379,14 +379,14 @@ public abstract class ESBIntegrationTest {
 
     protected void isLocalEntryDeployed(String localEntryName) throws Exception {
         Assert.assertTrue(esbUtils.isLocalEntryDeployed(contextUrls.getBackEndUrl(), sessionCookie, "sec_policy_3"),
-                "Localentry " + localEntryName + " not found");
+                          "Localentry " + localEntryName + " not found");
     }
 
     protected void deleteProxyService(String proxyServiceName) throws Exception {
         if (esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, proxyServiceName)) {
             esbUtils.deleteProxyService(contextUrls.getBackEndUrl(), sessionCookie, proxyServiceName);
             Assert.assertTrue(esbUtils.isProxyUnDeployed(contextUrls.getBackEndUrl(), sessionCookie, proxyServiceName),
-                    "Proxy Deletion failed or time out");
+                              "Proxy Deletion failed or time out");
         }
         if (proxyServicesList != null && proxyServicesList.contains(proxyServiceName)) {
             proxyServicesList.remove(proxyServiceName);
@@ -403,7 +403,7 @@ public abstract class ESBIntegrationTest {
         if (esbUtils.isApiExist(contextUrls.getBackEndUrl(), sessionCookie, api)) {
             esbUtils.deleteApi(contextUrls.getBackEndUrl(), sessionCookie, api);
             Assert.assertTrue(esbUtils.isApiUnDeployed(contextUrls.getBackEndUrl(), sessionCookie, api),
-                    "Api: " + api + " Deletion failed or time out");
+                              "Api: " + api + " Deletion failed or time out");
         }
         if (apiList != null && apiList.contains(api)) {
             apiList.remove(api);
@@ -453,7 +453,7 @@ public abstract class ESBIntegrationTest {
     protected void updateConnectorStatus(String libQName, String libName, String packageName, String status)
             throws RemoteException {
         esbUtils.updateConnectorStatus(contextUrls.getBackEndUrl(), sessionCookie, libQName, libName, packageName,
-                status);
+                                       status);
     }
 
     protected void addImport(String libName, String packageName) throws RemoteException {
@@ -599,7 +599,7 @@ public abstract class ESBIntegrationTest {
         //  } else {
         securityAdminServiceClient
                 .applySecurity(serviceName, policyId + "", userGroups, new String[] { "wso2carbon.jks" },
-                        "wso2carbon.jks");
+                               "wso2carbon.jks");
         //  }
         log.info("Security Scenario " + policyId + " Applied");
 
@@ -787,7 +787,7 @@ public abstract class ESBIntegrationTest {
                 try {
                     if (esbUtils.isScheduleTaskExist(contextUrls.getBackEndUrl(), sessionCookie, executor[0])) {
                         esbUtils.deleteScheduleTask(contextUrls.getBackEndUrl(), sessionCookie, executor[0],
-                                executor[1]);
+                                                    executor[1]);
                     }
                 } catch (Exception e) {
                     Assert.fail("while undeploying ScheduledTask Executor. " + e.getMessage());
@@ -799,7 +799,7 @@ public abstract class ESBIntegrationTest {
 
     protected void updateESBRegistry(String resourcePath) throws Exception {
         SynapseConfigAdminClient synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(),
-                getSessionCookie());
+                                                                                         getSessionCookie());
         //getting current configuration
         OMElement synapseConfig = AXIOMUtil.stringToOM(synapseConfigAdminClient.getConfiguration());
         synapseConfig.getFirstChildWithName(new QName(synapseConfig.getNamespace().getNamespaceURI(), "registry"))
@@ -827,7 +827,7 @@ public abstract class ESBIntegrationTest {
 
     protected void uploadCapp(String appname, DataHandler dataHandler) throws RemoteException {
         CarbonAppUploaderClient carbonAppUploaderClient = new CarbonAppUploaderClient(contextUrls.getBackEndUrl(),
-                sessionCookie);
+                                                                                      sessionCookie);
         carbonAppUploaderClient.uploadCarbonAppArtifact(appname, dataHandler);
     }
 
@@ -949,7 +949,7 @@ public abstract class ESBIntegrationTest {
 
     protected String login(AutomationContext context)
             throws IOException, XPathExpressionException, URISyntaxException, SAXException, XMLStreamException,
-            LoginAuthenticationExceptionException, AutomationUtilException {
+                   LoginAuthenticationExceptionException, AutomationUtilException {
         LoginLogoutClient loginLogoutClient = new LoginLogoutClient(context);
         return loginLogoutClient.login();
     }

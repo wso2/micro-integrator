@@ -61,6 +61,8 @@ public class ServerConfigurationManager {
 
     private static final Log log = LogFactory.getLog(ServerConfigurationManager.class);
     private static final long TIME_OUT = 600000;
+    private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
+    private static final String MI_HOME_SYSTEM_PROPERTY = "miCarbonHome";
     private File originalConfig;
     private File backUpConfig;
     private int port;
@@ -70,9 +72,6 @@ public class ServerConfigurationManager {
     private String sessionCookie;
     private LoginLogoutClient loginLogoutClient;
     private List<ConfigData> configData = new ArrayList<>();
-
-    private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
-    private static final String MI_HOME_SYSTEM_PROPERTY = "miCarbonHome";
 
     /**
      * Create a ServerConfigurationManager
@@ -102,6 +101,13 @@ public class ServerConfigurationManager {
         this.backEndUrl = autoCtx.getContextUrls().getBackEndUrl();
         this.port = new URL(backEndUrl).getPort();
         this.hostname = new URL(backEndUrl).getHost();
+    }
+
+    /**
+     * @return will return the carbon home. the location of the server instance
+     */
+    public static String getCarbonHome() {
+        return System.getProperty(ServerConstants.CARBON_HOME);
     }
 
     /**
@@ -150,13 +156,6 @@ public class ServerConfigurationManager {
         }
 
         configData.add(new ConfigData(backUpConfig, originalConfig));
-    }
-
-    /**
-     * @return will return the carbon home. the location of the server instance
-     */
-    public static String getCarbonHome() {
-        return System.getProperty(ServerConstants.CARBON_HOME);
     }
 
     /**
@@ -258,7 +257,7 @@ public class ServerConfigurationManager {
     public void restoreToLastConfiguration(boolean isRestartRequired) throws AutomationUtilException, IOException {
         for (ConfigData data : configData) {
             Files.move(data.getBackupConfig().toPath(), data.getOriginalConfig().toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
+                       StandardCopyOption.REPLACE_EXISTING);
 
             if (data.getBackupConfig().exists()) {
                 throw new IOException(
@@ -314,7 +313,7 @@ public class ServerConfigurationManager {
 
         try (InputStreamReader in = new InputStreamReader(new FileInputStream(sourceFile), StandardCharsets.UTF_8);
                 OutputStreamWriter out = new OutputStreamWriter(new FileOutputStream(originalConfig),
-                        StandardCharsets.UTF_8)) {
+                                                                StandardCharsets.UTF_8)) {
             int c;
             while ((c = in.read()) != -1) {
                 out.write(c);
@@ -327,9 +326,9 @@ public class ServerConfigurationManager {
      *
      * @throws AutomationUtilException - throws if server restart fails
      */
-    public  void restartGracefully() throws AutomationUtilException {
+    public void restartGracefully() throws AutomationUtilException {
 
-//        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
+        //        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
     /**
@@ -366,7 +365,8 @@ public class ServerConfigurationManager {
         ArrayList<String> commandArray;
         if (operatingSystem.contains("windows")) {
             commandArray = new ArrayList<>(Arrays.asList("cmd.exe", "/c",
-                    miHome + File.separator + "bin" + File.separator + scriptName + ".bat"));
+                                                         miHome + File.separator + "bin" + File.separator + scriptName
+                                                                 + ".bat"));
         } else {
             commandArray = new ArrayList<>(
                     Arrays.asList("sh", miHome + File.separator + "bin" + File.separator + scriptName + ".sh"));
@@ -383,7 +383,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if server restart fails
      */
     public void restartGracefully(String sessionCookie) throws AutomationUtilException {
-      this.restartGracefully();
+        this.restartGracefully();
     }
 
     /**

@@ -54,12 +54,12 @@ public class CloneSOAPActionTestCase extends ESBIntegrationTest {
         axis2Server2.start();
     }
 
-    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Tests SOAP Action")
     public void testSOAPAction() throws Exception {
 
-        OMElement response = axisServiceClient
-                .sendReceive(createSimpleQuoteRequestBody("WSO2"), getProxyServiceURLHttp("CloneSOAPActionTestCaseProxy"), "");
+        OMElement response = axisServiceClient.sendReceive(createSimpleQuoteRequestBody("WSO2"),
+                getProxyServiceURLHttp("CloneSOAPActionTestCaseProxy"), "");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
 

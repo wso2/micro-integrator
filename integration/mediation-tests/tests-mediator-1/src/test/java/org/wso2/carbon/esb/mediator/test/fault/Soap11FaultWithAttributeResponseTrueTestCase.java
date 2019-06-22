@@ -37,8 +37,7 @@ public class Soap11FaultWithAttributeResponseTrueTestCase extends ESBIntegration
         String proxyServiceName = "Soap11FaultWithAttributeResponseTrueTestCaseProxy";
         OMElement response;
         try {
-            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null,
-                    "WSO2");
+            response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());

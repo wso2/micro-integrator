@@ -21,7 +21,6 @@ import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class InvalidFunctionTestCase extends ESBIntegrationTest {
@@ -42,6 +41,5 @@ public class InvalidFunctionTestCase extends ESBIntegrationTest {
     public void destroy() throws Exception {
         super.cleanup();
     }
-
 
 }

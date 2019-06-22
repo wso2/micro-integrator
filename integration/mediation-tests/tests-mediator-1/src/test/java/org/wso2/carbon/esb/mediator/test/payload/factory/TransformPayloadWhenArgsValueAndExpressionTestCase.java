@@ -34,14 +34,13 @@ public class TransformPayloadWhenArgsValueAndExpressionTestCase extends ESBInteg
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"},
-            description = "Do transformation with a Payload Format that has arguments - " +
-                    "Argument Types : Value and Expression both")
+    @Test(groups = { "wso2.esb" }, description = "Do transformation with a Payload Format that has arguments - "
+            + "Argument Types : Value and Expression both")
     public void transformPayloadByArgsBothValueAndExpression() throws AxisFault, XPathExpressionException {
         OMElement response;
-        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
-                "TransformPayloadWhenArgsValueAndExpressionProxy"),
-                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
+        response = axis2Client
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("TransformPayloadWhenArgsValueAndExpressionProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertTrue(response.toString().contains("2000"), "Figure 2000 not found in response message");
     }
 }
