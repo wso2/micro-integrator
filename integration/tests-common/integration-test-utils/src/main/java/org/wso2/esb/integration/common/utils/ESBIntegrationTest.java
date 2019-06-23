@@ -892,13 +892,49 @@ public abstract class ESBIntegrationTest {
                 "Sequence not found. " + sequenceName);*/
     }
 
-    protected boolean isSequenceExists(String sequenceName) throws IOException {
+    private boolean checkCarbonAppExistence(String carbonAppName) throws IOException {
 
-        String response = checkArtifactUsingManagementApi("sequences");
+        String response = retrieveArtifactUsingManagementApi("applications");
+        return response.contains(carbonAppName);
+    }
+
+    private boolean checkApiExistence(String apiName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("apis");
+        return response.contains(apiName);
+    }
+
+    private boolean checkEndpointExistence(String endpoinName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("endpoints");
+        return response.contains(endpoinName);
+    }
+
+    private boolean checkInboundEndpointExistence(String inboundEndpoinName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("inbound-endpoints");
+        return response.contains(inboundEndpoinName);
+    }
+
+    private boolean checkProxyServiceExistence(String proxyServiceName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("proxy-services");
+        return response.contains(proxyServiceName);
+    }
+
+    private boolean checkTaskExistence(String taskName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("tasks");
+        return response.contains(taskName);
+    }
+
+    protected boolean checkSequenceExistence(String sequenceName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("sequences");
         return response.contains(sequenceName);
     }
 
-    private String checkArtifactUsingManagementApi(String artifactType) throws IOException {
+    private String retrieveArtifactUsingManagementApi(String artifactType) throws IOException {
 
         SimpleHttpClient client = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<>();
