@@ -41,7 +41,7 @@ public class IterateExpressionLessTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Testing when there is no iterate expression is specified")
     public void testIterateExpressionLessSequenceAdding() throws Exception {
 
-        Assert.assertFalse(isSequenceExists("invalidIterateMessages"),
+        Assert.assertFalse(checkSequenceExistence("invalidIterateMessages"),
                            "Sequence with invalid iterate mediator deployed.");
 
     }
