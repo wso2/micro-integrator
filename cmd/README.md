@@ -84,6 +84,22 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To show available Micro Integrators
             mi remote show
 ```
+   * #### log-level
+```bash
+        Usage:
+            mi log-level [command] [arguments]
+
+        Available Commands:
+            show [logger-name]                   Show information about a logger
+            update [logger-name] [log-level]     Update the log level of a logger
+
+        Examples:
+            # Show information about a logger
+            mi log-level show org.apache.coyote
+
+            # Update the log level of a logger
+            mi log-level update org.apache.coyote DEBUG
+```
    * #### api
 ```bash
         Usage:

@@ -363,6 +363,63 @@ paths:
             $ref: '#/definitions/SequenceInfo'
         '404':
           description: Not Found. Requested Sequence doesnot exist
+
+  ######################################################
+  # "Logger Collection"
+  ######################################################
+  /logging?loggerName={loggername}:
+    get:
+      summary: |
+        Retrieve log4j properties
+      description: |
+        This operation can be used to retrieve details of a log4j logger. You need to provide the name of the Logger to retrieve it.
+      produces:
+        - application/json
+      parameters:
+        - name: loggerame
+          description: Name of the Logger
+          in: query
+          required: true
+          type: string
+          x-example: org.apache.coyote
+      tags:
+        - Log4j properties
+      responses:
+        '200':
+          description: OK. Requested Logger data is returned.
+          schema:
+            $ref: '#/definitions/LoggerInfo'
+        '400':
+          description: Bad Request. Missing Parameters
+        '404':
+          description: Not Found. Requested Logger doesnot exist
+  /logging:
+    patch:
+      summary: |
+        Update log4j properties
+      description: |
+        This operation can be used to update the log level of a log4j logger. You need to provide the name of the Logger and the log level to update it.
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: The logger to update.
+          required: true
+          schema:
+            $ref: '#/definitions/LoggerUpdateInfo'
+      tags:
+        - Log4j properties
+      responses:
+        '200':
+          description: OK. Logger updated successfully.
+          schema:
+            $ref: '#/definitions/LoggerResponse'
+        '400':
+          description: Bad Request. Missing Parameters
+        '404':
+          description: Not Found. Requested Logger doesnot exist
+
 definitions:
   Artifacts:
     properties:
@@ -650,3 +707,27 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/SequenceSummary'
+  LoggerResponse:
+    properties:
+      message:
+        type: string
+        example: "Successfully updated org.apache.coyote level to DEBUG"
+  LoggerInfo:
+    properties:
+      name:
+        type: string
+        example: "org.apache.coyote"
+      parent:
+        type: string
+        example: "root"
+      level:
+        type: string
+        example: "WARN"
+  LoggerUpdateInfo:
+    properties:
+      loggerName:
+        type: string
+        example: "org.apache.coyote"
+      loggingLevel:
+        type: string
+        example: "DEBUG"

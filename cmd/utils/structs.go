@@ -30,6 +30,12 @@ type Remote struct {
 	Port string `yaml:"server_port"`
 }
 
+type Logger struct {
+	Name       string `json:"name"`
+	ParentName string `json:"parent"`
+	LogLevel   string `json:"level"`
+}
+
 type CarbonAppList struct {
 	Count      int32              `json:"count"`
 	CarbonApps []CarbonAppSummary `json:"list"`

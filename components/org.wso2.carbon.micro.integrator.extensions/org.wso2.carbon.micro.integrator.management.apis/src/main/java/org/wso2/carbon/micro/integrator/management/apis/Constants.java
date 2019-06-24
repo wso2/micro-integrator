@@ -28,6 +28,7 @@ public class Constants {
     public static final String PREFIX_PROXY_SERVICES = "/proxy-services";
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
+    public static final String PREFIX_LOGGING = "/logging";
     public static final String PREFIX_DATA_SERVICES = "/data-services";
     public static final String PREFIX_TEMPLATES = "/templates";
 
@@ -43,11 +44,20 @@ public class Constants {
     public static final String TRACING = "tracing";
     public static final String ENABLED = "enabled";
     public static final String DISABLED = "disabled";
+    public static final String MESSAGE = "message";
+    public static final String LEVEL = "level";
+    public static final String PARENT = "parent";
+    public static final String LOGGER_NAME = "loggerName";
+    public static final String LOGGING_LEVEL = "loggingLevel";
+    public static final String ROOT_LOGGER = "root";
 
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String HTTP_STATUS_CODE = "HTTP_SC";
+    public static final String HTTP_METHOD_GET = "GET";
+    public static final String HTTP_METHOD_POST = "POST";
+    public static final String HTTP_METHOD_PATCH = "PATCH";
     public static final String NOT_FOUND = "404";
     public static final String INTERNAL_SERVER_ERROR = "500";
-
+    public static final String BAD_REQUEST = "400";
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
 }
