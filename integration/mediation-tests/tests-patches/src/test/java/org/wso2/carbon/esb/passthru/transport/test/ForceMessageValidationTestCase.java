@@ -23,9 +23,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
@@ -42,7 +42,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
     private static final String API_NAME = "ForceMessageValidationTestAPI";
 
     private ServerConfigurationManager serverConfigurationManager;
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     /**
      * Add force.xml.message.validation and force.json.message.validation properties to passthru-http.properties, and
@@ -59,9 +59,10 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
         serverConfigurationManager.applyConfiguration(new File(
                 getESBResourceLocation().replace("//", "/") + File.separator + "passthru" + File.separator + "transport"
                         + File.separator + "forceMessageValidation" + File.separator + "passthru-http.properties"));
+        CarbonServerExtension.restartServer();
         super.init();
 
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     //enable tests with the synapse fix
@@ -74,18 +75,20 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test for invalid JSON payload with force.json.message.validation "
             + "property.")
     public void testInvalidJSONMessage() throws Exception {
-        logViewerClient.clearLogs();
+        carbonLogReader.clearLogs();
+        carbonLogReader.start();
 
         String inputPayload = "{\"abc\" :\"123\" } xyz";
-        String expectedOutput = "Error while building the message.\n" + "{\"abc\" :\"123\" } xyz";
+        String expectedOutput = "Error while building the message." + "{\"abc\" :\"123\" } xyz";
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/json");
 
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_NAME)), inputPayload, requestHeader);
 
-        Assert.assertTrue(Utils.assertIfSystemLogContains(logViewerClient, expectedOutput), "Test fails for forcing "
+        Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, 60), "Test fails for forcing "
                 + "JSON validation with force.json.message.validation passthru-http property.");
+        carbonLogReader.stop();
     }
 
     /**
@@ -95,23 +98,26 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
      */
     @Test(groups = "wso2.esb", description = "Test for invalid XML payload with force.xml.message.validation property.")
     public void testInvalidXMLMessage() throws Exception {
-        logViewerClient.clearLogs();
+        carbonLogReader.clearLogs();
+        carbonLogReader.start();
 
         String inputPayload = "<foo>\n" + "  <bar>xyz</bar>\n" + "</foo>\n" + "</bar>";
         String expectedOutput =
-                "Error while building the message.\n" + "<foo>\n" + "  <bar>xyz</bar>\n" + "</foo>\n" + "</bar>";
+                "Error while building the message." + "<foo>" + "  <bar>xyz</bar>" + "</foo>" + "</bar>";
 
         Map<String, String> requestHeader = new HashMap<>();
         requestHeader.put("Content-type", "application/xml");
 
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_NAME)), inputPayload, requestHeader);
-        Assert.assertTrue(Utils.assertIfSystemLogContains(logViewerClient, expectedOutput),
+        String logs = carbonLogReader.getLogs();
+        Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, 60),
                 "Test fails for forcing XML validation with force.xml.message.validation passthru-http property.");
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
         serverConfigurationManager.restoreToLastConfiguration();
+        CarbonServerExtension.restartServer();
     }
 }
