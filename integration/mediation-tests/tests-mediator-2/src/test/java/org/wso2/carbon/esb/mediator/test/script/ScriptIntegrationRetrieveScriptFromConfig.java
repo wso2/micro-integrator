@@ -1,5 +1,5 @@
 /*
- *Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  *WSO2 Inc. licenses this file to you under the Apache License,
  *Version 2.0 (the "License"); you may not use this file except
@@ -22,11 +22,8 @@ import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.net.URL;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
@@ -36,7 +33,6 @@ public class ScriptIntegrationRetrieveScriptFromConfig extends ESBIntegrationTes
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "Tests ScriptMediator retrieve script from config registry")
@@ -62,18 +58,5 @@ public class ScriptIntegrationRetrieveScriptFromConfig extends ESBIntegrationTes
     @AfterClass(alwaysRun = true)
     public void close() throws Exception {
         super.cleanup();
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-        resourceAdminServiceStub.deleteResource("/_system/config/script_key");
-
-        resourceAdminServiceStub.addCollection("/_system/config/", "script_key", "", "Contains test js files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_key/stockquoteTransform.js", "application/x-javascript", "js file",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/script/stockquoteTransform.js")));
     }
 }
