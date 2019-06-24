@@ -148,6 +148,11 @@
                     <exclude name=".*" />
                 </methods>
             </class>
+            <class name="org.wso2.carbon.esb.mediator.test.iterate.IterateSequentialPropertySavingTestCase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
         </classes>
     </test>
 
