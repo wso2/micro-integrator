@@ -21,12 +21,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,30 +35,33 @@ import static org.testng.Assert.assertTrue;
  */
 public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
     private CarbonLogReader carbonLogReader;
+    private SimpleHttpClient simpleHttpClient;
+    private Map<String, String> headers;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("foreachJSONTestProxy");
         carbonLogReader = new CarbonLogReader();
+        headers = new HashMap<>();
+        headers.put("Accept-Charset", "UTF-8");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test ForEach mediator with JSON payload")
+    @Test(groups = {"wso2.esb"}, description = "Test ForEach mediator with JSON payload")
     public void testForEachMediatorWithJSONPayload() throws Exception {
 
         carbonLogReader.start();
 
         String request = "{\"getQuote\":{\"request\":[{\"symbol\":\"IBM\"},{\"symbol\":\"WSO2\"},{\"symbol\":\"MSFT\"}]}}";
 
-        sendRequest(getProxyServiceURLHttp("foreachJSONTestProxy"), request);
+        simpleHttpClient = new SimpleHttpClient();
+        simpleHttpClient.doPost(getProxyServiceURLHttp("foreachJSONTestProxy"), headers,
+                request, "application/json;charset=UTF-8");
 
         boolean reachedEnd = false;
-
         String logs = carbonLogReader.getLogs();
 
-        carbonLogReader.stop();
-
-        if (logs.contains("STATE = END")) {
+        if (carbonLogReader.checkForLog("STATE = END", 200)) {
             reachedEnd = true;
             String payload = logs;
             String search = "<jsonObject><getQuote>(.*)</getQuote></jsonObject>";
@@ -84,34 +85,8 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
                     "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>MSFT</code></checkPriceRequest>"),
                     "MSTF Element not found");
         }
-
+        carbonLogReader.stop();
         assertTrue(reachedEnd, "Transformed json payload");
     }
 
-    private void sendRequest(String addUrl, String query) throws IOException {
-        String charset = "UTF-8";
-        URLConnection connection = new URL(addUrl).openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", "application/json;charset=" + charset);
-        OutputStream output = null;
-        try {
-            output = connection.getOutputStream();
-            output.write(query.getBytes(charset));
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-        }
-        InputStream response = connection.getInputStream();
-        if (response != null) {
-            StringBuilder sb = new StringBuilder();
-            byte[] bytes = new byte[1024];
-            int len;
-            while ((len = response.read(bytes)) != -1) {
-                sb.append(new String(bytes, 0, len));
-            }
-            response.close();
-        }
-    }
 }

@@ -22,13 +22,17 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,18 +43,21 @@ import static org.testng.Assert.assertTrue;
  * Test that foreach will process the payload sequentially. Verify the request payload order against processed order.
  */
 public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
+    private SimpleHttpClient simpleHttpClient;
+    private Map<String, String> headers;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
+        headers = new HashMap<>();
+        headers.put("Accept-Charset", "UTF-8");
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a nested foreach constructs with id specified")
     public void testNestedForEachPropertiesWithID() throws Exception {
-        verifyProxyServiceExistence("foreachNestedPropertiesTestProxy");
 
-        LogViewerClient logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        int beforeLogSize = logViewer.getAllRemoteSystemLogs().length;
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
@@ -61,197 +68,131 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
                         + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
                         + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
-        sendRequest(getProxyServiceURLHttp("foreachNestedPropertiesTestProxy"), request);
+        simpleHttpClient = new SimpleHttpClient();
+        simpleHttpClient.doPost(getProxyServiceURLHttp("foreachNestedPropertiesTestProxy"),
+                headers, request, "application/xml;charset=UTF-8");
+        carbonLogReader.stop();
 
-        int msgCounterOuter = 0;
-        int msgCounterInner = 0;
+        String logs = carbonLogReader.getLogs();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int afterLogSize = logs.length;
+        //*** MESSAGES FOR OUTER FOREACH ****
+        if (logs.contains("outer_fe_originalpayload") || logs.contains("outer_in_originalpayload")) {
+            //fe : original payload while in foreach
+            //in : original payload outside foreach
+            String search = "<m0:getQuote>(.*)</m0:getQuote>";
+            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(logs);
+            boolean matchFound = matcher.find();
 
-        // Verify logs to check that the order of symbols is same as in the payload. The symbols should be as SYM[1-10]
-        // as in payload. Since loop iterates from the last log onwards, verifying whether the symbols are in SYM[10-1] order
-        for (int i = (afterLogSize - beforeLogSize - 1); i >= 0; i--) {
-            String message = logs[i].getMessage();
+            assertTrue(matchFound, "getQuote element not found");
 
-            //*** MESSAGES FOR OUTER FOREACH ****
-            if (message.contains("outer_fe_originalpayload") || message.contains("outer_in_originalpayload")) {
-                //fe : original payload while in foreach
-                //in : original payload outside foreach
-                String search = "<m0:getQuote>(.*)</m0:getQuote>";
-                Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(message);
-                boolean matchFound = matcher.find();
+            int start = matcher.start();
+            int end = matcher.end();
+            String quote = logs.substring(start, end);
 
-                assertTrue(matchFound, "getQuote element not found");
+            assertTrue(quote.contains("<m0:getQuote>" + "            <m0:group>Group</m0:group>"
+                    + "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>"
+                    + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>"
+                    + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>"
+                    + "        </m0:getQuote>"), "original payload is incorrect");
+        } else if (logs.contains("outer_fe_group") || logs.contains("outer_in_group")) {
+            //group in insequence and foreach sequence
+            assertTrue(logs.contains("Group"), "Group mismatch, expected Group found = " + logs);
+        }
 
-                int start = matcher.start();
-                int end = matcher.end();
-                String quote = message.substring(start, end);
+        //*** MESSAGES FOR INNER FOREACH ***
 
-                assertEquals(quote, "<m0:getQuote>\n" + "            <m0:group>Group</m0:group>\n"
-                        + "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>\n"
-                        + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
-                        + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
-                        + "        </m0:getQuote>", "original payload is incorrect");
-            } else if (message.contains("outer_fe_count")) {
-                //counter in foreach sequence
-                assertTrue(message.contains("outer_fe_count = " + msgCounterOuter),
-                        "Counter mismatch, expected " + msgCounterOuter + " found = " + message);
-                msgCounterOuter++;
-            } else if (message.contains("outer_in_count")) {
-                //counter at the end of outer foreach in insequence
-                assertTrue(message.contains("outer_in_count = " + 3),
-                        "Final counter mismatch, expected 3 found = " + message);
-                msgCounterOuter++;
-            } else if (message.contains("outer_fe_group") || message.contains("outer_in_group")) {
-                //group in insequence and foreach sequence
-                assertTrue(message.contains("Group"), "Group mismatch, expected Group found = " + message);
+        else if (logs.contains("inner_fe_originalpayload") || logs.contains("inner_in_originalpayload")) {
+            //fe : original payload while in foreach
+            //in : original payload outside foreach
+            String search = "<m0:checkPrice(.*)</m0:checkPrice>";
+            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(logs);
+            boolean matchFound = matcher.find();
+
+            assertTrue(matchFound, "checkPrice element not found. Instead found : " + logs);
+
+            int start = matcher.start();
+            int end = matcher.end();
+            String quote = logs.substring(start, end);
+
+            if (logs.contains("<m0:group>NewGroup0</m0:group>")) {
+                assertTrue(quote.contains("<m0:code>IBM-1</m0:code>"), "IBM Element not found");
+                assertTrue(quote.contains("<m0:code>IBM-2</m0:code>"), "IBM Element not found");
+            } else if (logs.contains("<m0:group>NewGroup1</m0:group>")) {
+
+                assertTrue(quote.contains("<m0:code>WSO2-1</m0:code>"), "WSO2 Element not found");
+                assertTrue(quote.contains("<m0:code>WSO2-2</m0:code>"), "WSO2 Element not found");
+            } else if (logs.contains("<m0:group>NewGroup2</m0:group>")) {
+                assertTrue(quote.contains("<m0:code>MSFT-1</m0:code>"), "MSTF Element not found");
+                assertTrue(quote.contains("<m0:code>MSFT-2</m0:code>"), "MSTF Element not found");
+            } else {
+                assertTrue(false, "Payload not found");
+            }
+        } else if (logs.contains("inner_in_group")) {
+            //group in insequence for inner foreach
+            assertTrue(logs.contains("NewGroup2"), "Group mismatch, expected NewGroup2 found = " + logs);
+        } else if (logs.contains("inner_fe_end_originalpayload")) {
+            //at end of inner foreach
+
+            String search = "<m0:checkPrice(.*)</m0:checkPrice>";
+            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(logs);
+            boolean matchFound = matcher.find();
+
+            assertTrue(matchFound, "checkPrice element not found. Instead found : " + logs);
+
+            int start = matcher.start();
+            int end = matcher.end();
+            String quote = logs.substring(start, end);
+
+            if (logs.contains("<m0:group>NewGroup0</m0:group>")) {
+                assertTrue(quote.contains("<m0:code>IBM-1</m0:code>"), "IBM Element not found");
+                assertTrue(quote.contains("<m0:code>IBM-2</m0:code>"), "IBM Element not found");
+            } else if (logs.contains("<m0:group>NewGroup1</m0:group>")) {
+
+                assertTrue(quote.contains("<m0:code>WSO2-1</m0:code>"), "WSO2 Element not found");
+                assertTrue(quote.contains("<m0:code>WSO2-2</m0:code>"), "WSO2 Element not found");
+            } else if (logs.contains("<m0:group>NewGroup2</m0:group>")) {
+                assertTrue(quote.contains("<m0:code>MSFT-1</m0:code>"), "MSTF Element not found");
+                assertTrue(quote.contains("<m0:code>MSFT-2</m0:code>"), "MSTF Element not found");
+            } else {
+                assertTrue(false, "Payload not found");
             }
 
-            //*** MESSAGES FOR INNER FOREACH ***
+        } else if (logs.contains("inner_fe_end_count")) {
+            //counter at the end of foreach in insequence
+            assertTrue(logs.contains("inner_fe_end_count = " + 2),
+                    "Final counter mismatch, expected 2 found = " + logs);
+        } else if (logs.contains("in_payload")) {
+            //final payload in insequence and payload in outsequence
+            String search = "<m0:getQuote>(.*)</m0:getQuote>";
+            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(logs);
+            boolean matchFound = matcher.find();
 
-            else if (message.contains("inner_fe_originalpayload") || message.contains("inner_in_originalpayload")) {
-                //fe : original payload while in foreach
-                //in : original payload outside foreach
-                String search = "<m0:checkPrice(.*)</m0:checkPrice>";
-                Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(message);
-                boolean matchFound = matcher.find();
+            assertTrue(matchFound, "checkPrice element not found. Instead found : " + logs);
 
-                assertTrue(matchFound, "checkPrice element not found. Instead found : " + message);
+            int start = matcher.start();
+            int end = matcher.end();
+            String quote = logs.substring(start, end);
 
-                int start = matcher.start();
-                int end = matcher.end();
-                String quote = message.substring(start, end);
+            assertTrue(quote.contains("<m0:group>Group</m0:group>"), "Group Element not found");
+            assertTrue(quote.contains(
+                    "<m0:checkPrice><m0:group>NewGroup0</m0:group><m0:symbol>Group_NewGroup0_IBM-1</m0:symbol><m0:symbol>Group_NewGroup0_IBM-2</m0:symbol></m0:checkPrice>"),
+                    "IBM Element not found");
+            assertTrue(quote.contains(
+                    "<m0:checkPrice><m0:group>NewGroup1</m0:group><m0:symbol>Group_NewGroup1_WSO2-1</m0:symbol><m0:symbol>Group_NewGroup1_WSO2-2</m0:symbol></m0:checkPrice>"),
+                    "WSO2 Element not found");
+            assertTrue(quote.contains(
+                    "<m0:checkPrice><m0:group>NewGroup2</m0:group><m0:symbol>Group_NewGroup2_MSFT-1</m0:symbol><m0:symbol>Group_NewGroup2_MSFT-2</m0:symbol></m0:checkPrice>"),
+                    "MSTF Element not found");
 
-                if (message.contains("<m0:group>NewGroup0</m0:group>")) {
-                    assertTrue(quote.contains("<m0:code>IBM-1</m0:code>"), "IBM Element not found");
-                    assertTrue(quote.contains("<m0:code>IBM-2</m0:code>"), "IBM Element not found");
-                } else if (message.contains("<m0:group>NewGroup1</m0:group>")) {
-
-                    assertTrue(quote.contains("<m0:code>WSO2-1</m0:code>"), "WSO2 Element not found");
-                    assertTrue(quote.contains("<m0:code>WSO2-2</m0:code>"), "WSO2 Element not found");
-                } else if (message.contains("<m0:group>NewGroup2</m0:group>")) {
-                    assertTrue(quote.contains("<m0:code>MSFT-1</m0:code>"), "MSTF Element not found");
-                    assertTrue(quote.contains("<m0:code>MSFT-2</m0:code>"), "MSTF Element not found");
-                } else {
-                    assertTrue(false, "Payload not found");
-                }
-            } else if (message.contains("inner_fe_count")) {
-                //counter in foreach sequence
-                assertTrue(message.contains("inner_fe_count = " + msgCounterInner),
-                        "Counter mismatch, expected " + msgCounterInner + " found = " + message);
-                if (msgCounterInner == 1) {
-                    msgCounterInner = 0;
-                } else {
-                    msgCounterInner++;
-                }
-            } else if (message.contains("inner_fe_group")) {
-                //group in inner foreach sequence
-                assertTrue(message.contains("NewGroup" + (msgCounterOuter - 1)),
-                        "Group mismatch, expected NewGroup" + (msgCounterOuter - 1) + " found = " + message);
-            } else if (message.contains("inner_in_group")) {
-                //group in insequence for inner foreach
-                assertTrue(message.contains("NewGroup2"), "Group mismatch, expected NewGroup2 found = " + message);
-            } else if (message.contains("inner_in_count")) {
-                //counter at the end of foreach in insequence
-                assertTrue(message.contains("inner_in_count = " + 2),
-                        "Final counter mismatch, expected 2 found = " + message);
-                msgCounterInner++;
-            } else if (message.contains("inner_fe_end_originalpayload")) {
-                //at end of inner foreach
-
-                String search = "<m0:checkPrice(.*)</m0:checkPrice>";
-                Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(message);
-                boolean matchFound = matcher.find();
-
-                assertTrue(matchFound, "checkPrice element not found. Instead found : " + message);
-
-                int start = matcher.start();
-                int end = matcher.end();
-                String quote = message.substring(start, end);
-
-                if (message.contains("<m0:group>NewGroup0</m0:group>")) {
-                    assertTrue(quote.contains("<m0:code>IBM-1</m0:code>"), "IBM Element not found");
-                    assertTrue(quote.contains("<m0:code>IBM-2</m0:code>"), "IBM Element not found");
-                } else if (message.contains("<m0:group>NewGroup1</m0:group>")) {
-
-                    assertTrue(quote.contains("<m0:code>WSO2-1</m0:code>"), "WSO2 Element not found");
-                    assertTrue(quote.contains("<m0:code>WSO2-2</m0:code>"), "WSO2 Element not found");
-                } else if (message.contains("<m0:group>NewGroup2</m0:group>")) {
-                    assertTrue(quote.contains("<m0:code>MSFT-1</m0:code>"), "MSTF Element not found");
-                    assertTrue(quote.contains("<m0:code>MSFT-2</m0:code>"), "MSTF Element not found");
-                } else {
-                    assertTrue(false, "Payload not found");
-                }
-
-            } else if (message.contains("inner_fe_end_group")) {
-                //at end of inner foreach
-                assertTrue(message.contains("NewGroup" + (msgCounterOuter - 1)),
-                        "Group mismatch, expected NewGroup" + (msgCounterOuter - 1) + " found = " + message);
-            } else if (message.contains("inner_fe_end_count")) {
-                //counter at the end of foreach in insequence
-                assertTrue(message.contains("inner_fe_end_count = " + 2),
-                        "Final counter mismatch, expected 2 found = " + message);
-            } else if (message.contains("in_payload")) {
-                //final payload in insequence and payload in outsequence
-                String search = "<m0:getQuote>(.*)</m0:getQuote>";
-                Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(message);
-                boolean matchFound = matcher.find();
-
-                assertTrue(matchFound, "checkPrice element not found. Instead found : " + message);
-
-                int start = matcher.start();
-                int end = matcher.end();
-                String quote = message.substring(start, end);
-
-                assertTrue(quote.contains("<m0:group>Group</m0:group>"), "Group Element not found");
-                assertTrue(quote.contains(
-                        "<m0:checkPrice><m0:group>NewGroup0</m0:group><m0:symbol>Group_NewGroup0_IBM-1</m0:symbol><m0:symbol>Group_NewGroup0_IBM-2</m0:symbol></m0:checkPrice>"),
-                        "IBM Element not found");
-                assertTrue(quote.contains(
-                        "<m0:checkPrice><m0:group>NewGroup1</m0:group><m0:symbol>Group_NewGroup1_WSO2-1</m0:symbol><m0:symbol>Group_NewGroup1_WSO2-2</m0:symbol></m0:checkPrice>"),
-                        "WSO2 Element not found");
-                assertTrue(quote.contains(
-                        "<m0:checkPrice><m0:group>NewGroup2</m0:group><m0:symbol>Group_NewGroup2_MSFT-1</m0:symbol><m0:symbol>Group_NewGroup2_MSFT-2</m0:symbol></m0:checkPrice>"),
-                        "MSTF Element not found");
-
-            }
         }
     }
 
     @AfterClass
     public void close() throws Exception {
         super.cleanup();
-    }
-
-    private void sendRequest(String addUrl, String query) throws IOException {
-        String charset = "UTF-8";
-        URLConnection connection = new URL(addUrl).openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", "application/xml;charset=" + charset);
-        OutputStream output = null;
-        try {
-            output = connection.getOutputStream();
-            output.write(query.getBytes(charset));
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-        }
-        InputStream response = connection.getInputStream();
-        if (response != null) {
-            StringBuilder sb = new StringBuilder();
-            byte[] bytes = new byte[1024];
-            int len;
-            while ((len = response.read(bytes)) != -1) {
-                sb.append(new String(bytes, 0, len));
-            }
-            response.close();
-        }
     }
 }
