@@ -37,8 +37,6 @@ public class ScriptIntegrationInvokeJsScriptFunction extends ESBIntegrationTest 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
-
     }
 
     @Test(groups = "wso2.esb", description = "Tests script mediator2")
@@ -65,19 +63,4 @@ public class ScriptIntegrationInvokeJsScriptFunction extends ESBIntegrationTest 
         super.cleanup();
 
     }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-        resourceAdminServiceStub.deleteResource("/_system/config/script_js");
-
-        resourceAdminServiceStub.addCollection("/_system/config/", "script_js", "", "Contains test js files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_js/stockquoteTransform.js", "application/x-javascript", "js file",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/script/stockquoteTransform.js")));
-
-    }
-
 }
