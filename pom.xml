@@ -229,6 +229,12 @@
                 <artifactId>javax.jms-api</artifactId>
                 <version>${javax.jms-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>addressing</artifactId>
+                <type>mar</type>
+                <version>${axis2.wso2.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
