@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -39,7 +38,6 @@ public class PropertyIntegrationPRESERVE_WS_ADDRESSINGPropertyTest extends ESBIn
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/PRESERVE_WS_ADDRESSING.xml");
         wireServer = new WireMonitorServer(8991);
 
     }
@@ -50,7 +48,7 @@ public class PropertyIntegrationPRESERVE_WS_ADDRESSINGPropertyTest extends ESBIn
 
         wireServer.start();
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("PRESERVE_WS_ADDRESSING_TestProxy"),
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("PreserveWsAddressing"),
                     "http://localhost:8991/services/SimpleStockQuoteService", "WSO2");
         } catch (Exception e) {
             //ignore since wire message is captured
@@ -61,10 +59,4 @@ public class PropertyIntegrationPRESERVE_WS_ADDRESSINGPropertyTest extends ESBIn
         assertTrue(response.contains("<wsa:To>http://localhost:8991/services/SimpleStockQuoteService</wsa:To>"),
                 "Faulty out going message addressing header");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
-    }
-
 }
