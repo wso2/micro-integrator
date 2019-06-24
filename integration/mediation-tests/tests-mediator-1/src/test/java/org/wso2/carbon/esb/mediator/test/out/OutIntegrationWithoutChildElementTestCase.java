@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2005-2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -30,25 +30,19 @@ public class OutIntegrationWithoutChildElementTestCase extends ESBIntegrationTes
     @BeforeClass
     public void beforeClass() throws Exception {
         init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/out/out_without_children.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Out Mediator: Negative Case 1: Out Mediator without children")
     public void testOutWithoutChildren() throws Exception {
 
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
-                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("MultipleOutMediatorsTestCaseProxy"),null,
+                    "IBM");
             Assert.fail("This must throw an exception.");
         } catch (AxisFault e) {
             Assert.assertTrue(e.getReason().contains(ESBTestConstant.READ_TIME_OUT),
                     "Evaluate Read Timed out Exception");
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void afterClass() throws Exception {
-        cleanup();
     }
 
 }
