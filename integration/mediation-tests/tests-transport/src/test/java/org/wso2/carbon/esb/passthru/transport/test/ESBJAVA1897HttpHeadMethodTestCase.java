@@ -18,24 +18,17 @@
 
 package org.wso2.carbon.esb.passthru.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpHead;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.awaitility.Awaitility;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
-
-import java.io.File;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 
@@ -59,17 +52,6 @@ public class ESBJAVA1897HttpHeadMethodTestCase extends ESBIntegrationTest {
         axis2Server1.deployService(ESBTestConstant.STUDENT_REST_SERVICE);
         //    	}
         super.init();
-        // load the proxy config
-        String relativePath =
-                "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator + "rest"
-                        + File.separator + "rest-service-proxy.xml";
-        ESBTestCaseUtils util = new ESBTestCaseUtils();
-        relativePath = relativePath.replaceAll("[\\\\/]", File.separator);
-        OMElement proxyConfig = util.loadResource(relativePath);
-        addProxyService(proxyConfig);
-
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                .until(isDeployed(proxyConfig));
     }
 
     @Test(groups = "wso2.esb", description = "test to verify that the HTTP HEAD method works with PTT.")
@@ -91,15 +73,6 @@ public class ESBJAVA1897HttpHeadMethodTestCase extends ESBIntegrationTest {
         if (axis2Server1 != null && axis2Server1.isStarted()) {
             axis2Server1.stop();
         }
-        super.cleanup();
     }
 
-    private Callable<Boolean> isDeployed(final OMElement omElement) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return isProxyDeployed(omElement);
-            }
-        };
-    }
 }
