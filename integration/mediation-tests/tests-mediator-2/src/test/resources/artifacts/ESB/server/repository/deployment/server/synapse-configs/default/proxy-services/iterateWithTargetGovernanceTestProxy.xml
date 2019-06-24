@@ -4,10 +4,13 @@
         <inSequence>
             <iterate id="iterator" expression="//m0:getQuote/m0:request"
                      preservePayload="true" attachPath="//m0:getQuote" xmlns:m0="http://services.samples">
-                <target sequence="gov:/sequences/iterate/iterateLogAndSendSequence"/>
+                <target sequence="gov:/sequences/iterate/iterateLogAndSendSequence.xml"/>
             </iterate>
         </inSequence>
         <outSequence>
+            <log level="full">
+                <property name="bb" value="*********************"/>
+            </log>
             <sequence key="aggregateMessagesForIterateTests"/>
         </outSequence>
     </target>

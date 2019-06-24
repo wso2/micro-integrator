@@ -1,7 +1,10 @@
 <sequence xmlns="http://ws.apache.org/ns/synapse" name="aggregateMessagesForIterateTests">
+    <log level="full">
+        <property name="aa" value="*****"/>
+    </log>
     <aggregate id="iterator">
         <completeCondition>
-            <messageCount min="-1" max="-1" />
+            <messageCount min="-1" max="2" />
         </completeCondition>
         <onComplete xmlns:ns="http://org.apache.synapse/xsd"
                     xmlns:ns3="http://org.apache.synapse/xsd" xmlns:m0="http://services.samples"
