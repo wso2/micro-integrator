@@ -7,7 +7,7 @@
                 <target>
                     <sequence>
                         <send>
-                            <endpoint key="gov:/myEndpoint/iterateEndpoint"/>
+                            <endpoint key="gov:/myEndpoint/iterateEndpoint.xml"/>
                         </send>
                     </sequence>
                 </target>
