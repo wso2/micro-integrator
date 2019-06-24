@@ -597,7 +597,6 @@
                 <include>org.apache.axis2:addressing:mar</include>
             </includes>
         </dependencySet>
-
         <dependencySet>
             <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
             <includes>
