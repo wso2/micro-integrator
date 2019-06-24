@@ -15,7 +15,7 @@ import java.util.Set;
 
 public class LoggingResource extends ApiResource {
 
-    private static String[] logLevels = new String[]{"OFF", "TRACE", "DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
+    private static final Level[] logLevels = new Level[]{Level.OFF, Level.TRACE, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
     public LoggingResource(String urlTemplate) {
         super(urlTemplate);
@@ -67,7 +67,7 @@ public class LoggingResource extends ApiResource {
                 } else {
                     if (jsonPayload.has(Constants.LOGGER_NAME)) {
                         loggerName = jsonPayload.getString(Constants.LOGGER_NAME);
-                        if(loggerName.equals("root")){
+                        if(loggerName.equals(Constants.ROOT_LOGGER)){
                             // update root logger
                             jsonBody = updateSystemLog(logLevel);
                         } else {
@@ -128,34 +128,34 @@ public class LoggingResource extends ApiResource {
     private JSONObject getLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName) {
 
         JSONObject jsonBody = new JSONObject();
+        String logLevel;
+        String parentName;
 
-        if (loggerName.equals("root")) {
-            String parentName = "empty";
-            String logLevel = LogManager.getRootLogger().getEffectiveLevel().toString();
-            jsonBody.put(Constants.NAME, loggerName);
-            jsonBody.put(Constants.LEVEL, logLevel);
-            jsonBody.put(Constants.PARENT, parentName);
+        if (loggerName.equals(Constants.ROOT_LOGGER)) {
+            parentName = "empty";
+            logLevel = LogManager.getRootLogger().getEffectiveLevel().toString();
         } else {
             Logger logger = LogManager.exists(loggerName);
 
             if (Objects.nonNull(logger)) {
-                String parentName = Objects.isNull(logger.getParent()) ? "empty" : logger.getParent().getName();
-                String logLevel = logger.getEffectiveLevel().toString();
-                jsonBody.put(Constants.NAME, loggerName);
-                jsonBody.put(Constants.LEVEL, logLevel);
-                jsonBody.put(Constants.PARENT, parentName);
+                parentName = Objects.isNull(logger.getParent()) ? "empty" : logger.getParent().getName();
+                logLevel = logger.getEffectiveLevel().toString();
             } else {
                 jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
                 axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                return jsonBody;
             }
         }
+        jsonBody.put(Constants.NAME, loggerName);
+        jsonBody.put(Constants.LEVEL, logLevel);
+        jsonBody.put(Constants.PARENT, parentName);
         return jsonBody;
     }
 
     private boolean isALogLevel(String logLevelToTest) {
         boolean returnValue = false;
-        for (String logLevel : logLevels) {
-            if (logLevel.equalsIgnoreCase(logLevelToTest))
+        for (Level logLevel : logLevels) {
+            if (logLevel.toString().equalsIgnoreCase(logLevelToTest))
                 returnValue = true;
         }
         return returnValue;

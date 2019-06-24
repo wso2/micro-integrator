@@ -179,12 +179,7 @@ func UnmarshalData(url string, params map[string]string, model interface{}) (int
 		if len(resp.Body()) == 0 {
 			return nil, errors.New(resp.Status())
 		} else {
-			var data map[string]interface{}
-			unmarshalError := json.Unmarshal([]byte(resp.Body()), &data)
-
-			if unmarshalError != nil {
-				HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
-			}
+			data := UnmarshalJsonToStringMap(resp.Body())
 			return data["Error"], errors.New(resp.Status())
 		}
 	}
@@ -206,16 +201,11 @@ func UpdateMILogger(loggerName, loggingLevel string) string {
 	}
 
 	Logln(LogPrefixInfo+"Response:", string(resp.Status()))
-	var data map[string]interface{}
-	unmarshalError := json.Unmarshal([]byte(resp.Body()), &data)
-
-	if unmarshalError != nil {
-		HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
-	}
+	data := UnmarshalJsonToStringMap(resp.Body())
 	if resp.StatusCode() == http.StatusOK {
-		return data["message"].(string)
+		return data["message"]
 	} else {
-		return data["Error"].(string)
+		return data["Error"]
 	}
 }
 
@@ -269,4 +259,13 @@ func GetRESTAPIBase() string {
 	}
 
 	return restAPIBase
+}
+
+func UnmarshalJsonToStringMap(body []byte) map[string]string {
+	var data map[string]string
+	unmarshalError := json.Unmarshal(body, &data)
+	if unmarshalError != nil {
+		HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
+	}
+	return data
 }
