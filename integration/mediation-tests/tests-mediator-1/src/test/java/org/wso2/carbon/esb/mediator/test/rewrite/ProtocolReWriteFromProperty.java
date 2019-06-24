@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.rewrite;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -34,7 +33,6 @@ public class ProtocolReWriteFromProperty extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        verifyProxyServiceExistence("urlRewriteReplaceFromPropertyTestProxy");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Conditional URL Rewriting", dataProvider = "addressingUrl")
@@ -46,11 +44,6 @@ public class ProtocolReWriteFromProperty extends ESBIntegrationTest {
                         "IBM");
         assertTrue(response.toString().contains("IBM"));
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
     @DataProvider(name = "addressingUrl")
