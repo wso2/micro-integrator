@@ -20,11 +20,9 @@ package org.wso2.carbon.esb.mediators.cache;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.HttpResponse;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
@@ -36,22 +34,20 @@ import java.util.Map;
  */
 public class DistributedCachingHeaderSerializationTestcase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient = null;
-
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        verifyProxyServiceExistence("RespondProxy");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", description = "cache meditor test enabling axis2 clustering.")
     public void testDistributedCachingHeaderSerialization() throws Exception {
 
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
         String requestXml = "<a>ABC</a>";
 
         SimpleHttpClient httpClient = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<String, String>();
+        carbonLogReader.start();
         headers.put("Content-Type", "application/xml;charset=UTF-8");
         HttpResponse response1 = httpClient.doPost(getApiInvocationURL("CachingTest") + "/test", headers, requestXml,
                 "application/xml;charset=UTF-8");
@@ -68,29 +64,8 @@ public class DistributedCachingHeaderSerializationTestcase extends ESBIntegratio
 
         Assert.assertEquals(actualValue1, requestXml);
         Assert.assertEquals(actualValue2, requestXml);
-        Assert.assertTrue(stringExistsInLog("CACHEMATCHEDCACHEMATCHED"));
-    }
 
-    protected boolean stringExistsInLog(String value) throws Exception {
-        LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
-        boolean logFound = false;
-        for (LogEvent logEvent : logs) {
-            String msg = logEvent.getMessage();
-            if (msg.contains(value)) {
-                logFound = true;
-                break;
-            }
-        }
-
-        return logFound;
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        try {
-            super.cleanup();
-        } finally {
-            logViewerClient = null;
-        }
+        boolean existInLogs = carbonLogReader.getLogs().contains("CACHEMATCHEDCACHEMATCHED");
+        Assert.assertTrue(existInLogs);
     }
 }
