@@ -57,7 +57,4 @@ public class ESBJAVA5216CallMediatorPerAPILogTest extends ESBIntegrationTest {
         assertTrue(fileContent.contains("After"));
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-    }
 }
