@@ -20,48 +20,29 @@ package org.wso2.carbon.esb.mediator.test.router;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.net.URL;
-import javax.activation.DataHandler;
 
 /* Tests different types of sequences in router mediator */
 
 public class RouterMediatorSequenceTestCase extends ESBIntegrationTest {
-    private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", description = "Tests different kinds of sequences in target")
     public void testSequences() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/router/router_sequence_test.xml");
-        URL url = new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/router/router_sequence.xml");
-        resourceAdminServiceClient
-                .addResource("/_system/governance/sequences/router/routerSequence", "application/vnd.wso2.sequence",
-                        "configuration", setEndpoints(new DataHandler(url)));
         //test for named sequences
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
+                getProxyServiceURLHttp("RouterMediatorSequenceProxy"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2"));
+
         //test for sequences in registries
-        response = null;
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(
+                getProxyServiceURLHttp("RouterMediatorSequenceProxy"), null, "IBM");
         Assert.assertTrue(response.toString().contains("IBM"));
     }
-
-    @AfterClass
-    public void close() throws Exception {
-        resourceAdminServiceClient.deleteResource("/_system/governance/sequences/router/routerSequence");
-        super.cleanup();
-    }
-
 }
-
-
