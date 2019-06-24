@@ -229,6 +229,12 @@
                 <artifactId>javax.jms-api</artifactId>
                 <version>${javax.jms-api.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>addressing</artifactId>
+                <type>mar</type>
+                <version>${addressing.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -362,6 +368,9 @@
         <testng.version>6.11</testng.version>
         <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <addressing.version>${axis2.wso2.version}</addressing.version>
+
+
     </properties>
 
     <repositories>
