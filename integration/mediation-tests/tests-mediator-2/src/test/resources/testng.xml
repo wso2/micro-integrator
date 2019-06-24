@@ -124,6 +124,11 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
+            <class name="org.wso2.carbon.esb.message.processor.test.MessageProcessorPersistenceTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 
