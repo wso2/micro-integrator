@@ -22,12 +22,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.rmi.RemoteException;
 
 import static org.testng.Assert.assertNotNull;
 
@@ -36,12 +32,12 @@ import static org.testng.Assert.assertNotNull;
  */
 public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @AfterClass(alwaysRun = true)
@@ -54,7 +50,7 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
         boolean propertySet;
         boolean propertyRemoved;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
                         "inlineTest");
@@ -70,7 +66,7 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
         boolean propertySet;
         boolean propertyRemoved;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
                         "inlineTest");
@@ -86,7 +82,7 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
         boolean propertySet;
         boolean propertyRemoved;
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
                         "inlineTest");
@@ -103,16 +99,14 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
      * @param property required property which needs to be validate if exists or not.
      * @return A Boolean
      */
-    private boolean isPropertyContainedInLog(String property) throws LogViewerLogViewerException, RemoteException {
-        LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
+    private boolean isPropertyContainedInLog(String property) {
+
         boolean containsProperty = false;
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(property)) {
-                containsProperty = true;
-                break;
-            }
+        String message = carbonLogReader.getLogs();
+        if (message.contains(property)) {
+            containsProperty = true;
         }
+        carbonLogReader.stop();
         return containsProperty;
     }
 }
