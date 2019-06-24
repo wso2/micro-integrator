@@ -39,11 +39,10 @@ public class IterateSequentialFaultSequenceTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyProxyServiceExistence("iterateMediatorSequentialFaultSequenceTestProxy");
     }
 
     @Test(groups = "wso2.esb", description = "Tests property retrieval in fault sequence")
-    public void testPropertyRetrievalInFaultSequence() throws Exception {
+    public void testPropertyRetrievalInFaultSequence() {
         try {
             axis2Client.sendSimpleStockQuoteRequest(
                     getProxyServiceURLHttp("iterateMediatorSequentialFaultSequenceTestProxy"), null, "WSO2");
@@ -51,10 +50,5 @@ public class IterateSequentialFaultSequenceTestCase extends ESBIntegrationTest {
         } catch (AxisFault axisFault) {
             Assert.assertEquals(axisFault.getFaultCode().getLocalPart(), "AB005", "Fault code mismatched");
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
-        super.cleanup();
     }
 }
