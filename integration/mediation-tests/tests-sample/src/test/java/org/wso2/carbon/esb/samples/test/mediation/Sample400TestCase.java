@@ -35,7 +35,7 @@ public class Sample400TestCase extends ESBSampleIntegrationTest {
     public void testContinueParentTrue() throws Exception, InterruptedException {
 
         OMElement response = axis2Client
-                .sendMultipleQuoteRequest(getProxyServiceURLHttp("SplitAggregateProxy"), null, "WSO2", 4);
+                .sendMultipleQuoteRequest(getProxyServiceURLHttp("Sample400TestCaseProxy"), null, "WSO2", 4);
         assertTrue(response.toString().contains("WSO2"));
 
     }
