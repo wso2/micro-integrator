@@ -19,55 +19,37 @@
 package org.wso2.carbon.esb.endpoint.test;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient;
-
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        verifyAPIExistence("passParamsToEPTestApi");
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Sending a Message Via REST to test query param works with space character", enabled = true)
-    public void testPassParamsToEndpoint() throws Exception {
+            "wso2.esb"}, description = "Sending a Message Via REST to test query param works with space character")
+    public void testPassParamsToEndpoint() {
         String requestString = "/context?queryParam=some%20value";
-        boolean isSpaceCharacterEscaped = false;
-        logViewerClient.clearLogs();
-
+        boolean isSpaceCharacterEscaped;
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         try {
             HttpRequestUtil.sendGetRequest(getApiInvocationURL("passParamsToEPTest") + requestString, null);
         } catch (Exception timeout) {
             //a timeout is expected
         }
-
-        LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("queryParam = some%20value")) {
-                isSpaceCharacterEscaped = true;
-                break;
-            }
-        }
+        String logs = carbonLogReader.getLogs();
+        isSpaceCharacterEscaped = logs.contains("queryParam = some%20value");
+        carbonLogReader.stop();
 
         Assert.assertTrue(isSpaceCharacterEscaped,
                 "Fail to send a message via REST when query parameter consist of space character");
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 
 }
