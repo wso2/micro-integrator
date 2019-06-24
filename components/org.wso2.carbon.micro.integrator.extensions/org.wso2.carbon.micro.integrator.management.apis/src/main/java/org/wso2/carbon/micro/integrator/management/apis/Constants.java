@@ -30,6 +30,7 @@ public class Constants {
     public static final String PREFIX_SEQUENCES = "/sequences";
     public static final String PREFIX_DATA_SERVICES = "/data-services";
     public static final String PREFIX_TEMPLATES = "/templates";
+    public static final String PREFIX_MESSAGE_PROCESSORS = "/message-processors";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";
@@ -49,5 +50,11 @@ public class Constants {
     public static final String NOT_FOUND = "404";
     public static final String INTERNAL_SERVER_ERROR = "500";
 
+    public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
+    public static final String HTTP_POST = "POST";
+    public static final String HTTP_GET = "GET";
+
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
+
+    public static final String MESSAGE_JSON_ATTRIBUTE = "Message";
 }
