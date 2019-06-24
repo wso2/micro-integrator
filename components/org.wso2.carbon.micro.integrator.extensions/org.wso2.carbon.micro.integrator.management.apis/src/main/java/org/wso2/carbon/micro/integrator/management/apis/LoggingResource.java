@@ -81,8 +81,8 @@ public class LoggingResource extends ApiResource {
                     }
                 }
             } else {
-                // 400-Bad Request loggingLevel is missing
-                jsonBody = Utils.createJsonErrorObject("Logging level is missing");
+                // 400-Bad Request logLevel is missing
+                jsonBody = Utils.createJsonErrorObject("Log level is missing");
                 axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
             }
         }
@@ -117,7 +117,7 @@ public class LoggingResource extends ApiResource {
 
         if (Objects.nonNull(logger)) {
             logger.setLevel(Level.toLevel(loggerLevel));
-            jsonBody.put(Constants.MESSAGE, "Successfully updated " + loggerName + " level to " + logger.getLevel().toString());
+            jsonBody.put(Constants.MESSAGE, "Successfully updated log level of " + loggerName + " to " + logger.getLevel().toString());
         } else {
             jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
