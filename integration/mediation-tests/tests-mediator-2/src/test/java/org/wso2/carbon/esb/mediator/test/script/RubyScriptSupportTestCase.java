@@ -23,16 +23,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.esb.integration.common.clients.logging.LoggingAdminClient;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -67,8 +61,6 @@ public class RubyScriptSupportTestCase extends ESBIntegrationTest {
             + " -Script from gov registry")
     public void testJRubyScriptMediationScriptFromGovRegistry() throws Exception {
         enableDebugLogging();
-        uploadResourcesToConfigRegistry();
-
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorRubyStoredInRegistryTestProxy"), null,
                         "WSO2");
@@ -83,7 +75,6 @@ public class RubyScriptSupportTestCase extends ESBIntegrationTest {
 
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")),
                 "Fault response null localpart");
-        clearUploadedResource();
     }
 
     @AfterClass(alwaysRun = true)
@@ -91,37 +82,9 @@ public class RubyScriptSupportTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/script");
-        resourceAdminServiceStub.addCollection("/_system/governance/", "script", "", "Contains test script files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/governance/script/stockquoteTransform.rb", "application/xml", "script files",
-                        new DataHandler(new URL("file:///" + getClass()
-                                .getResource("/artifacts/ESB/mediatorconfig/script/stockquoteTransform.rb")
-                                .getPath())));
-
-    }
 
     private void enableDebugLogging() throws Exception {
         LoggingAdminClient logAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logAdminClient.updateLoggerData("org.apache.synapse", "DEBUG", true, false);
     }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/script");
-    }
-
 }
