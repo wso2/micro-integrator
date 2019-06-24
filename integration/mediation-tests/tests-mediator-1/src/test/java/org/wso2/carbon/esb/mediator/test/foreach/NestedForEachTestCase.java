@@ -22,19 +22,14 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.mediator.test.iterate.IterateClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,22 +39,21 @@ import static org.testng.Assert.assertTrue;
  * Test that a nested foreach will transform the payload.
  */
 public class NestedForEachTestCase extends ESBIntegrationTest {
-
     private IterateClient client;
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
+    private SimpleHttpClient simpleHttpClient;
+    private Map<String, String> headers;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
         client = new IterateClient();
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using a Nested ForEach Construct")
+    @Test(groups = {"wso2.esb"}, description = "Transforming a Message Using a Nested ForEach Construct")
     public void testNestedForEach() throws Exception {
-        verifyProxyServiceExistence("foreachNestedTestProxy");
-
-        logViewer.clearLogs();
+        carbonLogReader.start();
 
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
@@ -68,73 +62,63 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
                         + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
                         + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
                         + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
+        simpleHttpClient = new SimpleHttpClient();
+        simpleHttpClient.doPost(getProxyServiceURLHttp("foreachNestedTestProxy"),
+                headers, request, "application/xml;charset=UTF-8");
+        carbonLogReader.stop();
 
-        sendRequest(getProxyServiceURLHttp("foreachNestedTestProxy"), request);
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.clearLogs();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
+        if (logs.contains("foreach = after")) {
+            String search = "<m0:getQuote>(.*)</m0:getQuote>";
+            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+            Matcher matcher = pattern.matcher(logs);
+            boolean matchFound = matcher.find();
 
-        for (LogEvent log : logs) {
-            String message = log.getMessage();
+            assertTrue(matchFound, "getQuote element not found");
 
-            if (message.contains("foreach = after")) {
-                String search = "<m0:getQuote>(.*)</m0:getQuote>";
-                Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-                Matcher matcher = pattern.matcher(message);
-                boolean matchFound = matcher.find();
+            int start = matcher.start();
+            int end = matcher.end();
+            String quote = logs.substring(start, end);
 
-                assertTrue(matchFound, "getQuote element not found");
+            assertTrue(quote.contains(
+                    "<m0:checkPriceRequest><m0:symbol>IBM-1</m0:symbol><m0:symbol>IBM-2</m0:symbol></m0:checkPriceRequest>"),
+                    "IBM Element not found");
+            assertTrue(quote.contains(
+                    "<m0:checkPriceRequest><m0:symbol>WSO2-1</m0:symbol><m0:symbol>WSO2-2</m0:symbol></m0:checkPriceRequest>"),
+                    "WSO2 Element not found");
+            assertTrue(quote.contains(
+                    "<m0:checkPriceRequest><m0:symbol>MSFT-1</m0:symbol><m0:symbol>MSFT-2</m0:symbol></m0:checkPriceRequest>"),
+                    "MSFT Element not found");
 
-                int start = matcher.start();
-                int end = matcher.end();
-                String quote = message.substring(start, end);
-
-                assertTrue(quote.contains(
-                        "<m0:checkPriceRequest><m0:symbol>IBM-1</m0:symbol><m0:symbol>IBM-2</m0:symbol></m0:checkPriceRequest>"),
-                        "IBM Element not found");
-                assertTrue(quote.contains(
-                        "<m0:checkPriceRequest><m0:symbol>WSO2-1</m0:symbol><m0:symbol>WSO2-2</m0:symbol></m0:checkPriceRequest>"),
-                        "WSO2 Element not found");
-                assertTrue(quote.contains(
-                        "<m0:checkPriceRequest><m0:symbol>MSFT-1</m0:symbol><m0:symbol>MSFT-2</m0:symbol></m0:checkPriceRequest>"),
-                        "MSFT Element not found");
-
-            }
         }
     }
 
     @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
     public void testNestedForEachMediatorWithIterate() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/foreach/nested_foreach_iterate.xml");
-        logViewer.clearLogs();
-
-        String response = client.send(getMainSequenceURL(), createMultipleSymbolPayLoad(10), "urn:getQuote");
+        carbonLogReader.start();
+        String response = client.send(getProxyServiceURLHttp("nested_foreach_iterate"), createMultipleSymbolPayLoad(10), "urn:getQuote");
         Assert.assertNotNull(response);
+        carbonLogReader.stop();
 
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int forEachOuterCount = 0;
-        int forEachInnerCount = 0;
+        String logs = carbonLogReader.getLogs();
 
-        // Verify logs to check that the order of symbols is same as in the payload. The symbols should be as SYM[1-10]
-        // as in payload. Since loop iterates from the last log onwards, verifying whether the symbols are in SYM[10-1] order
-        for (int i = logs.length - 1; i >= 0; i--) {
-            String message = logs[i].getMessage();
-            if (message.contains("foreach = outer")) {
-                if (!message.contains("SYM" + forEachOuterCount)) {
+        for (int i = 0; i < 10; i++) {
+            if (logs.contains("foreach = outer")) {
+                if (!logs.contains("SYM" + i)) {
                     Assert.fail("Incorrect message entered outer ForEach scope. Could not find symbol SYM"
-                            + forEachOuterCount + " Found : " + message);
+                            + i + " Found : " + logs);
                 }
-                forEachOuterCount++;
-            } else if (message.contains("foreach = inner")) {
-                if (!message.contains("SYM" + forEachInnerCount)) {
+            } else if (logs.contains("foreach = inner")) {
+                if (!logs.contains("SYM" + i)) {
                     Assert.fail("Incorrect message entered inner ForEach scope. Could not find symbol SYM"
-                            + forEachInnerCount + " Found : " + message);
+                            + i + " Found : " + logs);
                 }
-                forEachInnerCount++;
             }
         }
-
-        Assert.assertEquals(forEachOuterCount, 10, "Count of messages entered outer ForEach scope is incorrect");
-        Assert.assertEquals(forEachInnerCount, 10, "Count of messages entered inner ForEach scope is incorrect");
+        Assert.assertEquals(logs.split("foreach = outer").length - 1, 10, "Count of messages entered outer ForEach scope is incorrect");
+        Assert.assertEquals(logs.split("foreach = inner").length - 1, 10, "Count of messages entered inner ForEach scope is incorrect");
     }
 
     private OMElement createMultipleSymbolPayLoad(int iterations) {
@@ -150,38 +134,5 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
             method.addChild(chkPrice);
         }
         return method;
-    }
-
-    private void sendRequest(String addUrl, String query) throws IOException {
-        String charset = "UTF-8";
-        URLConnection connection = new URL(addUrl).openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", "application/xml;charset=" + charset);
-        OutputStream output = null;
-        try {
-            output = connection.getOutputStream();
-            output.write(query.getBytes(charset));
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-        }
-        InputStream response = connection.getInputStream();
-        if (response != null) {
-            StringBuilder sb = new StringBuilder();
-            byte[] bytes = new byte[1024];
-            int len;
-            while ((len = response.read(bytes)) != -1) {
-                sb.append(new String(bytes, 0, len));
-            }
-            response.close();
-        }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        client = null;
-        super.cleanup();
     }
 }
