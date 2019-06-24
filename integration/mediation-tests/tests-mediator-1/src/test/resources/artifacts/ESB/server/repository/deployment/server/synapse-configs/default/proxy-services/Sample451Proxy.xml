@@ -1,0 +1,30 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse"
+       name="Sample451Proxy"
+       transports="https http"
+       startOnLoad="true"
+       trace="disable">
+
+    <description/>
+    <target>
+        <inSequence>
+            <rewrite>
+                <rewriterule>
+                    <condition>
+                        <and>
+                            <equal type="url" source="host" value="localhost"/>
+                            <not>
+                                <equal type="url" source="protocol" value="http"/>
+                            </not>
+                        </and>
+                    </condition>
+                    <action fragment="protocol" value="http"/>
+                    <action fragment="port" value="9000"/>
+                </rewriterule>
+            </rewrite>
+            <send/>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+    </target>
+</proxy>
