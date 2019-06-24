@@ -1,5 +1,5 @@
 <!--
-  ~  Copyright (c) 2005-2010, WSO2 Inc. (http://wso2.com) All Rights Reserved.
+  ~  Copyright (c) 2019, WSO2 Inc. (http://wso2.com) All Rights Reserved.
   ~
   ~  WSO2 Inc. licenses this file to you under the Apache License,
   ~  Version 2.0 (the "License"); you may not use this file except
@@ -18,16 +18,12 @@
   -->
 
 <sequence name="dynamic_seq1" xmlns="http://ws.apache.org/ns/synapse">
-
-    <in>
-        <log level="custom">
-            <property name="message" value="*** Test Message In dynamic sequence-1 ***"/>
-        </log>
-        <send>
-            <endpoint>
-                <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
-            </endpoint>
-        </send>
-    </in>
-
+    <log level="custom">
+        <property name="message" value="*** Test Message In dynamic sequence-1 ***"/>
+    </log>
+    <send>
+        <endpoint>
+            <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+        </endpoint>
+    </send>
 </sequence>
