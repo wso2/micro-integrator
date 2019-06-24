@@ -449,7 +449,7 @@
     <!-- ================================================= -->
 
     <!-- Comment this out to disable Addressing -->
-    <!--<module ref="addressing"/>-->
+    <module ref="addressing"/>
 
     <!-- ================================================= -->
     <!--                   Transactions                    -->
