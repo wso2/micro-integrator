@@ -24,14 +24,8 @@ import org.wso2.carbon.esb.datamapper.common.DataMapperIntegrationTest;
 
 public class ESBJAVA5200DashSupportForMappingDataTestCase extends DataMapperIntegrationTest {
 
-    private final String DM_ARTIFACT_ROOT_PATH = "/artifacts/ESB/mediatorconfig/datamapper/dashSupport/";
-    private final String DM_REGISTRY_ROOT_PATH = "datamapper/";
-
-    @Test(groups = { "wso2.esb" }, description = "Datamapper : test including dash for mapping data")
+    @Test(groups = {"wso2.esb"}, description = "Datamapper : test including dash for mapping data")
     public void testMultiplePrefixesToSameNamespace() throws Exception {
-        verifyAPIExistence("dashSupport");
-        uploadResourcesToGovernanceRegistry(DM_REGISTRY_ROOT_PATH + "dashSupport/", DM_ARTIFACT_ROOT_PATH,
-                "DashSupportConfig.dmc", "DashSupportConfig_inputSchema.json", "DashSupportConfig_outputSchema.json");
 
         String requestMsg = "<ns:IPU-58_Output xmlns:ns=\"http://systemeu.fr\">\n"
                 + "<ns:InitialisationCodePin>1</ns:InitialisationCodePin>\n" + "<ns:CodeRetour>2</ns:CodeRetour>\n"
