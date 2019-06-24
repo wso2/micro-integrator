@@ -4,7 +4,7 @@
         <inSequence>
             <iterate id="iterator" expression="//m0:getQuote/m0:request"
                      preservePayload="true" attachPath="//m0:getQuote" xmlns:m0="http://services.samples">
-                <target sequence="conf:/sequences/iterate/iterateLogAndSendSequence"/>
+                <target sequence="conf:/sequences/iterate/iterateLogAndSendSequence.xml"/>
             </iterate>
         </inSequence>
         <outSequence>

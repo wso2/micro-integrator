@@ -20,10 +20,9 @@
 -->
 <sequence xmlns="http://ws.apache.org/ns/synapse" name="iterateLogAndSendSequence">
     <log level="full" />
-    <call>
+    <send>
         <endpoint>
             <address uri="http://localhost:9000/services/SimpleStockQuoteService" />
         </endpoint>
-    </call>
-    <respond />
+    </send>
 </sequence>
