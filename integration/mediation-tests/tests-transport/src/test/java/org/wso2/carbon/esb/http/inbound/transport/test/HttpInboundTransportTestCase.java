@@ -20,26 +20,15 @@ package org.wso2.carbon.esb.http.inbound.transport.test;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import javax.xml.stream.XMLStreamException;
 
 public class HttpInboundTransportTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        addSequence(getArtifactConfig("TestIn.xml"));
-        addSequence(getArtifactConfig("reciveSeq.xml"));
-        addSequence(getArtifactConfig("TestOut.xml"));
-        addInboundEndpoint(getArtifactConfig("synapse.xml"));
-        addApi(getArtifactConfig("Test.xml"));
-        addInboundEndpoint(getArtifactConfig("apidispatch.xml"));
     }
 
     @Test(groups = "wso2.esb", description = "Inbound Http  test case")
@@ -56,24 +45,5 @@ public class HttpInboundTransportTestCase extends ESBIntegrationTest {
         OMElement response = axis2Client.sendSimpleStockQuoteRequest("http://localhost:8082/testapi/map", null, "IBM");
         Assert.assertNotNull(response);
         Assert.assertEquals("getQuoteResponse", response.getLocalName());
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
-    private OMElement getArtifactConfig(String fileName) throws Exception {
-        OMElement synapseConfig = null;
-        String path = "artifacts" + File.separator + "ESB" + File.separator + "http.inbound.transport" + File.separator
-                + fileName;
-        try {
-            synapseConfig = esbUtils.loadResource(path);
-        } catch (FileNotFoundException e) {
-            throw new Exception("File Location " + path + " may be incorrect", e);
-        } catch (XMLStreamException e) {
-            throw new XMLStreamException("XML Stream Exception while reading file stream", e);
-        }
-        return synapseConfig;
     }
 }

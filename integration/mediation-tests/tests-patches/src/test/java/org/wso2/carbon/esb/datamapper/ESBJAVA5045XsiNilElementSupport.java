@@ -28,17 +28,9 @@ import org.wso2.carbon.esb.datamapper.common.DataMapperIntegrationTest;
  */
 public class ESBJAVA5045XsiNilElementSupport extends DataMapperIntegrationTest {
 
-    private static final String FORWARD_SLASH = "/";
-    private final String DM_ARTIFACT_ROOT_PATH =
-            FORWARD_SLASH + "artifacts" + FORWARD_SLASH + "ESB" + FORWARD_SLASH + "mediatorconfig" + FORWARD_SLASH
-                    + "datamapper" + FORWARD_SLASH + "multiplePrefix" + FORWARD_SLASH;
-    private final String DM_REGISTRY_ROOT_PATH = "datamapper/";
 
-    @Test(groups = { "wso2.esb" }, description = "Datamapper : test support for xsi:nil attribute in elements")
+    @Test(groups = {"wso2.esb"}, description = "Datamapper : test support for xsi:nil attribute in elements")
     public void testxsiNilAttributeInElement() throws Exception {
-        verifyAPIExistence("ESBJAVA5045convertMenuApi");
-        uploadResourcesToGovernanceRegistry(DM_REGISTRY_ROOT_PATH + "multiplePrefix/", DM_ARTIFACT_ROOT_PATH,
-                "FoodMapping.dmc", "FoodMapping_inputSchema.json", "FoodMapping_outputSchema.json");
 
         String requestMsg = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<breakfast_menu>\n" + "<food>\n"
                 + "<name>Belgian Waffles</name>\n" + "<price>$5.95</price>\n"

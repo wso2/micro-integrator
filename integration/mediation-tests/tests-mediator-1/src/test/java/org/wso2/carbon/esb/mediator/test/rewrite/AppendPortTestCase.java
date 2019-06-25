@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.rewrite;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -32,7 +31,6 @@ public class AppendPortTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        verifyProxyServiceExistence("urlRewriteAppendPortTestProxy");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Append text to port", dataProvider = "addressingUrl", enabled = false)
@@ -43,11 +41,6 @@ public class AppendPortTestCase extends ESBIntegrationTest {
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("urlRewriteAppendPortTestProxy"), addUrl, "IBM");
         assertTrue(response.toString().contains("IBM"));
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
     @DataProvider(name = "addressingUrl")

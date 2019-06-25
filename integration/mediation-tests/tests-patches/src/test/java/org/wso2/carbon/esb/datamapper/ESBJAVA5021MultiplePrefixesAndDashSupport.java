@@ -24,16 +24,8 @@ import org.wso2.carbon.esb.datamapper.common.DataMapperIntegrationTest;
 
 public class ESBJAVA5021MultiplePrefixesAndDashSupport extends DataMapperIntegrationTest {
 
-    private final String DM_ARTIFACT_ROOT_PATH = "/artifacts/ESB/mediatorconfig/datamapper/multiplePrefix/";
-    private final String DM_REGISTRY_ROOT_PATH = "datamapper/";
-
-    @Test(groups = { "wso2.esb" }, description = "Datamapper : test support for multiple prefixes for same namespace")
+    @Test(groups = {"wso2.esb"}, description = "Datamapper : test support for multiple prefixes for same namespace")
     public void testMultiplePrefixesToSameNamespace() throws Exception {
-        verifyAPIExistence("simpleDataAPI_XMLtoXML2_withDash");
-        uploadResourcesToGovernanceRegistry(DM_REGISTRY_ROOT_PATH + "multiplePrefix/", DM_ARTIFACT_ROOT_PATH,
-                "simpleDataAPI_XMLtoXML2_withDash_regConf.dmc",
-                "simpleDataAPI_XMLtoXML2_withDash_regConf_inputSchema.json",
-                "simpleDataAPI_XMLtoXML2_withDash_regConf_outputSchema.json");
 
         String requestMsg = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
                 + "<SOAP-ENV:Envelope xmlns:SOAP-ENV=\"http://schemas.xmlsoap.org/soap/envelope/\" "

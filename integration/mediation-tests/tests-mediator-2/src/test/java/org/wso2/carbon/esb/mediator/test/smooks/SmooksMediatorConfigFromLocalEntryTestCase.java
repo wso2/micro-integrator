@@ -19,12 +19,12 @@ package org.wso2.carbon.esb.mediator.test.smooks;
 
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -33,7 +33,6 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTest {
-    private boolean isProxyDeployed = false;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
@@ -72,7 +71,7 @@ public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTe
     }
 
     private void addSmooksProxy() throws Exception {
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"SmooksProxy\" transports=\"vfs\" "
                 + "startOnLoad=\"true\">\n" + "    <target>\n" + "    <inSequence>\n" + "    <log level=\"full\"/>\n"
                 + "    <smooks config-key=\"smooksKey\">\n" + "        <input type=\"text\"/>\n"
@@ -86,19 +85,8 @@ public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTe
                 + "    <parameter name=\"transport.vfs.FileURI\">file://" + getClass()
                 .getResource("/artifacts/ESB/synapseconfig/smooks/").getPath() + "test/in/</parameter>\n"
                 + "    <parameter name=\"transport.vfs.FileNamePattern\">.*\\.txt</parameter>\n"
-                + "    <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n" + "</proxy>"));
-        isProxyDeployed = true;
+                + "    <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n" + "</proxy>"), "SmooksProxy", "proxy-services", true);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        try {
-            if (isProxyDeployed) {
-                deleteProxyService("SmooksProxy");
-            }
-        } finally {
-            super.cleanup();
-        }
-    }
 }
 

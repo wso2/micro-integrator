@@ -249,6 +249,22 @@ public class ServerConfigurationManager {
     }
 
     /**
+     * restore to a last configuration and restart the server
+     */
+    public void restoreToLastMIConfiguration() throws IOException, AutomationUtilException {
+        for (ConfigData data : configData) {
+            Files.move(data.getBackupConfig().toPath(), data.getOriginalConfig().toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+
+            if (data.getBackupConfig().exists()) {
+                throw new IOException(
+                        "File rename from " + data.getBackupConfig() + "to " + data.getOriginalConfig() + "fails");
+            }
+        }
+        restartMicroIntegrator();
+    }
+
+    /**
      * restore all files to last configuration and restart the server
      *
      * @throws AutomationUtilException - throws if restore to last configuration fails
@@ -282,6 +298,19 @@ public class ServerConfigurationManager {
     }
 
     /**
+     * apply configuration file and restart micro integrator server to take effect the configuration
+     *
+     * @param newConfig configuration file
+     * @throws AutomationUtilException - throws if apply configuration fails
+     * @throws IOException             - throws if apply configuration fails
+     */
+    public void applyMIConfiguration(File newConfig) throws AutomationUtilException, IOException {
+        //to backup existing configuration
+        applyConfigurationUtil(newConfig, newConfig);
+        restartMicroIntegrator();
+    }
+
+    /**
      * apply configuration file and restart server to take effect the configuration
      *
      * @param newConfig configuration file
@@ -305,7 +334,6 @@ public class ServerConfigurationManager {
 
     private void applyConfigurationUtil(File sourceFile, File targetFile) throws IOException, AutomationUtilException {
         appluConfigurationUtilUtil(sourceFile, targetFile);
-        restartGracefully();
     }
 
     private void appluConfigurationUtilUtil(File sourceFile, File targetFile) throws IOException {
@@ -329,6 +357,15 @@ public class ServerConfigurationManager {
     public void restartGracefully() throws AutomationUtilException {
 
         //        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
+    }
+
+    /**
+     * Restart MicroIntegrator Server
+     *
+     * @throws AutomationUtilException - throws if server restart fails
+     */
+    public void restartMicroIntegrator() throws AutomationUtilException {
+                org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
     /**
