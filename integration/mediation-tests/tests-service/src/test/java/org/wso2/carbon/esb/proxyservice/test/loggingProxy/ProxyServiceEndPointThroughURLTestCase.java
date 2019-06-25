@@ -18,30 +18,26 @@
 package org.wso2.carbon.esb.proxyservice.test.loggingProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import javax.xml.namespace.QName;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.*;
 
 public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/loggingProxy/proxy_service_with_end_point_through_url.xml");
-        isProxyDeployed("StockQuoteLoggingProxy");
-
     }
 
     @Test(groups = "wso2.esb", description = "Proxy service with providing endpoint through url")
     public void testLoggingProxy() throws Exception {
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteLoggingProxy"), null, "WSO2");
 
@@ -53,17 +49,11 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
                 getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
-        LogViewerClient logViewerClient = new LogViewerClient(context.getContextUrls().getBackEndUrl(),
-                getSessionCookie());
-        assertNotNull(logViewerClient.getRemoteLogs("INFO", "getQuote", "", ""), "Request INFO log entry not found");
-        assertNotNull(logViewerClient.getRemoteLogs("INFO", "<ns:symbol>WSO2</ns:symbol>", "", ""),
-                "Request INFO log entry not found");
-        assertNotNull(logViewerClient.getRemoteLogs("INFO", "ns:getQuoteResponse", "", ""),
-                "Request INFO log entry not found");
+        String logs = carbonLogReader.getLogs();
+        assertTrue(logs.contains("getQuote"));
+        assertTrue(logs.contains("<ns:symbol>WSO2</ns:symbol>"));
+        assertTrue(logs.contains("ns:getQuoteResponse"));
+        carbonLogReader.stop();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }

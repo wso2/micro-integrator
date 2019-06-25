@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.proxyservice.test.loggingProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -32,14 +31,7 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
-        log.info("Initializing environment");
         super.init();
-        log.info("Loading ESB configuration from classpath");
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/loggingProxy/wsdl_options_specified_source_url.xml");
-        log.info("Assert isProxyDeployed");
-        isProxyDeployed("wsdlOptionsFromSourceUrlLoggingProxy");
-        log.info("Initializing environment completed");
     }
 
     @Test(groups = "wso2.esb", description = "- Logging proxy" + "- Publish WSDL Options - Specified source url")
@@ -60,12 +52,7 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Specified source url -Log", enabled = false)
-    public void testLoggingProxyLogging() throws Exception {
+    public void testLoggingProxyLogging() {
         //ToDo Assert Logs
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }
