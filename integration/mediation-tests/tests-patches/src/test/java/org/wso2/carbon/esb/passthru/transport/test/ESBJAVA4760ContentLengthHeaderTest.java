@@ -37,7 +37,6 @@ public class ESBJAVA4760ContentLengthHeaderTest extends ESBIntegrationTest {
     @BeforeClass
     public void init() throws Exception {
         super.init();
-        verifyAPIExistence("StockQuoteAPIESBJAVA4760");
     }
 
     @Test(groups = "wso2.esb", description = "Test 204 status code  with disable chunking", enabled = true)
@@ -49,6 +48,5 @@ public class ESBJAVA4760ContentLengthHeaderTest extends ESBIntegrationTest {
 
     @AfterClass
     public void cleanUp() throws Exception {
-        super.cleanup();
     }
 }

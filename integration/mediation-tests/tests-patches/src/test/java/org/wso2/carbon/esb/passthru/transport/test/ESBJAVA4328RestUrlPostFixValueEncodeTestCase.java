@@ -37,7 +37,6 @@ public class ESBJAVA4328RestUrlPostFixValueEncodeTestCase extends ESBIntegration
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyProxyServiceExistence("Axis2RestServiceEncoded");
         client = new HttpClientUtil();
     }
 
@@ -54,6 +53,5 @@ public class ESBJAVA4328RestUrlPostFixValueEncodeTestCase extends ESBIntegration
 
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
-        cleanup();
     }
 }
