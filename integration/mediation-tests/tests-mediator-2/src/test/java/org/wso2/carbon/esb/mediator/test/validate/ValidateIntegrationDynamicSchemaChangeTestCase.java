@@ -23,27 +23,21 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.MicroRegistryManager;
 
 import java.io.File;
-import java.net.URL;
-import javax.activation.DataHandler;
 
 public class ValidateIntegrationDynamicSchemaChangeTestCase extends ESBIntegrationTest {
 
-    private String toUrl = null;
-    private ResourceAdminServiceClient resourceAdminServiceClient;
+    private MicroRegistryManager registryManager = null;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
 
         // Initialize ESBMediatorTest
         super.init();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        toUrl = getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE);
-
+        registryManager = new MicroRegistryManager();
     }
 
     /**
@@ -58,18 +52,8 @@ public class ValidateIntegrationDynamicSchemaChangeTestCase extends ESBIntegrati
      *
      * @throws Exception
      */
-
     @Test(groups = "wso2.esb")
     public void validateMediatorDynamicSchemaChangeTest() throws Exception {
-        URL url = new URL(
-                "file:///" + getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "filters"
-                        + File.separator + "validate" + File.separator + "schema1.xml");
-
-        resourceAdminServiceClient.addResource("/_system/config/filters/schema1", "application/xml", "First Schema",
-                new DataHandler(url));
-        //Work - Schema 1
-        Thread.sleep(1000);
-
         try {
             axis2Client
                     .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("validateMediatorDynamicSchemaChangeTestProxy"),
@@ -80,12 +64,11 @@ public class ValidateIntegrationDynamicSchemaChangeTestCase extends ESBIntegrati
                     "Received Fault message - after validation schema failure");
         }
 
-        URL url2 = new URL(
-                "file:///" + getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "filters"
-                        + File.separator + "validate" + File.separator + "schema1a.xml");
+        // Update schema reside in registry
+        String newSchemaPath = getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "filters"
+                                                        + File.separator + "validate" + File.separator + "schema1a.xml";
+        registryManager.updateResource("conf:/validate/schema1", newSchemaPath, true);
 
-        resourceAdminServiceClient.addResource("/_system/config/filters/schema1", "application/xml", "Second Schema",
-                new DataHandler(url2));
         //Work - Schema 2
         /** Time to set up schema - strictly necessary */
         Thread.sleep(30000);
@@ -100,14 +83,7 @@ public class ValidateIntegrationDynamicSchemaChangeTestCase extends ESBIntegrati
 
     @AfterClass(alwaysRun = true)
     public void clear() throws Exception {
-        try {
-            resourceAdminServiceClient.deleteResource("/_system/config/filters/schema1");
-        } finally {
-            super.cleanup();
-            toUrl = null;
-            resourceAdminServiceClient = null;
-        }
-
+        registryManager.restoreOriginalResources();
     }
 
 }

@@ -19,34 +19,17 @@ package org.wso2.carbon.esb.mediator.test.validate;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import java.io.File;
-import java.net.URL;
-import javax.activation.DataHandler;
-
 public class ValidateMediatorTestCase extends ESBIntegrationTest {
-
-    private ResourceAdminServiceClient resourceAdminServiceClient;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
-
         // Initialize ESBMediatorTest
         super.init();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        URL url2 = new URL(
-                "file:///" + getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "filters"
-                        + File.separator + "validate" + File.separator + "schema1a.xml");
-        resourceAdminServiceClient.deleteResource("/_system/config/schema");
-        resourceAdminServiceClient.addResource("/_system/config/schema/schema1a", "application/xml", "Second Schema",
-                new DataHandler(url2));
-
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2297*/
@@ -60,16 +43,4 @@ public class ValidateMediatorTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("GetQuoteResponse"), "GetQuoteResponse not found in response");
         Assert.assertTrue(response.toString().contains("WSO2 Company"), "GetQuoteResponse not found in response");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void clear() throws Exception {
-        try {
-            resourceAdminServiceClient.deleteResource("/_system/config/schema");
-        } finally {
-            super.cleanup();
-            resourceAdminServiceClient = null;
-        }
-
-    }
-
 }

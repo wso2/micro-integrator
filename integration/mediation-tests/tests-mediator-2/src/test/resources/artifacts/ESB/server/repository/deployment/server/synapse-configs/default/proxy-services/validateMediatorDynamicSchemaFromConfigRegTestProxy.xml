@@ -7,7 +7,7 @@
         <inSequence>
             <log level="full"/>
             <validate>
-                <schema key="conf:/schema/schema1a"/>
+                <schema key="conf:/validate/schema1a"/>
                 <on-fail>
                     <makefault>
                         <code xmlns:tns="http://www.w3.org/2003/05/soap-envelope"

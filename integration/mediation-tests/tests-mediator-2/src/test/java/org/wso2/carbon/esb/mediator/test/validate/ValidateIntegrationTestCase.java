@@ -18,19 +18,10 @@
 package org.wso2.carbon.esb.mediator.test.validate;
 
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -42,7 +33,6 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadConfig();
     }
 
     /**
@@ -134,35 +124,4 @@ public class ValidateIntegrationTestCase extends ESBIntegrationTest {
             assertEquals(axisFault.getMessage(), "Invalid custom quote request");
         }
     }
-
-    @AfterClass(groups = "wso2.esb")
-    public void close() throws Exception {
-        clearUploadedResource();
-        super.cleanup();
-    }
-
-    public void uploadConfig()
-            throws RemoteException, ResourceAdminServiceExceptionException, MalformedURLException, InterruptedException,
-            XPathExpressionException {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-        resourceAdminServiceStub.deleteResource("/_system/config/validate");
-        resourceAdminServiceStub.addCollection("/_system/config/", "validate", "", "Contains test schema files");
-        resourceAdminServiceStub.addResource("/_system/config/validate/schema.xml", "application/xml", "schema files",
-                new DataHandler(
-                        new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/validate/schema.xml")));
-        Thread.sleep(1000);
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-        resourceAdminServiceStub.deleteResource("/_system/config/validate");
-
-    }
-
 }

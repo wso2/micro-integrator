@@ -12,11 +12,7 @@
                         <reason value="Invalid custom quote request"/>
                         <role/>
                     </makefault>
-                    <property name="RESPONSE" value="true"/>
-                    <header xmlns:axis="http://ws.apache.org/axis2" xmlns:p="http://ws.apache.org/axis2" name="To"
-                            expression="get-property('ReplyTo')"/>
-                    <send/>
-                    <drop/>
+                    <respond/>
                 </on-fail>
             </validate>
             <send>
