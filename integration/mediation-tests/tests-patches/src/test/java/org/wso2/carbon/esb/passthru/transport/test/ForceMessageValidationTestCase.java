@@ -23,7 +23,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
-import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
@@ -56,10 +55,9 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
 
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfiguration(new File(
                 getESBResourceLocation().replace("//", "/") + File.separator + "passthru" + File.separator + "transport"
                         + File.separator + "forceMessageValidation" + File.separator + "passthru-http.properties"));
-        CarbonServerExtension.restartServer();
         super.init();
 
         carbonLogReader = new CarbonLogReader();
@@ -117,7 +115,6 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        serverConfigurationManager.restoreToLastConfiguration();
-        CarbonServerExtension.restartServer();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }
