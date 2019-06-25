@@ -158,4 +158,12 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
             throw new RuntimeException("Exception occurred while restarting the server" , e);
         }
     }
+
+    public static void shutdownServer() {
+        try {
+            serverManager.stopServer();
+        } catch (AutomationFrameworkException e) {
+            throw new RuntimeException("Exception occurred while shutdown the server" , e);
+        }
+    }
 }
