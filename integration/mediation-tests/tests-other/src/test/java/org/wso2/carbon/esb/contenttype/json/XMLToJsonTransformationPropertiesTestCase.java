@@ -46,11 +46,10 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfiguration(new File(
                 getESBResourceLocation() + File.separator + "json" + File.separator + "jsonTransformationConfig"
                         + File.separator + "synapse.properties"));
         super.init();
-        verifyProxyServiceExistence("xmlToJsonTestProxy");
     }
 
     /**
@@ -142,8 +141,7 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
 
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
         serverConfigurationManager = null;
     }
 }

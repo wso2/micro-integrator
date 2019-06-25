@@ -50,10 +50,9 @@ public class XMLToJsonNilTestCase extends ESBIntegrationTest {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(
+        serverConfigurationManager.applyMIConfiguration(
                 new File(getESBResourceLocation() + File.separator + "json" + File.separator + "synapse.properties"));
         super.init();
-        verifyAPIExistence("xmltoJsonNilTestAPI");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test XML to JSON with nil='true'")
@@ -70,8 +69,7 @@ public class XMLToJsonNilTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
         serverConfigurationManager = null;
     }
 }

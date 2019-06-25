@@ -19,7 +19,6 @@
 package org.wso2.carbon.esb.contenttype.json;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
@@ -38,7 +37,6 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        verifyProxyServiceExistence("xmlToJsonTestProxy");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test XML to JSON conversion")
@@ -113,10 +111,5 @@ public class XMLToJsonTestCase extends ESBIntegrationTest {
 
         Assert.assertEquals(response.getData(), "{\"location\":{\"name\":\"Bermuda Triangle\",\"description\":null}}",
                 "Invalid empty XML to JSON conversion . " + response.getData());
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 }
