@@ -20,11 +20,9 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.FileRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
@@ -34,13 +32,13 @@ import static org.testng.Assert.assertFalse;
 
 public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void deployService() throws Exception {
         super.init();
         verifyProxyServiceExistence("TestCalloutSoapHeader");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Test whether the callout mediator successfully handle SOAP messages "
@@ -59,29 +57,18 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
         boolean errorLog = false;
 
         try {
+            carbonLogReader.start();
             int result = httpClient.executeMethod(post);
             String responseBody = post.getResponseBodyAsString();
             log.info("Response Status: " + result);
             log.info("Response Body: " + responseBody);
 
-            LogEvent[] logs = logViewerClient.getAllSystemLogs();
-            for (LogEvent logEvent : logs) {
-                if (logEvent.getPriority().equals("ERROR")) {
-                    String message = logEvent.getMessage();
-                    if (message.contains("Unable to convert to SoapHeader Block")) {
-                        errorLog = true;
-                        break;
-                    }
-                }
-            }
+            errorLog = carbonLogReader.assertIfLogExists("Unable to convert to SoapHeader Block");
+            carbonLogReader.stop();
         } finally {
             post.releaseConnection();
         }
         assertFalse(errorLog, "Mediator Hasn't invoked successfully.");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
 }
