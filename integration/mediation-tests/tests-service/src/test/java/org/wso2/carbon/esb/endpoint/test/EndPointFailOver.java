@@ -37,14 +37,14 @@ public class EndPointFailOver extends ESBIntegrationTest {
     public void initiateTest() throws Exception {
         init();
 
-        axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");              // initializing 2 axis2servers
+        // initializing 2 axis2servers
+        axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
 
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/synapseconfig/configFailOver/ConfigFailOver.xml");    // load synapse
         axis2Server1.start();
+        //deploy the simple stock quote in server 2
         axis2Server2.deployService(
-                SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);     //deploy the simple stock quote in server 2
+                SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
         axis2Server2.start();
     }
 
@@ -53,12 +53,10 @@ public class EndPointFailOver extends ESBIntegrationTest {
     public void TestFailOver() throws Exception {
 
         // send the requests to each servers.
-
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), "", "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(
+                getProxyServiceURLHttp("EndPointFailOverProxy"), "", "IBM");
         boolean ResponseContainsIBM = response.getFirstElement().toString().contains("IBM");
-        Assert.assertTrue(
-                ResponseContainsIBM);              //checking whether response has IBM. If so server has successfully shifted
-
+        Assert.assertTrue(ResponseContainsIBM);              //checking whether response has IBM. If so server has successfully shifted
     }
 
     @AfterClass(alwaysRun = true)
