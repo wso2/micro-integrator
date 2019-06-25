@@ -35,5 +35,5 @@ var logLevelCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(logLevelCmd)
+	RootCmd.AddCommand(logLevelCmd)
 }

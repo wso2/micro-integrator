@@ -109,7 +109,7 @@ func executeListEndpointsCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixEndpoints
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.EndpointList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.EndpointList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints

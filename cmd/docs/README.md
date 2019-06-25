@@ -1,48 +1,41 @@
-# Management Console for WSO2 Micro Integrator
+# WSO2 Micro Integrator Command Line tool
 
-Command Line tool for managing the WSO2 Micro Integrator
+You can view and manage the Micro Integrator instances using the “mi” command line tool. Some of the usages of the command line tool include,
+1. Get a list of deployment runtime artifacts.
+2. Inspect details of each runtime artifact such as a proxy service or an API.
+3. Get the invocation endpoint of an artifact.
 
-## Getting Started
+### Running
 
-### Building from source 
+1. Add the MI CLI bin folder to PATH in UNIX-based Operating System (Linux, Solaris, and Mac OS X)
 
-- ### Setting up the development environment
-    1. Install [Go 1.12.x](https://golang.org/dl)
-    2. Fork the [repository](https://github.com/wso2/micro-integrator)
-    3. Clone your fork into any directory
-    5. `cd` into cloned directory and then cd into `micro-integrator/cmd`
-    6. Execute `go mod vendor` or `go mod download` to download all the dependencies
-    
-- ### Building from source
-    cd into micro-integrator home directory
+    `$ export PATH=/path/to/mi/cli/directory/bin:$PATH`
 
-    Execute `make install` to build both the **Micro Integrator** and **MIcro Integrator CLI** at once.
+2. Then execute,
 
-    Created Command Line tool packages will be available at cmd/build directory
+    `$ mi`
 
-- ### Running
-    Extract the compressed archive generated to a desired location.
-    
-    Then execute `./mi` to start the application.
-    
-    Execute `./mi --help` for further instructions.
+Execute mi --help for further instructions.
 
-    NOTE: To execute the tool from anywhere, append the location of the executable (mi) to your $PATH variable.
+### Add Command Autocompletion (Only for UNIX-based Operating System)
 
-- ### Command Autocompletion (For Bash Only)
-    Copy the file `mi_bash_completion.sh` to `/etc/bash_completion.d/` and source it with `source /etc/bash_completion.d/mi_bash_completion.sh` to enable bash auto-completion.
+    `$ source /path/to/mi/cli/directory/mi_bash_completion.sh`
 
-### Configuration 
+### Configuration
 
-- ### How to Enable the Management API
-    By default the Management Api is disabled. To use the Management Api you must use the system property `-DenableManagementApi` when starting the micro integrator
+##### Enabling the Management API
 
-- ### Management API Address and Port
-    To configure the address and the port of the Management Api in the CLI use the [**remote**](#remote) command. If no configuration is done, the address and the port will have the default values
+By default the Management API is disabled. To use the Management API you must use the system property `-DenableManagementApi` when starting the micro integrator
 
-    NOTE: The default hostname is localhost and the port is 9164.
+**NOTE: These APIs are not protected using an authorization mechanism. Therefore take extra measures to secure this port if you are enabling this in production.**
 
-## Usage 
+##### Changing Management API Address and Port
+
+To configure the address and the port of the Management Api in the CLI use the [**remote**](#remote) command. If no configuration is done, the address and the port will have the default values
+
+NOTE: The default hostname is localhost and the port is 9164.
+
+### Usage
 ```bash
      mi [command]
 ```
@@ -54,9 +47,8 @@ Command Line tool for managing the WSO2 Micro Integrator
     --help, -h
         Display information and example usage of a command
 ```
-
-### Commands
-   * #### remote
+#### Commands
+   * ##### remote
 ```bash
         Usage:
             mi remote [command] [arguments]
@@ -84,7 +76,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To show available Micro Integrators
             mi remote show
 ```
-   * #### log-level
+   * ##### log-level
 ```bash
         Usage:
             mi log-level [command] [arguments]
@@ -100,7 +92,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # Update the log level of a logger
             mi log-level update org.apache.coyote DEBUG
 ```
-   * #### api
+   * ##### api
 ```bash
         Usage:
             mi api [command] [argument]
@@ -115,7 +107,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific api
             mi api show sampleApi
 ```
-   * #### compositeapp
+   * ##### compositeapp
 ```bash
         Usage:
             mi compositeapp [command] [argument]
@@ -130,7 +122,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific composite app
             mi compositeapp show sampleApp
 ```
-   * #### endpoint
+   * ##### endpoint
 ```bash
         Usage:
             mi endpoint [command] [argument]
@@ -145,7 +137,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific endpoint
             mi endpoint show sampleEndpoint
 ```
-   * #### inboundendpoint
+   * ##### inboundendpoint
 ```bash
         Usage:
             mi inboundendpoint [command] [argument]
@@ -160,7 +152,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific inbound endpoint
             mi inboundendpoint show sampleEndpoint
 ```
-   * #### proxyservice
+   * ##### proxyservice
 ```bash
         Usage:
             mi proxyservice [command] [argument]
@@ -175,7 +167,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific proxy service
             mi proxyservice show sampleProxy
 ```
-   * #### sequence
+   * ##### sequence
 ```bash
         Usage:
             mi sequence [command] [argument]
@@ -190,7 +182,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific sequence
             mi sequence show sampleProxy
 ```
-   * #### task
+   * ##### task
 ```bash
         Usage:
             mi task [command] [argument]
@@ -205,7 +197,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific task
             mi task show sampleProxy
 ```
-   * #### dataservice
+   * ##### dataservice
 ```bash
         Usage:
             mi dataservice [command] [argument]
@@ -220,7 +212,7 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific task
             mi dataservice show SampleDataService
 ```
-* #### version
+* ##### version
 ```bash
         mi version 
 ```

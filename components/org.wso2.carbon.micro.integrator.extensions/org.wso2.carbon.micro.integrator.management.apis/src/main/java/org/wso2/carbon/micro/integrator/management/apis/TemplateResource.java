@@ -62,7 +62,7 @@ public class TemplateResource extends APIResource {
     @Override
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
-        methods.add(Constants.HTTP_METHOD_GET);
+        methods.add(Constants.HTTP_GET);
         return methods;
     }
 
@@ -125,13 +125,13 @@ public class TemplateResource extends APIResource {
             Map<String, Template> endpointTemplateMap = synapseConfiguration.getEndpointTemplates();
             JSONObject jsonBody = Utils.createJSONList(endpointTemplateMap.size());
             endpointTemplateMap.forEach((key, value) ->
-                    addToJsonList(jsonBody.getJSONArray(ENDPOINT_TEMPLATE_LIST), value.getName()));
+                    addToJsonList(jsonBody.getJSONArray(Constants.LIST), value.getName()));
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else if (SEQUENCE_TEMPLATE_TYPE.equalsIgnoreCase(templateType)) {
             Map<String, TemplateMediator> sequenceTemplateMap = synapseConfiguration.getSequenceTemplates();
             JSONObject jsonBody = Utils.createJSONList(sequenceTemplateMap.size());
             sequenceTemplateMap.forEach((key, value) ->
-                    addToJsonList(jsonBody.getJSONArray(SEQUENCE_TEMPLATE_LIST), value.getName()));
+                    addToJsonList(jsonBody.getJSONArray(Constants.LIST), value.getName()));
             Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
         } else {
             LOG.warn("Provided template type does not exist");

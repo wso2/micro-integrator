@@ -68,6 +68,6 @@ var remoteCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(remoteCmd)
+	RootCmd.AddCommand(remoteCmd)
 	remoteCmd.SetHelpTemplate(remoteCmdLongDesc + remoteUsage + utils.GetCmdFlags("remote") + remoteCmdExamples)
 }

@@ -1,4 +1,4 @@
-# bash completion for mi                                   -*- shell-script -*-
+# bash completion for mi    -*- shell-script -*-
 
 __mi_debug()
 {
@@ -243,9 +243,9 @@ __mi_handle_word()
     __mi_handle_word
 }
 
-_mi_completion()
+_mi_api_show()
 {
-    last_command="mi_completion"
+    last_command="mi_api_show"
 
     command_aliases=()
 
@@ -257,9 +257,6 @@ _mi_completion()
     flags_with_completion=()
     flags_completion=()
 
-    flags+=("--help")
-    flags+=("-h")
-    local_nonpersistent_flags+=("--help")
     flags+=("--verbose")
     flags+=("-v")
 
@@ -268,13 +265,14 @@ _mi_completion()
     noun_aliases=()
 }
 
-_mi_init()
+_mi_api()
 {
-    last_command="mi_init"
+    last_command="mi_api"
 
     command_aliases=()
 
     commands=()
+    commands+=("show")
 
     flags=()
     two_word_flags=()
@@ -284,23 +282,19 @@ _mi_init()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_api()
+_mi_compositeapp_show()
 {
-    last_command="mi_show_api"
+    last_command="mi_compositeapp_show"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -310,23 +304,20 @@ _mi_show_api()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_apis()
+_mi_compositeapp()
 {
-    last_command="mi_show_apis"
+    last_command="mi_compositeapp"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
+    commands+=("show")
 
     flags=()
     two_word_flags=()
@@ -336,23 +327,19 @@ _mi_show_apis()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_carbonapp()
+_mi_dataservice_show()
 {
-    last_command="mi_show_carbonapp"
+    last_command="mi_dataservice_show"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -362,23 +349,20 @@ _mi_show_carbonapp()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_carbonapps()
+_mi_dataservice()
 {
-    last_command="mi_show_carbonapps"
+    last_command="mi_dataservice"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
+    commands+=("show")
 
     flags=()
     two_word_flags=()
@@ -388,23 +372,19 @@ _mi_show_carbonapps()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_endpoint()
+_mi_endpoint_show()
 {
-    last_command="mi_show_endpoint"
+    last_command="mi_endpoint_show"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -414,23 +394,20 @@ _mi_show_endpoint()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_endpoints()
+_mi_endpoint()
 {
-    last_command="mi_show_endpoints"
+    last_command="mi_endpoint"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
+    commands+=("show")
 
     flags=()
     two_word_flags=()
@@ -440,23 +417,19 @@ _mi_show_endpoints()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_inboundendpoint()
+_mi_inboundendpoint_show()
 {
-    last_command="mi_show_inboundendpoint"
+    last_command="mi_inboundendpoint_show"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -466,23 +439,20 @@ _mi_show_inboundendpoint()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_inboundendpoints()
+_mi_inboundendpoint()
 {
-    last_command="mi_show_inboundendpoints"
+    last_command="mi_inboundendpoint"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
+    commands+=("show")
 
     flags=()
     two_word_flags=()
@@ -492,23 +462,19 @@ _mi_show_inboundendpoints()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_proxyservice()
+_mi_log-level_show()
 {
-    last_command="mi_show_proxyservice"
+    last_command="mi_log-level_show"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -518,23 +484,19 @@ _mi_show_proxyservice()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_proxyservices()
+_mi_log-level_update()
 {
-    last_command="mi_show_proxyservices"
+    last_command="mi_log-level_update"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -544,23 +506,21 @@ _mi_show_proxyservices()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_sequence()
+_mi_log-level()
 {
-    last_command="mi_show_sequence"
+    last_command="mi_log-level"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
+    commands+=("show")
+    commands+=("update")
 
     flags=()
     two_word_flags=()
@@ -570,23 +530,19 @@ _mi_show_sequence()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_sequences()
+_mi_proxyservice_show()
 {
-    last_command="mi_show_sequences"
+    last_command="mi_proxyservice_show"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -596,23 +552,20 @@ _mi_show_sequences()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_task()
+_mi_proxyservice()
 {
-    last_command="mi_show_task"
+    last_command="mi_proxyservice"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
+    commands+=("show")
 
     flags=()
     two_word_flags=()
@@ -622,23 +575,19 @@ _mi_show_task()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show_tasks()
+_mi_remote_add()
 {
-    last_command="mi_show_tasks"
+    last_command="mi_remote_add"
 
     command_aliases=()
 
     commands=()
-    commands+=("help")
 
     flags=()
     two_word_flags=()
@@ -648,36 +597,19 @@ _mi_show_tasks()
 
     flags+=("--verbose")
     flags+=("-v")
-
-    flags+=("--help")
-    flags+=("-h")
 
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
 }
 
-_mi_show()
+_mi_remote_remove()
 {
-    last_command="mi_show"
+    last_command="mi_remote_remove"
 
     command_aliases=()
 
     commands=()
-    commands+=("api")
-    commands+=("apis")
-    commands+=("carbonapp")
-    commands+=("carbonapps")
-    commands+=("endpoint")
-    commands+=("endpoints")
-    commands+=("inboundendpoint")
-    commands+=("inboundendpoints")
-    commands+=("proxyservice")
-    commands+=("proxyservices")
-    commands+=("sequence")
-    commands+=("sequences")
-    commands+=("task")
-    commands+=("tasks")
 
     flags=()
     two_word_flags=()
@@ -688,19 +620,196 @@ _mi_show()
     flags+=("--verbose")
     flags+=("-v")
 
-    flags+=("--help")
-    flags+=("-h")
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_remote_select()
+{
+    last_command="mi_remote_select"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
 
     must_have_one_flag=()
     must_have_one_noun=()
-    must_have_one_noun+=("api")
-    must_have_one_noun+=("carbonapp")
-    must_have_one_noun+=("endpoint")
-    must_have_one_noun+=("help")
-    must_have_one_noun+=("inboundendpoint")
-    must_have_one_noun+=("proxyservice")
-    must_have_one_noun+=("sequence")
-    must_have_one_noun+=("task")
+    noun_aliases=()
+}
+
+_mi_remote_show()
+{
+    last_command="mi_remote_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_remote_update()
+{
+    last_command="mi_remote_update"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_remote()
+{
+    last_command="mi_remote"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("add")
+    commands+=("remove")
+    commands+=("select")
+    commands+=("show")
+    commands+=("update")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    must_have_one_noun+=("add")
+    must_have_one_noun+=("remove")
+    must_have_one_noun+=("select")
+    must_have_one_noun+=("show")
+    must_have_one_noun+=("update")
+    noun_aliases=()
+}
+
+_mi_sequence_show()
+{
+    last_command="mi_sequence_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_sequence()
+{
+    last_command="mi_sequence"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("show")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_task_show()
+{
+    last_command="mi_task_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_task()
+{
+    last_command="mi_task"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("show")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
     noun_aliases=()
 }
 
@@ -721,9 +830,6 @@ _mi_version()
     flags+=("--verbose")
     flags+=("-v")
 
-    flags+=("--help")
-    flags+=("-h")
-
     must_have_one_flag=()
     must_have_one_noun=()
     noun_aliases=()
@@ -736,9 +842,16 @@ _mi_root_command()
     command_aliases=()
 
     commands=()
-    commands+=("completion")
-    commands+=("init")
-    commands+=("show")
+    commands+=("api")
+    commands+=("compositeapp")
+    commands+=("dataservice")
+    commands+=("endpoint")
+    commands+=("inboundendpoint")
+    commands+=("log-level")
+    commands+=("proxyservice")
+    commands+=("remote")
+    commands+=("sequence")
+    commands+=("task")
     commands+=("version")
 
     flags=()
@@ -750,15 +863,8 @@ _mi_root_command()
     flags+=("--verbose")
     flags+=("-v")
 
-    flags+=("--help")
-    flags+=("-h")
-
     must_have_one_flag=()
     must_have_one_noun=()
-    must_have_one_noun+=("help")
-    must_have_one_noun+=("init")
-    must_have_one_noun+=("show")
-    must_have_one_noun+=("version")
     noun_aliases=()
 }
 

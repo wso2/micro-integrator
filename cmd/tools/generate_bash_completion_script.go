@@ -16,24 +16,25 @@
 * under the License.
  */
 
-package cmd
+package main
 
 import (
-	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/cmd"
+	"log"
+	"os"
+	"path/filepath"
 )
 
-// Inbound Endpoint command related usage info
-const inboundEndpointCmdLiteral = "inboundendpoint"
-const inboundEndpointCmdShortDesc = "Manage deployed Inbound Endpoints"
-const inboundEndpointCmdLongDesc = "Manage the Inbound Endpoints deployed in the Micro Integrator"
+func main() {
 
-// inboundEndpointCmd represents the inboundEndpoint command
-var inboundEndpointCmd = &cobra.Command{
-	Use:   inboundEndpointCmdLiteral,
-	Short: inboundEndpointCmdShortDesc,
-	Long:  inboundEndpointCmdLongDesc,
-}
+	err := os.MkdirAll("shell-completions", os.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
 
-func init() {
-	RootCmd.AddCommand(inboundEndpointCmd)
+	log.Println("Generating bash completions...")
+	err = cmd.RootCmd.GenBashCompletionFile(filepath.FromSlash("./shell-completions/mi_bash_completion.sh"))
+	if err != nil {
+		log.Fatal(err)
+	}
 }

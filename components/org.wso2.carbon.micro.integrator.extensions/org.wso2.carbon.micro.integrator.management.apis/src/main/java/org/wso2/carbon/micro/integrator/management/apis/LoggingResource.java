@@ -43,7 +43,7 @@ public class LoggingResource extends ApiResource {
     public Set<String> getMethods() {
 
         Set<String> methods = new HashSet<>();
-        methods.add(Constants.HTTP_METHOD_GET);
+        methods.add(Constants.HTTP_GET);
         methods.add(Constants.HTTP_METHOD_PATCH);
         return methods;
     }
@@ -66,7 +66,7 @@ public class LoggingResource extends ApiResource {
 
         String httpMethod = axis2MessageContext.getProperty("HTTP_METHOD").toString();
 
-        if (httpMethod.equals(Constants.HTTP_METHOD_GET)) {
+        if (httpMethod.equals(Constants.HTTP_GET)) {
             String param = Utils.getQueryParameter(messageContext, Constants.LOGGER_NAME);
             if (Objects.nonNull(param)) {
                 jsonBody = getLoggerData(axis2MessageContext, param);

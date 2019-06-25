@@ -111,7 +111,7 @@ func executeListTasksCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixTasks
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.TaskList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.TaskList{})
 
 	if err == nil {
 		// Printing the list of available Tasks

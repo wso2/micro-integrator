@@ -51,7 +51,7 @@ public class ApiResource extends APIResource {
     public Set<String> getMethods() {
 
         Set<String> methods = new HashSet<>();
-        methods.add(Constants.HTTP_METHOD_GET);
+        methods.add(Constants.HTTP_GET);
         return methods;
     }
 

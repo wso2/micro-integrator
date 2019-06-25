@@ -136,6 +136,13 @@ else
     echo "Skipping Go Tests..."
 fi
 
+# run the completion.go file to get the bash completion script
+# To do the string replace first build the script so that we have a consistent name
+go build -gcflags=-trimpath=$GOPATH -asmflags=-trimpath=$GOPATH tools/generate_bash_completion_script.go
+./generate_bash_completion_script
+sed -i -e "s=./generate_bash_completion_script=mi=g" ./shell-completions/mi_bash_completion.sh
+rm generate_bash_completion_script
+
 for platform in ${platforms}
 do
     split=(${platform//\// })
@@ -158,8 +165,12 @@ do
     mi_archive_dir="${buildPath}/${mi_dir_name}"
     mkdir -p $mi_archive_dir
 
-    cp -r "${baseDir}/server_config.yaml" $mi_archive_dir > /dev/null 2>&1
+    cp -r "${baseDir}/docs/README.md" $mi_archive_dir > /dev/null 2>&1
     cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
+
+    if [[ "windows" != "$goos" ]]; then
+        cp -r "${baseDir}/shell-completions/mi_bash_completion.sh" $mi_archive_dir > /dev/null 2>&1
+    fi
 
     # set destination path for binary
     mi_bin_dir="${mi_archive_dir}/bin"

@@ -32,6 +32,9 @@ const showLogLevelCmdShortDesc = "Get information about a Logger"
 
 const showLogLevelCmdLongDesc = "Get information about the Logger specified by command line argument [logger-name]\n"
 
+var showLogLevelCmdUsage = "Usage:\n" +
+	"  " + programName + " " + logLevelCmdLiteral + " " + showLogLevelCmdLiteral + " [logger-name]\n\n"
+
 var showLogLevelCmdExamples = "Example:\n" +
 	"To get details about a specific logger\n" +
 	"  " + programName + " " + logLevelCmdLiteral + " " + showLogLevelCmdLiteral + " org.apache.coyote\n\n"
@@ -48,8 +51,7 @@ var loggerShowCmd = &cobra.Command{
 
 func init() {
 	logLevelCmd.AddCommand(loggerShowCmd)
-	loggerShowCmd.SetHelpTemplate(showLogLevelCmdLongDesc + utils.GetCmdUsage(programName, logLevelCmdLiteral,
-		showLogLevelCmdLiteral, "[logger-name]") + showLogLevelCmdExamples + utils.GetCmdFlags(logLevelCmdLiteral))
+	loggerShowCmd.SetHelpTemplate(showLogLevelCmdLongDesc + showLogLevelCmdUsage + showLogLevelCmdExamples + utils.GetCmdFlags(logLevelCmdLiteral))
 }
 
 func handleShowLoggerCmdArguments(args []string) {
@@ -68,8 +70,7 @@ func handleShowLoggerCmdArguments(args []string) {
 }
 
 func printLoggerHelp() {
-	fmt.Print(showLogLevelCmdLongDesc + utils.GetCmdUsage(programName, logLevelCmdLiteral, showLogLevelCmdLiteral,
-		"[logger-name]") + showLogLevelCmdExamples + utils.GetCmdFlags(logLevelCmdLiteral))
+	fmt.Print(showLogLevelCmdLongDesc + showLogLevelCmdUsage + showLogLevelCmdExamples + utils.GetCmdFlags(logLevelCmdLiteral))
 }
 
 func executeGetLoggerCmd(loggerName string) {
