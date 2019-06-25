@@ -33,12 +33,11 @@ public class SequenceAsLocalRegistryEntryTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/localEntryConfig/sequence_as_local_registry_entry.xml");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Create an sequence as a local registry entry")
     public void testSequenceAsLocalRegistryEntry() throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(),
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SequenceAsLocalRegistryEntryProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         assertNotNull(response, "Response is null");
         assertEquals(response.getLocalName(), "getQuoteResponse", "getQuoteResponse mismatch");
@@ -46,10 +45,5 @@ public class SequenceAsLocalRegistryEntryTestCase extends ESBIntegrationTest {
         String symbolResponse = omElement.getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"))
                 .getText();
         assertEquals(symbolResponse, "IBM", "Symbol is not match");
-    }
-
-    @AfterClass
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 }
