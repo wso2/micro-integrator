@@ -19,13 +19,10 @@
 package org.wso2.carbon.esb.passthru.transport.test;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.JSONClient;
 import org.wso2.esb.integration.common.utils.servers.SimpleSocketServer;
 
@@ -36,7 +33,6 @@ import org.wso2.esb.integration.common.utils.servers.SimpleSocketServer;
 public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extends ESBIntegrationTest {
     private static final String EXPECTED_ERROR_MESSAGE = "Could not save JSON payload. Invalid input stream found";
     private JSONClient jsonclient;
-    private LogViewerClient logViewerClient;
     private SimpleSocketServer simpleSocketServer;
 
     @BeforeClass(alwaysRun = true)
@@ -48,7 +44,6 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
     @Test(groups = { "wso2.esb" }, description = "Test whether the msg builder invoked property is set when the content"
             + " type is empty")
     public void testMsgBuilderInvokedPropertyWhenContentTypeisEmpty() throws Exception {
-        boolean isErrorFound = false;
 
         int port = 8090;
         String expectedResponse =
@@ -65,22 +60,13 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
         String apiEp = getApiInvocationURL("setMessageBuilderInvokedWithEmptyContentType");
         jsonclient.sendUserDefineRequest(apiEp, jsonPayload.trim());
 
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        Assert.assertTrue(Utils.checkForLog(logViewerClient, "messageBuilderInvokedValue = true", 20));
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(EXPECTED_ERROR_MESSAGE)) {
-                isErrorFound = true;
-            }
-        }
-        Assert.assertFalse(isErrorFound);
-    }
+        Assert.assertTrue(carbonLogReader.checkForLog("messageBuilderInvokedValue = true", 20));
+        Assert.assertFalse(carbonLogReader.assertIfLogExists(EXPECTED_ERROR_MESSAGE));
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 
 }
