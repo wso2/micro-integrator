@@ -31,16 +31,16 @@ import java.util.Set;
  */
 public class ApiResourceAdapter extends APIResource {
 
-    private final MiApiResource messageStoreResource;
+    private final MiApiResource apiResource;
 
-    ApiResourceAdapter(String prefixMessageStore, MiApiResource messageStoreResource) {
-        super(prefixMessageStore);
-        this.messageStoreResource = messageStoreResource;
+    ApiResourceAdapter(String uriTemplatePrefix, MiApiResource apiResource) {
+        super(uriTemplatePrefix);
+        this.apiResource = apiResource;
     }
 
     @Override
     public Set<String> getMethods() {
-        return messageStoreResource.getMethods();
+        return apiResource.getMethods();
     }
 
     @Override
@@ -53,6 +53,6 @@ public class ApiResourceAdapter extends APIResource {
             return false;
         }
 
-        return messageStoreResource.invoke(messageContext, axis2MessageContext, synapseConfiguration);
+        return apiResource.invoke(messageContext, axis2MessageContext, synapseConfiguration);
     }
 }
