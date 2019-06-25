@@ -31,6 +31,7 @@ public class Constants {
     public static final String PREFIX_LOGGING = "/logging";
     public static final String PREFIX_DATA_SERVICES = "/data-services";
     public static final String PREFIX_TEMPLATES = "/templates";
+    public static final String PREFIX_MESSAGE_PROCESSORS = "/message-processors";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";
@@ -53,11 +54,15 @@ public class Constants {
 
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String HTTP_STATUS_CODE = "HTTP_SC";
-    public static final String HTTP_METHOD_GET = "GET";
-    public static final String HTTP_METHOD_POST = "POST";
     public static final String HTTP_METHOD_PATCH = "PATCH";
     public static final String NOT_FOUND = "404";
     public static final String INTERNAL_SERVER_ERROR = "500";
     public static final String BAD_REQUEST = "400";
+
+    public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
+    public static final String HTTP_POST = "POST";
+    public static final String HTTP_GET = "GET";
+
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
+    public static final String MESSAGE_JSON_ATTRIBUTE = "Message";
 }

@@ -35,5 +35,5 @@ var sequenceCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(sequenceCmd)
+	RootCmd.AddCommand(sequenceCmd)
 }

@@ -34,23 +34,20 @@ var programName = os.Args[0]
 var rootCmdShortDesc = "CLI for Micro Integrator"
 
 var rootCmdLongDesc = dedent.Dedent(`
-        ` + utils.ProjectName + ` is a Command Line Tool for Management of WSO2 Micro Integrator
+        ` + programName + ` is a Command Line Tool for Management of WSO2 Micro Integrator
         `)
 
-var rootCmdValidArgs = []string{"server", "show", "version", "help"}
-
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:       utils.ProjectName,
-	Short:     rootCmdShortDesc,
-	Long:      rootCmdLongDesc,
-	ValidArgs: rootCmdValidArgs,
+// RootCmd represents the base command when called without any subcommands
+var RootCmd = &cobra.Command{
+	Use:   programName,
+	Short: rootCmdShortDesc,
+	Long:  rootCmdLongDesc,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// This is called by main.main(). It only needs to happen once to the RootCmd.
 func Execute() {
-	if err := rootCmd.Execute(); err != nil {
+	if err := RootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }
@@ -58,7 +55,7 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
+	RootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -68,7 +65,7 @@ func initConfig() {
 		utils.IsVerbose = true
 		utils.EnableVerboseMode()
 		t := time.Now()
-		utils.Logf(utils.LogPrefixInfo+"Executed ManagementCLI (%s) on %v\n", utils.ProjectName, t.Format(time.RFC1123))
+		utils.Logf(utils.LogPrefixInfo+"Executed ManagementCLI (%s) on %v\n", programName, t.Format(time.RFC1123))
 	} else {
 		utils.IsVerbose = false
 	}

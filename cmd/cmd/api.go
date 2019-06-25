@@ -35,5 +35,5 @@ var apiCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(apiCmd)
+	RootCmd.AddCommand(apiCmd)
 }

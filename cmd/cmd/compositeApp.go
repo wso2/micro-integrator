@@ -35,5 +35,5 @@ var compositeAppCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(compositeAppCmd)
+	RootCmd.AddCommand(compositeAppCmd)
 }
