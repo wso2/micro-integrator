@@ -1,4 +1,4 @@
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="enrichReplaceBodyBySpecifiedPropertyTestProxy" transports="https,http" statistics="disable" trace="disable" startOnLoad="true">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="EnrichIntegrationReplaceByPropertyTestCaseProxy" transports="https,http" statistics="disable" trace="disable" startOnLoad="true">
     <target>
         <inSequence>
             <log level="full" />
