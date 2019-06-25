@@ -48,7 +48,7 @@ public class TCPSessionPersistanceSpliyByCharacterTestCase extends ESBIntegratio
         int messageCount = 3;
         String character = "|";
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.CHARACTER.getDelimiterType(),
-                messageCount);
+                messageCount, 6792);
         tcpClient.setMessage(message);
         tcpClient.setCharacterDelimiter(character);
         tcpClient.sendToServer();

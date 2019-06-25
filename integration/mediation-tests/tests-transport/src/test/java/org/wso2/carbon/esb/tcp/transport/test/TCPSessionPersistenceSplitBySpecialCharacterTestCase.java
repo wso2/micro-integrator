@@ -50,7 +50,7 @@ public class TCPSessionPersistenceSplitBySpecialCharacterTestCase extends ESBInt
         int messageCount = 3;
         Character aByte = 0x03;
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.BYTE.getDelimiterType(),
-                messageCount);
+                messageCount, 6793);
         tcpClient.setMessage(message);
         tcpClient.setByteDelimiter(aByte);
         tcpClient.sendToServer();

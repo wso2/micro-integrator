@@ -33,14 +33,9 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
  */
 public class TCPSessionPersistenceSplitByStringTestCase extends ESBIntegrationTest {
 
-    private static String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap"
-            + ".org/soap/envelope/\"><soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
-
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
-
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/tcp/transport/tcpProxy_splitByString.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -48,7 +43,9 @@ public class TCPSessionPersistenceSplitByStringTestCase extends ESBIntegrationTe
     public void tcpTransportSplitByStringProxy() throws Exception {
         int messageCount = 3;
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.STRING.getDelimiterType(),
-                messageCount);
+                messageCount, 6791); // Port should match the port in tcpProxy_splitByString.xml
+        String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap"
+                + ".org/soap/envelope/\"><soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
         tcpClient.setMessage(message);
         tcpClient.setStringDelimiter("split");
         tcpClient.sendToServer();
