@@ -904,7 +904,7 @@ public abstract class ESBIntegrationTest {
         return response.contains(apiName);
     }
 
-    private boolean checkEndpointExistence(String endpoinName) throws IOException {
+    protected boolean checkEndpointExistence(String endpoinName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("endpoints");
         return response.contains(endpoinName);
