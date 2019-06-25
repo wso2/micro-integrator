@@ -4,12 +4,10 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.rmi.RemoteException;
@@ -20,7 +18,7 @@ import java.rmi.RemoteException;
  * <code>continueParent</code> attribute is set to <code>true</code>
  */
 public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
-    private LogViewerClient logViewerClient = null;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void deployService() throws Exception {
@@ -30,7 +28,7 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
 
         verifyProxyServiceExistence("CloneMediatorEmptyStackProxy");
 
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     /**
@@ -46,11 +44,12 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
         final String expectedErrorMsg = "Unexpected error executing task/async inject";
         final String expectedStackTrace = "java.util.Stack.peek";
 
-        boolean isEmptyStackError = false;
+        boolean isEmptyStackError;
         OMElement request = getSecurityRequest();
 
         // invoking the service through the proxy service
         AxisServiceClient client = new AxisServiceClient();
+        carbonLogReader.start();
 
         final String proxyUrl = contextUrls.getServiceUrl() + "/CloneMediatorEmptyStackProxy";
 
@@ -59,33 +58,15 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
         } catch (Exception e) {
             // Ignore it.
         }
-
-        Thread.sleep(2000);
-
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-
-        // Asserting both the ERROR message and the stack trace.
-
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            String stackTrace = logEvent.getStacktrace();
-            if (message.contains(expectedErrorMsg) && stackTrace.contains(expectedStackTrace)) {
-                isEmptyStackError = true;
-                break;
-            }
-        }
-
+        isEmptyStackError = carbonLogReader.assertIfLogExists(expectedErrorMsg) && carbonLogReader.
+                assertIfLogExists(expectedStackTrace);
+        carbonLogReader.stop();
+        carbonLogReader.clearLogs();
         /*
          * Asserting the results here. If there's an Empty stack error, then the
          * assertion should fail.
          */
         Assert.assertTrue(!isEmptyStackError, "Empty Stack ERROR message was found in the LOG stream.");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void unDeployService() throws Exception {
-        /* undeploying deployed artifact */
-        super.cleanup();
     }
 
     /**
