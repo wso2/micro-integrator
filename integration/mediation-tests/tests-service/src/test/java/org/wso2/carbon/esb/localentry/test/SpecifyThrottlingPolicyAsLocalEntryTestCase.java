@@ -34,7 +34,6 @@ public class SpecifyThrottlingPolicyAsLocalEntryTestCase extends ESBIntegrationT
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/localEntryConfig/throttle_policy_as_a_local_entry.xml");
     }
 
     @Test(groups = "wso2.esb", description = "Specified throttling policy as a local entry")
@@ -44,7 +43,8 @@ public class SpecifyThrottlingPolicyAsLocalEntryTestCase extends ESBIntegrationT
 
         try {
             for (int i = 0; i <= THROTTLE_MAX_MSG_COUNT; i++) {
-                response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+                response = axis2Client.
+                        sendSimpleStockQuoteRequest(getProxyServiceURLHttp("throttlePolicyInLocalEntryProxy"), null, "WSO2");
                 assertTrue(response.toString().contains("WSO2"), "Fault: Required response not found.");
                 throttleCounter++;
             }
@@ -58,12 +58,5 @@ public class SpecifyThrottlingPolicyAsLocalEntryTestCase extends ESBIntegrationT
             assertTrue(e.getMessage().contains("**Access Denied**"),
                     "Fault: value mismatched, should be '**Access Denied**'");
         }
-
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }

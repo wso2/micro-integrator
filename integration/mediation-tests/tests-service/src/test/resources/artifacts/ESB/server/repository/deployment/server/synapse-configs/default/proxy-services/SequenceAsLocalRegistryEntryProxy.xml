@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
@@ -16,5 +15,14 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<localEntry xmlns="http://ws.apache.org/ns/synapse" key="throttle_policy"
-            src="file:samples/service-bus/resources/policy/throttle_policy.xml"/>
+
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="SequenceAsLocalRegistryEntryProxy" transports="http,https">
+    <target>
+        <inSequence>
+            <sequence key="local-entry-sequence-key"/>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+    </target>
+</proxy>
