@@ -19,11 +19,9 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.FileRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 import org.wso2.esb.integration.common.utils.servers.SimpleSocketServer;
@@ -34,7 +32,7 @@ import static org.testng.Assert.fail;
 
 public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
     private SimpleSocketServer simpleSocketServer;
 
     @BeforeClass(alwaysRun = true)
@@ -48,7 +46,7 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
         simpleSocketServer = new SimpleSocketServer(port, expectedResponse);
         simpleSocketServer.start();
         verifyProxyServiceExistence("TestCalloutHTTP_SC");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Test whether response HTTP status code getting correctly after callout "
@@ -67,18 +65,11 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
         boolean errorLog = false;
 
         try {
+            carbonLogReader.start();
             httpClient.executeMethod(post);
-
-            LogEvent[] logs = logViewerClient.getAllSystemLogs();
-            for (LogEvent logEvent : logs) {
-                if (logEvent.getPriority().equals("INFO")) {
-                    String message = logEvent.getMessage();
-                    if (message.contains("STATUS-Fault") && message.contains("404 Error: Not Found")) {
-                        errorLog = true;
-                        break;
-                    }
-                }
-            }
+            errorLog = carbonLogReader.assertIfLogExists("STATUS-Fault") && carbonLogReader.
+                    assertIfLogExists("404 Error: Not Found");
+            carbonLogReader.stop();
         } finally {
             post.releaseConnection();
         }
@@ -88,11 +79,4 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
         }
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-        if (simpleSocketServer != null) {
-            simpleSocketServer.shutdown();
-        }
-    }
 }

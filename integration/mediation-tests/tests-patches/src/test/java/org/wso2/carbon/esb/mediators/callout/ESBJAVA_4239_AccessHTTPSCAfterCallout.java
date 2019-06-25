@@ -5,19 +5,16 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 
 import java.rmi.RemoteException;
 
 public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     private static final String PROXY_SERVICE_NAME = "HTTPSCProxy";
     private static final String EXPECTED_LOG_MESSAGE = "Status Code inSequence = 500";
@@ -25,19 +22,19 @@ public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void deployeService() throws Exception {
         super.init();
-        verifyProxyServiceExistence("HTTPSCProxy");
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test whether an HTTP SC can be retrieved after the callout mediator.")
-    public void testFetchHTTP_SC_After_Callout_Mediator()
-            throws RemoteException, InterruptedException, LogViewerLogViewerException {
+    public void testFetchHTTP_SC_After_Callout_Mediator() throws RemoteException, InterruptedException {
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         AxisServiceClient client = new AxisServiceClient();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");
 
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        boolean isScFound = Utils.checkForLog(logViewerClient, EXPECTED_LOG_MESSAGE, 20);
+        boolean isScFound = carbonLogReader.checkForLog(EXPECTED_LOG_MESSAGE, 20);
         Assert.assertTrue(isScFound, "The HTTP Status Code was not found in the log.");
+        carbonLogReader.stop();
     }
 
     /*
@@ -59,11 +56,6 @@ public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
         order.addChild(symb);
         placeOrder.addChild(order);
         return placeOrder;
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void UndeployeService() throws Exception {
-        super.cleanup();
     }
 
 }
