@@ -19,16 +19,11 @@ package org.wso2.esb.integration.common.utils.common;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension;
-import org.wso2.carbon.integration.common.admin.client.ServerAdminClient;
-import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.server.admin.stub.ServerAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.File;
@@ -46,7 +41,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -298,16 +292,21 @@ public class ServerConfigurationManager {
     }
 
     /**
-     * apply configuration file and restart micro integrator server to take effect the configuration
+     * apply configuration file and optionally restart micro integrator server to take effect the configuration
      *
-     * @param newConfig configuration file
+     * @param newConfig       configuration file
+     * @param restartRequired optional Restart flag
      * @throws AutomationUtilException - throws if apply configuration fails
      * @throws IOException             - throws if apply configuration fails
      */
-    public void applyMIConfiguration(File newConfig) throws AutomationUtilException, IOException {
+    public void applyMIConfiguration(File newConfig, boolean restartRequired)
+            throws AutomationUtilException, IOException {
         //to backup existing configuration
         applyConfigurationUtil(newConfig, newConfig);
-        restartMicroIntegrator();
+        if (restartRequired) {
+            restartMicroIntegrator();
+        }
+
     }
 
     /**
