@@ -251,7 +251,7 @@
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener"/>
 
     <transportReceiver name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportListener">
-        <parameter name="transport.tcp.port">8480</parameter>
+        <parameter name="transport.tcp.port">8290</parameter>
         <parameter name="transport.tcp.contentType">application/soap+xml</parameter>
         <!--parameter name="transport.tcp.contentType">text/xml</parameter-->
     </transportReceiver>
