@@ -26,21 +26,24 @@ import (
 )
 
 var showCmdLiteral = "show"
-var showCmdShortDesc = "List or show details about carbon app, endpoint, api, inbound endpoint, proxy service, task or sequence"
-var showCmdLongDesc = "List or show details about carbon app, endpoint, api, inbound endpoint, proxy service, task or sequence\n"
+var showCmdShortDesc = dedent.Dedent("List or show details about carbon app, endpoint, api, inbound endpoint, " +
+	"proxy service, task, sequence or data-service")
+var showCmdLongDesc = dedent.Dedent("List or show details about carbon app, endpoint, api, inbound endpoint, " +
+	"proxy service, task, sequence or data-service\n")
 
 var showUsageError = dedent.Dedent(`
 Usage
   ` + programName + ` ` + showCmdLiteral + ` [command] [argument] [flags]
 
 Available Commands:
-  api [api-name]                  Get information about one or more Apis
-  carbonapp [app-name]            Get information about one or more Carbon Apps
-  endpoint [endpoint-name]        Get information about one or more Endpoints
-  inboundendpoint [inbound-name]  Get information about one or more Inbounds
-  proxyservice [proxy-name]       Get information about one or more Proxies
-  sequence [sequence-name]        Get information about one or more Sequences
-  task [task-name]                Get information about one or more Task
+  api [api-name]                   Get information about one or more Apis
+  carbonapp [app-name]             Get information about one or more Carbon Apps
+  endpoint [endpoint-name]         Get information about one or more Endpoints
+  inboundendpoint [inbound-name]   Get information about one or more Inbounds
+  proxyservice [proxy-name]        Get information about one or more Proxies
+  sequence [sequence-name]         Get information about one or more Sequences
+  task [task-name]                 Get information about one or more Task
+  dataservice [dataservice-name] Get Information about one or more data-service
 `)
 
 var showCmdExamples = dedent.Dedent(`
@@ -55,7 +58,17 @@ var showCmdHelp = `
 Use " show [command] --help" for more information about a command
 `
 
-var showCmdValidArgs = []string{"api", "carbonapp", "endpoint", "inboundendpoint", "proxyservice", "sequence", "task", "help"}
+var showCmdValidArgs = []string{
+	"api",
+	"carbonapp",
+	"endpoint",
+	"inboundendpoint",
+	"proxyservice",
+	"sequence",
+	"task",
+	"dataservice",
+	"help",
+}
 
 // showCmd represents the show command
 var showCmd = &cobra.Command{
@@ -69,6 +82,6 @@ var showCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(showCmd)
+	RootCmd.AddCommand(showCmd)
 	showCmd.SetHelpTemplate(showCmdLongDesc + showUsageError + utils.GetCmdFlags("show") + showCmdExamples + showCmdHelp)
 }

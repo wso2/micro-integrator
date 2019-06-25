@@ -16,7 +16,6 @@
  * under the License.
  */
 
-
 package org.wso2.carbon.micro.integrator.management.apis;
 
 import java.util.Objects;
@@ -64,5 +63,12 @@ public class Utils {
         JSONObject errorObject =  new JSONObject();
         errorObject.put("Error", error);
         return errorObject;
+    }
+
+    public static boolean isDoingPOST(org.apache.axis2.context.MessageContext axis2MessageContext) {
+        if (Constants.HTTP_POST.equals(axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY))) {
+            return true;
+        }
+        return false;
     }
 }

@@ -16,22 +16,25 @@
 * under the License.
  */
 
-package cmd
+package main
 
 import (
-	"github.com/spf13/cobra"
+	"github.com/wso2/micro-integrator/cmd/cmd"
+	"log"
+	"os"
+	"path/filepath"
 )
 
-// completionCmd represents the completion command
-var completionCmd = &cobra.Command{
-	Use:   "completion",
-	Short: "Generates bash completion scripts",
-	Long:  `This command will generate a bash completion script`,
-	Run: func(cmd *cobra.Command, args []string) {
-		rootCmd.GenBashCompletionFile("mi_bash_completion.sh")
-	},
-}
+func main() {
 
-func init() {
-	rootCmd.AddCommand(completionCmd)
+	err := os.MkdirAll("shell-completions", os.ModePerm)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("Generating bash completions...")
+	err = cmd.RootCmd.GenBashCompletionFile(filepath.FromSlash("./shell-completions/mi_bash_completion.sh"))
+	if err != nil {
+		log.Fatal(err)
+	}
 }

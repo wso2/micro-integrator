@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
+
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
 )
 
 var proxyServiceName string
@@ -35,7 +34,7 @@ const showProxyServiceCmdShortDesc = "Get information about proxy services"
 var showProxyServiceCmdLongDesc = "Get information about the Proxy Service specified by command line argument [proxy-name] If not specified, list all the proxy services\n"
 
 var showProxyServiceCmdExamples = "Example:\n" +
-	"To get details about a specific prxoy\n" +
+	"To get details about a specific proxy\n" +
 	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + " SampleProxy\n\n" +
 	"To list all the proxies\n" +
 	"  " + programName + " " + showCmdLiteral + " " + showProxyServiceCmdLiteral + "\n\n"
@@ -109,34 +108,13 @@ func executeListProxyServicesCmd() {
 
 	finalUrl := utils.RESTAPIBase + utils.PrefixProxyServices
 
-	resp, err := utils.GetArtifactList(finalUrl, &utils.ProxyServiceList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.ProxyServiceList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints
 		list := resp.(*utils.ProxyServiceList)
-		printProxyList(*list)
+		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No proxies found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Proxies", err)
-	}
-}
-
-func printProxyList(proxyList utils.ProxyServiceList) {
-
-	if proxyList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "WSDL 1.1", "WSDL 2.0"}
-		table.Append(data)
-
-		for _, proxy := range proxyList.Proxies {
-			data = []string{proxy.Name, proxy.WSDL1_1, proxy.WSDL2_0}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No proxies found")
 	}
 }
