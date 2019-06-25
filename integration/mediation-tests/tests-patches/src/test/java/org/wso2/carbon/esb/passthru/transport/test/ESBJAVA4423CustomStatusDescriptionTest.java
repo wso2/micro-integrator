@@ -22,7 +22,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.SimpleSocketServer;
 
 import java.io.IOException;
@@ -32,13 +31,11 @@ import java.io.IOException;
  */
 public class ESBJAVA4423CustomStatusDescriptionTest extends ESBIntegrationTest {
 
-    private ServerConfigurationManager serverConfigurationManager;
     private SimpleSocketServer simpleSocketServer;
 
     @BeforeClass
     public void init() throws Exception {
         super.init();
-        verifyProxyServiceExistence("ESBJAVA4423HttpCustomProxyTest");
     }
 
     @Test(groups = "wso2.esb", description = "Test custom status description", enabled = true)
@@ -65,6 +62,5 @@ public class ESBJAVA4423CustomStatusDescriptionTest extends ESBIntegrationTest {
         if (simpleSocketServer != null) {
             simpleSocketServer.shutdown();
         }
-        super.cleanup();
     }
 }

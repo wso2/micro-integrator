@@ -26,9 +26,8 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
@@ -42,7 +41,7 @@ import static org.testng.Assert.assertFalse;
 
 public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
@@ -52,10 +51,9 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j.properties");
         applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.wire", "DEBUG");
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartMicroIntegrator();
         init();
-        verifyProxyServiceExistence("ESBJAVA3336httpsBackendProxyService");
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -67,14 +65,9 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
         } catch (Exception e) {
 
         }
-
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
         boolean errorLogFound = false;
-        for (LogEvent log : logs) {
-            if (log.getMessage().contains("Host: google.com:80")) {
-                errorLogFound = true;
-                break;
-            }
+        if (carbonLogReader.checkForLog("Host: google.com:80", 50)) {
+            errorLogFound = true;
         }
         assertFalse(errorLogFound, "Port 80 should not append to the Host header");
     }
@@ -82,7 +75,7 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
         cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
     /**

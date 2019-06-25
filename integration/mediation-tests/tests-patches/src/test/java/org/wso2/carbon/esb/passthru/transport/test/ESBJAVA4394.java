@@ -31,7 +31,6 @@ public class ESBJAVA4394 extends ESBIntegrationTest {
          * to the client. (client gets empty response)
          */
         init();
-        verifyProxyServiceExistence("ESBJAVA4394simpleStockPassthrough");
 
         tcpMonListener1 = new TCPMonListener(9200, "localhost", 9300);
         tcpMonListener1.start();
@@ -57,7 +56,6 @@ public class ESBJAVA4394 extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
-        cleanup();
         tcpMonListener1.stop();
         tcpMonListener2.stop();
     }
