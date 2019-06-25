@@ -26,10 +26,14 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * Adapter class to bridge {@link APIResource} and {@link MiApiResource}.
+ */
 public class ApiResourceAdapter extends APIResource {
-    private final MessageStoreResource messageStoreResource;
 
-    ApiResourceAdapter(String prefixMessageStore, MessageStoreResource messageStoreResource) {
+    private final MiApiResource messageStoreResource;
+
+    ApiResourceAdapter(String prefixMessageStore, MiApiResource messageStoreResource) {
         super(prefixMessageStore);
         this.messageStoreResource = messageStoreResource;
     }

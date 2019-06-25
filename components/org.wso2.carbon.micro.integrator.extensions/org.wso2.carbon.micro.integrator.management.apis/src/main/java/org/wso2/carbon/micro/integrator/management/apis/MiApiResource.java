@@ -23,6 +23,9 @@ import org.apache.synapse.config.SynapseConfiguration;
 
 import java.util.Set;
 
+/**
+ * Interface used define an exposed admin API.
+ */
 public interface MiApiResource {
 
     Set<String> getMethods();
