@@ -17,32 +17,34 @@
  */
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
+import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
-
+    private ServerConfigurationManager serverConfigurationManager;
     private int NUM_OF_MESSAGES = 5;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
+        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext());
+        serverConfigurationManager.applyMIConfiguration(new File(
+                getESBResourceLocation() + File.separator + "jms" + File.separator + "transport" + File.separator
+                        + "axis2config" + File.separator + "activemq" + File.separator + "axis2.xml"));
         super.init();
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_endpoint_proxy_service.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
-
     }
 
     @Test(groups = {
@@ -140,7 +142,7 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {
