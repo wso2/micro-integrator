@@ -84,7 +84,7 @@ public class TemplateResource extends APIResource {
                 populateTemplateListByType(messageContext, templateTypeParam);
             }
         } else {
-            populateFullTemplateList(messageContext);
+            populateFullTemplateList(axis2MessageContext, synapseConfiguration);
         }
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
@@ -92,11 +92,12 @@ public class TemplateResource extends APIResource {
 
     /**
      * Creates a response json with all templates available in the synapse configuration
-     **/
-    private void populateFullTemplateList(MessageContext messageContext) {
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
+     *
+     * @param axis2MessageContext AXIS2 message context
+     * @param synapseConfiguration Synapse configuration object
+     */
+    private void populateFullTemplateList(org.apache.axis2.context.MessageContext axis2MessageContext,
+                                          SynapseConfiguration synapseConfiguration) {
         Map<String, Template> endpointTemplateMap = synapseConfiguration.getEndpointTemplates();
         Map<String, TemplateMediator> sequenceTemplateMap = synapseConfiguration.getSequenceTemplates();
         JSONObject jsonBody = new JSONObject();
@@ -106,9 +107,11 @@ public class TemplateResource extends APIResource {
         jsonBody.put(SEQUENCE_TEMPLATE_LIST, sequenceTemplateList);
 
         endpointTemplateMap.forEach((key, value) ->
-                addToJsonList(jsonBody.getJSONArray(ENDPOINT_TEMPLATE_LIST), value.getName()));
+                                            addToJsonList(jsonBody.getJSONArray(ENDPOINT_TEMPLATE_LIST),
+                                                          value.getName()));
         sequenceTemplateMap.forEach((key, value) ->
-                addToJsonList(jsonBody.getJSONArray(SEQUENCE_TEMPLATE_LIST), value.getName()));
+                                            addToJsonList(jsonBody.getJSONArray(SEQUENCE_TEMPLATE_LIST),
+                                                          value.getName()));
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
 

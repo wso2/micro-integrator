@@ -85,7 +85,7 @@ public class MessageStoreResource extends APIResource {
         if (Objects.nonNull(messageStoreName)) {
             populateMessageStoreData(messageContext, messageStoreName);
         } else {
-            populateMessageStoreList(messageContext);
+            populateMessageStoreList(axis2MessageContext, synapseConfiguration);
         }
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
@@ -93,12 +93,12 @@ public class MessageStoreResource extends APIResource {
 
     /**
      * Sets the list of all available message stores to the response as json
-     * @param messageContext synapse message context
-     **/
-    private void populateMessageStoreList(MessageContext messageContext) {
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
+     *
+     * @param axis2MessageContext AXIS2 message context
+     * @param synapseConfiguration Synapse configuration object
+     */
+    private void populateMessageStoreList(org.apache.axis2.context.MessageContext axis2MessageContext,
+                                          SynapseConfiguration synapseConfiguration) {
         Map<String, MessageStore> storeMap = synapseConfiguration.getMessageStores();
         JSONObject jsonBody = Utils.createJSONList(storeMap.size());
         storeMap.forEach((key, value) ->
