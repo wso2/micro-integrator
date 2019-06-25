@@ -22,9 +22,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
@@ -34,46 +32,32 @@ import static org.testng.Assert.assertTrue;
 
 public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
-    private LogViewerClient logViewer;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
-        super.init();
-        serverConfigurationManager = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext());
+        serverConfigurationManager.applyMIConfiguration(new File(
                 getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
                         + "httpproxy" + File.separator + "axis2.xml"));
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/httpproxy/httpProxy.xml");
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", description = "Passthrough Transport Http.proxy test case")
     public void passthroughTransportHttpProxy() throws Exception {
-        int beforeLogSize = logViewer.getAllSystemLogs().length;
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("HttpProxyTest"), "", "IBM");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("PassthroughTransportHttpTestProxy"), "", "IBM");
         } catch (AxisFault expected) {
             //read timeout expected
         }
-        LogEvent[] logs = logViewer.getAllSystemLogs();
-        int afterLogSize = logs.length;
-
-        boolean proxyhostEntryFound = false;
-        for (int i = 0; i < (afterLogSize - beforeLogSize); i++) {
-            if (logs[i].getMessage().contains("111.wso2.com:7777")) {
-                proxyhostEntryFound = true;
-                break;
-            }
-        }
-        assertTrue(proxyhostEntryFound);
+        assertTrue(carbonLogReader.assertIfLogExists("111.wso2.com:7777"));
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }
