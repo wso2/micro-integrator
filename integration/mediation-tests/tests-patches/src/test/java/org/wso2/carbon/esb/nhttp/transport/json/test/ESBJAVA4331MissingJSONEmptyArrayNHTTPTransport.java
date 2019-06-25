@@ -40,11 +40,10 @@ public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrati
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfiguration(new File(
                 getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
                         + "json" + File.separator + "synapse.properties"));
         super.init();
-        verifyAPIExistence("testJsonEmptyArrayApi");
 
     }
 
@@ -81,8 +80,7 @@ public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrati
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
 }

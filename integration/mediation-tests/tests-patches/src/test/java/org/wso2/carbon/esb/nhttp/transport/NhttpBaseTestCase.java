@@ -42,13 +42,13 @@ public class NhttpBaseTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager
-                .applyConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile());
+                .applyMIConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile());
 
     }
 
     @AfterTest(alwaysRun = true)
     public void close() throws Exception {
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }
 
