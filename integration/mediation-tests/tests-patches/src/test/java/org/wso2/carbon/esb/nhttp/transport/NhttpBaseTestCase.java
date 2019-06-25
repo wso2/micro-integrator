@@ -26,6 +26,7 @@ import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
+import java.io.File;
 import java.nio.file.Paths;
 
 /**
@@ -42,13 +43,16 @@ public class NhttpBaseTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager
-                .applyConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile());
+                .applyMIConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile(), false);
+        serverConfigurationManager.applyMIConfiguration(new File(
+                getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
+                        + "json" + File.separator + "synapse.properties"), true);
 
     }
 
     @AfterTest(alwaysRun = true)
     public void close() throws Exception {
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }
 

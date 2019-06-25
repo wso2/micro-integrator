@@ -56,7 +56,6 @@ public class ESBJAVA4909MultipartRelatedTestCase extends ESBIntegrationTest {
         axis2Server = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server.start();
         axis2Server.deployService(MTOM_SERVICE);
-        verifyProxyServiceExistence("MTOMChecker");
     }
 
     @Test(groups = { "wso2.esb" }, description = "ESBJAVA4909MultipartTest")
@@ -74,7 +73,6 @@ public class ESBJAVA4909MultipartRelatedTestCase extends ESBIntegrationTest {
         if (axis2Server != null && axis2Server.isStarted()) {
             axis2Server.stop();
         }
-        super.cleanup();
     }
 
     public void sendUsingMTOM(String fileName, String targetEPR) throws IOException {
