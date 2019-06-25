@@ -19,35 +19,25 @@ package org.wso2.carbon.esb.mediator.test.smooks;
 
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import javax.activation.DataHandler;
 
 public class SmooksMediatorConfigFromConfigRegistryTestCase extends ESBIntegrationTest {
-    private ResourceAdminServiceClient resourceAdminServiceClient;
-    private boolean isProxyDeployed = false;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
 
         super.init();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
-                context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        uploadResourcesToConfigRegistry();
         addSmooksProxy();
     }
 
@@ -78,14 +68,9 @@ public class SmooksMediatorConfigFromConfigRegistryTestCase extends ESBIntegrati
 
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        resourceAdminServiceClient.addResource("/_system/config/smooks_config.xml", "application/xml", "xml files",
-                new DataHandler(new URL("file:///" + getClass()
-                        .getResource("/artifacts/ESB/synapseconfig/smooks/smooks_config.xml").getPath())));
-    }
 
     private void addSmooksProxy() throws Exception {
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"SmooksProxy\" transports=\"vfs\" "
                 + "startOnLoad=\"true\">\n" + "    <target>\n" + "    <inSequence>\n" + "    <log level=\"full\"/>\n"
                 + "    <smooks config-key=\"conf:/smooks_config.xml\">\n" + "        <input type=\"text\"/>\n"
@@ -99,21 +84,7 @@ public class SmooksMediatorConfigFromConfigRegistryTestCase extends ESBIntegrati
                 + "    <parameter name=\"transport.vfs.FileURI\">file://" + getClass()
                 .getResource("/artifacts/ESB/synapseconfig/smooks/").getPath() + "test/in/</parameter>\n"
                 + "    <parameter name=\"transport.vfs.FileNamePattern\">.*\\.csv</parameter>\n"
-                + "    <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n" + "</proxy>"));
-        isProxyDeployed = true;
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        try {
-            if (isProxyDeployed) {
-                deleteProxyService("SmooksProxy");
-            }
-            resourceAdminServiceClient.deleteResource("/_system/config/smooks_config.xml");
-        } finally {
-            super.cleanup();
-            resourceAdminServiceClient = null;
-        }
+                + "    <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n" + "</proxy>"), "SmooksProxy", "proxy-services", true);
     }
 }
 
