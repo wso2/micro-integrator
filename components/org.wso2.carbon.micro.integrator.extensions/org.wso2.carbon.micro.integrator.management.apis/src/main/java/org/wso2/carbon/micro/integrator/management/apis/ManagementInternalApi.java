@@ -21,17 +21,18 @@ package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import java.util.ArrayList;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
+
+import java.util.ArrayList;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_APIS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_DATA_SERVICES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_ENDPOINTS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_INBOUND_ENDPOINTS;
-import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_TASKS;
@@ -58,7 +59,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new SequenceResource(PREFIX_SEQUENCES));
         resourcesList.add(new DataServiceResource(PREFIX_DATA_SERVICES));
         resourcesList.add(new TemplateResource(PREFIX_TEMPLATES));
-        resourcesList.add(new MessageStoreResource(PREFIX_MESSAGE_STORE));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_MESSAGE_STORE, new MessageStoreResource()));
         resourcesList.add(new MessageProcessorResource(PREFIX_MESSAGE_PROCESSORS));
 
         resources = new APIResource[resourcesList.size()];

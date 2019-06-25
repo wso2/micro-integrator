@@ -22,7 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
-import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.message.store.MessageStore;
 import org.apache.synapse.message.store.impl.jdbc.JDBCMessageStore;
 import org.apache.synapse.message.store.impl.jms.JmsStore;
@@ -31,7 +30,6 @@ import org.apache.synapse.message.store.impl.rabbitmq.RabbitMQStore;
 import org.apache.synapse.message.store.impl.resequencer.ResequenceMessageStore;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.HashSet;
 import java.util.Map;
@@ -41,7 +39,7 @@ import java.util.Set;
 /**
  * Represents Message store resource defined in the synapse configuration.
  **/
-public class MessageStoreResource extends APIResource {
+public class MessageStoreResource implements MiApiResource {
 
     private static final Log LOG = LogFactory.getLog(MessageStoreResource.class);
 
@@ -62,8 +60,7 @@ public class MessageStoreResource extends APIResource {
     //HTTP method types supported by the resource
     Set<String> methods;
 
-    public MessageStoreResource(String urlTemplate) {
-        super(urlTemplate);
+    public MessageStoreResource() {
         methods = new HashSet<>();
         methods.add("GET");
     }
@@ -74,16 +71,13 @@ public class MessageStoreResource extends APIResource {
     }
 
     @Override
-    public boolean invoke(MessageContext messageContext) {
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
-        if (Objects.isNull(axis2MessageContext) || Objects.isNull(synapseConfiguration)) {
-            return false;
-        }
+    public boolean invoke(MessageContext messageContext,
+                          org.apache.axis2.context.MessageContext axis2MessageContext,
+                          SynapseConfiguration synapseConfiguration) {
+
         String messageStoreName = Utils.getQueryParameter(messageContext, Constants.NAME);
         if (Objects.nonNull(messageStoreName)) {
-            populateMessageStoreData(messageContext, messageStoreName);
+            populateMessageStoreData(axis2MessageContext, synapseConfiguration, messageStoreName);
         } else {
             populateMessageStoreList(axis2MessageContext, synapseConfiguration);
         }
@@ -108,18 +102,19 @@ public class MessageStoreResource extends APIResource {
 
     /**
      * Sets the information of the specified message store to the response as json
-     * @param messageContext synapse message context
-     * @param name name of the message store
-     * */
-    private void populateMessageStoreData(MessageContext messageContext, String name) {
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
-        MessageStore messageStore = synapseConfiguration.getMessageStore(name);
+     *
+     * @param axis2MessageContext AXIS2 message context
+     * @param synapseConfiguration Synapse configuration object
+     * @param messageStoreName           messageStoreName of the message store
+     */
+    private void populateMessageStoreData(org.apache.axis2.context.MessageContext axis2MessageContext,
+                                          SynapseConfiguration synapseConfiguration,
+                                          String messageStoreName) {
+        MessageStore messageStore = synapseConfiguration.getMessageStore(messageStoreName);
         if (Objects.nonNull(messageStore)) {
             Utils.setJsonPayLoad(axis2MessageContext, getMessageStoreAsJson(messageStore));
         } else {
-            LOG.warn("Message store " + name + " does not exist");
+            LOG.warn("Message store " + messageStoreName + " does not exist");
             Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Message store does not exist"));
         }
     }
