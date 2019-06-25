@@ -23,7 +23,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.BufferedReader;
@@ -44,32 +43,13 @@ import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.activation.DataHandler;
 
 public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
-    private ResourceAdminServiceClient resourceAdminServiceClient;
     private Map<String, String> httpHeaders = new HashMap();
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        resourceAdminServiceClient = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
-        URL stockQuoteSchemaUrl = new URL(
-                "file:///" + getESBResourceLocation() + File.separator + "mediatorconfig" + File.separator + "validate"
-                        + File.separator + "StockQuoteSchema.json");
-        resourceAdminServiceClient
-                .addResource("/_system/config/StockQuoteSchema.json", "application/json", "JSON Schema",
-                        new DataHandler(stockQuoteSchemaUrl));
-
-        URL url = new URL(
-                "file:///" + getESBResourceLocation() + File.separator + "mediatorconfig" + File.separator + "validate"
-                        + File.separator + "largeJsonSchema.json");
-        resourceAdminServiceClient
-                .addResource("/_system/config/largeJsonSchema.json", "application/json", "JSON Schema",
-                        new DataHandler(url));
-
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/validate/jsonSchemaValidateConfig.xml");
         httpHeaders.put("Content-Type", "application/json");
 
     }
@@ -204,7 +184,6 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void clear() throws Exception {
         super.cleanup();
-        resourceAdminServiceClient.deleteResource("/_system/config/StockQuoteSchema.json");
     }
 
     private static HttpResponse doPost(URL endpoint, String postBody, Map<String, String> headers)

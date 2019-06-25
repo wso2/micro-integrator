@@ -15,10 +15,6 @@ public class ValidateIntegrationDynamicSchemaKeyTestCase extends ESBIntegrationT
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "filters" + File.separator + "validate" + File.separator
-                        + "synapse_config.xml");
     }
 
     /**
@@ -30,7 +26,6 @@ public class ValidateIntegrationDynamicSchemaKeyTestCase extends ESBIntegrationT
      * according to schema "a" Then send a request using "testProxy2" and check
      * whether validation happens according to schema "b"
      * <p/>
-     * Test artifacts: /synapseconfig/filters/validate/synapse_config.xml
      *
      * @throws Exception
      */
@@ -49,10 +44,5 @@ public class ValidateIntegrationDynamicSchemaKeyTestCase extends ESBIntegrationT
         OMElement response2 = axis2Client
                 .send(getProxyServiceURLHttps("validateSchemaBTestProxy"), null, "mediate", payload2);
         Assert.assertTrue(response2.toString().contains("ValidateSuccess"), "Validate failed with schema b.");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void clear() throws Exception {
-        super.cleanup();
     }
 }
