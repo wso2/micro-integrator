@@ -19,27 +19,17 @@ package org.wso2.carbon.esb.mediator.test.conditionalRouter;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.apache.commons.lang.ArrayUtils;
-import org.awaitility.Awaitility;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.clients.sequences.SequenceAdminServiceClient;
-import org.wso2.esb.integration.common.utils.ArtifactReaderUtil;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.clients.stockquoteclient.StockQuoteClient;
 
-import java.io.File;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
 public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
-
-    public static final String CONF_FILTERS_DYNAMIC_SEQ_1 = "conf:/filters/dynamic_seq1";
 
     private String toUrl = null;
     private String mainSeqUrl;
@@ -205,38 +195,18 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
 
     /**
      * The test is for dynamically load a xml file from WSO2registry
-     * Test artifacts: synapseconfig/conditional_router/synapse4.xml AND synapseconfig/conditional_router/dynamic_seq1.xml
+     * Test artifacts: ConditionalRouterIntegrationTestProxy AND dynamic_seq1.xml
      *
      * @throws Exception
      */
     @Test(groups = { "wso2.esb" })
     public void conditionalRouterMediatorWithDynamicSequenceTest() throws Exception {
 
-        ArtifactReaderUtil artifactReaderUtil = new ArtifactReaderUtil();
-
-        // Get an OMElement from xml
-        OMElement omElement = artifactReaderUtil.getOMElement(
-                getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "filters"
-                        + File.separator + "conditional_router" + File.separator + "dynamic_seq1.xml");
-
-        // Add dynamic sequence to WSO2registry    config/filters/dynamic_seq1
-        if (ArrayUtils.contains(sequenceAdminServiceClient.getDynamicSequences(), "conf:/filters/dynamic_seq1")) {
-            sequenceAdminServiceClient.deleteDynamicSequence("conf:/filters/dynamic_seq1");
-
-            Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(dynamicSequenceExists(sequenceAdminServiceClient.
-                            getDynamicSequences(), CONF_FILTERS_DYNAMIC_SEQ_1));
-        }
-        sequenceAdminServiceClient.addDynamicSequence("conf:filters/dynamic_seq1", setEndpoints(omElement));
-        //load it to esb
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/filters/conditional_router/synapse4.xml");
-
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(mainSeqUrl, toUrl, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
+                getProxyServiceURLHttp("ConditionalRouterIntegrationTestProxy"), toUrl, "WSO2");
 
         Assert.assertTrue(response.toString().contains("GetQuoteResponse"));
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
-
-        sequenceAdminServiceClient.deleteDynamicSequence("conf:/filters/dynamic_seq1");
 
     }
 
@@ -312,27 +282,4 @@ public class ConditionalRouterIntegrationTest extends ESBIntegrationTest {
 
     }
 
-    /**
-     * Checks if a dynamic sequence exists inside a sequence array.
-     *
-     * @param seqArr    Sequence array.
-     * @param strToFind Sequence to be checked.
-     * @return True if exists, False otherwise.
-     */
-    private Callable<Boolean> dynamicSequenceExists(final String[] seqArr, final String strToFind) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() {
-                return !ArrayUtils.contains(seqArr, strToFind);
-            }
-        };
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        sequenceAdminServiceClient = null;
-        mainSeqUrl = null;
-        toUrl = null;
-        super.cleanup();
-    }
 }
