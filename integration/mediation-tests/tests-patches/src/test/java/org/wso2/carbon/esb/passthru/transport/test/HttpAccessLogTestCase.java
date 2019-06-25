@@ -68,9 +68,8 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
         createNewDir(httpLogDir);
         applyProperty(srcFile, propertyName, httpLogDir);
         applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.access", "DEBUG");
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartMicroIntegrator();
         super.init();
-        verifyProxyServiceExistence("HttpAccessLogsTestProxy");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -164,7 +163,7 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
             super.cleanup();
         } finally {
             Thread.sleep(3000);
-            serverConfigurationManager.restoreToLastConfiguration();
+            serverConfigurationManager.restoreToLastMIConfiguration();
             serverConfigurationManager = null;
             httpLogDir = null;
         }
