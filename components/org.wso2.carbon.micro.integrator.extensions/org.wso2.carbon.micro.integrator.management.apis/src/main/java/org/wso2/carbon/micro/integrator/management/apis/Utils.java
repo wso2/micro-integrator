@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import java.util.Objects;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,9 +27,11 @@ import org.apache.synapse.rest.RESTConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.Objects;
+
 public class Utils {
 
-    private static Log LOG = LogFactory.getLog(Utils.class);
+    private static final Log LOG = LogFactory.getLog(Utils.class);
 
     public static String getQueryParameter(MessageContext messageContext, String key){
         if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key))){
