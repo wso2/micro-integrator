@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.enrich;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
@@ -26,8 +25,6 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import java.io.IOException;
-import java.net.URL;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
@@ -45,10 +42,6 @@ public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase ext
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
                 context.getContextTenant().getContextUser().getPassword());
-        uploadResourcesToConfigRegistry();
-        uploadResourcesToGovernanceRegistry();
-
-        verifyProxyServiceExistence("enrichReplaceInlineContentFromConfigRegistryTestProxy");
     }
 
     @Test(groups = {
@@ -67,30 +60,4 @@ public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase ext
 
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/required");
-        resourceAdminServiceStub.addCollection("/_system/config/", "required", "", "Contains test required files");
-        resourceAdminServiceStub
-                .addResource("/_system/config/required/registry_configs.xml", "application/xml", "xml files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/enrich/required/registry_configs.xml")));
-    }
-
-    private void uploadResourcesToGovernanceRegistry() throws Exception {
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
-        resourceAdminServiceStub.addCollection("/_system/governance/", "xslt", "", "Contains test XSLT files");
-        resourceAdminServiceStub
-                .addResource("/_system/governance/xslt/transform_back.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform_back.xslt")));
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
-        resourceAdminServiceStub.deleteResource("/_system/config/required");
-        cleanup();
-    }
 }
