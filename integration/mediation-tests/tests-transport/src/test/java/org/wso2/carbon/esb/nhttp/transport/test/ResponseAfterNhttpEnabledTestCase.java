@@ -39,7 +39,7 @@ import static java.io.File.separator;
  * JIRA issue :     WSO2 Carbon / CARBON-11600
  * ESB fails to read responses coming from a backend service when interst ops queuing is enabled in nhttp transport
  */
-public class ResponseAfterNttpEnabledTestCase extends ESBIntegrationTest {
+public class ResponseAfterNhttpEnabledTestCase extends ESBIntegrationTest {
 
     private String toUrl = null;
     private ServerConfigurationManager serverConfigurationManager;
@@ -50,16 +50,13 @@ public class ResponseAfterNttpEnabledTestCase extends ESBIntegrationTest {
         super.init();
         toUrl = getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE);
         serverConfigurationManager = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+                new AutomationContext());
         URL url = getClass().getResource(
                 separator + "artifacts" + separator + "ESB" + separator + "synapseconfig" + separator
                         + "nhttp_transport" + separator + "nhttp.properties");
         File srcFile = new File(url.getPath());
-        serverConfigurationManager.applyConfiguration(srcFile);
+        serverConfigurationManager.applyMIConfiguration(srcFile, true);
         super.init();
-        loadESBConfigurationFromClasspath(
-                separator + "artifacts" + separator + "ESB" + separator + "synapseconfig" + separator
-                        + "nhttp_transport" + separator + "response_nhttp_synapse.xml");
     }
 
     /**
@@ -72,7 +69,7 @@ public class ResponseAfterNttpEnabledTestCase extends ESBIntegrationTest {
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.esb")
     public void testMessageMediationAfterEnablingNhttp() throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), toUrl, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("response_nhttp_synapse_proxy"), toUrl, "WSO2");
 
         Assert.assertTrue(response.toString().contains("WSO2 Company"),
                 "'WSO2 Company' String " + "not found when nhttp enabled! ");
