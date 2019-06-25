@@ -17,60 +17,53 @@
 
 package org.wso2.carbon.esb.endpoint.test;
 
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+
 public class DynamicTimeoutEndpointTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/endpointDynamicTimeout/synapse.xml");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test default endpoint with dynamic timeout")
-    public void testDynamicTimeoutEndpoint() throws Exception {
+    @Test(groups = {"wso2.esb"}, description = "Test default endpoint with dynamic timeout")
+    public void testDynamicTimeoutEndpoint() throws IOException {
         String request = "{}";
         String response = sendRequest(getProxyServiceURLHttp("MockTimeoutProxy"), request);
         Assert.assertEquals(response, "{ \"quote\" : \"IBM\"}");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test delayed endpoint with dynamic timeout")
-    public void testDynamicDelayedTimeoutEndpoint() throws Exception {
+    @Test(groups = {"wso2.esb"}, description = "Test delayed endpoint with dynamic timeout")
+    public void testDynamicDelayedTimeoutEndpoint() throws IOException {
         String request = "{}";
         String response = sendRequest(getProxyServiceURLHttp("MockDelayedTimeoutProxy"), request);
         Assert.assertEquals(response, "{\"error_code\" : 101504, \"error_msg\" : \"Send timeout\"}");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test template endpoint with dynamic timeout")
-    public void testDynamicTimeoutTemplateEndpoint() throws Exception {
+    @Test(groups = {"wso2.esb"}, description = "Test template endpoint with dynamic timeout")
+    public void testDynamicTimeoutTemplateEndpoint() throws IOException {
         String request = "{}";
         String response = sendRequest(getProxyServiceURLHttp("MockTimeoutTemplateProxy"), request);
         Assert.assertEquals(response, "{ \"quote\" : \"IBM\"}");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test template endpoint with dynamic delayed timeout")
-    public void testDynamicDelayedTimeoutTemplateEndpoint() throws Exception {
+    @Test(groups = {"wso2.esb"}, description = "Test template endpoint with dynamic delayed timeout")
+    public void testDynamicDelayedTimeoutTemplateEndpoint() throws IOException {
         String request = "{}";
         String response = sendRequest(getProxyServiceURLHttp("MockDelayedTimeoutTemplateProxy"), request);
         Assert.assertEquals(response, "{\"error_code\" : 101504, \"error_msg\" : \"Send timeout\"}");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
-        super.cleanup();
-    }
-
-    protected String sendRequest(String addUrl, String request) throws IOException {
+    private String sendRequest(String addUrl, String request) throws IOException {
         String charset = "UTF-8";
         URLConnection connection = new URL(addUrl).openConnection();
         connection.setDoOutput(true);
