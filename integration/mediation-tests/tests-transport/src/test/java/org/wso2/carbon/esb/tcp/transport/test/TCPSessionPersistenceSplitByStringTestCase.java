@@ -43,7 +43,7 @@ public class TCPSessionPersistenceSplitByStringTestCase extends ESBIntegrationTe
     public void tcpTransportSplitByStringProxy() throws Exception {
         int messageCount = 3;
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.STRING.getDelimiterType(),
-                messageCount, 6791); // Port should match the port in tcpProxy_splitByString.xml
+                messageCount, 6792); // Port should match the port in tcpProxy_splitByString.xml
         String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap"
                 + ".org/soap/envelope/\"><soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
         tcpClient.setMessage(message);

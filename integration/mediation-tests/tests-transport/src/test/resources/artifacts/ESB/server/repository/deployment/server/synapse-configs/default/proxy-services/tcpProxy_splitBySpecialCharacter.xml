@@ -51,7 +51,7 @@
     <parameter name="transport.tcp.recordDelimiter">0x03</parameter>
     <parameter name="transport.tcp.responseClient">true</parameter>
     <parameter name="transport.tcp.inputType">binary</parameter>
-    <parameter name="transport.tcp.port">6795</parameter>
+    <parameter name="transport.tcp.port">6791</parameter>
     <parameter name="transport.tcp.recordDelimiterType">byte</parameter>
     <parameter name="transport.tcp.contentType">text/xml</parameter>
 </proxy>
