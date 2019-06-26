@@ -916,7 +916,7 @@ public abstract class ESBIntegrationTest {
         return response.contains(inboundEndpoinName);
     }
 
-    private boolean checkProxyServiceExistence(String proxyServiceName) throws IOException {
+    protected boolean checkProxyServiceExistence(String proxyServiceName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("proxy-services");
         return response.contains(proxyServiceName);
