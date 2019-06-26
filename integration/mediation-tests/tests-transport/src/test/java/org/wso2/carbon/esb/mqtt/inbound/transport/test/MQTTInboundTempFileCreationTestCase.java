@@ -18,11 +18,15 @@
 
 package org.wso2.carbon.esb.mqtt.inbound.transport.test;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 
@@ -41,9 +45,10 @@ public class MQTTInboundTempFileCreationTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        //The inbound endpoints are not pre-deployed since it will add a polling overhead throughout the time other
-        // tests are run
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mqtt/inbound/transport/PublishToMqttTestSequence.xml");
+        OMElement inboundOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(getESBResourceLocation()
+                + File.separator + "mqtt" + File.separator + "inbound" + File.separator + "transport" + File.separator
+                + "PublishToMqttTestEndpoint.xml")));
+        Utils.deploySynapseConfiguration(inboundOMElement, "PublishToMqttTestEndpoint", "inbound-endpoints", true);
     }
 
     @Test(groups = { "wso2.esb" }, description = "Temp folder creation test case")
@@ -64,7 +69,7 @@ public class MQTTInboundTempFileCreationTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        deleteInboundEndpointFromName("PublishToMqttTestEndpoint");
+        Utils.undeploySynapseConfiguration("PublishToMqttTestEndpoint", "inbound-endpoints");
         super.cleanup();
     }
 
