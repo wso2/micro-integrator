@@ -47,7 +47,7 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
     public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyMIConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
                         + "axis2.xml"));
         super.init();

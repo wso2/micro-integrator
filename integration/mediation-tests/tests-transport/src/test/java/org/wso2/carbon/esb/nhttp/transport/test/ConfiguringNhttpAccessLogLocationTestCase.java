@@ -64,7 +64,7 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
 
         applyProperty(srcFile, propertyName, nhttpLogDir);
         applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.access", "INFO");
-        serverConfigurationManager.applyMIConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator + "nhttp"
                         + separator + "transport" + separator + "axis2.xml"));
 
@@ -114,7 +114,7 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
         properties.load(new FileInputStream(srcFile));
         properties.setProperty(key, value);
         properties.store(new FileOutputStream(destinationFile), null);
-        serverConfigurationManager.applyConfigurationWithoutRestart(destinationFile);
+        serverConfigurationManager.applyMIConfiguration(destinationFile);
     }
 
     /**

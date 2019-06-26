@@ -55,7 +55,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
 
-        serverConfigurationManager.applyMIConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation().replace("//", "/") + File.separator + "passthru" + File.separator + "transport"
                         + File.separator + "forceMessageValidation" + File.separator + "passthru-http.properties"));
         super.init();

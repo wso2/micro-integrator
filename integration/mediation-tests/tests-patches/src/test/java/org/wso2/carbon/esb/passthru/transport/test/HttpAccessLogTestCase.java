@@ -139,7 +139,7 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
             properties.setProperty(key, value);
             properties.store(fos, null);
             fos.flush();
-            serverConfigurationManager.applyConfigurationWithoutRestart(destinationFile);
+            serverConfigurationManager.applyMIConfiguration(destinationFile);
         } catch (Exception e) {
             Assert.assertTrue(false, "Exception occured with the message: " + e.getMessage());
         } finally {

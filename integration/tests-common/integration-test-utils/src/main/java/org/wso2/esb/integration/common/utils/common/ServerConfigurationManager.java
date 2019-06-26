@@ -298,7 +298,7 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if apply configuration fails
      * @throws IOException             - throws if apply configuration fails
      */
-    public void applyMIConfiguration(File newConfig)
+    public void applyMIConfigurationWithRestart(File newConfig)
             throws AutomationUtilException, IOException {
         //to backup existing configuration
         applyConfigurationUtil(newConfig, newConfig);
@@ -311,7 +311,7 @@ public class ServerConfigurationManager {
      * @param newConfig configuration file
      * @throws IOException - throws if apply configuration fails
      */
-    public void applyConfigurationWithoutRestart(File newConfig) throws IOException {
+    public void applyMIConfiguration(File newConfig) throws IOException {
         //to backup existing configuration
         appluConfigurationUtilUtil(newConfig, newConfig);
     }

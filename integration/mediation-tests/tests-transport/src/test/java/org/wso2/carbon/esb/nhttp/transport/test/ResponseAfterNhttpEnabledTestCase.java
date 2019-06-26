@@ -54,7 +54,7 @@ public class ResponseAfterNhttpEnabledTestCase extends ESBIntegrationTest {
                 separator + "artifacts" + separator + "ESB" + separator + "synapseconfig" + separator
                         + "nhttp_transport" + separator + "nhttp.properties");
         File srcFile = new File(url.getPath());
-        serverConfigurationManager.applyMIConfiguration(srcFile);
+        serverConfigurationManager.applyMIConfigurationWithRestart(srcFile);
         super.init();
     }
 

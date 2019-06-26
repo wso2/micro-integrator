@@ -82,7 +82,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfigurationWithoutRestart(
+        serverConfigurationManager.applyMIConfiguration(
                 new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
         super.init();
 
