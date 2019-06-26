@@ -17,13 +17,11 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<definitions xmlns="http://ws.apache.org/ns/synapse">
-<proxy name="TCPProxy"
-       transports="tcp"
-       startOnLoad="true"
-       trace="disable">
+<proxy name="TCPProxySplitByString" transports="tcp" startOnLoad="true" trace="disable"
+       xmlns="http://ws.apache.org/ns/synapse">
     <description/>
     <target>
+
         <inSequence>
             <property name="symbol" value="IBM" scope="default" type="STRING"/>
             <enrich>
@@ -52,11 +50,10 @@
             <send/>
         </outSequence>
     </target>
-    <parameter name="transport.tcp.recordDelimiter">0x03</parameter>
     <parameter name="transport.tcp.responseClient">true</parameter>
-    <parameter name="transport.tcp.inputType">binary</parameter>
-    <parameter name="transport.tcp.port">6789</parameter>
-    <parameter name="transport.tcp.recordDelimiterType">byte</parameter>
+    <parameter name="transport.tcp.recordDelimiter">split</parameter>
+    <parameter name="transport.tcp.inputType">string</parameter>
+    <parameter name="transport.tcp.port">6792</parameter>
+    <parameter name="transport.tcp.recordDelimiterType">string</parameter>
     <parameter name="transport.tcp.contentType">text/xml</parameter>
 </proxy>
-</definitions>
