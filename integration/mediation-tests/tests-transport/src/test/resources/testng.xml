@@ -209,7 +209,7 @@
         <classes>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.NhttpBaseTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.DefaultRequestContentTypeTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.ResponseAfterNttpEnabledTestCase"/>
+            <class name="org.wso2.carbon.esb.nhttp.transport.test.ResponseAfterNhttpEnabledTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.NhttpMaximumOpenConnections"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.ConfiguringNhttpAccessLogLocationTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.ContentTypeCharsetTestCase"/>
