@@ -39,6 +39,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -422,6 +425,20 @@ public class Utils {
         } catch (XMLStreamException e) {
             log.error("Error when serializing synapse config", e);
         }
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, String artifactType) {
+        CarbonServerExtension.shutdownServer();
+        String pathString = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+                + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
+                + File.separator + artifactType + File.separator + artifactName + ".xml";
+        Path path = FileSystems.getDefault().getPath(pathString);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            log.error("Error while deleting the file", e);
+        }
+        CarbonServerExtension.restartServer();
     }
 
 }

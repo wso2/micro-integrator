@@ -19,6 +19,7 @@
 package org.wso2.esb.integration.common.utils;
 
 import org.apache.commons.io.input.Tailer;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,6 +109,17 @@ public class CarbonLogReader {
     }
 
     /**
+     * Check for the existence of occurrences of a given log message.
+     *
+     * @param expected            expected log string
+     * @param numberofOccurrences numberofOccurrences expected number of log occurrences
+     * @return true if the expected number of log occurrences are found, false otherwise
+     */
+    public boolean assertIfLogExists(String expected, int numberofOccurrences) {
+        return numberofOccurrences == StringUtils.countMatches(this.getLogs(), expected);
+    }
+
+    /**
      * Check for the existence of the given log message. The polling will happen in one second intervals.
      *
      * @param expected expected log string
@@ -125,5 +137,24 @@ public class CarbonLogReader {
             }
         }
         return logExists;
+    }
+
+    /**
+     * Check for the existence of the given log message occurrences. The polling will happen in one second intervals.
+     *
+     * @param expected            expected log message
+     * @param timeout             max time to poll in seconds
+     * @param numberofOccurrences expected number of log occurrences
+     * @return true if the expected number of log occurrences are found within the given timeout, false otherwise
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public boolean checkForLog(String expected, int timeout, int numberofOccurrences) throws InterruptedException {
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (assertIfLogExists(expected, numberofOccurrences)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

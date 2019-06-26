@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.proxyservice.test.proxyservices;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -35,8 +34,6 @@ public class ProxyServiceEndpointBindingsTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/proxyservice/stock_quote_proxy.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "Proxy service endpoint binding HttpSoap11Endpoint test")
@@ -65,11 +62,6 @@ public class ProxyServiceEndpointBindingsTestCase extends ESBIntegrationTest {
         assertEquals(symbol, "HttpsSoap11Endpoint",
                 "Mediation Ignored. proxy service invocation failed when WS-addressing is sent");
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 
     private String getProxyServiceHttp11BindingURL(String proxyServiceName) throws XPathExpressionException {

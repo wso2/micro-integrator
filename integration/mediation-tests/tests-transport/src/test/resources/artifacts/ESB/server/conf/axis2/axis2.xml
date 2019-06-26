@@ -250,6 +250,13 @@
 
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener"/>
 
+    <transportReceiver name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportListener">
+        <parameter name="transport.tcp.port">8290</parameter>
+        <parameter name="transport.tcp.contentType">application/soap+xml</parameter>
+        <!--parameter name="transport.tcp.contentType">text/xml</parameter-->
+    </transportReceiver>
+
+
     <!--<transportReceiver name="mailto" class="org.apache.axis2.transport.mail.MailTransportListener">-->
     <!-- configure any optional POP3/IMAP properties
     check com.sun.mail.pop3 and com.sun.mail.imap package documentation for more details-->
@@ -362,6 +369,8 @@
     <!-- ================================================= -->
     <!--             Transport Outs (Senders)              -->
     <!-- ================================================= -->
+
+    <transportSender name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportSender"/>
 
     <transportSender name="http" class="org.apache.synapse.transport.passthru.PassThroughHttpSender">
         <parameter name="non-blocking" locked="false">true</parameter>

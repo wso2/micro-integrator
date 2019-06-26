@@ -50,10 +50,10 @@ public class JSONDisableAutoPrimitiveNumericTestCase extends ESBIntegrationTest 
         serverConfigurationManager = new ServerConfigurationManager(context);
         //Need to apply the configuration here since this changes default synapse properties which could affect other
         // test cases
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfiguration(new File(
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
                         + File.separator + "json" + File.separator + "disableAutoPrimitiveNumeric" + File.separator
-                        + "synapse.properties"));
+                        + "synapse.properties"), true);
         super.init();
     }
 
@@ -78,7 +78,6 @@ public class JSONDisableAutoPrimitiveNumericTestCase extends ESBIntegrationTest 
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }

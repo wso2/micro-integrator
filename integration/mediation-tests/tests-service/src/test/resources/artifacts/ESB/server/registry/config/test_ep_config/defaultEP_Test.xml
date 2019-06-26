@@ -16,5 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<localEntry xmlns="http://ws.apache.org/ns/synapse" key="throttle_policy"
-            src="file:samples/service-bus/resources/policy/throttle_policy.xml"/>
+<endpoint xmlns="http://ws.apache.org/ns/synapse" name="defaultEP">
+    <default/>
+</endpoint>

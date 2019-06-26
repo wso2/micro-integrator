@@ -15,28 +15,23 @@
   ~  KIND, either express or implied.  See the License for the
   ~  specific language governing permissions and limitations
   ~  under the License.
+  ~
 -->
-<proxy xmlns="http://ws.apache.org/ns/synapse"
-       name="Sample61TestCaseProxy"
-       transports="https http"
-       startOnLoad="true"
-       trace="disable">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="response_nhttp_synapse_proxy" transports="https http"
+       startOnLoad="true" trace="disable">
     <description/>
     <target>
         <inSequence>
-            <property name="EP_LIST"
-                      value="http://localhost:9100/services/SimpleStockQuoteService,http://localhost:9200/services/SimpleStockQuoteService,http://localhost:9300/services/SimpleStockQuoteService"/>
-            <property name="OUT_ONLY" value="true"/>
-            <property name="FORCE_SC_ACCEPTED" value="true" scope="axis2"/>
+            <log level="full"/>
             <send>
                 <endpoint>
-                    <recipientlist>
-                        <endpoints value="{get-property('EP_LIST')}" max-cache="20"/>
-                    </recipientlist>
+                    <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
                 </endpoint>
             </send>
         </inSequence>
         <outSequence>
+            <log level="full"/>
+            <send/>
         </outSequence>
     </target>
 </proxy>

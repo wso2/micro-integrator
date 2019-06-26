@@ -18,18 +18,14 @@
 
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.http.HttpResponse;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 import java.util.HashMap;
@@ -46,14 +42,12 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
     private final Map<String, String> headers = new HashMap<String, String>(1);
     private final String payload = "{\n" + "  \"email\" : \"jms@yomail.com\",\n" + "  \"firstName\" : \"Jms\",\n"
             + "  \"lastName\" : \"Broker\",\n" + "  \"id\" : 10\n" + "}";
-    private LogViewerClient logViewer;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
         headers.put("Test-Header-Field", "TestHeaderValue");
         //headers.put("Content-Type", "application/json");
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/JMSMessageStoreREST.xml");
         JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         try {
@@ -62,36 +56,22 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         } finally {
             consumer.disconnect();
         }
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
         Thread.sleep(1000);
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = { "wso2.esb" }, description = "JMS Message store/processor support for RESTful services.")
     public void testJMSMessageStoreAndProcessor() throws Exception {
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
+
         HttpResponse response = httpClient.doPost(url, headers, payload, "application/json");
         Thread.sleep(10000);
         assertEquals(response.getStatusLine().getStatusCode(), 202);
-        LogEvent[] logs = logViewer.getAllSystemLogs();
-        int i = 1;
-        for (LogEvent log : logs) {
-            if (log.getMessage().contains(logLine0)) {
-                ++i;
-            }
-            if (log.getMessage().contains(logLine1)) {
-                ++i;
-            }
-        }
-        if (i == 3) {
-            Assert.assertTrue(true);
-        } else {
-            Assert.assertTrue(false);
-        }
+
+        Assert.assertTrue(carbonLogReader.assertIfLogExists(logLine0) && carbonLogReader.assertIfLogExists(logLine1),
+                "Expected messages are not logged in JMSMessageStoreProcRESTTestCase.");
+        carbonLogReader.stop();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }
 

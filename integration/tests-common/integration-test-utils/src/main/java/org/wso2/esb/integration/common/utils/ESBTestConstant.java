@@ -32,4 +32,5 @@ public class ESBTestConstant {
     public static final String INCOMING_MESSAGE_IS_NULL = "The input stream for an incoming message is null.";
     public static final String ERROR_ADDING_SEQUENCE = "Error adding sequence";     //when invalid sequence is uploaded
     public static final String UNABLE_TO_SAVE_SEQUENCE = "Unable to save the Sequence";     //when updating sequence with invalid content
+    public static final String NOT_FOUND_ERROR = "Transport error: 404 Error: Not Found";
 }

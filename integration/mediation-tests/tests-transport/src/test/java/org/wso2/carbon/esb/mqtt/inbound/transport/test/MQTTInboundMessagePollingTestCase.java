@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.esb.mqtt.inbound.transport.test;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,6 +31,7 @@ import org.wso2.carbon.esb.mqtt.utils.MQTTTestClient;
 import org.wso2.carbon.esb.mqtt.utils.QualityOfService;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.extensions.jmsserver.ActiveMQServerExtension;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
@@ -42,7 +46,6 @@ import java.io.File;
  */
 public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewerClient = null;
     private JMSBroker activeMQServer;
 
     @BeforeClass(alwaysRun = true)
@@ -51,17 +54,17 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         activeMQServer = new JMSBroker("MQTTBroker",
                 JMSBrokerConfigurationProvider.getInstance().getTransportConnectors());
         activeMQServer.start();
+        OMElement inboundOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(getESBResourceLocation()
+                + File.separator + "mqtt" + File.separator + "inbound" + File.separator + "transport" + File.separator
+                + "MQTT_Test_Inbound_EP.xml")));
+        Utils.deploySynapseConfiguration(inboundOMElement, "MQTT_Test_Inbound_EP", "inbound-endpoints", true);
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mqtt" + File.separator
-                        + "inbound" + File.separator + "transport" + File.separator
-                        + "simple_mqtt_inboud_transport_config.xml");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewerClient.clearLogs();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check if Inbound MQTT Transport receives messages without issue")
     public void testMQTTInboundEndpointMessagePolling() throws Exception {
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         //connect to broker and publish a message
         String brokerURL = "tcp://localhost:1883";
         String userName = "admin";
@@ -81,15 +84,16 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         }
 
         //check EI log to see if message is consumed
-        boolean result = Utils.checkForLog(logViewerClient, messageToSend, 5);
+        boolean result = carbonLogReader.checkForLog(messageToSend, 5);
         Assert.assertTrue(result, "Message is not found in log. Expected : " + messageToSend);
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
         activeMQServer.stop();
         ActiveMQServerExtension.startMQServer();
+        Utils.undeploySynapseConfiguration("MQTT_Test_Inbound_EP", "inbound-endpoints");
     }
 
 }
