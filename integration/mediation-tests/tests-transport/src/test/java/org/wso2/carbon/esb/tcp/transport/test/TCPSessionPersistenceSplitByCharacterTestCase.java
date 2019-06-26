@@ -44,7 +44,7 @@ public class TCPSessionPersistenceSplitByCharacterTestCase extends ESBIntegratio
         int messageCount = 3;
         String character = "|";
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.CHARACTER.getDelimiterType(),
-                messageCount, 6788); // Port should match the port in tcpProxy_splitByCharacter.xml
+                messageCount, 6790); // Port should match the port in tcpProxy_splitByCharacter.xml
         String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"
                 + "<soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
         tcpClient.setMessage(message);
