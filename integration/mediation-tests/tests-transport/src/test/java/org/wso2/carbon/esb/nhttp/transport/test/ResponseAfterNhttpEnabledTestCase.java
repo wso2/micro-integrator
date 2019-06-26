@@ -25,7 +25,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
@@ -55,7 +54,7 @@ public class ResponseAfterNhttpEnabledTestCase extends ESBIntegrationTest {
                 separator + "artifacts" + separator + "ESB" + separator + "synapseconfig" + separator
                         + "nhttp_transport" + separator + "nhttp.properties");
         File srcFile = new File(url.getPath());
-        serverConfigurationManager.applyMIConfiguration(srcFile, true);
+        serverConfigurationManager.applyMIConfiguration(srcFile);
         super.init();
     }
 

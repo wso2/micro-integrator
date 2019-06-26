@@ -115,9 +115,9 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
 
         // replace the axis2.xml enabled vfs transfer and restart the ESB server gracefully.
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyMIConfiguration(new File(
+        serverConfigurationManager.applyConfigurationWithoutRestart(new File(
                 getClass().getResource("/artifacts/ESB/synapseconfig/" + "vfsTransport/ESBJAVA4770/axis2.xml")
-                        .getPath()), false);
+                        .getPath()));
         super.init();
     }
 

@@ -38,7 +38,7 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(new AutomationContext());
         serverConfigurationManager.applyMIConfiguration(new File(
                 getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
-                        + "httpproxy" + File.separator + "axis2.xml"), true);
+                        + "httpproxy" + File.separator + "axis2.xml"));
         super.init();
     }
 

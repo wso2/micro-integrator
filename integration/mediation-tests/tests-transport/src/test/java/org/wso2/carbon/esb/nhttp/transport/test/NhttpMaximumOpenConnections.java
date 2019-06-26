@@ -58,7 +58,7 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
                         + "synapseconfig" + separator + "MaxOpenConnections" + separator + "nhttp.properties";
         File srcFile = new File(nhttpFile);
 
-        serverConfigurationManagerProp.applyMIConfiguration(srcFile, false);
+        serverConfigurationManagerProp.applyConfigurationWithoutRestart(srcFile);
 
         serverConfigurationManagerAxis2 = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -67,7 +67,7 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
                         + "synapseconfig" + separator + "MaxOpenConnections" + separator + "nhttp" + separator
                         + "axis2.xml";
         File axis2File = new File(nhttpAxis2xml);
-        serverConfigurationManagerAxis2.applyMIConfiguration(axis2File, true);
+        serverConfigurationManagerAxis2.applyMIConfiguration(axis2File);
 
         super.init();
 

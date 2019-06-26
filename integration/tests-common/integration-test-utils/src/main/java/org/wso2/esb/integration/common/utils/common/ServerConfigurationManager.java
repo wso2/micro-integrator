@@ -292,21 +292,17 @@ public class ServerConfigurationManager {
     }
 
     /**
-     * apply configuration file and optionally restart micro integrator server to take effect the configuration
+     * apply configuration file and restart micro integrator server to take effect the configuration
      *
      * @param newConfig       configuration file
-     * @param restartRequired optional Restart flag
      * @throws AutomationUtilException - throws if apply configuration fails
      * @throws IOException             - throws if apply configuration fails
      */
-    public void applyMIConfiguration(File newConfig, boolean restartRequired)
+    public void applyMIConfiguration(File newConfig)
             throws AutomationUtilException, IOException {
         //to backup existing configuration
         applyConfigurationUtil(newConfig, newConfig);
-        if (restartRequired) {
-            restartMicroIntegrator();
-        }
-
+        restartMicroIntegrator();
     }
 
     /**

@@ -48,7 +48,7 @@ public class XMLToJsonTransformationPropertiesTestCase extends ESBIntegrationTes
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager.applyMIConfiguration(new File(
                 getESBResourceLocation() + File.separator + "json" + File.separator + "jsonTransformationConfig"
-                        + File.separator + "synapse.properties"), true);
+                        + File.separator + "synapse.properties"));
         super.init();
     }
 

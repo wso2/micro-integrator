@@ -47,7 +47,7 @@ public class ConversionWithNonSOAPContentTypeBackendTestCase extends ESBIntegrat
     public void setEnvironment() throws Exception {
         serverManager = new ServerConfigurationManager(new AutomationContext());
         serverManager.applyMIConfiguration(new File(
-                getClass().getResource("/artifacts/ESB/passthru/transport/soapconversion/axis2.xml").getPath()), true);
+                getClass().getResource("/artifacts/ESB/passthru/transport/soapconversion/axis2.xml").getPath()));
         super.init();
     }
 
