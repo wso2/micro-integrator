@@ -29,7 +29,7 @@ import org.wso2.carbon.esb.tcp.transport.test.util.NativeTCPClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 /**
- * Test TCP session persistance splitting by a string.
+ * Test TCP session persistence splitting by a string.
  */
 public class TCPSessionPersistenceSplitByStringTestCase extends ESBIntegrationTest {
 
@@ -39,7 +39,7 @@ public class TCPSessionPersistenceSplitByStringTestCase extends ESBIntegrationTe
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Tcp proxy service which configured to split by string")
+    @Test(groups = "wso2.esb", description = "Tcp proxy service configured to split by a string")
     public void tcpTransportSplitByStringProxy() throws Exception {
         int messageCount = 3;
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.STRING.getDelimiterType(),

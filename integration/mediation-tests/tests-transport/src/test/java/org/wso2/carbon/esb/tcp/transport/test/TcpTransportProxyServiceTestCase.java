@@ -35,7 +35,7 @@ public class TcpTransportProxyServiceTestCase extends ESBIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Proxy service with tcp transport")
+    @Test(groups = "wso2.esb", description = "Proxy service with Tcp transport")
     public void tcpTransportProxy() throws Exception {
         TcpClient tcpClient = new TcpClient();
         OMElement response;

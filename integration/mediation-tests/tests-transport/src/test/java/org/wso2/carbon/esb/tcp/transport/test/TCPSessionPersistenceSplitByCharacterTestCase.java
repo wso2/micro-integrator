@@ -29,7 +29,7 @@ import org.wso2.carbon.esb.tcp.transport.test.util.NativeTCPClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 /**
- * Test TCP session persistance splitting by a charachter.
+ * Test TCP session persistence splitting by a character.
  */
 public class TCPSessionPersistenceSplitByCharacterTestCase extends ESBIntegrationTest {
 
@@ -39,7 +39,7 @@ public class TCPSessionPersistenceSplitByCharacterTestCase extends ESBIntegratio
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Tcp proxy service configured to split by character")
+    @Test(groups = "wso2.esb", description = "Tcp proxy service configured to split by a character")
     public void tcpTransportSplitByCharacterProxy() throws Exception {
         int messageCount = 3;
         String character = "|";
