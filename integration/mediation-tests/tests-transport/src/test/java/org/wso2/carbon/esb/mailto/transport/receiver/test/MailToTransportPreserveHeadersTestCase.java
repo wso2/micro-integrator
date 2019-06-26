@@ -19,10 +19,13 @@
 package org.wso2.carbon.esb.mailto.transport.receiver.test;
 
 import com.icegreen.greenmail.user.GreenMailUser;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.GreenMailClient;
@@ -41,18 +44,20 @@ import static org.testng.Assert.assertTrue;
  */
 
 public class MailToTransportPreserveHeadersTestCase extends ESBIntegrationTest {
-    private static LogViewerClient logViewerClient;
+    private static CarbonLogReader carbonLogReader;
     private static GreenMailClient greenMailClient;
     private static GreenMailUser greenMailUser;
 
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
-                        + File.separator + "mailTransportReceiver" + File.separator
-                        + "mail_transport_preserve_header.xml");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        OMElement mailToProxyOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(
+                getESBResourceLocation() + File.separator + "mailTransport" + File.separator +
+                        "mailTransportReceiver" + File.separator + "mail_transport_preserve_header.xml")));
+        Utils.deploySynapseConfiguration(mailToProxyOMElement,
+                "MailTransportPreserveHeader","proxy-services",
+                true);
+        carbonLogReader = new CarbonLogReader();
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
 
@@ -63,21 +68,20 @@ public class MailToTransportPreserveHeadersTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport preserve header parameter")
     public void testEmailPreserveHeaderTransport() throws Exception {
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         Date date = new Date();
         String emailSubject = "Preserve Headers Test : " + new Timestamp(date.getTime());
         Map<String, String> headers = new HashMap<>();
         headers.put("Delivered-To", "wso2@localhost");
         greenMailClient.sendMail(emailSubject, headers);
 
-        assertTrue(Utils.checkForLog(logViewerClient, "Delivered-To = wso2@localhost", 10000),
+        assertTrue(carbonLogReader.checkForLog("Delivered-To = wso2@localhost", 10000),
                 "Mail is not Received by ESB with Preserve Header Successfully");
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
-        super.cleanup();
-
+        Utils.undeploySynapseConfiguration("MailTransportPreserveHeader","proxy-services");
     }
 
 }

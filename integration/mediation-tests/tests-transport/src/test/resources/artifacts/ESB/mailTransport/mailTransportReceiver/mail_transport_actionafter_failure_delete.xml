@@ -16,7 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<definitions xmlns="http://ws.apache.org/ns/synapse">
     <proxy xmlns="http://ws.apache.org/ns/synapse"
            name="MailToTransportActionAfterFailureDELETETestCase"
            transports="mailto"
@@ -52,4 +51,3 @@
         <parameter name="transport.mail.Protocol">imap</parameter>
         <description/>
     </proxy>
-</definitions>

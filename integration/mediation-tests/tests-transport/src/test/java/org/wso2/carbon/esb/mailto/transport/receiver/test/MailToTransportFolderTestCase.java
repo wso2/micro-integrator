@@ -19,10 +19,13 @@
 package org.wso2.carbon.esb.mailto.transport.receiver.test;
 
 import com.icegreen.greenmail.user.GreenMailUser;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.GreenMailClient;
@@ -36,17 +39,20 @@ import static org.testng.Assert.assertTrue;
 
 public class MailToTransportFolderTestCase extends ESBIntegrationTest {
     private String emailSubject;
-    private static LogViewerClient logViewerClient;
+    private static CarbonLogReader carbonLogReader;
     private static GreenMailClient greenMailClient;
     private static GreenMailUser greenMailUser;
 
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
-                        + File.separator + "mailTransportReceiver" + File.separator + "mail_transport_folder.xml");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        OMElement mailToProxyOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(
+                getESBResourceLocation() + File.separator + "mailTransport" + File.separator +
+                        "mailTransportReceiver" + File.separator + "mail_transport_folder.xml")));
+        Utils.deploySynapseConfiguration(mailToProxyOMElement,
+                "MailTransportFolder","proxy-services",
+                true);
+        carbonLogReader = new CarbonLogReader();
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
 
@@ -57,18 +63,17 @@ public class MailToTransportFolderTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport folder parameter")
     public void testEmailTransportFolder() throws Exception {
-        logViewerClient.clearLogs();
+        carbonLogReader.start();
         Date date = new Date();
         emailSubject = "Folder Test : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
 
-        assertTrue(Utils.checkForLog(logViewerClient, emailSubject, 10000), "Email not received successfully!");
+        assertTrue(carbonLogReader.checkForLog(emailSubject, 10), "Email not received successfully!");
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
-        super.cleanup();
-
+        Utils.undeploySynapseConfiguration("MailTransportFolder","proxy-services");
     }
 
 }
