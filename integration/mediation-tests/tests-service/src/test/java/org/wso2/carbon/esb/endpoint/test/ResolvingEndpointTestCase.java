@@ -19,69 +19,32 @@
 package org.wso2.carbon.esb.endpoint.test;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
 
 /**
  * Resolving Endpoints test class
  */
 public class ResolvingEndpointTestCase extends ESBIntegrationTest {
-    private final String ENDPOINT_NAME = "resolvingEP";
-    private EndPointAdminClient endPointAdminClient;
 
+    @Override
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
-        addResolvingEndpoint();
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" }, description = "Sending a Message to a dynamically resolved endpoint")
-    public void testSendingToDynamicallyResolvedEndpoint() throws Exception {
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
+    @Test(groups = {"wso2.esb"}, description = "Sending a Message to a dynamically resolved endpoint")
+    public void testSendingToDynamicallyResolvedEndpoint() throws AxisFault {
 
         OMElement response = axis2Client.sendSimpleStockQuoteRequest(
                 "http://localhost:8480/services/resolvingEndpointTestProxy?myKey=resolvingEP", null, "WSO2");
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("WSO2 Company"));
     }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
-
-    private void addResolvingEndpoint() throws Exception {
-        addEndpoint(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\" name=\"resolvingEP\">\n" + "    <address "
-                + "uri=\"http://localhost:9000/services/SimpleStockQuoteService\">\n" + "        <suspendOnFailure>\n"
-                + "            <progressionFactor>1.0</progressionFactor>\n" + "        </suspendOnFailure>\n"
-                + "        <markForSuspension>\n" + "            <retriesBeforeSuspension>0</retriesBeforeSuspension>\n"
-                + "            <retryDelay>0</retryDelay>\n" + "        </markForSuspension>\n" + "    </address>\n"
-                + "</endpoint>"));
-
-        String[] endpoints = endPointAdminClient.getEndpointNames();
-        if (endpoints != null && endpoints.length > 0 && endpoints[0] != null) {
-            List endpointList = Arrays.asList(endpoints);
-            assertTrue(endpointList.contains(ENDPOINT_NAME));
-        } else {
-            fail("Endpoint has not been added to the system properly");
-        }
-
-    }
-
 }
-
