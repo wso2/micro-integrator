@@ -39,38 +39,22 @@ import javax.activation.FileDataSource;
 public class CAppArtifactIndicationTestCase extends ESBIntegrationTest {
     private ServiceAdminClient serviceAdminClient;
 
-    String service = "sampleCustomProxy";
-    String carFileName = "esb-artifacts-car_1.0.0.car";
+    String carFileName = "esb-artifacts-car";
 
-    @BeforeClass(alwaysRun = true)
-    protected void uploadCarFileTest() throws Exception {
+    @Test(groups = { "wso2.esb" }, description = "test car application deployment")
+    public void carDeploymentTest() throws Exception {
         super.init();
-        CarbonAppUploaderClient carbonAppUploaderClient = new CarbonAppUploaderClient(
-                context.getContextUrls().getBackEndUrl(), sessionCookie);
-        carbonAppUploaderClient.uploadCarbonAppArtifact("esb-artifacts-car_1.0.0.car", new DataHandler(
-                new FileDataSource(new File(getESBResourceLocation() + File.separator + "car" + File.separator
-                        + "esb-artifacts-car_1.0.0.car"))));
-        serviceAdminClient = new ServiceAdminClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
+
+        Assert.assertTrue(checkCarbonAppExistence(carFileName),"car application deployment failed");
         TimeUnit.SECONDS.sleep(5);
-        log.info(carFileName + " uploaded successfully");
+        log.info(carFileName + " deployed successfully");
     }
 
     @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service get deployed through capp")
     public void testProxyServiceIsCApp() throws Exception {
+
         Thread.sleep(6000);
-        Assert.assertTrue(
-                esbUtils.isProxyDeployed(context.getContextUrls().getBackEndUrl(), sessionCookie, "sampleCustomProxy"),
-                "transform Proxy service deployment failed");
-        TimeUnit.SECONDS.sleep(5);
-        ServiceMetaData serviceMetaData = serviceAdminClient.getServicesData(service);
-        /*log.info("Is " + service + " a CApp artifact? " + serviceMetaData.isCAppArtifactSpecified
-                ());
-        Assert.assertNotNull(serviceMetaData.isCAppArtifactSpecified(), service + " is not a " +
-                "CApp artifact");*/
+        Assert.assertTrue(checkProxyServiceExistence("sampleCustomProxy"),"transform Proxy service deployment failed");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
-        super.cleanup();
-    }
 }
