@@ -257,10 +257,10 @@
     </transportReceiver>
 
 
-    <!--<transportReceiver name="mailto" class="org.apache.axis2.transport.mail.MailTransportListener">-->
+    <transportReceiver name="mailto" class="org.apache.axis2.transport.mail.MailTransportListener">
     <!-- configure any optional POP3/IMAP properties
     check com.sun.mail.pop3 and com.sun.mail.imap package documentation for more details-->
-    <!--</transportReceiver>-->
+    </transportReceiver>
 
     <!--Uncomment this and configure as appropriate for JMS transport support, after setting up your JMS environment (e.g. ActiveMQ)
     <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
@@ -422,6 +422,26 @@
         <parameter name="mail.smtp.password">mailpassword</parameter>
         <parameter name="mail.smtp.from">synapse.demo.0@gmail.com</parameter>
     </transportSender>-->
+    <transportSender name="mailto" class="org.apache.axis2.transport.mail.MailTransportSender">
+        <parameter name="mail.smtp.host">localhost</parameter>
+        <parameter name="mail.smtp.port">3025</parameter>
+        <parameter name="mail.smtp.starttls.enable">true</parameter>
+        <parameter name="mail.smtp.auth">true</parameter>
+        <parameter name="mail.smtp.user">wso2</parameter>
+        <parameter name="mail.smtp.password">wso2</parameter>
+        <parameter name="mail.smtp.from">wso2@localhost</parameter>
+        <parameter name="transport.mail.SMTPBccAddresses">wso2bcc@localhost</parameter>
+    </transportSender>
+
+    <transportSender name="mailtoWSO2" class="org.apache.axis2.transport.mail.MailTransportSender">
+        <parameter name="mail.smtp.host">localhost</parameter>
+        <parameter name="mail.smtp.port">3025</parameter>
+        <parameter name="mail.smtp.starttls.enable">true</parameter>
+        <parameter name="mail.smtp.auth">true</parameter>
+        <parameter name="mail.smtp.user">wso2_secondary</parameter>
+        <parameter name="mail.smtp.password">wso2_secondary</parameter>
+        <parameter name="mail.smtp.from">wso2_secondary@localhost</parameter>
+    </transportSender>
 
     <!--Uncomment this for FIX transport support
     <transportSender name="fix" class="org.apache.synapse.transport.fix.FIXTransportSender"/>

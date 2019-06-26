@@ -16,7 +16,6 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<definitions xmlns="http://ws.apache.org/ns/synapse">
     <proxy xmlns="http://ws.apache.org/ns/synapse"
            name="MailTranportInvalidAddress"
            transports="mailto"
@@ -51,4 +50,3 @@
         <parameter name="mail.pop3.password">automation.test</parameter>
         <description/>
     </proxy>
-</definitions>
