@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.proxyservice.test.loggingProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -33,10 +32,6 @@ public class WSDLOptionsSpecifiedInlineTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/loggingProxy/wsdl_options_specified_inline.xml");
-        isProxyDeployed("wsdlOptionsFromInlineLoggingProxy");
-
     }
 
     @Test(groups = "wso2.esb", description = "- Logging proxy" + "- Publish WSDL Options - Specified Inline")
@@ -56,12 +51,8 @@ public class WSDLOptionsSpecifiedInlineTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "- Logging proxy -Publish WSDL Options - Specified Inline -Log", enabled = false)
-    public void testLoggingProxyLogging() throws Exception {
+    public void testLoggingProxyLogging() {
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }
