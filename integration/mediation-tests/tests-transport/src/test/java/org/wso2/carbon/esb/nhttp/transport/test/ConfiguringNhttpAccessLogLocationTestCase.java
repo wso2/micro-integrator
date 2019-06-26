@@ -16,7 +16,6 @@
 
 package org.wso2.carbon.esb.nhttp.transport.test;
 
-import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -24,7 +23,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -36,8 +34,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import static java.io.File.separator;
 
@@ -51,7 +47,7 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+                new AutomationContext());
         String nhttpFile = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator
                 + "synapseconfig" + separator + "nhttp_transport" + separator + "nhttp.properties";
 
@@ -68,16 +64,11 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
 
         applyProperty(srcFile, propertyName, nhttpLogDir);
         applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.access", "INFO");
-        serverConfigurationManager.applyConfigurationWithoutRestart(new File(
+        serverConfigurationManager.applyMIConfiguration(new File(
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator + "nhttp"
-                        + separator + "transport" + separator + "axis2.xml"));
-
-        serverConfigurationManager.restartGracefully();
+                        + separator + "transport" + separator + "axis2.xml"), true);
 
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/nhttp_transport/nhttp_test_synapse.xml");
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(300, TimeUnit.SECONDS)
-                .until(isServiceDeployed("NhttpLogsTestProxy"));
     }
 
     /**
@@ -123,7 +114,7 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
         properties.load(new FileInputStream(srcFile));
         properties.setProperty(key, value);
         properties.store(new FileOutputStream(destinationFile), null);
-        serverConfigurationManager.applyConfigurationWithoutRestart(destinationFile);
+        serverConfigurationManager.applyMIConfiguration(destinationFile, false);
     }
 
     /**
@@ -141,16 +132,5 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
             serverConfigurationManager = null;
             nhttpLogDir = null;
         }
-    }
-
-    private Callable<Boolean> isServiceDeployed(final String proxyName) {
-
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-
-                return isProxySuccesfullyDeployed(proxyName);
-            }
-        };
     }
 }

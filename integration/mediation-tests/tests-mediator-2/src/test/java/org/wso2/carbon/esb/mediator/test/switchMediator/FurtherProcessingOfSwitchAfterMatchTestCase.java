@@ -18,34 +18,36 @@
 
 package org.wso2.carbon.esb.mediator.test.switchMediator;
 
-import org.testng.annotations.AfterClass;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class FurtherProcessingOfSwitchAfterMatchTestCase extends ESBIntegrationTest {
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void beforeClass() throws Exception {
         super.init();
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = {
             "wso2.esb" }, description = "Switch Mediator: Test whether further processing of the switch block is done after a match is found.")
     public void testFurtherProcessingOfSwitch() throws Exception {
+        carbonLogReader.start();
 
         axis2Client.sendSimpleStockQuoteRequest(
                 getProxyServiceURLHttp("switchMediatorFurtherProcessingAfterMatchTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
 
-        // TODO AsserTrue symbol property of INFO log for "Great stock - IBM"
-        // TODO !AssertTrue Test property of INFO log for "Oh no! IBM again?"
-    }
+        //AsserTrue symbol property of INFO log for "Great stock - IBM"
+        //!AssertTrue Test property of INFO log for "Oh no! IBM again?"
+        Assert.assertTrue(carbonLogReader.assertIfLogExists("Great stock - IBM"), "Symbol property not set");
+        Assert.assertFalse(carbonLogReader.assertIfLogExists("Oh no! IBM again?"), "Test property set unexpectedly");
 
-    @AfterClass
-    public void afterClass() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
-
 }
