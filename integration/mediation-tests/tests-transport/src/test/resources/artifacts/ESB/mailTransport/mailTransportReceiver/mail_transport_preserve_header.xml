@@ -16,7 +16,6 @@
   ~ under the License.
   -->
 
-<definitions xmlns="http://ws.apache.org/ns/synapse">
     <proxy xmlns="http://ws.apache.org/ns/synapse"
            name="MailTransportPreserveHeader"
            transports="mailto"
@@ -55,4 +54,3 @@
         <parameter name="mail.imap.password">wso2</parameter>
         <description/>
     </proxy>
-</definitions>
