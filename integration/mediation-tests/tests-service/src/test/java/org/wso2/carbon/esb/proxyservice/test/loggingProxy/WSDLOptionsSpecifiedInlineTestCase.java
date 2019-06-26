@@ -54,5 +54,4 @@ public class WSDLOptionsSpecifiedInlineTestCase extends ESBIntegrationTest {
     public void testLoggingProxyLogging() {
         //ToDo Assert Logs
     }
-
 }
