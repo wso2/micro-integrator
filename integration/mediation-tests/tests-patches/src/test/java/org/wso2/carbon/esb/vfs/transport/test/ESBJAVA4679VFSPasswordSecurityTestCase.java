@@ -103,7 +103,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(context);
         serverConfigurationManager.applyMIConfiguration(new File(getClass().getResource(
                 FORWARD_SLASH + "artifacts" + FORWARD_SLASH + "ESB" + FORWARD_SLASH + "synapseconfig" + FORWARD_SLASH
-                        + "vfsTransport" + FORWARD_SLASH + "axis2.xml").getPath()), false);
+                        + "vfsTransport" + FORWARD_SLASH + "axis2.xml").getPath()));
         super.init();
         carbonLogReader = new CarbonLogReader();
 

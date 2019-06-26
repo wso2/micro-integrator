@@ -50,9 +50,9 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
          * following configFiles/preserveContentType/passthru-http.properties resource
          */
 
-        serverConfigurationManager.applyMIConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
-                        + "preserveheaders" + File.separator + "passthru-http.properties"), true);
+                        + "preserveheaders" + File.separator + "passthru-http.properties"));
         super.init();
         wireServer = new WireMonitorServer(8992);
     }

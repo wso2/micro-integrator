@@ -50,8 +50,8 @@ public class XMLToJsonNilTestCase extends ESBIntegrationTest {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyMIConfiguration(
-                new File(getESBResourceLocation() + File.separator + "json" + File.separator + "synapse.properties"), true);
+        serverConfigurationManager.applyMIConfigurationWithRestart(
+                new File(getESBResourceLocation() + File.separator + "json" + File.separator + "synapse.properties"));
         super.init();
     }
 

@@ -43,10 +43,10 @@ public class NhttpBaseTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager
-                .applyMIConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile(), false);
-        serverConfigurationManager.applyMIConfiguration(new File(
+                .applyMIConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile());
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
-                        + "json" + File.separator + "synapse.properties"), true);
+                        + "json" + File.separator + "synapse.properties"));
 
     }
 

@@ -41,9 +41,9 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         serverConfigurationManager = new ServerConfigurationManager(new AutomationContext());
-        serverConfigurationManager.applyMIConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "jms" + File.separator + "transport" + File.separator
-                        + "axis2config" + File.separator + "activemq" + File.separator + "axis2.xml"), true);
+                        + "axis2config" + File.separator + "activemq" + File.separator + "axis2.xml"));
         super.init();
     }
 

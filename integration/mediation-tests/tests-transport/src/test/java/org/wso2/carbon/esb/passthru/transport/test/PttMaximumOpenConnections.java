@@ -47,7 +47,7 @@ public class PttMaximumOpenConnections extends ESBIntegrationTest {
         serverConfigurationManagerProp = new ServerConfigurationManager(new AutomationContext());
         String pttFile = FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator
                         + "synapseconfig" + separator + "MaxOpenConnections" + separator + "passthru-http.properties";
-        serverConfigurationManagerProp.applyMIConfiguration(new File(pttFile), true);
+        serverConfigurationManagerProp.applyMIConfigurationWithRestart(new File(pttFile));
 
         super.init();
         maxOpenConnectionClients = new MaximumOpenConnectionsClient[CONCURRENT_CLIENTS];
