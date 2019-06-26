@@ -18,35 +18,35 @@
 
 package org.wso2.carbon.esb.mediator.test.switchMediator;
 
-import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 public class SwitchInsideSwitchTestCase extends ESBIntegrationTest {
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void beforeClass() throws Exception {
         super.init();
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Switch Mediator: Testing Switch inside Switch Scenario")
     public void testSample2() throws Exception {
-        OMElement response;
+        carbonLogReader.start();
 
-        response = axis2Client
+        axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("switchMediatorSwitchInsideSwitchTestProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
-        // TODO Assert Test property of INFO log for "This is Get Quote service"
+        // Assert Test property of INFO log for "This is Get Quote service"
         // & symbol property of INFO log for "Great stock - IBM"
+        String logs = carbonLogReader.getLogs();
+        carbonLogReader.stop();
 
+        Assert.assertTrue(logs.contains("This is Get Quote service"), "Test Property not set");
+        Assert.assertTrue(logs.contains("Great stock - IBM"), "Symbol property not set");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void afterClass() throws Exception {
-        super.cleanup();
-    }
-
 }
