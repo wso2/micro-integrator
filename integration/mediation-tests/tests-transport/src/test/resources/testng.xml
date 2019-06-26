@@ -199,11 +199,12 @@
         </packages>
     </test>
 
-    <test name="WebSocket-Inbound-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.websocket.inbound.transport.test"/>
-        </packages>
-    </test>
+    <!-- Disable due to https://github.com/wso2/micro-integrator/issues/457 -->
+    <!--<test name="WebSocket-Inbound-Test" preserve-order="true" verbose="2">-->
+        <!--<packages>-->
+            <!--<package name="org.wso2.carbon.esb.websocket.inbound.transport.test"/>-->
+        <!--</packages>-->
+    <!--</test>-->
 
     <test name="nhttp-Transport-Test" preserve-order="true" verbose="2">
         <classes>
