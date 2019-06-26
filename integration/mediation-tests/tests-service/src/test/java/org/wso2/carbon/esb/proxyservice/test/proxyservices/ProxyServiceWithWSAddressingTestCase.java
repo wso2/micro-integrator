@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.proxyservice.test.proxyservices;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -33,8 +32,6 @@ public class ProxyServiceWithWSAddressingTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/proxyservice/proxy_with_addressing.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "test proxy service behavior when addressing is sent")
@@ -64,8 +61,4 @@ public class ProxyServiceWithWSAddressingTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }
