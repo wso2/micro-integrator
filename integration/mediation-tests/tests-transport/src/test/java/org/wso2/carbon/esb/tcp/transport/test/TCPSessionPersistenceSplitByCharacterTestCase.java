@@ -31,24 +31,22 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 /**
  * Test TCP session persistance splitting by a charachter.
  */
-public class TCPSessionPersistanceSpliyByCharacterTestCase extends ESBIntegrationTest {
-
-    private static String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"
-            + "<soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
+public class TCPSessionPersistenceSplitByCharacterTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/tcp/transport/tcpProxy_splitByCharacter.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Tcp proxy service which configured to split by character")
+    @Test(groups = "wso2.esb", description = "Tcp proxy service configured to split by character")
     public void tcpTransportSplitByCharacterProxy() throws Exception {
         int messageCount = 3;
         String character = "|";
         NativeTCPClient tcpClient = new NativeTCPClient(NativeTCPClient.DelimiterTypeEnum.CHARACTER.getDelimiterType(),
-                messageCount, 6792);
+                messageCount, 6788); // Port should match the port in tcpProxy_splitByCharacter.xml
+        String message = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">"
+                + "<soapenv:Header/><soapenv:Body/></soapenv:Envelope>";
         tcpClient.setMessage(message);
         tcpClient.setCharacterDelimiter(character);
         tcpClient.sendToServer();

@@ -41,10 +41,10 @@ public class TcpTransportProxyServiceTestCase extends ESBIntegrationTest {
         OMElement response;
         String tcpProxyUrl;
         if (isRunningOnStratos()) {
-            tcpProxyUrl = "tcp://localhost:8480/services/t/" + context.getContextTenant().getDomain()
+            tcpProxyUrl = "tcp://localhost:8290/services/t/" + context.getContextTenant().getDomain()
                     + "/tcpProxy/tcpProxy?contentType=application/soap+xml";
         } else {
-            tcpProxyUrl = "tcp://localhost:8480/services/tcpProxy/tcpProxy?contentType=application/soap+xml";
+            tcpProxyUrl = "tcp://localhost:8290/services/tcpProxy/tcpProxy?contentType=application/soap+xml";
         }
         response = tcpClient
                 .sendSimpleStockQuote12(tcpProxyUrl, "TCPPROXY", tcpClient.CONTENT_TYPE_APPLICATIONS_SOAP_XML);

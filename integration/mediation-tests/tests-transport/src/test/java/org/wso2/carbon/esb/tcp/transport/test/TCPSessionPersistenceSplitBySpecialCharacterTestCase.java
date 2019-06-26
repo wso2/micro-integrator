@@ -30,7 +30,7 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 /**
- * Test TCP session persistance splitting by a special charachter.
+ * Test TCP session persistence splitting by a special character.
  */
 public class TCPSessionPersistenceSplitBySpecialCharacterTestCase extends ESBIntegrationTest {
 
