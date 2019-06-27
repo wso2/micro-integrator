@@ -18,34 +18,26 @@
 
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
 public class JMSOutOnlyTestCase extends ESBIntegrationTest {
-    private LogViewerClient logViewerClient;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_out_only_proxy.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        //to clear the logs old logs
-        logViewerClient.getAllSystemLogs();
-        logViewerClient.clearLogs();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test proxy service with out-only jms transport")
     public void testJMSProxy() throws Exception {
+
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<?xml version='1.0' encoding='UTF-8'?>"
@@ -56,7 +48,6 @@ public class JMSOutOnlyTestCase extends ESBIntegrationTest {
                 + "            <xsd:symbol>JMSTransport</xsd:symbol>" + "         </ser:order>"
                 + "      </ser:placeOrder>" + "   </soapenv:Body>" + "</soapenv:Envelope>";
 
-        AXIOMUtil.stringToOM(payload);
         client.sendRobust(AXIOMUtil.stringToOM(payload), contextUrls.getServiceUrl() + "/MainProxy", "placeOrder");
         client.sendRobust(AXIOMUtil.stringToOM(payload), contextUrls.getServiceUrl() + "/MainProxy", "placeOrder");
         client.sendRobust(AXIOMUtil.stringToOM(payload), contextUrls.getServiceUrl() + "/MainProxy", "placeOrder");
@@ -64,26 +55,12 @@ public class JMSOutOnlyTestCase extends ESBIntegrationTest {
         Thread.sleep(60000); //wait until all message received to jms proxy
         client.sendRobust(AXIOMUtil.stringToOM(payload), contextUrls.getServiceUrl() + "/EndLogProxy", "placeOrder");
 
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
+        String logMessage = carbonLogReader.getSubstringBetweenStrings("Expiring message ID",
+                "dropping message after global timeout of : 120 seconds", 60);
 
-        boolean logMessageFound = false;
-        String logMessage = "";
-        for (LogEvent item : logs) {
-            String message = item.getMessage();
-            if (message.startsWith("Expiring message ID") && message
-                    .endsWith("dropping message after global timeout of : 120 seconds")) {
-                logMessageFound = true;
-                logMessage = message;
-                break;
-            }
+        Assert.assertFalse(!logMessage.isEmpty(),
+                "Unnecessary Call Back Registered. Log message found > " + logMessage);
 
-        }
-        Assert.assertFalse(logMessageFound, "Unnecessary Call Back Registered. Log message found > " + logMessage);
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 }
