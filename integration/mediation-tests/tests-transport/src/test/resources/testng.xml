@@ -23,8 +23,16 @@
 
     <test name="ViewPopRedirectTests" preserve-order="true" verbose="2">
         <classes>
-            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.RedirectTest"/>
-            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.ViewPopTest"/>
+            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.RedirectTest">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.ViewPopTest">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 
@@ -77,6 +85,11 @@
 
         <classes>
             <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA2824MissingResponseTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSCAppDeploymentWithFaultyProxyTestCase">
                 <methods>
                     <exclude name=".*"/>
                 </methods>

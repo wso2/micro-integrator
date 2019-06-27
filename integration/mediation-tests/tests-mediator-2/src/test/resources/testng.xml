@@ -82,12 +82,6 @@
         </packages>
     </test>
 
-    <test name="Spring-mediator-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.mediator.test.spring"/>
-        </packages>
-    </test>
-
     <test name="Smook-mediator-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.smooks"/>

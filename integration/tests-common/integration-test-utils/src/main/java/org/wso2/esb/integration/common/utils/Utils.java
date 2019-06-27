@@ -51,6 +51,28 @@ public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
 
+    public enum ArtifactType {
+        API("api"),
+        ENDPOINT("endpoints"),
+        INBOUND_ENDPOINT("inbound-endpoints"),
+        LOCAL_ENTRY("local-entries"),
+        MESSAGE_PROCESSOR("message-processors"),
+        MESSAGE_STORES("message-stores"),
+        PROXY("proxy-services"),
+        SEQUENCE("sequences"),
+        TEMPLATE("templates");
+
+        private String type;
+
+        ArtifactType(String type) {
+            this.type = type;
+        }
+
+        public String getDirName() {
+            return type;
+        }
+    }
+
     public static OMElement getSimpleQuoteRequest(String symbol) {
         OMFactory fac = OMAbstractFactory.getOMFactory();
         OMNamespace omNs = fac.createOMNamespace("http://services.samples", "ns");
@@ -407,6 +429,11 @@ public class Utils {
         return isCarFileDeployed;
     }
 
+    public static void deploySynapseConfiguration(OMElement config, String artifactName, ArtifactType type,
+                                                  boolean isRestartRequired) {
+        deploySynapseConfiguration(config, artifactName, type.getDirName(), isRestartRequired);
+    }
+
     public static void deploySynapseConfiguration(OMElement config, String artifactName, String artifactType,
                                                   boolean isRestartRequired) {
 
@@ -435,7 +462,15 @@ public class Utils {
         }
     }
 
+    public static void undeploySynapseConfiguration(String artifactName, ArtifactType type, boolean restartServer) {
+        undeploySynapseConfiguration(artifactName, type.getDirName(), restartServer);
+    }
+
     public static void undeploySynapseConfiguration(String artifactName, String artifactType) {
+        undeploySynapseConfiguration(artifactName, artifactType, true);
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, String artifactType, boolean restartServer) {
         CarbonServerExtension.shutdownServer();
         String pathString = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
                 + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
@@ -446,7 +481,9 @@ public class Utils {
         } catch (IOException e) {
             log.error("Error while deleting the file", e);
         }
-        CarbonServerExtension.restartServer();
+        if (restartServer) {
+            CarbonServerExtension.restartServer();
+        }
     }
 
 }

@@ -128,7 +128,7 @@ public class ConfiguringNhttpAccessLogLocationTestCase extends ESBIntegrationTes
             super.cleanup();
         } finally {
             Thread.sleep(3000);
-            serverConfigurationManager.restoreToLastConfiguration();
+            serverConfigurationManager.restoreToLastMIConfiguration();
             serverConfigurationManager = null;
             nhttpLogDir = null;
         }

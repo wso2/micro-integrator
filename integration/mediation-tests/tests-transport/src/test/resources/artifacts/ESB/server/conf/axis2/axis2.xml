@@ -262,7 +262,7 @@
     check com.sun.mail.pop3 and com.sun.mail.imap package documentation for more details-->
     </transportReceiver>
 
-    <!--Uncomment this and configure as appropriate for JMS transport support, after setting up your JMS environment (e.g. ActiveMQ)
+    <!--Uncomment this and configure as appropriate for JMS transport support, after setting up your JMS environment (e.g. ActiveMQ) -->
     <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
         <parameter name="myTopicConnectionFactory" locked="false">
         	<parameter name="java.naming.factory.initial" locked="false">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
@@ -284,7 +284,7 @@
         	<parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
 		    <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
         </parameter>
-    </transportReceiver>-->
+    </transportReceiver>
 
     <!--Uncomment this and configure as appropriate for JMS transport support with Apache Qpid -->
     <!--transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
@@ -406,8 +406,18 @@
     <!--Uncomment this local transport to use local transport in mediation flow-->
     <transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>
 
-    <!-- uncomment this and configure to use connection pools for sending messages>
-      <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender"/-->
+    <!-- uncomment this and configure to use connection pools for sending messages> -->
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
+        <parameter name="myQueueConnectionFactory2" locked="false">
+            <parameter name="java.naming.factory.initial" locked="false">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
+            <parameter name="java.naming.provider.url" locked="false">tcp://localhost:61626</parameter>
+            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
+            <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
+            <parameter name="transport.jms.Destination" locked="false">dynamicQueues/StaleConnectionTest</parameter>
+            <parameter name="transport.jms.DestinationType" locked="false">queue</parameter>
+            <parameter name="transport.jms.CacheLevel" locked="false">connection</parameter>
+        </parameter>
+    </transportSender>
 
     <transportSender name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportSender"/>
 

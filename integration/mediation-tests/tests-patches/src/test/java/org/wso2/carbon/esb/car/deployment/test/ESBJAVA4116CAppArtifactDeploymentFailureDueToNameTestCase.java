@@ -33,8 +33,7 @@ public class ESBJAVA4116CAppArtifactDeploymentFailureDueToNameTestCase extends E
     @Test(groups = "wso2.esb", description = "Test whether capp deployment fails "
             + "if sequence artifact name consist of *main* as a substring")
     public void testSequenceDeployed() throws Exception {
-        org.testng.Assert.assertTrue(
-                esbUtils.isSequenceDeployed(contextUrls.getBackEndUrl(), getSessionCookie(), "MySequenceDomain"),
+        org.testng.Assert.assertTrue(checkSequenceExistence("MySequenceDomain"),
                 "ERROR - CappAxis2Deployer Error while deploying carbon application");
     }
 

@@ -29,6 +29,12 @@
                     <exclude name=".*" />
                 </methods>
             </class>
+            <!-- Removing due to https://github.com/wso2/micro-integrator/issues/486 -->
+            <class name="org.wso2.carbon.esb.mediator.test.aggregate.SoapHeaderBlocksTestCase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
         </classes>
     </test>
 
@@ -182,7 +188,12 @@
             <package name="org.wso2.carbon.esb.mediator.test.enrich"/>
         </packages>
         <classes>
-            <class name="org.wso2.carbon.esb.mediator.test.enrich.jsonpath.EnrichIntegrationJsonPathTestCase">
+            <class name="org.wso2.carbon.esb.mediator.test.enrich.jsonpath.EnrichIntegrationJsonPathTestCase"/>
+            <!-- Excluding due to https://github.com/wso2/micro-integrator/issues/486-->
+            <class name="org.wso2.carbon.esb.mediator.test.enrich.EnrichByOMTextTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
             </class>
         </classes>
     </test>

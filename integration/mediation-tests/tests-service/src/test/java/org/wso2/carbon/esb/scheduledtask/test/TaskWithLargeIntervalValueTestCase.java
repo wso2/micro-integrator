@@ -22,7 +22,7 @@ import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
@@ -44,29 +44,33 @@ public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
     public void testDeployWithLargeIntervalValue() throws Exception {
 
         OMElement task = AXIOMUtil.stringToOM(
-                "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n"
+                "<task xmlns=\"http://ws.apache.org/ns/synapse\"\n"
                         + "           name=\"ESBJAVA5234TestTask\"\n"
                         + "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n"
-                        + "    <task:trigger count=\"1\" interval=\"25920000\"/>\n"
-                        + "    <task:property name=\"message\">\n"
+                        + "    <trigger count=\"1\" interval=\"25920000\"/>\n"
+                        + "    <property name=\"message\" "
+                        + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\">\n"
                         + "        <m0:placeOrder xmlns:m0=\"http://services.samples\">\n" + "            <m0:order>\n"
                         + "                <m0:price>100</m0:price>\n"
                         + "                <m0:quantity>200</m0:quantity>\n"
                         + "                <m0:symbol>IBM</m0:symbol>\n" + "            </m0:order>\n"
-                        + "        </m0:placeOrder>\n" + "    </task:property>\n" + "</task:task>");
+                        + "        </m0:placeOrder>\n" + "    </property>\n "
+                        + "<property name=\"proxyName\" value=\"ProxyForTaskWithLargeInterval\" \n"
+                        + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n"
+                        + "    <property name=\"injectTo\" value=\"proxy\" \n"
+                        + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n" + "</task>");
 
-        addScheduledTask(task);
-
-        LogViewerClient logViewerClient = new LogViewerClient(context.getContextUrls().getBackEndUrl(),
-                getSessionCookie());
+        Utils.deploySynapseConfiguration(task, "ESBJAVA5234TestTask", "tasks", true);
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         boolean assertValue = Utils
-                .checkForLog(logViewerClient, "ESBJAVA5234TestTask was added to the Synapse configuration successfully",
+                .logExists(carbonLogReader, "injected value from ESBJAVA5234TestTask received",
                         5);
         assertTrue(assertValue, "Scheduled task with large interval value has not deployed.");
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        Utils.undeploySynapseConfiguration("ESBJAVA5234TestTask", "tasks");
     }
 }

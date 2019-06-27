@@ -22,6 +22,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import javax.xml.namespace.QName;
 
@@ -42,7 +43,8 @@ public class ProxyServiceEnablingHTTPTestCase extends ESBIntegrationTest {
     public void testWSDLBasedProxy() throws Exception {
 
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enableHttpWsdlBasedProxy"), null, "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("enableHttpWsdlBasedProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();

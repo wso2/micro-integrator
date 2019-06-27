@@ -23,7 +23,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,48 +33,44 @@ import static org.testng.Assert.assertTrue;
 
 public class InjectToSequenceTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/scheduledTask/InjectToSequenceTestConfig.xml");
-        logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" })
     public void injectToSequenceTest() throws Exception {
         OMElement task = AXIOMUtil.stringToOM(
-                "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n"
+                "<task xmlns=\"http://ws.apache.org/ns/synapse\"\n"
                         + "           name=\"SampleInjectToSequenceTask\"\n"
                         + "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n"
-                        + "    <task:trigger count=\"1\" interval=\"1\"/>\n" + "    <task:property name=\"message\">\n"
+                        + "    <trigger count=\"1\" interval=\"1\"/>\n" + "    <property name=\"message\" \n"
+                        + " xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\">\n"
                         + "        <m0:placeOrder xmlns:m0=\"http://services.samples\">\n" + "            <m0:order>\n"
                         + "                <m0:price>100</m0:price>\n"
                         + "                <m0:quantity>200</m0:quantity>\n"
                         + "                <m0:symbol>IBM</m0:symbol>\n" + "            </m0:order>\n"
-                        + "        </m0:placeOrder>\n" + "    </task:property>\n"
-                        + "    <task:property name=\"sequenceName\" value=\"SampleSequence\"/>\n"
-                        + "    <task:property name=\"injectTo\" value=\"sequence\"/>\n" + "</task:task>");
+                        + "        </m0:placeOrder>\n" + "    </property>\n"
+                        + "    <property name=\"sequenceName\" value=\"SampleSequence\" \n"
+                        + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n"
+                        + "    <property name=\"injectTo\" value=\"sequence\" \n"
+                        + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n" + "</task>");
 
-        int beforeLogSize = logViewer.getAllSystemLogs().length;
-        addScheduledTask(task);
+        carbonLogReader.start();
+        Utils.deploySynapseConfiguration(task, "SampleInjectToSequenceTask", "tasks",  true);
         TimeUnit.SECONDS.sleep(5);
-        LogEvent[] logs = logViewer.getAllSystemLogs();
-        int afterLogSize = logs.length;
 
-        boolean invokedLogFound = false;
-        for (int i = 0; i < (afterLogSize - beforeLogSize); i++) {
-            if (logs[i].getMessage().contains("SEQUENCE INVOKED")) {
-                invokedLogFound = true;
-                break;
-            }
-        }
+        boolean invokedLogFound = carbonLogReader.getLogs().contains("SEQUENCE INVOKED");
+        carbonLogReader.stop();
         assertTrue(invokedLogFound);
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
+        Utils.undeploySynapseConfiguration("SampleInjectToSequenceTask", "tasks");
         super.cleanup();
     }
 }
