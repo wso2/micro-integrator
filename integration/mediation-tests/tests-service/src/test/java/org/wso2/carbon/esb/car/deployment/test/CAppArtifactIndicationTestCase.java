@@ -46,14 +46,12 @@ public class CAppArtifactIndicationTestCase extends ESBIntegrationTest {
         super.init();
 
         Assert.assertTrue(checkCarbonAppExistence(carFileName),"car application deployment failed");
-        TimeUnit.SECONDS.sleep(5);
         log.info(carFileName + " deployed successfully");
     }
 
     @Test(groups = "wso2.esb", enabled = true, description = "Test whether proxy service get deployed through capp")
     public void testProxyServiceIsCApp() throws Exception {
 
-        Thread.sleep(6000);
         Assert.assertTrue(checkProxyServiceExistence("sampleCustomProxy"),"transform Proxy service deployment failed");
     }
 
