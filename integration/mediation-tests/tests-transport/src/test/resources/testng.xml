@@ -23,7 +23,11 @@
 
     <test name="ViewPopRedirectTests" preserve-order="true" verbose="2">
         <classes>
-            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.RedirectTest"/>
+            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.RedirectTest">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
             <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.ViewPopTest"/>
         </classes>
     </test>
