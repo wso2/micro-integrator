@@ -29,6 +29,12 @@
                     <exclude name=".*" />
                 </methods>
             </class>
+            <!-- Removing due to https://github.com/wso2/micro-integrator/issues/486 -->
+            <class name="org.wso2.carbon.esb.mediator.test.aggregate.SoapHeaderBlocksTestCase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
         </classes>
     </test>
 

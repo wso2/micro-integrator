@@ -22,16 +22,11 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.IOException;
-import java.net.URL;
-import javax.activation.DataHandler;
-import javax.xml.stream.XMLStreamException;
 
 public class OnCompleteSequenceFromRegistryTestCase extends ESBIntegrationTest {
-    private ResourceAdminServiceClient resourceAdminServiceStub;
 
     private AggregatedRequestClient aggregatedRequestClient;
     private final int no_of_requests = 5;
@@ -39,9 +34,6 @@ public class OnCompleteSequenceFromRegistryTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadResourcesToConfigRegistry();
-        verifyProxyServiceExistence("aggregateMediatorOnCompleteFromConfTestProxy");
         aggregatedRequestClient = new AggregatedRequestClient();
         aggregatedRequestClient
                 .setProxyServiceUrl(getProxyServiceURLHttp("aggregateMediatorOnCompleteFromConfTestProxy"));
@@ -51,8 +43,8 @@ public class OnCompleteSequenceFromRegistryTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "pick up a sequence from registry conf on onComplete action of aggregate mediator")
-    public void test() throws IOException, XMLStreamException {
+            "wso2.esb"}, description = "pick up a sequence from registry conf on onComplete action of aggregate mediator")
+    public void test() throws IOException {
 
         String Response = aggregatedRequestClient.getResponse();
         Assert.assertNotNull(Response, "Response message is null");
@@ -62,21 +54,9 @@ public class OnCompleteSequenceFromRegistryTestCase extends ESBIntegrationTest {
         Assert.assertTrue(Response.contains("WSO2"), "payload factory in registry sequence has not run");
     }
 
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/config/sequences");
-        resourceAdminServiceStub.addCollection("/_system/config/", "sequences", "",
-                "Contains test sequence containing payload factory");
-        resourceAdminServiceStub
-                .addResource("/_system/config/sequences/dynamic_seq1.xml", "application/xml", "xml files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/synapseconfig/onCompleteSequenceConfig/sequences/dynamic_seq1.xml")));
-    }
-
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         try {
-            resourceAdminServiceStub.deleteResource("/_system/config/sequences");
-            resourceAdminServiceStub = null;
             aggregatedRequestClient = null;
         } finally {
             super.cleanup();
