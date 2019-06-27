@@ -93,7 +93,7 @@
         <classes>
             <class name="org.wso2.carbon.esb.car.deployment.test.CAppDeploymentOrderTest">
                 <methods>
-                    <exclude name=".*"/>
+                    <exclude name="localEntryDeploymentTest"/>
                 </methods>
             </class>
         </classes>
