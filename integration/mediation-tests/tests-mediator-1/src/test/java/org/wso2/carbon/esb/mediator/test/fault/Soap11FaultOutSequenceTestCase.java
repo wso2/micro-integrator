@@ -39,7 +39,7 @@ public class Soap11FaultOutSequenceTestCase extends ESBIntegrationTest {
         try {
             String proxyServiceName = "Soap11FaultOutSequenceTestCaseProxy";
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName),
-                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+                    null, "WSO2");
             fail("This query must throw an exception.");
         } catch (AxisFault expected) {
             log.info("Fault Message : " + expected.getMessage());
