@@ -40,8 +40,6 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Test Car with Mediator deployment and invocation")
     public void capp1DeploymentAndServiceInvocation() throws Exception {
 
-        Assert.assertTrue(checkProxyServiceExistence("MediatorTestProxy"),"Proxy service deployment failed");
-
         OMElement response = null;
         try {
             response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("MediatorTestProxy"), null, "WSO2");
