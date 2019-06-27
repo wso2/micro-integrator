@@ -410,10 +410,18 @@ public class Utils {
     public static void deploySynapseConfiguration(OMElement config, String artifactName, String artifactType,
                                                   boolean isRestartRequired) {
 
-        String path = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+        String directory = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
                 + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
-                + File.separator + artifactType + File.separator + artifactName + ".xml";
+                + File.separator + artifactType;
+        String path = directory + File.separator + artifactName + ".xml";
 
+        if (!Files.exists(FileSystems.getDefault().getPath(directory))) {
+            try {
+                Files.createDirectories(FileSystems.getDefault().getPath(directory));
+            } catch (IOException e) {
+                log.error("Error while creating the directory, " + directory + ".", e);
+            }
+        }
         try (OutputStream outputStream = new FileOutputStream(path)) {
             config.serialize(outputStream);
             config.serialize(System.out);
