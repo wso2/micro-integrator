@@ -143,7 +143,7 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
             Thread.sleep(3000);
             serverConfigurationManagerProp.restoreToLastConfiguration(false);
             serverConfigurationManagerProp = null;
-            serverConfigurationManagerAxis2.restoreToLastConfiguration();
+            serverConfigurationManagerAxis2.restoreToLastMIConfiguration();
             serverConfigurationManagerAxis2 = null;
         }
 
