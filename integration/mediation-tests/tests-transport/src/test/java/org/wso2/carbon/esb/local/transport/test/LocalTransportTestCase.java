@@ -23,7 +23,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
 import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
@@ -36,10 +35,6 @@ public class LocalTransportTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void deployProxyServices() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "local" + File.separator
-                        + "local-transport.xml");
-
     }
 
     @AfterClass(alwaysRun = true)
@@ -47,7 +42,7 @@ public class LocalTransportTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "testing local transport scenario")
+    @Test(groups = {"wso2.esb"}, description = "testing local transport scenario")
     public void testLocalTransportScenario() throws Exception {
 
         OMElement response = axis2Client
