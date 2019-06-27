@@ -16,15 +16,12 @@
 package org.wso2.carbon.esb.json;
 
 import org.apache.http.HttpResponse;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
-
-import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 
@@ -37,9 +34,6 @@ public class EI2757MalformedJSONPayloadFaultyTestCase extends ESBIntegrationTest
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "json" + File.separator
-                        + "malformedJsonFaulty.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -50,10 +44,5 @@ public class EI2757MalformedJSONPayloadFaultyTestCase extends ESBIntegrationTest
                 .doPost(getApiInvocationURL("malformedJson"), null, payload, "application/json");
         assertEquals(response.getStatusLine().getStatusCode(), 500,
                 "The status code set in the faulty sequence is not received");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }

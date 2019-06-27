@@ -20,43 +20,41 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.IOException;
 
 public class ESBJAVA_3698_MessageBuildingWithDifferentPayloadAndContentTypeTestCase extends ESBIntegrationTest {
     private final DefaultHttpClient httpClient = new DefaultHttpClient();
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
         verifyAPIExistence("ESBJAVA3698JsonStockQuoteAPI");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check for Axis Fault when xml payload is sent with application/json"
             + " content type", enabled = true)
     public void testAxisFaultWithXmlPayloadAndJSONContentType()
             throws ClientProtocolException, IOException, InterruptedException, LogViewerLogViewerException {
+        carbonLogReader.start();
         final HttpPost post = new HttpPost("http://localhost:8480/ESBJAVA3698jsonstockquote/test");
         post.addHeader("Content-Type", "application/json");
         post.addHeader("SOAPAction", "urn:getQuote");
         StringEntity se = new StringEntity(getPayload());
         post.setEntity(se);
 
-        logViewerClient.clearLogs();
-
         httpClient.execute(post);
 
-        boolean errorLogFound = Utils
-                .checkForLog(logViewerClient, "Error occurred while processing document for application/json", 10);
+        boolean errorLogFound = carbonLogReader.checkForLog(
+                "Error occurred while processing document for application/json", 60);
+        carbonLogReader.stop();
         Assert.assertEquals(errorLogFound, true, "Expected SOAP Response was NOT found in the LOG stream.");
     }
 
@@ -67,11 +65,5 @@ public class ESBJAVA_3698_MessageBuildingWithDifferentPayloadAndContentTypeTestC
                         + "<xsd:symbol>IBM</xsd:symbol>" + "</ser:request>" + "</ser:getQuote>" + "</soapenv:Body>"
                         + "</soapenv:Envelope>";
         return payload;
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        logViewerClient = null;
-        super.cleanup();
     }
 }

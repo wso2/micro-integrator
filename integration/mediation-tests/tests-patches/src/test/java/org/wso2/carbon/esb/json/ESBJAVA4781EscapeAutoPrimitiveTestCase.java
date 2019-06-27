@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.json;
 
 import junit.framework.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
@@ -30,7 +29,6 @@ public class ESBJAVA4781EscapeAutoPrimitiveTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyAPIExistence("FormatterEscapePrimitiveSequenceAPI");
 
     }
 
@@ -51,10 +49,4 @@ public class ESBJAVA4781EscapeAutoPrimitiveTestCase extends ESBIntegrationTest {
                 expected.equals(response.getData()));
 
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }
