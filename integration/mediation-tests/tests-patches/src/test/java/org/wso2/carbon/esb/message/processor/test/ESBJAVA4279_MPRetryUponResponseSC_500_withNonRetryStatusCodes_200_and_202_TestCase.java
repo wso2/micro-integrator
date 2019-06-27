@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,6 +29,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
@@ -44,16 +46,12 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     private static final String EXPECTED_ERROR_MESSAGE = "Message forwarding failed";
     private static final String EXPECTED_MP_DEACTIVATION_MSG = "Successfully deactivated the message processor [Processor1]";
     private static final int RETRY_COUNT = 4;
-    private LogViewerClient logViewerClient;
-    private ActiveMQServer activeMQServer = new ActiveMQServer();
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void deployeService() throws Exception {
         super.init();
-        activeMQServer.startJMSBroker();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/messageProcessorConfig/MessageProcessorRetryUpon_500_ResponseWith_200And_202As_Non_retry_SC.xml");
-        isProxyDeployed(PROXY_SERVICE_NAME);
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = {
@@ -65,25 +63,18 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
         boolean isMpDeactivated = false;
         int retryAttempts = 0;
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
+        carbonLogReader.start();
         AxisServiceClient client = new AxisServiceClient();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");
 
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+
 
         // Wait till the log appears
         Thread.sleep(20000);
-
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains(EXPECTED_ERROR_MESSAGE)) {
-                isRetriedUpon_500_response = true;
-                retryAttempts++;
-            } else if (message.contains(EXPECTED_MP_DEACTIVATION_MSG)) {
-                isMpDeactivated = true;
-            }
-        }
-
+        String logs = carbonLogReader.getLogs();
+        isRetriedUpon_500_response = logs.contains(EXPECTED_ERROR_MESSAGE);
+        retryAttempts = StringUtils.countMatches(logs, EXPECTED_ERROR_MESSAGE);
+        isMpDeactivated = logs.contains(EXPECTED_MP_DEACTIVATION_MSG);
         if (retryAttempts == RETRY_COUNT) {
             isRetryCompleted = true;
         }
@@ -94,7 +85,6 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     @AfterClass(alwaysRun = true)
     public void UndeployeService() throws Exception {
         super.cleanup();
-        activeMQServer.stopJMSBroker();
     }
 
     /*
