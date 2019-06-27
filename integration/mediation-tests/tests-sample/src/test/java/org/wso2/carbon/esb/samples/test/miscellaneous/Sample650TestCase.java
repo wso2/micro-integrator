@@ -27,10 +27,7 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
-import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.clients.localentry.LocalEntriesAdminClient;
-import org.wso2.esb.integration.common.clients.sequences.SequenceAdminServiceClient;
-import org.wso2.esb.integration.common.clients.tasks.TaskAdminClient;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
@@ -40,10 +37,7 @@ import static org.testng.Assert.assertTrue;
 
 public class Sample650TestCase extends ESBSampleIntegrationTest {
 
-    private EndPointAdminClient endPointAdminClient;
     private LocalEntriesAdminClient localEntriesAdminClient;
-    private SequenceAdminServiceClient sequenceAdminServiceClient;
-    private TaskAdminClient taskAdminClient;
     private ServerConfigurationManager serverManager = null;
 
     @BeforeClass(alwaysRun = true)
@@ -68,20 +62,14 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
 
         FileUtils.moveDirectory(newDir, targetDir);
 
-        serverManager.applyConfiguration(new File(
+        serverManager.applyMIConfigurationWithRestart(new File(
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
                         + File.separator + "miscellaneous" + File.separator + "axis2.xml"));
 
         // serverManager.restartGracefully();
         super.init();
 
-        endPointAdminClient = new EndPointAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
         localEntriesAdminClient = new LocalEntriesAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
-        sequenceAdminServiceClient = new SequenceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
-        taskAdminClient = new TaskAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -120,7 +108,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Test End points")
     public void testEndPoints() throws Exception {
-        assertTrue(endPointAdminClient.getEndpointCount() == 1, "End points not added");
+        assertTrue(getNoOfArtifacts("endpoints") == 1, "End points not added");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -132,13 +120,13 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Test Sequences")
     public void testSequences() throws Exception {
-        assertTrue(sequenceAdminServiceClient.getSequences().length > 3, "Sequences not added");
+        assertTrue(getNoOfArtifacts("sequences") > 3, "Sequences not added");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Test tasks")
     public void testTasks() throws Exception {
-        assertTrue(taskAdminClient.getScheduleTaskList().size() == 1, "tasks not added");
+        assertTrue(getNoOfArtifacts("tasks") == 1, "tasks not added");
     }
 
     @AfterClass(alwaysRun = true)
@@ -146,7 +134,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
         super.cleanup();
         Thread.sleep(5000);
         if (serverManager != null) {
-            serverManager.restoreToLastConfiguration();
+            serverManager.restoreToLastMIConfiguration();
         }
     }
 }

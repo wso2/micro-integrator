@@ -23,6 +23,7 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.application.mgt.synapse.stub.ExceptionException;
 import org.wso2.carbon.application.mgt.synapse.stub.types.carbon.SynapseApplicationMetadata;
@@ -914,6 +915,16 @@ public abstract class ESBIntegrationTest {
 
         String response = retrieveArtifactUsingManagementApi("inbound-endpoints");
         return response.contains(inboundEndpoinName);
+    }
+
+    protected int getNoOfArtifacts(String artifactType) throws IOException {
+        int count = 0;
+        String response = retrieveArtifactUsingManagementApi(artifactType);
+        JSONObject jsonObject = new JSONObject(response);
+        if(jsonObject.has("count")) {
+            count = jsonObject.getInt("count");
+        }
+        return count;
     }
 
     protected boolean checkProxyServiceExistence(String proxyServiceName) throws IOException {
