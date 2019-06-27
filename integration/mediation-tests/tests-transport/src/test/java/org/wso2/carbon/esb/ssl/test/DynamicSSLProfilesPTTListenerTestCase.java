@@ -133,7 +133,7 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
         deleteProxyService(proxyService);
         super.cleanup();
         if (serverManager != null) {
-            serverManager.restoreToLastConfiguration();
+            serverManager.restoreToLastMIConfiguration();
         }
     }
 

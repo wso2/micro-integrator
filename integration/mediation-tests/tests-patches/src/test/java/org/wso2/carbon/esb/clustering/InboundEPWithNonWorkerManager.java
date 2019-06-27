@@ -85,7 +85,7 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
         serverConfigurationManager = null;
     }
 
