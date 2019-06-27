@@ -18,10 +18,10 @@
 package org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import javax.xml.namespace.QName;
 
@@ -33,17 +33,14 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/wsdl_options_specified_source_url.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "- WSDL based proxy" + "- Publish WSDL Options - Specified source url")
     public void testWSDLBasedProxy() throws Exception {
 
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromSourceUrlWsdlBasedProxy"), null,
-                        "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromSourceUrlWsdlBasedProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -55,8 +52,4 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }

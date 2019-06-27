@@ -4,7 +4,6 @@
     <description/>
     <target>
         <inSequence>
-            <property name="symbol" value="conf:/validate1/schema.xml"/>
             <property name="isValid" value="true"/>
             <validate>
                 <schema key="conf:/validate/schema.xml"/>

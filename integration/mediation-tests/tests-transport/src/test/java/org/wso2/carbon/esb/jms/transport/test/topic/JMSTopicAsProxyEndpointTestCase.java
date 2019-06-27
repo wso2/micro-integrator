@@ -17,15 +17,12 @@
  */
 package org.wso2.carbon.esb.jms.transport.test.topic;
 
-import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSTopicMessageConsumer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
@@ -34,8 +31,6 @@ public class JMSTopicAsProxyEndpointTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/topic/send_messages_topic_synapse.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
@@ -70,10 +65,5 @@ public class JMSTopicAsProxyEndpointTestCase extends ESBIntegrationTest {
                     "Message Content received from topic" + " mismatched than the original message");
         }
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }

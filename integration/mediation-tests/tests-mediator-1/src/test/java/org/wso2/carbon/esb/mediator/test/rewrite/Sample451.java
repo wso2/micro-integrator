@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.rewrite;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -33,7 +32,6 @@ public class Sample451 extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/rewrite/synapse_sample451.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -42,14 +40,9 @@ public class Sample451 extends ESBIntegrationTest {
     public void invokeService(String addUrl) throws AxisFault {
         OMElement response;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), addUrl, "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("Sample451Proxy"), addUrl, "IBM");
         assertTrue(response.toString().contains("IBM"));
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-        super.cleanup();
     }
 
     @DataProvider(name = "addressingUrl")

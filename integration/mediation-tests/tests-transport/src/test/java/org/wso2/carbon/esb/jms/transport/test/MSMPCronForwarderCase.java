@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.awaitility.Awaitility;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -27,11 +26,8 @@ import org.wso2.carbon.automation.extensions.servers.tomcatserver.TomcatServerMa
 import org.wso2.carbon.automation.extensions.servers.tomcatserver.TomcatServerType;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
-import org.wso2.esb.integration.common.clients.logging.LoggingAdminClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.services.jaxrs.customersample.CustomerConfig;
 
 import java.net.URL;
@@ -41,6 +37,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Check if the message processor runs the forwarder with the specified interval along with the cron interval
@@ -48,9 +45,10 @@ import static org.testng.Assert.assertEquals;
  */
 public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
-    private TomcatServerManager tomcatServerManager;
-    private LoggingAdminClient logAdmin;
     private final int NUMBER_OF_MESSAGES = 4;
+
+    private TomcatServerManager tomcatServerManager;
+    private CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
@@ -63,15 +61,12 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         tomcatServerManager.startServer();  // staring tomcat server instance
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isServerStarted());
-        logAdmin = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor")
     public void testMessageProcessorCronForwader() throws Exception {
-        logAdmin.updateLoggerData("org.apache.synapse", LoggingAdminClient.LogLevel.DEBUG.name(), true, false);
 
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/MSMP_CRON_WITH_FORWARDER.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
+        carbonLogReader.start();
 
         // SEND THE REQUEST
         String addUrl = getProxyServiceURLHttp("MSMPRetrytest");
@@ -94,23 +89,22 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
         // WAIT FOR THE MESSAGE PROCESSOR TO TRIGGER
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isLogWritten());
+        assertTrue(carbonLogReader.checkForLog("Jack", 60, NUMBER_OF_MESSAGES));
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         //undo logger change
-        logAdmin.updateLoggerData("org.apache.synapse", LoggingAdminClient.LogLevel.INFO.name(), true, false);
         if (tomcatServerManager != null) {
             tomcatServerManager.stop();
         }
-        super.cleanup();
+        carbonLogReader.stop();
     }
 
     private Callable<Boolean> isServerStarted() {
         return new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-
                 return tomcatServerManager.isRunning();
             }
         };
@@ -118,23 +112,8 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
     private Callable<Boolean> isLogWritten() {
         return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-                LogEvent[] logEvents = logViewerClient.getAllSystemLogs();
-
-                boolean success = false;
-                int msgCount = 0;
-                for (int i = 0; i < logEvents.length; i++) {
-                    if (logEvents[i].getMessage().contains("Jack")) {
-                        msgCount = ++msgCount;
-                        if (NUMBER_OF_MESSAGES == msgCount) {
-                            success = true;
-                            break;
-                        }
-                    }
-                }
-                return success;
+            @Override public Boolean call() throws Exception {
+                return carbonLogReader.assertIfLogExists("Jack", NUMBER_OF_MESSAGES);
             }
         };
     }

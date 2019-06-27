@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.proxyservice.test.passThroughProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -34,8 +33,6 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/passThroughProxy/passThroughProxy.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "Pass through proxy http with addressing uri")
@@ -136,8 +133,4 @@ public class PassThroughProxyServiceTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }

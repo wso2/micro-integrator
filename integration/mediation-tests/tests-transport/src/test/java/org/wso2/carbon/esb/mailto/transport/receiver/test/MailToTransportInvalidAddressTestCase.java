@@ -18,10 +18,13 @@
 
 package org.wso2.carbon.esb.mailto.transport.receiver.test;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
@@ -35,16 +38,18 @@ import static org.testng.Assert.assertTrue;
  */
 public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
 
-    private static LogViewerClient logViewerClient;
+    private static CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "mailTransport"
-                        + File.separator + "mailTransportReceiver" + File.separator
-                        + "mail_transport_invalid_address.xml");
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        OMElement mailToProxyOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(
+                getESBResourceLocation() + File.separator + "mailTransport" + File.separator +
+                        "mailTransportReceiver" + File.separator + "mail_transport_invalid_address.xml")));
+        Utils.deploySynapseConfiguration(mailToProxyOMElement,
+                "MailTransportInvalidAddress","proxy-services",
+                true);
+        carbonLogReader = new CarbonLogReader();
 
         // Since ESB reads all unread emails one by one, we have to delete
         // the all unread emails before run the test
@@ -54,14 +59,13 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
     @Test(groups = {
             "wso2.esb" }, description = "Test email transport with invalid address parameter and pop3 protocol")
     public void testEmailTransportInvalidAddress() throws Exception {
-        logViewerClient.clearLogs();
-        assertTrue(Utils.checkForLog(logViewerClient, "Error connecting to mail server for address", 10000),
+        carbonLogReader.start();
+        assertTrue(carbonLogReader.checkForLog("Error connecting to mail server for address", 10),
                 "Couldn't find the error message in log");
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
-        super.cleanup();
-
+        Utils.undeploySynapseConfiguration("MailTransportInvalidAddress","proxy-services");
     }
 }

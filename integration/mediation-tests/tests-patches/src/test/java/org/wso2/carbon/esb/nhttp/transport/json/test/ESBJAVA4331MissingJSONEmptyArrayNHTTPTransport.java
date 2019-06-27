@@ -22,30 +22,14 @@ import junit.framework.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-
-import java.io.File;
 
 public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrationTest {
-
-    private ServerConfigurationManager serverConfigurationManager;
-
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(
-                getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
-                        + "json" + File.separator + "synapse.properties"));
-        super.init();
-        verifyAPIExistence("testJsonEmptyArrayApi");
-
     }
 
     @Test(groups = "wso2.esb", description = "check whether Backend JSON payload is missing Json empty array elements "
@@ -81,8 +65,6 @@ public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrati
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
     }
 
 }

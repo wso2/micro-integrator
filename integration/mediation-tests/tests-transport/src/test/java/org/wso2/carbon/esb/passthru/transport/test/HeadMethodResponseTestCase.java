@@ -19,11 +19,9 @@
 
 package org.wso2.carbon.esb.passthru.transport.test;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
@@ -31,34 +29,23 @@ import static org.testng.Assert.assertFalse;
 
 public class HeadMethodResponseTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewer;
-
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/HeadMethodResponseTestSynapse.xml");
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = "wso2.esb", description = " Checking response for HEAD request contains a body")
     public void testResponseBodyOfHEADRequest() throws Exception {
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
+
         SimpleHttpClient httpClient = new SimpleHttpClient();
-        httpClient.doGet(contextUrls.getServiceUrl() + "/ClientProxy", null);
+        httpClient.doGet(contextUrls.getServiceUrl() + "/HeadMethodResponseTestClientProxy", null);
 
-        LogEvent[] logs = logViewer.getAllSystemLogs();
-        boolean errorLogFound = false;
-        for (LogEvent log : logs) {
-            if (log.getMessage().contains("HTTP protocol violation")) {
-                errorLogFound = true;
-                break;
-            }
-        }
-        assertFalse(errorLogFound,
+        assertFalse(carbonLogReader.assertIfLogExists("HTTP protocol violation"),
                 "HTTP protocol violation for Http HEAD request, " + "Response for HEAD request contains a body");
+
+        carbonLogReader.stop();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }

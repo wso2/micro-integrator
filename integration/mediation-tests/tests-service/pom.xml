@@ -482,6 +482,27 @@
                             </resources>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-addressing-client-module</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/client/modules
+                            </outputDirectory>
+                            <resources>
+                                <resource>
+                                    <directory>
+                                        ${basedir}/target/tobeCopied/wso2mi-${product.mi.version}/repository/deployment/client/modules/
+                                    </directory>
+                                    <includes>
+                                        <include>**/*.mar</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
 
                     <!--       <execution>
                                <id>copy-sample-jks</id>

@@ -19,16 +19,11 @@ package org.wso2.esb.integration.common.utils.common;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension;
-import org.wso2.carbon.integration.common.admin.client.ServerAdminClient;
-import org.wso2.carbon.integration.common.utils.ClientConnectionUtil;
 import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
-import org.wso2.carbon.server.admin.stub.ServerAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 
 import java.io.File;
@@ -46,7 +41,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -249,6 +243,22 @@ public class ServerConfigurationManager {
     }
 
     /**
+     * restore to a last configuration and restart the server
+     */
+    public void restoreToLastMIConfiguration() throws IOException, AutomationUtilException {
+        for (ConfigData data : configData) {
+            Files.move(data.getBackupConfig().toPath(), data.getOriginalConfig().toPath(),
+                    StandardCopyOption.REPLACE_EXISTING);
+
+            if (data.getBackupConfig().exists()) {
+                throw new IOException(
+                        "File rename from " + data.getBackupConfig() + "to " + data.getOriginalConfig() + "fails");
+            }
+        }
+        restartMicroIntegrator();
+    }
+
+    /**
      * restore all files to last configuration and restart the server
      *
      * @throws AutomationUtilException - throws if restore to last configuration fails
@@ -282,12 +292,26 @@ public class ServerConfigurationManager {
     }
 
     /**
+     * apply configuration file and restart micro integrator server to take effect the configuration
+     *
+     * @param newConfig       configuration file
+     * @throws AutomationUtilException - throws if apply configuration fails
+     * @throws IOException             - throws if apply configuration fails
+     */
+    public void applyMIConfigurationWithRestart(File newConfig)
+            throws AutomationUtilException, IOException {
+        //to backup existing configuration
+        applyConfigurationUtil(newConfig, newConfig);
+        restartMicroIntegrator();
+    }
+
+    /**
      * apply configuration file and restart server to take effect the configuration
      *
      * @param newConfig configuration file
      * @throws IOException - throws if apply configuration fails
      */
-    public void applyConfigurationWithoutRestart(File newConfig) throws IOException {
+    public void applyMIConfiguration(File newConfig) throws IOException {
         //to backup existing configuration
         appluConfigurationUtilUtil(newConfig, newConfig);
     }
@@ -305,7 +329,6 @@ public class ServerConfigurationManager {
 
     private void applyConfigurationUtil(File sourceFile, File targetFile) throws IOException, AutomationUtilException {
         appluConfigurationUtilUtil(sourceFile, targetFile);
-        restartGracefully();
     }
 
     private void appluConfigurationUtilUtil(File sourceFile, File targetFile) throws IOException {
@@ -329,6 +352,15 @@ public class ServerConfigurationManager {
     public void restartGracefully() throws AutomationUtilException {
 
         //        org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
+    }
+
+    /**
+     * Restart MicroIntegrator Server
+     *
+     * @throws AutomationUtilException - throws if server restart fails
+     */
+    public void restartMicroIntegrator() throws AutomationUtilException {
+                org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension.restartServer();
     }
 
     /**

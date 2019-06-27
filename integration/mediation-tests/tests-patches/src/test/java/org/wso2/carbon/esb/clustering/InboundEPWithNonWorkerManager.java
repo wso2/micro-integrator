@@ -58,7 +58,7 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfigurationWithoutRestart(new File(FULL_RESOURCE_PATH + "axis2.xml"));
+        serverConfigurationManager.applyMIConfiguration(new File(FULL_RESOURCE_PATH + "axis2.xml"));
         serverConfigurationManager
                 .copyToComponentLib(new File(getClass().getResource(JAR_LOCATION + File.separator + HAWTBUF).toURI()));
         serverConfigurationManager.copyToComponentLib(
@@ -85,7 +85,7 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
         serverConfigurationManager = null;
     }
 

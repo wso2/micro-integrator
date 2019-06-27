@@ -34,7 +34,6 @@ public class NoEntityBodyPropertyCheck extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyProxyServiceExistence("NoEntityBodyPropertyTestProxy");
     }
 
     @Test(groups = "wso2.esb", description = " Checking NO_ENTITY_BODY_PROPERTY", enabled = true)
@@ -52,6 +51,5 @@ public class NoEntityBodyPropertyCheck extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
     }
 }

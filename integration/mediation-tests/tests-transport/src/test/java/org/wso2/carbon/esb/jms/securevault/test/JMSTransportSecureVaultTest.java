@@ -25,9 +25,8 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfiguration;
-import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.carbon.base.CarbonBaseUtils;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
@@ -49,7 +48,6 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
     private static final String CIPHER_TEXT_PROPERTIES_FILE = "cipher-text.properties";
     private static final String SECRET_CONF_PROPERTIES_FILE = "secret-conf.properties";
     private static final String PASSWORD_FILE = "password-tmp";
-    private static final String SYNAPSE_CONFIG_FILE = "JMSSecureVaultTestProxy.xml";
     private static final String PROXY_NAME = "JMSSecureVaultTestProxy";
 
     /**
@@ -59,8 +57,7 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
-        super.init();
-        serverConfigurationManager = new ServerConfigurationManager(context);
+        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext());
         String secureVaultConfDir =
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
                         + "jms" + File.separator + "securevault" + File.separator;
@@ -100,16 +97,8 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
         targetFile = new File(targetFileLocation);
         serverConfigurationManager.applyConfigurationWithoutRestart(srcFile, targetFile, false);
 
-        serverConfigurationManager.restartGracefully();
+        serverConfigurationManager.restartMicroIntegrator();
         super.init();
-        loadESBConfigurationFromClasspath(
-                "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator + "securevault"
-                        + File.separator + SYNAPSE_CONFIG_FILE);
-        isProxyDeployed(PROXY_NAME);
-    }
-
-    private JMSBrokerConfiguration getJMSBrokerConfiguration() {
-        return JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration();
     }
 
     /**
@@ -137,11 +126,6 @@ public class JMSTransportSecureVaultTest extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
-        try {
-            super.cleanup();
-        } finally {
-            serverConfigurationManager.restoreToLastConfiguration();
-            serverConfigurationManager = null;
-        }
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }

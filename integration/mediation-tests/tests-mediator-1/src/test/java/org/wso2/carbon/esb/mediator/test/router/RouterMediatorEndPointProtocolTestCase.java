@@ -19,9 +19,7 @@
 package org.wso2.carbon.esb.mediator.test.router;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -35,32 +33,12 @@ public class RouterMediatorEndPointProtocolTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         init();
-        addProxy();
-        OMElement config = esbUtils.loadResource("/artifacts/ESB/mediatorconfig/router/router_https_endpoint.xml");
-        config = AXIOMUtil.stringToOM(config.toString().replace("https://localhost:8243/services/StockQuoteProxy",
-                getProxyServiceURLHttps("StockQuoteProxy")));
-        updateESBConfiguration(config);
     }
 
     @Test(groups = "wso2.esb", description = "Tests for https")
     public void testHTTPS() throws Exception {
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(
+                getProxyServiceURLHttps("RouterMediatorEndpointProtocolProxy"), null, "WSO2");
         Assert.assertTrue(response.toString().contains("WSO2"));
     }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
-
-    private void addProxy() throws Exception {
-        OMElement proxy = AXIOMUtil.stringToOM(
-                "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"StockQuoteProxy\" transports=\"https\">\n"
-                        + "        <target>\n" + "            <endpoint>\n"
-                        + "                <address uri=\"http://localhost:9000/services/SimpleStockQuoteService\" />\n"
-                        + "            </endpoint>\n" + "            <outSequence>\n" + "                <send />\n"
-                        + "            </outSequence>\n" + "        </target>\n" + "    </proxy>");
-        addProxyService(proxy);
-    }
-
 }

@@ -2,7 +2,7 @@
         <resource methods="POST">
             <inSequence>
                 <validate>
-                    <schema key="conf:/largeJsonSchema.json"/>
+                    <schema key="conf:/validate/largeJsonSchema.json"/>
                     <on-fail>
                         <log level="custom">
                             <property name="." value="*******Validation Fail********"/>

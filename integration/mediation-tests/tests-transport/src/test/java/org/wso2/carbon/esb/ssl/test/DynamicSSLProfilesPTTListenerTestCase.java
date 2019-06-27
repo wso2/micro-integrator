@@ -58,7 +58,7 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
     public void initialize() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(context);
-        serverManager.applyConfigurationWithoutRestart(new File(
+        serverManager.applyMIConfiguration(new File(
                 getESBResourceLocation() + File.separator + "dynamicsslprofiles" + File.separator + "pttlistener"
                         + File.separator + "axis2.xml"));
         serverManager.restartGracefully();
@@ -133,7 +133,7 @@ public class DynamicSSLProfilesPTTListenerTestCase extends ESBIntegrationTest {
         deleteProxyService(proxyService);
         super.cleanup();
         if (serverManager != null) {
-            serverManager.restoreToLastConfiguration();
+            serverManager.restoreToLastMIConfiguration();
         }
     }
 

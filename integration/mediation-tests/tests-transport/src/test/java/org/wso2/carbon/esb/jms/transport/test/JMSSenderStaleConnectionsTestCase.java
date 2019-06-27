@@ -18,17 +18,13 @@
 
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.JMSBrokerController;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.extensions.jmsserver.ActiveMQServerExtension;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
@@ -43,25 +39,16 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
     private final String exceptedErrorLog = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/"
             + "envelope/\"><soapenv:Body><ns:getQuote xmlns:ns=\"http://services.samples\"><ns:request><ns:symbol>"
             + "JMS</ns:symbol></ns:request></ns:getQuote></soapenv:Body></soapenv:Envelope>";
-    private LogViewerClient logViewerClient;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        /* uploadSynapseConfig (Proxy) */
-        OMElement synapse = esbUtils.loadResource("artifacts/ESB/jms/transport/JMSSenderStaleConnectionsTestProxy.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
-
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for JMS sender side stale connections handling")
     public void staleConnectionsTestJMSProxy() throws Exception {
 
-        int beforeLogCount = logViewerClient.getAllSystemLogs().length;
         AxisServiceClient client = new AxisServiceClient();
-
-        boolean isExceptionThrown = false;
 
         for (int i = 0; i < 15; i++) {
             client.sendRobust(Utils.getStockQuoteRequest("JMS"),
@@ -77,19 +64,12 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
         client.sendRobust(Utils.getStockQuoteRequest("JMS"),
                 getProxyServiceURLHttp("JMSSenderStaleConnectionsTestProxy"), "getQuote");
 
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
-        for (int i = 0; i < (logs.length - beforeLogCount); i++) {
-            if (logs[i].getMessage().contains(exceptedErrorLog)) {
-                isExceptionThrown = true;
-                break;
-            }
-        }
-        Assert.assertFalse(isExceptionThrown, "Sender Side Stale connections handling test failed");
+        Assert.assertFalse(carbonLogReader.assertIfLogExists(exceptedErrorLog),
+                "Sender Side Stale connections handling test failed");
+        carbonLogReader.stop();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }

@@ -52,13 +52,13 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
         super.init();
 
         serverConfigurationManagerProp = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+                new AutomationContext());
         String nhttpFile = /*ProductConstant.getResourceLocations(ProductConstant.ESB_SERVER_NAME)*/
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator
                         + "synapseconfig" + separator + "MaxOpenConnections" + separator + "nhttp.properties";
         File srcFile = new File(nhttpFile);
 
-        serverConfigurationManagerProp.applyConfigurationWithoutRestart(srcFile);
+        serverConfigurationManagerProp.applyMIConfiguration(srcFile);
 
         serverConfigurationManagerAxis2 = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
@@ -67,7 +67,7 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
                         + "synapseconfig" + separator + "MaxOpenConnections" + separator + "nhttp" + separator
                         + "axis2.xml";
         File axis2File = new File(nhttpAxis2xml);
-        serverConfigurationManagerAxis2.applyConfiguration(axis2File);
+        serverConfigurationManagerAxis2.applyMIConfigurationWithRestart(axis2File);
 
         super.init();
 
@@ -143,7 +143,7 @@ public class NhttpMaximumOpenConnections extends ESBIntegrationTest {
             Thread.sleep(3000);
             serverConfigurationManagerProp.restoreToLastConfiguration(false);
             serverConfigurationManagerProp = null;
-            serverConfigurationManagerAxis2.restoreToLastConfiguration();
+            serverConfigurationManagerAxis2.restoreToLastMIConfiguration();
             serverConfigurationManagerAxis2 = null;
         }
 

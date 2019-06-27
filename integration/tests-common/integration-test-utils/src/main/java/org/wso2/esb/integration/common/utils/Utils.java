@@ -39,6 +39,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -47,6 +50,28 @@ import javax.xml.stream.XMLStreamException;
 public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
+
+    public enum ArtifactType {
+        API("api"),
+        ENDPOINT("endpoints"),
+        INBOUND_ENDPOINT("inbound-endpoints"),
+        LOCAL_ENTRY("local-entries"),
+        MESSAGE_PROCESSOR("message-processors"),
+        MESSAGE_STORES("message-stores"),
+        PROXY("proxy-services"),
+        SEQUENCE("sequences"),
+        TEMPLATE("templates");
+
+        private String type;
+
+        ArtifactType(String type) {
+            this.type = type;
+        }
+
+        public String getDirName() {
+            return type;
+        }
+    }
 
     public static OMElement getSimpleQuoteRequest(String symbol) {
         OMFactory fac = OMAbstractFactory.getOMFactory();
@@ -404,13 +429,26 @@ public class Utils {
         return isCarFileDeployed;
     }
 
+    public static void deploySynapseConfiguration(OMElement config, String artifactName, ArtifactType type,
+                                                  boolean isRestartRequired) {
+        deploySynapseConfiguration(config, artifactName, type.getDirName(), isRestartRequired);
+    }
+
     public static void deploySynapseConfiguration(OMElement config, String artifactName, String artifactType,
                                                   boolean isRestartRequired) {
 
-        String path = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+        String directory = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
                 + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
-                + File.separator + artifactType + File.separator + artifactName + ".xml";
+                + File.separator + artifactType;
+        String path = directory + File.separator + artifactName + ".xml";
 
+        if (!Files.exists(FileSystems.getDefault().getPath(directory))) {
+            try {
+                Files.createDirectories(FileSystems.getDefault().getPath(directory));
+            } catch (IOException e) {
+                log.error("Error while creating the directory, " + directory + ".", e);
+            }
+        }
         try (OutputStream outputStream = new FileOutputStream(path)) {
             config.serialize(outputStream);
             config.serialize(System.out);
@@ -421,6 +459,30 @@ public class Utils {
             log.error("Error when creating file", exception);
         } catch (XMLStreamException e) {
             log.error("Error when serializing synapse config", e);
+        }
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, ArtifactType type, boolean restartServer) {
+        undeploySynapseConfiguration(artifactName, type.getDirName(), restartServer);
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, String artifactType) {
+        undeploySynapseConfiguration(artifactName, artifactType, true);
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, String artifactType, boolean restartServer) {
+        CarbonServerExtension.shutdownServer();
+        String pathString = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+                + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
+                + File.separator + artifactType + File.separator + artifactName + ".xml";
+        Path path = FileSystems.getDefault().getPath(pathString);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            log.error("Error while deleting the file", e);
+        }
+        if (restartServer) {
+            CarbonServerExtension.restartServer();
         }
     }
 

@@ -20,13 +20,11 @@ package org.wso2.carbon.esb.mediator.test.enrich;
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import java.io.IOException;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
@@ -34,7 +32,6 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase extends ESBIntegrationTest {
-    ResourceAdminServiceClient resourceAdminServiceStub;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
@@ -45,9 +42,9 @@ public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase ext
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "This test is to replace a part of a message from resgistry file content")
+            "wso2.esb"}, description = "This test is to replace a part of a message from resgistry file content")
     public void replaceMessageContentFromRegistryFileContentTest()
-            throws IOException, XMLStreamException, XPathExpressionException {
+            throws IOException, XPathExpressionException {
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("enrichReplaceInlineContentFromConfigRegistryTestProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");

@@ -21,12 +21,10 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.URL;
-import java.net.URLConnection;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.testng.Assert.assertTrue;
 
@@ -36,11 +34,15 @@ import static org.testng.Assert.assertTrue;
 public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
 
     private CarbonLogReader carbonLogReader;
+    private SimpleHttpClient simpleHttpClient;
+    private Map<String, String> headers;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
         carbonLogReader = new CarbonLogReader();
+        headers = new HashMap<>();
+        headers.put("Accept-Charset", "UTF-8");
     }
 
     @Test(groups = "wso2.esb", description = "Test multiple foreach constructs with property mediator in flow")
@@ -57,7 +59,9 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
                         + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
                         + "    </soap:Body>\n" + "</soap:Envelope>\n";
 
-        sendRequest(getProxyServiceURLHttp("foreachPropertyTestProxy"), request);
+        simpleHttpClient = new SimpleHttpClient();
+        simpleHttpClient.doPost(getProxyServiceURLHttp("foreachPropertyTestProxy"),
+                headers, request, "application/xml;charset=UTF-8");
         carbonLogReader.stop();
 
         String logs = carbonLogReader.getLogs();
@@ -103,8 +107,9 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
                         + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
                         + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
                         + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
-
-        sendRequest(getProxyServiceURLHttp("NestedForEachPropertiesWithID"), request);
+        simpleHttpClient = new SimpleHttpClient();
+        simpleHttpClient.doPost(getProxyServiceURLHttp("NestedForEachPropertiesWithID"),
+                headers, request, "application/xml;charset=UTF-8");
         carbonLogReader.stop();
 
         String logs = carbonLogReader.getLogs();
@@ -134,32 +139,5 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
             assertTrue(logs.contains("in_fe_inner = property inner foreach"));
         }
 
-    }
-
-    private void sendRequest(String addUrl, String query) throws IOException {
-        String charset = "UTF-8";
-        URLConnection connection = new URL(addUrl).openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", "application/xml;charset=" + charset);
-        OutputStream output = null;
-        try {
-            output = connection.getOutputStream();
-            output.write(query.getBytes(charset));
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-        }
-        InputStream response = connection.getInputStream();
-        if (response != null) {
-            StringBuilder sb = new StringBuilder();
-            byte[] bytes = new byte[1024];
-            int len;
-            while ((len = response.read(bytes)) != -1) {
-                sb.append(new String(bytes, 0, len));
-            }
-            response.close();
-        }
     }
 }

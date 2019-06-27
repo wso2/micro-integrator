@@ -32,25 +32,23 @@ public class TcpTransportProxyServiceTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/tcp/transport/tcpProxy.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Proxy service with tcp transport")
+    @Test(groups = "wso2.esb", description = "Proxy service with Tcp transport")
     public void tcpTransportProxy() throws Exception {
         TcpClient tcpClient = new TcpClient();
         OMElement response;
-        String tcProxyUrl;
+        String tcpProxyUrl;
         if (isRunningOnStratos()) {
-            tcProxyUrl = "tcp://localhost:8290/services/t/" + context.getContextTenant().getDomain()
+            tcpProxyUrl = "tcp://localhost:8290/services/t/" + context.getContextTenant().getDomain()
                     + "/tcpProxy/tcpProxy?contentType=application/soap+xml";
         } else {
-            tcProxyUrl = "tcp://localhost:8290/services/tcpProxy/tcpProxy?contentType=application/soap+xml";
+            tcpProxyUrl = "tcp://localhost:8290/services/tcpProxy/tcpProxy?contentType=application/soap+xml";
         }
         response = tcpClient
-                .sendSimpleStockQuote12(tcProxyUrl, "TCPPROXY", tcpClient.CONTENT_TYPE_APPLICATIONS_SOAP_XML);
+                .sendSimpleStockQuote12(tcpProxyUrl, "TCPPROXY", tcpClient.CONTENT_TYPE_APPLICATIONS_SOAP_XML);
         Assert.assertTrue(response.toString().contains("TCPPROXY"), "Symbol not found in response message");
-
     }
 
     @AfterClass(alwaysRun = true)

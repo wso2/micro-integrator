@@ -27,8 +27,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.ftpserver.FTPServerManager;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
@@ -57,7 +57,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
     private File sampleFileFolder;
     private File inputFolder;
     private ServerConfigurationManager serverConfigurationManager;
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
     private String pathToFtpDir;
     private int FTPPort = 8085;
     private String inputFolderName = "in";
@@ -101,11 +101,11 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         // replace the axis2.xml enabled vfs transfer and restart the ESB server
         // gracefully
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(new File(getClass().getResource(
+        serverConfigurationManager.applyMIConfiguration(new File(getClass().getResource(
                 FORWARD_SLASH + "artifacts" + FORWARD_SLASH + "ESB" + FORWARD_SLASH + "synapseconfig" + FORWARD_SLASH
                         + "vfsTransport" + FORWARD_SLASH + "axis2.xml").getPath()));
         super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
 
     }
 
@@ -117,7 +117,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
             Thread.sleep(3000);
             ftpServerManager.stop();
             log.info("FTP Server stopped successfully");
-            serverConfigurationManager.restoreToLastConfiguration();
+            serverConfigurationManager.restoreToLastMIConfiguration();
 
         }
 
@@ -140,6 +140,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         String moveAfterProcess =
                 "vfs:ftp://{wso2:vault-decrypt('" + encryptedPass + "')}@localhost:" + FTPPort + "/" + outputFolderName;
 
+        carbonLogReader.start();
         String log = "File recieved for secure password for the proxy service - ";
         //create VFS transport listener proxy
         /**
@@ -168,12 +169,13 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
         //add the listener proxy to ESB server
         try {
-            addProxyService(proxyOM);
+            Utils.deploySynapseConfiguration(proxyOM, "VfsSecurePasswordTest", "proxy-services", true);
         } catch (Exception e) {
             LOGGER.error("Error while updating the Synapse config", e);
         }
         LOGGER.info("Synapse config updated");
-        boolean isSuccess = Utils.checkForLog(logViewerClient, log, 30);
+        boolean isSuccess = carbonLogReader.checkForLog(log, 60);
+        carbonLogReader.stop();
         Assert.assertTrue(isSuccess, "Secure password deployment failed, file did not received to the vfs proxy");
     }
 

@@ -41,6 +41,7 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
@@ -51,7 +52,6 @@ import java.nio.channels.FileChannel;
 import java.security.PublicKey;
 import java.util.ArrayList;
 import java.util.List;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
 /**
@@ -82,7 +82,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(
+        serverConfigurationManager.applyMIConfiguration(
                 new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
         super.init();
 
@@ -130,7 +130,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
         //create VFS transport listener proxy
         try {
-            addProxyService(proxyOM);
+            Utils.deploySynapseConfiguration(proxyOM, "SFTPTestCaseProxy", "proxy-services", true);
         } catch (Exception e) {
             log.error("Error while updating the Synapse config", e);
         }
@@ -148,7 +148,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
     /**
@@ -247,13 +247,5 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
             IOUtils.closeQuietly(fileInputStream);
             IOUtils.closeQuietly(fileOutputStream);
         }
-    }
-
-    protected void addProxyService(OMElement proxyConfig) throws Exception {
-        String proxyName = proxyConfig.getAttributeValue(new QName("name"));
-        if (esbUtils.isProxyServiceExist(context.getContextUrls().getBackEndUrl(), sessionCookie, proxyName)) {
-            esbUtils.deleteProxyService(context.getContextUrls().getBackEndUrl(), sessionCookie, proxyName);
-        }
-        esbUtils.addProxyService(context.getContextUrls().getBackEndUrl(), sessionCookie, setEndpoints(proxyConfig));
     }
 }

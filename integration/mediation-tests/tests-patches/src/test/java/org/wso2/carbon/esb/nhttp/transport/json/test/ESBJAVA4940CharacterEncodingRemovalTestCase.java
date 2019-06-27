@@ -40,8 +40,6 @@ public class ESBJAVA4940CharacterEncodingRemovalTestCase extends ESBIntegrationT
     @BeforeClass
     public void init() throws Exception {
         super.init();
-        verifyProxyServiceExistence("ESBJAVA4940SetEncodingTrue");
-        verifyProxyServiceExistence("ESBJAVA4940SetEncodingFalse");
     }
 
     @Test(groups = "wso2.esb", description = "Test charset encoding removal when SetEncoding is true")
@@ -85,6 +83,5 @@ public class ESBJAVA4940CharacterEncodingRemovalTestCase extends ESBIntegrationT
 
     @AfterClass
     public void cleanUp() throws Exception {
-        super.cleanup();
     }
 }

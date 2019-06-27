@@ -18,15 +18,11 @@
 package org.wso2.carbon.esb.mediator.test.enrich;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import java.net.URL;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
 
 import static org.testng.Assert.assertEquals;
@@ -34,18 +30,13 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class EnrichByOMTextTestCase extends ESBIntegrationTest {
-    private ResourceAdminServiceClient resourceAdminServiceStub;
-
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadResourcesToGovernanceRegistry();
-        verifyProxyServiceExistence("enrichByOMTextTestProxy");
     }
 
     /*https://wso2.org/jira/browse/STRATOS-2248*/
-    @Test(groups = { "wso2.esb" }, description = "Enrich by OMText")
+    @Test(groups = {"wso2.esb"}, description = "Enrich by OMText")
     public void enrichByOMText() throws Exception {
         OMElement response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("enrichByOMTextTestProxy"),
                 getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
@@ -56,22 +47,5 @@ public class EnrichByOMTextTestCase extends ESBIntegrationTest {
         assertEquals(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Code")).getText(), "IBM",
                 "Symbol not ,match");
 
-    }
-
-    private void uploadResourcesToGovernanceRegistry() throws Exception {
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
-        resourceAdminServiceStub.addCollection("/_system/governance/", "xslt", "", "Contains test XSLT files");
-        resourceAdminServiceStub
-                .addResource("/_system/governance/xslt/transform_back.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform_back.xslt")));
-    }
-
-    @AfterClass(alwaysRun = true)
-    private void destroy() throws Exception {
-
-        resourceAdminServiceStub.deleteResource("/_system/governance/xslt");
-        cleanup();
     }
 }

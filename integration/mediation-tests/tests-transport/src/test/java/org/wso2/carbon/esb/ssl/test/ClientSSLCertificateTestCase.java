@@ -24,6 +24,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.test.utils.generic.MutualSSLClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
@@ -45,9 +46,8 @@ public class ClientSSLCertificateTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-        serverManager = new ServerConfigurationManager(context);
-        serverManager.applyConfigurationWithoutRestart(new File(CONFIG_LOCATION + "axis2.xml"));
-        serverManager.restartGracefully();
+        serverManager = new ServerConfigurationManager(new AutomationContext());
+        serverManager.applyMIConfigurationWithRestart(new File(CONFIG_LOCATION + "axis2.xml"));
         super.init();
     }
 
@@ -90,7 +90,7 @@ public class ClientSSLCertificateTestCase extends ESBIntegrationTest {
     public void destroy() throws Exception {
         super.cleanup();
         if (serverManager != null) {
-            serverManager.restoreToLastConfiguration();
+            serverManager.restoreToLastMIConfiguration();
         }
 
     }

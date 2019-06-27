@@ -18,15 +18,13 @@
 
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
+
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.lang.management.ManagementFactory;
 import java.util.HashMap;
@@ -53,34 +51,21 @@ import static org.testng.Assert.assertTrue;
 
 public class PropertyIntegrationAxis2PropertiesTestCase extends ESBIntegrationTest {
 
-    private ServerConfigurationManager serverManager = null;
-
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
-        serverManager = new ServerConfigurationManager(context);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.init();
-        super.cleanup();
-    }
-
-    @Test(groups = { "wso2.esb" }, description = "Send messages using  ConcurrentConsumers "
+    @Test(groups = {"wso2.esb"}, description = "Send messages using  ConcurrentConsumers "
             + "and MaxConcurrentConsumers Axis2 level properties")
     public void maxConcurrentConsumersTest() throws Exception {
-        serverManager.restartGracefully();
+        CarbonServerExtension.restartServer();
 
         super.init();  // after restart the server instance initialization
-        JMXServiceURL url = new JMXServiceURL(
-                "service:jmx:rmi://" + context.getDefaultInstance().getHosts().get("default") + ":11311/jndi/rmi://"
-                        + context.getDefaultInstance().getHosts().
-                        get("default") + ":10199/jmxrmi");
-
-        HashMap<String, String[]> environment = new HashMap<String, String[]>();
-        String[] credentials = new String[] { "admin", "admin" };
+        JMXServiceURL url =
+                new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + getHostname() + ":1099/jmxrmi");
+        HashMap<String, String[]> environment = new HashMap<>();
+        String[] credentials = new String[]{"admin", "admin"};
         environment.put(JMXConnector.CREDENTIALS, credentials);
 
         MBeanServerConnection mBeanServerConnection = JMXConnectorFactory.
@@ -118,4 +103,3 @@ public class PropertyIntegrationAxis2PropertiesTestCase extends ESBIntegrationTe
         assertTrue((afterThreadCount - beforeThreadCount) <= 150, "Expected thread count range" + " not met");
     }
 }
-

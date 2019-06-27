@@ -20,7 +20,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.StringRequestEntity;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -36,7 +35,6 @@ public class ReplaceJSONPayloadTestcase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        verifyProxyServiceExistence(proxyServiceName);
     }
 
     @Test(groups = "wso2.esb")
@@ -45,11 +43,6 @@ public class ReplaceJSONPayloadTestcase extends ESBIntegrationTest {
         String requestMessageBody = createRequest();
         String response = httpClient(getProxyServiceURLHttp(proxyServiceName), requestMessageBody);
         Assert.assertTrue(response.contains(expectedResponse), "The expected response is not received");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void clear() throws Exception {
-        super.cleanup();
     }
 
     private String createRequest() {
@@ -84,5 +77,4 @@ public class ReplaceJSONPayloadTestcase extends ESBIntegrationTest {
             throw new RuntimeException(e);
         }
     }
-
 }

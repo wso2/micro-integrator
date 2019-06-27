@@ -19,16 +19,13 @@ package org.wso2.carbon.esb.proxyservice.test.customProxy;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import javax.xml.namespace.QName;
-
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class InvokingNonExistingProxyTestCase extends ESBIntegrationTest {
 
@@ -39,36 +36,15 @@ public class InvokingNonExistingProxyTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Invoking Non existing proxy service")
-    public void testNonExistingProxyInvocation() throws Exception {
-        loadESBConfigurationFromClasspath("/artifacts/ESB/proxyconfig/proxy/customProxy/non_existing_proxy.xml");
+    public void testNonExistingProxyInvocation() {
         try {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("NonExistingProxyService"), null, "WSO2");
+            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                    "NonExistingProxyService"), null, "WSO2");
+            Assert.assertNull(response.getFirstElement());
         } catch (AxisFault fault) {
-            assertEquals(fault.getMessage(), ESBTestConstant.INCOMING_MESSAGE_IS_NULL, "Error Message Mismatched");
+            assertEquals(fault.getMessage(), ESBTestConstant.NOT_FOUND_ERROR, "Error Message Mismatched");
         }
 
     }
 
-    @Test(groups = "wso2.esb", description = "Invoking Non existing proxy service when main sequence has endpoint")
-    public void testMainSequenceForNonExistingProxy() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/customProxy/non_existing_proxy_route_to_main.xml");
-
-        OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("NonExistingProxyService"), null, "WSO2");
-
-        String lastPrice = response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
-        assertNotNull(lastPrice, "Fault: response message 'last' price null");
-
-        String symbol = response.getFirstElement()
-                .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
-        assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }

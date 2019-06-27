@@ -19,18 +19,9 @@ package org.wso2.carbon.esb.mediator.test.validate;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
@@ -40,7 +31,6 @@ public class ValidateIntegrationNegativeTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadConfig();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Provide invalid dynamic key as shema location")
@@ -69,38 +59,6 @@ public class ValidateIntegrationNegativeTestCase extends ESBIntegrationTest {
             assertEquals(expected.getMessage(), expectedErrorMsg, "Error Message mismatched");
         }
     }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        clearUploadedResource();
-        super.cleanup();
-    }
-
-    private void uploadConfig()
-            throws RemoteException, ResourceAdminServiceExceptionException, MalformedURLException, InterruptedException,
-            XPathExpressionException {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-        resourceAdminServiceStub.deleteResource("/_system/config/validate");
-        resourceAdminServiceStub.addCollection("/_system/config/", "validate", "", "Contains test schema files");
-
-        resourceAdminServiceStub.addResource("/_system/config/validate/schema.xml", "application/xml", "schema files",
-                new DataHandler(
-                        new URL("file:///" + getESBResourceLocation() + "/mediatorconfig/validate/schema.xml")));
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), context.getContextTenant().getContextUser().getUserName(),
-                context.getContextTenant().getContextUser().getPassword());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/validate");
-    }
-
 }
 
 

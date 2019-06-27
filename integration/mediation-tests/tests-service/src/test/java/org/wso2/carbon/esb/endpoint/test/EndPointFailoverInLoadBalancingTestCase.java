@@ -48,37 +48,29 @@ public class EndPointFailoverInLoadBalancingTestCase extends ESBIntegrationTest 
         axis2Server2.deployService(SampleAxis2Server.LB_SERVICE_2);
 
         lbClient = new LoadbalanceFailoverClient();
-        uploadSynapseConfig();
-    }
-
-    private void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/synapseconfig/patch_automation/load_balance_failover_synapse.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Test sending request to Load Balancing Endpoints With while one endpoint is out of order")
     public void testLoadbalancerWithFailedEndpoints() throws Exception {
         String response;
-        lbClient.sendLoadBalanceFailoverRequest(getMainSequenceURL());
-        lbClient.sendLoadBalanceFailoverRequest(getMainSequenceURL());
-        response = lbClient.sendLoadBalanceFailoverRequest(getMainSequenceURL());
+        lbClient.sendLoadBalanceFailoverRequest(getProxyServiceURLHttp("LoadBalanceFailOverSynapseProxy"));
+        lbClient.sendLoadBalanceFailoverRequest(getProxyServiceURLHttp("LoadBalanceFailOverSynapseProxy"));
+        response = lbClient.sendLoadBalanceFailoverRequest(getProxyServiceURLHttp("LoadBalanceFailOverSynapseProxy"));
         Assert.assertNotNull(response, "Asserting for null response");
         Assert.assertTrue(!response.contains("COULDN'T SEND THE MESSAGE TO THE SERVER"),
                 "Asserting whether the request is lost");
-        System.out.println(response);
         Assert.assertTrue(response.contains("Response from server: Server_1"), "Asserting for correct response");
 
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanUp() throws Exception {
+    public void cleanUp() {
         axis2Server1.stop();
         axis2Server2.stop();
         axis2Server1 = null;
         axis2Server2 = null;
         lbClient = null;
-        super.cleanup();
 
     }
 }

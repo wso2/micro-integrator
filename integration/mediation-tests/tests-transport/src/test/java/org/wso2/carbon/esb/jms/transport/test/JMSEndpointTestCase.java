@@ -1,34 +1,23 @@
 package org.wso2.carbon.esb.jms.transport.test;
 
 import junit.framework.Assert;
-import org.apache.axiom.om.OMElement;
 import org.awaitility.Awaitility;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
-import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 public class JMSEndpointTestCase extends ESBIntegrationTest {
-    private EndPointAdminClient endPointAdminClient;
     private int NUM_OF_MESSAGES = 3;
 
     @BeforeClass(alwaysRun = true)
     public void deployeService() throws Exception {
         super.init();
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_transport.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
-        endPointAdminClient = new EndPointAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(300, TimeUnit.SECONDS)
-                .until(isServiceDeployed("JMSEndpointTestCaseProxy"));
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test JMS to JMS ")
@@ -66,22 +55,6 @@ public class JMSEndpointTestCase extends ESBIntegrationTest {
         } finally {
             consumer.disconnect();
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void UndeployeService() throws Exception {
-        super.init();
-        endPointAdminClient = null;
-        super.cleanup();
-    }
-
-    private Callable<Boolean> isServiceDeployed(final String proxyName) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return isProxySuccesfullyDeployed(proxyName);
-            }
-        };
     }
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {

@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.mediator.test.call;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;

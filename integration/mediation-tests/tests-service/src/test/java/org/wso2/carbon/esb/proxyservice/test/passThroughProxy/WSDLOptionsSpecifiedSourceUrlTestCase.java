@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.proxyservice.test.passThroughProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -33,9 +32,6 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/passThroughProxy/wsdl_options_specified_source_url.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "- Pass through proxy" + "- Publish WSDL Options - Specified source url")
@@ -53,10 +49,5 @@ public class WSDLOptionsSpecifiedSourceUrlTestCase extends ESBIntegrationTest {
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }

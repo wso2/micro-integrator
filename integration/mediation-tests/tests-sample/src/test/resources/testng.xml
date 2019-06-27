@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false">
+<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
@@ -66,6 +66,11 @@
             <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample100TestCase">
                 <methods>
                     <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample650TestCase">
+                <methods>
+                    <exclude name="testLocalEntries"/>
                 </methods>
             </class>
         </classes>

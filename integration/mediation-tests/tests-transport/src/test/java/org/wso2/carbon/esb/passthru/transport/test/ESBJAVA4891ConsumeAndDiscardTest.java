@@ -19,7 +19,6 @@
 package org.wso2.carbon.esb.passthru.transport.test;
 
 import org.apache.commons.io.FileUtils;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
@@ -55,14 +54,13 @@ public class ESBJAVA4891ConsumeAndDiscardTest extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-        input = FileUtils
-                .readFileToString(new File(getESBResourceLocation() + "/passthru/transport/inputESBJAVA4891.xml"),
-                        "ISO-8859-1");
-        loadESBConfigurationFromClasspath("/artifacts/ESB/passthru/transport/ESBJAVA-4891.xml");
+        input = FileUtils.readFileToString(new File(
+                getESBResourceLocation() + "/passthru/transport/inputESBJAVA4891.xml"), "ISO-8859-1");
     }
 
     /**
-     * There was an infinite read waiting in the pipe, when OMException happened in Payload mediator, because we do consume and discard, without checking the remaining elements in the buffer.
+     * There was an infinite read waiting in the pipe, when OMException happened in Payload mediator, because we do
+     * consume and discard, without checking the remaining elements in the buffer.
      * So In this test case, we create an exception in payload mediator and check the response.
      * The fix was done to check the buffer and do the consume and discard.
      *
@@ -70,16 +68,11 @@ public class ESBJAVA4891ConsumeAndDiscardTest extends ESBIntegrationTest {
      */
     @Test(groups = "wso2.esb", description = "Testing with a Payload Mediator")
     public void testPartialReadErrorWithPayloadMediator() throws Exception {
-        URL endpoint = new URL(getProxyServiceURLHttp("TestProxy"));
+        URL endpoint = new URL(getProxyServiceURLHttp("ESBJAVA4891ConsumeAndDiscardTestProxy"));
         Map<String, String> header = new HashMap<>();
         header.put("Content-Type", "application/xml");
         HttpResponse httpResponse = doPost(endpoint, input, header);
         assertTrue(EXPECTED_ERROR.equals(httpResponse.getData()), "Expected error message not received");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 
     private static HttpResponse doPost(URL endpoint, String postBody, Map<String, String> headers)

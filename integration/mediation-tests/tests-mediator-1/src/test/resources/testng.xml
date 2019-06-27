@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false">
+<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
@@ -25,6 +25,12 @@
         </packages>
         <classes>
             <class name="org.wso2.carbon.esb.mediator.test.aggregate.NestedAggregatesTestCase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
+            <!-- Removing due to https://github.com/wso2/micro-integrator/issues/486 -->
+            <class name="org.wso2.carbon.esb.mediator.test.aggregate.SoapHeaderBlocksTestCase">
                 <methods>
                     <exclude name=".*" />
                 </methods>
@@ -182,7 +188,12 @@
             <package name="org.wso2.carbon.esb.mediator.test.enrich"/>
         </packages>
         <classes>
-            <class name="org.wso2.carbon.esb.mediator.test.enrich.jsonpath.EnrichIntegrationJsonPathTestCase">
+            <class name="org.wso2.carbon.esb.mediator.test.enrich.jsonpath.EnrichIntegrationJsonPathTestCase"/>
+            <!-- Excluding due to https://github.com/wso2/micro-integrator/issues/486-->
+            <class name="org.wso2.carbon.esb.mediator.test.enrich.EnrichByOMTextTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
             </class>
         </classes>
     </test>

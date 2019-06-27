@@ -105,7 +105,7 @@
 
     <!-- This deployment interceptor will be called whenever before a module is initialized or -->
     <!-- service is deployed -->
-    <listener class="org.wso2.carbon.core.deployment.DeploymentInterceptor"/>
+<!--    <listener class="org.wso2.carbon.core.deployment.DeploymentInterceptor"/>-->
 
     <!-- ================================================= -->
     <!--                  Deployers                        -->
@@ -663,8 +663,8 @@
 
             <handler name="HTTPLocationBasedDispatcher"
                      class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
-            <handler name="MultitenantDispatcher"
-                     class="org.wso2.carbon.tenant.dispatcher.MultitenantDispatcher"/>
+<!--            <handler name="MultitenantDispatcher"-->
+<!--                     class="org.wso2.carbon.tenant.dispatcher.MultitenantDispatcher"/>-->
             <handler name="SynapseDispatcher"
                      class="org.apache.synapse.core.axis2.SynapseDispatcher"/>
             <handler name="SynapseMustUnderstandHandler"

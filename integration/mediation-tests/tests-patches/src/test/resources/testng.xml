@@ -18,7 +18,7 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false">
+<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
@@ -151,7 +151,6 @@
             <class name="org.wso2.carbon.esb.car.deployment.test.ESBJAVA3611EndpointTestCase"/>
             <class name="org.wso2.carbon.esb.car.deployment.test.ESBJAVA3546CAppProxyOnLoadTestCase"/>
             <class name="org.wso2.carbon.esb.car.deployment.test.ESBJAVA4116CAppArtifactDeploymentFailureDueToNameTestCase"/>
-            <class name="org.wso2.carbon.esb.car.deployment.test.CarbonApplicationReDeploymentTestCase"/>
             <class name="org.wso2.carbon.esb.car.deployment.test.CARBON16113DeployArtifactsBeforeTransportStarsTestCase"/>
         </classes>
     </test>

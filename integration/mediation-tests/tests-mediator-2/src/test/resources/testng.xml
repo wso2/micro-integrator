@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false">
+<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
@@ -82,12 +82,6 @@
         </packages>
     </test>
 
-    <test name="Spring-mediator-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.mediator.test.spring"/>
-        </packages>
-    </test>
-
     <test name="Smook-mediator-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.smooks"/>
@@ -124,6 +118,11 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
+            <class name="org.wso2.carbon.esb.message.processor.test.MessageProcessorPersistenceTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 
@@ -139,6 +138,11 @@
         </packages>
         <classes>
             <class name="org.wso2.carbon.esb.mediator.test.iterate.InvalidNamespaceTestCase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.mediator.test.iterate.IterateSequentialPropertySavingTestCase">
                 <methods>
                     <exclude name=".*" />
                 </methods>

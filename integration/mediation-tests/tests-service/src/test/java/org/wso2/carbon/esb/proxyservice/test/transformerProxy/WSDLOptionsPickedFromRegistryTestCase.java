@@ -39,10 +39,6 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/transformerProxy/wsdl_options_pick_from_registry.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "- Transformer proxy" + "- Publish WSDL Options - Picked from registry")
@@ -63,56 +59,6 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")),
                 "Fault response null localpart");
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        clearUploadedResource();
-        super.cleanup();
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_xslt");
-        resourceAdminServiceStub.addCollection("/_system/config/", "script_xslt", "", "Contains test xslt files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_xslt/transform.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform.xslt")));
-        Thread.sleep(1000);
-        resourceAdminServiceStub
-                .addResource("/_system/config/script_xslt/transform_back.xslt", "application/xml", "xslt files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/mediatorconfig/xslt/transform_back.xslt")));
-
-        Thread.sleep(2000);
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
-        resourceAdminServiceStub.addCollection("/_system/config/", "proxy", "", "Contains test proxy tests files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/proxy/sample_proxy_1.wsdl", "application/wsdl+xml", "wsdl+xml files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/proxyconfig/proxy/utils/sample_proxy_1.wsdl")));
-
-        Thread.sleep(1000);
-
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
-        ;
-
-        resourceAdminServiceStub.deleteResource("/_system/config/script_xslt");
     }
 
 }

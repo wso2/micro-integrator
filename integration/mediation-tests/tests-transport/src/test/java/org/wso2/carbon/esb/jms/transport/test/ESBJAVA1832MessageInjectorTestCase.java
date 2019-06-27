@@ -18,6 +18,8 @@
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -25,8 +27,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
+import org.wso2.esb.integration.common.utils.Utils;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,11 +44,11 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        OMElement msgProessor = esbUtils.loadResource("/artifacts/ESB/jms/transport/msgInjection/msg_store.xml");
-        OMElement task = esbUtils.loadResource("/artifacts/ESB/jms/transport/msgInjection/msg_injecting_task.xml");
         consumer = new JMSQueueMessageConsumer(JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(msgProessor));
-        esbUtils.addScheduleTask(contextUrls.getBackEndUrl(), getSessionCookie(), task);
+        OMElement omElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(getESBResourceLocation()
+                + File.separator + "jms" + File.separator + "transport" + File.separator + "msgInjection" + File.separator
+                + "ESBJAVA1832MessageInjectorTestTask.xml")));
+        Utils.deploySynapseConfiguration(omElement, "ESBJAVA1832MessageInjectorTestTask", "tasks", true);
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
@@ -67,8 +70,6 @@ public class ESBJAVA1832MessageInjectorTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        esbUtils.deleteScheduleTask(contextUrls.getBackEndUrl(), getSessionCookie(), "TheTask",
-                "synapse.simple.quartz");
-        super.cleanup();
+        Utils.undeploySynapseConfiguration("ESBJAVA1832MessageInjectorTestTask", "tasks");
     }
 }

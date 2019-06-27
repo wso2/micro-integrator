@@ -1,34 +1,20 @@
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.io.File;
 
 public class ESBJAVA2464TestCase extends ESBIntegrationTest {
 
     private static final String logLine0 = "org.wso2.carbon.proxyadmin.service.ProxyServiceAdmin is not an admin service. Service name ";
 
-    private LogViewerClient logViewer;
-
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadSynapseConfig();
-    }
-
-    private void uploadSynapseConfig() throws Exception {
-        loadESBConfigurationFromClasspath(
-                "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator
-                        + "nonBlockingHTTP" + File.separator + "local_jms_proxy_synapse.xml");
     }
 
     @Test(groups = {
@@ -42,8 +28,11 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
                 + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">"
                 + "  <soapenv:Header/>" + "  <soapenv:Body>" + "     <echo:echoInt>" + "        <!--Optional:-->"
                 + "       <in>1</in>" + "     </echo:echoInt>" + "  </soapenv:Body>" + "</soapenv:Envelope>";
+
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         try {
-            sender.connect("echoProxy");
+            sender.connect("ESBJAVA2464TestProxy");
             for (int i = 0; i < 3; i++) {
                 sender.pushMessage(message);
             }
@@ -51,18 +40,10 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
             sender.disconnect();
         }
 
-        LogEvent[] logs = logViewer.getAllSystemLogs();
-        for (LogEvent log : logs) {
-            if (log.getMessage().contains(logLine0)) {
-                Assert.fail(logLine0 + "is in log");
-            }
+        if (carbonLogReader.assertIfLogExists(logLine0)) {
+            Assert.fail(logLine0 + "is in log");
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        // Restore the axis2 configuration altered by this test case
-        super.cleanup();
+        carbonLogReader.stop();
     }
 
 }

@@ -29,6 +29,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.base.CarbonBaseUtils;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.SftpServerRunner;
 
@@ -114,7 +115,7 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
 
         // replace the axis2.xml enabled vfs transfer and restart the ESB server gracefully.
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfiguration(new File(
                 getClass().getResource("/artifacts/ESB/synapseconfig/" + "vfsTransport/ESBJAVA4770/axis2.xml")
                         .getPath()));
         super.init();
@@ -128,7 +129,7 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
             Thread.sleep(3000);
             sftpServerRunner.stop();
             log.info("FTP Server stopped successfully.");
-            serverConfigurationManager.restoreToLastConfiguration();
+            serverConfigurationManager.restoreToLastMIConfiguration();
         }
     }
 
@@ -151,7 +152,7 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
                         + "?transport.vfs.AvoidPermissionCheck=true";
 
         //create VFS transport listener proxy
-        String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"VfsSecurePasswordTest\"\n"
+        String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"VfsSecurePasswordTest1\"\n"
                 + "       transports=\"vfs http https\"\n" + "       startOnLoad=\"true\"\n"
                 + "       trace=\"disable\">\n" + "   <description/>\n" + "   <target>\n" + "      <inSequence>\n"
                 + "         <property name=\"transport.vfs.ReplyFileName\"\n"
@@ -175,7 +176,7 @@ public class ESBJAVA4770VFSPasswordSecurityWithLargekeyTestCase extends ESBInteg
 
         //add the listener proxy to ESB server
         try {
-            addProxyService(proxyOM);
+            Utils.deploySynapseConfiguration(proxyOM, "VfsSecurePasswordTest1", "proxy-services", true);
         } catch (Exception e) {
             LOGGER.error("Error while updating the Synapse config", e);
         }

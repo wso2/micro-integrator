@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false">
+<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
@@ -110,12 +110,6 @@
                 </methods>
             </class>
         </classes>
-    </test>
-
-    <test name="Hot-Deployment-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.hotdeployment.test"/>
-        </packages>
     </test>
 
     <test name="LocalEntry-Test" preserve-order="true" verbose="2">

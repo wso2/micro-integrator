@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false">
+<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestManagerListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
@@ -23,8 +23,16 @@
 
     <test name="ViewPopRedirectTests" preserve-order="true" verbose="2">
         <classes>
-            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.RedirectTest"/>
-            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.ViewPopTest"/>
+            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.RedirectTest">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.ViewPopTest">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 
@@ -77,6 +85,11 @@
 
         <classes>
             <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA2824MissingResponseTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSCAppDeploymentWithFaultyProxyTestCase">
                 <methods>
                     <exclude name=".*"/>
                 </methods>
@@ -199,17 +212,18 @@
         </packages>
     </test>
 
-    <test name="WebSocket-Inbound-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.websocket.inbound.transport.test"/>
-        </packages>
-    </test>
+    <!-- Disable due to https://github.com/wso2/micro-integrator/issues/457 -->
+    <!--<test name="WebSocket-Inbound-Test" preserve-order="true" verbose="2">-->
+        <!--<packages>-->
+            <!--<package name="org.wso2.carbon.esb.websocket.inbound.transport.test"/>-->
+        <!--</packages>-->
+    <!--</test>-->
 
     <test name="nhttp-Transport-Test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.NhttpBaseTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.DefaultRequestContentTypeTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.ResponseAfterNttpEnabledTestCase"/>
+            <class name="org.wso2.carbon.esb.nhttp.transport.test.ResponseAfterNhttpEnabledTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.NhttpMaximumOpenConnections"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.ConfiguringNhttpAccessLogLocationTestCase"/>
             <class name="org.wso2.carbon.esb.nhttp.transport.test.ContentTypeCharsetTestCase"/>

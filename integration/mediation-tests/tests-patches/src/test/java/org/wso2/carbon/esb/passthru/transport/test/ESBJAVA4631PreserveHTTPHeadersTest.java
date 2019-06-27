@@ -50,12 +50,11 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
          * following configFiles/preserveContentType/passthru-http.properties resource
          */
 
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
                         + "preserveheaders" + File.separator + "passthru-http.properties"));
         super.init();
         wireServer = new WireMonitorServer(8992);
-        verifyAPIExistence("ContentTypePreserveAPI");
     }
 
     @Test(groups = "wso2.esb", description = "Preserve Content-Type header test", enabled = true)
@@ -92,6 +91,5 @@ public class ESBJAVA4631PreserveHTTPHeadersTest extends ESBIntegrationTest {
 
     @AfterClass
     public void cleanUp() throws Exception {
-        super.cleanup();
     }
 }

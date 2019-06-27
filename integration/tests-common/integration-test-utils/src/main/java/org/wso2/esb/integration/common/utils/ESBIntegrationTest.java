@@ -23,10 +23,12 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.json.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.application.mgt.synapse.stub.ExceptionException;
 import org.wso2.carbon.application.mgt.synapse.stub.types.carbon.SynapseApplicationMetadata;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
+import org.wso2.carbon.automation.engine.configurations.UrlGenerationUtil;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.DefaultInstance;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -99,6 +101,9 @@ public abstract class ESBIntegrationTest {
     private List<String> priorityExecutorList = null;
     private List<String[]> scheduledTaskList = null;
     private List<String> inboundEndpointList = null;
+    private static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
+    private String hostName = null;
+    private int portOffset;
 
     /**
      * Initialize the context given a tenant domain and a user.
@@ -124,6 +129,12 @@ public abstract class ESBIntegrationTest {
         context = new AutomationContext();
         contextUrls = context.getContextUrls();
         esbUtils = new ESBTestCaseUtils();
+        hostName = UrlGenerationUtil.getManagerHost(context.getInstance());
+        portOffset = Integer.parseInt(System.getProperty("port.offset"));
+    }
+
+    public String getHostname() {
+        return this.hostName;
     }
 
     protected void cleanup() throws Exception {
@@ -892,19 +903,19 @@ public abstract class ESBIntegrationTest {
                 "Sequence not found. " + sequenceName);*/
     }
 
-    private boolean checkCarbonAppExistence(String carbonAppName) throws IOException {
+    protected boolean checkCarbonAppExistence(String carbonAppName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("applications");
         return response.contains(carbonAppName);
     }
 
-    private boolean checkApiExistence(String apiName) throws IOException {
+    protected boolean checkApiExistence(String apiName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("apis");
         return response.contains(apiName);
     }
 
-    private boolean checkEndpointExistence(String endpoinName) throws IOException {
+    protected boolean checkEndpointExistence(String endpoinName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("endpoints");
         return response.contains(endpoinName);
@@ -916,7 +927,17 @@ public abstract class ESBIntegrationTest {
         return response.contains(inboundEndpoinName);
     }
 
-    private boolean checkProxyServiceExistence(String proxyServiceName) throws IOException {
+    protected int getNoOfArtifacts(String artifactType) throws IOException {
+        int count = 0;
+        String response = retrieveArtifactUsingManagementApi(artifactType);
+        JSONObject jsonObject = new JSONObject(response);
+        if(jsonObject.has("count")) {
+            count = jsonObject.getInt("count");
+        }
+        return count;
+    }
+
+    protected boolean checkProxyServiceExistence(String proxyServiceName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("proxy-services");
         return response.contains(proxyServiceName);
@@ -940,7 +961,10 @@ public abstract class ESBIntegrationTest {
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
 
-        HttpResponse response = client.doGet("https://localhost:9354/management/" + artifactType, headers);
+        String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                + artifactType;
+
+        HttpResponse response = client.doGet(endpoint, headers);
         return client.getResponsePayload(response);
     }
 

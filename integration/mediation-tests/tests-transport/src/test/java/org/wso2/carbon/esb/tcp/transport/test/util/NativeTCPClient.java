@@ -30,7 +30,6 @@ import java.net.Socket;
 public class NativeTCPClient {
 
     private String host = "localhost";
-    private int port = 6789;
     private Socket socket = null;
     private int messageCount = 0;
     private String delimiterType;
@@ -39,8 +38,8 @@ public class NativeTCPClient {
     private String characterDelimiter;
     private String message;
 
-    public NativeTCPClient(String delimiterType, int messageCount) throws Exception {
-        this.socket = new Socket(this.host, this.port);
+    public NativeTCPClient(String delimiterType, int messageCount, int port) throws IOException {
+        this.socket = new Socket(this.host, port);
         this.messageCount = messageCount;
         this.delimiterType = delimiterType;
     }

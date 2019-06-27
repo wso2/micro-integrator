@@ -18,18 +18,11 @@
 package org.wso2.carbon.esb.proxyservice.test.loggingProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -37,16 +30,7 @@ import static org.testng.Assert.assertNotNull;
 public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
-        log.info("Initializing environment");
         super.init();
-        log.info("Uploading registry resources");
-        uploadResourcesToConfigRegistry();
-        log.info("Loading ESB configuration from classpath");
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/loggingProxy/pick_end_point_from_registry.xml");
-        log.info("Assert isProxyDeployed");
-        isProxyDeployed("pickEndpointFromRegLoggingProxy");
-        log.info("Initializing environment completed");
     }
 
     @Test(groups = "wso2.esb", description = "- Logging proxy"
@@ -68,39 +52,8 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "- Logging proxy"
             + "- Create a proxy service and pick the endpoint from registry (config) -" + " Log", enabled = false)
-    public void testLoggingProxyLogging() throws Exception {
+    public void testLoggingProxyLogging() {
         //ToDo Assert Logs
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        clearUploadedResource();
-        super.cleanup();
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
-        resourceAdminServiceStub.addCollection("/_system/config/", "proxy", "", "Contains test proxy tests files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/proxy/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/proxyconfig/proxy/utils/registry_endpoint.xml"))));
-
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
-
-    }
 }

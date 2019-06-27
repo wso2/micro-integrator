@@ -61,9 +61,4 @@ public class SetHostHttpHeaderTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
-
 }

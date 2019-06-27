@@ -27,8 +27,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
@@ -41,19 +40,19 @@ import static org.testng.Assert.assertTrue;
  */
 public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
-    private LogViewerClient logViewer;
+    private CarbonLogReader carbonLogReader;
     private final String API_NAME = "MimeAttachmentAPI";
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
                         + "axis2.xml"));
         super.init();
         verifyAPIExistence(API_NAME);
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = "wso2.esb", description = "Access content of MIME in NHTTP transport")
@@ -77,6 +76,7 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
         reqEntity.addPart("data", data);
 
         httppost.setEntity(reqEntity);
+        carbonLogReader.start();
         httpclient.execute(httppost);
 
         String expectedMessage = "<soapenv:Body><mediate><file_type>xml</file_type><description>Simple HTTP POST "
@@ -86,13 +86,10 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
                 + "+CiAgICA8dG9rZW4" + "+d3NvMl9hY2Nlc3NfMDAxPC90b2tlbj4KPC9taW1lPg==</data></mediate></soapenv:Body"
                 + "></soapenv:Envelope>";
 
-        LogEvent[] logs = logViewer.getAllSystemLogs();
         boolean LogFound = false;
-        for (LogEvent log : logs) {
-            if (log.getMessage().contains(expectedMessage)) {
+            if (carbonLogReader.getLogs().contains(expectedMessage)) {
                 LogFound = true;
-                break;
-            }
+                carbonLogReader.stop();
         }
         assertTrue(LogFound, "MIME message build was not successful.");
     }

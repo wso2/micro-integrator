@@ -48,16 +48,8 @@ public class RedirectTest extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true, description = "Test Message processor Redirect service")
     protected void setup() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("artifacts/ESB/messageProcessorConfig/RedirectTest.xml");
-
         // Initialization
         messageProcessorClient = new MessageProcessorClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
-
-        verifyMessageStoreExistence(STORE_NAME);
-        verifyMessageStoreExistence(REDIRECT_STORE_NAME);
-        verifyMessageProcessorExistence(PROCESSOR_NAME);
-        verifyMessageProcessorExistence(REDIRECT_PROCESSOR_NAME);
-        isProxySuccesfullyDeployed(PROXY_NAME);
     }
 
     @AfterClass(alwaysRun = true)

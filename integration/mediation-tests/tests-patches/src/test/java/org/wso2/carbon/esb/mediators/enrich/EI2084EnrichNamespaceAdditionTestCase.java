@@ -18,8 +18,6 @@
 
 package org.wso2.carbon.esb.mediators.enrich;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.lang3.CharEncoding;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpHeaders;
@@ -28,7 +26,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -42,22 +39,6 @@ public class EI2084EnrichNamespaceAdditionTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        String api = "<api xmlns=\"http://ws.apache.org/ns/synapse\" name=\"" + API_NAME + "\" context=\"/" + API_NAME
-                + "\">\n" + "   <resource methods=\"POST\" uri-template=\"/test_with_pf\">\n" + "      <inSequence>\n"
-                + "         <enrich>\n" + "            <source type=\"body\" clone=\"true\"/>\n"
-                + "            <target type=\"property\" property=\"INPUT_MESSAGE\"/>\n" + "         </enrich>\n"
-                + "         <payloadFactory media-type=\"xml\">\n" + "            <format>\n"
-                + "               <inline xmlns=\"\">\n" + "                  <payload>$1</payload>\n"
-                + "               </inline>\n" + "            </format>\n" + "            <args>\n"
-                + "               <arg evaluator=\"xml\" expression=\"get-property('INPUT_MESSAGE')\"/>\n"
-                + "            </args>\n" + "         </payloadFactory>\n"
-                + "         <property name=\"messageType\" value=\"text/xml\" scope=\"axis2\"/>\n"
-                + "         <respond/>\n" + "      </inSequence>\n" + "      <outSequence/>\n"
-                + "      <faultSequence/>\n" + "   </resource>\n" + "</api>\n";
-
-        OMElement omAPI = AXIOMUtil.stringToOM(api);
-        addApi(omAPI);
-        Assert.assertTrue(esbUtils.isApiDeployed(contextUrls.getBackEndUrl(), sessionCookie, API_NAME));
     }
 
     @Test(groups = "wso2.esb", description = "Enrich / Payload Factory mediators,soap namespace is added when soap is not in use")
@@ -83,9 +64,5 @@ public class EI2084EnrichNamespaceAdditionTestCase extends ESBIntegrationTest {
                 "unnessary namespaces present in message");
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
 }
 
