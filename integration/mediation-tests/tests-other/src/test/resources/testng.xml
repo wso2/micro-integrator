@@ -1,6 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false">
+<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
