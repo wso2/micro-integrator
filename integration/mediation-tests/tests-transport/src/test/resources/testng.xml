@@ -28,7 +28,11 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
-            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.ViewPopTest"/>
+            <class name="org.wso2.carbon.esb.jms.ViewPopRedirectTests.ViewPopTest">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 
