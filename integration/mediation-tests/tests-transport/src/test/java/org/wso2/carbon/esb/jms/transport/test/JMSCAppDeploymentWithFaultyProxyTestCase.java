@@ -65,19 +65,6 @@ public class JMSCAppDeploymentWithFaultyProxyTestCase extends ESBIntegrationTest
 
     }
 
-    @Test(groups = {
-            "wso2.esb" }, dependsOnMethods = "proxyServiceDeploymentTest", description = "faulty proxy service invocation")
-    public void deleteCarFileAndArtifactUnDeploymentTest() throws Exception {
-        applicationAdminClient.deleteApplication(carFileName);
-        isCarFileUploaded = false;
-        Assert.assertTrue(isCarFileUnDeployed(carFileName));
-
-        TimeUnit.SECONDS.sleep(5);
-        // verify whether artifacts are undeployed successfully
-        verifyUndeployment();
-
-    }
-
     /**
      * @param carFileName - Name of the car file to deploy
      * @return true if the car file deployed successfully else, false
@@ -106,39 +93,6 @@ public class JMSCAppDeploymentWithFaultyProxyTestCase extends ESBIntegrationTest
 
         }
         return isCarFileDeployed;
-    }
-
-    /**
-     * @param carFileName - Name of the car file to undeploy
-     * @return true if the car file undeployed successfully else, false
-     */
-    private boolean isCarFileUnDeployed(String carFileName) throws Exception {
-
-        log.info("waiting " + MAX_TIME + " millis for car undeployment " + carFileName);
-        boolean isCarFileUnDeployed = false;
-        Calendar startTime = Calendar.getInstance();
-        long time;
-        while ((time = (Calendar.getInstance().getTimeInMillis() - startTime.getTimeInMillis())) < MAX_TIME) {
-            String[] applicationList = applicationAdminClient.listAllApplications();
-            if (applicationList != null) {
-                if (!ArrayUtils.contains(applicationList, carFileName)) {
-                    isCarFileUnDeployed = true;
-                    log.info("car file deployed in " + time + " mills");
-                    return isCarFileUnDeployed;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    // ignore
-                }
-            } else {
-                isCarFileUnDeployed = true;
-                log.info("car file deployed in " + time + " mills");
-                return isCarFileUnDeployed;
-            }
-
-        }
-        return isCarFileUnDeployed;
     }
 
     /**
