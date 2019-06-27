@@ -120,6 +120,27 @@ public class CarbonLogReader {
     }
 
     /**
+     * Returns the substring between the given start and end substrings.
+     *
+     * @param startWith starting substring
+     * @param endWith   ending substring
+     * @param timeout   max time to poll in seconds
+     * @return the substring between the given string, empty string otherwise
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public String getSubstringBetweenStrings(String startWith, String endWith, int timeout)
+            throws InterruptedException {
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (assertIfLogExists(startWith) && assertIfLogExists(endWith) && !StringUtils
+                    .substringBetween(startWith, endWith).isEmpty()) {
+                return StringUtils.substringBetween(startWith, endWith);
+            }
+        }
+        return "";
+    }
+
+    /**
      * Check for the existence of the given log message. The polling will happen in one second intervals.
      *
      * @param expected expected log string

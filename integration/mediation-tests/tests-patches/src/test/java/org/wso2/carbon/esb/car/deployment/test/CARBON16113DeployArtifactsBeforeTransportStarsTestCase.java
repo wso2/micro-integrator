@@ -23,15 +23,9 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-
-import java.io.File;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 
 /**
  * Test case to ensure Carbon apps (.car files) are deployed before the transport starts.
@@ -42,45 +36,28 @@ public class CARBON16113DeployArtifactsBeforeTransportStarsTestCase extends ESBI
     private final String TRANSPORT_MESSAGE = "Pass-through HTTP Listener started on ";
     private final String CAPP_MESSAGE = "Deploying Carbon Application : car-deployment-before-tranaport-start-test_1.0.0.car";
     private ServerConfigurationManager serverConfigurationManager;
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     private void initialize() throws Exception {
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(
-                new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
+        carbonLogReader = new CarbonLogReader();
+        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext());
+        carbonLogReader.start();
+        serverConfigurationManager.restartMicroIntegrator();
+        carbonLogReader.stop();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Testing whether CApp is deployed before transport starts")
-    public void carReDeploymentTest() throws Exception {
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        uploadCapp("car-deployment-before-tranaport-start-test_1.0.0.car", new DataHandler(new FileDataSource(new File(
-                getESBResourceLocation() + File.separator + "car" + File.separator
-                        + "car-deployment-before-tranaport-start-test_1.0.0.car"))));
-        logViewerClient.clearLogs();
-        serverConfigurationManager.restartGracefully();
-        super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
+    public void carReDeploymentTest() {
         boolean cappBeforeTransport = false;
-        int size = logs.length;
-        for (int i = size - 1; i >= 0; i--) {
-            if (logs[i].getMessage().contains(CAPP_MESSAGE)) {
-                for (int j = i; j >= 0; j--) {
-                    if (logs[j].getMessage().contains(TRANSPORT_MESSAGE)) {
-                        cappBeforeTransport = true;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-
+        String logs = carbonLogReader.getLogs();
+        cappBeforeTransport = logs.indexOf(CAPP_MESSAGE) < logs.indexOf(TRANSPORT_MESSAGE);
         Assert.assertTrue(cappBeforeTransport, "Transport started before deploying Carbon app");
     }
 
     @AfterClass(alwaysRun = true)
     public void cleanupEnvironment() throws Exception {
-        super.cleanup();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }

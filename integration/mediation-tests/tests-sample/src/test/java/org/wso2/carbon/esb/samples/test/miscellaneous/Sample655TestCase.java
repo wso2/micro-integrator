@@ -35,7 +35,6 @@ public class Sample655TestCase extends ESBSampleIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadSampleESBConfiguration(655);
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
