@@ -102,6 +102,13 @@
         <packages>
             <package name="org.wso2.carbon.esb.scheduledtask.test"/>
         </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.scheduledtask.test.TaskRedeployWithCappTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+        </classes>
     </test>
     <test name="Tenant-Test" preserve-order="true" verbose="2" parallel="false">
         <packages>
