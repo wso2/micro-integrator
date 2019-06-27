@@ -18,18 +18,12 @@
 package org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -39,17 +33,14 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/wsdl_options_pick_from_registry.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "- WSDL based proxy" + "- Publish WSDL Options - Picked from registry")
     public void testWSDLBasedProxy() throws Exception {
 
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromRegWsdlBasedProxy"), null, "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromRegWsdlBasedProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE) , "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -61,37 +52,4 @@ public class WSDLOptionsPickedFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        clearUploadedResource();
-        super.cleanup();
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
-        resourceAdminServiceStub.addCollection("/_system/config/", "proxy", "", "Contains test proxy tests files");
-
-        resourceAdminServiceStub
-                .addResource("/_system/config/proxy/sample_proxy_1.wsdl", "application/wsdl+xml", "wsdl+xml files",
-                        new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/proxyconfig/proxy/utils/sample_proxy_1.wsdl")));
-
-        Thread.sleep(1000);
-
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
-
-    }
 }
