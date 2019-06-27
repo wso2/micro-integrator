@@ -38,9 +38,6 @@ public class ESBJAVA3650_CustomHeaderPreserved_MessageProcessorOutMessage_TestCa
     @BeforeClass(alwaysRun = true)
     public void deployeService() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/messageProcessorConfig/CustomHeaderPreserved_MessageProcessorOutMessage.xml");
-        isProxyDeployed(PROXY_SERVICE_NAME);
         tcpMonListener = new TCPMonListener(8999, "localhost", 9000);
         tcpMonListener.start();
     }
@@ -60,6 +57,5 @@ public class ESBJAVA3650_CustomHeaderPreserved_MessageProcessorOutMessage_TestCa
     @AfterClass(alwaysRun = true)
     public void UndeployeService() throws Exception {
         tcpMonListener.stop();
-        super.cleanup();
     }
 }
