@@ -18,8 +18,10 @@
 
 package org.wso2.carbon.esb.endpoint.test;
 
+import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
@@ -27,16 +29,14 @@ import org.wso2.carbon.esb.endpoint.test.util.EndpointTestUtils;
 import org.wso2.esb.integration.common.clients.endpoint.EndPointAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.IOException;
-import java.rmi.RemoteException;
-import javax.xml.stream.XMLStreamException;
-
 public class DynamicURIWSDLEpTestCase extends ESBIntegrationTest {
 
     private String ENDPOINT_PATH_1 = "conf:/DynamicAddressEndpointConf";
     private String ENDPOINT_PATH_2 = "gov:/DynamicAddressEndpointGov";
     private String ENDPOINT_XML = "<endpoint xmlns=\"http://ws.apache.org/ns/synapse\">\n"
-            + "   <wsdl uri=\"http://webservices.amazon.com/AWSECommerceService/JP/AWSECommerceService1.wsdl\" service=\"AWSECommerceService1\" port=\"AWSECommerceServicePort\" >\n"
+            +
+            "   <wsdl uri=\"http://webservices.amazon.com/AWSECommerceService/JP/AWSECommerceService1.wsdl\" " +
+            "service=\"AWSECommerceService1\" port=\"AWSECommerceServicePort\" >\n"
             + "      <suspendOnFailure>\n" + "         <progressionFactor>1.0</progressionFactor>\n"
             + "      </suspendOnFailure>\n" + "      <markForSuspension>\n"
             + "         <retriesBeforeSuspension>0</retriesBeforeSuspension>\n"
@@ -46,28 +46,12 @@ public class DynamicURIWSDLEpTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        endPointAdminClient = new EndPointAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
-        cleanupEndpoints();
     }
 
-    @Test(groups = { "wso2.esb" })
+    @Test(groups = {"wso2.esb"})
     public void testDynamicURIESDLEndpoint() throws Exception {
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_1);
         dynamicEndpointAdditionScenario(ENDPOINT_PATH_2);
-
-        dynamicEndpointDeletionScenario(ENDPOINT_PATH_1);
-        dynamicEndpointDeletionScenario(ENDPOINT_PATH_2);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void cleanup() throws Exception {
-        endPointAdminClient = null;
-        super.cleanup();
-    }
-
-    private void cleanupEndpoints() throws RemoteException, EndpointAdminEndpointAdminException {
-        EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_1, endPointAdminClient);
-        EndpointTestUtils.cleanupDynamicEndpoint(ENDPOINT_PATH_2, endPointAdminClient);
     }
 
     private void dynamicEndpointAdditionScenario(String path)
@@ -76,13 +60,5 @@ public class DynamicURIWSDLEpTestCase extends ESBIntegrationTest {
         endPointAdminClient.addDynamicEndPoint(path, AXIOMUtil.stringToOM(ENDPOINT_XML));
         EndpointTestUtils.assertDynamicEndpointAddition(path, beforeCount, endPointAdminClient);
     }
-
-    private void dynamicEndpointDeletionScenario(String path)
-            throws RemoteException, EndpointAdminEndpointAdminException {
-        int beforeCount = endPointAdminClient.getDynamicEndpointCount();
-        endPointAdminClient.deleteDynamicEndpoint(path);
-        EndpointTestUtils.assertDynamicEndpointDeletion(beforeCount, endPointAdminClient);
-    }
-
 }
 

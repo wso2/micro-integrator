@@ -43,6 +43,13 @@
         <packages>
             <package name="org.wso2.carbon.esb.endpoint.test"/>
         </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.endpoint.test.DynamicURIWSDLEpTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+        </classes>
     </test>
     <test name="LocalEntry-Test" preserve-order="true" verbose="2">
         <packages>
