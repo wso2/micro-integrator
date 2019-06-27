@@ -49,8 +49,7 @@ public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneFunctionalContextTestProxy"), null, "IBM");
         Assert.assertNotNull(response);
 
-        String logs = carbonLogReader.getLogs();
-        Assert.assertTrue(logs.contains("REQUEST PARAM VALUE"));
+        Assert.assertTrue(carbonLogReader.checkForLog("REQUEST PARAM VALUE",60));
         carbonLogReader.stop();
     }
 
