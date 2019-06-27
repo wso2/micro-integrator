@@ -395,11 +395,12 @@ public class CarbonServerManager {
     }
 
     private int getPortOffsetFromCommandMap(Map<String, String> commandMap) {
+        int portOffset = 0;
         if (commandMap.containsKey(ExtensionConstants.PORT_OFFSET_COMMAND)) {
-            return Integer.parseInt(commandMap.get(ExtensionConstants.PORT_OFFSET_COMMAND));
-        } else {
-            return 0;
+            portOffset = Integer.parseInt(commandMap.get(ExtensionConstants.PORT_OFFSET_COMMAND));
         }
+        System.setProperty("port.offset", Integer.toString(portOffset));
+        return portOffset;
     }
 
     private String[] mergerArrays(String[] array1, String[] array2) {
