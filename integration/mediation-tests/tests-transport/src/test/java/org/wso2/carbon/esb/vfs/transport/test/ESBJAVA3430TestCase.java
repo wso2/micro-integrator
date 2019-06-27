@@ -9,7 +9,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.ftpserver.FTPServerManager;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.File;
@@ -27,6 +27,7 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
     private File inputFolder;
     private LogViewerClient logViewerClient;
     private String pathToFtpDir;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void runFTPServer() throws Exception {
@@ -63,23 +64,14 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
         ftpServerManager.startFtpServer();
 
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator + "vfs_null_check.xml");
-
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
+        carbonLogReader = new CarbonLogReader();
     }
 
     @AfterClass(alwaysRun = true)
     public void stopFTPServer() throws Exception {
-        try {
-            super.cleanup();
-        } finally {
-            ftpServerManager.stop();
-            log.info("FTP Server stopped successfully");
-        }
-
+        ftpServerManager.stop();
+        log.info("FTP Server stopped successfully");
+        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP directly in root directory")
@@ -87,8 +79,7 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
 
         // To check the timed out exception happened
         boolean timeout = false;
-        // To check whether the NPE happened
-        boolean isError = false;
+        carbonLogReader.start();
 
         try {
             OMElement response = axis2Client
@@ -97,20 +88,11 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
             if (axisFault.getLocalizedMessage().contains("Read timed out")) {
                 timeout = true;
             }
-        } finally {
-            removeProxy("VFSProxyFileCreateInRoot");
         }
 
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("Error creating file under the FTP root")) {
-                isError = true;
-                break;
-            }
-        }
-
+        // To check whether the NPE happened
+        boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", 5);
+        carbonLogReader.clearLogs();
         Assert.assertFalse(isError && timeout,
                 " The null check for the replyFile.getParent() in VFSTransportSender is not available");
     }
@@ -120,8 +102,6 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
 
         // To check the timed out exception happened
         boolean timeout = false;
-        // To check whether the NPE happened
-        boolean isError = false;
 
         try {
             OMElement response = axis2Client
@@ -130,30 +110,11 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
             if (axisFault.getLocalizedMessage().contains("Read timed out")) {
                 timeout = true;
             }
-        } finally {
-            removeProxy("VFSProxyFileCreateInDirectory");
         }
 
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("Error creating file under the FTP root")) {
-                isError = true;
-                break;
-            }
-        }
-
+        // To check whether the NPE happened
+        boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", 5);
         Assert.assertFalse(isError && timeout,
                 " The null check for the replyFile.getParent() in VFSTransportSender is not available");
     }
-
-    /**
-     * @param proxyName - Name of the proxy to be removed
-     * @throws Exception
-     */
-    private void removeProxy(String proxyName) throws Exception {
-        deleteProxyService(proxyName);
-    }
-
 }

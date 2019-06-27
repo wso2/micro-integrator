@@ -67,9 +67,6 @@ public class ESBJAVA4450TestCase extends ESBIntegrationTest {
         ftpServerManager.startFtpServer();
 
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator + "vfs_file_type.xml");
     }
 
     @Test(groups = "wso2.esb", description = "VFS transfer file type if default")

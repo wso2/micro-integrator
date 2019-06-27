@@ -9,14 +9,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.Utils;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This test class related to - https://wso2.org/jira/browse/ESBJAVA-3419
@@ -26,21 +24,54 @@ import java.io.IOException;
 
 public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
 
+    private CarbonLogReader logReader;
+    private static String PROXY1_NAME = "HidePasswordListenerProxy";
+    private static String PROXY2_NAME = "HidePasswordSenderProxy";
+
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
+        logReader = new CarbonLogReader();
+        logReader.start();
+        deployArtifacts();
     }
 
     @AfterClass(alwaysRun = true)
     public void restoreServerConfiguration() throws Exception {
-        super.cleanup();
+        logReader.stop();
+        Utils.undeploySynapseConfiguration(PROXY1_NAME, Utils.ArtifactType.PROXY, false);
+        Utils.undeploySynapseConfiguration(PROXY2_NAME, Utils.ArtifactType.PROXY, true);
+
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportListener not logs the clear password on error")
     public void testVFSListenerHidePasswordInLog() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM(
+        Assert.assertFalse(logReader.checkForLog("ClearPassword", 5),
+                " The password is getting printed in the log in the VFSTransportListener.");
+        logReader.clearLogs();
+    }
+
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportSender not logs the clear password on error",
+            dependsOnMethods = "testVFSListenerHidePasswordInLog")
+    public void testVFSSenderHidePasswordInLog() throws Exception {
+        try {
+            OMElement response = axis2Client
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("HidePasswordSenderProxy"),
+                            getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        } catch (AxisFault e) {
+            // Ignore exception
+        }
+
+        Assert.assertFalse(logReader.checkForLog("ClearPassword", 5), " The password is getting printed in the log VFSTransportSender.");
+    }
+
+
+    private void deployArtifacts() throws XMLStreamException {
+
+        OMElement proxy1 = AXIOMUtil.stringToOM(
                 "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"HidePasswordListenerProxy\"\n"
                         + "       transports=\"vfs\"\n" + "       statistics=\"disable\"\n"
                         + "       trace=\"disable\"\n" + "       startOnLoad=\"true\">\n" + "   <target>\n"
@@ -64,20 +95,9 @@ public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
                         + "   <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                         + "   <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>\n"
                         + "   <parameter name=\"ScenarioID\">scenario1</parameter>\n" + "   <description/>\n"
-                        + "</proxy>"));
+                        + "</proxy>");
 
-        Thread.sleep(3000);
-
-        Assert.assertFalse(isClearPassword(),
-                " The password is getting printed in the log in the VFSTransportListener.");
-
-    }
-
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportSender not logs the clear password on error")
-    public void testVFSSenderHidePasswordInLog() throws Exception {
-
-        addProxyService(AXIOMUtil.stringToOM(
+        OMElement proxy2 = AXIOMUtil.stringToOM(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"HidePasswordSenderProxy\"\n"
                         + "           xmlns=\"http://ws.apache.org/ns/synapse\""
                         + "           transports=\"https http\"\n" + "           startOnLoad=\"true\"\n"
@@ -99,48 +119,10 @@ public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
                         + "                    </endpoint>\n" + "                </send>\n"
                         + "            </inSequence>\n" + "            <outSequence>\n" + "                <drop/>\n"
                         + "            </outSequence>\n" + "            <faultSequence/>\n" + "        </target>\n"
-                        + "    </proxy>"));
+                        + "    </proxy>");
 
-        try {
-            OMElement response = axis2Client
-                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("HidePasswordSenderProxy"),
-                            getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
-        } catch (AxisFault e) {
-        }
 
-        Assert.assertFalse(isClearPassword(), " The password is getting printed in the log VFSTransportSender.");
-    }
-
-    /**
-     * The wso2carbon.log is used here, coz the LogViewerClient stack
-     * is not logs this exception.
-     *
-     * @return true if the password printed in the log, else false.
-     */
-    private boolean isClearPassword() {
-
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new FileReader(
-                    CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "logs"
-                            + File.separator + "wso2carbon.log"));
-            String currentLine;
-            while ((currentLine = reader.readLine()) != null) {
-                if (currentLine.contains("ClearPassword")) {
-                    return true;
-                }
-            }
-
-        } catch (IOException e) {
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException ex) {
-            }
-        }
-
-        return false;
+        Utils.deploySynapseConfiguration(proxy1, PROXY1_NAME, Utils.ArtifactType.PROXY, false);
+        Utils.deploySynapseConfiguration(proxy2, PROXY2_NAME, Utils.ArtifactType.PROXY, true);
     }
 }
