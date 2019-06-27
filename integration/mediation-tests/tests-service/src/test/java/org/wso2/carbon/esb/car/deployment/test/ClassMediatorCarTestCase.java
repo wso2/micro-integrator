@@ -51,5 +51,8 @@ public class ClassMediatorCarTestCase extends ESBIntegrationTest {
 
     }
 
+    /**
+     * Not using hot deployment. Remove rest of the methods since those are not valid.
+     * */
 
 }
