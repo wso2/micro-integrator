@@ -8,9 +8,6 @@
             </iterate>
         </inSequence>
         <outSequence>
-            <log level="full">
-                <property name="bb" value="*********************"/>
-            </log>
             <sequence key="aggregateMessagesForIterateTests"/>
         </outSequence>
     </target>
