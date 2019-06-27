@@ -133,6 +133,10 @@ public abstract class ESBIntegrationTest {
         portOffset = Integer.parseInt(System.getProperty("port.offset"));
     }
 
+    public String getHostname() {
+        return this.hostName;
+    }
+
     protected void cleanup() throws Exception {
 		/*try {
 			if (synapseConfiguration != null) {
