@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.json;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.HttpResponse;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -33,7 +32,6 @@ public class ESBJAVA_4572TestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyAPIExistence("ESBJAVA4572TestAPI");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -50,10 +48,5 @@ public class ESBJAVA_4572TestCase extends ESBIntegrationTest {
         String val = "{\"state\":[{\"path\":\"user_programs_progress\",\"entry\":"
                 + "[{\"value\":\"false\",\"key\":\"testJson14\"}]}]}";
         Assert.assertEquals(val, exPayload);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }

@@ -16,7 +16,6 @@
 package org.wso2.carbon.esb.json;
 
 import org.apache.http.HttpResponse;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -36,7 +35,6 @@ public class ESBJAVA4270TestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyAPIExistence("ESBJAVA4270StockQuoteAPI");
     }
 
     @Test(groups = "wso2.esb", description = "Call API with GET request and content type = application/json in NHTTP "
@@ -55,10 +53,5 @@ public class ESBJAVA4270TestCase extends ESBIntegrationTest {
         HttpResponse response = httpClient.doGet(url, headers);
         assertEquals(response.getStatusLine().getStatusCode(), 200);
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }

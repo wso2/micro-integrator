@@ -2,7 +2,6 @@ package org.wso2.carbon.esb.json;
 
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.map.ObjectMapper;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -17,7 +16,6 @@ public class HttpRelativeLocationHeaderTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
-        verifyProxyServiceExistence("HTTPRelativeLocationService0Proxy");
     }
 
     @Test(groups = { "wso2.esb", "localOnly" }, description = "Http Location header")
@@ -31,10 +29,4 @@ public class HttpRelativeLocationHeaderTestCase extends ESBIntegrationTest {
         final JsonNode actualJsonObject = mapper.readTree(actualResult);
         assertEquals(actualJsonObject, expectedJsonObject, "Could not process relative Location header.");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }
