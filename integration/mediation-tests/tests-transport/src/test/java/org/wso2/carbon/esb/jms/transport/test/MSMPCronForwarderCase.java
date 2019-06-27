@@ -45,8 +45,10 @@ import static org.testng.Assert.assertTrue;
  */
 public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
-    private TomcatServerManager tomcatServerManager;
     private final int NUMBER_OF_MESSAGES = 4;
+
+    private TomcatServerManager tomcatServerManager;
+    private CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
@@ -63,7 +65,7 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor")
     public void testMessageProcessorCronForwader() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
+
         carbonLogReader.start();
 
         // SEND THE REQUEST
@@ -86,8 +88,8 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         assertEquals(response4.getResponseCode(), 202, "ESB failed to send 202 even after setting FORCE_SC_ACCEPTED");
 
         // WAIT FOR THE MESSAGE PROCESSOR TO TRIGGER
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isLogWritten());
         assertTrue(carbonLogReader.checkForLog("Jack", 60, NUMBER_OF_MESSAGES));
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
@@ -96,6 +98,7 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         if (tomcatServerManager != null) {
             tomcatServerManager.stop();
         }
+        carbonLogReader.stop();
     }
 
     private Callable<Boolean> isServerStarted() {
@@ -107,4 +110,11 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         };
     }
 
+    private Callable<Boolean> isLogWritten() {
+        return new Callable<Boolean>() {
+            @Override public Boolean call() throws Exception {
+                return carbonLogReader.assertIfLogExists("Jack", NUMBER_OF_MESSAGES);
+            }
+        };
+    }
 }
