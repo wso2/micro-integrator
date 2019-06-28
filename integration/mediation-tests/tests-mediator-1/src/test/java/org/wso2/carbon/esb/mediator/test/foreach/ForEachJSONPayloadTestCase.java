@@ -58,35 +58,19 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachJSONTestProxy"), headers,
                 request, "application/json;charset=UTF-8");
 
-        boolean reachedEnd = false;
-        String logs = carbonLogReader.getLogs();
+        //boolean reachedEnd = false;
+        String logs = carbonLogReader.getSubstringBetweenStrings("<jsonObject>", "</jsonObject>", 6);
+        assertTrue(logs.contains(
+                "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>IBM</code></checkPriceRequest>"),
+                "IBM Element not found");
+        assertTrue(logs.contains(
+                "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>WSO2</code></checkPriceRequest>"),
+                "WSO2 Element not found");
+        assertTrue(logs.contains(
+                "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>MSFT</code></checkPriceRequest>"),
+                "MSTF Element not found");
 
-        if (carbonLogReader.checkForLog("STATE = END", 200)) {
-            reachedEnd = true;
-            String payload = logs;
-            String search = "<jsonObject><getQuote>(.*)</getQuote></jsonObject>";
-            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-            Matcher matcher = pattern.matcher(payload);
-            boolean matchFound = matcher.find();
-
-            assertTrue(matchFound, "getQuote element not found");
-
-            int start = matcher.start();
-            int end = matcher.end();
-            String quote = payload.substring(start, end);
-
-            assertTrue(quote.contains(
-                    "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>IBM</code></checkPriceRequest>"),
-                    "IBM Element not found");
-            assertTrue(quote.contains(
-                    "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>WSO2</code></checkPriceRequest>"),
-                    "WSO2 Element not found");
-            assertTrue(quote.contains(
-                    "<checkPriceRequest xmlns=\"http://ws.apache.org/ns/synapse\"><code>MSFT</code></checkPriceRequest>"),
-                    "MSTF Element not found");
-        }
         carbonLogReader.stop();
-        assertTrue(reachedEnd, "Transformed json payload");
     }
 
 }
