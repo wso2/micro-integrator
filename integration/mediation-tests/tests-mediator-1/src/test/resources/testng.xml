@@ -196,6 +196,12 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
+            <!-- Excluding due to https://github.com/wso2/micro-integrator/issues/486-->
+            <class name="org.wso2.carbon.esb.mediator.test.enrich.EnrichAddCustomHeaderTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
 
