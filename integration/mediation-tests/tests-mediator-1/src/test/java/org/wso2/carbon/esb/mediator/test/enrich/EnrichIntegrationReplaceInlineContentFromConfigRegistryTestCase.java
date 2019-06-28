@@ -20,6 +20,7 @@ package org.wso2.carbon.esb.mediator.test.enrich;
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
@@ -32,6 +33,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
 public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase extends ESBIntegrationTest {
+    ResourceAdminServiceClient resourceAdminServiceStub;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
