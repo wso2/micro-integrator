@@ -204,6 +204,13 @@
         <packages>
             <package name="org.wso2.carbon.esb.https.inbound.transport.test"/>
         </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.https.inbound.transport.test.HttpsInboundTransportTestCase">
+                <methods>
+                    <exclude name=".*" />
+                </methods>
+            </class>
+        </classes>
     </test>
 
     <test name="SSL Test" preserve-order="true" verbose="2">
