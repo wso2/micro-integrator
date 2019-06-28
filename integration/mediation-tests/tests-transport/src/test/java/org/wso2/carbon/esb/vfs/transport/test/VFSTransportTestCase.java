@@ -28,6 +28,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
@@ -38,6 +39,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -49,6 +51,8 @@ import static org.testng.Assert.assertTrue;
 public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private String pathToVfsDir;
+    private File rootFolder;
+    private HashMap<String, File> proxyVFSRoots = new HashMap<>();
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
@@ -57,7 +61,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
                         + File.separator + "vfsTransport" + File.separator).getPath();
 
-        File rootFolder = new File(pathToVfsDir + "test" + File.separator);
+        rootFolder = new File(pathToVfsDir + "test" + File.separator);
         File outFolder = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator);
         File inFolder = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator);
         File originalFolder = new File(pathToVfsDir + "test" + File.separator + "original" + File.separator);
@@ -73,36 +77,61 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         assertTrue(inFolder.exists(), "File folder doesn't exists");
         assertTrue(originalFolder.exists(), "File folder doesn't exists");
         assertTrue(failureFolder.exists(), "File folder doesn't exists");
+
+        addVFSProxyWriteFile();
+        addVFSProxy1();
+        addVFSProxy2();
+        addVFSProxy3();
+        addVFSProxy4();
+        addVFSProxy5();
+        addVFSProxy6();
+        addVFSProxy7();
+        addVFSProxy8();
+        addVFSProxy9();
+        addVFSProxy10();
+        addVFSProxy11();
+        addVFSProxy12();
+        addVFSProxy13();
+        addVFSProxy14();
+        addVFSProxy15();
+        addVFSProxy16();
+        addVFSProxy17();
+        addVFSProxy18();
+        addVFSProxy19();
+        addVFSProxy20();
+        addVFSProxy21();
+        addVFSProxy22();
+        addVFSProxy23();
+        addVFSProxy24();
+
+        CarbonServerExtension.restartServer();
     }
 
     @AfterClass(alwaysRun = true)
     public void restoreServerConfiguration() throws Exception {
+        /*for (Map.Entry<String, File> entry : proxyVFSRoots.entrySet()) {
+            removeProxy(entry.getKey());
+        }
 
+        CarbonServerExtension.restartServer();*/
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Writing to a file the content of a xml with content in text element")
     public void testVFSProxyPlainXMLWriter() throws Exception {
 
-        addVFSProxyWriteFile();
-
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out_reply.xml");
+        File outfile = new File(proxyVFSRoots.get("salesforce_DAMAS_writeFile") + File.separator +
+                "out" + File.separator + "out_reply.xml");
 
         String request = " <ns:text xmlns:ns=\"http://ws.apache.org/commons/ns/payload\">\n"
                 + "         <test>request_value</test>\n" + "      </ns:text>";
         sendRequest(getProxyServiceURLHttp("salesforce_DAMAS_writeFile"), request, "text/xml");
 
-        try {
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("request_value"), "Sent request body not found");
 
-            //Assert.assertTrue(!outfile.exists());
-            Thread.sleep(1000);
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("request_value"), "Sent request body not found");
-        } finally {
-            deleteFile(outfile);
-            removeProxy("salesforce_DAMAS_writeFile");
-        }
     }
 
     protected void sendRequest(String addUrl, String request, String contentType) throws IOException {
@@ -131,6 +160,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private void addVFSProxyWriteFile() throws Exception {
 
+        String proxyName = "salesforce_DAMAS_writeFile";
         OMElement proxy = AXIOMUtil.stringToOM(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n"
                         + "       name=\"salesforce_DAMAS_writeFile\"\n" + "       transports=\"http\"\n"
@@ -142,7 +172,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                         + "                   type=\"STRING\"/>\n"
                         + "                           <log level=\"full\"/>\n" + "         <send>\n"
                         + "            <endpoint>\n" + "               <address uri=\"vfs:file://" + pathToVfsDir
-                        + "test" + File.separator + "out\"/>\n" + "<timeout>\n"
+                        + "test" + File.separator + proxyName + File.separator +  "out\"/>\n" + "<timeout>\n"
                         + "               <duration>10</duration>\n"
                         + "               <responseAction>discard</responseAction>\n" + "            </timeout>"
                         + "            </endpoint>\n" + "         </send>\n" + "      </inSequence>\n"
@@ -153,7 +183,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                         + "   <parameter name=\"redeliveryPolicy.redeliveryDelay\">1</parameter>\n"
                         + "   <description/>\n" + "</proxy>");
 
-        addProxy(proxy, "salesforce_DAMAS_writeFile");
+        addProxy(proxy, proxyName);
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -162,23 +192,16 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml")
     public void testVFSProxyFileURI_LinuxPath_ContentType_XML() throws Exception {
 
-        addVFSProxy1();
-
+        //Related proxy : VFSProxy1
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("WSO2 Company"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy1");
-        }
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy1") + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy1") + File.separator + "out" + File.separator + "out.xml");
+
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -187,24 +210,18 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.txt")
     public void testVFSProxyFileURI_LinuxPath_ContentType_Plain() throws Exception {
 
-        addVFSProxy2();
-
+        //Related proxy : VFSProxy2
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy2") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy2") + File.separator + "out" + File.separator + "out.txt");
 
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy2");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -213,23 +230,17 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = *")
     public void testVFSProxyFileURI_LinuxPath_SelectAll_FileNamePattern() throws Exception {
 
-        addVFSProxy3();
-
+        //Related proxy : VFSProxy3
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy3");
-        }
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy3") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy3") + File.separator + "out" + File.separator + "out.txt");
+
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -238,21 +249,16 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = nothing")
     public void testVFSProxyFileURI_LinuxPath_No_FileNamePattern() throws Exception {
 
-        addVFSProxy4();
-
+        //Related proxy : VFSProxy4
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().
-                    pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
-            Assert.assertTrue(!outfile.exists());
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy4");
-        }
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy4") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy4") + File.separator + "out" + File.separator + "out.txt");
+
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().
+                pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
+        Assert.assertTrue(!outfile.exists());
+
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -261,23 +267,17 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.txt, transport.PollInterval=1")
     public void testVFSProxyPollInterval_1() throws Exception {
 
-        addVFSProxy5();
-
+        //Related proxy : VFSProxy5
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy5");
-        }
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy5") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy5") + File.separator + "out" + File.separator + "out.txt");
+
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -286,29 +286,22 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.txt, transport.PollInterval=30")
     public void testVFSProxyPollInterval_30() throws Exception {
 
-        addVFSProxy6();
-
+        //Related proxy : VFSProxy6
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy6") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy6") + File.separator + "out" + File.separator + "out.txt");
 
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        FileUtils.copyFile(sourceFile, targetFile);
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
-            Assert.assertTrue(!outfile.exists());
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(outfile));
+        Assert.assertTrue(!outfile.exists());
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy6");
-        }
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -318,31 +311,23 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.PollInterval=1, transport.vfs.ActionAfterProcess=MOVE")
     public void testVFSProxyActionAfterProcess_Move() throws Exception {
 
-        addVFSProxy7();
-
+        //Related proxy : VFSProxy7
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
-        File originalFile = new File(pathToVfsDir + "test" + File.separator + "original" + File.separator + "test.txt");
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy7") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy7") + File.separator + "out" + File.separator + "out.txt");
+        File originalFile = new File(proxyVFSRoots.get("VFSProxy7") + File.separator + "original" + File.separator + "test.txt");
 
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        FileUtils.copyFile(sourceFile, targetFile);
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
 
-            Assert.assertTrue(originalFile.exists());
-            String vfsOriginal = FileUtils.readFileToString(originalFile);
-            Assert.assertTrue(vfsOriginal.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            removeProxy("VFSProxy7");
-        }
+        Assert.assertTrue(originalFile.exists());
+        String vfsOriginal = FileUtils.readFileToString(originalFile);
+        Assert.assertTrue(vfsOriginal.contains("andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -352,30 +337,21 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.ActionAfterProcess=DELETE")
     public void testVFSProxyActionAfterProcess_DELETE() throws Exception {
 
-        addVFSProxy8();
-
+        //Related proxy : VFSProxy8
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
-        File originalFile = new File(pathToVfsDir + "test" + File.separator + "original" + File.separator + "test.txt");
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy8") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy8") + File.separator + "out" + File.separator + "out.txt");
+        File originalFile = new File(proxyVFSRoots.get("VFSProxy8") + File.separator + "original" + File.separator + "test.txt");
 
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-
-            Assert.assertTrue(!originalFile.exists());
-            Assert.assertTrue(!targetFile.exists());
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            removeProxy("VFSProxy8");
-        }
+        Assert.assertTrue(!originalFile.exists());
+        Assert.assertTrue(!targetFile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -385,24 +361,18 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + " transport.vfs.ReplyFileName = out.txt ")
     public void testVFSProxyReplyFileName_Normal() throws Exception {
 
-        addVFSProxy9();
-
+        //Related proxy : VFSProxy9
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.txt");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy9") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy9") + File.separator + "out" + File.separator + "out.txt");
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy9");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -412,24 +382,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.ReplyFileName = out123@wso2_text.txt ")
     public void testVFSProxyReplyFileName_SpecialChars() throws Exception {
 
-        addVFSProxy10();
+        //Related proxy : VFSProxy10
 
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(
-                pathToVfsDir + "test" + File.separator + "out" + File.separator + "out123@wso2_text.txt");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy10") + File.separator + "in" + File.separator + "test.txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy10") + File.separator + "out" + File.separator + "out123@wso2_text.txt");
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -439,24 +404,18 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.ReplyFileName = not specified ")
     public void testVFSProxyReplyFileName_NotSpecified() throws Exception {
 
-        addVFSProxy11();
-
+        //Related proxy : VFSProxy11
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.txt");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "response.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        File targetFile = new File(proxyVFSRoots.get("VFSProxy11") + File.separator + "in" + File.separator + "test" +
+                ".txt");
+        File outfile = new File(proxyVFSRoots.get("VFSProxy11") + File.separator + "out" + File.separator + "response.xml");
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy11");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -465,33 +424,27 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure=MOVE")
     public void testVFSProxyActionAfterFailure_MOVE() throws Exception {
 
-        addVFSProxy12();
-
+        //Related proxy : VFSProxy12
+        String proxyName = "VFSProxy12";
         File sourceFile = new File(pathToVfsDir + File.separator + "fail.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        File originalFile = new File(pathToVfsDir + "test" + File.separator + "failure" + File.separator + "fail.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File originalFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "failure" + File.separator + "fail.xml");
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(originalFile));
-            Assert.assertTrue(!outfile.exists());
+        FileUtils.copyFile(sourceFile, targetFile);
 
-            Assert.assertTrue(originalFile.exists());
-            String vfsOut = FileUtils.readFileToString(originalFile);
-            Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-            Assert.assertFalse(
-                    new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
-                    "lock file exists even after moving the failed file");
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            removeProxy("VFSProxy12");
-        }
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(outfile));
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(originalFile));
+        Assert.assertTrue(!outfile.exists());
+
+        Assert.assertTrue(originalFile.exists());
+        String vfsOut = FileUtils.readFileToString(originalFile);
+        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertFalse(
+                new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
+                "lock file exists even after moving the failed file");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -500,28 +453,22 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure=DELETE")
     public void testVFSProxyActionAfterFailure_DELETE() throws Exception {
 
-        addVFSProxy13();
-
+        //Related proxy : VFSProxy13
+        String proxyName = "VFSProxy13";
         File sourceFile = new File(pathToVfsDir + File.separator + "fail.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Thread.sleep(2000);
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File originalFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "failure" + File.separator + "fail.xml");
 
-            File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-            Assert.assertTrue(!outfile.exists());
-
-            File originalFile = new File(
-                    pathToVfsDir + "test" + File.separator + "failure" + File.separator + "fail.xml");
-
-            Assert.assertTrue(!originalFile.exists());
-            Assert.assertFalse(
-                    new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
-                    "lock file exists even after moving the failed file");
-        } finally {
-            deleteFile(targetFile);
-            removeProxy("VFSProxy13");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(targetFile));
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(outfile));
+        Assert.assertTrue(!originalFile.exists());
+        Assert.assertFalse(
+                new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
+                "lock file exists even after moving the failed file");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -530,28 +477,22 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure=NotSpecified")
     public void testVFSProxyActionAfterFailure_NotSpecified() throws Exception {
 
-        addVFSProxy14();
-
+        String proxyName = "VFSProxy14";
         File sourceFile = new File(pathToVfsDir + File.separator + "fail.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        File originalFile = new File(pathToVfsDir + "test" + File.separator + "failure" + File.separator + "fail.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File originalFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "failure" + File.separator + "fail.xml");
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
-            Assert.assertTrue(!outfile.exists());
-            Assert.assertTrue(!originalFile.exists());
-            Assert.assertFalse(
-                    new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
-                    "lock file exists even after moving the failed file");
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            removeProxy("VFSProxy14");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(targetFile));
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(outfile));
+        Assert.assertTrue(!outfile.exists());
+        Assert.assertTrue(!originalFile.exists());
+        Assert.assertFalse(
+                new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
+                "lock file exists even after moving the failed file");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -560,14 +501,9 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml")
     public void testVFSProxyFileURI_Invalid() throws Exception {
 
-        addVFSProxy15();
-
-        Thread.sleep(2000);
-
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        Assert.assertTrue(!outfile.exists());
-
-        removeProxy("VFSProxy15");
+        String proxyName = "VFSProxy15";
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(outfile));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -576,25 +512,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.FileURI = Invalid")
     public void testVFSProxyContentType_Invalid() throws Exception {
 
-        addVFSProxy16();
-
+        String proxyName = "VFSProxy16";
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
+        FileUtils.copyFile(sourceFile, targetFile);
 
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("WSO2 Company"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy16");
-        }
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
     }
 
     //https://wso2.org/jira/browse/ESBJAVA-2273
@@ -604,22 +534,16 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.FileURI = Invalid", enabled = false)
     public void testVFSProxyContentType_NotSpecified() throws Exception {
 
-        addVFSProxy17();
-
+        String proxyName = "VFSProxy17";
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
 
-            Assert.assertTrue(!outfile.exists());
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy17");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS).
+                atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
+
+        Assert.assertTrue(!outfile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -628,24 +552,18 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.PollInterval = Non Integer")
     public void testVFSProxyPollInterval_NonInteger() throws Exception {
 
-        addVFSProxy18();
-
+        String proxyName = "VFSProxy18";
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
-            //The poll interval will be set to 300s here,
+        FileUtils.copyFile(sourceFile, targetFile);
 
-            Assert.assertTrue(!outfile.exists());
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy18");
-        }
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS)
+                .atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
+        //The poll interval will be set to 300s here,
+
+        Assert.assertTrue(!outfile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -654,28 +572,23 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterProcess = Invalid")
     public void testVFSProxyActionAfterProcess_Invalid() throws Exception {
 
-        addVFSProxy19();
-
+        String proxyName = "VFSProxy19";
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        File originalFile = new File(pathToVfsDir + "test" + File.separator + "original" + File.separator + "test.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("WSO2 Company"));
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File originalFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "original" + File.separator + "test.xml");
 
-            Assert.assertTrue(!originalFile.exists());
-            Assert.assertTrue(!targetFile.exists());
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            removeProxy("VFSProxy19");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(targetFile));
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS)
+                .atMost(60, TimeUnit.SECONDS).until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
+
+        Assert.assertTrue(!originalFile.exists());
+        Assert.assertTrue(!targetFile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -684,30 +597,24 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.ActionAfterFailure = Invalid")
     public void testVFSProxyActionAfterFailure_Invalid() throws Exception {
 
-        addVFSProxy20();
+        String proxyName = "VFSProxy20";
 
         File sourceFile = new File(pathToVfsDir + File.separator + "fail.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        File originalFile = new File(pathToVfsDir + "test" + File.separator + "failure" + File.separator + "fail.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(targetFile));
-            Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(outfile));
-            Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(originalFile));
-            Assert.assertTrue(!outfile.exists());
-            Assert.assertTrue(!originalFile.exists());
-            Assert.assertTrue(!targetFile.exists());
-            Assert.assertFalse(
-                    new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
-                    "lock file exists even after moving the failed file");
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            removeProxy("VFSProxy20");
-        }
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File originalFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "failure" + File.separator + "fail.xml");
+
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(targetFile));
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(outfile));
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(originalFile));
+        Assert.assertTrue(!outfile.exists());
+        Assert.assertTrue(!originalFile.exists());
+        Assert.assertTrue(!targetFile.exists());
+        Assert.assertFalse(
+                new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
+                "lock file exists even after moving the failed file");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -716,59 +623,49 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.MoveAfterProcess = processed")
     public void testVFSProxyMoveAfterProcessInvalidFile() throws Exception {
 
-        addVFSProxy21();
+        String proxyName = "VFSProxy21";
 
         File sourceFile = new File(pathToVfsDir + File.separator + "fail.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml");
-        File originalFile = new File(
-                pathToVfsDir + "test" + File.separator + "processed" + File.separator + "test.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(targetFile));
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml");
+        File originalFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "processed" + File.separator + "test.xml");
 
-            Assert.assertFalse(outfile.exists(), "Out put file found");
-            Assert.assertFalse(originalFile.exists(), "Input file moved even if file processing is failed");
-            Assert.assertFalse(targetFile.exists(), "Input file found after reading the file");
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            removeProxy("VFSProxy21");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(targetFile));
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS)
+                .atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
+
+        Assert.assertFalse(outfile.exists(), "Out put file found");
+        Assert.assertFalse(originalFile.exists(), "Input file moved even if file processing is failed");
+        Assert.assertFalse(targetFile.exists(), "Input file found after reading the file");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Linux Path," + " transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.MoveAfterProcess = processed")
+            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.MoveAfterProcess = processed",
+            dependsOnMethods = "testVFSProxyMoveAfterProcessInvalidFile")
     public void testVFSProxyMoveAfterProcess() throws Exception {
 
-        addVFSProxy21();
+        String proxyName = "VFSProxy21";
 
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
         File originalFileAfterProcessed = new File(
-                pathToVfsDir + "test" + File.separator + "processed" + File.separator + "test.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
+                proxyVFSRoots.get(proxyName) + File.separator + "processed" + File.separator + "test.xml");
 
-            Assert.assertTrue(outfile.exists(), "out put file not found");
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("WSO2 Company"), "Invalid Response message. >" + vfsOut);
-            //input file should be moved to processed directory after processing the input file
-            Assert.assertTrue(originalFileAfterProcessed.exists(), "Input file is not moved after processing the file");
-            Assert.assertFalse(targetFile.exists(), "Input file is exist after processing the input file");
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFileAfterProcessed);
-            removeProxy("VFSProxy21");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+
+        Assert.assertTrue(outfile.exists(), "out put file not found");
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("WSO2 Company"), "Invalid Response message. >" + vfsOut);
+        //input file should be moved to processed directory after processing the input file
+        Assert.assertTrue(originalFileAfterProcessed.exists(), "Input file is not moved after processing the file");
+        Assert.assertFalse(targetFile.exists(), "Input file is exist after processing the input file");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -777,37 +674,30 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.vfs.MoveAfterFailure = Invalid")
     public void testVFSProxyMoveAfterFailure() throws Exception {
 
-        addVFSProxy22();
+        String proxyName = "VFSProxy22";
 
         File sourceFile = new File(pathToVfsDir + "fail.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "fail.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        File originalFile = new File(pathToVfsDir + "test" + File.separator + "invalid" + File.separator + "fail.xml");
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+        File originalFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "invalid" + File.separator + "fail.xml");
         /*File lockFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator +
                                  "fail.xml.lock");*/
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(targetFile));
-            Awaitility.await().pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(originalFile));
+
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(targetFile));
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(outfile));
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(originalFile));
 
 
-            Assert.assertFalse(outfile.exists(), "Out put file found");
-            Assert.assertTrue(originalFile.exists(),
-                    "Input file not moved even if failure happens while building message");
-            Assert.assertFalse(targetFile.exists(), "input file not found even if it is invalid file");
-            //reason to bellow assert- https://wso2.org/jira/browse/ESBJAVA-1838
-            //            Assert.assertTrue(lockFile.exists(), "lock file doesn't exists"); commented since  it is fixed now
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            deleteFile(originalFile);
-            //            deleteFile(lockFile);
-            removeProxy("VFSProxy22");
-        }
+        Assert.assertFalse(outfile.exists(), "Out put file found");
+        Assert.assertTrue(originalFile.exists(),
+                "Input file not moved even if failure happens while building message");
+        Assert.assertFalse(targetFile.exists(), "input file not found even if it is invalid file");
+        //reason to bellow assert- https://wso2.org/jira/browse/ESBJAVA-1838
+        //            Assert.assertTrue(lockFile.exists(), "lock file doesn't exists"); commented since  it is fixed now
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -816,26 +706,21 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml, " + "transport.vfs.ReplyFileURI  = Invalid")
     public void testVFSProxyReplyFileURI_Invalid() throws Exception {
 
-        addVFSProxy23();
+        String proxyName = "VFSProxy23";
 
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "invalid" + File.separator + "out.xml");
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "invalid" + File.separator + "out.xml");
         deleteFile(outfile); //delete outfile dir if exists
-        FileUtils.cleanDirectory(new File(pathToVfsDir + "test" + File.separator + "in"));
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
+        FileUtils.cleanDirectory(new File(proxyVFSRoots.get(proxyName) + File.separator + "in"));
 
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
-            Assert.assertTrue(outfile.exists());
-            String vfsOut = FileUtils.readFileToString(outfile);
-            Assert.assertTrue(vfsOut.contains("WSO2 Company"));
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy23");
-        }
+        FileUtils.copyFile(sourceFile, targetFile);
+
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileExist(outfile));
+        Assert.assertTrue(outfile.exists());
+        String vfsOut = FileUtils.readFileToString(outfile);
+        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -844,29 +729,28 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             + "transport.vfs.FileNamePattern = - *\\.xml, " + "transport.vfs.ReplyFileName  = Invalid")
     public void testVFSProxyReplyFileName_Invalid() throws Exception {
 
-        addVFSProxy24();
+        String proxyName = "VFSProxy24";
 
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(pathToVfsDir + "test" + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator + "out.xml");
-        try {
-            FileUtils.copyFile(sourceFile, targetFile);
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
-            Assert.assertTrue(!outfile.exists());
-        } finally {
-            deleteFile(targetFile);
-            deleteFile(outfile);
-            removeProxy("VFSProxy24");
-        }
+        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
+        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
+
+        FileUtils.copyFile(sourceFile, targetFile);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileNotExist(targetFile));
+        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS)
+                .atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
+        Assert.assertTrue(!outfile.exists());
     }
 
     private void addVFSProxy1() throws Exception {
 
+        String proxyName = "VFSProxy1";
+
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy1\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -877,18 +761,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy1");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy2() throws Exception {
 
+        String proxyName = "VFSProxy2";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy2\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator + proxyName
+                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -897,18 +782,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.txt\"/>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
                 + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy2");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy3() throws Exception {
 
+        String proxyName = "VFSProxy3";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy3\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.*</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -917,18 +803,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.txt\"/>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
                 + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy3");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy4() throws Exception {
 
+        String proxyName = "VFSProxy4";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy4\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\"></parameter>"
@@ -937,18 +824,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.txt\"/>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
                 + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy4");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy5() throws Exception {
 
+        String proxyName = "VFSProxy5";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy5\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -957,18 +845,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.txt\"/>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
                 + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy5");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy6() throws Exception {
 
+        String proxyName = "VFSProxy6";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy6\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">30</parameter>\n"
@@ -977,41 +866,44 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.txt\"/>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
                 + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy6");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy7() throws Exception {
 
+        String proxyName = "VFSProxy7";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy7\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n"
                 + "                <parameter name=\"transport.vfs.MoveAfterProcess\">file://" + pathToVfsDir + "test"
-                + File.separator + "original" + File.separator + "</parameter>" + "                <target>\n"
+                + File.separator + proxyName + File.separator + "original" + File.separator + "</parameter>"
+                + "           <target>\n"
                 + "                        <inSequence>\n"
                 + "                           <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.txt\"/>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
                 + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy7");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy8() throws Exception {
 
+        String proxyName = "VFSProxy8";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy8\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1021,18 +913,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.txt\"/>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
                 + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy8");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy9() throws Exception {
 
+        String proxyName = "VFSProxy9";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy9\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1042,18 +935,20 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "\"/>\n" + "                               </endpoint>\n"
-                + "                           </send>" + "                        </inSequence>"
+                + File.separator + proxyName+ File.separator + "out" + File.separator + "\"/>\n" + "                               </endpoint>\n"
+                + "                           </send>"
+                + "                        </inSequence>"
                 + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy9");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy10() throws Exception {
 
+        String proxyName = "VFSProxy10";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy10\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1061,20 +956,22 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <property name=\"transport.vfs.ReplyFileName\" value=\"out123@wso2_text.txt\" scope=\"transport\"/>"
                 + "                           <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
-                + "                               <endpoint name=\"FileEpr\">\n"
+                + "                                 <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "\"/>\n" + "                               </endpoint>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "\"/>\n"
+                + "                                 </endpoint>\n"
                 + "                           </send>" + "                        </inSequence>"
                 + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy10");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy11() throws Exception {
 
+        String proxyName = "VFSProxy11";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy11\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
-                + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*.txt</parameter>"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1083,23 +980,24 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                           <log level=\"full\"/>\n" + "                           <send>\n"
                 + "                               <endpoint name=\"FileEpr\">\n"
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "\"/>\n" + "                               </endpoint>\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "\"/>\n" + "</endpoint>\n"
                 + "                           </send>" + "                        </inSequence>"
                 + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy11");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy12() throws Exception {
 
+        String proxyName = "VFSProxy12";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy12\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <parameter name=\"transport.vfs.MoveAfterFailure\">file://" + pathToVfsDir + "test"
-                + File.separator + "failure" + File.separator + "</parameter>\n"
+                + File.separator + proxyName + File.separator + "failure" + File.separator + "</parameter>\n"
                 + "                <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>"
                 + "                <target>\n" + "                        <endpoint>\n"
                 + "                                <address format=\"soap12\" uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n"
@@ -1107,18 +1005,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy12");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy13() throws Exception {
 
+        String proxyName = "VFSProxy13";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy13\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1129,18 +1028,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy13");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy14() throws Exception {
 
+        String proxyName = "VFSProxy14";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy14\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1150,18 +1050,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy14");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy15() throws Exception {
 
+        String proxyName = "VFSProxy15";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy15\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "invalid" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "invalid" + File.separator + "</parameter>"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1171,18 +1072,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy15");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy16() throws Exception {
 
+        String proxyName = "VFSProxy16";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy16\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">invalid/invalid</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1193,18 +1095,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy16");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy17() throws Exception {
 
+        String proxyName = "VFSProxy17";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy17\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <target>\n" + "                        <endpoint>\n"
@@ -1213,18 +1116,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy17");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy18() throws Exception {
 
+        String proxyName = "VFSProxy18";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy18\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1.1</parameter>\n"
@@ -1234,24 +1138,26 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy18");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy19() throws Exception {
 
+        String proxyName = "VFSProxy19";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy19\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <parameter name=\"transport.vfs.ActionAfterProcess\">MOVEDD</parameter>\n"
                 + "                <parameter name=\"transport.vfs.MoveAfterProcess\">file://" + pathToVfsDir + "test"
-                + File.separator + "original" + File.separator + "</parameter>" + "                <target>\n"
+                + File.separator + proxyName + File.separator + "original" + File.separator + "</parameter>"
+                + "                 <target>\n"
                 + "                        <endpoint>\n"
                 + "                                <address format=\"soap12\" uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n"
                 + "                        </endpoint>\n" + "                        <outSequence>\n"
@@ -1259,23 +1165,24 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy19");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy20() throws Exception {
 
+        String proxyName = "VFSProxy20";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy20\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <parameter name=\"transport.vfs.MoveAfterFailure\">file://" + pathToVfsDir + "test"
-                + File.separator + "failure" + File.separator + "</parameter>\n"
+                + File.separator + proxyName + File.separator + "failure" + File.separator + "</parameter>\n"
                 + "                <parameter name=\"transport.vfs.ActionAfterFailure\">MOVEDD</parameter>"
                 + "                <target>\n" + "                        <endpoint>\n"
                 + "                                <address format=\"soap12\" uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n"
@@ -1283,24 +1190,25 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy20");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy21() throws Exception {
 
+        String proxyName = "VFSProxy21";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy21\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <parameter name=\"transport.vfs.ActionAfterProcess\">MOVE</parameter>\n"
                 + "                <parameter name=\"transport.vfs.MoveAfterProcess\">file://" + pathToVfsDir + "test"
-                + File.separator + "processed" + File.separator + "</parameter>"
+                + File.separator + proxyName + File.separator + "processed" + File.separator + "</parameter>"
                 + "                <parameter name=\"transport.vfs.CreateFolder\">true</parameter>"
                 + "                <target>\n" + "                        <endpoint>\n"
                 + "                                <address format=\"soap12\" uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n"
@@ -1309,23 +1217,24 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy21");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy22() throws Exception {
 
+        String proxyName = "VFSProxy22";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy22\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <parameter name=\"transport.vfs.MoveAfterFailure\">file://" + pathToVfsDir + "test"
-                + File.separator + "invalid" + File.separator + "</parameter>\n"
+                + File.separator + proxyName + File.separator + "invalid" + File.separator + "</parameter>\n"
                 + "                <parameter name=\"transport.vfs.ActionAfterFailure\">MOVE</parameter>"
                 + "                <parameter name=\"transport.vfs.CreateFolder\">true</parameter>"
                 + "                <target>\n" + "                        <endpoint>\n"
@@ -1334,18 +1243,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy22");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy23() throws Exception {
 
+        String proxyName = "VFSProxy23";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy23\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1356,18 +1266,19 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                 <log level=\"full\"/>" + "                                <send>\n"
                 + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + "invalid" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "invalid" + File.separator + "out.xml\"/>"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy23");
+        addProxy(proxy, proxyName);
     }
 
     private void addVFSProxy24() throws Exception {
 
+        String proxyName = "VFSProxy24";
         OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy24\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
@@ -1378,18 +1289,45 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
                 + "                                <send>\n" + "                                        <endpoint>\n"
                 + "                                                <address uri=\"vfs:ftpd://" + pathToVfsDir + "test"
-                + File.separator + "out" + File.separator + "\"/> <!--CHANGE-->\n"
+                + File.separator + proxyName + File.separator + "out" + File.separator + "\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
                 + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, "VFSProxy24");
+        addProxy(proxy, proxyName);
     }
 
     private void removeProxy(String proxyName) throws Exception {
-        Utils.undeploySynapseConfiguration(proxyName, Utils.ArtifactType.PROXY, true);
+        deleteProxyVfsRootDir(proxyName);
+        Utils.undeploySynapseConfiguration(proxyName, Utils.ArtifactType.PROXY, false);
     }
 
     private void addProxy(OMElement proxy, String proxyName) {
-        Utils.deploySynapseConfiguration(proxy, proxyName, Utils.ArtifactType.PROXY, true);
+        createProxyVfsRootDir(proxyName);
+        Utils.deploySynapseConfiguration(proxy, proxyName, Utils.ArtifactType.PROXY, false);
+    }
+
+    private void createProxyVfsRootDir(String proxyName) {
+        // Create folder structure
+        File proxyRoot = new File(rootFolder.getPath() + File.separator + proxyName);
+        File inDir = new File(rootFolder.getPath() + File.separator + proxyName + File.separator + "in");
+        File outDir = new File(rootFolder.getPath() + File.separator + proxyName + File.separator + "out");
+        File failureDir = new File(rootFolder.getPath() + File.separator + proxyName + File.separator + "failure");
+        File originalDir = new File(rootFolder.getPath() + File.separator + proxyName + File.separator + "original");
+        File processedDir = new File(rootFolder.getPath() + File.separator + proxyName + File.separator + "processed");
+
+        assertTrue(proxyRoot.mkdirs(), "Test VFS Root Directory creation failed for proxy : " + proxyName);
+        assertTrue(inDir.mkdir(), "Test VFS In Directory creation failed for proxy : " + proxyName);
+        assertTrue(outDir.mkdir(), "Test VFS Out Directory creation failed for proxy : " + proxyName);
+        assertTrue(failureDir.mkdir(), "Test VFS Failure Directory creation failed for proxy : " + proxyName);
+        assertTrue(originalDir.mkdir(), "Test VFS Original Directory creation failed for proxy : " + proxyName);
+        assertTrue(processedDir.mkdir(), "Test VFS Processed Directory creation failed for proxy : " + proxyName);
+
+        proxyVFSRoots.put(proxyName, proxyRoot);
+    }
+
+    private boolean deleteProxyVfsRootDir(String proxyName) {
+        // Delete folder structure
+        File proxyRoot = new File(rootFolder.getPath() + File.separator + proxyName);
+        return proxyRoot.exists() && proxyRoot.delete();
     }
 
     private boolean deleteFile(File file) throws IOException {
