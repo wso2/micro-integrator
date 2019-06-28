@@ -104,7 +104,7 @@ public class PropertyPersistenceDeletingAndAddingTstCase extends ESBIntegrationT
             */
 
             serverConfigurationManager.removeFromComponentLib(CLASS_JAR_FIVE_PROPERTIES);
-            Utils.undeploySynapseConfiguration("class_property_persistence_five_properties", "proxy-services");
+            Utils.undeploySynapseConfiguration("class_property_persistence_five_properties", "proxy-services", false);
             serverConfigurationManager.copyToComponentLib(new File(
                     getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FOUR_PROPERTIES).toURI()));
 

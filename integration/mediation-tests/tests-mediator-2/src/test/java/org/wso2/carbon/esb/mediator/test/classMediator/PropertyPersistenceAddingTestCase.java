@@ -90,7 +90,7 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
          */
 
         serverConfigurationManager.removeFromComponentLib(CLASS_JAR_THREE_PROPERTIES);
-        Utils.undeploySynapseConfiguration("class_property_persistence_three_properties", "proxy-services");
+        Utils.undeploySynapseConfiguration("class_property_persistence_three_properties", "proxy-services", false);
         serverConfigurationManager.copyToComponentLib(
                 new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FIVE_PROPERTIES).toURI()));
         OMElement class_five_properties = AXIOMUtil.stringToOM(FileUtils.readFileToString(
