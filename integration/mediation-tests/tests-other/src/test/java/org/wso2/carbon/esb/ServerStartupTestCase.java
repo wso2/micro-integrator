@@ -17,8 +17,30 @@
  */
 package org.wso2.carbon.esb;
 
-import org.wso2.carbon.integration.common.tests.ServerStartupBaseTest;
+import org.testng.Assert;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-public class ServerStartupTestCase extends ServerStartupBaseTest {
+public class ServerStartupTestCase extends ESBIntegrationTest {
+
+    private CarbonLogReader carbonLogReader;
+
+    @BeforeSuite(alwaysRun = true)
+    public void initialize() {
+        carbonLogReader = new CarbonLogReader();
+    }
+
+    @Test(groups = { "wso2.esb" }, description = "verify server startup errors")
+    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
+    public void testVerifyLogs() {
+        carbonLogReader.start();
+        String logs = carbonLogReader.getLogs();
+        boolean status = logs.indexOf("Mgt Console URL") < logs.indexOf("Starting WSO2 Carbon");
+        Assert.assertFalse(status, "Server started with errors.");
+    }
 
 }
