@@ -19,7 +19,6 @@
 package org.wso2.carbon.esb.mediator.test.classMediator;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -27,8 +26,8 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.registry.properties.stub.PropertiesAdminServiceRegistryExceptionException;
 import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
-import java.io.IOException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
@@ -45,18 +44,18 @@ public class ClassMediationWithLoadOfPropertiesTestCase extends ESBIntegrationTe
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/class/class_mediation_with_twenty_properties.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb", "localOnly" }, description = "Class Mediator "
             + " -Class mediator which has a load of properties to be passed and mediation")
     public void testMediationWithLoadOfProperties()
-            throws IOException, PropertiesAdminServiceRegistryExceptionException,
+            throws Exception, PropertiesAdminServiceRegistryExceptionException,
                    ResourceAdminServiceExceptionException, XMLStreamException, InterruptedException {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                "classMediatorWithLoadOfPropertiesTestCase_main_sequence"),
+                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -82,10 +81,5 @@ public class ClassMediationWithLoadOfPropertiesTestCase extends ESBIntegrationTe
         refer https://wso2.org/jira/browse/TA-508
          */
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }
