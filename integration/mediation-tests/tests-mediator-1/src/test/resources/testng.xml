@@ -170,7 +170,6 @@
             <package name="org.wso2.carbon.esb.mediator.test.drop"/>
         </packages>
     </test>
-
     <test name="Message-Store-Test" preserve-order="true" verbose="2">
         <classes>
             <!--<class name="org.wso2.carbon.esb.message.store.test.JMSEndpointSuspensionViaVFSTest"/>-->
