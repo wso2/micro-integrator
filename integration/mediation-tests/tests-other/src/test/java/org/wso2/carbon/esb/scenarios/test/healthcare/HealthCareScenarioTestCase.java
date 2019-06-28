@@ -8,33 +8,28 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
+import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 import java.io.IOException;
-import java.net.URL;
-import javax.activation.DataHandler;
 import javax.xml.stream.XMLStreamException;
 
 import static org.testng.Assert.assertTrue;
 
 public class HealthCareScenarioTestCase extends ESBIntegrationTest {
-    ResourceAdminServiceClient resourceAdminServiceStub;
     AxisServiceClient a2Client = new AxisServiceClient();
+    SampleAxis2Server axis2Server1;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub
-                .addResource("/_system/governance/service_integration/wsdls/HCCService.wsdl", "application/wsdl+xml",
-                        "wsdl+xml files", new DataHandler(new URL("file:///" + getESBResourceLocation()
-                                + "/synapseconfig/healthcarescenario/HCCService.wsdl")));
-
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/healthcarescenario/synapse.xml");
+        axis2Server1 = new SampleAxis2Server("test_axis2_server_9009.xml");
+        axis2Server1.start();
+        axis2Server1.deployService("geows");
+        axis2Server1.deployService("hcfacilitylocator");
+        axis2Server1.deployService("hcinformationservice");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -81,9 +76,8 @@ public class HealthCareScenarioTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        resourceAdminServiceStub.deleteResource("/_system/governance/service_integration");
-        resourceAdminServiceStub = null;
         a2Client = null;
+        axis2Server1.stop();
         super.cleanup();
     }
 }
