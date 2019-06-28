@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.esb.vfs.transport.test;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Awaitility;
@@ -28,6 +29,7 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +37,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.HashMap;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -74,7 +77,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void restoreServerConfiguration() throws Exception {
-        super.cleanup();
+
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -128,7 +131,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private void addVFSProxyWriteFile() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM(
+        OMElement proxy = AXIOMUtil.stringToOM(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n"
                         + "       name=\"salesforce_DAMAS_writeFile\"\n" + "       transports=\"http\"\n"
                         + "       statistics=\"disable\"\n" + "       trace=\"enable\"\n"
@@ -148,7 +151,9 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                         + "   <parameter name=\"redeliveryPolicy.maximumRedeliveries\">0</parameter>\n"
                         + "   <parameter name=\"transport.vfs.ContentType\">text/plain</parameter>\n"
                         + "   <parameter name=\"redeliveryPolicy.redeliveryDelay\">1</parameter>\n"
-                        + "   <description/>\n" + "</proxy>"));
+                        + "   <description/>\n" + "</proxy>");
+
+        addProxy(proxy, "salesforce_DAMAS_writeFile");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
@@ -688,11 +693,9 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         try {
             FileUtils.copyFile(sourceFile, targetFile);
             Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileNotExist(outfile));
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(originalFile));
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(targetFile));
+                    .until(isFileNotExist(targetFile));
+            Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(outfile));
+            Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(originalFile));
             Assert.assertTrue(!outfile.exists());
             Assert.assertTrue(!originalFile.exists());
             Assert.assertTrue(!targetFile.exists());
@@ -723,7 +726,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         try {
             FileUtils.copyFile(sourceFile, targetFile);
             Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
+                    .until(isFileNotExist(targetFile));
 
             Assert.assertFalse(outfile.exists(), "Out put file found");
             Assert.assertFalse(originalFile.exists(), "Input file moved even if file processing is failed");
@@ -785,11 +788,12 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         try {
             FileUtils.copyFile(sourceFile, targetFile);
             Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(outfile));
+                    .until(isFileNotExist(targetFile));
+            Awaitility.await().pollInterval(1, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS)
+                    .until(isFileNotExist(outfile));
             Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                     .until(isFileExist(originalFile));
-            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                    .until(isFileExist(targetFile));
+
 
             Assert.assertFalse(outfile.exists(), "Out put file found");
             Assert.assertTrue(originalFile.exists(),
@@ -859,7 +863,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
     private void addVFSProxy1() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy1\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -875,12 +879,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy1");
     }
 
     private void addVFSProxy2() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy2\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -894,12 +899,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
-                + "                        </inSequence>" + "                </target>\n" + "        </proxy>"));
+                + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy2");
     }
 
     private void addVFSProxy3() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy3\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -913,12 +919,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
-                + "                        </inSequence>" + "                </target>\n" + "        </proxy>"));
+                + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy3");
     }
 
     private void addVFSProxy4() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy4\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -932,12 +939,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
-                + "                        </inSequence>" + "                </target>\n" + "        </proxy>"));
+                + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy4");
     }
 
     private void addVFSProxy5() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy5\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -951,12 +959,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
-                + "                        </inSequence>" + "                </target>\n" + "        </proxy>"));
+                + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy5");
     }
 
     private void addVFSProxy6() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy6\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -970,12 +979,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
-                + "                        </inSequence>" + "                </target>\n" + "        </proxy>"));
+                + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy6");
     }
 
     private void addVFSProxy7() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy7\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -992,12 +1002,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
-                + "                        </inSequence>" + "                </target>\n" + "        </proxy>"));
+                + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy7");
     }
 
     private void addVFSProxy8() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy8\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1012,12 +1023,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.txt\"/>\n"
                 + "                               </endpoint>\n" + "                           </send>"
-                + "                        </inSequence>" + "                </target>\n" + "        </proxy>"));
+                + "                        </inSequence>" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy8");
     }
 
     private void addVFSProxy9() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy9\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1032,12 +1044,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "\"/>\n" + "                               </endpoint>\n"
                 + "                           </send>" + "                        </inSequence>"
-                + "                </target>\n" + "        </proxy>"));
+                + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy9");
     }
 
     private void addVFSProxy10() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy10\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1052,12 +1065,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "\"/>\n" + "                               </endpoint>\n"
                 + "                           </send>" + "                        </inSequence>"
-                + "                </target>\n" + "        </proxy>"));
+                + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy10");
     }
 
     private void addVFSProxy11() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy11\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">" + pathToVfsDir + "test" + File.separator
                 + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1071,12 +1085,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                   <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "\"/>\n" + "                               </endpoint>\n"
                 + "                           </send>" + "                        </inSequence>"
-                + "                </target>\n" + "        </proxy>"));
+                + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy11");
     }
 
     private void addVFSProxy12() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy12\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1094,12 +1109,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy12");
     }
 
     private void addVFSProxy13() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy13\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1115,12 +1131,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy13");
     }
 
     private void addVFSProxy14() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy14\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1135,12 +1152,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy14");
     }
 
     private void addVFSProxy15() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy15\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "invalid" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1155,12 +1173,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy15");
     }
 
     private void addVFSProxy16() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy16\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1176,12 +1195,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy16");
     }
 
     private void addVFSProxy17() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy17\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1195,12 +1215,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy17");
     }
 
     private void addVFSProxy18() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy18\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1215,12 +1236,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy18");
     }
 
     private void addVFSProxy19() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy19\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1239,12 +1261,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy19");
     }
 
     private void addVFSProxy20() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy20\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1262,12 +1285,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy20");
     }
 
     private void addVFSProxy21() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy21\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1287,12 +1311,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy21");
     }
 
     private void addVFSProxy22() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy22\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1311,12 +1336,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy22");
     }
 
     private void addVFSProxy23() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy23\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1332,33 +1358,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
                 + File.separator + "invalid" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
-
-        System.out.println("\"<?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"?>\\n\" +\n"
-                + "                                             \"<proxy xmlns=\\\"http://ws.apache.org/ns/synapse\\\" name=\\\"VFSProxy23\\\" transports=\\\"vfs\\\">\\n\" +\n"
-                + "                                             \"                <parameter name=\\\"transport.vfs.FileURI\\\">file://\" + getClass().getResource(File.separator + \"artifacts\" + File.separator + \"ESB\" + File.separator + \"synapseconfig\" + File.separator + \"vfsTransport\" + File.separator).getPath() + \"test\" + File.separator + \"in\" + File.separator + \"</parameter> <!--CHANGE-->\\n\" +\n"
-                + "                                             \"                <parameter name=\\\"transport.vfs.ContentType\\\">text/xml</parameter>\\n\" +\n"
-                + "                                             \"                <parameter name=\\\"transport.vfs.FileNamePattern\\\">.*\\\\.xml</parameter>\\n\" +\n"
-                + "                                             \"                <parameter name=\\\"transport.PollInterval\\\">1</parameter>\\n\" +\n"
-                + "                                             \"                <target>\\n\" +\n"
-                + "                                             \"                        <endpoint>\\n\" +\n"
-                + "                                             \"                                <address format=\\\"soap12\\\" uri=\\\"http://localhost:9000/services/SimpleStockQuoteService\\\"/>\\n\" +\n"
-                + "                                             \"                        </endpoint>\\n\" +\n"
-                + "                                             \"                        <outSequence>\\n\" +\n"
-                + "                                             \"                                <property action=\\\"set\\\" name=\\\"OUT_ONLY\\\" value=\\\"true\\\"/>\\n\" +\n"
-                + "                                             \"                                <send>\\n\" +\n"
-                + "                                             \"                                        <endpoint>\\n\" +\n"
-                + "                                             \"                                                <address uri=\\\"vfs:file://\" + getClass().getResource(File.separator + \"artifacts\" + File.separator + \"ESB\" + File.separator + \"synapseconfig\" + File.separator + \"vfsTransport\" + File.separator).getPath() + \"test\" + File.separator + \"invalid\" + File.separator + \"out.xml\\\"/> <!--CHANGE-->\\n\" +\n"
-                + "                                             \"                                        </endpoint>\\n\" +\n"
-                + "                                             \"                                </send>\\n\" +\n"
-                + "                                             \"                        </outSequence>\\n\" +\n"
-                + "                                             \"                </target>\\n\" +\n"
-                + "                                             \"        </proxy>\")");
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy23");
     }
 
     private void addVFSProxy24() throws Exception {
 
-        addProxyService(AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy24\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
@@ -1374,11 +1380,16 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "                                                <address uri=\"vfs:ftpd://" + pathToVfsDir + "test"
                 + File.separator + "out" + File.separator + "\"/> <!--CHANGE-->\n"
                 + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>"));
+                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
+        addProxy(proxy, "VFSProxy24");
     }
 
     private void removeProxy(String proxyName) throws Exception {
-        deleteProxyService(proxyName);
+        Utils.undeploySynapseConfiguration(proxyName, Utils.ArtifactType.PROXY, true);
+    }
+
+    private void addProxy(OMElement proxy, String proxyName) {
+        Utils.deploySynapseConfiguration(proxy, proxyName, Utils.ArtifactType.PROXY, true);
     }
 
     private boolean deleteFile(File file) throws IOException {
