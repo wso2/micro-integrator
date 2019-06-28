@@ -1,5 +1,8 @@
 package org.wso2.carbon.esb.http.inbound.transport.test;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.Assert;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
@@ -7,7 +10,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 
+import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
 
@@ -41,6 +46,15 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+
+        OMElement inbound1 = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(getESBResourceLocation()
+                + File.separator + "http.inbound.transport" + File.separator + "inbound1.xml")));
+        Utils.deploySynapseConfiguration(inbound1, "inbound1", "inbound-endpoints", false);
+
+        OMElement inbound2 = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(getESBResourceLocation()
+                + File.separator + "http.inbound.transport" + File.separator + "inbound2.xml")));
+        Utils.deploySynapseConfiguration(inbound2, "inbound2", "inbound-endpoints", true);
+
         carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
 
@@ -49,7 +63,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch")
     public void inboundHttpSuperSequenceTest() throws Exception {
 
-        HttpRequestUtil.doPost(new URL("http://localhost:9090/"), requestPayload, new HashMap<String, String>());
+        HttpRequestUtil.doPost(new URL("http://localhost:9090/"), requestPayload, new HashMap<>());
         //this case matches with the regex but there is no api or proxy so dispatch to  super tenant main sequence
         Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /"));
         carbonLogReader.clearLogs();
@@ -67,14 +81,14 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
          * since this matches with inbound regex but no api or proxy found to be dispatched
          */
         carbonLogReader.clearLogs();
-        HttpRequestUtil.doPost(new URL("http://localhost:9090/idontexist"), requestPayload, new HashMap<String, String>());
+        HttpRequestUtil.doPost(new URL("http://localhost:9090/idontexist"), requestPayload, new HashMap<>());
         Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /idontexist"));
         carbonLogReader.clearLogs();
     }
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch")
     public void inboundHttpSuperDefaultMainTest() throws Exception {
-        HttpRequestUtil.doPost(new URL("http://localhost:9091/"), requestPayload, new HashMap<String, String>());
+        HttpRequestUtil.doPost(new URL("http://localhost:9091/"), requestPayload, new HashMap<>());
         Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /"));
         carbonLogReader.clearLogs();
     }
@@ -89,5 +103,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     @AfterTest(alwaysRun = true)
     public void destroy() throws Exception {
         carbonLogReader.stop();
+        Utils.undeploySynapseConfiguration("inbound1", "inbound-endpoints", false);
+        Utils.undeploySynapseConfiguration("inbound2", "inbound-endpoints", true);
     }
 }
