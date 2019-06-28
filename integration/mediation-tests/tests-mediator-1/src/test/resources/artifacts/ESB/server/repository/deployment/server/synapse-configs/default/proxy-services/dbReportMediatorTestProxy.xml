@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2017 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2019 WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
   ~ WSO2 Inc. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -16,7 +16,8 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="dbReportMediatorTestProxy" transports="https http" startOnLoad="true" trace="disable">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="dbReportMediatorTestProxy" transports="https http"
+       startOnLoad="true" trace="disable">
     <description/>
     <target>
         <inSequence>
@@ -29,8 +30,8 @@
         <outSequence>
             <log level="custom">
                 <property name="text"
-                    value="** Reporting to the Database **"/>
-                </log>
+                          value="** Reporting to the Database **"/>
+            </log>
             <dbreport xmlns="http://ws.apache.org/ns/synapse">
                 <connection>
                     <pool>
