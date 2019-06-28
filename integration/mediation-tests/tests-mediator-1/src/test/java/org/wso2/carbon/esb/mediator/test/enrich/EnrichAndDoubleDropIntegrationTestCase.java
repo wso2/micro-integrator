@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.enrich;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -33,12 +32,11 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        //loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config11/synapse.xml");
         cloneClient = new CloneClient();
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Enrichment of response message")
+    @Test(groups = {"wso2.esb"}, description = "Enrichment of response message")
     public void enrichMediatorTest() throws IOException {
 
         String response = cloneClient
@@ -49,18 +47,11 @@ public class EnrichAndDoubleDropIntegrationTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.contains("urn:AuthInf"), "Header mismatched");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "including two drop mediators")
+    @Test(groups = {"wso2.esb"}, description = "including two drop mediators")
     public void dropMediatorTest() throws IOException {
         String response;
 
         response = cloneClient.getResponse(getProxyServiceURLHttp("EnrichAndDoubleDropIntegrationTestProxy"), "IBM");
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void closeTestArtifacts() throws Exception {
-        cloneClient.destroy();
-        cloneClient = null;
 
     }
 

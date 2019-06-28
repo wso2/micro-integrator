@@ -46,14 +46,8 @@ public class ViewPopTest extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true, description = "Test Message processor View and Pop service")
     protected void setup() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("artifacts/ESB/messageProcessorConfig/ViewPopTest.xml");
-
         // Initialization
         messageProcessorClient = new MessageProcessorClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
-
-        verifyMessageStoreExistence(STORE_NAME);
-        verifyMessageProcessorExistence(PROCESSOR_NAME);
-        isProxySuccesfullyDeployed(PROXY_NAME);
     }
 
     @AfterClass(alwaysRun = true)

@@ -18,10 +18,26 @@
     <test name="ESB-Sample-Messaging-Test-1" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.samples.test.messaging.Sample705TestCase"/>
-            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample701TestCase"/>
-            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample702TestCase"/>
-            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample704TestCase"/>
-            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample700TestCase"/>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample701TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample702TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample704TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample700TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
     <test name="ESB-Sample-Messaging-Test-2" preserve-order="true" verbose="2">
@@ -71,6 +87,7 @@
             <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample650TestCase">
                 <methods>
                     <exclude name="testLocalEntries"/>
+                    <exclude name="testTasks"/>
                 </methods>
             </class>
         </classes>

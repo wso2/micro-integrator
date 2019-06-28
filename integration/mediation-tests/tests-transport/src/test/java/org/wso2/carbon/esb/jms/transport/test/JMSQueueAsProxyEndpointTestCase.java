@@ -35,15 +35,10 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
-    private ServerConfigurationManager serverConfigurationManager;
     private int NUM_OF_MESSAGES = 5;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
-        serverConfigurationManager = new ServerConfigurationManager(new AutomationContext());
-        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
-                getESBResourceLocation() + File.separator + "jms" + File.separator + "transport" + File.separator
-                        + "axis2config" + File.separator + "activemq" + File.separator + "axis2.xml"));
         super.init();
     }
 
@@ -138,11 +133,6 @@ public class JMSQueueAsProxyEndpointTestCase extends ESBIntegrationTest {
         } finally {
             consumer.disconnect();
         }
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
     private Callable<Boolean> isMessagesConsumed(final JMSQueueMessageConsumer consumer) {

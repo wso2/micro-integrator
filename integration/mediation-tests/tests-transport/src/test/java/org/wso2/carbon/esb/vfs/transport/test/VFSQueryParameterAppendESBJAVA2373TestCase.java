@@ -29,12 +29,17 @@ import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
+import javax.xml.stream.XMLStreamException;
 
 public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTest {
+
+    private static final String APPEND_TRUE_PROXY_NAME = "VFSQueryParamAppendTrueProxy";
+    private static final String APPEND_FALSE_PROXY_NAME = "VFSQueryParamAppendFalseProxy";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
@@ -44,11 +49,13 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
                         + File.separator + "vfsTransport" + File.separator).getPath() + "test" + File.separator + "out"
                 + File.separator);
         outfolder.mkdirs();
+        deployArtifacts();
     }
 
     @AfterClass(alwaysRun = true)
     public void restoreServerConfiguration() throws Exception {
-        super.cleanup();
+        Utils.undeploySynapseConfiguration(APPEND_TRUE_PROXY_NAME, Utils.ArtifactType.PROXY, false);
+        Utils.undeploySynapseConfiguration(APPEND_FALSE_PROXY_NAME, Utils.ArtifactType.PROXY, true);
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -57,8 +64,76 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
     public void testVFSFileURI() throws Exception {
         //<header name="To" value="vfs:file:///home/ravi/SupportProjects/carbon/4.0.0/platform/trunk/trunk/products/esb/4.5.1/modules/integration/tests/target/test-classes/artifacts/ESB/synapseconfig/vfsTransport/out/vfs-ESBJAVA2373-file?transport.vfs.Append=true"/>
         //System.out.println("<header name=\"To\" value=\"vfs:file://" + getClass().getResource(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig" + File.separator + "vfsTransport" + File.separator).getPath() + "out/vfs-ESBJAVA2373-file?transport.vfs.Append=true" + "\"/>");
-        addProxyService(AXIOMUtil.stringToOM(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"VFSProxy\"\n"
+        try {
+            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(APPEND_TRUE_PROXY_NAME),
+                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        } catch (AxisFault e) {
+        }
+
+        File appendTrueFile = new File(getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "vfsTransport" + File.separator).getPath()
+                + "out/vfs-ESBJAVA2373-append-true");
+        Assert.assertTrue(appendTrueFile.exists(), "File with transport.vfs.Append=true file has been created?");
+
+        long fileSize = appendTrueFile.length();
+
+        try {
+            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(APPEND_TRUE_PROXY_NAME),
+                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        } catch (AxisFault e) {
+        }
+
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileSizeLarge(fileSize, appendTrueFile.length()));
+        Assert.assertTrue(fileSize < appendTrueFile.length(), "File has been appended to");
+
+
+        try {
+            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(APPEND_FALSE_PROXY_NAME),
+                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        } catch (AxisFault e) {
+        }
+
+        File appendFalseFile = new File(getClass().getResource(
+                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
+                        + File.separator + "vfsTransport" + File.separator).getPath()
+                + "out/vfs-ESBJAVA2373-append-false");
+        Assert.assertTrue(appendFalseFile.exists(), "File with transport.vfs.Append=false file has been created?");
+
+        try {
+            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(APPEND_FALSE_PROXY_NAME),
+                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
+        } catch (AxisFault e) {
+        }
+
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
+                .until(isFileSizeEqual(fileSize, appendFalseFile.length()));
+        Assert.assertTrue(fileSize == appendFalseFile.length(), "File has been overwritten - no appending");
+
+    }
+
+    private Callable<Boolean> isFileSizeEqual(final long fileSize, final long appendedFileSize) {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return fileSize == appendedFileSize;
+            }
+        };
+    }
+
+    private Callable<Boolean> isFileSizeLarge(final long fileSize, final long appendedFileSize) {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return fileSize < appendedFileSize;
+            }
+        };
+    }
+
+    private void deployArtifacts() throws XMLStreamException {
+        OMElement appendFalseProxy = AXIOMUtil.stringToOM(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"VFSQueryParamAppendTrueProxy\"\n"
                         + "           xmlns=\"http://ws.apache.org/ns/synapse\""
                         + "           transports=\"https http\"\n" + "           startOnLoad=\"true\"\n"
                         + "           trace=\"disable\">\n" + "        <target>\n" + "            <inSequence>\n"
@@ -83,37 +158,10 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
                         + "                    </endpoint>\n" + "                </send>\n"
                         + "            </inSequence>\n" + "            <outSequence>\n" + "                <drop/>\n"
                         + "            </outSequence>\n" + "            <faultSequence/>\n" + "        </target>\n"
-                        + "    </proxy>"));
+                        + "    </proxy>");
 
-        try {
-            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxy"),
-                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
-        } catch (AxisFault e) {
-        }
-
-        File appendTrueFile = new File(getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath()
-                + "out/vfs-ESBJAVA2373-append-true");
-        Assert.assertTrue(appendTrueFile.exists(), "File with transport.vfs.Append=true file has been created?");
-
-        long fileSize = appendTrueFile.length();
-
-        try {
-            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxy"),
-                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
-        } catch (AxisFault e) {
-        }
-
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                .until(isFileSizeLarge(fileSize, appendTrueFile.length()));
-        Assert.assertTrue(fileSize < appendTrueFile.length(), "File has been appended to");
-
-        deleteProxyService("VFSProxy");
-
-        // Adding append = false proxy.
-        addProxyService(AXIOMUtil.stringToOM(
-                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"VFSProxy\"\n"
+        OMElement appendTrueProxy = AXIOMUtil.stringToOM(
+                "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"VFSQueryParamAppendFalseProxy\"\n"
                         + "           xmlns=\"http://ws.apache.org/ns/synapse\""
                         + "           transports=\"https http\"\n" + "           startOnLoad=\"true\"\n"
                         + "           trace=\"disable\">\n" + "        <target>\n" + "            <inSequence>\n"
@@ -138,48 +186,9 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
                         + "                    </endpoint>\n" + "                </send>\n"
                         + "            </inSequence>\n" + "            <outSequence>\n" + "                <drop/>\n"
                         + "            </outSequence>\n" + "            <faultSequence/>\n" + "        </target>\n"
-                        + "    </proxy>"));
+                        + "    </proxy>");
 
-        try {
-            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxy"),
-                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
-        } catch (AxisFault e) {
-        }
-
-        File appendFalseFile = new File(getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath()
-                + "out/vfs-ESBJAVA2373-append-false");
-        Assert.assertTrue(appendFalseFile.exists(), "File with transport.vfs.Append=false file has been created?");
-
-        try {
-            OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("VFSProxy"),
-                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
-        } catch (AxisFault e) {
-        }
-
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                .until(isFileSizeEqual(fileSize, appendFalseFile.length()));
-        Assert.assertTrue(fileSize == appendFalseFile.length(), "File has been overwritten - no appending");
-
-        deleteProxyService("VFSProxy");
-    }
-
-    private Callable<Boolean> isFileSizeEqual(final long fileSize, final long appendedFileSize) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return fileSize == appendedFileSize;
-            }
-        };
-    }
-
-    private Callable<Boolean> isFileSizeLarge(final long fileSize, final long appendedFileSize) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return fileSize < appendedFileSize;
-            }
-        };
+        Utils.deploySynapseConfiguration(appendTrueProxy, APPEND_TRUE_PROXY_NAME, Utils.ArtifactType.PROXY, false);
+        Utils.deploySynapseConfiguration(appendFalseProxy, APPEND_FALSE_PROXY_NAME, Utils.ArtifactType.PROXY, true);
     }
 }

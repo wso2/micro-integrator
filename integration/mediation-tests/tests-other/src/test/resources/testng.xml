@@ -19,6 +19,28 @@
         <packages>
             <package name="org.wso2.carbon.esb.resource.test.*"/>
         </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.resource.test.template.SequenceTemplateMediaTypeTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.resource.test.template.EndpointTemplateMediaTypeTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.resource.test.endpoint.EndPointMediaTypeTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.resource.test.sequence.SequenceMediaTypeTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+        </classes>
     </test>
 
     <test name="GZIP-Compression-Test" preserve-order="true" verbose="2">
@@ -91,14 +113,6 @@
         </packages>
     </test>
 
-    <test name="Template-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.template"/>
-            <!--todo Uncomment below package after synapse 2.1.7-wso2v35 or higher upgrade-->
-            <package name="org.wso2.carbon.esb.template.endpointTemplate"/>
-        </packages>
-    </test>
-
     <test name="Stats-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.statistics"/>
@@ -115,12 +129,6 @@
     <test name="LocalEntry-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.localentry.test.*"/>
-        </packages>
-    </test>
-
-    <test name="logging-tests" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.logging"/>
         </packages>
     </test>
 

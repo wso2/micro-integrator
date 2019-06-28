@@ -22,6 +22,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import javax.xml.namespace.QName;
 
@@ -33,17 +34,14 @@ public class WSDLOptionsSpecifiedInlineTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/wsdl_options_specified_inline.xml");
-
     }
 
     @Test(groups = "wso2.esb", description = "- WSDL based proxy" + "- Publish WSDL Options - Specified Inline")
     public void testWSDLBasedProxy() throws Exception {
 
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromInlineWsdlBasedProxy"), null,
-                        "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("wsdlOptionsFromInlineWsdlBasedProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();

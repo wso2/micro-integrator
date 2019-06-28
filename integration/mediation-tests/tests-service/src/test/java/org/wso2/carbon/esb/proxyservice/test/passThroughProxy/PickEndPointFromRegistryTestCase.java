@@ -18,21 +18,11 @@
 package org.wso2.carbon.esb.proxyservice.test.passThroughProxy;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.registry.resource.stub.ResourceAdminServiceExceptionException;
-import org.wso2.carbon.registry.resource.stub.common.xsd.ResourceData;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
-import java.net.URL;
-import java.rmi.RemoteException;
-import javax.activation.DataHandler;
 import javax.xml.namespace.QName;
-import javax.xml.xpath.XPathExpressionException;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -41,7 +31,6 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
     }
 
     @Test(groups = "wso2.esb", description = "- Pass through proxy"
@@ -65,43 +54,4 @@ public class PickEndPointFromRegistryTestCase extends ESBIntegrationTest {
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        clearUploadedResource();
-        super.cleanup();
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        resourceAdminServiceStub.deleteResource("/_system/config/proxy");
-        resourceAdminServiceStub.addCollection("/_system/config/", "proxy", "", "Contains test proxy tests files");
-
-        Assert.assertTrue(resourceAdminServiceStub
-                .addResource("/_system/config/proxy/registry_endpoint.xml", "application/xml", "xml files",
-                        setEndpoints(new DataHandler(
-                                new URL("file:///" + getESBResourceLocation() + File.separator + "proxyconfig"
-                                        + File.separator + "proxy" + File.separator + "utils" + File.separator
-                                        + "registry_endpoint.xml")))), "Adding Resource failed");
-        ResourceData[] resources = resourceAdminServiceStub.getResource("/_system/config/proxy/registry_endpoint.xml");
-        Assert.assertNotNull(resources, "Resource object is null");
-        Assert.assertEquals(resources[0].getName(), "registry_endpoint.xml", "Resource Not Exist");
-
-        Thread.sleep(1000);
-
-    }
-
-    private void clearUploadedResource()
-            throws InterruptedException, ResourceAdminServiceExceptionException, RemoteException,
-            XPathExpressionException {
-
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                context.getContextUrls().getBackEndUrl(), getSessionCookie());
-
-        Assert.assertTrue(resourceAdminServiceStub.deleteResource("/_system/config/proxy"), "Resource deletion failed");
-        Thread.sleep(1000);
-
-    }
 }

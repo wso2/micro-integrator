@@ -133,6 +133,10 @@ public abstract class ESBIntegrationTest {
         portOffset = Integer.parseInt(System.getProperty("port.offset"));
     }
 
+    public String getHostname() {
+        return this.hostName;
+    }
+
     protected void cleanup() throws Exception {
 		/*try {
 			if (synapseConfiguration != null) {
@@ -899,13 +903,13 @@ public abstract class ESBIntegrationTest {
                 "Sequence not found. " + sequenceName);*/
     }
 
-    private boolean checkCarbonAppExistence(String carbonAppName) throws IOException {
+    protected boolean checkCarbonAppExistence(String carbonAppName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("applications");
         return response.contains(carbonAppName);
     }
 
-    private boolean checkApiExistence(String apiName) throws IOException {
+    protected boolean checkApiExistence(String apiName) throws IOException {
 
         String response = retrieveArtifactUsingManagementApi("apis");
         return response.contains(apiName);
