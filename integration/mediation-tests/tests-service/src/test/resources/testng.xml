@@ -89,6 +89,16 @@
                     <exclude name="localEntryDeploymentTest"/>
                 </methods>
             </class>
+            <class name="org.wso2.carbon.esb.car.deployment.test.XSLTTransformationCarTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.car.deployment.test.CAppDeactivateAndRestartTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
         </classes>
     </test>
     <test name="ScheduleTask-Test" preserve-order="true" verbose="2" parallel="false">
