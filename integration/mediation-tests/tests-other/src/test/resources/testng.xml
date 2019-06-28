@@ -106,13 +106,7 @@
             <package name="org.wso2.carbon.esb.mediationstats.*"/>
         </packages>
     </test>
-
-    <test name="Eager-Loading-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.eager.loading"/>
-        </packages>
-    </test>
-
+    
     <test name="Stats-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.statistics"/>
