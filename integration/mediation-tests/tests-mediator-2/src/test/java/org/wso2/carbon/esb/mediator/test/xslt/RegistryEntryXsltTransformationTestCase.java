@@ -34,7 +34,6 @@ public class RegistryEntryXsltTransformationTestCase extends ESBIntegrationTest 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
-
     }
 
     @Test(groups = {
