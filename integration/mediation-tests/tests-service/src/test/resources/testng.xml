@@ -83,14 +83,8 @@
         <packages>
             <package name="org.wso2.carbon.esb.car.deployment.test"/>
         </packages>
-        <classes>
-            <class name="org.wso2.carbon.esb.car.deployment.test.CAppDeploymentOrderTest">
-                <methods>
-                    <exclude name="localEntryDeploymentTest"/>
-                </methods>
-            </class>
-        </classes>
     </test>
+
     <test name="ScheduleTask-Test" preserve-order="true" verbose="2" parallel="false">
         <packages>
             <package name="org.wso2.carbon.esb.scheduledtask.test"/>
