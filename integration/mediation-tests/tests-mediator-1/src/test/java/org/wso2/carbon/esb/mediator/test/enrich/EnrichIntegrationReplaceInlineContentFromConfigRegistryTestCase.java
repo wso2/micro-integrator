@@ -36,6 +36,9 @@ public class EnrichIntegrationReplaceInlineContentFromConfigRegistryTestCase ext
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
+        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
+                context.getContextTenant().getContextUser().getUserName(),
+                context.getContextTenant().getContextUser().getPassword());
     }
 
     @Test(groups = {
