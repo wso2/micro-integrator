@@ -41,7 +41,6 @@ public class NestedAggregatesTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        //  loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/config13/synapse.xml");
         aggregatedRequestClient = new AggregatedRequestClient();
         aggregatedRequestClient.setProxyServiceUrl(getProxyServiceURLHttp("nestedAggregatedTestCase"));
         aggregatedRequestClient.setSymbol("IBM");
