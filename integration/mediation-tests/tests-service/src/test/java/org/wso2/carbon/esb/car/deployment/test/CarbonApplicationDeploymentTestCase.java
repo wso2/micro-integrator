@@ -19,10 +19,16 @@
 package org.wso2.carbon.esb.car.deployment.test;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class CarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
+
+    @BeforeClass(alwaysRun = true)
+    public void setEnvironment() throws Exception {
+        super.init();
+    }
 
     @Test(groups = { "wso2.esb" }, description = "test endpoint deployment from car file")
     public void endpointDeploymentTest() throws Exception {
