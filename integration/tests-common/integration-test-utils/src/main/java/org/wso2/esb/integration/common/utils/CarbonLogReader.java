@@ -133,8 +133,8 @@ public class CarbonLogReader {
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
             if (assertIfLogExists(startWith) && assertIfLogExists(endWith) && !StringUtils
-                    .substringBetween(startWith, endWith).isEmpty()) {
-                return StringUtils.substringBetween(startWith, endWith);
+                    .substringBetween(this.getLogs(), startWith, endWith).isEmpty()) {
+                return StringUtils.substringBetween(this.getLogs(), startWith, endWith);
             }
         }
         return "";
