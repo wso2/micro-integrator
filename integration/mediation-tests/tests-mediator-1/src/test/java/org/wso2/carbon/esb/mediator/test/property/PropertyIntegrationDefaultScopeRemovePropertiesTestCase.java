@@ -104,14 +104,9 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
      * The method that checks whether the particular
      * match string is available in the sysytem logs
      */
-    private boolean isMatchFound(String matchStr) {
-        boolean isSet = false;
-        String logs = carbonLogReader.getLogs();
+    private boolean isMatchFound(String matchStr) throws InterruptedException {
+        boolean isSet = carbonLogReader.checkForLog(matchStr, 6) && carbonLogReader.checkForLog("symbol = null", 6);
         carbonLogReader.stop();
-
-        if (logs.contains(matchStr) && logs.contains("symbol = null")) {
-            isSet = true;
-        }
         return isSet;
     }
 }
