@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.db.dbreport;
 
 import javax.xml.namespace.QName;
-import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -34,6 +33,7 @@ import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import static org.testng.Assert.assertEquals;
+import static org.wso2.carbon.esb.mediator.test.db.DBTestUtil.getDBPath;
 
 public class DBReportMediatorTestCase extends ESBIntegrationTest {
 
@@ -43,12 +43,12 @@ public class DBReportMediatorTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
-        String DB_USER = "wso2carbon";
-        String DB_PASSWORD = "wso2carbon";
+        String DB_USER = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_USER_NAME);
+        String DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
         String JDBC_URL = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
-        String databaseName =
-                System.getProperty("carbon.home") + File.separator + "databases" + File.separator + "testdb_dbreport";
-        JDBC_URL = JDBC_URL + databaseName + ";AUTO_SERVER=TRUE";
+        String databasePath = getDBPath("testdb_dbreport");
+
+        JDBC_URL = JDBC_URL + databasePath + ";AUTO_SERVER=TRUE";
         h2DataBaseManager = new H2DataBaseManager(JDBC_URL, DB_USER, DB_PASSWORD);
         h2DataBaseManager.executeUpdate("CREATE TABLE company(price double, name varchar(20))");
         super.init();

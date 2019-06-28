@@ -35,7 +35,7 @@
                 <connection>
                     <pool>
                         <driver>org.h2.Driver</driver>
-                        <url>jdbc:h2:./databases/testdb_dbreport;AUTO_SERVER=TRUE</url>
+                        <url>jdbc:h2:../testdb_dbreport;AUTO_SERVER=TRUE</url>
                         <user>wso2carbon</user>
                         <password>wso2carbon</password>
                     </pool>
