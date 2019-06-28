@@ -19,12 +19,16 @@
 package org.wso2.carbon.esb.mediator.test.classMediator;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
@@ -48,11 +52,12 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
         serverConfigurationManager = new ServerConfigurationManager(context);
         serverConfigurationManager.copyToComponentLib(
                 new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_THREE_PROPERTIES).toURI()));
-        serverConfigurationManager.restartGracefully();
-
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/class/class_property_persistence_three_properties.xml");
+        OMElement class_three_properties = AXIOMUtil.stringToOM(FileUtils.readFileToString(
+                new File(getESBResourceLocation() + File.separator + "mediatorconfig" + File.separator +
+                        "class" + File.separator + "class_property_persistence_three_properties.xml")));
+        Utils.deploySynapseConfiguration(class_three_properties, "class_property_persistence_three_properties",
+                "proxy-services", true);
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -60,7 +65,9 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
             + " -Class mediator property persistence -adding properties")
     public void testMediationPropertyPersistenceAdding() throws Exception {
 
-        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        OMElement response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                "class_property_persistence_three_properties"),
+                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
 
         String lastPrice = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText();
@@ -83,18 +90,21 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
          */
 
         serverConfigurationManager.removeFromComponentLib(CLASS_JAR_THREE_PROPERTIES);
+        Utils.undeploySynapseConfiguration("class_property_persistence_three_properties", "proxy-services", false);
         serverConfigurationManager.copyToComponentLib(
                 new File(getClass().getResource(JAR_LOCATION + File.separator + CLASS_JAR_FIVE_PROPERTIES).toURI()));
-        loadSampleESBConfiguration(0);
+        OMElement class_five_properties = AXIOMUtil.stringToOM(FileUtils.readFileToString(
+                new File(getESBResourceLocation() + File.separator + "mediatorconfig" + File.separator +
+                        "class" + File.separator + "class_property_persistence_five_properties.xml")));
+        Utils.deploySynapseConfiguration(class_five_properties, "class_property_persistence_five_properties",
+                "proxy-services", true);
         /* waiting for the new config file to be written to the disk */
         Thread.sleep(10000);
-        serverConfigurationManager.restartGracefully();
 
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/class/class_property_persistence_five_properties.xml");
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "IBM");
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                "class_property_persistence_five_properties"), null, "IBM");
 
         lastPrice = response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "last"))
                 .getText();
@@ -122,7 +132,7 @@ public class PropertyPersistenceAddingTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        Utils.undeploySynapseConfiguration("class_property_persistence_five_properties", "proxy-services");
         serverConfigurationManager.removeFromComponentLib(CLASS_JAR_FIVE_PROPERTIES);
         serverConfigurationManager = null;
     }

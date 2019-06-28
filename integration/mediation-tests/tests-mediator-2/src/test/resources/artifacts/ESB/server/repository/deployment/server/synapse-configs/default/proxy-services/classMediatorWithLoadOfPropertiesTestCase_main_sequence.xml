@@ -16,7 +16,7 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="class_property_persistence_four_properties" transports="http,https">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="classMediatorWithLoadOfPropertiesTestCase_main_sequence" transports="http,https">
     <target>
         <inSequence>
             <send>
@@ -26,11 +26,29 @@
             </send>
         </inSequence>
         <outSequence>
-            <class name="org.wso2.carbon.test.mediator.StockQuoteMediator">
+            <class name="org.wso2.integration.test.mediator.SimpleClassMediator">
+                <property name="percentageChange" value="-1.5"/>
                 <property name="bonusFor" value="5"/>
+                <property name="earnings" value="-9"/>
+                <property name="marketCap" value="3.8"/>
+                <property name="prevClose" value="-132"/>
+                <property name="symbol" value="IBM"/>
+                <property name="change" value="-2"/>
+                <property name="perRatio" value="-18.9"/>
+                <property name="open" value="-173.2"/>
+                <property name="market" value="CSE"/>
                 <property name="discountFactor" value="10"/>
-                <property name="servicesDeduction" value="5"/>
+                <property name="email" value="user@wso2.org"/>
+                <property name="name" value="IBM Company"/>
+                <property name="volume" value="20000"/>
+                <property name="userName" value="esb user"/>
+                <property name="mediator" value="D2O"/>
+                <property name="high" value="-175"/>
+                <property name="low" value="-172"/>
                 <property name="taxFor" value="5"/>
+                <property name="broker" value="SMS"/>
+                <property name="lastTradeTimeStamp" value="2015"/>
+                <property name="capitalAcquired" value="1.9"/>
             </class>
             <send/>
         </outSequence>

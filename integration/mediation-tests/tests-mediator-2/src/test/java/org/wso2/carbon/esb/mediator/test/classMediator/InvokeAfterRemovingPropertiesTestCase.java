@@ -20,10 +20,10 @@ package org.wso2.carbon.esb.mediator.test.classMediator;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
 
 import javax.xml.namespace.QName;
 
@@ -40,20 +40,19 @@ public class InvokeAfterRemovingPropertiesTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Invoke after removing some properties")
     public void testAfterRemovingProperties() throws Exception {
-        loadSampleESBConfiguration(380);
         OMElement response, editedResponse;
 
-        response = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        response = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("synapse_sample_380_main_sequence"),
+                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         assertNotNull(response, "Response message null");
         String responseString = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "last")).getText().toString();
         double discountedPrice = Double.parseDouble(responseString);
         assertTrue(discountedPrice > 0);
 
-        String filePath = "/artifacts/ESB/synapseconfig/class_mediator/synapse.xml";
-        loadESBConfigurationFromClasspath(filePath);
-
-        editedResponse = axis2Client.sendSimpleStockQuoteRequest(getMainSequenceURL(), null, "WSO2");
+        editedResponse = axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp(
+                "invokeAfterRemovingPropertiesTestCase_main_sequence_proxy"),
+                getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "WSO2");
         assertNotNull(editedResponse, "Response message null");
 
         int editResponse = (int) Double.parseDouble(
@@ -62,10 +61,4 @@ public class InvokeAfterRemovingPropertiesTestCase extends ESBIntegrationTest {
 
         Assert.assertEquals(editResponse, 0, "Value mismatched");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
-
 }

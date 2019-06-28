@@ -16,7 +16,7 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="class_property_persistence_four_properties" transports="http,https">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="invokeAfterRemovingPropertiesTestCase_main_sequence_proxy" transports="http,https">
     <target>
         <inSequence>
             <send>
@@ -26,11 +26,10 @@
             </send>
         </inSequence>
         <outSequence>
-            <class name="org.wso2.carbon.test.mediator.StockQuoteMediator">
-                <property name="bonusFor" value="5"/>
-                <property name="discountFactor" value="10"/>
-                <property name="servicesDeduction" value="5"/>
-                <property name="taxFor" value="5"/>
+
+            <class name="samples.mediators.DiscountQuoteMediator">
+                <property name="discountFactor" value="100"/>
+
             </class>
             <send/>
         </outSequence>

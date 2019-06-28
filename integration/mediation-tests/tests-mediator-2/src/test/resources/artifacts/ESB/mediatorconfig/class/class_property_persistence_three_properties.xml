@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (c) 2005-2010, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
   ~ WSO2 Inc. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -16,29 +16,29 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-<definitions xmlns="http://ws.apache.org/ns/synapse">
-    <sequence name="fault">
-        <makefault>
-            <code xmlns:tns="http://www.w3.org/2003/05/soap-envelope" value="tns:Receiver"/>
-            <reason value="Mediation failed."/>
-        </makefault>
-        <send/>
-    </sequence>
-    <sequence name="main" onError="fault">
-        <in>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="class_property_persistence_three_properties" transports="http,https">
+    <target>
+        <inSequence>
             <send>
                 <endpoint name="stockquote">
                     <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
                 </endpoint>
             </send>
-        </in>
-        <out>
+        </inSequence>
+        <outSequence>
             <class name="org.wso2.carbon.test.mediator.StockQuoteMediator">
                 <property name="bonusFor" value="5"/>
                 <property name="discountFactor" value="10"/>
                 <property name="taxFor" value="5"/>
             </class>
             <send/>
-        </out>
-    </sequence>
-</definitions>
+        </outSequence>
+        <faultSequence>
+            <makefault>
+                <code xmlns:tns="http://www.w3.org/2003/05/soap-envelope" value="tns:Receiver"/>
+                <reason value="Mediation failed."/>
+            </makefault>
+            <send/>
+        </faultSequence>
+    </target>
+</proxy>
