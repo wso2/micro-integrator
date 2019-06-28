@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.db.dblookup;
 
-import java.io.File;
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -30,23 +29,21 @@ import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-public class DBlookupMediatorTestCase extends ESBIntegrationTest {
+import static org.wso2.carbon.esb.mediator.test.db.DBTestUtil.getDBPath;
+
+public class DBLookupMediatorTestCase extends ESBIntegrationTest {
     private H2DataBaseManager h2DatabaseManager;
-    private String JDBC_URL;
-    private String DB_USER;
-    private String DB_PASSWORD;
     private final double WSO2_PRICE = 200.0;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
-        DB_PASSWORD = "wso2carbon";
-        JDBC_URL = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
-        DB_USER = "wso2carbon";
-        String databaseName =
-                System.getProperty("carbon.home") + File.separator + "databases" + File.separator + "testdb_dblookup";
-        JDBC_URL = JDBC_URL + databaseName + ";AUTO_SERVER=TRUE";
+        String DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
+        String JDBC_URL = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
+        String DB_USER = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_USER_NAME);
+        String databasePath = getDBPath("testdb_dblookup");
+        JDBC_URL = JDBC_URL + databasePath + ";AUTO_SERVER=TRUE";
         h2DatabaseManager = new H2DataBaseManager(JDBC_URL, DB_USER, DB_PASSWORD);
         h2DatabaseManager.executeUpdate("CREATE TABLE IF NOT EXISTS company(price double, name varchar(20))");
         super.init();

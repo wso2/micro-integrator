@@ -17,8 +17,11 @@
  */
 package org.wso2.carbon.esb.mediator.test.db.dbreport;
 
+import javax.xml.namespace.QName;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -29,49 +32,31 @@ import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Random;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-
 import static org.testng.Assert.assertEquals;
+import static org.wso2.carbon.esb.mediator.test.db.DBTestUtil.getDBPath;
 
 public class DBReportMediatorTestCase extends ESBIntegrationTest {
 
     private H2DataBaseManager h2DataBaseManager;
-    private String JDBC_URL;
-    private String DB_USER;
-    private String DB_PASSWORD;
-    private String JDBC_DRIVER;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
-        DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
-        JDBC_URL = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
-        DB_USER = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_USER_NAME);
-        JDBC_DRIVER = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DRIVER_CLASS_NAME);
-        String databaseName =
-                System.getProperty("basedir") + File.separator + "target" + File.separator + "testdb_dbreport"
-                        + new Random().nextInt();
-        JDBC_URL = JDBC_URL + databaseName + ";AUTO_SERVER=TRUE";
+        String DB_USER = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_USER_NAME);
+        String DB_PASSWORD = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_DB_PASSWORD);
+        String JDBC_URL = automationContext.getConfigurationValue(XPathConstants.DATA_SOURCE_URL);
+        String databasePath = getDBPath("testdb_dbreport");
+
+        JDBC_URL = JDBC_URL + databasePath + ";AUTO_SERVER=TRUE";
         h2DataBaseManager = new H2DataBaseManager(JDBC_URL, DB_USER, DB_PASSWORD);
         h2DataBaseManager.executeUpdate("CREATE TABLE company(price double, name varchar(20))");
         super.init();
     }
 
-    /*  before a request is sent to the db mediator the count of price rows greater than 1000 should
-be 3. After the request is gone through db mediator the count should be zero. price values
-greater than 1000 will remain with the count of one */
+    /*  Before a request is sent to the db mediator, the count of price rows greater than 1000 should
+        be 3. After the request is gone through db mediator, the count should be zero. Price values
+        greater than 1000 will remain with the count of one. */
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "DBLookup/DBReport mediator should replace a" + " &lt;/&gt; with </>")
     public void DBMediatorReplaceLessThanAndGreaterThanSignTestCase() throws Exception {
@@ -84,10 +69,6 @@ greater than 1000 will remain with the count of one */
         numOfPriceGreaterThan = getRecordCount("SELECT price from company WHERE price > 1000 ");
         assertEquals(numOfPrice, 3, "Fault, invalid response");
         assertEquals(numOfPriceGreaterThan, 1, "Fault, invalid response");
-        File synapseFile = new File(
-                getClass().getResource("/artifacts/ESB/mediatorconfig/dbreport/dbReportMediatorTestProxy.xml")
-                        .getPath());
-        addProxyService(updateSynapseConfiguration(synapseFile));
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("dbReportMediatorTestProxy"), null, "WSO2");
         numOfPrice = getRecordCount("SELECT price from company WHERE price < 1000 ");
         numOfPriceGreaterThan = getRecordCount("SELECT price from company WHERE price > 1000 ");
@@ -96,11 +77,10 @@ greater than 1000 will remain with the count of one */
 
     }
 
-    /*  before a request is sent the database has "200.0"(WSO2_PRICE) as the value corresponding to
-the 'name' "WSO2".
-* After the request is sent, the value 200.0 is replaced by the value given by xpath to response
-* message content. */
-
+    /*  Before a request is sent, the database has "200.0"(WSO2_PRICE) as the value corresponding to
+        the 'name' "WSO2".
+        After the request is sent, the value 200.0 is replaced by the value given by xpath to response
+        message content. */
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Insert or update DB table using message contents.")
     public void DBReportUseMessageContentTestCase() throws Exception {
@@ -112,10 +92,6 @@ the 'name' "WSO2".
         h2DataBaseManager.executeUpdate("INSERT INTO company VALUES(" + price + ",'WSO2')");
         h2DataBaseManager.executeUpdate("INSERT INTO company VALUES(300.0,'MNO')");
 
-        File synapseFile = new File(getClass().getResource(
-                "/artifacts/ESB/mediatorconfig/dbreport/" + "dbReportMediatorUsingMessageContentTestProxy.xml")
-                .getPath());
-        addProxyService(updateSynapseConfiguration(synapseFile));
         priceMessageContent = getPrice();
         assertEquals(priceMessageContent, Double.toString(price), "Fault, invalid response");
         response = axis2Client
@@ -132,39 +108,6 @@ the 'name' "WSO2".
         h2DataBaseManager.disconnect();
         h2DataBaseManager = null;
         super.cleanup();
-    }
-
-    private OMElement updateSynapseConfiguration(File synapseFile) throws IOException, XMLStreamException {
-
-        OMElement synapseContent;
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(synapseFile));
-        XMLStreamReader xmlStreamReader = XMLInputFactory.newInstance().createXMLStreamReader(bufferedInputStream);
-        StAXOMBuilder stAXOMBuilder = new StAXOMBuilder(xmlStreamReader);
-        synapseContent = stAXOMBuilder.getDocumentElement();
-        synapseContent.build();
-        bufferedInputStream.close();
-
-        OMElement targetElement = synapseContent
-                .getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "target"));
-        OMElement outSequenceElement = targetElement
-                .getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "outSequence"));
-        OMElement dbReportElement = outSequenceElement
-                .getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "dbreport"));
-        OMElement connectionElement = dbReportElement
-                .getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "connection"));
-        OMElement poolElement = connectionElement.getFirstElement();
-        OMElement driverElemnt = poolElement
-                .getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "driver"));
-        OMElement urlElemnt = poolElement.getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "url"));
-        OMElement userElemnt = poolElement.getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "user"));
-        OMElement passwordElemnt = poolElement
-                .getFirstChildWithName(new QName("http://ws.apache.org/ns/synapse", "password"));
-
-        driverElemnt.setText(JDBC_DRIVER);
-        urlElemnt.setText(JDBC_URL);
-        userElemnt.setText(DB_USER);
-        passwordElemnt.setText(DB_PASSWORD);
-        return synapseContent;
     }
 
     private int getRecordCount(String sql) throws SQLException {
