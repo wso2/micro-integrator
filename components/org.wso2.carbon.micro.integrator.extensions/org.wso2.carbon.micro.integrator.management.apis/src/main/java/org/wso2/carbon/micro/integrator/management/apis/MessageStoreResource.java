@@ -137,22 +137,20 @@ public class MessageStoreResource implements MiApiResource {
      * @return String message store type
      * */
     private String getStoreType(MessageStore messageStore) {
-        if (messageStore instanceof JDBCMessageStore) {
-            return JDBCMESSAGESTORE_TYPE;
-        }
-        if (messageStore instanceof JmsStore) {
-            return JMSSTORE_TYPE;
-        }
-        if (messageStore instanceof InMemoryStore) {
-            return INMEMORYSTORE_TYPE;
-        }
-        if (messageStore instanceof RabbitMQStore) {
-            return RABBITMQSTORE_TYPE;
-        }
+
         if (messageStore instanceof ResequenceMessageStore) {
             return RESEQUENCEMESSAGESTORE_TYPE;
+        } else if (messageStore instanceof JDBCMessageStore) {
+            return JDBCMESSAGESTORE_TYPE;
+        } else if (messageStore instanceof JmsStore) {
+            return JMSSTORE_TYPE;
+        } else if (messageStore instanceof InMemoryStore) {
+            return INMEMORYSTORE_TYPE;
+        } else if (messageStore instanceof RabbitMQStore) {
+            return RABBITMQSTORE_TYPE;
+        } else {
+            return CUSTOMSTORE_TYPE;
         }
-        return CUSTOMSTORE_TYPE;
     }
 
     /**
