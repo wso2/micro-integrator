@@ -22,7 +22,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -30,6 +34,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Micro-Integrator registry manager for integration tests
@@ -55,6 +60,20 @@ public class MicroRegistryManager {
      */
     public void addResource(String resourcePath, String sourcePath) throws MicroRegistryManagerException {
         updateResource(resourcePath, sourcePath, false);
+    }
+
+    /**
+     * Function to add resource to the Micro Registry
+     *
+     * @param filePath resource path in WSO2 registry path style
+     * @param sourcePath source file
+     * @param propertyName source file
+     * @param value property value
+     * @throws MicroRegistryManagerException if error occurred while updating resource
+     */
+    public void addProperty(String filePath, String sourcePath, String propertyName, String value) throws
+            MicroRegistryManagerException {
+        updateProperty(filePath, sourcePath, propertyName, value, false);
     }
 
     /**
@@ -97,6 +116,106 @@ public class MicroRegistryManager {
             log.info("Successfully copied" + message);
         } catch (IOException e) {
             throw new MicroRegistryManagerException("Error occurred while copying" + message, e);
+        }
+    }
+
+    /**
+     * Function to update existing property from the Micro Registry
+     *
+     * @param collectionPath resource path in WSO2 registry path style
+     * @param resourceName resource path in WSO2 registry path style
+     * @param propertyName source file
+     * @param value property value
+     * @param backupOriginal bool to indicate whether to backup the original resource if exists
+     * @throws MicroRegistryManagerException if error occurred while updating resource
+     */
+    public void updateProperty(String collectionPath, String resourceName, String propertyName, String value, boolean
+            backupOriginal) throws MicroRegistryManagerException {
+
+        StringBuilder pathBuilder = new StringBuilder();
+        pathBuilder.append(System.getProperty("carbon.home")).append(File.separator).append("registry").append(File.separator);
+        if (collectionPath.startsWith(CONF_PATH)) {
+            String relativePath = collectionPath.substring(5).replace('/', File.separatorChar);
+            pathBuilder.append("config").append(relativePath);
+        } else if (collectionPath.startsWith(GOV_PATH)) {
+            String relativePath = collectionPath.substring(4).replace('/', File.separatorChar);
+            pathBuilder.append("governance").append(relativePath);
+        } else {
+            throw new MicroRegistryManagerException("Unknown resource path: " + collectionPath);
+        }
+
+        String targetPath = pathBuilder.toString();
+        String propertiesFileName = resourceName.split("/")[0] + ".properties";
+        String message = " property name:" + propertyName + " to: " + targetPath;
+
+        boolean isExists = new File(targetPath + resourceName).isFile();
+        if (!isExists) {
+            try {
+                new File(targetPath + resourceName).createNewFile();
+                new File(targetPath + propertiesFileName).createNewFile();
+            } catch (IOException e) {
+                throw new MicroRegistryManagerException("Error occurred while creating of file: " + targetPath, e);
+            }
+        }
+
+        if (backupOriginal) {
+            //backup original file if exists
+            try {
+                backupFile(targetPath);
+            } catch (IOException e) {
+                throw new MicroRegistryManagerException("Error occurred while taking backup of file: " + targetPath, e);
+            }
+        }
+
+        Properties prop = new Properties();
+        if (isExists) {
+            try (InputStream input = new FileInputStream(targetPath + propertiesFileName)) {
+                prop.load(input);
+            } catch (IOException e) {
+                throw new MicroRegistryManagerException("Error occurred while adding property" + message, e);
+            }
+        }
+        try (OutputStream output = new FileOutputStream(targetPath + propertiesFileName)) {
+            prop.setProperty(propertyName, value);
+            prop.store(output, null);
+        } catch (IOException e) {
+            throw new MicroRegistryManagerException("Error occurred while adding property" + message, e);
+        }
+    }
+
+    /**
+     * Function to update existing property from the Micro Registry
+     *
+     * @param collectionPath resource path in WSO2 registry path style
+     * @param resourceName resource path in WSO2 registry path style
+     * @param propertyName source file
+     * @return property value
+     * @throws MicroRegistryManagerException if error occurred while updating resource
+     */
+    public String getProperty(String collectionPath, String resourceName, String propertyName) throws
+            MicroRegistryManagerException {
+
+        StringBuilder pathBuilder = new StringBuilder();
+        pathBuilder.append(System.getProperty("carbon.home")).append(File.separator).append("registry").append(File.separator);
+
+        if (collectionPath.startsWith(CONF_PATH)) {
+            String relativePath = collectionPath.substring(5).replace('/', File.separatorChar);
+            pathBuilder.append("config").append(relativePath);
+        } else if (collectionPath.startsWith(GOV_PATH)) {
+            String relativePath = collectionPath.substring(4).replace('/', File.separatorChar);
+            pathBuilder.append("governance").append(relativePath);
+        } else {
+            throw new MicroRegistryManagerException("Unknown resource path: " + collectionPath);
+        }
+
+        String targetPath = pathBuilder.toString();
+        String message = " get property:" + propertyName + " from: " + targetPath;
+        try (InputStream input = new FileInputStream(targetPath + resourceName + ".properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+            return prop.getProperty(propertyName);
+        } catch (IOException e) {
+            throw new MicroRegistryManagerException("Error occurred while adding property" + message, e);
         }
     }
 
