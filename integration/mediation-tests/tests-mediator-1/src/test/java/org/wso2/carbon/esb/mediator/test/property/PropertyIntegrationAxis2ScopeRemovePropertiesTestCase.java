@@ -106,14 +106,9 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
      * 'symbol = some_value' and then checks whether another 'symbol = null' present,
      * to make sure a property is set and removed.
      */
-    private boolean isMatchFound(String matchStr) {
-        boolean isSet = false;
-        String logs = carbonLogReader.getLogs();
+    private boolean isMatchFound(String matchStr) throws InterruptedException {
+        boolean isSet = carbonLogReader.checkForLog(matchStr, 6) && carbonLogReader.checkForLog("symbol = null", 6);
         carbonLogReader.stop();
-
-        if (logs.contains(matchStr) && logs.contains("symbol = null")) {
-            isSet = true;
-        }
         return isSet;
     }
 }
