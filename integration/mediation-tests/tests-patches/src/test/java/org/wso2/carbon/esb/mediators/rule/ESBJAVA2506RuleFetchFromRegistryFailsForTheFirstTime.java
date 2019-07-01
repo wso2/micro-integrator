@@ -30,11 +30,12 @@ public class ESBJAVA2506RuleFetchFromRegistryFailsForTheFirstTime extends ESBInt
         super.init();
     }
 
+    // TODO re-attend to this test case when https://github.com/wso2/micro-integrator/issues/388 is fixed.
     @Test(groups = "wso2.esb", description = "Test whether proxy which has Rule "
-            + "mediator which fetch custom rules from registry in sequence get deployed through capp")
+            + "mediator which fetch custom rules from registry in sequence get deployed through capp", enabled = false)
     public void testRuleMediatorProxyDeployed() throws Exception {
         org.testng.Assert
-                .assertTrue(esbUtils.isProxyDeployed(contextUrls.getBackEndUrl(), getSessionCookie(), "proxyService2"),
+                .assertTrue(checkProxyServiceExistence("proxyService2"),
                         "ERROR - ProxyServiceDeployer ProxyService Deployment from the file : "
                                 + "esb-artifacts-rule-mediator-car_1.0.0.car/proxyService2_1.0.0/proxyService2-1.0.0.xml "
                                 + ": Failed");
