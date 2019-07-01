@@ -47,7 +47,7 @@ public class APIHeadMethod extends ESBIntegrationTest {
         HttpHead httpHead = new HttpHead(restURL);
         HttpResponse response = httpclient.execute(httpHead);
 
-        Assert.assertTrue(logReader.getLogs().contains("API_HIT"));
+        Assert.assertTrue(logReader.checkForLog("API_HIT", 60));
 
         // http head method should return a 200 OK
         assertTrue(response.getStatusLine().getStatusCode() == 200);
