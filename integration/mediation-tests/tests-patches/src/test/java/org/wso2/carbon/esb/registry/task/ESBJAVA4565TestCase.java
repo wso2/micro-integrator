@@ -24,15 +24,9 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.io.File;
-import java.nio.file.Paths;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
+import org.wso2.esb.integration.common.utils.Utils;
 
 /**
  * ESBJAVA-4565
@@ -41,52 +35,36 @@ import javax.activation.FileDataSource;
 
 public class ESBJAVA4565TestCase extends ESBIntegrationTest {
 
-    private static final String REGISTRY_ARTIFACT = "/_system/governance/services/test/config/ftp.xml";
-    private ResourceAdminServiceClient resourceAdminServiceStub;
-
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        verifySequenceExistence("ESBJAVA4565TestSequence");
-        resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(), getSessionCookie());
-
-        String ftpXmlPath = Paths.get(getESBResourceLocation(), "registry", "ftp.xml").toString();
-        resourceAdminServiceStub.addResource(REGISTRY_ARTIFACT, "application/xml", "FTP Test account details",
-                new DataHandler(new FileDataSource(new File(ftpXmlPath))));
 
         OMElement task = AXIOMUtil.stringToOM(
-                "<task:task xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"\n"
+                "<task \n"
                         + "           name=\"TestTask\"\n"
-                        + "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n"
-                        + "    <task:trigger interval=\"10\"/>\n"
-                        + "    <task:property name=\"format\" value=\"get\"/>\n"
-                        + "    <task:property name=\"sequenceName\" value=\"ESBJAVA4565TestSequence\"/>\n"
-                        + "    <task:property name=\"injectTo\" value=\"sequence\"/>\n"
-                        + "    <task:property name=\"message\"><empty/></task:property>\n" + "</task:task>");
-        this.addScheduledTask(task);
+                        + "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\" "
+                        + "xmlns=\"http://ws.apache.org/ns/synapse\">\n"
+                        + "    <trigger interval=\"10\"/>\n"
+                        + "    <property name=\"format\" "
+                        + "value=\"get\" xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n"
+                        + "    <property name=\"sequenceName\" value=\"ESBJAVA4565TestSequence\" "
+                        + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n"
+                        + "    <property name=\"injectTo\" value=\"sequence\" xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n"
+                        + "    <property name=\"message\" xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"><empty/></property>\n" + "</task>");
+        Utils.deploySynapseConfiguration(task, "TestTask", "tasks", true);
     }
 
     @Test(groups = "wso2.esb", description = "Analyze carbon logs to find NPE due to unresolved tenant domain.")
     public void checkErrorLog() throws Exception {
-        LogViewerClient cli = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        LogEvent[] logs = cli.getAllRemoteSystemLogs();
-        Assert.assertNotNull(logs, "No logs found");
-        Assert.assertTrue(logs.length > 0, "No logs found");
-        boolean hasErrorLog = false;
-        for (LogEvent logEvent : logs) {
-            String msg = logEvent.getMessage();
-            if (msg.contains("java.lang.NullPointerException: Tenant domain has not been set in CarbonContext")) {
-                hasErrorLog = true;
-                break;
-            }
-        }
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
+        boolean hasErrorLog = carbonLogReader.getLogs().contains("java.lang.NullPointerException: Tenant domain has not been set in CarbonContext");
         Assert.assertFalse(hasErrorLog,
                 "Tenant domain not resolved when registry resource is accessed inside " + "a scheduled task");
     }
 
     @AfterClass(alwaysRun = true, enabled = false)
     public void UndeployService() throws Exception {
-        resourceAdminServiceStub.deleteResource(REGISTRY_ARTIFACT);
         super.cleanup();
     }
 }
