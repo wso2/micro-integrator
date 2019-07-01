@@ -60,6 +60,7 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         //Check if the property we set is used
         boolean validLogMessage = validateLogMessage(OLD_VALUE);
         Assert.assertTrue(validLogMessage);
+        carbonLogReader.stop();
 
         //Update the registry value
         updateResourcesInConfigRegistry();
@@ -71,15 +72,15 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         //Check if the new value is being used
         boolean validChangedLogMessage = validateLogMessage(NEW_VALUE);
         Assert.assertTrue(validChangedLogMessage);
+        carbonLogReader.stop();
 
     }
 
     private boolean validateLogMessage(String value) throws InterruptedException {
         String logs = carbonLogReader.getLogs();
-        carbonLogReader.stop();
         Assert.assertNotNull(logs, "No logs found");
         Assert.assertTrue(logs.length() > 0, "No logs found");
-        return Utils.checkForLog(carbonLogReader, value, 2);
+        return Utils.checkForLog(carbonLogReader, value, 10);
     }
 
     private void SendRequest() {

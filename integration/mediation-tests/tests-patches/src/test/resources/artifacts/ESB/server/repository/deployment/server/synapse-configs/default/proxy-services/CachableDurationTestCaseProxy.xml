@@ -25,17 +25,12 @@
     <description/>
     <target>
         <inSequence>
-            <in>
-                <property name="test" expression="get-property('registry','conf:/cache@cache_test')" scope="default"/>
-                <log level="custom">
-                    <property name="FROM" value="in"/>
-                    <property name="test" expression="$ctx:test"/>
-                </log>
-                <drop/>
-            </in>
-            <out>
-                <drop/>
-            </out>
+            <property name="test" expression="get-property('registry','conf:/cache@cache_test')" scope="default"/>
+            <log level="custom">
+                <property name="FROM" value="in"/>
+                <property name="test" expression="$ctx:test"/>
+            </log>
+            <drop/>
         </inSequence>
     </target>
 </proxy>
