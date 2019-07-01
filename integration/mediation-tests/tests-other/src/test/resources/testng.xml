@@ -99,6 +99,13 @@
         <packages>
             <package name="org.wso2.carbon.esb.mediationstats.*"/>
         </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.mediationstats.test.MediationStatEnableTestCase">
+                <methods>
+                    <exclude name="*"/>
+                </methods>
+            </class>
+        </classes>
     </test>
     
     <test name="Stats-Test" preserve-order="true" verbose="2">
