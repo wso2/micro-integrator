@@ -16,8 +16,10 @@
     </test>
 
     <test name="ESB-Sample-Messaging-Test-1" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.messaging.*"/>
+        </packages>
         <classes>
-            <class name="org.wso2.carbon.esb.samples.test.messaging.Sample705TestCase"/>
             <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample701TestCase">
                 <methods>
                     <exclude name=".*"/>
@@ -29,23 +31,6 @@
                 </methods>
             </class>
             <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample704TestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
-            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample700TestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
-        </classes>
-    </test>
-    <test name="ESB-Sample-Messaging-Test-2" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.samples.test.messaging.*"/>
-        </packages>
-        <classes>
-            <class name="org.wso2.carbon.esb.samples.test.messaging.Sample705TestCase">
                 <methods>
                     <exclude name=".*"/>
                 </methods>
