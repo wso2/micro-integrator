@@ -67,7 +67,8 @@ public class CarbonServerManager {
     private static int defaultHttpPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTP_PORT);
     private static int defaultHttpsPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTPS_PORT);
     private String scriptName;
-    private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
+    private static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
+    private static final String SERVER_STARTUP_MESSAGE = "Listener started on 0.0.0.0:";
 
     public CarbonServerManager(AutomationContext context) {
         this.automationContext = context;
@@ -143,7 +144,9 @@ public class CarbonServerManager {
                 }
             }));
 
-            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 60, TimeUnit.SECONDS);
+            waitTill(() ->
+                            !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset)),
+                    60, TimeUnit.SECONDS);
 
             if (!inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE)) {
                 throw new RuntimeException("Server initialization failed");
