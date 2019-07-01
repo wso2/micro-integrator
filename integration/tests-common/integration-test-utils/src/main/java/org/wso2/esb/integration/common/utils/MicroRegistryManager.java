@@ -149,33 +149,21 @@ public class MicroRegistryManager {
         String message = " property name:" + propertyName + " to: " + targetPath;
 
         boolean isExists = new File(targetPath + resourceName).isFile();
-        if (!isExists) {
-            try {
+        try {
+            if (!isExists) {
                 new File(targetPath + resourceName).createNewFile();
                 new File(targetPath + propertiesFileName).createNewFile();
-            } catch (IOException e) {
-                throw new MicroRegistryManagerException("Error occurred while creating of file: " + targetPath, e);
             }
-        }
-
-        if (backupOriginal) {
-            //backup original file if exists
-            try {
+            if (backupOriginal) {
+                //backup original file if exists
                 backupFile(targetPath);
-            } catch (IOException e) {
-                throw new MicroRegistryManagerException("Error occurred while taking backup of file: " + targetPath, e);
             }
-        }
-
-        Properties prop = new Properties();
-        if (isExists) {
-            try (InputStream input = new FileInputStream(targetPath + propertiesFileName)) {
+            Properties prop = new Properties();
+            if (isExists) {
+                InputStream input = new FileInputStream(targetPath + propertiesFileName);
                 prop.load(input);
-            } catch (IOException e) {
-                throw new MicroRegistryManagerException("Error occurred while adding property" + message, e);
             }
-        }
-        try (OutputStream output = new FileOutputStream(targetPath + propertiesFileName)) {
+            OutputStream output = new FileOutputStream(targetPath + propertiesFileName);
             prop.setProperty(propertyName, value);
             prop.store(output, null);
         } catch (IOException e) {
@@ -215,7 +203,7 @@ public class MicroRegistryManager {
             prop.load(input);
             return prop.getProperty(propertyName);
         } catch (IOException e) {
-            throw new MicroRegistryManagerException("Error occurred while adding property" + message, e);
+            throw new MicroRegistryManagerException("Error occurred while getting property" + message, e);
         }
     }
 
