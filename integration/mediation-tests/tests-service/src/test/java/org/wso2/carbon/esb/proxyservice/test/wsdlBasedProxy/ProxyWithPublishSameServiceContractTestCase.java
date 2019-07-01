@@ -18,12 +18,18 @@
 package org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.apache.commons.io.FileUtils;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.ESBTestConstant;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import javax.xml.namespace.QName;
+
+import java.io.File;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -33,9 +39,12 @@ public class ProxyWithPublishSameServiceContractTestCase extends ESBIntegrationT
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/proxyconfig/proxy/wsdlBasedProxy/proxy_service_with_publish_same_service_contract.xml");
-
+        OMElement publishSameServiceContractTestProxy = AXIOMUtil.stringToOM(FileUtils.readFileToString(
+                new File(getESBResourceLocation() + File.separator + "proxyconfig" + File.separator +
+                        "proxy" + File.separator + "wsdlBasedProxy" + File.separator +
+                        "proxy_service_with_publish_same_service_contract.xml")));
+        Utils.deploySynapseConfiguration(publishSameServiceContractTestProxy, "publishSameServiceContractTestProxy",
+                "proxy-services", true);
     }
 
     @Test(groups = "wso2.esb", description = "- WSDL based proxy"
@@ -43,7 +52,8 @@ public class ProxyWithPublishSameServiceContractTestCase extends ESBIntegrationT
     public void testWSDLBasedProxy() throws Exception {
 
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("publishSameServiceContractTestProxy"), null,
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("publishSameServiceContractTestProxy"),
+                        getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE) + "?wsdl",
                         "WSO2");
 
         String lastPrice = response.getFirstElement()
@@ -53,12 +63,11 @@ public class ProxyWithPublishSameServiceContractTestCase extends ESBIntegrationT
         String symbol = response.getFirstElement()
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
-
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        Utils.undeploySynapseConfiguration("publishSameServiceContractTestProxy", "proxy-services", false);
     }
 
 }
