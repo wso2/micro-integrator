@@ -65,8 +65,9 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
                 "Valid Request failed. Response: " + response.getData());
     }
 
+    // TODO enable this test case once https://github.com/wso2/micro-integrator/issues/388 is fixed
     @Test(groups = "wso2.esb", description = "Validating the request payload against the JSON Schema "
-            + "stored in config registry")
+            + "stored in config registry", enabled = false)
     public void validRequestTest2() throws Exception {
         String payload = "{" + "  \"getQuote\": {" + "    \"request\": { \"symbol\": \"WSO2\" }" + "  }" + "}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonSchemaFromRegTestProxy")),
@@ -87,8 +88,9 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
                 "Validation must be failed. Response: " + response.getData());
     }
 
+    // TODO enable this test case once https://github.com/wso2/micro-integrator/issues/388 is fixed
     @Test(groups = "wso2.esb", description = "Validating the invalid request payload having invalid "
-            + "element against the JSON Schema stored in config registry")
+            + "element against the JSON Schema stored in config registry", enabled = false)
     public void inValidRequestTest2() throws Exception {
         String payload = "{" + "  \"getQuote\": {" + "    \"request\": { \"symbol1\": \"WSO2\" }" + "  }" + "}";
         HttpResponse response = doPost(new URL(getProxyServiceURLHttp("validateMediatorJsonSchemaFromRegTestProxy")),
@@ -121,13 +123,16 @@ public class ValidateJSONSchemaTestCase extends ESBIntegrationTest {
                 "Validation must be failed. Response: " + response.getData());
     }
 
+    // TODO enable this test case once https://github.com/wso2/micro-integrator/issues/388 is fixed
+
     /**
      * Send a series of valid and invalid requests and see if
      * validation works in the expected way
      *
      * @throws Exception on a test exception
      */
-    @Test(groups = "wso2.esb", description = "Validating the valid and invalid requests series against the JSON Schema")
+    @Test(groups = "wso2.esb", description = "Validating the valid and invalid requests series against the JSON " +
+            "Schema", enabled = false)
     public void validAndInvalidRequestTest() throws Exception {
         sendInvalidRequestAndAssert();
         sendInvalidRequestAndAssert();
