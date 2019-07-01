@@ -61,12 +61,6 @@
         </packages>
     </test>
 
-    <test name="Security-Test-Tryit" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.security.test.tryit"/>
-        </packages>
-    </test>
-
     <!-- Disabled due to jenkins failure with "no space left on device" -->
     <!--<test name="Test-Multiple-servers" preserve-order="true" verbose="2">-->
     <!--<classes>-->
