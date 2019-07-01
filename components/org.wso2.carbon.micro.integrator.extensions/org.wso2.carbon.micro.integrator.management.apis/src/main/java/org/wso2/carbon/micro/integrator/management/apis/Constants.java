@@ -19,7 +19,7 @@
 package org.wso2.carbon.micro.integrator.management.apis;
 
 public class Constants {
-
+    //Constants for the API resource prefixes
     public static final String REST_API_CONTEXT = "/management";
     public static final String PREFIX_APIS = "/apis";
     public static final String PREFIX_CARBON_APPS = "/applications";
@@ -30,6 +30,7 @@ public class Constants {
     public static final String PREFIX_SEQUENCES = "/sequences";
     public static final String PREFIX_DATA_SERVICES = "/data-services";
     public static final String PREFIX_TEMPLATES = "/templates";
+    public static final String PREFIX_MESSAGE_STORE = "/message-stores";
     public static final String PREFIX_MESSAGE_PROCESSORS = "/message-processors";
 
     public static final String COUNT = "count";
