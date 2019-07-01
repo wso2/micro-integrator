@@ -405,12 +405,36 @@ func TestUnmarshalDataNotFound(t *testing.T) {
 
 	params := make(map[string]string)
 	params["apiName"] = "ABC"
-	defer server.Close()
 
 	resp, err := UnmarshalData(server.URL, params, &API{})
 
 	if resp != nil {
 		t.Error("Response should be nil")
+	}
+
+	if err == nil {
+		t.Error("Error " + err.Error())
+	}
+}
+
+func TestUnmarshalDataBadRequest(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNotFound)
+		if r.Method != http.MethodGet {
+			t.Errorf("Expected method '%s', got '%s'\n", http.MethodGet, r.Method)
+		}
+		body := dedent.Dedent(`
+		{
+			"Error": "Invalid log level abc"
+		}`)
+		w.Write([]byte(body))
+	}))
+	defer server.Close()
+
+	resp, err := UnmarshalData(server.URL, nil, &Logger{})
+
+	if resp == nil {
+		t.Error(`Response should be, "Error": "Invalid log level abc"`)
 	}
 
 	if err == nil {

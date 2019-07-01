@@ -16,24 +16,24 @@
 * under the License.
  */
 
-package utils
+package cmd
 
 import (
-	"testing"
+	"github.com/spf13/cobra"
 )
 
-// test case 1 - for a file that does not exist
-func TestIsFileExist1(t *testing.T) {
-	isFileExist := IsFileExist("random-string")
-	if isFileExist {
-		t.Errorf("Expected '%t' for a file that does not exist, got '%t' instead\n", false, true)
-	}
+// Composite App command related usage info
+const appCmdLiteral = "compositeapp"
+const appCmdShortDesc = "Manage deployed Composite Apps"
+const appCmdLongDesc = "Manage the Composite Apps deployed in the Micro Integrator"
+
+// compositeAppCmd represents the composite app command
+var compositeAppCmd = &cobra.Command{
+	Use:   appCmdLiteral,
+	Short: appCmdShortDesc,
+	Long:  appCmdLongDesc,
 }
 
-// test for a file that does exist
-func TestIsFileExist2(t *testing.T) {
-	isFileExist := IsFileExist("./fileIOUtils.go")
-	if !isFileExist {
-		t.Errorf("Expected '%t' for a file that does exist,  got '%t' instead\n", true, false)
-	}
+func init() {
+	RootCmd.AddCommand(compositeAppCmd)
 }

@@ -16,24 +16,24 @@
 * under the License.
  */
 
-package utils
+package cmd
 
 import (
-	"testing"
+	"github.com/spf13/cobra"
 )
 
-// test case 1 - for a file that does not exist
-func TestIsFileExist1(t *testing.T) {
-	isFileExist := IsFileExist("random-string")
-	if isFileExist {
-		t.Errorf("Expected '%t' for a file that does not exist, got '%t' instead\n", false, true)
-	}
+// List APIs command related usage info
+const logLevelCmdLiteral = "log-level"
+const logLevelCmdShortDesc = "Manage log4j properties"
+const logLevelCmdLongDesc = "Update and view log4j properties in the Micro Integrator"
+
+// apisListCmd represents the list apis command
+var logLevelCmd = &cobra.Command{
+	Use:   logLevelCmdLiteral,
+	Short: logLevelCmdShortDesc,
+	Long:  logLevelCmdLongDesc,
 }
 
-// test for a file that does exist
-func TestIsFileExist2(t *testing.T) {
-	isFileExist := IsFileExist("./fileIOUtils.go")
-	if !isFileExist {
-		t.Errorf("Expected '%t' for a file that does exist,  got '%t' instead\n", true, false)
-	}
+func init() {
+	RootCmd.AddCommand(logLevelCmd)
 }

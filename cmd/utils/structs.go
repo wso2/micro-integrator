@@ -18,9 +18,22 @@
 
 package utils
 
-type ServerConfig struct {
+type RemoteConfig struct {
+	Remotes       Remotes `yaml:"servers"`
+	CurrentServer string  `yaml:"current_server"`
+}
+
+type Remotes map[string]Remote
+
+type Remote struct {
 	Url  string `yaml:"server_address"`
 	Port string `yaml:"server_port"`
+}
+
+type Logger struct {
+	Name       string `json:"name"`
+	ParentName string `json:"parent"`
+	LogLevel   string `json:"level"`
 }
 
 type CarbonAppList struct {

@@ -25,15 +25,15 @@ import (
 
 var dataServiceNameInput string
 
-const showDataServiceCmdLiteral = "dataservice"
-const showDataServiceCmdShortDesc = "Show details about a specific data service"
-const showDataServiceCmdLongDesc = "Show details about a data service specified by the name"
+const showDataServiceCmdLiteral = "show"
+const showDataServiceCmdShortDesc = "Show infomation about data services"
+const showDataServiceCmdLongDesc = "Get information about the Data service specified by command line argument [dataservice-name] If not specified, list all the data services\n"
 
 var showDataServiceCmdExmaples = "Example:\n" +
 	"To get details about a specific data-service\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showDataServiceCmdLiteral + " SampleDataService\n\n" +
+	"  " + programName + " " + dataServicesCmdLiteral + " " + showDataServiceCmdLiteral + " SampleDataService\n\n" +
 	"To list all the proxies\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showDataServiceCmdLiteral + "\n\n"
+	"  " + programName + " " + dataServicesCmdLiteral + " " + showDataServiceCmdLiteral + "\n\n"
 
 // dataServiceInfoCmd represents the dataServiceInfo command
 var dataServiceInfoCmd = &cobra.Command{
@@ -47,7 +47,7 @@ var dataServiceInfoCmd = &cobra.Command{
 }
 
 func init() {
-	showCmd.AddCommand(dataServiceInfoCmd)
+	dataServiceCmd.AddCommand(dataServiceInfoCmd)
 }
 
 func handleDataServiceCmdArguments(args []string) {
@@ -66,6 +66,20 @@ func handleDataServiceCmdArguments(args []string) {
 	}
 }
 
+func executeDataServiceListCmd() {
+	finalURL := utils.GetRESTAPIBase() + utils.PrefixDataServices
+
+	resp, err := utils.UnmarshalData(finalURL, nil, &utils.DataServicesList{})
+
+	if err == nil {
+		// print the list of available data services
+		list := resp.(*utils.DataServicesList)
+		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No dataservices found")
+	} else {
+		utils.Logln(utils.LogPrefixError+"Getting List of Dataservices", err)
+	}
+}
+
 func executeGetDataServiceCmd(dataServiceName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixDataServices, "dataServiceName", dataServiceName)
 	resp, err := utils.UnmarshalData(finalUrl, params, &utils.DataServiceInfo{})
@@ -81,8 +95,8 @@ func executeGetDataServiceCmd(dataServiceName string) {
 }
 
 func printShowDataServiceHelp() {
-	fmt.Println(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showDataServiceCmdLiteral,
-		"[data-service-name]") + showDataServiceCmdExmaples + utils.GetCmdFlags("data-service"))
+	fmt.Println(showProxyServiceCmdLongDesc + utils.GetCmdUsage(programName, dataServicesCmdLiteral, showDataServiceCmdLiteral,
+		"[data-service-name]") + showDataServiceCmdExmaples + utils.GetCmdFlags(dataServicesCmdLiteral))
 }
 
 func printDataServiceInfo(dataServiceInfo utils.DataServiceInfo) {

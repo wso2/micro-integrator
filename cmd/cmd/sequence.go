@@ -16,24 +16,24 @@
 * under the License.
  */
 
-package utils
+package cmd
 
 import (
-	"testing"
+	"github.com/spf13/cobra"
 )
 
-// test case 1 - for a file that does not exist
-func TestIsFileExist1(t *testing.T) {
-	isFileExist := IsFileExist("random-string")
-	if isFileExist {
-		t.Errorf("Expected '%t' for a file that does not exist, got '%t' instead\n", false, true)
-	}
+// Seqeunce command related usage info
+const sequenceCmdLiteral = "sequence"
+const sequenceCmdShortDesc = "Manage deployed Seqeunces"
+const sequenceCmdLongDesc = "Manage the Seqeunces deployed in the Micro Integrator"
+
+// sequencesListCmd represents the list sequences command
+var sequenceCmd = &cobra.Command{
+	Use:   sequenceCmdLiteral,
+	Short: sequenceCmdShortDesc,
+	Long:  sequenceCmdLongDesc,
 }
 
-// test for a file that does exist
-func TestIsFileExist2(t *testing.T) {
-	isFileExist := IsFileExist("./fileIOUtils.go")
-	if !isFileExist {
-		t.Errorf("Expected '%t' for a file that does exist,  got '%t' instead\n", true, false)
-	}
+func init() {
+	RootCmd.AddCommand(sequenceCmd)
 }

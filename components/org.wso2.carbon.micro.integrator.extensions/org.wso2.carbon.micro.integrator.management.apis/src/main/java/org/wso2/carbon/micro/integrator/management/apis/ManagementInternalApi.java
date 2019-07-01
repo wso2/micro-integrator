@@ -31,6 +31,7 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_DATA_SERVICES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_ENDPOINTS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_INBOUND_ENDPOINTS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_LOGGING;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
@@ -59,6 +60,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new SequenceResource(PREFIX_SEQUENCES));
         resourcesList.add(new DataServiceResource(PREFIX_DATA_SERVICES));
         resourcesList.add(new TemplateResource(PREFIX_TEMPLATES));
+        resourcesList.add(new LoggingResource(PREFIX_LOGGING));
         resourcesList.add(new ApiResourceAdapter(PREFIX_MESSAGE_STORE, new MessageStoreResource()));
         resourcesList.add(new MessageProcessorResource(PREFIX_MESSAGE_PROCESSORS));
 

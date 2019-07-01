@@ -588,6 +588,81 @@ curl -X GET "https://localhost:9164/management/sequences?sequenceName=InjectXMLS
 | ---- | ----------- | ------ |
 | 404 | Not Found. Requested Sequence doesnot exist |  |
 
+### /logging
+
+#### PATCH
+##### Summary:
+
+Enable or Disable loggers
+
+##### Description:
+
+This operation provides you the ability to Enable or Disable loggers
+
+##### Request
+###### Body
+```
+{
+  "loggingLevel": "OFF",
+  "loggerName": root
+}
+```
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | OK. Logger updated. ||    
+| 400 | Bad Request. ||
+| 500 | Internal Server Error. ||
+
+##### Example
+
+```
+curl -X PATCH "https://localhost:9164/management/logging" -H "accept: application/json" -d "{"loggingLevel": "DEBUG",  "loggerName": "org.apache.coyote}"-k
+```
+```
+```json
+{
+  "message": "Successfully updated org.apache.coyote level to DEBUG"
+}
+```
+
+#### GET
+##### Summary:
+
+Get log level of a logger
+
+##### Description:
+
+This operation provides you the ability to retrieve logger data
+
+##### Parameters
+
+| Name | Located in | Description | Required | Schema |
+| ---- | ---------- | ----------- | -------- | ---- |
+| loggerName | query | Name of the Logger | Yes | string |
+
+##### Responses
+
+| Code | Description | Schema |
+| ---- | ----------- | ------ |
+| 200 | OK. | [LoggerInfo](#loggerinfo) |    
+| 400 | Bad Request. ||
+| 500 | Internal Server Error. ||
+
+##### Example
+
+```
+curl -X GET "https://localhost:9164/management/logging?loggerName=org.apache.coyote" -H "accept: application/json" -k
+```
+```json
+{
+  "name": "org.apache.coyote",
+  "level":"WARN",
+  "parent":"root"
+}
+```
+
 ### Models
 
 #### Artifacts
@@ -784,3 +859,11 @@ curl -X GET "https://localhost:9164/management/sequences?sequenceName=InjectXMLS
 | ---- | ---- | ----------- | -------- |
 | count | integer |  | No |
 | list | [ [SequenceSummary](#sequencesummary) ] |  | No |
+
+#### LoggerInfo
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| name | string |  | No |
+| parent | string |  | No |
+| level | string |  | No |

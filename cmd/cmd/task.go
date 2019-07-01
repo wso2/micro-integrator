@@ -20,25 +20,20 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
-// List Endpoints command related usage info
-const listEndpointsCmdLiteral = "endpoints"
+// Task command related usage info
+const taskCmdLiteral = "task"
+const taskCmdShortDesc = "Manage deployed Tasks"
+const taskCmdLongDesc = "Manage the Tasks deployed in the Micro Integrator"
 
-// endpointsListCmd represents the list endpoints command
-var endpointsListCmd = &cobra.Command{
-	Use:   listEndpointsCmdLiteral,
-	Short: showEndpointCmdShortDesc,
-	Long:  showEndpointCmdLongDesc + showEndpointCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		// defined in endpointInfo.go
-		handleEndpointCmdArguments(args)
-	},
+// taskCmd represents the task command
+var taskCmd = &cobra.Command{
+	Use:   taskCmdLiteral,
+	Short: taskCmdShortDesc,
+	Long:  taskCmdLongDesc,
 }
 
 func init() {
-	showCmd.AddCommand(endpointsListCmd)
-	endpointsListCmd.SetHelpTemplate(showEndpointCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showEndpointCmdLiteral, "[endpointname]") + showEndpointCmdExamples + utils.GetCmdFlags("endpoint(s)"))
+	RootCmd.AddCommand(taskCmd)
 }

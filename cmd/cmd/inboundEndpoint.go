@@ -20,25 +20,20 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"github.com/wso2/micro-integrator/cmd/utils"
 )
 
-// List Seqeunces command related usage info
-const listSequenceCmdLiteral = "sequences"
+// Inbound Endpoint command related usage info
+const inboundEndpointCmdLiteral = "inboundendpoint"
+const inboundEndpointCmdShortDesc = "Manage deployed Inbound Endpoints"
+const inboundEndpointCmdLongDesc = "Manage the Inbound Endpoints deployed in the Micro Integrator"
 
-// sequencesListCmd represents the list sequences command
-var sequencesListCmd = &cobra.Command{
-	Use:   listSequenceCmdLiteral,
-	Short: showSequenceCmdShortDesc,
-	Long:  showSequenceCmdLongDesc + showSequenceCmdExamples,
-	Run: func(cmd *cobra.Command, args []string) {
-		// defined in seqeunceInfo.go
-		handleSequenceCmdArguments(args)
-	},
+// inboundEndpointCmd represents the inboundEndpoint command
+var inboundEndpointCmd = &cobra.Command{
+	Use:   inboundEndpointCmdLiteral,
+	Short: inboundEndpointCmdShortDesc,
+	Long:  inboundEndpointCmdLongDesc,
 }
 
 func init() {
-	showCmd.AddCommand(sequencesListCmd)
-	sequencesListCmd.SetHelpTemplate(showSequenceCmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showSequenceCmdLiteral, "[sequence-name]") + showSequenceCmdExamples + utils.GetCmdFlags("sequence(s)"))
+	RootCmd.AddCommand(inboundEndpointCmd)
 }

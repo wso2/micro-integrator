@@ -42,8 +42,7 @@ public class SequenceResource extends APIResource {
     @Override
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
-        methods.add("GET");
-        methods.add("POST");
+        methods.add(Constants.HTTP_GET);
         return methods;
     }
 

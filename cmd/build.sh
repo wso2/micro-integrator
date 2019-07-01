@@ -165,7 +165,7 @@ do
     mi_archive_dir="${buildPath}/${mi_dir_name}"
     mkdir -p $mi_archive_dir
 
-    cp -r "${baseDir}/server_config.yaml" $mi_archive_dir > /dev/null 2>&1
+    cp -r "${baseDir}/docs/README.md" $mi_archive_dir > /dev/null 2>&1
     cp -r "${baseDir}/LICENSE" $mi_archive_dir > /dev/null 2>&1
 
     if [[ "windows" != "$goos" ]]; then

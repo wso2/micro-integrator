@@ -26,7 +26,6 @@ import (
 const ProjectName = "mi"
 
 // File Names and Paths
-var CurrentDir, _ = os.Getwd()
 
 const ConfigDirName = ".wso2micli"
 
@@ -42,7 +41,6 @@ var EnvKeysAllFilePath = filepath.Join(ConfigDirPath, EnvKeysAllFileName)
 const ServerConfigFileName = "server_config.yaml"
 const SampleMainConfigFileName = "main_config.yaml.sample"
 
-var ServerConfigFilePath = filepath.Join(CurrentDir, ServerConfigFileName)
 var SampleMainConfigFilePath = filepath.Join(ConfigDirPath, SampleMainConfigFileName)
 
 const ExportDirName = "exported"
@@ -83,6 +81,7 @@ const DefaultHttpRequestTimeout = 100000
 // Default Server Address
 const HTTPProtocol = "http://"
 const HTTPSProtocol = "https://"
+const DefaultRemoteName = "default"
 const DefaultHost = "localhost"
 const DefaultPort = "9164"
 const Context = "management"
@@ -96,5 +95,6 @@ const PrefixInboundEndpoints = "inbound-endpoints"
 const PrefixEndpoints = "endpoints"
 const PrefixSequences = "sequences"
 const PrefixTasks = "tasks"
+const PrefixLogging = "logging"
 const PrefixServer = "server"
 const PrefixDataServices = "data-services"

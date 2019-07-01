@@ -37,18 +37,15 @@ var rootCmdLongDesc = dedent.Dedent(`
         ` + programName + ` is a Command Line Tool for Management of WSO2 Micro Integrator
         `)
 
-var rootCmdValidArgs = []string{"init", "show", "version", "help"}
-
-// rootCmd represents the base command when called without any subcommands
+// RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
-	Use:       programName,
-	Short:     rootCmdShortDesc,
-	Long:      rootCmdLongDesc,
-	ValidArgs: rootCmdValidArgs,
+	Use:   programName,
+	Short: rootCmdShortDesc,
+	Long:  rootCmdLongDesc,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
+// This is called by main.main(). It only needs to happen once to the RootCmd.
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
 		os.Exit(1)
@@ -59,12 +56,6 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	RootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "Enable verbose mode")
-
-	// Init ServerConfigVars
-	err := utils.SetConfigVars(utils.ServerConfigFilePath)
-	if err != nil {
-		utils.HandleErrorAndExit("Error reading "+utils.ServerConfigFileName+".", err)
-	}
 }
 
 // initConfig reads in config file and ENV variables if set.

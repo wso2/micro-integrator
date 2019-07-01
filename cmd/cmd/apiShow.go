@@ -29,16 +29,16 @@ import (
 var apiName string
 
 // Show API command related usage info
-const showAPICmdLiteral = "api"
+const showAPICmdLiteral = "show"
 const showAPICmdShortDesc = "Get information about APIs"
 
-var showAPICmdLongDesc = "Get information about the API specified by command line argument [api-name] If not specified, list all the apis\n"
+const showAPICmdLongDesc = "Get information about the API specified by command line argument [api-name] If not specified, list all the apis\n"
 
 var showAPICmdExamples = "Example:\n" +
 	"To get details about a specific api\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + " TestAPI\n\n" +
+	"  " + programName + " " + apiCmdLiteral + " " + showAPICmdLiteral + " TestAPI\n\n" +
 	"To list all the apis\n" +
-	"  " + programName + " " + showCmdLiteral + " " + showAPICmdLiteral + "\n\n"
+	"  " + programName + " " + apiCmdLiteral + " " + showAPICmdLiteral + "\n\n"
 
 // apiShowCmd represents the show api command
 var apiShowCmd = &cobra.Command{
@@ -51,9 +51,9 @@ var apiShowCmd = &cobra.Command{
 }
 
 func init() {
-	showCmd.AddCommand(apiShowCmd)
-	apiShowCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral,
-		showAPICmdLiteral, "[api-name]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
+	apiCmd.AddCommand(apiShowCmd)
+	apiShowCmd.SetHelpTemplate(showAPICmdLongDesc + utils.GetCmdUsage(programName, apiCmdLiteral,
+		showAPICmdLiteral, "[api-name]") + showAPICmdExamples + utils.GetCmdFlags(apiCmdLiteral))
 }
 
 func handleAPICmdArguments(args []string) {
@@ -74,8 +74,8 @@ func handleAPICmdArguments(args []string) {
 }
 
 func printAPIHelp() {
-	fmt.Print(showAPICmdLongDesc + utils.GetCmdUsage(programName, showCmdLiteral, showAPICmdLiteral,
-		"[api-name]") + showAPICmdExamples + utils.GetCmdFlags("api(s)"))
+	fmt.Print(showAPICmdLongDesc + utils.GetCmdUsage(programName, apiCmdLiteral, showAPICmdLiteral,
+		"[api-name]") + showAPICmdExamples + utils.GetCmdFlags(apiCmdLiteral))
 }
 
 func executeGetAPICmd(apiname string) {
@@ -132,7 +132,7 @@ func printAPIInfo(api utils.API) {
 
 func executeListAPIsCmd() {
 
-	finalUrl := utils.RESTAPIBase + utils.PrefixAPIs
+	finalUrl := utils.GetRESTAPIBase() + utils.PrefixAPIs
 
 	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.APIList{})
 
