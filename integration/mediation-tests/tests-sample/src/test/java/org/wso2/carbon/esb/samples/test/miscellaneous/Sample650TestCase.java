@@ -19,6 +19,7 @@ package org.wso2.carbon.esb.samples.test.miscellaneous;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.io.FileUtils;
+import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,10 +29,13 @@ import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.esb.samples.test.util.ESBSampleIntegrationTest;
 import org.wso2.esb.integration.common.clients.localentry.LocalEntriesAdminClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
 import java.io.File;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 
@@ -39,6 +43,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
 
     private LocalEntriesAdminClient localEntriesAdminClient;
     private ServerConfigurationManager serverManager = null;
+    private static final String MANAGEMENT_API_MESSAGE = "Listener started on 0.0.0.0:";
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
@@ -62,10 +67,14 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
 
         FileUtils.moveDirectory(newDir, targetDir);
 
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         serverManager.applyMIConfigurationWithRestart(new File(
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
                         + File.separator + "miscellaneous" + File.separator + "axis2.xml"));
 
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(5000, TimeUnit.SECONDS).
+                until(isManagementApiAwailable(carbonLogReader));
         // serverManager.restartGracefully();
         super.init();
 
@@ -127,6 +136,15 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test tasks")
     public void testTasks() throws Exception {
         assertTrue(getNoOfArtifacts("tasks") == 1, "tasks not added");
+    }
+
+    private Callable<Boolean> isManagementApiAwailable(final CarbonLogReader carbonLogReader) {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return carbonLogReader.getLogs().contains(MANAGEMENT_API_MESSAGE + (9154 + getPortOffset()));
+            }
+        };
     }
 
     @AfterClass(alwaysRun = true)
