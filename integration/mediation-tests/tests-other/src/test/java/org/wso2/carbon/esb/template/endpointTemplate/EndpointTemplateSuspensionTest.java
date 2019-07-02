@@ -88,7 +88,7 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
 
         //Check logs to verify endpoint suspension
         boolean epSuspended = Utils.checkForLog(carbonLogReader,
-                "testEP1 with address http://localhost:8480/testbe has been marked for SUSPENSION", 50);
+                "testEP1 with address http://localhost:8480/testbe has been marked for SUSPENSION", 10);
 
         Assert.assertTrue(epSuspended, "template endpoint suspension failed");
         carbonLogReader.stop();
