@@ -17,23 +17,15 @@
  */
 package org.wso2.carbon.esb.handler;
 
+import java.io.IOException;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
-import org.wso2.esb.integration.common.utils.common.FileManager;
-import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-
-import java.io.File;
-import java.io.IOException;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
@@ -42,99 +34,58 @@ import static org.testng.Assert.fail;
  */
 public class HandlerTest extends ESBIntegrationTest {
 
-    private static final String CONF_NAME = "synapse-handlers.xml";
-    private static final String LOCATION = "/artifacts/ESB/handler";
-
-    private ServerConfigurationManager serverConfigurationManager;
-    private LogViewerClient logViewerClient;
+    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        serverConfigurationManager = new ServerConfigurationManager(context);
-        copyToComponentConf(getClass().getResource(LOCATION + "/" + CONF_NAME).getPath(), CONF_NAME);
-        serverConfigurationManager.restartForcefully();
-        super.init();
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logViewerClient.clearLogs();
+        carbonLogReader = new CarbonLogReader();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via proxy to check synapse handler logs")
-    public void testSynapseHandlerExecution() throws IOException, LogViewerLogViewerException {
-        boolean requestInStatus = false;
-        boolean requestOutStatus = false;
-        boolean responseInStatus = false;
-        boolean responseOutStatus = false;
+    @Test(groups = {"wso2.esb"}, description = "Sending a Message Via proxy to check synapse handler logs")
+    public void testSynapseHandlerExecution() throws IOException, InterruptedException {
         boolean handlerStatus = false;
+        carbonLogReader.start();
+
         OMElement response = axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxy"), null, "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxy"), null,
+                                             "WSO2");
         Assert.assertNotNull(response);
-        LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
-        for (LogEvent logEvent : logs) {
-            String message = logEvent.getMessage();
-            if (message.contains("handleRequestInFlow")) {
-                requestInStatus = true;
-            }
 
-            if (message.contains("handleRequestOutFlow")) {
-                requestOutStatus = true;
-            }
-
-            if (message.contains("handleResponseInFlow")) {
-                responseInStatus = true;
-            }
-
-            if (message.contains("handleResponseOutFlow")) {
-                responseOutStatus = true;
-            }
-        }
-
-        if (requestInStatus && requestOutStatus && responseInStatus && responseOutStatus) {
+        if (carbonLogReader.checkForLog("handleRequestInFlow", 6) &&
+                carbonLogReader.checkForLog("handleRequestOutFlow", 6) &&
+                carbonLogReader.checkForLog("handleResponseInFlow", 6) &&
+                carbonLogReader.checkForLog("handleResponseOutFlow", 6)) {
             handlerStatus = true;
         }
+        carbonLogReader.stop();
 
         Assert.assertTrue(handlerStatus, "Synapse handler not working properly");
-
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sending a message via proxy to check whether Synapse Handlers get "
+    @Test(groups = {"wso2.esb"}, description = "Sending a message via proxy to check whether Synapse Handlers get "
             + "invoked when a SoapFault come as a response")
     public void testSynapseHandlerExecutionWhenSoapFaultRecieved()
-            throws IOException, LogViewerLogViewerException, InterruptedException {
+            throws InterruptedException {
         boolean responseInStatus = false;
         boolean errorOnSoapFaultStatus = false;
-        logViewerClient.clearLogs();
+        carbonLogReader.clearLogs();
+        carbonLogReader.start();
         try {
             axis2Client
-                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxyWithSoapfault"), null, "WSO2");
+                    .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxyWithSoapfault"),
+                                                 null, "WSO2");
             fail("This query must throw an exception since SoapFault come as response");
         } catch (AxisFault expected) {
             assertEquals(expected.getReason(), "Custom ERROR Message", "Custom ERROR Message mismatched");
         }
 
-        errorOnSoapFaultStatus = Utils.checkForLogsWithPriority(logViewerClient, "INFO", "Fault Sequence Hit", 10);
-        responseInStatus = Utils.checkForLogsWithPriority(logViewerClient, "INFO", "handleResponseInFlow", 10);
+        errorOnSoapFaultStatus = carbonLogReader.checkForLog("Fault Sequence Hit", 10);
+        responseInStatus = carbonLogReader.checkForLog("handleResponseInFlow", 10);
+        carbonLogReader.stop();
 
         Assert.assertTrue(errorOnSoapFaultStatus, "When SoapFault come as a response the fault sequence hasn't been "
                 + "invoked because of FORCE_ERROR_ON_SOAP_FAULT property is not working properly");
         Assert.assertTrue(responseInStatus, "Synapse handler hasn't been invoked when a Soap Fault received");
-    }
-
-    private void copyToComponentConf(String sourcePath, String fileName) throws IOException {
-        String carbonHome = System.getProperty("carbon.home");
-        String targetPath = carbonHome + File.separator + "conf";
-        FileManager.copyResourceToFileSystem(sourcePath, targetPath, fileName);
-    }
-
-    private void removeFromComponentConf(String fileName) {
-        String carbonHome = System.getProperty("carbon.home");
-        String filePath = carbonHome + File.separator + "conf" + File.separator + fileName;
-        FileManager.deleteFile(filePath);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        removeFromComponentConf(getClass().getResource(LOCATION + "/" + CONF_NAME).getPath());
-        super.cleanup();
     }
 }
