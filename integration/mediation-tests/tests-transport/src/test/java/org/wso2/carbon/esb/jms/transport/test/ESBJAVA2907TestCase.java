@@ -23,9 +23,9 @@ public class ESBJAVA2907TestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test adding OMElements as properties when saving messages to the MessageStore")
     public void testAddingOMElementPropertyToMessageStore() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
-        client.sendRobust(Utils.getStockQuoteRequest("IBM"), getProxyServiceURLHttp("testPS"), "getQuote");
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
+        client.sendRobust(Utils.getStockQuoteRequest("IBM"), getProxyServiceURLHttp("testPS"), "getQuote");
         Assert.assertTrue(carbonLogReader.checkForLog(GET_QUOTE_REQUEST_BODY, 5), "OMElement is not saved to the message store");
         carbonLogReader.stop();
     }
