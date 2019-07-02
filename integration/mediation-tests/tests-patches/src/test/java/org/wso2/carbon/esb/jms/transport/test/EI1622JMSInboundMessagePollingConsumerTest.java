@@ -24,12 +24,9 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
-
-import java.io.File;
 
 import static org.testng.Assert.assertTrue;
 
@@ -37,17 +34,12 @@ import static org.testng.Assert.assertTrue;
  * This is the test class for the fix product-ei/issues/1622.
  */
 public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTest {
-    private LogViewerClient logViewerClient = null;
     private static final String ENDPOINT_NAME = "jms_inbound";
+    private CarbonLogReader carbonLogReader = null;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
-        super.init();
-        OMElement synapse = esbUtils.loadResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator
-                        + "transport" + File.separator + "EI1622_jms_transport_sequence.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
-        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
+        carbonLogReader = new CarbonLogReader();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check whether polling is suspended.")
@@ -55,10 +47,11 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
 
         pushMessageToQue(addEndpoint());
 
-        assertTrue(Utils.checkForLog(logViewerClient, "Suspending polling as the pollingSuspensionLimit of 2 "
+        assertTrue(Utils.checkForLog(carbonLogReader, "Suspending polling as the pollingSuspensionLimit of 2 "
                         + "reached. Polling will be re-started after 3000 milliseconds", 10),
                 "JMS Polling suspension is not enabled.");
-        deleteInboundEndpointFromName(ENDPOINT_NAME);
+        carbonLogReader.stop();
+        Utils.undeploySynapseConfiguration(ENDPOINT_NAME, "inbound-endpoints", true);
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check whether polling is permanently suspended when limit is zero.")
@@ -66,9 +59,10 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
 
         pushMessageToQue(addEndpointWithSuspensionLimitZero());
 
-        assertTrue(Utils.checkForLog(logViewerClient, "Polling is suspended permanently", 10),
+        assertTrue(Utils.checkForLog(carbonLogReader, "Polling is suspended permanently", 10),
                 "JMS Polling is not permanently suspended though the suspension limit is 0.");
-        deleteInboundEndpointFromName(ENDPOINT_NAME);
+        carbonLogReader.stop();
+        Utils.undeploySynapseConfiguration(ENDPOINT_NAME, "inbound-endpoints", true);
     }
 
     /**
@@ -83,9 +77,10 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         String queueName = "JMSMS";
 
         try {
-            addInboundEndpoint(inBoundEndpoint);
+            Utils.deploySynapseConfiguration(inBoundEndpoint, ENDPOINT_NAME, "inbound-endpoints", true);
             sender.connect(queueName);
-            logViewerClient.clearLogs();
+            carbonLogReader.clearLogs();
+            carbonLogReader.start();
             sender.pushMessage("<?xml version='1.0' encoding='UTF-8'?>"
                     + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\""
                     + " xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"

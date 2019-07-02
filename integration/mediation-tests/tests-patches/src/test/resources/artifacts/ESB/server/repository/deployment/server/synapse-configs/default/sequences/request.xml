@@ -1,4 +1,4 @@
-<sequence xmlns="http://ws.apache.org/ns/synapse" name="request" onError="faultSeq">
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="request" onError="EI1622_jms_transport_fault">
         <log level="custom">
             <property name="TEST" value="Message Received to the sequence"/>
         </log>
