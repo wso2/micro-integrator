@@ -17,34 +17,22 @@
 ~  under the License.
 ~
 -->
-<definitions xmlns="http://ws.apache.org/ns/synapse">
-    <registry provider="org.wso2.carbon.mediation.registry.WSO2Registry">
-        <parameter name="cachableDuration">15000</parameter>
-    </registry>
-    <proxy name="publishSameServiceContractTestProxy" transports="https http" startOnLoad="true" trace="disable">
-        <target>
-            <endpoint>
-                <wsdl service="SimpleStockQuoteService" port="SimpleStockQuoteServiceHttpSoap11Endpoint" uri="http://localhost:9000/services/SimpleStockQuoteService?wsdl"/>
-            </endpoint>
-            <outSequence>
-                <send/>
-            </outSequence>
-        </target>
-        <publishWSDL uri="http://localhost:9000/services/SimpleStockQuoteService?wsdl"/>
-    </proxy>
-    <sequence name="proxy">
-        <send>
-            <endpoint>
-                <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
-            </endpoint>
-        </send>
-    </sequence>
-    <sequence name="fault">
-        <log level="full">
-            <property name="MESSAGE" value="Executing default &quot;fault&quot; sequence"/>
-            <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
-            <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
-        </log>
-        <drop/>
-    </sequence>
-</definitions>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="publishSameServiceContractTestProxy" transports="https http" startOnLoad="true" trace="disable">
+    <target>
+        <endpoint>
+            <wsdl service="SimpleStockQuoteService" port="SimpleStockQuoteServiceHttpSoap11Endpoint" uri="http://localhost:9000/services/SimpleStockQuoteService?wsdl"/>
+        </endpoint>
+        <outSequence>
+            <send/>
+        </outSequence>
+        <faultSequence>
+            <log level="full">
+                <property name="MESSAGE" value="Executing default &quot;fault&quot; sequence"/>
+                <property name="ERROR_CODE" expression="get-property('ERROR_CODE')"/>
+                <property name="ERROR_MESSAGE" expression="get-property('ERROR_MESSAGE')"/>
+            </log>
+            <drop/>
+        </faultSequence>
+    </target>
+    <publishWSDL uri="http://localhost:9000/services/SimpleStockQuoteService?wsdl"/>
+</proxy>
