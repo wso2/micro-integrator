@@ -74,6 +74,8 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         String messageToSend = "<msg><a>Testing123</a></msg>";
         byte[] payload = messageToSend.getBytes();
         MQTTTestClient mqttPublisherClient = null;
+        Assert.assertTrue(carbonLogReader.checkForLog("MQTT_Test_Inbound_EP connected to the broker",
+                20));
         try {
             mqttPublisherClient = new MQTTTestClient(brokerURL, userName, password, publisherClientId);
             mqttPublisherClient.publishMessage(topic, payload, QualityOfService.LEAST_ONCE.getValue(), false);
@@ -84,7 +86,7 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         }
 
         //check EI log to see if message is consumed
-        boolean result = carbonLogReader.checkForLog(messageToSend, 5);
+        boolean result = carbonLogReader.checkForLog(messageToSend, 10);
         Assert.assertTrue(result, "Message is not found in log. Expected : " + messageToSend);
         carbonLogReader.stop();
     }
