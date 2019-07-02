@@ -124,21 +124,18 @@ public class MicroRegistryManager {
      * Function is to check if the registry resources are exist in filepath
      *
      * @param sourcePath path to registry resource
-     * @param fileName registry resource file name
+     * @param resourcePath path to resource file path from registry resource
+     * @param filename registry filename
      */
 
-    public void checkResourceExist(String sourcePath, String fileName) throws MicroRegistryManagerException {
+    public boolean checkResourceExist(String sourcePath, String resourcePath, String filename) throws Exception {
+        try {
+            String path = sourcePath + resourcePath + filename;
+            return path.contains(filename);
 
-        String path = sourcePath + fileName;
-
-        if (path != null ) {
-            log.info("Registry resources found");
-        } else {
-            log.info("Registry resources not found on registry");
-            throw new MicroRegistryManagerException("Unknown resource path: " + sourcePath);
+        } catch (Exception e) {
+            throw new Exception("Exception occurred while checking the registry resource file.", e);
         }
-
-
     }
 
     /**

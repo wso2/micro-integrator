@@ -18,6 +18,7 @@
 
 package org.wso2.carbon.esb.car.deployment.test;
 
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.utils.ServerConstants;
@@ -29,6 +30,8 @@ import java.io.File;
 public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
 
     private MicroRegistryManager registryManager = null;
+    String registryResource1 = "transform.xslt";
+    String registryResource2 = "transform_back.xslt";
 
     @BeforeClass(alwaysRun = true)
     protected void uploadCarFileTest() throws Exception {
@@ -41,12 +44,12 @@ public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
     public void artifactDeploymentAndServiceInvocation() throws Exception {
 
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        System.out.println(carbonHome);
-        String sourcePath = carbonHome + File.separator + "server" + File.separator + "registry"
-                + File.separator + "config" ;
+        String sourcePath = carbonHome + File.separator + "registry";
 
-        registryManager.checkResourceExist(sourcePath, "transform.xslt");
-        registryManager.checkResourceExist(sourcePath,"transform_back.xslt");
+        Assert.assertTrue(registryManager.checkResourceExist(sourcePath,"/config/", registryResource1),"Registry resources not found");
+        log.info(registryResource1 + "Registry resources found");
+        Assert.assertTrue(registryManager.checkResourceExist(sourcePath,"config/", registryResource2), "Registry resources not found");
+        log.info(registryResource2 + "Registry resources found");
 
     }
 
