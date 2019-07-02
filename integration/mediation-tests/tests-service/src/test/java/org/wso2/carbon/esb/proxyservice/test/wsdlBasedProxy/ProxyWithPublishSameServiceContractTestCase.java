@@ -67,7 +67,7 @@ public class ProxyWithPublishSameServiceContractTestCase extends ESBIntegrationT
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        Utils.undeploySynapseConfiguration("publishSameServiceContractTestProxy", "proxy-services", false);
+        Utils.undeploySynapseConfiguration("publishSameServiceContractTestProxy", "proxy-services", true);
     }
 
 }
