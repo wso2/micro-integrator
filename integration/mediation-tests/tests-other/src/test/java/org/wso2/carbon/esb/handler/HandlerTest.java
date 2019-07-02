@@ -43,7 +43,7 @@ public class HandlerTest extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"}, description = "Sending a Message Via proxy to check synapse handler logs")
-    public void testSynapseHandlerExecution() throws IOException {
+    public void testSynapseHandlerExecution() throws IOException, InterruptedException {
         boolean handlerStatus = false;
         carbonLogReader.start();
 
@@ -52,9 +52,10 @@ public class HandlerTest extends ESBIntegrationTest {
                                              "WSO2");
         Assert.assertNotNull(response);
 
-        String message = carbonLogReader.getLogs();
-        if (message.contains("handleRequestInFlow") && message.contains("handleRequestOutFlow") && message.contains(
-                "handleResponseInFlow") && message.contains("handleResponseOutFlow")) {
+        if (carbonLogReader.checkForLog("handleRequestInFlow", 6) &&
+                carbonLogReader.checkForLog("handleRequestOutFlow", 6) &&
+                carbonLogReader.checkForLog("handleResponseInFlow", 6) &&
+                carbonLogReader.checkForLog("handleResponseOutFlow", 6)) {
             handlerStatus = true;
         }
         carbonLogReader.stop();
