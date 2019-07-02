@@ -18,53 +18,36 @@
 
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
-
 import static org.testng.Assert.assertTrue;
 
 public class ESBJAVA3282CalloutJMSHeadersTestCase extends ESBIntegrationTest {
+    private CarbonLogReader carbonLogReader;
+
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        OMElement synapse = esbUtils.
-                loadResource("/artifacts/ESB/jms/transport/callout_jms_headers.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
+        carbonLogReader = new CarbonLogReader();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Callout JMS headers test case")
+    @Test(groups = {"wso2.esb"}, description = "Callout JMS headers test case")
     public void testCalloutJMSHeaders() throws Exception {
+        carbonLogReader.start();
 
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<payload/>";
         AXIOMUtil.stringToOM(payload);
-        client.sendRobust(AXIOMUtil.stringToOM(payload), getProxyServiceURLHttp("JMCalloutClientProxy"), "urn:mediate");
+        client.sendRobust(AXIOMUtil.stringToOM(payload), getProxyServiceURLHttp("JMCalloutClientProxy"),
+                          "urn:mediate");
 
-        Thread.sleep(60000); //wait until all message received to jms proxy
-
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        LogEvent[] logs = logViewerClient.getAllSystemLogs();
-        boolean logFound = false;
-        for (LogEvent item : logs) {
-            if (item.getPriority().equals("INFO")) {
-                String message = item.getMessage();
-                if (message.contains("RequestHeaderVal")) {
-                    logFound = true;
-                    break;
-                }
-            }
-        }
-
-        assertTrue(logFound);
-
+        assertTrue(carbonLogReader.checkForLog("RequestHeaderVal", 10));
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
