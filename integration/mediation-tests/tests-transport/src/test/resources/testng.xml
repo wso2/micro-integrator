@@ -79,21 +79,27 @@
     </test>
 
     <test name="JMS-transport-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.jms.transport.test.*"/>
-        </packages>
-
         <classes>
-            <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA2824MissingResponseTestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
-            <class name="org.wso2.carbon.esb.jms.transport.test.JMSCAppDeploymentWithFaultyProxyTestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
+            <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA1793TestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA1832MessageInjectorTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA1910TestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA2464TestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.ESBJAVA2907TestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSAccessSOAPFaultDataTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSClientAndRestServiceTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSEndpointSuspensionTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSEndpointTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSMapMessageTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSMessageProcessorTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSMessageStoreProcRESTTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.MSMPCronForwarderCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSOutOnlyTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSQueueAsProxyEndpointTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSSenderStaleConnectionsTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSTransportProxyTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.JMSMessageStoreUnavailableTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.SpecialCharacterTestCase"/>
+            <class name="org.wso2.carbon.esb.jms.transport.test.topic.JMSTopicAsProxyEndpointTestCase"/>
         </classes>
     </test>
 
