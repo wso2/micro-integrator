@@ -17,15 +17,11 @@
  */
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
-import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
 import static org.testng.Assert.assertTrue;
@@ -34,28 +30,18 @@ public class ESBJAVA4692_MP_FaultSequence_HttpsEndpoint_TestCase extends ESBInte
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        OMElement synapse = esbUtils.
-                loadResource("/artifacts/ESB/jms/transport/ESBJAVA4692_MP_FaultSequence.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
-    @Test(groups = { "wso2.esb" }, description = "MP Fault Sequence test case for https")
+    @Test(groups = {"wso2.esb"}, description = "MP Fault Sequence test case for https")
     public void testCalloutJMSHeaders() throws Exception {
-
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<payload/>";
         AXIOMUtil.stringToOM(payload);
         client.sendRobust(AXIOMUtil.stringToOM(payload), getProxyServiceURLHttps("MSProxy"), "urn:mediate");
-
-        LogViewerClient logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        boolean logFound = Utils
-                .checkForLogsWithPriority(logViewerClient, "INFO", "FaultSeq = *********** FaultSeq *****************",
-                        10);
+        boolean logFound = carbonLogReader.checkForLog("FaultSeq = *********** FaultSeq *****************", 6);
+        carbonLogReader.stop();
         assertTrue(logFound, "Fault Sequence Not Executed for Soap Fault");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }
