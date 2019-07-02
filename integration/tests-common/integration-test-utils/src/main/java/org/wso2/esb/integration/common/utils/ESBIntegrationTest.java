@@ -137,6 +137,10 @@ public abstract class ESBIntegrationTest {
         return this.hostName;
     }
 
+    public int getPortOffset(){
+        return this.portOffset;
+    }
+
     protected void cleanup() throws Exception {
 		/*try {
 			if (synapseConfiguration != null) {
