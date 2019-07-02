@@ -18,6 +18,11 @@
 
 package org.wso2.carbon.esb.statistics;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+
 import junit.framework.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -29,55 +34,44 @@ import org.wso2.esb.integration.common.utils.ESBTestCaseUtils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.ThriftServer;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Map;
-
 public class ProxyStatisticsTest extends ESBIntegrationTest {
-    public static final int MEDIATOR_ID_INDEX = 4;
-    ThriftServer thriftServer;
-    private ServerConfigurationManager serverConfigurationManager;
+    private static final int MEDIATOR_ID_INDEX = 4;
+    private ThriftServer thriftServer;
 
     @BeforeClass(alwaysRun = true)
     protected void initialize() throws Exception {
         //Starting the thrift port to listen to statistics events
         thriftServer = new ThriftServer("Wso2EventTestCase", 7612, true);
         thriftServer.start(7612);
-        log.info("Thrift Server is Started on port 8462");
+        log.info("Thrift Server is Started on port 7612");
 
         //Changing synapse configuration to enable statistics and tracing
-        serverConfigurationManager = new ServerConfigurationManager(
+        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "StatisticTestResources" + File.separator
                         + "synapse.properties"));
+
         super.init();
-
-        thriftServer.resetMsgCount();
-        thriftServer.resetPreservedEventList();
-        //load esb configuration to the server
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/statistics/synapseconfigproxy.xml");
-        thriftServer.waitToReceiveEvents(20000, 4); //waiting for esb to send artifact config data to the thriftserver
-
-        //Checking whether all the artifact configuration events are received
-        Assert.assertEquals("Four configuration events are required", 4, thriftServer.getMsgCount());
+        thriftServer.waitToReceiveEvents(20000); //waiting for esb to send artifact config data to the thriftserver
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Proxy statistics message count check.")
+    @Test(groups = {"wso2.esb"}, description = "Proxy statistics message count check.")
     public void statisticsCollectionCountTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
+
         for (int i = 0; i < 100; i++) {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "WSO2");
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events to the
         // backend
         Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                thriftServer.getMsgCount());
+                            thriftServer.getMsgCount());
+
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Proxy statistics statistics event data check")
+    @Test(groups = {"wso2.esb"}, description = "Proxy statistics statistics event data check")
     public void statisticsEventDataTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
@@ -113,7 +107,7 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Proxy Spilt Aggregate scenario statistics message count check.")
+    @Test(groups = {"wso2.esb"}, description = "Proxy Spilt Aggregate scenario statistics message count check.")
     public void statisticsSpiltAggregateProxyCollectionCountTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
@@ -123,11 +117,10 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events
         Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                thriftServer.getMsgCount());
+                            thriftServer.getMsgCount());
     }
 
-    //
-    @Test(groups = { "wso2.esb" }, description = "Proxy SpiltAggregate statistics event data check")
+    @Test(groups = {"wso2.esb"}, description = "Proxy SpiltAggregate statistics event data check")
     public void spiltAggregatesStatisticsEventDataTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
@@ -173,9 +166,7 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanupArtifactsIfExist() throws Exception {
+    public void cleanupArtifactsIfExist() {
         thriftServer.stop();
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
     }
 }
