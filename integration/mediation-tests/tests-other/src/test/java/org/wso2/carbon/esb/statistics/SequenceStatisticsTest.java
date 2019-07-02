@@ -37,39 +37,31 @@ import java.util.Map;
 public class SequenceStatisticsTest extends ESBIntegrationTest {
     public static final int MEDIATOR_ID_INDEX = 4;
     ThriftServer thriftServer;
-    private ServerConfigurationManager serverConfigurationManager;
 
     @BeforeClass(alwaysRun = true)
     protected void initialize() throws Exception {
         //Starting the thrift port to listen to statistics events
         thriftServer = new ThriftServer("Wso2EventTestCase", 7612, true);
         thriftServer.start(7612);
-        log.info("Thrift Server is Started on port 8462");
+        log.info("Thrift Server is Started on port 7612");
 
         //Changing synapse configuration to enable statistics and tracing
-        serverConfigurationManager = new ServerConfigurationManager(
+        ServerConfigurationManager serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(
+        serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "StatisticTestResources" + File.separator
                         + "synapse.properties"));
         super.init();
-
-        thriftServer.resetMsgCount();
-        thriftServer.resetPreservedEventList();
-        //load esb configuration to the server
-        loadESBConfigurationFromClasspath("/artifacts/ESB/synapseconfig/statistics/sequencereference.xml");
-        thriftServer.waitToReceiveEvents(20000, 6); //waiting for esb to send artifact config data to the thriftserver
-
-        //Checking whether all the artifact configuration events are received
-        Assert.assertEquals("Six configuration events are required", 6, thriftServer.getMsgCount());
+        thriftServer.waitToReceiveEvents(20000); //waiting for esb to send artifact config data to the thriftserver
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Proxy statistics message count check.")
+    @Test(groups = {"wso2.esb"}, description = "Proxy statistics message count check.")
     public void statisticsCollectionCountTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
+
         for (int i = 0; i < 100; i++) {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ReferencingProxy"), null, "WSO2");
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SequenceReferenceProxy"), null, "WSO2");
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events to the
         // backend
@@ -77,12 +69,12 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
                 thriftServer.getMsgCount());
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sequence statistics message count check.")
+    @Test(groups = {"wso2.esb"}, description = "Sequence statistics message count check.")
     public void statisticsCollectionCountTestForNestedSequence() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
         for (int i = 0; i < 100; i++) {
-            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ReferencingProxyStatisticDisable"), null,
+            axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ReferencingProxyStatisticDisableProxy"), null,
                     "WSO2");
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events to the
@@ -91,13 +83,13 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
                 thriftServer.getMsgCount());
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Nested Sequence statistics statistics event data check")
+    @Test(groups = {"wso2.esb"}, description = "Nested Sequence statistics statistics event data check")
     public void statisticsEventDataTestForNestedSequence() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
 
         axis2Client
-                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ReferencingProxyStatisticDisable"), null, "WSO2");
+                .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ReferencingProxyStatisticDisableProxy"), null, "WSO2");
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
         Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
@@ -119,14 +111,14 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
 		BackendSequence@7:RespondMediator
 		 */
         ArrayList<String> mediatorList = new ArrayList<>();
-        mediatorList.add("BackendSequence@0:BackendSequence");
-        mediatorList.add("BackendSequence@1:CallMediator");
-        mediatorList.add("StockQuoteService@0:StockQuoteService");
-        mediatorList.add("BackendSequence@3:HeaderMediator:Action");
-        mediatorList.add("BackendSequence@4:PayloadFactoryMediator");
-        mediatorList.add("BackendSequence@5:CallMediator");
-        mediatorList.add("StockQuoteService@0:StockQuoteService");
-        mediatorList.add("BackendSequence@7:RespondMediator");
+        mediatorList.add("StatisticBackendSequence@0:StatisticBackendSequence");
+        mediatorList.add("StatisticBackendSequence@1:CallMediator");
+        mediatorList.add("StockQuoteServiceEndPoint@0:StockQuoteServiceEndPoint");
+        mediatorList.add("StatisticBackendSequence@3:HeaderMediator:Action");
+        mediatorList.add("StatisticBackendSequence@4:PayloadFactoryMediator");
+        mediatorList.add("StatisticBackendSequence@5:CallMediator");
+        mediatorList.add("StockQuoteServiceEndPoint@0:StockQuoteServiceEndPoint");
+        mediatorList.add("StatisticBackendSequence@7:RespondMediator");
 
         //Checking whether all the mediators are present in the event
         Assert.assertEquals("Eight configuration events are required", 8, eventList.size());
@@ -136,12 +128,12 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sequence statistics statistics event data check")
+    @Test(groups = {"wso2.esb"}, description = "Sequence statistics statistics event data check")
     public void statisticsEventDataTest() throws Exception {
         thriftServer.resetMsgCount();
         thriftServer.resetPreservedEventList();
 
-        axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ReferencingProxy"), null, "WSO2");
+        axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SequenceReferenceProxy"), null, "WSO2");
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
         Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
@@ -165,15 +157,15 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
 		 */
 
         ArrayList<String> mediatorList = new ArrayList<>();
-        mediatorList.add("ReferencingProxy@0:ReferencingProxy");
-        mediatorList.add("BackendSequence@0:BackendSequence");
-        mediatorList.add("BackendSequence@1:CallMediator");
-        mediatorList.add("StockQuoteService@0:StockQuoteService");
-        mediatorList.add("BackendSequence@3:HeaderMediator:Action");
-        mediatorList.add("BackendSequence@4:PayloadFactoryMediator");
-        mediatorList.add("BackendSequence@5:CallMediator");
-        mediatorList.add("StockQuoteService@0:StockQuoteService");
-        mediatorList.add("BackendSequence@7:RespondMediator");
+        mediatorList.add("SequenceReferenceProxy@0:SequenceReferenceProxy");
+        mediatorList.add("StatisticBackendSequence@0:StatisticBackendSequence");
+        mediatorList.add("StatisticBackendSequence@1:CallMediator");
+        mediatorList.add("StockQuoteServiceEndPoint@0:StockQuoteServiceEndPoint");
+        mediatorList.add("StatisticBackendSequence@3:HeaderMediator:Action");
+        mediatorList.add("StatisticBackendSequence@4:PayloadFactoryMediator");
+        mediatorList.add("StatisticBackendSequence@5:CallMediator");
+        mediatorList.add("StockQuoteServiceEndPoint@0:StockQuoteServiceEndPoint");
+        mediatorList.add("StatisticBackendSequence@7:RespondMediator");
 
         //Checking whether all the mediators are present in the event
         Assert.assertEquals("Nine configuration events are required", 9, eventList.size());
@@ -185,9 +177,7 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
     }
 
     @AfterClass(alwaysRun = true)
-    public void cleanupArtifactsIfExist() throws Exception {
+    public void cleanupArtifactsIfExist() {
         thriftServer.stop();
-        super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
     }
 }
