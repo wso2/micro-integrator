@@ -31,6 +31,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.StandardOpenOption;
+import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -116,6 +117,24 @@ public class MicroRegistryManager {
             log.info("Successfully copied" + message);
         } catch (IOException e) {
             throw new MicroRegistryManagerException("Error occurred while copying" + message, e);
+        }
+    }
+
+    /**
+     * Function is to check if the registry resources are exist in filepath
+     *
+     * @param sourcePath path to registry resource
+     * @param resourcePath path to resource file path from registry resource
+     * @param filename registry filename
+     */
+
+    public boolean checkResourceExist(String sourcePath, String resourcePath, String filename) throws Exception {
+        try {
+            String path = sourcePath + resourcePath + filename;
+            return path.contains(filename);
+
+        } catch (Exception e) {
+            throw new Exception("Exception occurred while checking the registry resource file.", e);
         }
     }
 
