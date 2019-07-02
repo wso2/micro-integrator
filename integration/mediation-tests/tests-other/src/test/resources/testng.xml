@@ -102,7 +102,7 @@
         <classes>
             <class name="org.wso2.carbon.esb.mediationstats.test.MediationStatEnableTestCase">
                 <methods>
-                    <exclude name="*"/>
+                    <exclude name=".*"/>
                 </methods>
             </class>
         </classes>
