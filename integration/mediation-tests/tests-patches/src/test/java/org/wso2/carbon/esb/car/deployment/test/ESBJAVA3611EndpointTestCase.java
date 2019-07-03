@@ -16,24 +16,29 @@
 
 package org.wso2.carbon.esb.car.deployment.test;
 
+import org.awaitility.Awaitility;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-public class ESBJAVA3611EndpointTestCase extends ESBIntegrationTest {
+import java.util.concurrent.TimeUnit;
 
-    String carFileName = "ESBCApp-3.2.2.car";
+public class ESBJAVA3611EndpointTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     protected void uploadCarFileTest() throws Exception {
         super.init();
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).
+                until(isManagementApiAvailable());
     }
 
     @Test(groups = "wso2.esb", enabled = true, description = "Test whether Endpoint get deployed in tenant through  capp")
     public void testEndpointDeployed() throws Exception {
         checkEndpointExistence("Axis2ServiceCSEndPoint");
     }
+
+
 
     @AfterTest(alwaysRun = true)
     public void cleanupEnvironment() throws Exception {
