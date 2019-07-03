@@ -52,6 +52,7 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test whether response HTTP status code getting correctly after callout "
             + "mediator successfully execute")
     public void testHttpStatusCodeGettingSuccessfully() throws Exception {
+        carbonLogReader.start();
         String endpoint = getProxyServiceURLHttp("TestCalloutHTTP_SC");
         String soapRequest =
                 TestConfigurationProvider.getResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator
@@ -65,7 +66,6 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
         boolean errorLog = false;
 
         try {
-            carbonLogReader.start();
             httpClient.executeMethod(post);
             errorLog = carbonLogReader.assertIfLogExists("STATUS-Fault") && carbonLogReader.
                     assertIfLogExists("404 Error: Not Found");
