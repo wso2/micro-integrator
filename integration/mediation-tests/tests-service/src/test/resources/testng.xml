@@ -29,6 +29,11 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
+            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.ESBJAVA4821WSDLProxyServiceDeploymentTestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.PickEndPointFromRegistryTestCase"/>
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.ProxyServiceEnablingHTTPTestCase"/>
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.ProxyServiceEndPointThroughURLTestCase"/>
