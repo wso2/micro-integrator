@@ -123,15 +123,25 @@ public class MicroRegistryManager {
     /**
      * Function is to check if the registry resources are exist in filepath
      *
-     * @param sourcePath path to registry resource
      * @param resourcePath path to resource file path from registry resource
      * @param filename registry filename
      */
 
-    public boolean checkResourceExist(String sourcePath, String resourcePath, String filename) throws Exception {
-        try {
-            String path = sourcePath + resourcePath + filename;
-            return path.contains(filename);
+    public boolean checkResourceExist(String resourcePath, String filename) throws Exception {
+
+        StringBuilder pathBuilder = new StringBuilder();
+        pathBuilder.append(System.getProperty("carbon.home")).append(File.separator).append("registry").append(File.separator);
+
+        String relativePath = resourcePath.substring(5).replace('/', File.separatorChar);
+        pathBuilder.append("config").append(relativePath);
+
+        boolean isExists = new File(pathBuilder + filename).isFile();
+        try{
+            if (isExists){
+                return true;
+            }else {
+                return false;
+            }
 
         } catch (Exception e) {
             throw new Exception("Exception occurred while checking the registry resource file.", e);
