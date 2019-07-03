@@ -61,7 +61,6 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
         boolean isRetriedUpon_500_response = false;
         boolean isRetryCompleted = false;
         boolean isMpDeactivated = false;
-        int retryAttempts = 0;
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         carbonLogReader.start();
         AxisServiceClient client = new AxisServiceClient();
@@ -72,14 +71,12 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
         // Wait till the log appears
         Thread.sleep(20000);
         String logs = carbonLogReader.getLogs();
-        isRetriedUpon_500_response = logs.contains(EXPECTED_ERROR_MESSAGE);
-        retryAttempts = StringUtils.countMatches(logs, EXPECTED_ERROR_MESSAGE);
-        isMpDeactivated = logs.contains(EXPECTED_MP_DEACTIVATION_MSG);
-        if (retryAttempts == RETRY_COUNT) {
-            isRetryCompleted = true;
-        }
+        isRetriedUpon_500_response = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, 20);
+        isRetryCompleted = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, 20, RETRY_COUNT);
+        isMpDeactivated = carbonLogReader.checkForLog(EXPECTED_MP_DEACTIVATION_MSG, 20);
         Assert.assertTrue(isRetriedUpon_500_response && isRetryCompleted && isMpDeactivated,
                 "MP does not retry sending the request upon receiving HTTP SC 500 response");
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
