@@ -63,6 +63,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URISyntaxException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
@@ -70,6 +71,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Callable;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
@@ -970,6 +972,31 @@ public abstract class ESBIntegrationTest {
 
         HttpResponse response = client.doGet(endpoint, headers);
         return client.getResponsePayload(response);
+    }
+
+    public Callable<Boolean> isManagementApiAvailable() {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                Socket s = null;
+                try
+                {
+                    s = new Socket(hostName, DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset);
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    log.error("Error while opening socket for port " + DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset, e);
+                    return false;
+                }
+                finally
+                {
+                    if(s != null) {
+                        s.close();
+                    }
+                }
+            }
+        };
     }
 
     protected void verifyAPIExistence(String apiName) throws RestApiAdminAPIException, RemoteException {
