@@ -129,23 +129,27 @@ public class MicroRegistryManager {
 
     public boolean checkResourceExist(String resourcePath, String filename) throws Exception {
 
+        boolean isExists = false;
+
         StringBuilder pathBuilder = new StringBuilder();
         pathBuilder.append(System.getProperty("carbon.home")).append(File.separator).append("registry").append(File.separator);
 
-        String relativePath = resourcePath.substring(5).replace('/', File.separatorChar);
-        pathBuilder.append("config").append(relativePath);
-
-        boolean isExists = new File(pathBuilder + filename).isFile();
-        try{
-            if (isExists){
-                return true;
-            }else {
-                return false;
-            }
-
-        } catch (Exception e) {
-            throw new Exception("Exception occurred while checking the registry resource file.", e);
+        if (resourcePath.startsWith(CONF_PATH)) {
+            String relativePath = resourcePath.substring(5).replace('/', File.separatorChar);
+            pathBuilder.append("config").append(relativePath);
+        } else if (resourcePath.startsWith(GOV_PATH)) {
+            String relativePath = resourcePath.substring(4).replace('/', File.separatorChar);
+            pathBuilder.append("governance").append(relativePath);
+        } else {
+            throw new MicroRegistryManagerException("Exception occurred while checking the registry resource file: " + resourcePath);
         }
+
+        if(new File(pathBuilder + filename).isFile()){
+            isExists = true;
+        }else {
+            isExists = false;
+        }
+        return isExists;
     }
 
     /**
