@@ -73,7 +73,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
                         + File.separator + "miscellaneous" + File.separator + "axis2.xml"));
 
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(5000, TimeUnit.SECONDS).
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(50, TimeUnit.SECONDS).
                 until(isManagementApiAwailable(carbonLogReader));
         // serverManager.restartGracefully();
         super.init();
