@@ -39,7 +39,7 @@ public class ServerStartupTestCase extends ESBIntegrationTest {
     public void testVerifyLogs() {
         carbonLogReader.start();
         String logs = carbonLogReader.getLogs();
-        boolean status = logs.indexOf("Mgt Console URL") < logs.indexOf("Starting WSO2 Carbon");
+        boolean status = logs.indexOf("Mgt Console URL") < logs.indexOf("Starting WSO2 Carbon") || logs.contains("ERROR");
         carbonLogReader.stop();
         Assert.assertFalse(status, "Server started with errors.");
     }

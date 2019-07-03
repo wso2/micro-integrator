@@ -41,8 +41,8 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
     public void initialize() throws Exception {
         super.init();
         OMElement mailToProxyOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(
-                getESBResourceLocation() + File.separator + "mailTransport" + File.separator +
-                        "mailTransportReceiver" + File.separator + "mail_transport_invalid_folder.xml")));
+                getESBResourceLocation() + File.separator + "mailTransport" + File.separator
+                        + "mailTransportReceiver" + File.separator + "mail_transport_invalid_folder.xml")));
         Utils.deploySynapseConfiguration(mailToProxyOMElement,
                 "MailTransportInvalidFolder","proxy-services",
                 true);
