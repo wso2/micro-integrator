@@ -104,6 +104,7 @@ public abstract class ESBIntegrationTest {
     private List<String[]> scheduledTaskList = null;
     private List<String> inboundEndpointList = null;
     private static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
+    private static final int DEFAULT_INTERNAL_API_HTTP_PORT = 9191;
     private String hostName = null;
     private int portOffset;
 
@@ -974,27 +975,21 @@ public abstract class ESBIntegrationTest {
         return client.getResponsePayload(response);
     }
 
-    public Callable<Boolean> isManagementApiAvailable() {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Socket s = null;
-                try
-                {
-                    s = new Socket(hostName, DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    log.error("Error while opening socket for port " + DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset, e);
-                    return false;
-                }
-                finally
-                {
-                    if(s != null) {
-                        s.close();
-                    }
-                }
+    protected Callable<Boolean> isManagementApiAvailable() {
+        return checkPortAvailability(DEFAULT_INTERNAL_API_HTTPS_PORT);
+    }
+
+    protected Callable<Boolean> isPrometheusApiAvailable() {
+        return checkPortAvailability(DEFAULT_INTERNAL_API_HTTP_PORT);
+    }
+
+    private Callable<Boolean> checkPortAvailability(int portNo) {
+        return () -> {
+            try (Socket ignored = new Socket(hostName, portNo + portOffset)) {
+                return true;
+            } catch (Exception e) {
+                log.error("Error while opening socket for port " + (portNo + portOffset));
+                return false;
             }
         };
     }
