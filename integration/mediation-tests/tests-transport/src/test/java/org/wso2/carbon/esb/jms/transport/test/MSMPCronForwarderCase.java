@@ -46,21 +46,12 @@ import static org.testng.Assert.assertTrue;
 public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
     private final int NUMBER_OF_MESSAGES = 4;
-
-    private TomcatServerManager tomcatServerManager;
     private CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         // START THE ESB
         super.init();
-        // START THE SERVER
-        tomcatServerManager = new TomcatServerManager(CustomerConfig.class.getName(), TomcatServerType.jaxrs.name(),
-                8080);
-
-        tomcatServerManager.startServer();  // staring tomcat server instance
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
-                .until(isServerStarted());
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor")
@@ -94,20 +85,7 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        //undo logger change
-        if (tomcatServerManager != null) {
-            tomcatServerManager.stop();
-        }
         carbonLogReader.stop();
-    }
-
-    private Callable<Boolean> isServerStarted() {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return tomcatServerManager.isRunning();
-            }
-        };
     }
 
     private Callable<Boolean> isLogWritten() {
