@@ -19,6 +19,7 @@
 package org.wso2.carbon.esb.statistics;
 
 import org.apache.http.HttpResponse;
+import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,6 +29,7 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class PrometheusStatisticsTest extends ESBIntegrationTest {
 
@@ -40,6 +42,8 @@ public class PrometheusStatisticsTest extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Test if metric data are exposed, when it is enabled in config")
     public void testPrometheusPublisher() throws Exception {
 
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).
+                until(isManagementApiAvailable());
         SimpleHttpClient client = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");

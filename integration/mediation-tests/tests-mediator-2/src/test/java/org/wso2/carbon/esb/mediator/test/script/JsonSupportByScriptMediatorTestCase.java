@@ -22,12 +22,10 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.net.URL;
-import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -129,13 +127,8 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
      * @param property required property which needs to be validate if exists or not.
      * @return A Boolean
      */
-    private boolean isPropertyContainedInLog(String property) throws LogViewerLogViewerException, RemoteException {
-
-        String log = carbonLogReader.getLogs();
-        boolean containsProperty = false;
-        if (log.contains(property)) {
-            containsProperty = true;
-        }
+    private boolean isPropertyContainedInLog(String property) throws InterruptedException {
+        boolean containsProperty = carbonLogReader.checkForLog(property, 20);
         carbonLogReader.stop();
         return containsProperty;
     }
