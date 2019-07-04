@@ -9,51 +9,51 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestTransformerListener"/>
     </listeners>
 
-    <!--<test name="ESB-Sample-Endpoint-Test" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.samples.test.endpoint.*"/>-->
-        <!--</packages>-->
-    <!--</test>-->
+    <test name="ESB-Sample-Endpoint-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.endpoint.*"/>
+        </packages>
+    </test>
 
-    <!--<test name="ESB-Sample-Messaging-Test-1" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.samples.test.messaging.*"/>-->
-        <!--</packages>-->
-        <!--<classes>-->
-            <!--<class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample701TestCase">-->
-                <!--<methods>-->
-                    <!--<exclude name=".*"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-            <!--<class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample702TestCase">-->
-                <!--<methods>-->
-                    <!--<exclude name=".*"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-            <!--<class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample704TestCase">-->
-                <!--<methods>-->
-                    <!--<exclude name=".*"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-            <!--<class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample700TestCase">-->
-                <!--<methods>-->
-                    <!--<exclude name=".*"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-    <!--<test name="ESB-Sample-Mediation-Test" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.samples.test.mediation.*"/>-->
-        <!--</packages>-->
-        <!--<classes>-->
-            <!--<class name="org.wso2.carbon.esb.samples.test.mediation.jason.Sample441TestCase">-->
-                <!--<methods>-->
-                    <!--<exclude name=".*"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
+    <test name="ESB-Sample-Messaging-Test-1" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.messaging.*"/>
+        </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample701TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample702TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample704TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+            <class name="org.wso2.carbon.esb.samples.test.messaging.store.Sample700TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="ESB-Sample-Mediation-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.mediation.*"/>
+        </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.samples.test.mediation.jason.Sample441TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
     <test name="ESB-Sample-Miscellaneous-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.samples.test.miscellaneous.*"/>
@@ -71,42 +71,42 @@
             </class>
         </classes>
     </test>
-    <!--<test name="ESB-Sample-Proxy-Test" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.samples.test.proxy.*"/>-->
-        <!--</packages>-->
-        <!--<classes>-->
-            <!--<class name="org.wso2.carbon.esb.samples.test.proxy.Sample153TestCase">-->
-                <!--<methods>-->
-                    <!--<exclude name=".*"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
-    <!--</test>-->
-    <!--<test name="ESB-Sample-Transport-Test" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.samples.test.transport.*"/>-->
-        <!--</packages>-->
+    <test name="ESB-Sample-Proxy-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.proxy.*"/>
+        </packages>
+        <classes>
+            <class name="org.wso2.carbon.esb.samples.test.proxy.Sample153TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="ESB-Sample-Transport-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.transport.*"/>
+        </packages>
 
-        <!--<classes>-->
-            <!--&lt;!&ndash;excluded due to wso2/product-ei/#1234&ndash;&gt;-->
-            <!--<class name="org.wso2.carbon.esb.samples.test.transport.Sample254TestCase">-->
-                <!--<methods>-->
-                    <!--<exclude name=".*"/>-->
-                <!--</methods>-->
-            <!--</class>-->
-        <!--</classes>-->
+        <classes>
+            <!--excluded due to wso2/product-ei/#1234-->
+            <class name="org.wso2.carbon.esb.samples.test.transport.Sample254TestCase">
+                <methods>
+                    <exclude name=".*"/>
+                </methods>
+            </class>
+        </classes>
 
-    <!--</test>-->
-    <!--<test name="ESB-Sample-StreamingXpath-Test" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.samples.test.streamingxpath.*"/>-->
-        <!--</packages>-->
-    <!--</test>-->
-    <!--<test name="ESB-Sample-PriorityExecutor" preserve-order="true" verbose="2">-->
-        <!--<packages>-->
-            <!--<package name="org.wso2.carbon.esb.samples.test.mediation.priorityexecutor.*"/>-->
-        <!--</packages>-->
-    <!--</test>-->
+    </test>
+    <test name="ESB-Sample-StreamingXpath-Test" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.streamingxpath.*"/>
+        </packages>
+    </test>
+    <test name="ESB-Sample-PriorityExecutor" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.samples.test.mediation.priorityexecutor.*"/>
+        </packages>
+    </test>
 </suite>
 
