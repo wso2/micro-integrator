@@ -15,6 +15,7 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.Utils;
 
 import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 
 /**
  * This test class related to - https://wso2.org/jira/browse/ESBJAVA-3419
@@ -69,7 +70,7 @@ public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
     }
 
 
-    private void deployArtifacts() throws XMLStreamException {
+    private void deployArtifacts() throws XMLStreamException, IOException {
 
         OMElement proxy1 = AXIOMUtil.stringToOM(
                 "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"HidePasswordListenerProxy\"\n"

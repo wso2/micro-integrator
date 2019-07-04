@@ -1302,7 +1302,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Utils.undeploySynapseConfiguration(proxyName, Utils.ArtifactType.PROXY, false);
     }
 
-    private void addProxy(OMElement proxy, String proxyName) {
+    private void addProxy(OMElement proxy, String proxyName) throws IOException {
         createProxyVfsRootDir(proxyName);
         Utils.deploySynapseConfiguration(proxy, proxyName, Utils.ArtifactType.PROXY, false);
     }

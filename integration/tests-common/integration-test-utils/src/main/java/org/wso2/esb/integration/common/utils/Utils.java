@@ -430,12 +430,12 @@ public class Utils {
     }
 
     public static void deploySynapseConfiguration(OMElement config, String artifactName, ArtifactType type,
-                                                  boolean isRestartRequired) {
+                                                  boolean isRestartRequired) throws IOException {
         deploySynapseConfiguration(config, artifactName, type.getDirName(), isRestartRequired);
     }
 
     public static void deploySynapseConfiguration(OMElement config, String artifactName, String artifactType,
-                                                  boolean isRestartRequired) {
+                                                  boolean isRestartRequired) throws IOException {
 
         String directory = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
                 + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
@@ -446,7 +446,7 @@ public class Utils {
             try {
                 Files.createDirectories(FileSystems.getDefault().getPath(directory));
             } catch (IOException e) {
-                log.error("Error while creating the directory, " + directory + ".", e);
+                throw new IOException("Error while creating the directory, " + directory + ".", e);
             }
         }
         try (OutputStream outputStream = new FileOutputStream(path)) {
