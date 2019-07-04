@@ -121,7 +121,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Test local entries")
+    @Test(groups = "wso2.esb", description = "Test local entries", enabled = false)
     public void testLocalEntries() throws Exception {
         assertTrue(localEntriesAdminClient.getEntryDataCount() > 1, "local entries not added");
     }
@@ -133,7 +133,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Test tasks")
+    @Test(groups = "wso2.esb", description = "Test tasks", enabled = false)
     public void testTasks() throws Exception {
         assertTrue(getNoOfArtifacts("tasks") == 1, "tasks not added");
     }

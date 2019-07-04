@@ -69,12 +69,6 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
-            <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample650TestCase">
-                <methods>
-                    <exclude name="testLocalEntries"/>
-                    <exclude name="testTasks"/>
-                </methods>
-            </class>
         </classes>
     </test>
     <test name="ESB-Sample-Proxy-Test" preserve-order="true" verbose="2">
