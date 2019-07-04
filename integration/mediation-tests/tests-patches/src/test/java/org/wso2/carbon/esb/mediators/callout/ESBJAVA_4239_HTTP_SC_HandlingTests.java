@@ -67,8 +67,8 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
 
         try {
             httpClient.executeMethod(post);
-            errorLog = carbonLogReader.assertIfLogExists("STATUS-Fault") && carbonLogReader.
-                    assertIfLogExists("404 Error: Not Found");
+            errorLog = carbonLogReader.checkForLog("STATUS-Fault", 60) && carbonLogReader.
+                    checkForLog("404 Error: Not Found", 60);
             carbonLogReader.stop();
         } finally {
             post.releaseConnection();
