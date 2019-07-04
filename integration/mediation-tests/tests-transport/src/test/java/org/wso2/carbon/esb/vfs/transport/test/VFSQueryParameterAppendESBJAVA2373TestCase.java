@@ -32,6 +32,7 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 import javax.xml.stream.XMLStreamException;
@@ -131,7 +132,7 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
         };
     }
 
-    private void deployArtifacts() throws XMLStreamException {
+    private void deployArtifacts() throws XMLStreamException, IOException {
         OMElement appendFalseProxy = AXIOMUtil.stringToOM(
                 "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "    <proxy name=\"VFSQueryParamAppendTrueProxy\"\n"
                         + "           xmlns=\"http://ws.apache.org/ns/synapse\""

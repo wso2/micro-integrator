@@ -36,10 +36,12 @@ import java.util.HashMap;
 
 public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
 
-    private static final String requestPayload = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' >"
+    private static final String REQUEST_PAYLOAD = "<soapenv:Envelope xmlns:soapenv='http://schemas.xmlsoap.org/soap/envelope/' >"
             + "<soapenv:Body xmlns:ser='http://services.samples' xmlns:xsd='http://services.samples/xsd'> "
             + "<ser:getQuote> <ser:request> <xsd:symbol>WSO2</xsd:symbol> </ser:request> </ser:getQuote> "
             + "</soapenv:Body></soapenv:Envelope> ";
+
+    private String urlContext = "";
 
     private CarbonLogReader carbonLogReader;
 
@@ -55,6 +57,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
                 + File.separator + "http.inbound.transport" + File.separator + "inbound2.xml")));
         Utils.deploySynapseConfiguration(inbound2, "inbound2", "inbound-endpoints", true);
 
+        urlContext = "http://" + getHostname() + ":" + "9090" + "/";
         carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
 
@@ -63,7 +66,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch")
     public void inboundHttpSuperSequenceTest() throws Exception {
 
-        HttpRequestUtil.doPost(new URL("http://localhost:9090/"), requestPayload, new HashMap<>());
+        HttpRequestUtil.doPost(new URL(urlContext), REQUEST_PAYLOAD, new HashMap<>());
         //this case matches with the regex but there is no api or proxy so dispatch to  super tenant main sequence
         Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /"));
         carbonLogReader.clearLogs();
@@ -71,9 +74,9 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch")
     public void inboundHttpSuperAPITest() throws Exception {
-        axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/foo", null, "WSO2");
+        axis2Client.sendSimpleStockQuoteRequest(urlContext + "foo", null, "WSO2");
         Assert.assertTrue(carbonLogReader.assertIfLogExists("FOO"));
-        axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/boo", null, "WSO2");
+        axis2Client.sendSimpleStockQuoteRequest(urlContext + "boo", null, "WSO2");
         Assert.assertTrue(carbonLogReader.assertIfLogExists("BOO"));
 
         /**
@@ -81,21 +84,21 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
          * since this matches with inbound regex but no api or proxy found to be dispatched
          */
         carbonLogReader.clearLogs();
-        HttpRequestUtil.doPost(new URL("http://localhost:9090/idontexist"), requestPayload, new HashMap<>());
+        HttpRequestUtil.doPost(new URL(urlContext + "idontexist"), REQUEST_PAYLOAD, new HashMap<>());
         Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /idontexist"));
         carbonLogReader.clearLogs();
     }
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch")
     public void inboundHttpSuperDefaultMainTest() throws Exception {
-        HttpRequestUtil.doPost(new URL("http://localhost:9091/"), requestPayload, new HashMap<>());
+        HttpRequestUtil.doPost(new URL("http://" + getHostname() + ":9091/"), REQUEST_PAYLOAD, new HashMap<>());
         Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /"));
         carbonLogReader.clearLogs();
     }
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch")
     public void inboundHttpSuperProxyDispatchTest() throws Exception {
-        axis2Client.sendSimpleStockQuoteRequest("http://localhost:9090/services/HttpInboundDispatchTestProxy", null, "WSO2");
+        axis2Client.sendSimpleStockQuoteRequest(urlContext + "services/HttpInboundDispatchTestProxy", null, "WSO2");
         Assert.assertTrue(carbonLogReader.assertIfLogExists("PROXY_HIT"));
         carbonLogReader.clearLogs();
     }

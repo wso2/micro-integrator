@@ -63,8 +63,10 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
 
-        Assert.assertTrue(carbonLogReader.checkForLog("messageBuilderInvokedValue = true", 20));
-        Assert.assertFalse(carbonLogReader.assertIfLogExists(EXPECTED_ERROR_MESSAGE));
+        Assert.assertTrue(carbonLogReader.checkForLog("messageBuilderInvokedValue = true", 20),
+                "'message.builder.invoked' value is not set when the content type is empty.");
+        Assert.assertFalse(carbonLogReader.assertIfLogExists(EXPECTED_ERROR_MESSAGE), "The error, "
+                + EXPECTED_ERROR_MESSAGE + "is found in testMsgBuilderInvokedPropertyWhenContentTypeisEmpty testcase.");
 
         carbonLogReader.stop();
     }
