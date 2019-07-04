@@ -120,10 +120,9 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
      * @param property required property which needs to be validate if exists or not.
      * @return A Boolean
      */
-    private boolean isPropertyContainedInLog(String property) {
+    private boolean isPropertyContainedInLog(String property) throws InterruptedException{
         boolean containsProperty = false;
-        String log = carbonLogReader.getLogs();
-        if (log.contains(property)) {
+        if (carbonLogReader.checkForLog(property, 60)) {
             containsProperty = true;
         }
         carbonLogReader.stop();

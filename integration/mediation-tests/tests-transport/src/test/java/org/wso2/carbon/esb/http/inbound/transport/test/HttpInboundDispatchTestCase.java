@@ -68,7 +68,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
 
         HttpRequestUtil.doPost(new URL(urlContext), REQUEST_PAYLOAD, new HashMap<>());
         //this case matches with the regex but there is no api or proxy so dispatch to  super tenant main sequence
-        Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /"));
+        Assert.assertTrue(carbonLogReader.checkForLog("main sequence executed for call to non-existent = /", 60));
         carbonLogReader.clearLogs();
     }
 
@@ -85,21 +85,22 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
          */
         carbonLogReader.clearLogs();
         HttpRequestUtil.doPost(new URL(urlContext + "idontexist"), REQUEST_PAYLOAD, new HashMap<>());
-        Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /idontexist"));
+        Assert.assertTrue(carbonLogReader.checkForLog(
+                "main sequence executed for call to non-existent = /idontexist", 60));
         carbonLogReader.clearLogs();
     }
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch")
     public void inboundHttpSuperDefaultMainTest() throws Exception {
         HttpRequestUtil.doPost(new URL("http://" + getHostname() + ":9091/"), REQUEST_PAYLOAD, new HashMap<>());
-        Assert.assertTrue(carbonLogReader.assertIfLogExists("main sequence executed for call to non-existent = /"));
+        Assert.assertTrue(carbonLogReader.checkForLog("main sequence executed for call to non-existent = /", 60));
         carbonLogReader.clearLogs();
     }
 
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch")
     public void inboundHttpSuperProxyDispatchTest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest(urlContext + "services/HttpInboundDispatchTestProxy", null, "WSO2");
-        Assert.assertTrue(carbonLogReader.assertIfLogExists("PROXY_HIT"));
+        Assert.assertTrue(carbonLogReader.checkForLog("PROXY_HIT", 60));
         carbonLogReader.clearLogs();
     }
 
