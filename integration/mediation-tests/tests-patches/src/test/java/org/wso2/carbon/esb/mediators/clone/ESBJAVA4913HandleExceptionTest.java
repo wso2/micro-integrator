@@ -17,14 +17,13 @@ public class ESBJAVA4913HandleExceptionTest extends ESBIntegrationTest {
     public void deployService() throws Exception {
         // Initializing server configuration
         super.init();
-        verifyAPIExistence("ESBJAVA4913testapi");
     }
 
     /**
      * Verifies whether the mediator reach error sequence on error while executing.
      */
     @Test(groups = "wso2.esb", description = "Check if clone mediator reach error sequence on error.")
-    public void testExceptionHandlingInCloneMediator() {
+    public void testExceptionHandlingInCloneMediator() throws Exception{
 
         final String expectedErrorMsg = "This is error sequence from sequenceOne";
         CarbonLogReader carbonLogReader = new CarbonLogReader();
@@ -35,8 +34,7 @@ public class ESBJAVA4913HandleExceptionTest extends ESBIntegrationTest {
         } catch (Exception e) {
             // Ignore read timeout from get request.
         }
-        String logs = carbonLogReader.getLogs();
-        boolean isExpectedErrorMessageFound = logs.contains(expectedErrorMsg);
+        boolean isExpectedErrorMessageFound = carbonLogReader.checkForLog(expectedErrorMsg, DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         /*
          * Asserting the results here. If there's no logs from error sequence, then the

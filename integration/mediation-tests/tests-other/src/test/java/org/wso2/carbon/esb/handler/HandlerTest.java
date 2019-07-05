@@ -52,10 +52,10 @@ public class HandlerTest extends ESBIntegrationTest {
                                              "WSO2");
         Assert.assertNotNull(response);
 
-        if (carbonLogReader.checkForLog("handleRequestInFlow", 6) &&
-                carbonLogReader.checkForLog("handleRequestOutFlow", 6) &&
-                carbonLogReader.checkForLog("handleResponseInFlow", 6) &&
-                carbonLogReader.checkForLog("handleResponseOutFlow", 6)) {
+        if (carbonLogReader.checkForLog("handleRequestInFlow", DEFAULT_TIMEOUT) &&
+                carbonLogReader.checkForLog("handleRequestOutFlow", DEFAULT_TIMEOUT) &&
+                carbonLogReader.checkForLog("handleResponseInFlow", DEFAULT_TIMEOUT) &&
+                carbonLogReader.checkForLog("handleResponseOutFlow", DEFAULT_TIMEOUT)) {
             handlerStatus = true;
         }
         carbonLogReader.stop();
@@ -80,8 +80,8 @@ public class HandlerTest extends ESBIntegrationTest {
             assertEquals(expected.getReason(), "Custom ERROR Message", "Custom ERROR Message mismatched");
         }
 
-        errorOnSoapFaultStatus = carbonLogReader.checkForLog("Fault Sequence Hit", 10);
-        responseInStatus = carbonLogReader.checkForLog("handleResponseInFlow", 10);
+        errorOnSoapFaultStatus = carbonLogReader.checkForLog("Fault Sequence Hit", DEFAULT_TIMEOUT);
+        responseInStatus = carbonLogReader.checkForLog("handleResponseInFlow", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
 
         Assert.assertTrue(errorOnSoapFaultStatus, "When SoapFault come as a response the fault sequence hasn't been "

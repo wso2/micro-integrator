@@ -60,7 +60,7 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
             "wso2.esb" }, description = "Test email transport with invalid address parameter and pop3 protocol")
     public void testEmailTransportInvalidAddress() throws Exception {
         carbonLogReader.start();
-        assertTrue(carbonLogReader.checkForLog("Error connecting to mail server for address", 10),
+        assertTrue(carbonLogReader.checkForLog("Error connecting to mail server for address", DEFAULT_TIMEOUT),
                 "Couldn't find the error message in log");
     }
 

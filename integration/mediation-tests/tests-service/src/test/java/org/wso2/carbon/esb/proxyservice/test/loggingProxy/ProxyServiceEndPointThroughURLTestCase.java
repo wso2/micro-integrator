@@ -49,9 +49,9 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
                 getFirstChildWithName(new QName("http://services.samples/xsd", "symbol")).getText();
         assertEquals(symbol, "WSO2", "Fault: value 'symbol' mismatched");
 
-        assertTrue(carbonLogReader.checkForLog("getQuote", 60));
-        assertTrue(carbonLogReader.checkForLog("<ns:symbol>WSO2</ns:symbol>", 60));
-        assertTrue(carbonLogReader.checkForLog("ns:getQuoteResponse", 60));
+        assertTrue(carbonLogReader.checkForLog("getQuote", DEFAULT_TIMEOUT));
+        assertTrue(carbonLogReader.checkForLog("<ns:symbol>WSO2</ns:symbol>", DEFAULT_TIMEOUT));
+        assertTrue(carbonLogReader.checkForLog("ns:getQuoteResponse", DEFAULT_TIMEOUT));
         carbonLogReader.stop();
     }
 

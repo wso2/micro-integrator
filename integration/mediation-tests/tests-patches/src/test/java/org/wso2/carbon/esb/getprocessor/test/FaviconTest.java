@@ -34,15 +34,14 @@ public class FaviconTest extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test for ClosedChannel Exception")
-    public void faviconTest() throws IOException {
+    public void faviconTest() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
         HttpsResponse response = HttpsURLConnectionClient.
                 getRequest("https://localhost:8443/" + "favicon.ico", null);
         Assert.assertEquals(response.getResponseCode(), 301, "Response code mismatch");
-        String logs = carbonLogReader.getLogs();
+        boolean exceptionFound = carbonLogReader.checkForLog("ClosedChannelException", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
-        boolean exceptionFound = logs.contains("ClosedChannelException");
         Assert.assertTrue(!exceptionFound, "ClosedChannelException occurred while retrieving favicon.ico");
     }
 }

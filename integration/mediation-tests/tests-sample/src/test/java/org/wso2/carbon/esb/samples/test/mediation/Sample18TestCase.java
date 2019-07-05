@@ -47,8 +47,8 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using ForEachMediator")
     public void testTransformWithForEachMediator() throws Exception {
 
-        CarbonLogReader logReader = new CarbonLogReader();
-        logReader.start();
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
@@ -65,11 +65,8 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
 
         client.doPost(endpoint, headers, request, "application/xml;charset=" + charset);
 
-        String logs = logReader.getLogs();
-        logReader.stop();
-
-        if (logs.contains("<m0:getQuote>")) {
-
+        if (carbonLogReader.checkForLog("<m0:getQuote>", DEFAULT_TIMEOUT)) {
+            String logs = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(logs);
@@ -90,6 +87,7 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
         } else {
             fail("Expected logs not found.");
         }
+        carbonLogReader.stop();
     }
 
 }

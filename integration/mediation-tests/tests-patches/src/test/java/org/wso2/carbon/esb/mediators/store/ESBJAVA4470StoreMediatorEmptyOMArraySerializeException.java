@@ -44,8 +44,8 @@ public class ESBJAVA4470StoreMediatorEmptyOMArraySerializeException extends ESBI
         httpClient.doGet(url, null);
         TimeUnit.SECONDS.sleep(10);
 
-        boolean logFound = carbonLogReader.checkForLog("Index: 0, Size: 0", 6) && carbonLogReader.checkForLog("ERROR"
-                , 6);
+        boolean logFound = carbonLogReader.checkForLog("Index: 0, Size: 0", DEFAULT_TIMEOUT) &&
+                carbonLogReader.checkForLog("ERROR", DEFAULT_TIMEOUT);
         assertFalse(logFound, "Exception thrown when serializing OM Array property by Store Mediator");
     }
 

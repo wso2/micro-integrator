@@ -84,7 +84,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
 
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_NAME)), inputPayload, requestHeader);
 
-        Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, 60), "Test fails for forcing "
+        Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, DEFAULT_TIMEOUT), "Test fails for forcing "
                 + "JSON validation with force.json.message.validation passthru-http property.");
         carbonLogReader.stop();
     }
@@ -107,8 +107,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
         requestHeader.put("Content-type", "application/xml");
 
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_NAME)), inputPayload, requestHeader);
-        String logs = carbonLogReader.getLogs();
-        Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, 60),
+        Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, DEFAULT_TIMEOUT),
                 "Test fails for forcing XML validation with force.xml.message.validation passthru-http property.");
         carbonLogReader.stop();
     }

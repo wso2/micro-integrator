@@ -40,20 +40,17 @@ public class Sample381TestCase extends ESBSampleIntegrationTest {
 
         int numberOfMsgToExpect = 5;
 
-        CarbonLogReader logReader = new CarbonLogReader(true);
-        logReader.start();
+        CarbonLogReader carbonLogReader = new CarbonLogReader(true);
+        carbonLogReader.start();
 
         MDDProducer mddProducerMSTF = new MDDProducer();
 
         for (int i = 0; i < numberOfMsgToExpect; i++) {
             mddProducerMSTF.sendMessage("MSTF", "dynamicQueues/JMSBinaryProxy");
         }
-
         Thread.sleep(5000);
-        String logs = logReader.getLogs();
-        logReader.stop();
-        Assert.assertTrue(logs.contains("MSTF"), "Request log not found");
-
+        Assert.assertTrue(carbonLogReader.checkForLog("MSTF", DEFAULT_TIMEOUT), "Request log not found");
+        carbonLogReader.stop();
     }
 
 }

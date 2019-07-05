@@ -122,7 +122,7 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
      * @return A Boolean
      */
     private boolean isPropertyContainedInLog(String property) throws InterruptedException {
-        boolean containsProperty = carbonLogReader.checkForLog(property, 60);
+        boolean containsProperty = carbonLogReader.checkForLog(property, DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         return containsProperty;
     }

@@ -68,7 +68,7 @@ public class MailToTransportFolderTestCase extends ESBIntegrationTest {
         emailSubject = "Folder Test : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
 
-        assertTrue(carbonLogReader.checkForLog(emailSubject, 10), "Email not received successfully!");
+        assertTrue(carbonLogReader.checkForLog(emailSubject, DEFAULT_TIMEOUT), "Email not received successfully!");
     }
 
     @AfterClass(alwaysRun = true)

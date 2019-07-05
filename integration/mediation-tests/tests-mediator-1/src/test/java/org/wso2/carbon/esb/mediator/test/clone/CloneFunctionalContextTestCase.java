@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.clone;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -49,12 +48,7 @@ public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CloneFunctionalContextTestProxy"), null, "IBM");
         Assert.assertNotNull(response);
 
-        Assert.assertTrue(carbonLogReader.checkForLog("REQUEST PARAM VALUE",60));
+        Assert.assertTrue(carbonLogReader.checkForLog("REQUEST PARAM VALUE", DEFAULT_TIMEOUT));
         carbonLogReader.stop();
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
     }
 }

@@ -53,7 +53,7 @@ public class LogMediatorLevelTest extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"));
         log.info(response);
         boolean logFound = carbonLogReader
-                .checkForLog("*****TEST CUSTOM LOGGING MESSAGE TO SYSTEM LOGS TEST*****", 2);
+                .checkForLog("*****TEST CUSTOM LOGGING MESSAGE TO SYSTEM LOGS TEST*****", DEFAULT_TIMEOUT);
         Assert.assertTrue(logFound, "System Log not found. LogViewer Admin service not working properly");
 
         carbonLogReader.stop();

@@ -21,17 +21,12 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.apache.commons.lang.StringUtils;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 import java.rmi.RemoteException;
 
@@ -70,18 +65,12 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
 
         // Wait till the log appears
         Thread.sleep(20000);
-        String logs = carbonLogReader.getLogs();
-        isRetriedUpon_500_response = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, 20);
-        isRetryCompleted = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, 20, RETRY_COUNT);
-        isMpDeactivated = carbonLogReader.checkForLog(EXPECTED_MP_DEACTIVATION_MSG, 20);
+        isRetriedUpon_500_response = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT);
+        isRetryCompleted = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT, RETRY_COUNT);
+        isMpDeactivated = carbonLogReader.checkForLog(EXPECTED_MP_DEACTIVATION_MSG, DEFAULT_TIMEOUT);
         Assert.assertTrue(isRetriedUpon_500_response && isRetryCompleted && isMpDeactivated,
                 "MP does not retry sending the request upon receiving HTTP SC 500 response");
         carbonLogReader.stop();
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void UndeployeService() throws Exception {
-        super.cleanup();
     }
 
     /*

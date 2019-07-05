@@ -44,6 +44,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     private LocalEntriesAdminClient localEntriesAdminClient;
     private ServerConfigurationManager serverManager = null;
     private static final String MANAGEMENT_API_MESSAGE = "Listener started on 0.0.0.0:";
+    CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
@@ -67,7 +68,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
 
         FileUtils.moveDirectory(newDir, targetDir);
 
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
         serverManager.applyMIConfigurationWithRestart(new File(
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
@@ -142,14 +143,14 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
         return new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
-                return carbonLogReader.getLogs().contains(MANAGEMENT_API_MESSAGE + (9154 + getPortOffset()));
+                return carbonLogReader.checkForLog(MANAGEMENT_API_MESSAGE + (9154 + getPortOffset()), DEFAULT_TIMEOUT);
             }
         };
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
         Thread.sleep(5000);
         if (serverManager != null) {
             serverManager.restoreToLastMIConfiguration();

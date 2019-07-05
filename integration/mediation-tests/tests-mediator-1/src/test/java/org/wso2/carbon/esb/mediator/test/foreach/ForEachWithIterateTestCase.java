@@ -46,24 +46,21 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators")
     public void testForEachInlineSequenceWithIterateEndpoint() throws Exception {
+        carbonLogReader.clearLogs();
         carbonLogReader.start();
 
         String response = client
                 .getMultipleCustomResponse(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), "IBM", 2);
         Assert.assertNotNull(response);
-        carbonLogReader.stop();
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.clearLogs();
 
-        if (logs.contains("foreach = in")) {
-            if (!logs.contains("IBM")) {
+        if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
+            if (!carbonLogReader.getLogs().contains("IBM")) {
                 Assert.fail("Incorrect message entered ForEach scope");
             }
         }
-
-        Assert.assertEquals(logs.split("foreach = in").length - 1, 2,
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 2),
                 "Count of messages entered ForEach scope is incorrect");
-
+        carbonLogReader.stop();
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
         Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));
@@ -74,27 +71,24 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
             Assert.assertTrue(getQuote.toString().contains("IBM"));
         }
         Assert.assertEquals(i, 2, "Message count mismatched in response");
-
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and aggregate mediators")
     public void testForEachSequenceRefWithIterateEndpoint() throws Exception {
+        carbonLogReader.clearLogs();
         carbonLogReader.start();
 
         String response = client
                 .getMultipleCustomResponse(getProxyServiceURLHttp("foreach_simple_sequenceref"), "IBM", 2);
         Assert.assertNotNull(response);
-
-        String logs = carbonLogReader.getLogs();
-        if (logs.contains("foreach = in")) {
-            if (!logs.contains("IBM")) {
+        if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
+            if (!carbonLogReader.getLogs().contains("IBM")) {
                 Assert.fail("Incorrect message entered ForEach scope");
             }
         }
-
-        Assert.assertEquals(logs.split("foreach = in").length - 1, 2,
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 2),
                 "Count of messages entered ForEach scope is incorrect");
-
+        carbonLogReader.stop();
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
         Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));

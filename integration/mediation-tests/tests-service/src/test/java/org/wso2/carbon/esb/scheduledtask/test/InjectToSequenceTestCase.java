@@ -21,8 +21,6 @@ import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
@@ -63,7 +61,7 @@ public class InjectToSequenceTestCase extends ESBIntegrationTest {
         Utils.deploySynapseConfiguration(task, "SampleInjectToSequenceTask", "tasks",  true);
         TimeUnit.SECONDS.sleep(5);
 
-        boolean invokedLogFound = carbonLogReader.getLogs().contains("SEQUENCE INVOKED");
+        boolean invokedLogFound = carbonLogReader.checkForLog("SEQUENCE INVOKED", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         assertTrue(invokedLogFound);
     }
@@ -71,6 +69,5 @@ public class InjectToSequenceTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         Utils.undeploySynapseConfiguration("SampleInjectToSequenceTask", "tasks");
-        super.cleanup();
     }
 }

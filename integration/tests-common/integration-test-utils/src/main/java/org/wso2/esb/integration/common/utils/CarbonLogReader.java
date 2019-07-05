@@ -151,11 +151,11 @@ public class CarbonLogReader {
     public boolean checkForLog(String expected, int timeout) throws InterruptedException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
-            TimeUnit.SECONDS.sleep(1);
             if (assertIfLogExists(expected)) {
                 logExists = true;
                 break;
             }
+            TimeUnit.SECONDS.sleep(1);
         }
         return logExists;
     }
@@ -171,10 +171,10 @@ public class CarbonLogReader {
      */
     public boolean checkForLog(String expected, int timeout, int numberofOccurrences) throws InterruptedException {
         for (int i = 0; i < timeout; i++) {
-            TimeUnit.SECONDS.sleep(1);
             if (assertIfLogExists(expected, numberofOccurrences)) {
                 return true;
             }
+            TimeUnit.SECONDS.sleep(1);
         }
         return false;
     }

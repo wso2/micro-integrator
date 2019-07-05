@@ -23,7 +23,6 @@ import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
@@ -44,7 +43,7 @@ public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationT
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test getting the  URI element of a request URL")
-    public void testXpathURLProperty() throws IOException {
+    public void testXpathURLProperty() throws Exception {
         boolean isUri = false;
         carbonLogReader.start();
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("XpathURLPropertyApi") + "/edit?a=wso2&b=2.4", null);
@@ -57,13 +56,10 @@ public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationT
 
         String msg = "SYMBOL = wso2, VALUE = 2.4";
         // after sending the message reading the log file
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.stop();
-
-        if (logs.contains(msg)) {
+        if (carbonLogReader.checkForLog(msg, DEFAULT_TIMEOUT)) {
             isUri = true;
         }
-
+        carbonLogReader.stop();
         assertTrue(isUri, "Message expected (SYMBOL = wso2, VALUE = 2.4) Not found");
     }
 }

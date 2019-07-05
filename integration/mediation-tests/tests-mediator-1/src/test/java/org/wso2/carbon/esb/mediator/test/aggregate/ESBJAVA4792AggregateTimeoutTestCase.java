@@ -28,7 +28,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 import javax.xml.stream.XMLStreamException;
@@ -49,38 +48,37 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
         axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server1.deployService("LBServiceWithSleep");
         axis2Server1.start();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/aggregate/aggregateConfig.xml");
     }
 
     @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
             + "aggregator timeout when iterator is used")
     public void checkOnCompleteExecutionInIterator() throws Exception {
-        CarbonLogReader logReader = new CarbonLogReader();
-        logReader.start();
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         OMElement payload = getSleepOperationRequestForIterator();
         OMElement response = axis2Client
                 .send(getProxyServiceURLHttp("timeoutIterator"), null, "sleepOperation", payload);
-        String logs = logReader.getLogs();
-        logReader.stop();
         Assert.assertEquals(countLoadElement(response), 2, "Response must have two aggregated responses");
         //wait a last response to come to aggregator
-        boolean logFound = Utils
-                .logExists(logReader, "On Complete Triggered in Iterator for ESBJAVA4792AggregateTimeoutTestCase", 10);
+        boolean logFound = carbonLogReader.checkForLog("On Complete Triggered in Iterator for ESBJAVA4792AggregateTimeoutTestCase",
+                        DEFAULT_TIMEOUT);
         Assert.assertTrue(logFound, "OnComplete has been triggered more than expecting");
+        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
             + "aggregator timeout when clone is used")
     public void checkOnCompleteExecutionInClone() throws Exception {
-        CarbonLogReader logReader = new CarbonLogReader();
-        logReader.start();
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         OMElement payload = getSleepOperationRequest();
         OMElement response = axis2Client.send(getProxyServiceURLHttps("timeoutClone"), null, "sleepOperation", payload);
         Assert.assertEquals(countLoadElement(response), 2, "Response must have two aggregated responses");
         //wait a last response to come to aggregator
-        boolean logFound = Utils
-                .logExists(logReader, "On Complete Triggered in Clone for ESBJAVA4792AggregateTimeoutTestCase", 10);
+        boolean logFound = carbonLogReader.checkForLog(
+                "On Complete Triggered in Clone for ESBJAVA4792AggregateTimeoutTestCase", DEFAULT_TIMEOUT);
         Assert.assertTrue(logFound, "OnComplete has been triggered more than expecting");
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)

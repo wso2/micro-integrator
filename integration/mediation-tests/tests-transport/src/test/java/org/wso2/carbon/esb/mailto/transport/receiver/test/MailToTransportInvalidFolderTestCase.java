@@ -56,7 +56,7 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Test email transport with invalid folder")
     public void testEmailTransportInvalidFolder() throws Exception {
         carbonLogReader.start();
-        assertTrue(carbonLogReader.checkForLog("FolderABC not found", 10),
+        assertTrue(carbonLogReader.checkForLog("FolderABC not found", DEFAULT_TIMEOUT),
                 "Couldn't find the error message in log");
     }
 

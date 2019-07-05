@@ -91,7 +91,7 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
         }
 
         // To check whether the NPE happened
-        boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", 5);
+        boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", DEFAULT_TIMEOUT);
         carbonLogReader.clearLogs();
         Assert.assertFalse(isError && timeout,
                 " The null check for the replyFile.getParent() in VFSTransportSender is not available");
@@ -113,7 +113,7 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
         }
 
         // To check whether the NPE happened
-        boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", 5);
+        boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", DEFAULT_TIMEOUT);
         Assert.assertFalse(isError && timeout,
                 " The null check for the replyFile.getParent() in VFSTransportSender is not available");
     }

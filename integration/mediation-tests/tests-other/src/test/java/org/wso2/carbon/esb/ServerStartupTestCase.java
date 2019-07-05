@@ -36,10 +36,9 @@ public class ServerStartupTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "verify server startup errors")
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    public void testVerifyLogs() {
+    public void testVerifyLogs() throws InterruptedException {
         carbonLogReader.start();
-        String logs = carbonLogReader.getLogs();
-        boolean status = logs.contains("ERROR");
+        boolean status = carbonLogReader.checkForLog("ERROR", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         Assert.assertFalse(status, "Server started with errors.");
     }
