@@ -44,6 +44,7 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
     public void testSmallNumbers() throws Exception {
+        carbonLogReader.clearLogs();
         carbonLogReader.start();
 
         OMElement response = null;
@@ -54,26 +55,19 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
             Assert.assertTrue(response.toString().contains("IBM"), "Incorrect symbol in response");
             response = null;
         }
-
-        carbonLogReader.stop();
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.clearLogs();
-
-        if (logs.contains("foreach = in")) {
-            if (!logs.contains("IBM")) {
+        if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
+            if (!carbonLogReader.checkForLog("IBM", DEFAULT_TIMEOUT)) {
                 Assert.fail("Incorrect message entered ForEach scope. Could not find symbol IBM ..");
             }
         }
-
-        String[] splittedElements = logs.split("foreach = in");
-
-        Assert.assertEquals(splittedElements.length - 1, 20, "Count of messages entered ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 20), "Count of messages entered ForEach scope is incorrect");
+        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
     public void testLargeNumbers() throws Exception {
+        carbonLogReader.clearLogs();
         carbonLogReader.start();
-
         OMElement response = null;
         for (int i = 0; i < 100; i++) {
             response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachSmallMessageTestProxy"), null,
@@ -83,16 +77,13 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
                     "Incorrect symbol in response. Could not find symbol MSFT ..");
             response = null;
         }
-        carbonLogReader.stop();
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.clearLogs();
-        if (logs.contains("foreach = in")) {
-            if (!logs.contains("MSFT")) {
+        if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
+            if (!carbonLogReader.checkForLog("MSFT", DEFAULT_TIMEOUT)) {
                 Assert.fail("Incorrect message entered ForEach scope");
             }
         }
-
-        String[] splittedElements = logs.split("foreach = in");
-        Assert.assertEquals(splittedElements.length - 1, 100, "Count of messages entered ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT , 100),
+                "Count of messages entered ForEach scope is incorrect");
+        carbonLogReader.stop();
     }
 }

@@ -49,7 +49,7 @@ public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportListener not logs the clear password on error")
     public void testVFSListenerHidePasswordInLog() throws Exception {
 
-        Assert.assertFalse(logReader.checkForLog("ClearPassword", 5),
+        Assert.assertFalse(logReader.checkForLog("ClearPassword", DEFAULT_TIMEOUT),
                 " The password is getting printed in the log in the VFSTransportListener.");
         logReader.clearLogs();
     }
@@ -66,7 +66,7 @@ public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
             // Ignore exception
         }
 
-        Assert.assertFalse(logReader.checkForLog("ClearPassword", 5), " The password is getting printed in the log VFSTransportSender.");
+        Assert.assertFalse(logReader.checkForLog("ClearPassword", DEFAULT_TIMEOUT), " The password is getting printed in the log VFSTransportSender.");
     }
 
 

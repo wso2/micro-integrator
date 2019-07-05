@@ -106,6 +106,7 @@ public abstract class ESBIntegrationTest {
     private static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
     private String hostName = null;
     private int portOffset;
+    protected final int DEFAULT_TIMEOUT = 60;
 
     /**
      * Initialize the context given a tenant domain and a user.

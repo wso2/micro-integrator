@@ -86,7 +86,7 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         }
 
         //check EI log to see if message is consumed
-        boolean result = carbonLogReader.checkForLog(messageToSend, 10);
+        boolean result = carbonLogReader.checkForLog(messageToSend, DEFAULT_TIMEOUT);
         Assert.assertTrue(result, "Message is not found in log. Expected : " + messageToSend);
         carbonLogReader.stop();
     }

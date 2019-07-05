@@ -66,7 +66,7 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
 
         }
         boolean errorLogFound = false;
-        if (carbonLogReader.checkForLog("Host: google.com:80", 50)) {
+        if (carbonLogReader.checkForLog("Host: google.com:80", DEFAULT_TIMEOUT)) {
             errorLogFound = true;
         }
         assertFalse(errorLogFound, "Port 80 should not append to the Host header");

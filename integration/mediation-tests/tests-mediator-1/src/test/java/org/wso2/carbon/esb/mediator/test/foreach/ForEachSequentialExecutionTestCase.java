@@ -52,22 +52,17 @@ public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
                         "urn:getQuote");
         Assert.assertNotNull(response);
 
-        carbonLogReader.stop();
-        String logs = carbonLogReader.getLogs();
-
         // Verify logs to check that the order of symbols is same as in the payload. The symbols should be as SYM[1-10]
         // as in payload. Since loop iterates from the last log onwards, verifying whether the symbols are in SYM[10-1] order
         for (int i = 0; i < 10; i++) {
-            if (logs.contains("foreach = in")) {
-                if (!logs.contains("SYM" + i)) {
+            if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
+                if (!carbonLogReader.getLogs().contains("SYM" + i)) {
                     Assert.fail("Incorrect message entered ForEach scope. Could not find symbol SYM" + i);
                 }
             }
         }
-        String[] splittedElements = logs.split("SYM");
-
-        Assert.assertEquals(splittedElements.length - 1, 10, "Count of messages entered ForEach scope is incorrect");
-
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 10), "Count of messages entered ForEach scope is incorrect");
+        carbonLogReader.stop();
     }
 
     private OMElement createMultipleSymbolPayLoad(int iterations) {

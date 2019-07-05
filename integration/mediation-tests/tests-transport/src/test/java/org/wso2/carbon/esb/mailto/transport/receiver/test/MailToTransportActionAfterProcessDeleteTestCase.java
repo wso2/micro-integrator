@@ -72,7 +72,7 @@ public class MailToTransportActionAfterProcessDeleteTestCase extends ESBIntegrat
         emailSubject = "Process Delete : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
 
-        assertTrue(carbonLogReader.checkForLog(emailSubject, 10), "Email not processed!");
+        assertTrue(carbonLogReader.checkForLog(emailSubject, DEFAULT_TIMEOUT), "Email not processed!");
 
         assertTrue(GreenMailServer.checkEmailDeleted(emailSubject, "imap"), "Mail has not been deleted successfully");
         carbonLogReader.stop();

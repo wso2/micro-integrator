@@ -51,7 +51,7 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
 
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("services/client/anotherParam"), null);
 
-        Assert.assertFalse(logReader.checkForLog("anotherParam", 10),
+        Assert.assertFalse(logReader.checkForLog("anotherParam", DEFAULT_TIMEOUT),
                 " Target URL is wrong. It appends the context URL part also.");
 
         logReader.stop();
@@ -68,7 +68,7 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
         logReader.start();
 
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("services/client/anotherParam/foo"), null);
-        Assert.assertTrue(logReader.checkForLog("/services/testAPI/foo", 10),
+        Assert.assertTrue(logReader.checkForLog("/services/testAPI/foo", DEFAULT_TIMEOUT),
                 " Target URL is wrong. expected /services/testAPI/foo ");
         logReader.stop();
     }

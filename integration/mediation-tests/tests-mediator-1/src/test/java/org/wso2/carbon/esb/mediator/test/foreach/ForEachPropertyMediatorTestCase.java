@@ -62,38 +62,35 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachPropertyTestProxy"),
                 headers, request, "application/xml;charset=UTF-8");
+
+        if (carbonLogReader.checkForLog("fe_1_verify_in_1", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_1_verify_in_1 = first property insequence"));
+        }
+        if (carbonLogReader.checkForLog("in_2_verify_fe_1", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_2_verify_fe_1 = property in first foreach"));
+        }
+        if (carbonLogReader.checkForLog("fe_2_verify_in_1", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_2_verify_in_1 = first property insequence"));
+        }
+        if (carbonLogReader.checkForLog("fe_2_verify_fe_1", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_2_verify_fe_1 = property in first foreach"));
+        }
+        if (carbonLogReader.checkForLog("fe_2_verify_in_2", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_2_verify_in_2 = second property insequence"));
+        }
+        if (carbonLogReader.checkForLog("in_3_verify_fe_2", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_3_verify_fe_2 = property in second foreach"));
+        }
+        if (carbonLogReader.checkForLog("in_3_verify_in_1", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_3_verify_in_1 = first property insequence"));
+        }
+        if (carbonLogReader.checkForLog("in_3_verify_fe_1", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_3_verify_fe_1 = property in first foreach"));
+        }
+        if (carbonLogReader.checkForLog("in_3_verify_in_2", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_3_verify_in_2 = second property insequence"));
+        }
         carbonLogReader.stop();
-
-        String logs = carbonLogReader.getLogs();
-
-        if (logs.contains("fe_1_verify_in_1")) {
-            assertTrue(logs.contains("fe_1_verify_in_1 = first property insequence"));
-        }
-        if (logs.contains("in_2_verify_fe_1")) {
-            assertTrue(logs.contains("in_2_verify_fe_1 = property in first foreach"));
-        }
-        if (logs.contains("fe_2_verify_in_1")) {
-            assertTrue(logs.contains("fe_2_verify_in_1 = first property insequence"));
-        }
-        if (logs.contains("fe_2_verify_fe_1")) {
-            assertTrue(logs.contains("fe_2_verify_fe_1 = property in first foreach"));
-        }
-        if (logs.contains("fe_2_verify_in_2")) {
-            assertTrue(logs.contains("fe_2_verify_in_2 = second property insequence"));
-        }
-        if (logs.contains("in_3_verify_fe_2")) {
-            assertTrue(logs.contains("in_3_verify_fe_2 = property in second foreach"));
-        }
-        if (logs.contains("in_3_verify_in_1")) {
-            assertTrue(logs.contains("in_3_verify_in_1 = first property insequence"));
-        }
-        if (logs.contains("in_3_verify_fe_1")) {
-            assertTrue(logs.contains("in_3_verify_fe_1 = property in first foreach"));
-        }
-        if (logs.contains("in_3_verify_in_2")) {
-            assertTrue(logs.contains("in_3_verify_in_2 = second property insequence"));
-        }
-
     }
 
     @Test(groups = "wso2.esb", description = "Test nested foreach constructs with property mediator in flow")
@@ -110,34 +107,31 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("NestedForEachPropertiesWithID"),
                 headers, request, "application/xml;charset=UTF-8");
+
+        if (carbonLogReader.checkForLog("fe_outer_verify_in", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_outer_verify_in = property insequence"));
+        }
+        if (carbonLogReader.checkForLog("fe_inner_verify_in", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_inner_verify_in = property insequence"));
+        }
+        if (carbonLogReader.checkForLog("fe_inner_verify_fe_outer", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_inner_verify_fe_outer = property outer foreach"));
+        }
+        if (carbonLogReader.checkForLog("fe_outer_verify_fe_outer", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_outer_verify_fe_outer = property outer foreach"));
+        }
+        if (carbonLogReader.checkForLog("fe_outer_fe_inner", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("fe_outer_fe_inner = property inner foreach"));
+        }
+        if (carbonLogReader.checkForLog("in_verify_in", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_verify_in = property insequence"));
+        }
+        if (carbonLogReader.checkForLog("in_fe_outer", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_fe_outer = property outer foreach"));
+        }
+        if (carbonLogReader.checkForLog("in_fe_inner", DEFAULT_TIMEOUT)) {
+            assertTrue(carbonLogReader.getLogs().contains("in_fe_inner = property inner foreach"));
+        }
         carbonLogReader.stop();
-
-        String logs = carbonLogReader.getLogs();
-
-        if (logs.contains("fe_outer_verify_in")) {
-            assertTrue(logs.contains("fe_outer_verify_in = property insequence"));
-        }
-        if (logs.contains("fe_inner_verify_in")) {
-            assertTrue(logs.contains("fe_inner_verify_in = property insequence"));
-        }
-        if (logs.contains("fe_inner_verify_fe_outer")) {
-            assertTrue(logs.contains("fe_inner_verify_fe_outer = property outer foreach"));
-        }
-        if (logs.contains("fe_outer_verify_fe_outer")) {
-            assertTrue(logs.contains("fe_outer_verify_fe_outer = property outer foreach"));
-        }
-        if (logs.contains("fe_outer_fe_inner")) {
-            assertTrue(logs.contains("fe_outer_fe_inner = property inner foreach"));
-        }
-        if (logs.contains("in_verify_in")) {
-            assertTrue(logs.contains("in_verify_in = property insequence"));
-        }
-        if (logs.contains("in_fe_outer")) {
-            assertTrue(logs.contains("in_fe_outer = property outer foreach"));
-        }
-        if (logs.contains("in_fe_inner")) {
-            assertTrue(logs.contains("in_fe_inner = property inner foreach"));
-        }
-
     }
 }

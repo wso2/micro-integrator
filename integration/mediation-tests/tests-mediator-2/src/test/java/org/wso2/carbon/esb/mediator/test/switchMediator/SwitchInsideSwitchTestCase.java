@@ -43,10 +43,9 @@ public class SwitchInsideSwitchTestCase extends ESBIntegrationTest {
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
         // Assert Test property of INFO log for "This is Get Quote service"
         // & symbol property of INFO log for "Great stock - IBM"
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.stop();
-
-        Assert.assertTrue(logs.contains("This is Get Quote service"), "Test Property not set");
-        Assert.assertTrue(logs.contains("Great stock - IBM"), "Symbol property not set");
+        Assert.assertTrue(carbonLogReader.checkForLog("This is Get Quote service", DEFAULT_TIMEOUT),
+                "Test Property not set");
+        Assert.assertTrue(carbonLogReader.checkForLog("Great stock - IBM", DEFAULT_TIMEOUT),
+                "Symbol property not set");
     }
 }

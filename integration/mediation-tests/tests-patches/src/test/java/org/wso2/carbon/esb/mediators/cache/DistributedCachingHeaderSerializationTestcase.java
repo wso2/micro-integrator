@@ -65,7 +65,7 @@ public class DistributedCachingHeaderSerializationTestcase extends ESBIntegratio
         Assert.assertEquals(actualValue1, requestXml);
         Assert.assertEquals(actualValue2, requestXml);
 
-        boolean existInLogs = carbonLogReader.checkForLog("CACHEMATCHEDCACHEMATCHED", 6);
+        boolean existInLogs = carbonLogReader.checkForLog("CACHEMATCHEDCACHEMATCHED", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         Assert.assertTrue(existInLogs);
     }

@@ -21,7 +21,6 @@ package org.wso2.carbon.esb.registry.task;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.llom.util.AXIOMUtil;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -58,13 +57,9 @@ public class ESBJAVA4565TestCase extends ESBIntegrationTest {
     public void checkErrorLog() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
-        boolean hasErrorLog = carbonLogReader.getLogs().contains("java.lang.NullPointerException: Tenant domain has not been set in CarbonContext");
+        boolean hasErrorLog = carbonLogReader.checkForLog(
+                "java.lang.NullPointerException: Tenant domain has not been set in CarbonContext", DEFAULT_TIMEOUT);
         Assert.assertFalse(hasErrorLog,
                 "Tenant domain not resolved when registry resource is accessed inside " + "a scheduled task");
-    }
-
-    @AfterClass(alwaysRun = true, enabled = false)
-    public void UndeployService() throws Exception {
-        super.cleanup();
     }
 }

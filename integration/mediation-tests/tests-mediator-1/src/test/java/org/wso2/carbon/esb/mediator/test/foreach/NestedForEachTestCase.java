@@ -53,6 +53,7 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
 
     @Test(groups = {"wso2.esb"}, description = "Transforming a Message Using a Nested ForEach Construct")
     public void testNestedForEach() throws Exception {
+        carbonLogReader.clearLogs();
         carbonLogReader.start();
 
         String request =
@@ -65,12 +66,9 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachNestedTestProxy"),
                 headers, request, "application/xml;charset=UTF-8");
-        carbonLogReader.stop();
 
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.clearLogs();
-
-        if (logs.contains("foreach = after")) {
+        if (carbonLogReader.checkForLog("foreach = after", DEFAULT_TIMEOUT)) {
+            String logs = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(logs);
@@ -93,32 +91,34 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
                     "MSFT Element not found");
 
         }
+        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
     public void testNestedForEachMediatorWithIterate() throws Exception {
+        carbonLogReader.clearLogs();
         carbonLogReader.start();
         String response = client.send(getProxyServiceURLHttp("nested_foreach_iterate"), createMultipleSymbolPayLoad(10), "urn:getQuote");
         Assert.assertNotNull(response);
-        carbonLogReader.stop();
-
-        String logs = carbonLogReader.getLogs();
 
         for (int i = 0; i < 10; i++) {
-            if (logs.contains("foreach = outer")) {
-                if (!logs.contains("SYM" + i)) {
+            if (carbonLogReader.checkForLog("foreach = outer", DEFAULT_TIMEOUT)) {
+                if (!carbonLogReader.getLogs().contains("SYM" + i)) {
                     Assert.fail("Incorrect message entered outer ForEach scope. Could not find symbol SYM"
-                            + i + " Found : " + logs);
+                            + i + " Found : " + carbonLogReader.getLogs());
                 }
-            } else if (logs.contains("foreach = inner")) {
-                if (!logs.contains("SYM" + i)) {
+            } else if (carbonLogReader.checkForLog("foreach = inner", DEFAULT_TIMEOUT)) {
+                if (!carbonLogReader.getLogs().contains("SYM" + i)) {
                     Assert.fail("Incorrect message entered inner ForEach scope. Could not find symbol SYM"
-                            + i + " Found : " + logs);
+                            + i + " Found : " + carbonLogReader.getLogs());
                 }
             }
         }
-        Assert.assertEquals(logs.split("foreach = outer").length - 1, 10, "Count of messages entered outer ForEach scope is incorrect");
-        Assert.assertEquals(logs.split("foreach = inner").length - 1, 10, "Count of messages entered inner ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = outer", DEFAULT_TIMEOUT, 10),
+                "Count of messages entered outer ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = inner", DEFAULT_TIMEOUT, 10),
+                "Count of messages entered inner ForEach scope is incorrect");
+        carbonLogReader.stop();
     }
 
     private OMElement createMultipleSymbolPayLoad(int iterations) {

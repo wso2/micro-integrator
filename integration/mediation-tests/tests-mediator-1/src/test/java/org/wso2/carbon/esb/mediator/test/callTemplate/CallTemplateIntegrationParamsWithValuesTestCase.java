@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.callTemplate;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -44,19 +43,13 @@ public class CallTemplateIntegrationParamsWithValuesTestCase extends ESBIntegrat
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "IBM");
         boolean requestLog = false;
         boolean responseLog = false;
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.stop();
-        if (logs.contains("REQUEST PARAM VALUE")) {
+        if (carbonLogReader.checkForLog("REQUEST PARAM VALUE", DEFAULT_TIMEOUT)) {
             requestLog = true;
         }
-        if (logs.contains("RESPONSE PARAM VALUE")) {
+        if (carbonLogReader.checkForLog("RESPONSE PARAM VALUE", DEFAULT_TIMEOUT)) {
             responseLog = true;
         }
         Assert.assertTrue((requestLog && responseLog), "Relevant log not found in carbon logs");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void cleanUp() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 }

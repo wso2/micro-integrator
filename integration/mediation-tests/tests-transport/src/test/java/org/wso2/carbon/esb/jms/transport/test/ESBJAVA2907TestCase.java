@@ -26,7 +26,7 @@ public class ESBJAVA2907TestCase extends ESBIntegrationTest {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
         client.sendRobust(Utils.getStockQuoteRequest("IBM"), getProxyServiceURLHttp("testPS"), "getQuote");
-        Assert.assertTrue(carbonLogReader.checkForLog(GET_QUOTE_REQUEST_BODY, 5), "OMElement is not saved to the message store");
+        Assert.assertTrue(carbonLogReader.checkForLog(GET_QUOTE_REQUEST_BODY, DEFAULT_TIMEOUT), "OMElement is not saved to the message store");
         carbonLogReader.stop();
     }
 

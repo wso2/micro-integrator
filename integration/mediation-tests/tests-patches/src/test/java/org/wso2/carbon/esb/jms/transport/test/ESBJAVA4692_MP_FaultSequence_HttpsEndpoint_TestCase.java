@@ -40,7 +40,7 @@ public class ESBJAVA4692_MP_FaultSequence_HttpsEndpoint_TestCase extends ESBInte
         String payload = "<payload/>";
         AXIOMUtil.stringToOM(payload);
         client.sendRobust(AXIOMUtil.stringToOM(payload), getProxyServiceURLHttps("MSProxy"), "urn:mediate");
-        boolean logFound = carbonLogReader.checkForLog("FaultSeq = *********** FaultSeq *****************", 6);
+        boolean logFound = carbonLogReader.checkForLog("FaultSeq = *********** FaultSeq *****************", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         assertTrue(logFound, "Fault Sequence Not Executed for Soap Fault");
     }

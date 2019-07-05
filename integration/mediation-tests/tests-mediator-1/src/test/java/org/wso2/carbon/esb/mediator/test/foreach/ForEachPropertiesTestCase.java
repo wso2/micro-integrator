@@ -63,14 +63,12 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachSinglePropertyTestProxy"),
                 headers, request, "application/xml;charset=UTF-8");
 
-        carbonLogReader.stop();
-        String logs = carbonLogReader.getLogs();
-
-        if (logs.contains("fe_originalpayload") || logs.contains("in_originalpayload") || logs
-                .contains("out_originalpayload")) {
+        if (carbonLogReader.checkForLog("fe_originalpayload", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("in_originalpayload", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("out_originalpayload", DEFAULT_TIMEOUT)) {
             //fe : original payload while in foreach
             //in : original payload outside foreach
-            String payload = logs;
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(payload);
@@ -82,7 +80,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 int end = matcher.end();
                 String quote = payload.substring(start, end);
 
-                assertTrue(logs.contains("<m0:getQuote>" + "            <m0:group>Group1</m0:group>"
+                assertTrue(carbonLogReader.getLogs().contains("<m0:getQuote>" + "            <m0:group>Group1</m0:group>"
                                 + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
                                 + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
                                 + "            <m0:request><m0:code>MSFT</m0:code></m0:request>" + "        </m0:getQuote>"),
@@ -90,19 +88,22 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
             }
         }
 
-        if (logs.contains("fe_group") || logs.contains("in_group")) {
+        if (carbonLogReader.checkForLog("fe_group", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("in_group", DEFAULT_TIMEOUT)) {
             //group in insequence and foreach sequence
-            assertTrue(logs.contains("Group1"), "Group mismatch, expected Group1 found = " + logs);
+            assertTrue(carbonLogReader.getLogs().contains("Group1"), "Group mismatch, expected Group1 found = " +
+                    carbonLogReader.getLogs());
         }
 
-        if (logs.contains("in_count")) {
+        if (carbonLogReader.checkForLog("in_count", DEFAULT_TIMEOUT)) {
             //counter at the end of foreach in insequence
-            assertTrue(logs.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + logs);
+            assertTrue(carbonLogReader.getLogs().contains("in_count = " + 3),
+                    "Final counter mismatch, expected 3 found = " + carbonLogReader.getLogs());
         }
 
-        if (logs.contains("in_payload")) {
+        if (carbonLogReader.checkForLog("in_payload", DEFAULT_TIMEOUT)) {
             //final payload in insequence
-            String payload = logs;
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(payload);
@@ -120,6 +121,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 assertTrue(quote.contains("<m0:symbol>Group1_MSFT</m0:symbol>"), "MSTF Element not found");
             }
         }
+        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified")
@@ -139,14 +141,13 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachMultiplePropertyWithoutIDTestProxy"), headers,
                 request, "application/xml;charset=UTF-8");
-        String logs = carbonLogReader.getLogs();
-        String message = logs;
 
         //*** MESSAGES FOR FOREACH 1 ****
-        if (message.contains("1_fe_originalpayload") || message.contains("1_in_originalpayload")) {
+        if (carbonLogReader.checkForLog("1_fe_originalpayload", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("1_in_originalpayload", DEFAULT_TIMEOUT)) {
             //fe : original payload while in foreach
             //in : original payload outside foreach
-            String payload = message;
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(payload);
@@ -166,19 +167,22 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
             }
         }
 
-        if (message.contains("1_fe_group") || message.contains("1_in_group")) {
+        if (carbonLogReader.checkForLog("1_fe_group", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("1_in_group", DEFAULT_TIMEOUT)) {
             //group in insequence and foreach sequence
-            assertTrue(message.contains("Group1"), "Group mismatch, expected Group1 found = " + message);
+            assertTrue(carbonLogReader.getLogs().contains("Group1"),
+                    "Group mismatch, expected Group1 found = " + carbonLogReader.getLogs());
         }
 
-        if (carbonLogReader.checkForLog("1_in_count", 200)) {
+        if (carbonLogReader.checkForLog("1_in_count", DEFAULT_TIMEOUT)) {
             //counter at the end of foreach in insequence
-            assertTrue(message.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + message);
+            assertTrue(carbonLogReader.getLogs().contains("in_count = " + 3),
+                    "Final counter mismatch, expected 3 found = " + carbonLogReader.getLogs());
         }
 
-        if (carbonLogReader.checkForLog("1_in_payload", 200)) {
+        if (carbonLogReader.checkForLog("1_in_payload", DEFAULT_TIMEOUT)) {
             //final payload in insequence and payload in outsequence
-            String payload = message;
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(payload);
@@ -197,13 +201,16 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
             }
         }
 
-        foreachAssert(logs);
+        foreachAssert(carbonLogReader.getLogs());
 
-        if (message.contains("2_fe_group") || message.contains("2_in_group")) {
+        if (carbonLogReader.checkForLog("2_fe_group", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("2_in_group", DEFAULT_TIMEOUT)) {
             //group in insequence and foreach sequence
-            assertTrue(message.contains("Group2"), "Group mismatch, expected Group1 found = " + message);
+            assertTrue(carbonLogReader.getLogs().contains("Group2"), "Group mismatch, expected Group1 found = " +
+                    carbonLogReader.getLogs());
         }
-        foreachAssert(logs);
+        foreachAssert(carbonLogReader.getLogs());
+        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs with id specified")
@@ -222,17 +229,14 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachMultiplePropertyWithIDTestProxy"), headers,
                 request, "application/xml;charset=UTF-8");
-        carbonLogReader.stop();
 
-        String logs = carbonLogReader.getLogs();
-        String message = logs;
 
         //*** MESSAGES FOR FOREACH 1 ****
-        if (carbonLogReader.checkForLog("1_fe_originalpayload", 200) ||
-                carbonLogReader.checkForLog("1_in_originalpayload", 200)) {
+        if (carbonLogReader.checkForLog("1_fe_originalpayload", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("1_in_originalpayload", DEFAULT_TIMEOUT)) {
             //fe : original payload while in foreach
             //in : original payload outside foreach
-            String payload = message;
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(payload);
@@ -252,20 +256,22 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
             }
         }
 
-        if (carbonLogReader.checkForLog("1_fe_group", 200) ||
-                carbonLogReader.checkForLog("1_in_group", 200)) {
+        if (carbonLogReader.checkForLog("1_fe_group", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("1_in_group", DEFAULT_TIMEOUT)) {
             //group in insequence and foreach sequence
-            assertTrue(message.contains("Group1"), "Group mismatch, expected Group1 found = " + message);
+            assertTrue(carbonLogReader.getLogs().contains("Group1"), "Group mismatch, expected Group1 found = " +
+                    carbonLogReader.getLogs());
         }
 
-        if (message.contains("1_in_count")) {
+        if (carbonLogReader.checkForLog("1_in_count", DEFAULT_TIMEOUT)) {
             //counter at the end of foreach in insequence
-            assertTrue(message.contains("in_count = " + 3), "Final counter mismatch, expected 3 found = " + message);
+            assertTrue(carbonLogReader.getLogs().contains("in_count = " + 3),
+                    "Final counter mismatch, expected 3 found = " + carbonLogReader.getLogs());
         }
 
-        if (message.contains("1_in_payload")) {
+        if (carbonLogReader.checkForLog("1_in_payload", DEFAULT_TIMEOUT)) {
             //final payload in insequence and payload in outsequence
-            String payload = message;
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(payload);
@@ -287,17 +293,19 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         if (carbonLogReader.checkForLog("2_fe_group", 200) ||
                 carbonLogReader.checkForLog("2_in_group", 200)) {
             //group in insequence and foreach sequence
-            assertTrue(message.contains("Group2"), "Group mismatch, expected Group1 found = " + message);
+            assertTrue(carbonLogReader.getLogs().contains("Group2"), "Group mismatch, expected Group1 found = " +
+                    carbonLogReader.getLogs());
         }
 
-        if (message.contains("2_in_count")) {
+        if (carbonLogReader.checkForLog("2_in_count", DEFAULT_TIMEOUT)) {
             //counter at the end of foreach in insequence
-            assertTrue(message.contains("in_count = " + 4), "Final counter mismatch, expected 4 found = " + message);
+            assertTrue(carbonLogReader.getLogs().contains("in_count = " + 4),
+                    "Final counter mismatch, expected 4 found = " + carbonLogReader.getLogs());
         }
 
-        if (message.contains("2_in_payload")) {
+        if (carbonLogReader.checkForLog("2_in_payload", DEFAULT_TIMEOUT)) {
             //final payload in insequence and payload in outsequence
-            String payload = message;
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:checkPrice(.*)</m0:checkPrice>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(payload);
@@ -317,6 +325,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 assertTrue(quote.contains("<m0:symbol>Group1_Group2_SUN</m0:symbol>"), "SUN Element not found");
             }
         }
+        carbonLogReader.stop();
     }
 
     private void foreachAssert(String message) throws Exception {

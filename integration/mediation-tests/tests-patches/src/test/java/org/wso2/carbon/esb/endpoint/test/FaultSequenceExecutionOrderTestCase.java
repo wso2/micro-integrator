@@ -28,7 +28,6 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,7 +47,7 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"}, description = "Correct Fault Sequence Invoke Test")
-    public void testCorrectFaultSequenceExecution() throws IOException {
+    public void testCorrectFaultSequenceExecution() throws Exception {
 
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
@@ -57,12 +56,11 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", contentType);
         httpClient.doPost(getMainSequenceURL() + "faultSequenceExecutionOrderTest", headers, "", contentType);
-        String logs = carbonLogReader.getLogs();
-        carbonLogReader.stop();
-        boolean isImmediateOnly = logs.contains("cF = C Fault");
-        boolean isSuperSequecefalutExecuted = logs.contains("aF = A Fault");
+        boolean isImmediateOnly = carbonLogReader.checkForLog("cF = C Fault", DEFAULT_TIMEOUT);
+        boolean isSuperSequecefalutExecuted = carbonLogReader.checkForLog("aF = A Fault", DEFAULT_TIMEOUT);
         Assert.assertTrue(isImmediateOnly);
         Assert.assertFalse(isSuperSequecefalutExecuted);
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)

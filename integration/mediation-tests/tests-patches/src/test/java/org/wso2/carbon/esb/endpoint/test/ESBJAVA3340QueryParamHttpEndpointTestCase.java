@@ -34,7 +34,7 @@ public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTes
 
     @Test(groups = {
             "wso2.esb"}, description = "Sending a Message Via REST to test query param works with space character")
-    public void testPassParamsToEndpoint() {
+    public void testPassParamsToEndpoint() throws InterruptedException {
         String requestString = "/context?queryParam=some%20value";
         boolean isSpaceCharacterEscaped;
         CarbonLogReader carbonLogReader = new CarbonLogReader();
@@ -44,8 +44,7 @@ public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTes
         } catch (Exception timeout) {
             //a timeout is expected
         }
-        String logs = carbonLogReader.getLogs();
-        isSpaceCharacterEscaped = logs.contains("queryParam = some%20value");
+        isSpaceCharacterEscaped = carbonLogReader.checkForLog("queryParam = some%20value", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
 
         Assert.assertTrue(isSpaceCharacterEscaped,

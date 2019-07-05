@@ -52,7 +52,8 @@ public class propertyIntegrationAxis2ClientRemovePropertiesTestCase extends ESBI
     }
 
     private boolean isMatchFound(String matchStr) throws InterruptedException {
-        boolean isSet = carbonLogReader.checkForLog(matchStr, 6) && carbonLogReader.checkForLog("symbol = null", 6);
+        boolean isSet = carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT) &&
+                carbonLogReader.checkForLog("symbol = null", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         return isSet;
     }

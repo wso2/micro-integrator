@@ -71,14 +71,13 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachNestedPropertiesTestProxy"),
                 headers, request, "application/xml;charset=UTF-8");
-        carbonLogReader.stop();
-
-        String logs = carbonLogReader.getLogs();
 
         //*** MESSAGES FOR OUTER FOREACH ****
-        if (logs.contains("outer_fe_originalpayload") || logs.contains("outer_in_originalpayload")) {
+        if (carbonLogReader.checkForLog("outer_fe_originalpayload", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("outer_in_originalpayload", DEFAULT_TIMEOUT)) {
             //fe : original payload while in foreach
             //in : original payload outside foreach
+            String logs = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(logs);
@@ -95,46 +94,50 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
                     + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>"
                     + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>"
                     + "        </m0:getQuote>"), "original payload is incorrect");
-        } else if (logs.contains("outer_fe_group") || logs.contains("outer_in_group")) {
+        } else if (carbonLogReader.checkForLog("outer_fe_group", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("outer_in_group", DEFAULT_TIMEOUT)) {
             //group in insequence and foreach sequence
-            assertTrue(logs.contains("Group"), "Group mismatch, expected Group found = " + logs);
+            assertTrue(carbonLogReader.getLogs().contains("Group"), "Group mismatch, expected Group found = " + carbonLogReader.getLogs());
         }
 
         //*** MESSAGES FOR INNER FOREACH ***
 
-        else if (logs.contains("inner_fe_originalpayload") || logs.contains("inner_in_originalpayload")) {
+        else if (carbonLogReader.checkForLog("inner_fe_originalpayload", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("inner_in_originalpayload", DEFAULT_TIMEOUT)) {
             //fe : original payload while in foreach
             //in : original payload outside foreach
+            String payload = carbonLogReader.getLogs();
             String search = "<m0:checkPrice(.*)</m0:checkPrice>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-            Matcher matcher = pattern.matcher(logs);
+            Matcher matcher = pattern.matcher(payload);
             boolean matchFound = matcher.find();
 
-            assertTrue(matchFound, "checkPrice element not found. Instead found : " + logs);
+            assertTrue(matchFound, "checkPrice element not found. Instead found : " + payload);
 
             int start = matcher.start();
             int end = matcher.end();
-            String quote = logs.substring(start, end);
+            String quote = payload.substring(start, end);
 
-            if (logs.contains("<m0:group>NewGroup0</m0:group>")) {
+            if (payload.contains("<m0:group>NewGroup0</m0:group>")) {
                 assertTrue(quote.contains("<m0:code>IBM-1</m0:code>"), "IBM Element not found");
                 assertTrue(quote.contains("<m0:code>IBM-2</m0:code>"), "IBM Element not found");
-            } else if (logs.contains("<m0:group>NewGroup1</m0:group>")) {
+            } else if (payload.contains("<m0:group>NewGroup1</m0:group>")) {
 
                 assertTrue(quote.contains("<m0:code>WSO2-1</m0:code>"), "WSO2 Element not found");
                 assertTrue(quote.contains("<m0:code>WSO2-2</m0:code>"), "WSO2 Element not found");
-            } else if (logs.contains("<m0:group>NewGroup2</m0:group>")) {
+            } else if (payload.contains("<m0:group>NewGroup2</m0:group>")) {
                 assertTrue(quote.contains("<m0:code>MSFT-1</m0:code>"), "MSTF Element not found");
                 assertTrue(quote.contains("<m0:code>MSFT-2</m0:code>"), "MSTF Element not found");
             } else {
                 assertTrue(false, "Payload not found");
             }
-        } else if (logs.contains("inner_in_group")) {
+        } else if (carbonLogReader.checkForLog("inner_in_group", DEFAULT_TIMEOUT)) {
             //group in insequence for inner foreach
-            assertTrue(logs.contains("NewGroup2"), "Group mismatch, expected NewGroup2 found = " + logs);
-        } else if (logs.contains("inner_fe_end_originalpayload")) {
+            assertTrue(carbonLogReader.getLogs().contains("NewGroup2"),
+                    "Group mismatch, expected NewGroup2 found = " + carbonLogReader.getLogs());
+        } else if (carbonLogReader.checkForLog("inner_fe_end_originalpayload", DEFAULT_TIMEOUT)) {
             //at end of inner foreach
-
+            String logs = carbonLogReader.getLogs();
             String search = "<m0:checkPrice(.*)</m0:checkPrice>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(logs);
@@ -160,12 +163,13 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
                 assertTrue(false, "Payload not found");
             }
 
-        } else if (logs.contains("inner_fe_end_count")) {
+        } else if (carbonLogReader.checkForLog("inner_fe_end_count", DEFAULT_TIMEOUT)) {
             //counter at the end of foreach in insequence
-            assertTrue(logs.contains("inner_fe_end_count = " + 2),
-                    "Final counter mismatch, expected 2 found = " + logs);
-        } else if (logs.contains("in_payload")) {
+            assertTrue(carbonLogReader.getLogs().contains("inner_fe_end_count = " + 2),
+                    "Final counter mismatch, expected 2 found = " + carbonLogReader.getLogs());
+        } else if (carbonLogReader.checkForLog("in_payload", DEFAULT_TIMEOUT)) {
             //final payload in insequence and payload in outsequence
+            String logs = carbonLogReader.getLogs();
             String search = "<m0:getQuote>(.*)</m0:getQuote>";
             Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
             Matcher matcher = pattern.matcher(logs);
@@ -189,6 +193,7 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
                     "MSTF Element not found");
 
         }
+        carbonLogReader.stop();
     }
 
     @AfterClass

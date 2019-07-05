@@ -72,7 +72,7 @@ public class MailToTransportActionAfterFailureMOVETestCase extends ESBIntegratio
         emailSubject = "Failure Move : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
 
-        assertTrue(carbonLogReader.checkForLog( "Failed to process message", 10),
+        assertTrue(carbonLogReader.checkForLog( "Failed to process message", DEFAULT_TIMEOUT),
                 "Couldn't get the failure message!");
 
         assertTrue(GreenMailServer.checkEmailMoved(emailSubject, "imap"),

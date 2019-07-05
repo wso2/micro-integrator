@@ -46,7 +46,7 @@ public class ESBJAVA3282CalloutJMSHeadersTestCase extends ESBIntegrationTest {
         client.sendRobust(AXIOMUtil.stringToOM(payload), getProxyServiceURLHttp("JMCalloutClientProxy"),
                           "urn:mediate");
 
-        assertTrue(carbonLogReader.checkForLog("RequestHeaderVal", 10));
+        assertTrue(carbonLogReader.checkForLog("RequestHeaderVal", DEFAULT_TIMEOUT));
         carbonLogReader.stop();
     }
 

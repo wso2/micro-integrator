@@ -33,7 +33,6 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
 
     private String symbol;
     private CarbonLogReader carbonLogReader;
-    private final int DEFAULT_TIMEOUT = 60;
 
     @BeforeClass
     public void setEnvironment() throws Exception {

@@ -72,7 +72,7 @@ public class MailToTransportActionAfterProcessMoveTestCase extends ESBIntegratio
         emailSubject = "Process Move : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
 
-        assertTrue(carbonLogReader.checkForLog(emailSubject, 10), "Email not processed!");
+        assertTrue(carbonLogReader.checkForLog(emailSubject, DEFAULT_TIMEOUT), "Email not processed!");
 
         assertTrue(GreenMailServer.checkEmailMoved(emailSubject, "imap"), "Mail has not been moved successfully");
         carbonLogReader.stop();

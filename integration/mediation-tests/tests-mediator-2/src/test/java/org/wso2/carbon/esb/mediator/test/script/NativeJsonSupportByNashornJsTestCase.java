@@ -122,7 +122,7 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
      */
     private boolean isPropertyContainedInLog(String property) throws InterruptedException{
         boolean containsProperty = false;
-        if (carbonLogReader.checkForLog(property, 60)) {
+        if (carbonLogReader.checkForLog(property, DEFAULT_TIMEOUT)) {
             containsProperty = true;
         }
         carbonLogReader.stop();
