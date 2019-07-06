@@ -29,8 +29,6 @@ public class ESBJAVA3611EndpointTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     protected void uploadCarFileTest() throws Exception {
         super.init();
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).
-                until(isManagementApiAvailable());
     }
 
     @Test(groups = "wso2.esb", enabled = true, description = "Test whether Endpoint get deployed in tenant through  capp")
