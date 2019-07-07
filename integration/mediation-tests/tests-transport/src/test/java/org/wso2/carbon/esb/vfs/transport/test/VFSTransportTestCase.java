@@ -105,8 +105,6 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         addVFSProxy24();
 
         CarbonServerExtension.restartServer();
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).
-                until(isManagementApiAvailable());
     }
 
     @AfterClass(alwaysRun = true)

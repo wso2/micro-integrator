@@ -23,6 +23,7 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.awaitility.Awaitility;
 import org.json.JSONObject;
 import org.testng.Assert;
 import org.wso2.carbon.application.mgt.synapse.stub.ExceptionException;
@@ -72,6 +73,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 import javax.xml.namespace.QName;
@@ -107,6 +109,7 @@ public abstract class ESBIntegrationTest {
     private String hostName = null;
     private int portOffset;
     protected final int DEFAULT_TIMEOUT = 60;
+    protected boolean isManagementApiAvailable = false;
 
     /**
      * Initialize the context given a tenant domain and a user.
@@ -134,6 +137,7 @@ public abstract class ESBIntegrationTest {
         esbUtils = new ESBTestCaseUtils();
         hostName = UrlGenerationUtil.getManagerHost(context.getInstance());
         portOffset = Integer.parseInt(System.getProperty("port.offset"));
+        isManagementApiAvailable = false;
     }
 
     public String getHostname() {
@@ -964,6 +968,11 @@ public abstract class ESBIntegrationTest {
 
     private String retrieveArtifactUsingManagementApi(String artifactType) throws IOException {
 
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+
         SimpleHttpClient client = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
@@ -976,26 +985,13 @@ public abstract class ESBIntegrationTest {
     }
 
     public Callable<Boolean> isManagementApiAvailable() {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                Socket s = null;
-                try
-                {
-                    s = new Socket(hostName, DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset);
-                    return true;
-                }
-                catch (Exception e)
-                {
-                    log.error("Error while opening socket for port " + DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset, e);
-                    return false;
-                }
-                finally
-                {
-                    if(s != null) {
-                        s.close();
-                    }
-                }
+        return () -> {
+            try (Socket s = new Socket(hostName, DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset)) {
+                isManagementApiAvailable = true;
+                return true;
+            } catch (Exception e) {
+                log.error("Error while opening socket for port " + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset), e);
+                return false;
             }
         };
     }
