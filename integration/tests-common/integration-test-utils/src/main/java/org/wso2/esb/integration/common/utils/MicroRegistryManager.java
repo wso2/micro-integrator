@@ -145,7 +145,6 @@ public class MicroRegistryManager {
         return new File(pathBuilder.toString() + filename).isFile();
     }
 
-
     /**
      * Function to update existing property from the Micro Registry
      *
