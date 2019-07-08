@@ -143,7 +143,6 @@ public class MicroRegistryManager {
         }
 
         return new File(pathBuilder.toString() + filename).isFile();
-
     }
 
 
