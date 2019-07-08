@@ -66,4 +66,6 @@ public class Constants {
 
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
     public static final String MESSAGE_JSON_ATTRIBUTE = "Message";
+
+    public static final String SYNAPSE_CONFIGURATION = "configuration";
 }
