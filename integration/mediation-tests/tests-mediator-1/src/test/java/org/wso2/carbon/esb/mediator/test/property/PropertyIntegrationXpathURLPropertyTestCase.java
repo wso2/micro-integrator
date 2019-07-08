@@ -56,9 +56,7 @@ public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationT
 
         String msg = "SYMBOL = wso2, VALUE = 2.4";
         // after sending the message reading the log file
-        if (carbonLogReader.checkForLog(msg, DEFAULT_TIMEOUT)) {
-            isUri = true;
-        }
+        isUri = carbonLogReader.checkForLog(msg, DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         assertTrue(isUri, "Message expected (SYMBOL = wso2, VALUE = 2.4) Not found");
     }

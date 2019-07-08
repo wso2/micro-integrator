@@ -18,6 +18,7 @@
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -38,11 +39,12 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (axis2 scope)")
     public void testIntVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntAxis2RemoveTestProxy"), null,
                         "Random Symbol");
@@ -52,7 +54,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2 scope)")
     public void testStringVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringAxis2RemoveTestProxy"), null,
                         "Random Symbol");
@@ -63,7 +65,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (axis2 scope)")
     public void testFloatVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatAxis2RemoveTestProxy"), null,
                         "Random Symbol");
@@ -73,7 +75,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (axis2 scope)")
     public void testLongVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyLongAxis2RemoveTestProxy"), null,
                         "Random Symbol");
@@ -83,7 +85,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (axis2 scope)")
     public void testShortVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortAxis2RemoveTestProxy"), null,
                         "Random Symbol");
@@ -93,7 +95,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (axis2 scope)")
     public void testOMVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyOMAxis2RemoveTestProxy"), null,
                         "Random Symbol");
@@ -109,7 +111,11 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
     private boolean isMatchFound(String matchStr) throws InterruptedException {
         boolean isSet = carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT) &&
                 carbonLogReader.checkForLog("symbol = null", DEFAULT_TIMEOUT);
-        carbonLogReader.stop();
         return isSet;
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        carbonLogReader.stop();
     }
 }

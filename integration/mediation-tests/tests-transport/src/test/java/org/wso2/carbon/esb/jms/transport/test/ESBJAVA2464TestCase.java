@@ -40,7 +40,7 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
             sender.disconnect();
         }
 
-        if (carbonLogReader.assertIfLogExists(logLine0)) {
+        if (carbonLogReader.checkForLog(logLine0, DEFAULT_TIMEOUT)) {
             Assert.fail(logLine0 + "is in log");
         }
         carbonLogReader.stop();

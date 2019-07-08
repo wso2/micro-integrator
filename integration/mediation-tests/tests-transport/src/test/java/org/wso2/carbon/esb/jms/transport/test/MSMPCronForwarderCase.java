@@ -91,7 +91,7 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
     private Callable<Boolean> isLogWritten() {
         return new Callable<Boolean>() {
             @Override public Boolean call() throws Exception {
-                return carbonLogReader.assertIfLogExists("Jack", NUMBER_OF_MESSAGES);
+                return carbonLogReader.checkForLog("Jack", DEFAULT_TIMEOUT, NUMBER_OF_MESSAGES);
             }
         };
     }

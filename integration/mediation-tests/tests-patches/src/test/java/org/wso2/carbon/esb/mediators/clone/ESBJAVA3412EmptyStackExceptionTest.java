@@ -58,8 +58,8 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
         } catch (Exception e) {
             // Ignore it.
         }
-        isEmptyStackError = carbonLogReader.assertIfLogExists(expectedErrorMsg) && carbonLogReader.
-                assertIfLogExists(expectedStackTrace);
+        isEmptyStackError = carbonLogReader.checkForLog(expectedErrorMsg, DEFAULT_TIMEOUT) && carbonLogReader.
+                checkForLog(expectedStackTrace, DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         /*

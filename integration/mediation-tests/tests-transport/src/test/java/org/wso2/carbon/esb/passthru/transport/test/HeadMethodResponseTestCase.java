@@ -42,7 +42,7 @@ public class HeadMethodResponseTestCase extends ESBIntegrationTest {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         httpClient.doGet(contextUrls.getServiceUrl() + "/HeadMethodResponseTestClientProxy", null);
 
-        assertFalse(carbonLogReader.assertIfLogExists("HTTP protocol violation"),
+        assertFalse(carbonLogReader.checkForLog("HTTP protocol violation", DEFAULT_TIMEOUT),
                 "HTTP protocol violation for Http HEAD request, " + "Response for HEAD request contains a body");
 
         carbonLogReader.stop();

@@ -68,7 +68,8 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         Thread.sleep(10000);
         assertEquals(response.getStatusLine().getStatusCode(), 202);
 
-        Assert.assertTrue(carbonLogReader.assertIfLogExists(logLine0) && carbonLogReader.assertIfLogExists(logLine1),
+        Assert.assertTrue(carbonLogReader.checkForLog(logLine0, DEFAULT_TIMEOUT) &&
+                        carbonLogReader.checkForLog(logLine1, DEFAULT_TIMEOUT),
                 "Expected messages are not logged in JMSMessageStoreProcRESTTestCase.");
         carbonLogReader.stop();
     }

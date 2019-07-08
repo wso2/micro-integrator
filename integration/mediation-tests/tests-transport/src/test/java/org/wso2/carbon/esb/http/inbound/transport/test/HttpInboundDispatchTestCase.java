@@ -75,9 +75,9 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch")
     public void inboundHttpSuperAPITest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest(urlContext + "foo", null, "WSO2");
-        Assert.assertTrue(carbonLogReader.assertIfLogExists("FOO"));
+        Assert.assertTrue(carbonLogReader.checkForLog("FOO", DEFAULT_TIMEOUT));
         axis2Client.sendSimpleStockQuoteRequest(urlContext + "boo", null, "WSO2");
-        Assert.assertTrue(carbonLogReader.assertIfLogExists("BOO"));
+        Assert.assertTrue(carbonLogReader.checkForLog("BOO", DEFAULT_TIMEOUT));
 
         /**
          * Test API dispatch to non existent API - this should trigger super tenant main sequence.
