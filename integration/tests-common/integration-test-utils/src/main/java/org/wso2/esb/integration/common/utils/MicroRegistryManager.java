@@ -120,23 +120,59 @@ public class MicroRegistryManager {
         }
     }
 
+
+
     /**
      * Function is to check if the registry resources are exist in filepath
      *
-     * @param sourcePath path to registry resource
      * @param resourcePath path to resource file path from registry resource
      * @param filename registry filename
      */
-
-    public boolean checkResourceExist(String sourcePath, String resourcePath, String filename) throws Exception {
-        try {
-            String path = sourcePath + resourcePath + filename;
-            return path.contains(filename);
-
-        } catch (Exception e) {
-            throw new Exception("Exception occurred while checking the registry resource file.", e);
+    public boolean checkResourceExist(String resourcePath, String filename) throws Exception {
+        StringBuilder pathBuilder = new StringBuilder();
+        pathBuilder.append(System.getProperty("carbon.home")).append(File.separator).append("registry").append(File.separator);
+        if (resourcePath.startsWith(CONF_PATH)) {
+            String relativePath = resourcePath.substring(5).replace('/', File.separatorChar);
+            pathBuilder.append("config").append(relativePath);
+        } else if (resourcePath.startsWith(GOV_PATH)) {
+            String relativePath = resourcePath.substring(4).replace('/', File.separatorChar);
+            pathBuilder.append("governance").append(relativePath);
+        } else {
+            throw new MicroRegistryManagerException("Exception occurred while checking the registry resource file: " + resourcePath);
         }
+        return new File(pathBuilder.toString() + filename).isFile();
     }
+
+//    public boolean checkResourceExist(String resourcePath, String filename) throws MicroRegistryManagerException {
+//
+//        StringBuilder pathBuilder = new StringBuilder();
+//
+//        if (resourcePath.startsWith(CONF_PATH)) {
+//            checkConfPath(resourcePath);
+//        } else if (resourcePath.startsWith(GOV_PATH)) {
+//            checkGovPath(resourcePath);
+//        } else {
+//            throw new MicroRegistryManagerException("Invalid registry resource path: " + resourcePath + ". Resource path should start with conf: or gov:");
+//        }
+//        return new File(pathBuilder.toString() + filename).isFile();
+//    }
+//
+//    public void checkGovPath(String govResource) {
+//        StringBuilder pathBuilder = new StringBuilder();
+//        pathBuilder.append(System.getProperty("carbon.home")).append(File.separator).append("registry").append(File.separator);
+//
+//        String relativePath = govResource.substring(4).replace('/', File.separatorChar);
+//        pathBuilder.append("governance").append(relativePath);
+//    }
+//
+//    public void checkConfPath(String confResource) {
+//        StringBuilder pathBuilder = new StringBuilder();
+//        pathBuilder.append(System.getProperty("carbon.home")).append(File.separator).append("registry").append(File.separator);
+//
+//        String relativePath = confResource.substring(5).replace('/', File.separatorChar);
+//        pathBuilder.append("config").append(relativePath);
+//
+//    }
 
     /**
      * Function to update existing property from the Micro Registry
