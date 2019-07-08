@@ -45,14 +45,13 @@ public class ApiResourceAdapter extends APIResource {
 
     @Override
     public boolean invoke(MessageContext messageContext) {
+        buildMessage(messageContext);
         org.apache.axis2.context.MessageContext axis2MessageContext
                 = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
         SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
-
         if (Objects.isNull(axis2MessageContext) || Objects.isNull(synapseConfiguration)) {
             return false;
         }
-
         return apiResource.invoke(messageContext, axis2MessageContext, synapseConfiguration);
     }
 }
