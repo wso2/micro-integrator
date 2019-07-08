@@ -21,11 +21,8 @@ package org.wso2.carbon.esb.car.deployment.test;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.MicroRegistryManager;
-
-import java.io.File;
 
 public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
 
@@ -43,13 +40,10 @@ public class XSLTTransformationCarTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "test endpoint deployment from car file")
     public void artifactDeploymentAndServiceInvocation() throws Exception {
 
-        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        String sourcePath = carbonHome + File.separator + "registry";
-
-        Assert.assertTrue(registryManager.checkResourceExist(sourcePath,"/config/", registryResource1),"Registry resources not found");
-        log.info(registryResource1 + "Registry resources found");
-        Assert.assertTrue(registryManager.checkResourceExist(sourcePath,"config/", registryResource2), "Registry resources not found");
-        log.info(registryResource2 + "Registry resources found");
+        Assert.assertTrue(registryManager.checkResourceExist("conf:/", registryResource1),"Registry resources not found");
+        log.info(registryResource1 + " Registry resources found");
+        Assert.assertTrue(registryManager.checkResourceExist("conf:/", registryResource2), "Registry resources not found");
+        log.info(registryResource2 + " Registry resources found");
 
     }
 
