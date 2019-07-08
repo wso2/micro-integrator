@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.api.test;
  */
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
@@ -44,7 +43,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded?queryParam=ESB:WSO2"), null);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%3AWSO2");
+        isPercentEncoded = carbonLogReader.checkForLog("ESB%3AWSO2", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertTrue(isPercentEncoded,
@@ -59,7 +58,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/escapeUrlEncoded?queryParam=ESB:WSO2"), null);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%3AWSO2");
+        isPercentEncoded = carbonLogReader.checkForLog("ESB%3AWSO2", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertFalse(isPercentEncoded,
@@ -74,7 +73,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded/ESB:WSO2"), null);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("To: /services/test_2/ESB%3AWSO2");
+        isPercentEncoded = carbonLogReader.checkForLog("To: /services/test_2/ESB%3AWSO2", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertTrue(isPercentEncoded,
@@ -89,7 +88,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         carbonLogReader.start();
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/escapeUrlEncoded/ESB:WSO2"), null);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("To: /services/test_2/ESB%3AWSO2");
+        isPercentEncoded = carbonLogReader.checkForLog("To: /services/test_2/ESB%3AWSO2", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertFalse(isPercentEncoded,
@@ -106,8 +105,9 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded?queryParam=ESB%20WSO2"), null);
         String decodedMessageContextProperty = "decodedQueryParamValue = ESB WSO2";
-        isMessageContextPropertyPercentDecoded = carbonLogReader.assertIfLogExists(decodedMessageContextProperty);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%20WSO2");
+        isMessageContextPropertyPercentDecoded =
+                carbonLogReader.checkForLog(decodedMessageContextProperty, DEFAULT_TIMEOUT);
+        isPercentEncoded = carbonLogReader.checkForLog("ESB%20WSO2", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertTrue(isMessageContextPropertyPercentDecoded,
@@ -125,8 +125,9 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/urlEncoded?queryParam=ESB+WSO2"), null);
         String decodedMessageContextProperty = "decodedQueryParamValue = ESB+WSO2";
-        isMessageContextPropertyPercentDecoded = carbonLogReader.assertIfLogExists(decodedMessageContextProperty);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%2BWSO2");
+        isMessageContextPropertyPercentDecoded =
+                carbonLogReader.checkForLog(decodedMessageContextProperty, DEFAULT_TIMEOUT);
+        isPercentEncoded = carbonLogReader.checkForLog("ESB%2BWSO2", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertTrue(isMessageContextPropertyPercentDecoded,
@@ -144,8 +145,8 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("services/client/escapeUrlEncoded?queryParam=ESB+WSO2"), null);
         String decodedMessageContextProperty = "decodedQueryParamValue = ESB+WSO2";
-        isMessageContextPropertyPercentDecoded = carbonLogReader.assertIfLogExists(decodedMessageContextProperty);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("ESB%2BWSO2");
+        isMessageContextPropertyPercentDecoded = carbonLogReader.checkForLog(decodedMessageContextProperty, DEFAULT_TIMEOUT);
+        isPercentEncoded = carbonLogReader.checkForLog("ESB%2BWSO2", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertTrue(isMessageContextPropertyPercentDecoded,
@@ -162,17 +163,11 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
         HttpResponse response = HttpRequestUtil.sendGetRequest(
                 getApiInvocationURL("services/client/special_case/http://localhost:8480/services/test_2/special_case"),
                 null);
-        isPercentEncoded = carbonLogReader.assertIfLogExists("To: /services/test_2/special_case");
+        isPercentEncoded = carbonLogReader.checkForLog("To: /services/test_2/special_case", DEFAULT_TIMEOUT);
         carbonLogReader.stop();
         carbonLogReader.clearLogs();
         Assert.assertTrue(isPercentEncoded,
                 "The Special case of of Full URL expansion should be identified and should not percent encode full URL");
 
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }

@@ -45,8 +45,8 @@ public class FurtherProcessingOfSwitchAfterMatchTestCase extends ESBIntegrationT
 
         //AsserTrue symbol property of INFO log for "Great stock - IBM"
         //!AssertTrue Test property of INFO log for "Oh no! IBM again?"
-        Assert.assertTrue(carbonLogReader.assertIfLogExists("Great stock - IBM"), "Symbol property not set");
-        Assert.assertFalse(carbonLogReader.assertIfLogExists("Oh no! IBM again?"), "Test property set unexpectedly");
+        Assert.assertTrue(carbonLogReader.checkForLog("Great stock - IBM", DEFAULT_TIMEOUT), "Symbol property not set");
+        Assert.assertFalse(carbonLogReader.checkForLog("Oh no! IBM again?", DEFAULT_TIMEOUT), "Test property set unexpectedly");
 
         carbonLogReader.stop();
     }

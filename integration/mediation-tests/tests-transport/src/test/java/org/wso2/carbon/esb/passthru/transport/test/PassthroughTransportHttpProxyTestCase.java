@@ -52,7 +52,7 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
         } catch (AxisFault expected) {
             //read timeout expected
         }
-        assertTrue(carbonLogReader.assertIfLogExists("111.wso2.com:7777"),
+        assertTrue(carbonLogReader.checkForLog("111.wso2.com:7777", DEFAULT_TIMEOUT),
                 "The log message with http proxy host was not found in passthroughTransportHttpProxy testcase.");
         carbonLogReader.stop();
     }

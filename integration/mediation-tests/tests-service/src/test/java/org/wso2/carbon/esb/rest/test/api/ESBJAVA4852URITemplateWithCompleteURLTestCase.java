@@ -55,7 +55,7 @@ public class ESBJAVA4852URITemplateWithCompleteURLTestCase extends ESBIntegratio
             delete.releaseConnection();
         }
 
-        Assert.assertTrue(logReader.assertIfLogExists("order API INVOKED"),
+        Assert.assertTrue(logReader.checkForLog("order API INVOKED", DEFAULT_TIMEOUT),
                 "Request Not Dispatched to API when HTTP method having full url");
 
         logReader.stop();

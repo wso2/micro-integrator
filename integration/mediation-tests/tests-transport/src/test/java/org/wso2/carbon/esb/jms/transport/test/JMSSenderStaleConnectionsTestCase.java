@@ -67,7 +67,7 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
 
-        Assert.assertFalse(carbonLogReader.assertIfLogExists(exceptedErrorLog),
+        Assert.assertFalse(carbonLogReader.checkForLog(exceptedErrorLog, DEFAULT_TIMEOUT),
                 "Sender Side Stale connections handling test failed");
         carbonLogReader.stop();
     }

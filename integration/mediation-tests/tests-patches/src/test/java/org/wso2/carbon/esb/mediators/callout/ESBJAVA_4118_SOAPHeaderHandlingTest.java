@@ -63,7 +63,7 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
             log.info("Response Status: " + result);
             log.info("Response Body: " + responseBody);
 
-            errorLog = carbonLogReader.assertIfLogExists("Unable to convert to SoapHeader Block");
+            errorLog = carbonLogReader.checkForLog("Unable to convert to SoapHeader Block", DEFAULT_TIMEOUT);
             carbonLogReader.stop();
         } finally {
             post.releaseConnection();
