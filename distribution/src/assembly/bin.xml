@@ -509,6 +509,14 @@
             <filtered>true</filtered>
         </file>
 
+        <!-- Cipher Tool Files -->
+        <file>
+            <source>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-${cipher.tool.version}.jar
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/lib</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
         <file>
             <source>src/conf/synapse-handlers.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
