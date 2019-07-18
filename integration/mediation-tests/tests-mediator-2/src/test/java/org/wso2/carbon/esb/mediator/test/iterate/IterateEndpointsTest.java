@@ -60,7 +60,6 @@ public class IterateEndpointsTest extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Tests for https endpoint")
     public void testHTTPS() throws Exception {
-        verifyProxyServiceExistence("iterateWithHttpsEndPointTestProxy");
         String response = client
                 .getMultipleResponse(getProxyServiceURLHttps("iterateWithHttpsEndPointTestProxy"), "WSO2", 2);
         Assert.assertNotNull(response);
@@ -80,7 +79,6 @@ public class IterateEndpointsTest extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void close() throws Exception {
         client = null;
-        super.cleanup();
     }
 
 }

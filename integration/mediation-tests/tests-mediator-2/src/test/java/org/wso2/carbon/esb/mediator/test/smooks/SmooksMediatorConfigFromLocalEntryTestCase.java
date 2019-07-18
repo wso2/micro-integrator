@@ -54,7 +54,7 @@ public class SmooksMediatorConfigFromLocalEntryTestCase extends ESBIntegrationTe
          * The polling interval of the VFS proxy is 1000 ms. Therefore 2000ms waiting time was added to provide
          * enough time for the processing
          */
-        Thread.sleep(2000);
+        Thread.sleep(3000);
 
         Path outPutFilePath = Paths.get(smooksResourceDir, "test", "out", "config-localentry-test-out.xml");
         Assert.assertTrue(Files.exists(outPutFilePath), "output file has not been created, there could be an issue "

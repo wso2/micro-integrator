@@ -37,11 +37,12 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (default scope)")
     public void testIntVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -51,7 +52,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (default scope)")
     public void testStringVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -62,7 +63,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (default scope)")
     public void testFloatVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -72,7 +73,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (default scope)")
     public void testLongVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyLongDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -82,7 +83,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (default scope)")
     public void testShortVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -92,7 +93,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (default scope)")
     public void testOMVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyOMDefaultRemoveTestProxy"), null,
                         "Random Symbol");
@@ -107,7 +108,6 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
     private boolean isMatchFound(String matchStr) throws InterruptedException {
         boolean isSet = carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT) &&
                 carbonLogReader.checkForLog("symbol = null", DEFAULT_TIMEOUT);
-        carbonLogReader.stop();
         return isSet;
     }
 }

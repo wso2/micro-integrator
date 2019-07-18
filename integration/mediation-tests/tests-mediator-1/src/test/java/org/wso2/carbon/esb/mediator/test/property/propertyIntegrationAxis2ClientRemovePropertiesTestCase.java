@@ -38,23 +38,21 @@ public class propertyIntegrationAxis2ClientRemovePropertiesTestCase extends ESBI
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2-client scope)")
     public void testStringVal() throws Exception {
-        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyAxis2ClientRemoveTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("Property Set and Removed"), "Proxy Invocation Failed!");
-        assertTrue(isMatchFound("symbol = TestValue"),
+        assertTrue(isMatchFound("symbol = TestValue") && isMatchFound("symbol = null"),
                 "Integer Property Not Either Set or Removed in the Axis2 Client scope!!");
+        carbonLogReader.stop();
     }
 
     private boolean isMatchFound(String matchStr) throws InterruptedException {
-        boolean isSet = carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT) &&
-                carbonLogReader.checkForLog("symbol = null", DEFAULT_TIMEOUT);
-        carbonLogReader.stop();
-        return isSet;
+        return carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT);
     }
 }
