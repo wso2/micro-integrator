@@ -22,6 +22,7 @@ import java.io.IOException;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -40,12 +41,13 @@ public class HandlerTest extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Sending a Message Via proxy to check synapse handler logs")
     public void testSynapseHandlerExecution() throws IOException, InterruptedException {
         boolean handlerStatus = false;
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxy"), null,
@@ -58,8 +60,6 @@ public class HandlerTest extends ESBIntegrationTest {
                 carbonLogReader.checkForLog("handleResponseOutFlow", DEFAULT_TIMEOUT)) {
             handlerStatus = true;
         }
-        carbonLogReader.stop();
-
         Assert.assertTrue(handlerStatus, "Synapse handler not working properly");
     }
 
@@ -70,7 +70,6 @@ public class HandlerTest extends ESBIntegrationTest {
         boolean responseInStatus = false;
         boolean errorOnSoapFaultStatus = false;
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
         try {
             axis2Client
                     .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("handlerTestProxyWithSoapfault"),
@@ -82,10 +81,14 @@ public class HandlerTest extends ESBIntegrationTest {
 
         errorOnSoapFaultStatus = carbonLogReader.checkForLog("Fault Sequence Hit", DEFAULT_TIMEOUT);
         responseInStatus = carbonLogReader.checkForLog("handleResponseInFlow", DEFAULT_TIMEOUT);
-        carbonLogReader.stop();
 
         Assert.assertTrue(errorOnSoapFaultStatus, "When SoapFault come as a response the fault sequence hasn't been "
                 + "invoked because of FORCE_ERROR_ON_SOAP_FAULT property is not working properly");
         Assert.assertTrue(responseInStatus, "Synapse handler hasn't been invoked when a Soap Fault received");
+    }
+
+    @AfterClass(groups = "wso2.esb", alwaysRun = true)
+    public void close() throws Exception {
+        carbonLogReader.stop();
     }
 }
