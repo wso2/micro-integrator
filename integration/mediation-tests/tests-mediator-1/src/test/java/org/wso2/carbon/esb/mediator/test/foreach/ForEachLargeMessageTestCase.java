@@ -19,6 +19,7 @@ package org.wso2.carbon.esb.mediator.test.foreach;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -39,12 +40,12 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
         init();
         symbol = FixedSizeSymbolGenerator.generateMessageMB(1);
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Tests large message in small number 5")
     public void testSmallNumbers() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
         OMElement response;
         for (int i = 0; i < 5; i++) {
             response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachLargeMessageTestProxy"), null,
@@ -59,14 +60,11 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
             }
         }
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 5), "Count of messages entered ForEach scope is incorrect");
-        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Tests large message in large number 10")
     public void testLargeNumbers() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
-
         OMElement response;
         for (int i = 0; i < 10; i++) {
             response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachLargeMessageTestProxy"), null,
@@ -80,13 +78,11 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
             }
         }
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 10), "Count of messages entered ForEach scope is incorrect");
-        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Tests large message 3MB")
     public void testLargeMessage() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
 
         String symbol2 = FixedSizeSymbolGenerator.generateMessageMB(3);
         OMElement response;
@@ -102,6 +98,10 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
             }
         }
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 1), "Count of messages entered ForEach scope is incorrect");
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         carbonLogReader.stop();
     }
 
