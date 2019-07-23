@@ -17,6 +17,7 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -41,16 +42,14 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         headers = new HashMap<>();
         headers.put("Accept-Charset", "UTF-8");
     }
 
     @Test(groups = "wso2.esb", description = "Test multiple foreach constructs with property mediator in flow")
     public void testForEachPropertyMediator() throws Exception {
-        verifyProxyServiceExistence("foreachPropertyTestProxy");
-
-        carbonLogReader.start();
-
+        carbonLogReader.clearLogs();
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
@@ -90,13 +89,11 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
         if (carbonLogReader.checkForLog("in_3_verify_in_2", DEFAULT_TIMEOUT)) {
             assertTrue(carbonLogReader.getLogs().contains("in_3_verify_in_2 = second property insequence"));
         }
-        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Test nested foreach constructs with property mediator in flow")
     public void testNestedForEachPropertiesWithID() throws Exception {
-        carbonLogReader.start();
-
+        carbonLogReader.clearLogs();
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
@@ -132,6 +129,10 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
         if (carbonLogReader.checkForLog("in_fe_inner", DEFAULT_TIMEOUT)) {
             assertTrue(carbonLogReader.getLogs().contains("in_fe_inner = property inner foreach"));
         }
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         carbonLogReader.stop();
     }
 }

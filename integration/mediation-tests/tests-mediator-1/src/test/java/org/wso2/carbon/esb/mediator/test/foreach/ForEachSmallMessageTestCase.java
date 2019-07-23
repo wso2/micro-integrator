@@ -19,6 +19,7 @@ package org.wso2.carbon.esb.mediator.test.foreach;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -39,13 +40,13 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
         init();
         symbol = FixedSizeSymbolGenerator.generateMessageKB(5);
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
     }
 
     @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
     public void testSmallNumbers() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
 
         OMElement response = null;
         for (int i = 0; i < 20; i++) {
@@ -61,13 +62,11 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
             }
         }
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 20), "Count of messages entered ForEach scope is incorrect");
-        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
     public void testLargeNumbers() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
         OMElement response = null;
         for (int i = 0; i < 100; i++) {
             response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachSmallMessageTestProxy"), null,
@@ -84,6 +83,10 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
         }
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT , 100),
                 "Count of messages entered ForEach scope is incorrect");
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         carbonLogReader.stop();
     }
 }

@@ -43,15 +43,13 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
         super.init();
         verifyProxyServiceExistence("foreachJSONTestProxy");
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         headers = new HashMap<>();
         headers.put("Accept-Charset", "UTF-8");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test ForEach mediator with JSON payload")
     public void testForEachMediatorWithJSONPayload() throws Exception {
-
-        carbonLogReader.start();
-
         String request = "{\"getQuote\":{\"request\":[{\"symbol\":\"IBM\"},{\"symbol\":\"WSO2\"},{\"symbol\":\"MSFT\"}]}}";
 
         simpleHttpClient = new SimpleHttpClient();
