@@ -22,6 +22,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.mediator.test.iterate.IterateClient;
@@ -49,13 +50,12 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         super.init();
         client = new IterateClient();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Transforming a Message Using a Nested ForEach Construct")
     public void testNestedForEach() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
-
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
@@ -91,13 +91,11 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
                     "MSFT Element not found");
 
         }
-        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
     public void testNestedForEachMediatorWithIterate() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
         String response = client.send(getProxyServiceURLHttp("nested_foreach_iterate"), createMultipleSymbolPayLoad(10), "urn:getQuote");
         Assert.assertNotNull(response);
 
@@ -118,6 +116,10 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
                 "Count of messages entered outer ForEach scope is incorrect");
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = inner", DEFAULT_TIMEOUT, 10),
                 "Count of messages entered inner ForEach scope is incorrect");
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         carbonLogReader.stop();
     }
 

@@ -45,14 +45,13 @@ public class ESBJAVA_4239_HTTP_SC_HandlingTests extends ESBIntegrationTest {
                         + "<test></test>";
         simpleSocketServer = new SimpleSocketServer(port, expectedResponse);
         simpleSocketServer.start();
-        verifyProxyServiceExistence("TestCalloutHTTP_SC");
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Test whether response HTTP status code getting correctly after callout "
             + "mediator successfully execute")
     public void testHttpStatusCodeGettingSuccessfully() throws Exception {
-        carbonLogReader.start();
         String endpoint = getProxyServiceURLHttp("TestCalloutHTTP_SC");
         String soapRequest =
                 TestConfigurationProvider.getResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator

@@ -17,6 +17,7 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -42,14 +43,14 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         headers = new HashMap<>();
         headers.put("Accept-Charset", "UTF-8");
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct")
     public void testSingleForEachProperties() throws Exception {
-        carbonLogReader.start();
-
+        carbonLogReader.clearLogs();
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
@@ -121,14 +122,11 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 assertTrue(quote.contains("<m0:symbol>Group1_MSFT</m0:symbol>"), "MSTF Element not found");
             }
         }
-        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified")
     public void testMultipleForEachPropertiesWithoutID() throws Exception {
-        verifyProxyServiceExistence("foreachMultiplePropertyWithoutIDTestProxy");
-        carbonLogReader.start();
-
+        carbonLogReader.clearLogs();
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
@@ -210,13 +208,11 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                     carbonLogReader.getLogs());
         }
         foreachAssert(carbonLogReader.getLogs());
-        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs with id specified")
     public void testMultipleForEachPropertiesWithID() throws Exception {
-        carbonLogReader.start();
-
+        carbonLogReader.clearLogs();
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
@@ -325,14 +321,18 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 assertTrue(quote.contains("<m0:symbol>Group1_Group2_SUN</m0:symbol>"), "SUN Element not found");
             }
         }
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         carbonLogReader.stop();
     }
 
     private void foreachAssert(String message) throws Exception {
         //*** MESSAGES FOR FOREACH 2 ***
 
-        if (carbonLogReader.checkForLog("2_fe_originalpayload", 200) ||
-                carbonLogReader.checkForLog("2_in_originalpayload", 200)) {
+        if (carbonLogReader.checkForLog("2_fe_originalpayload", DEFAULT_TIMEOUT) ||
+                carbonLogReader.checkForLog("2_in_originalpayload", DEFAULT_TIMEOUT)) {
             //fe : original payload while in foreach
             //in : original payload outside foreach
             String payload = message;

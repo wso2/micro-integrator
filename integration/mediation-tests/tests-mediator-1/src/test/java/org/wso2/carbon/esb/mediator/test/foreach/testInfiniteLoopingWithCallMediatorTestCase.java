@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.foreach;
 
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
@@ -43,8 +42,6 @@ public class testInfiniteLoopingWithCallMediatorTestCase extends ESBIntegrationT
     @BeforeClass(alwaysRun = true)
     public void deployArtifacts() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/foreach/" + "foreach_test_message_flow_with_call.xml");
     }
 
     /**
@@ -67,10 +64,5 @@ public class testInfiniteLoopingWithCallMediatorTestCase extends ESBIntegrationT
 
         Assert.assertTrue(response.getData().contains("<company>wso2</company>"),
                 "Expected response was not" + " received. Got " + response.getData());
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 }

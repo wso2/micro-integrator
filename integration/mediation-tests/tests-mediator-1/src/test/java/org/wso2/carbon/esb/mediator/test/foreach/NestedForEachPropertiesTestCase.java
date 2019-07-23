@@ -45,20 +45,19 @@ import static org.testng.Assert.assertTrue;
 public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
     private SimpleHttpClient simpleHttpClient;
     private Map<String, String> headers;
+    CarbonLogReader carbonLogReader;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
         headers = new HashMap<>();
         headers.put("Accept-Charset", "UTF-8");
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a nested foreach constructs with id specified")
     public void testNestedForEachPropertiesWithID() throws Exception {
-
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
-
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
@@ -193,11 +192,10 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
                     "MSTF Element not found");
 
         }
-        carbonLogReader.stop();
     }
 
     @AfterClass
     public void close() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 }
