@@ -38,6 +38,8 @@ public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
         super.init();
         carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
+        //allow time for log reader to start
+        Thread.sleep(1000);
 
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("LogMediatorLevelAndCategoryTestProxy"), null,
@@ -110,7 +112,7 @@ public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
     }
 
     private boolean isLogAvailable(String validateLog) throws InterruptedException {
-        if (carbonLogReader.checkForLog(validateLog, 60)) {
+        if (carbonLogReader.checkForLog(validateLog, DEFAULT_TIMEOUT)) {
             return true;
         }
         return false;

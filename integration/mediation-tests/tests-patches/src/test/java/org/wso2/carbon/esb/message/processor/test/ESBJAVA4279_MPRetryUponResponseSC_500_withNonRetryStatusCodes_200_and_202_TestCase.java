@@ -47,6 +47,7 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     public void deployeService() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = {
@@ -57,7 +58,6 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
         boolean isRetryCompleted = false;
         boolean isMpDeactivated = false;
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
-        carbonLogReader.start();
         AxisServiceClient client = new AxisServiceClient();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");
 
