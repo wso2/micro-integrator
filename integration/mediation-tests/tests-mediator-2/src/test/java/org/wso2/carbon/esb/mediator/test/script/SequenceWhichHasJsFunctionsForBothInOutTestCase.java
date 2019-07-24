@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.script;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -53,10 +52,4 @@ public class SequenceWhichHasJsFunctionsForBothInOutTestCase extends ESBIntegrat
                 "Fault response null localpart");
 
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }

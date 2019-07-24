@@ -57,10 +57,4 @@ public class ScriptIntegrationInvokeJsScriptFunction extends ESBIntegrationTest 
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")),
                 "Fault response null localpart");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-
-    }
 }

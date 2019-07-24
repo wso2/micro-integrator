@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.script;
 
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
@@ -81,10 +80,5 @@ public class AddHeadersUsingNashornJsTestCase extends ESBIntegrationTest {
         Assert.assertTrue((response.getData().contains("OM")),
                 "Response does not contain the keyword \"OM\". " + "Response: " + response.getData());
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
     }
 }

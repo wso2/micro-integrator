@@ -58,11 +58,6 @@ public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrat
 
     }
 
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
     private void enableDebugLogging() throws Exception {
         LoggingAdminClient logAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logAdminClient.updateLoggerData("org.apache.synapse", "DEBUG", true, false);
