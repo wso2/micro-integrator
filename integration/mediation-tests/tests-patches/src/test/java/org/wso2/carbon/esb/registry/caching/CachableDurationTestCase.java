@@ -41,6 +41,7 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         super.init();
         registryManager = new MicroRegistryManager();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         String sourceFile = getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "registry"
                 + File.separator + "caching" + File.separator + "registry.xml";
         String registryConfig = FileUtils.readFileToString(new File(sourceFile));
@@ -53,26 +54,22 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
     public void testCachableDuration() throws Exception {
 
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
         //invoking the service
         SendRequest();
 
         //Check if the property we set is used
         boolean validLogMessage = validateLogMessage(OLD_VALUE);
         Assert.assertTrue(validLogMessage);
-        carbonLogReader.stop();
 
         //Update the registry value
         updateResourcesInConfigRegistry();
         Assert.assertTrue(registryManager.getProperty(PATH, RESOURCE_PATH, NAME).equals(NEW_VALUE));
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
         SendRequest();
 
         //Check if the new value is being used
         boolean validChangedLogMessage = validateLogMessage(NEW_VALUE);
         Assert.assertTrue(validChangedLogMessage);
-        carbonLogReader.stop();
 
     }
 
@@ -121,7 +118,7 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         String registryConfig = FileUtils.readFileToString(new File(sourceFile));
         Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(registryConfig), "registry", "",
                 true);
-        super.cleanup();
+        carbonLogReader.stop();
     }
 
 }

@@ -59,6 +59,7 @@ public class MailToTransportActionAfterFailureDELETETestCase extends ESBIntegrat
         carbonLogReader = new CarbonLogReader();
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
+        carbonLogReader.start();
 
         // Since ESB reads all unread emails one by one,
         // we have to delete all unread emails before running the test
@@ -68,7 +69,6 @@ public class MailToTransportActionAfterFailureDELETETestCase extends ESBIntegrat
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport received action after failure delete")
     public void testEmailTransportActionAfterFailureDELETE() throws Exception {
-        carbonLogReader.start();
         Date date = new Date();
         emailSubject = "Failure Delete : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
@@ -77,13 +77,13 @@ public class MailToTransportActionAfterFailureDELETETestCase extends ESBIntegrat
                 "Couldn't get the failure message!");
 
         assertTrue(GreenMailServer.checkEmailDeleted(emailSubject, "imap"), "Mail has not been deleted successfully");
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
         Utils.undeploySynapseConfiguration("MailToTransportActionAfterFailureDELETETestCase",
                 "proxy-services");
+        carbonLogReader.stop();
     }
 }
 

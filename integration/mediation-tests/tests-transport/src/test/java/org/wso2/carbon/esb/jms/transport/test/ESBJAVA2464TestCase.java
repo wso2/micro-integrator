@@ -9,12 +9,13 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA2464TestCase extends ESBIntegrationTest {
-
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
     private static final String logLine0 = "org.wso2.carbon.proxyadmin.service.ProxyServiceAdmin is not an admin service. Service name ";
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = {
@@ -29,8 +30,6 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
                 + "  <soapenv:Header/>" + "  <soapenv:Body>" + "     <echo:echoInt>" + "        <!--Optional:-->"
                 + "       <in>1</in>" + "     </echo:echoInt>" + "  </soapenv:Body>" + "</soapenv:Envelope>";
 
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         try {
             sender.connect("ESBJAVA2464TestProxy");
             for (int i = 0; i < 3; i++) {

@@ -47,6 +47,7 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
                 "MailTransportInvalidFolder","proxy-services",
                 true);
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
         // Since ESB reads all unread emails one by one, we have to delete
         // the all unread emails before run the test
@@ -55,7 +56,6 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport with invalid folder")
     public void testEmailTransportInvalidFolder() throws Exception {
-        carbonLogReader.start();
         assertTrue(carbonLogReader.checkForLog("FolderABC not found", DEFAULT_TIMEOUT),
                 "Couldn't find the error message in log");
     }
@@ -63,6 +63,7 @@ public class MailToTransportInvalidFolderTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
         Utils.undeploySynapseConfiguration("MailTransportInvalidFolder","proxy-services");
+        carbonLogReader.stop();
     }
 
 }

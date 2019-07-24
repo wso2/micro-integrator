@@ -37,6 +37,7 @@ public class InjectToSequenceTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" })
@@ -57,17 +58,16 @@ public class InjectToSequenceTestCase extends ESBIntegrationTest {
                         + "    <property name=\"injectTo\" value=\"sequence\" \n"
                         + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n" + "</task>");
 
-        carbonLogReader.start();
         Utils.deploySynapseConfiguration(task, "SampleInjectToSequenceTask", "tasks",  true);
         TimeUnit.SECONDS.sleep(5);
 
         boolean invokedLogFound = carbonLogReader.checkForLog("SEQUENCE INVOKED", DEFAULT_TIMEOUT);
-        carbonLogReader.stop();
         assertTrue(invokedLogFound);
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
+        carbonLogReader.stop();
         Utils.undeploySynapseConfiguration("SampleInjectToSequenceTask", "tasks");
     }
 }

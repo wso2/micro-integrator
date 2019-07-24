@@ -22,14 +22,14 @@ public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void deployeService() throws Exception {
         super.init();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test whether an HTTP SC can be retrieved after the callout mediator.")
     public void testFetchHTTP_SC_After_Callout_Mediator() throws RemoteException, InterruptedException {
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         AxisServiceClient client = new AxisServiceClient();
-        carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");
 
         boolean isScFound = carbonLogReader.checkForLog(EXPECTED_LOG_MESSAGE, DEFAULT_TIMEOUT);

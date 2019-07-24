@@ -19,6 +19,7 @@
 package org.wso2.carbon.esb.rest.test.api;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
@@ -38,6 +39,7 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
     public void init() throws Exception {
         super.init();
         logReader = new CarbonLogReader();
+        logReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource")
@@ -47,14 +49,13 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
          *  sending request from Client API with additional resource
          * "anotherParam" services/client/anotherParam
          */
-        logReader.start();
+        logReader.clearLogs();
 
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("services/client/anotherParam"), null);
 
         Assert.assertFalse(logReader.checkForLog("anotherParam", DEFAULT_TIMEOUT),
                 " Target URL is wrong. It appends the context URL part also.");
 
-        logReader.stop();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource")
@@ -65,11 +66,15 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
          *  & prameter - "foo"
          *  services/client/anotherParam/foo
          */
-        logReader.start();
+        logReader.clearLogs();
 
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("services/client/anotherParam/foo"), null);
         Assert.assertTrue(logReader.checkForLog("/services/testAPI/foo", DEFAULT_TIMEOUT),
                 " Target URL is wrong. expected /services/testAPI/foo ");
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
         logReader.stop();
     }
 }

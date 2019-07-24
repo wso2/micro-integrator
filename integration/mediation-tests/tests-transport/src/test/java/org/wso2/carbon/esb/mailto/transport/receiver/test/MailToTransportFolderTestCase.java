@@ -55,6 +55,7 @@ public class MailToTransportFolderTestCase extends ESBIntegrationTest {
         carbonLogReader = new CarbonLogReader();
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
+        carbonLogReader.start();
 
         // Since ESB reads all unread emails one by one, we have to delete
         // the all unread emails before run the test
@@ -63,7 +64,6 @@ public class MailToTransportFolderTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport folder parameter")
     public void testEmailTransportFolder() throws Exception {
-        carbonLogReader.start();
         Date date = new Date();
         emailSubject = "Folder Test : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
@@ -74,6 +74,7 @@ public class MailToTransportFolderTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
         Utils.undeploySynapseConfiguration("MailTransportFolder","proxy-services");
+        carbonLogReader.stop();
     }
 
 }

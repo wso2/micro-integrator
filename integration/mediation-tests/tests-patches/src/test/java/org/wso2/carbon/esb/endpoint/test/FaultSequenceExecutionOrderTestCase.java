@@ -37,6 +37,7 @@ import java.util.Map;
 public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
 
     private SampleAxis2Server axis2Server;
+    CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
@@ -44,13 +45,12 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
         axis2Server = new SampleAxis2Server("test_axis2_server_9001.xml");
         axis2Server.deployService(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE + "_timeout");
         axis2Server.start();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Correct Fault Sequence Invoke Test")
     public void testCorrectFaultSequenceExecution() throws Exception {
-
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         String contentType = "application/xml";
         SimpleHttpClient httpClient = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<String, String>();
@@ -60,12 +60,12 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
         boolean isSuperSequecefalutExecuted = carbonLogReader.checkForLog("aF = A Fault", DEFAULT_TIMEOUT);
         Assert.assertTrue(isImmediateOnly);
         Assert.assertFalse(isSuperSequecefalutExecuted);
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() {
         axis2Server.stop();
         axis2Server = null;
+        carbonLogReader.stop();
     }
 }

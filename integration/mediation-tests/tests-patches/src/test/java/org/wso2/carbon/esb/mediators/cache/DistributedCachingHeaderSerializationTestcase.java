@@ -33,21 +33,20 @@ import java.util.Map;
  * This test can be used make sure cache mediator works with distributed caching is enabled.
  */
 public class DistributedCachingHeaderSerializationTestcase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "cache meditor test enabling axis2 clustering.")
     public void testDistributedCachingHeaderSerialization() throws Exception {
-
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
         String requestXml = "<a>ABC</a>";
 
         SimpleHttpClient httpClient = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<String, String>();
-        carbonLogReader.start();
         headers.put("Content-Type", "application/xml;charset=UTF-8");
         HttpResponse response1 = httpClient.doPost(getApiInvocationURL("CachingTest") + "/test", headers, requestXml,
                 "application/xml;charset=UTF-8");

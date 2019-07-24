@@ -52,12 +52,11 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
     protected void init() throws Exception {
         // START THE ESB
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor")
     public void testMessageProcessorCronForwader() throws Exception {
-
-        carbonLogReader.start();
 
         // SEND THE REQUEST
         String addUrl = getProxyServiceURLHttp("MSMPRetrytest");

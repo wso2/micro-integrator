@@ -26,10 +26,13 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = {
@@ -37,8 +40,6 @@ public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTes
     public void testPassParamsToEndpoint() throws InterruptedException {
         String requestString = "/context?queryParam=some%20value";
         boolean isSpaceCharacterEscaped;
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         try {
             HttpRequestUtil.sendGetRequest(getApiInvocationURL("passParamsToEPTest") + requestString, null);
         } catch (Exception timeout) {

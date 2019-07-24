@@ -50,6 +50,7 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
                 "MailTransportInvalidAddress","proxy-services",
                 true);
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
 
         // Since ESB reads all unread emails one by one, we have to delete
         // the all unread emails before run the test
@@ -59,13 +60,13 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
     @Test(groups = {
             "wso2.esb" }, description = "Test email transport with invalid address parameter and pop3 protocol")
     public void testEmailTransportInvalidAddress() throws Exception {
-        carbonLogReader.start();
         assertTrue(carbonLogReader.checkForLog("Error connecting to mail server for address", DEFAULT_TIMEOUT),
                 "Couldn't find the error message in log");
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
+        carbonLogReader.stop();
         Utils.undeploySynapseConfiguration("MailTransportInvalidAddress","proxy-services");
     }
 }

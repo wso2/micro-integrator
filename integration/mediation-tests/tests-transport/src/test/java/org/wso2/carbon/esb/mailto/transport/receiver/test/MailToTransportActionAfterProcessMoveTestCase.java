@@ -59,6 +59,7 @@ public class MailToTransportActionAfterProcessMoveTestCase extends ESBIntegratio
         carbonLogReader = new CarbonLogReader();
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
+        carbonLogReader.start();
 
         // Since ESB reads all unread emails one by one, we have to delete
         // the all unread emails before run the test
@@ -67,7 +68,6 @@ public class MailToTransportActionAfterProcessMoveTestCase extends ESBIntegratio
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport action after process move")
     public void testEmailTransportActionAfterProcessMove() throws Exception {
-        carbonLogReader.start();
         Date date = new Date();
         emailSubject = "Process Move : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
@@ -75,11 +75,11 @@ public class MailToTransportActionAfterProcessMoveTestCase extends ESBIntegratio
         assertTrue(carbonLogReader.checkForLog(emailSubject, DEFAULT_TIMEOUT), "Email not processed!");
 
         assertTrue(GreenMailServer.checkEmailMoved(emailSubject, "imap"), "Mail has not been moved successfully");
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
         Utils.undeploySynapseConfiguration("MailTransportMove","proxy-services");
+        carbonLogReader.stop();
     }
 }

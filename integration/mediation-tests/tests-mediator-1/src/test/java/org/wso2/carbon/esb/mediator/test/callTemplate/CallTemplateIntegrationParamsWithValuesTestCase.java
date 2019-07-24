@@ -32,13 +32,13 @@ public class CallTemplateIntegrationParamsWithValuesTestCase extends ESBIntegrat
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Call Template Mediator Sample Parameters with"
             + " values assigned test")
     public void testTemplatesParameter() throws Exception {
-        carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "IBM");
         boolean requestLog = false;

@@ -33,6 +33,7 @@ import org.wso2.esb.integration.common.utils.Utils;
  */
 
 public class ESBJAVA4565TestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
@@ -51,15 +52,15 @@ public class ESBJAVA4565TestCase extends ESBIntegrationTest {
                         + "    <property name=\"injectTo\" value=\"sequence\" xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n"
                         + "    <property name=\"message\" xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"><empty/></property>\n" + "</task>");
         Utils.deploySynapseConfiguration(task, "TestTask", "tasks", true);
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Analyze carbon logs to find NPE due to unresolved tenant domain.")
     public void checkErrorLog() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         boolean hasErrorLog = carbonLogReader.checkForLog(
                 "java.lang.NullPointerException: Tenant domain has not been set in CarbonContext", DEFAULT_TIMEOUT);
         Assert.assertFalse(hasErrorLog,
                 "Tenant domain not resolved when registry resource is accessed inside " + "a scheduled task");
+        carbonLogReader.stop();
     }
 }
