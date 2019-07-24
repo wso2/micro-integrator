@@ -69,6 +69,9 @@ public class Constants {
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
     public static final String MESSAGE_JSON_ATTRIBUTE = "Message";
 
+    // Json attribute in response for synapse configuration
+    public static final String SYNAPSE_CONFIGURATION = "configuration";
+
     // Types of functional components
-    public static final int ITEM_TYPE_IMPORT        = 14;
+    public static final int ITEM_TYPE_IMPORT = 14;
 }

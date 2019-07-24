@@ -18,11 +18,13 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.description.TransportInDescription;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.rest.APISerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.API;
 import org.apache.synapse.rest.Resource;
@@ -154,6 +156,8 @@ public class ApiResource extends APIResource {
         JSONArray resourceListObject = new JSONArray();
         apiObject.put("resources", resourceListObject);
 
+        OMElement apiConfiguration = APISerializer.serializeAPI(api);
+        apiObject.put(Constants.SYNAPSE_CONFIGURATION, apiConfiguration.toString());
         Resource[] resources = api.getResources();
 
         for (Resource resource : resources) {

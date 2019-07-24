@@ -19,10 +19,12 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.ProxyServiceSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.json.JSONObject;
@@ -34,6 +36,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class ProxyServiceResource extends APIResource {
 
@@ -152,6 +156,8 @@ public class ProxyServiceResource extends APIResource {
         String tracingState = proxyService.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
         proxyObject.put(Constants.TRACING, tracingState);
 
+        OMElement proxyConfiguration = ProxyServiceSerializer.serializeProxy(null, proxyService);
+        proxyObject.put(SYNAPSE_CONFIGURATION, proxyConfiguration.toString());
         return proxyObject;
     }
 }
