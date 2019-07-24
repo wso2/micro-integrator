@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -38,7 +37,6 @@ public class PropertyIntegrationTRANSPORT_HEADERSPropertyTest extends ESBIntegra
     public void setEnvironment() throws Exception {
         init();
         wireServer = new WireMonitorServer(8996);
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/TRANSPORT_HEADERS.xml");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -55,10 +53,5 @@ public class PropertyIntegrationTRANSPORT_HEADERSPropertyTest extends ESBIntegra
         }
         String response = wireServer.getCapturedMessage();
         assertFalse(response.contains("Test-TRANSPORT_HEADERS: test"), "Property not set");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
     }
 }

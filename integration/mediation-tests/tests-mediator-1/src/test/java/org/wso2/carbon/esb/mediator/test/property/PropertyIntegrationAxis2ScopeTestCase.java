@@ -99,9 +99,4 @@ public class PropertyIntegrationAxis2ScopeTestCase extends ESBIntegrationTest {
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyOMAxis2TestProxy"), null, "Random Symbol");
         assertTrue(response.toString().contains("OMMMMM"), "OM Property Not Set in the Axis2 scope!");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        cleanup();
-    }
 }

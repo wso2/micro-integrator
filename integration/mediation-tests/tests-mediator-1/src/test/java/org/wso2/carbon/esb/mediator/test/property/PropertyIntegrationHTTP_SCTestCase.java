@@ -22,7 +22,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.FileRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -40,13 +39,6 @@ public class PropertyIntegrationHTTP_SCTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyProxyServiceExistence("HTTP_SCTestProxy");
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "Getting HTTP status code number ")

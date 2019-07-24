@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -97,10 +96,5 @@ public class PropertyIntegrationDefaultScopeTestCase extends ESBIntegrationTest 
                 response.getFirstElement().getFirstChildWithName(new QName("http://services.samples/xsd", "name"))
                         .toString().contains("12 Company"), "Short Property not set in the Default scope!");
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        cleanup();
     }
 }

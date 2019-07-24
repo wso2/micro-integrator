@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -54,10 +53,5 @@ public class PropertyIntegrationPropertyInTransportScopeTest extends ESBIntegrat
         }
         String response = wireServer.getCapturedMessage();
         assertTrue(response.contains("TransportProperty: testProperty"), "Property not set");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
     }
 }

@@ -18,6 +18,7 @@
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -49,10 +50,14 @@ public class propertyIntegrationAxis2ClientRemovePropertiesTestCase extends ESBI
         assertTrue(response.toString().contains("Property Set and Removed"), "Proxy Invocation Failed!");
         assertTrue(isMatchFound("symbol = TestValue") && isMatchFound("symbol = null"),
                 "Integer Property Not Either Set or Removed in the Axis2 Client scope!!");
-        carbonLogReader.stop();
     }
 
     private boolean isMatchFound(String matchStr) throws InterruptedException {
         return carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT);
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        carbonLogReader.stop();
     }
 }

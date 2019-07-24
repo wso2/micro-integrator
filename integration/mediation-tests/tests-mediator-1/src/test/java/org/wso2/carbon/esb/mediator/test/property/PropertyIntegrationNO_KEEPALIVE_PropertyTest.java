@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -55,10 +54,5 @@ public class PropertyIntegrationNO_KEEPALIVE_PropertyTest extends ESBIntegration
         String response = wireServer.getCapturedMessage();
         assertTrue(response.contains("Connection: Close"), "Property Not Set");
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
     }
 }

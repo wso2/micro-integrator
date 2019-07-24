@@ -18,7 +18,6 @@
 
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
@@ -40,14 +39,7 @@ public class PropertyIntegrationXpathAxis2PropertyTestCase extends ESBIntegratio
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/XPATHAXIS2.xml");
         logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
-
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test getting the property value at the axis2 scope")

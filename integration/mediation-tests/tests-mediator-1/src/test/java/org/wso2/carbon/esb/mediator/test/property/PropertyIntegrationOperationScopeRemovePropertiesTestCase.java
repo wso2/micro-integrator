@@ -18,6 +18,7 @@
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -38,11 +39,12 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (operation scope)")
     public void testIntVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyIntOperationRemoveTestProxy"), null,
                         "Random Symbol");
@@ -52,7 +54,7 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (operation scope)")
     public void testStringVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyStringOperationRemoveTestProxy"), null,
                         "Random Symbol");
@@ -63,7 +65,7 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (operation scope)")
     public void testFloatVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyFloatOperationRemoveTestProxy"), null,
                         "Random Symbol");
@@ -73,7 +75,7 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (operation scope)")
     public void testLongVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyLongOperationRemoveTestProxy"), null,
                         "Random Symbol");
@@ -83,7 +85,7 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (operation scope)")
     public void testShortVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortOperationRemoveTestProxy"), null,
                         "Random Symbol");
@@ -93,12 +95,17 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
 
     @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (operation scope)")
     public void testOMVal() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyOMOperationRemoveTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("Property Set and Removed"), "Proxy Invocation Failed!");
         assertTrue(isMatchFound("symbol = OMMMMM"), "OM Property Not Either Set or Removed in the Axis2 scope!!");
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        carbonLogReader.stop();
     }
 
     /**
@@ -108,7 +115,6 @@ public class PropertyIntegrationOperationScopeRemovePropertiesTestCase extends E
     private boolean isMatchFound(String matchStr) throws InterruptedException {
         boolean isSet = carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT) &&
                 carbonLogReader.checkForLog("symbol = null", DEFAULT_TIMEOUT);
-        carbonLogReader.stop();
         return isSet;
     }
 }

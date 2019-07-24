@@ -46,14 +46,10 @@ public class PropertyIntegrationFORCE_HTTP_10TestCase extends ESBIntegrationTest
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
         tcpMonListener.stop();
-        super.cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "Test-with FORCE_HTTP_1.0 Property enabled false " + "scenario")
     public void testWithForceHTTP10EnabledFalseTest() throws Exception {
-
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/FORCE_HTTP_1.0_DISABLED.xml");
-
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("FORCE_HTTP_1_0_FalseTestProxy"), null, "WSO2");
 
@@ -67,9 +63,6 @@ public class PropertyIntegrationFORCE_HTTP_10TestCase extends ESBIntegrationTest
 
     @Test(groups = "wso2.esb", description = "Test-with FORCE_HTTP_1.0 Property enabled true scenario", dependsOnMethods = "testWithForceHTTP10EnabledFalseTest")
     public void testWithForceHTTP10EnabledTrueTest() throws Exception {
-
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/FORCE_HTTP_1.0_ENABLED.xml");
-
         tcpMonListener.clear();
 
         Thread.sleep(3000);

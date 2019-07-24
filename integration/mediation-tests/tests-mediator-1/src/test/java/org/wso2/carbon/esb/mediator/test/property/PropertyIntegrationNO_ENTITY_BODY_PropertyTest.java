@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.property;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -66,10 +65,5 @@ public class PropertyIntegrationNO_ENTITY_BODY_PropertyTest extends ESBIntegrati
     public void testWithNoEntityBodyPropertTest() throws Exception {
         client.getWithContentType(getProxyServiceURLHttp("Axis2ProxyService2") + "/echoString", "in=IBM",
                 MediaType.APPLICATION_FORM_URLENCODED);
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
     }
 }

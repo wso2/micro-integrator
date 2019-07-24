@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
@@ -53,10 +52,5 @@ public class NullValueTransportHeaderTestCase extends ESBIntegrationTest {
                         "{\"test\" : \"nullHeaderVal\"}", requestHeader);
         Assert.assertTrue(response.getData().contains("{\"company\" : \"wso2\"}"),
                 "Expected response was not" + "received. Got " + response.getData());
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 }
