@@ -77,7 +77,7 @@ public class ConnectorResource implements MiApiResource {
         if (messageContext.isDoingGET()) {
             populateConnectorList(axis2MessageContext, synapseConfiguration);
             axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
-        } else if (Utils.isDoingPOST(axis2MessageContext)) {
+        } else {
 
             try {
                 if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
