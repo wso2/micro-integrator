@@ -65,7 +65,7 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
         /* send another message after broker restart */
         client.sendRobust(Utils.getStockQuoteRequest("JMS"),
                 getProxyServiceURLHttp("JMSSenderStaleConnectionsTestProxy"), "getQuote");
-
+        carbonLogReader.clearLogs();
         Assert.assertFalse(carbonLogReader.checkForLog(exceptedErrorLog, DEFAULT_TIMEOUT),
                 "Sender Side Stale connections handling test failed");
         carbonLogReader.stop();
