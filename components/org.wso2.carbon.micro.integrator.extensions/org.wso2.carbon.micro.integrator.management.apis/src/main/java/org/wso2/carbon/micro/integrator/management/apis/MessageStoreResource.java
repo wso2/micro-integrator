@@ -57,6 +57,7 @@ public class MessageStoreResource implements MiApiResource {
     private static final String CONSUMER_ATTRIBUTE = "consumer";
     private static final String PRODUCER_ATTRIBUTE = "producer";
     private static final String PROPERTIES_ATTRIBUTE = "properties";
+    private static final String STORE_SIZE_ATTRIBUTE = "size";
     //HTTP method types supported by the resource
     Set<String> methods;
 
@@ -128,6 +129,7 @@ public class MessageStoreResource implements MiApiResource {
         JSONObject messageStoreObject = new JSONObject();
         messageStoreObject.put(Constants.NAME, messageStore.getName());
         messageStoreObject.put(STORE_TYPE_PROPERTY, getStoreType(messageStore));
+        messageStoreObject.put(STORE_SIZE_ATTRIBUTE, messageStore.size());
         list.put(messageStoreObject);
     }
 
@@ -166,6 +168,7 @@ public class MessageStoreResource implements MiApiResource {
         jsonObject.put(CONSUMER_ATTRIBUTE, messageStore.getConsumer());
         jsonObject.put(PRODUCER_ATTRIBUTE, messageStore.getProducer());
         jsonObject.put(PROPERTIES_ATTRIBUTE, messageStore.getParameters());
+        jsonObject.put(STORE_SIZE_ATTRIBUTE, messageStore.size());
 
         return jsonObject;
     }
