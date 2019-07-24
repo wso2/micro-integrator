@@ -18,15 +18,21 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import org.apache.axis2.AxisFault;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 public class Utils {
@@ -71,5 +77,19 @@ public class Utils {
             return true;
         }
         return false;
+    }
+
+    /**
+     * Returns the JSON payload of a given message
+     *
+     * @param axis2MessageContext axis2MessageContext
+     * @return JsonObject payload
+     */
+    public static JsonObject getJsonPayload(org.apache.axis2.context.MessageContext axis2MessageContext)
+            throws IOException {
+
+        InputStream jsonStream = JsonUtil.getJsonPayload(axis2MessageContext);
+        String jsonString = IOUtils.toString(jsonStream);
+        return new JsonParser().parse(jsonString).getAsJsonObject();
     }
 }
