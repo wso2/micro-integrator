@@ -18,6 +18,7 @@
 package org.wso2.carbon.esb.mediator.test.script;
 
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpResponse;
@@ -42,7 +43,7 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
     protected void init() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
-
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending a JSON message Via REST and manipulate with JS")
@@ -64,7 +65,7 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with JS")
     public void testSerializingJson() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
         String payload = "{\n" + "\"name\": \"John Doe\",\n" + "\"dob\": \"1990-03-19\",\n" + "\"ssn\": " + "\"234-23"
@@ -115,6 +116,11 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
 
     }
 
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        carbonLogReader.stop();
+    }
+
     /**
      * This method check whether given property contains in the logs.
      *
@@ -123,7 +129,6 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
      */
     private boolean isPropertyContainedInLog(String property) throws InterruptedException {
         boolean containsProperty = carbonLogReader.checkForLog(property, DEFAULT_TIMEOUT);
-        carbonLogReader.stop();
         return containsProperty;
     }
 }

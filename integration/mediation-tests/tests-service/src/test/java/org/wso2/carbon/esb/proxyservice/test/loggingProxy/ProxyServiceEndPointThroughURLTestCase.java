@@ -28,16 +28,16 @@ import javax.xml.namespace.QName;
 import static org.testng.Assert.*;
 
 public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Proxy service with providing endpoint through url")
     public void testLoggingProxy() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteLoggingProxy"), null, "WSO2");
 

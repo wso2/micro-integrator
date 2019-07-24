@@ -27,16 +27,16 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import java.io.IOException;
 
 public class FaviconTest extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Test for ClosedChannel Exception")
     public void faviconTest() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         HttpsResponse response = HttpsURLConnectionClient.
                 getRequest("https://localhost:8443/" + "favicon.ico", null);
         Assert.assertEquals(response.getResponseCode(), 301, "Response code mismatch");

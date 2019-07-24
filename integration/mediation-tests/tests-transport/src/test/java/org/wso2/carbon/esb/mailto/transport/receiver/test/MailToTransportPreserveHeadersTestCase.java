@@ -60,6 +60,7 @@ public class MailToTransportPreserveHeadersTestCase extends ESBIntegrationTest {
         carbonLogReader = new CarbonLogReader();
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
+        carbonLogReader.start();
 
         // Since ESB reads all unread emails one by one, we have to delete
         // the all unread emails before run the test
@@ -68,7 +69,6 @@ public class MailToTransportPreserveHeadersTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport preserve header parameter")
     public void testEmailPreserveHeaderTransport() throws Exception {
-        carbonLogReader.start();
         Date date = new Date();
         String emailSubject = "Preserve Headers Test : " + new Timestamp(date.getTime());
         Map<String, String> headers = new HashMap<>();
@@ -82,6 +82,7 @@ public class MailToTransportPreserveHeadersTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
         Utils.undeploySynapseConfiguration("MailTransportPreserveHeader","proxy-services");
+        carbonLogReader.stop();
     }
 
 }

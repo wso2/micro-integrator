@@ -32,12 +32,11 @@ public class SwitchInsideSwitchTestCase extends ESBIntegrationTest {
     public void beforeClass() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Switch Mediator: Testing Switch inside Switch Scenario")
     public void testSample2() throws Exception {
-        carbonLogReader.start();
-
         axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("switchMediatorSwitchInsideSwitchTestProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
@@ -47,5 +46,6 @@ public class SwitchInsideSwitchTestCase extends ESBIntegrationTest {
                 "Test Property not set");
         Assert.assertTrue(carbonLogReader.checkForLog("Great stock - IBM", DEFAULT_TIMEOUT),
                 "Symbol property not set");
+        carbonLogReader.stop();
     }
 }

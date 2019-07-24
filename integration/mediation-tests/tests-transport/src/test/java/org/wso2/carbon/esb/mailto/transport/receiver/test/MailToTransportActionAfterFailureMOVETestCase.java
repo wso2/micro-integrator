@@ -57,6 +57,7 @@ public class MailToTransportActionAfterFailureMOVETestCase extends ESBIntegratio
                 "MailToTransportActionAfterFailureMoveTestCase","proxy-services",
                 true);
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         greenMailUser = GreenMailServer.getPrimaryUser();
         greenMailClient = new GreenMailClient(greenMailUser);
 
@@ -67,7 +68,6 @@ public class MailToTransportActionAfterFailureMOVETestCase extends ESBIntegratio
 
     @Test(groups = { "wso2.esb" }, description = "Test email transport received action after failure move")
     public void testEmailTransportActionAfterFailureMOVE() throws Exception {
-        carbonLogReader.start();
         Date date = new Date();
         emailSubject = "Failure Move : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
@@ -77,11 +77,11 @@ public class MailToTransportActionAfterFailureMOVETestCase extends ESBIntegratio
 
         assertTrue(GreenMailServer.checkEmailMoved(emailSubject, "imap"),
                 "Mail has not been moved successfully");
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void deleteService() throws Exception {
+        carbonLogReader.stop();
         Utils.undeploySynapseConfiguration("MailToTransportActionAfterFailureMoveTestCase",
                 "proxy-services");
     }

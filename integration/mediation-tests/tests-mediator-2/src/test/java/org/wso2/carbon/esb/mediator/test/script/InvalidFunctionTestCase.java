@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.script;
 
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -36,10 +35,4 @@ public class InvalidFunctionTestCase extends ESBIntegrationTest {
         axis2Client.sendCustomQuoteRequest(
                 getProxyServiceURLHttp("scriptMediatorJSStoredInRegistryInvalidFunctionTestProxy"), null, "WSO2");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }

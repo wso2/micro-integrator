@@ -19,7 +19,6 @@
 package org.wso2.carbon.esb.mediator.test.script;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -49,10 +48,5 @@ public class InlinedFunctionTest extends ESBIntegrationTest {
                 "Price", "Local Name does not match");
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")).getText(),
                 "Text does not exist");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 }

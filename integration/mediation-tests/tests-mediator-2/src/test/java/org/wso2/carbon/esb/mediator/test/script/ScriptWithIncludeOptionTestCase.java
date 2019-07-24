@@ -55,9 +55,4 @@ public class ScriptWithIncludeOptionTestCase extends ESBIntegrationTest {
                 "Fault response null localpart");
 
     }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
 }

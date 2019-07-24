@@ -33,10 +33,12 @@ import static org.testng.Assert.assertTrue;
  * Test whether the scheduled task is created successfully when large interval value(> Integer.MAX_VALUE) is defined.
  */
 public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = {
@@ -61,8 +63,6 @@ public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
                         + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\"/>\n" + "</task>");
 
         Utils.deploySynapseConfiguration(task, "ESBJAVA5234TestTask", "tasks", true);
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         boolean assertValue = Utils
                 .logExists(carbonLogReader, "injected value from ESBJAVA5234TestTask received",
                         5);
@@ -72,5 +72,6 @@ public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         Utils.undeploySynapseConfiguration("ESBJAVA5234TestTask", "tasks");
+        carbonLogReader.stop();
     }
 }

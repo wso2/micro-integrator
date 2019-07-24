@@ -29,7 +29,6 @@ import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config
 import org.wso2.carbon.esb.jms.utils.JMSBroker;
 import org.wso2.carbon.esb.mqtt.utils.MQTTTestClient;
 import org.wso2.carbon.esb.mqtt.utils.QualityOfService;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.extensions.jmsserver.ActiveMQServerExtension;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -45,7 +44,7 @@ import java.io.File;
  * 4. Inspect logs and check if message is consumed
  */
 public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
-
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
     private JMSBroker activeMQServer;
 
     @BeforeClass(alwaysRun = true)
@@ -59,12 +58,11 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
                 + "MQTT_Test_Inbound_EP.xml")));
         Utils.deploySynapseConfiguration(inboundOMElement, "MQTT_Test_Inbound_EP", "inbound-endpoints", true);
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check if Inbound MQTT Transport receives messages without issue")
     public void testMQTTInboundEndpointMessagePolling() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         //connect to broker and publish a message
         String brokerURL = "tcp://localhost:1883";
         String userName = "admin";
@@ -88,7 +86,6 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         //check EI log to see if message is consumed
         boolean result = carbonLogReader.checkForLog(messageToSend, DEFAULT_TIMEOUT);
         Assert.assertTrue(result, "Message is not found in log. Expected : " + messageToSend);
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
@@ -96,6 +93,7 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         activeMQServer.stop();
         ActiveMQServerExtension.startMQServer();
         Utils.undeploySynapseConfiguration("MQTT_Test_Inbound_EP", "inbound-endpoints");
+        carbonLogReader.stop();
     }
 
 }

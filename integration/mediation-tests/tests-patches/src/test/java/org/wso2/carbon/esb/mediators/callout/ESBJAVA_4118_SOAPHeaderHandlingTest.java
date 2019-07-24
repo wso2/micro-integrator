@@ -39,6 +39,7 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
         super.init();
         verifyProxyServiceExistence("TestCalloutSoapHeader");
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Test whether the callout mediator successfully handle SOAP messages "
@@ -57,7 +58,6 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
         boolean errorLog = false;
 
         try {
-            carbonLogReader.start();
             int result = httpClient.executeMethod(post);
             String responseBody = post.getResponseBodyAsString();
             log.info("Response Status: " + result);

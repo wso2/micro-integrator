@@ -27,17 +27,17 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
 public class JMSOutOnlyTestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test proxy service with out-only jms transport")
     public void testJMSProxy() throws Exception {
-
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
 
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<?xml version='1.0' encoding='UTF-8'?>"

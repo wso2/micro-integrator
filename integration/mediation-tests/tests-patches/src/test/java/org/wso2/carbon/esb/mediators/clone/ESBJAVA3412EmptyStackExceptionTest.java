@@ -29,6 +29,7 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
         verifyProxyServiceExistence("CloneMediatorEmptyStackProxy");
 
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     /**
@@ -49,7 +50,6 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
 
         // invoking the service through the proxy service
         AxisServiceClient client = new AxisServiceClient();
-        carbonLogReader.start();
 
         final String proxyUrl = contextUrls.getServiceUrl() + "/CloneMediatorEmptyStackProxy";
 
@@ -61,7 +61,6 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
         isEmptyStackError = carbonLogReader.checkForLog(expectedErrorMsg, DEFAULT_TIMEOUT) && carbonLogReader.
                 checkForLog(expectedStackTrace, DEFAULT_TIMEOUT);
         carbonLogReader.stop();
-        carbonLogReader.clearLogs();
         /*
          * Asserting the results here. If there's an Empty stack error, then the
          * assertion should fail.

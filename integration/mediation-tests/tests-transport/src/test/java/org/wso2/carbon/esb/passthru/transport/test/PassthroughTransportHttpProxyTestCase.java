@@ -32,6 +32,7 @@ import static org.testng.Assert.assertTrue;
 
 public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
@@ -40,12 +41,11 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
                 getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
                         + "httpproxy" + File.separator + "axis2.xml"));
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Passthrough Transport Http.proxy test case")
     public void passthroughTransportHttpProxy() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
 
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("PassthroughTransportHttpTestProxy"), "", "IBM");
@@ -54,11 +54,11 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
         }
         assertTrue(carbonLogReader.checkForLog("111.wso2.com:7777", DEFAULT_TIMEOUT),
                 "The log message with http proxy host was not found in passthroughTransportHttpProxy testcase.");
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         serverConfigurationManager.restoreToLastMIConfiguration();
+        carbonLogReader.stop();
     }
 }

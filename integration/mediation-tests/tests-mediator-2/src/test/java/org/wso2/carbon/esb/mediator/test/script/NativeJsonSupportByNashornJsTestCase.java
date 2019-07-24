@@ -43,6 +43,7 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
     protected void init() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending a JSON message Via REST and manipulate with NashornJS")
@@ -64,7 +65,7 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with NashornJS")
     public void testSerializingJson() throws Exception {
-        carbonLogReader.start();
+        carbonLogReader.clearLogs();
         Map<String, String> httpHeaders = new HashMap<>();
         httpHeaders.put("Content-Type", "application/json");
         String payload = "{\n" + "\"name\": \"John Doe\",\n" + "\"dob\": \"1990-03-19\",\n" + "\"ssn\": " + "\"234-23"
@@ -125,12 +126,11 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
         if (carbonLogReader.checkForLog(property, DEFAULT_TIMEOUT)) {
             containsProperty = true;
         }
-        carbonLogReader.stop();
         return containsProperty;
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 }

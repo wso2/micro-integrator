@@ -30,29 +30,29 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
 import static org.testng.Assert.assertTrue;
 
 public class CalloutJMSHeadersTestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "JMCalloutClientProxy");
         esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "JMSCalloutBEProxy");
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Callout JMS headers test case")
     public void testCalloutJMSHeaders() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<payload/>";
         AXIOMUtil.stringToOM(payload);
-        carbonLogReader.start();
+
         client.sendRobust(AXIOMUtil.stringToOM(payload), getProxyServiceURLHttp("JMCalloutClientProxy"), "urn:mediate");
         boolean logFound = Utils.assertIfSystemLogContains(carbonLogReader, "RequestHeaderVal");
         assertTrue(logFound, "Required log entry not found");
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 }

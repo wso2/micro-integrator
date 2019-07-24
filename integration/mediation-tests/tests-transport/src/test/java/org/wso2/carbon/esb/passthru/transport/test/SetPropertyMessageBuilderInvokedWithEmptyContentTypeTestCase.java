@@ -34,11 +34,13 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
     private static final String EXPECTED_ERROR_MESSAGE = "Could not save JSON payload. Invalid input stream found";
     private JSONClient jsonclient;
     private SimpleSocketServer simpleSocketServer;
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test whether the msg builder invoked property is set when the content"
@@ -59,9 +61,6 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
         final String jsonPayload = "{\"album\":\"Hello\",\"singer\":\"Peter\"}";
         String apiEp = getApiInvocationURL("setMessageBuilderInvokedWithEmptyContentType");
         jsonclient.sendUserDefineRequest(apiEp, jsonPayload.trim());
-
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
 
         Assert.assertTrue(carbonLogReader.checkForLog("messageBuilderInvokedValue = true", 20),
                 "'message.builder.invoked' value is not set when the content type is empty.");

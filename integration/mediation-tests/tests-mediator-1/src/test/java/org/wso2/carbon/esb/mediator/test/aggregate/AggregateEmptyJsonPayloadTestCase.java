@@ -35,11 +35,13 @@ import static org.wso2.esb.integration.common.utils.Utils.assertIfSystemLogConta
  */
 public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
 
+    CarbonLogReader logReader = new CarbonLogReader();
     private static final String PROXY_NAME = "aggregateEmptyJsonPayloadTestProxy";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
+        logReader.start();
     }
 
     /**
@@ -64,11 +66,10 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
         requestHeader.put("Content-type", "text/xml");
         requestHeader.put("SOAPAction", "urn:mediate");
         requestHeader.put("Accept", "application/json");
-        CarbonLogReader logReader = new CarbonLogReader();
-        logReader.start();
         HttpRequestUtil.doPost(new URL(getProxyServiceURLHttp(PROXY_NAME)), inputPayload, requestHeader);
 
         Assert.assertTrue(assertIfSystemLogContains(logReader, expectedOutput),
                 "No content 204 responses are not properly aggregated at the aggregate mediator.");
+        logReader.stop();
     }
 }

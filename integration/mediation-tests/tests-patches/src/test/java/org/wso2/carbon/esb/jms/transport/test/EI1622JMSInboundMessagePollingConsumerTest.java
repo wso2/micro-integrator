@@ -40,6 +40,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check whether polling is suspended.")
@@ -50,7 +51,6 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         assertTrue(Utils.checkForLog(carbonLogReader, "Suspending polling as the pollingSuspensionLimit of 2 "
                         + "reached. Polling will be re-started after 3000 milliseconds", 10),
                 "JMS Polling suspension is not enabled.");
-        carbonLogReader.stop();
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, "inbound-endpoints", true);
     }
 
@@ -61,7 +61,6 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
 
         assertTrue(Utils.checkForLog(carbonLogReader, "Polling is suspended permanently", 10),
                 "JMS Polling is not permanently suspended though the suspension limit is 0.");
-        carbonLogReader.stop();
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, "inbound-endpoints", true);
     }
 
@@ -78,9 +77,8 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
 
         try {
             Utils.deploySynapseConfiguration(inBoundEndpoint, ENDPOINT_NAME, "inbound-endpoints", true);
-            sender.connect(queueName);
             carbonLogReader.clearLogs();
-            carbonLogReader.start();
+            sender.connect(queueName);
             sender.pushMessage("<?xml version='1.0' encoding='UTF-8'?>"
                     + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\""
                     + " xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
@@ -96,7 +94,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 
     /**

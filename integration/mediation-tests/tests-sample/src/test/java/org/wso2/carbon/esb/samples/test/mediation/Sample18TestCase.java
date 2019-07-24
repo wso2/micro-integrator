@@ -35,21 +35,18 @@ import static org.testng.Assert.fail;
  * Sample 18: Transforming a Message Using ForEachMediator
  */
 public class Sample18TestCase extends ESBSampleIntegrationTest {
-
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
     private String endpoint;
 
     @BeforeClass(alwaysRun = true)
     public void uploadSynapseConfig() throws Exception {
         super.init();
         endpoint = getProxyServiceURLHttp("Sample18TestCaseProxy");
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using ForEachMediator")
     public void testTransformWithForEachMediator() throws Exception {
-
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
-
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"

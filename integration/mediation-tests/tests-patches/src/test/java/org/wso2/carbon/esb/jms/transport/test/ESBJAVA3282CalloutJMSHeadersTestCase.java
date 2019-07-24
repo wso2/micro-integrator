@@ -34,12 +34,11 @@ public class ESBJAVA3282CalloutJMSHeadersTestCase extends ESBIntegrationTest {
     protected void init() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @Test(groups = {"wso2.esb"}, description = "Callout JMS headers test case")
     public void testCalloutJMSHeaders() throws Exception {
-        carbonLogReader.start();
-
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<payload/>";
         AXIOMUtil.stringToOM(payload);
@@ -47,11 +46,10 @@ public class ESBJAVA3282CalloutJMSHeadersTestCase extends ESBIntegrationTest {
                           "urn:mediate");
 
         assertTrue(carbonLogReader.checkForLog("RequestHeaderVal", DEFAULT_TIMEOUT));
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 }

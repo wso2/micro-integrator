@@ -70,11 +70,4 @@ public class GroovyScriptSupportTestCase extends ESBIntegrationTest {
 
         assertEquals(actualResult, expectedResult, "Fault: value 'symbol' mismatched");
     }
-
-    @AfterClass(alwaysRun = true)
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    public void destroy() throws Exception {
-        super.cleanup();
-    }
-
 }

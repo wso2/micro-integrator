@@ -35,6 +35,7 @@ import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClie
  * message will be sent. If this message get into default fault sequence, the test will be failed.
  */
 public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
     /* this will be printed on default fault sequence when the exception is thrown */
     private final String exceptedErrorLog = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/"
             + "envelope/\"><soapenv:Body><ns:getQuote xmlns:ns=\"http://services.samples\"><ns:request><ns:symbol>"
@@ -43,6 +44,7 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test for JMS sender side stale connections handling")
@@ -63,9 +65,6 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
         /* send another message after broker restart */
         client.sendRobust(Utils.getStockQuoteRequest("JMS"),
                 getProxyServiceURLHttp("JMSSenderStaleConnectionsTestProxy"), "getQuote");
-
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
 
         Assert.assertFalse(carbonLogReader.checkForLog(exceptedErrorLog, DEFAULT_TIMEOUT),
                 "Sender Side Stale connections handling test failed");

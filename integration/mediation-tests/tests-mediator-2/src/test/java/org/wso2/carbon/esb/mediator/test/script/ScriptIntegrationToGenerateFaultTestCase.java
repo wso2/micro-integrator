@@ -98,7 +98,6 @@ public class ScriptIntegrationToGenerateFaultTestCase extends ESBIntegrationTest
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
         clearUploadedResource();
     }
 

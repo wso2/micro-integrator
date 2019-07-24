@@ -28,17 +28,16 @@ import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 import static org.testng.Assert.assertFalse;
 
 public class HeadMethodResponseTestCase extends ESBIntegrationTest {
+    CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = " Checking response for HEAD request contains a body")
     public void testResponseBodyOfHEADRequest() throws Exception {
-        CarbonLogReader carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
-
         SimpleHttpClient httpClient = new SimpleHttpClient();
         httpClient.doGet(contextUrls.getServiceUrl() + "/HeadMethodResponseTestClientProxy", null);
 

@@ -61,6 +61,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
         super.init();
 
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     //enable tests with the synapse fix
@@ -74,7 +75,6 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
             + "property.")
     public void testInvalidJSONMessage() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
 
         String inputPayload = "{\"abc\" :\"123\" } xyz";
         String expectedOutput = "Error while building the message." + "{\"abc\" :\"123\" } xyz";
@@ -86,7 +86,6 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
 
         Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, DEFAULT_TIMEOUT), "Test fails for forcing "
                 + "JSON validation with force.json.message.validation passthru-http property.");
-        carbonLogReader.stop();
     }
 
     /**
@@ -97,7 +96,6 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test for invalid XML payload with force.xml.message.validation property.")
     public void testInvalidXMLMessage() throws Exception {
         carbonLogReader.clearLogs();
-        carbonLogReader.start();
 
         String inputPayload = "<foo>\n" + "  <bar>xyz</bar>\n" + "</foo>\n" + "</bar>";
         String expectedOutput =
@@ -109,11 +107,11 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_NAME)), inputPayload, requestHeader);
         Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, DEFAULT_TIMEOUT),
                 "Test fails for forcing XML validation with force.xml.message.validation passthru-http property.");
-        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         serverConfigurationManager.restoreToLastMIConfiguration();
+        carbonLogReader.stop();
     }
 }
