@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -38,7 +37,6 @@ public class PropertyIntegrationDISABLE_CHUNKING_PropertyTest extends ESBIntegra
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/DISABLE_CHUNKING.xml");
         wireServer = new WireMonitorServer(8993);
     }
 
@@ -56,10 +54,5 @@ public class PropertyIntegrationDISABLE_CHUNKING_PropertyTest extends ESBIntegra
         String response = wireServer.getCapturedMessage();
         assertTrue(response.contains("Content-Length"), "Content-Length not found in out going message");
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
     }
 }

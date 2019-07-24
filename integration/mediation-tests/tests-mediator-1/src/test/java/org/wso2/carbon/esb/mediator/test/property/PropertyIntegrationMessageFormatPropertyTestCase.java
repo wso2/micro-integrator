@@ -21,7 +21,6 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
@@ -42,13 +41,7 @@ public class PropertyIntegrationMessageFormatPropertyTestCase extends ESBIntegra
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyProxyServiceExistence("MESSAGE_FORMAT_TestProxy");
         clientUtil = new HttpClientUtil();
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "Testing with POX message format")

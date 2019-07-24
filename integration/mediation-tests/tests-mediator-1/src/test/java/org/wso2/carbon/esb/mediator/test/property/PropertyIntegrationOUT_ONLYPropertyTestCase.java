@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -37,15 +36,8 @@ public class PropertyIntegrationOUT_ONLYPropertyTestCase extends ESBIntegrationT
         super.init();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
-    }
-
     @Test(groups = "wso2.esb", description = "Tests when Out_Only property is disabled")
     public void testOutOnlyPropertyEnabledFalse() throws Exception {
-        verifyProxyServiceExistence("OUT_ONLY_FalseTestProxy");
-
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("OUT_ONLY_FalseTestProxy"), null, "WSO2");
 
@@ -55,8 +47,6 @@ public class PropertyIntegrationOUT_ONLYPropertyTestCase extends ESBIntegrationT
 
     @Test(groups = "wso2.esb", description = "Tests when Out_Only property is enabled", dependsOnMethods = "testOutOnlyPropertyEnabledFalse", expectedExceptions = AxisFault.class)
     public void testOutOnlyPropertyEnabledTrue() throws Exception {
-        verifyProxyServiceExistence("OUT_ONLY_TrueTestProxy");
-
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("OUT_ONLY_TrueTestProxy"), null, "WSO2");
     }
 }

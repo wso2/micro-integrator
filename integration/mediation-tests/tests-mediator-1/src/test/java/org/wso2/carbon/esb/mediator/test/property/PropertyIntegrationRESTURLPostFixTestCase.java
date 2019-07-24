@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -63,10 +62,5 @@ public class PropertyIntegrationRESTURLPostFixTestCase extends ESBIntegrationTes
         assertEquals(response.getFirstElement().getText(), "charitha", "Text does not match");
         //TODO: Checking the following log message in ESB log."rest-url-value = /echoString?s=wso2"
 
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
     }
 }

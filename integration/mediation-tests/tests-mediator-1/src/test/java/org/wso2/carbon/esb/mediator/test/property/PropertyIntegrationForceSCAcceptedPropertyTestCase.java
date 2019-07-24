@@ -22,7 +22,6 @@ import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.FileRequestEntity;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.RequestEntity;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -42,15 +41,8 @@ public class PropertyIntegrationForceSCAcceptedPropertyTestCase extends ESBInteg
         super.init();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
-
     @Test(groups = "wso2.esb", description = "Testing functionality of FORCE_SC_ACCEPTED " + "- Enabled False")
     public void testFORCE_SC_ACCEPTEDPropertyEnabledFalseScenario() throws Exception {
-        verifyProxyServiceExistence("FORCE_SC_ACCEPTED_FalseTestProxy");
-
         int responseStatus = 0;
 
         String strXMLFilename =
@@ -78,8 +70,6 @@ public class PropertyIntegrationForceSCAcceptedPropertyTestCase extends ESBInteg
     @Test(groups = "wso2.esb", description = "Testing functionality of FORCE_SC_ACCEPTED " + "Enabled True  - "
             + "Client should receive 202 message", dependsOnMethods = "testFORCE_SC_ACCEPTEDPropertyEnabledFalseScenario")
     public void testWithFORCE_SC_ACCEPTEDPropertyEnabledTrueScenario() throws Exception {
-        verifyProxyServiceExistence("FORCE_SC_ACCEPTED_TrueTestProxy");
-
         int responseStatus = 0;
 
         String strXMLFilename =

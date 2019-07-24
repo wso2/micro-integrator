@@ -22,7 +22,6 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -46,16 +45,8 @@ public class PropertyIntegrationForceHttpContentLengthPropertyTestCase extends E
         wireServer = new WireMonitorServer(8994);
     }
 
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
-    }
-
     @Test(groups = "wso2.esb", description = "Tests when both properties are enabled")
     public void testWithEnableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest() throws Exception {
-
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/EnableFORCE_HTTP_CONTENT_LENGTH.xml");
-
         wireServer.start();
 
         HttpClient httpclient = new DefaultHttpClient();
@@ -82,10 +73,6 @@ public class PropertyIntegrationForceHttpContentLengthPropertyTestCase extends E
 
     @Test(groups = "wso2.esb", description = "Tests when both properties are disabled", dependsOnMethods = "testWithEnableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest")
     public void testWithDisableFORCE_HTTP_CONTENT_LENGTHAndCOPY_CONTENT_LENGTH_FROM_INCOMINGTest() throws Exception {
-
-        loadESBConfigurationFromClasspath(
-                "/artifacts/ESB/mediatorconfig/property/DisableFORCE_HTTP_CONTENT_LENGTH.xml");
-
         wireServer.start();
 
         HttpClient httpclient = new DefaultHttpClient();

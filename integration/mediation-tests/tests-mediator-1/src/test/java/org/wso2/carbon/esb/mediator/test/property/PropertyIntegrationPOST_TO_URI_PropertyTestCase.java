@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
@@ -55,10 +54,4 @@ public class PropertyIntegrationPOST_TO_URI_PropertyTestCase extends ESBIntegrat
         String response = wireServer.getCapturedMessage();
         assertTrue(response.contains("POST http://localhost:8992"), "Faulty Response");
     }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        cleanup();
-    }
-
 }

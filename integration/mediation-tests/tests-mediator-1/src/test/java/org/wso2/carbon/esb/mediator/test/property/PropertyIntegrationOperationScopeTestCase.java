@@ -18,7 +18,6 @@
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -82,10 +81,5 @@ public class PropertyIntegrationOperationScopeTestCase extends ESBIntegrationTes
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyShortOperationTestProxy"), null,
                         "Random Symbol");
         assertTrue(response.toString().contains("12"), "Short Property Not Set in the Operation scope!");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        cleanup();
     }
 }

@@ -20,7 +20,6 @@ package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -35,7 +34,6 @@ public class HTTPHeaderCaseSensitivityTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyProxyServiceExistence("httpHeaderTestProxy");
     }
 
     /*Add a http header with name "TEST_HEADER" where all the letters are in uppercase.*/
@@ -89,10 +87,5 @@ public class HTTPHeaderCaseSensitivityTestCase extends ESBIntegrationTest {
                 .getFirstChildWithName(new QName("http://services.samples/xsd", "symbol"));
 
         assertEquals(symbolElement.getText(), "mixed", "Fault, invalid response");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        super.cleanup();
     }
 }

@@ -19,12 +19,10 @@ package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
 import javax.xml.namespace.QName;
 
 public class PropertyIntegrationTestCase extends ESBIntegrationTest {
@@ -32,14 +30,6 @@ public class PropertyIntegrationTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "propertyMediatorConfig" + File.separator + "synapse.xml");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void destroy() throws Exception {
-        cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "Set a new property value (static text value) and retrieve it using get-property(property-name) Xpath function  (in default scope)")

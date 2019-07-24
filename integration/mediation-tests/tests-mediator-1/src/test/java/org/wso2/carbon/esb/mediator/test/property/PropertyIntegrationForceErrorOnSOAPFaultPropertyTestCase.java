@@ -36,17 +36,10 @@ public class PropertyIntegrationForceErrorOnSOAPFaultPropertyTestCase extends ES
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        loadESBConfigurationFromClasspath("/artifacts/ESB/mediatorconfig/property/FORCE_ERROR_ON_SOAP_FAULT.xml");
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void stop() throws Exception {
-        super.cleanup();
     }
 
     @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property", enabled = false)
     public void testWithoutOutOnlyPropertyTest() throws Exception {
-
         SimpleHttpClient httpClient = new SimpleHttpClient();
         Map<String, String> headers = new HashMap<String, String>();
         headers.put("Content-Type", "text/xml");

@@ -38,19 +38,19 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
     public void setEnvironment() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
-        super.cleanup();
+        carbonLogReader.stop();
     }
 
     @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator")
     public void testSetPropertyWithAxis2ScopeInScript() throws Exception {
-
+        carbonLogReader.clearLogs();
         boolean propertySet;
         boolean propertyRemoved;
-        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
                         "inlineTest");
@@ -63,10 +63,9 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
     @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator")
     public void testSetPropertyWithTransportScopeInScript() throws Exception {
-
+        carbonLogReader.clearLogs();
         boolean propertySet;
         boolean propertyRemoved;
-        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
                         "inlineTest");
@@ -79,10 +78,9 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
 
     @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator")
     public void testSetPropertyWithOperationScopeInScript() throws Exception {
-
+        carbonLogReader.clearLogs();
         boolean propertySet;
         boolean propertyRemoved;
-        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("setRemovePropertiesWithNashornJsTestProxy"), null,
                         "inlineTest");
@@ -105,7 +103,6 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         if (carbonLogReader.checkForLog(property, DEFAULT_TIMEOUT)) {
             containsProperty = true;
         }
-        carbonLogReader.stop();
         return containsProperty;
     }
 }

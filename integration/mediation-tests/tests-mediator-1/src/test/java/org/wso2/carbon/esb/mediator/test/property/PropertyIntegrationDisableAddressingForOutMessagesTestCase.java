@@ -43,7 +43,6 @@ public class PropertyIntegrationDisableAddressingForOutMessagesTestCase extends 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        verifyProxyServiceExistence("disableAddressingTestProxy");
         axisOperationClient = new AxisOperationClient();
 
     }
@@ -77,7 +76,6 @@ public class PropertyIntegrationDisableAddressingForOutMessagesTestCase extends 
 
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
-        cleanup();
         axisOperationClient.destroy();
         axisOperationClient = null;
     }
