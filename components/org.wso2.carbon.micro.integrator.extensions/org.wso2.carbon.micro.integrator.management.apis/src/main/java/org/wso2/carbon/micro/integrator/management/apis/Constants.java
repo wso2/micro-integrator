@@ -34,6 +34,7 @@ public class Constants {
     public static final String PREFIX_MESSAGE_STORE = "/message-stores";
     public static final String PREFIX_MESSAGE_PROCESSORS = "/message-processors";
     public static final String PREFIX_LOCAL_ENTRIES = "/local-entries";
+    public static final String PREFIX_CONNECTORS = "/connectors";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";
@@ -67,4 +68,7 @@ public class Constants {
 
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
     public static final String MESSAGE_JSON_ATTRIBUTE = "Message";
+
+    // Types of functional components
+    public static final int ITEM_TYPE_IMPORT        = 14;
 }

@@ -28,6 +28,7 @@ import java.util.ArrayList;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_APIS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_CONNECTORS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_DATA_SERVICES;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_ENDPOINTS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_INBOUND_ENDPOINTS;
@@ -65,6 +66,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_MESSAGE_STORE, new MessageStoreResource()));
         resourcesList.add(new MessageProcessorResource(PREFIX_MESSAGE_PROCESSORS));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOCAL_ENTRIES, new LocalEntryResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_CONNECTORS, new ConnectorResource()));
 
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);
