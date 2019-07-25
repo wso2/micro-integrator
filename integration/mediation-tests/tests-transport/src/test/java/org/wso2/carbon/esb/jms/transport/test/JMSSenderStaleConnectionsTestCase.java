@@ -49,7 +49,6 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
 
     @Test(groups = { "wso2.esb" }, description = "Test for JMS sender side stale connections handling")
     public void staleConnectionsTestJMSProxy() throws Exception {
-
         AxisServiceClient client = new AxisServiceClient();
 
         for (int i = 0; i < 15; i++) {
@@ -62,11 +61,12 @@ public class JMSSenderStaleConnectionsTestCase extends ESBIntegrationTest {
         activeMQServer.stop();
         activeMQServer.start();
 
+        carbonLogReader.clearLogs();
         /* send another message after broker restart */
         client.sendRobust(Utils.getStockQuoteRequest("JMS"),
                 getProxyServiceURLHttp("JMSSenderStaleConnectionsTestProxy"), "getQuote");
-        carbonLogReader.clearLogs();
-        Assert.assertFalse(carbonLogReader.checkForLog(exceptedErrorLog, DEFAULT_TIMEOUT),
+        String logs = carbonLogReader.getLogs();
+        Assert.assertFalse(logs.contains(exceptedErrorLog),
                 "Sender Side Stale connections handling test failed");
         carbonLogReader.stop();
     }
