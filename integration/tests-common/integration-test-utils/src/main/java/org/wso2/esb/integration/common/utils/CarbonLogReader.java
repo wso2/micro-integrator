@@ -20,10 +20,12 @@ package org.wso2.esb.integration.common.utils;
 
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.lang.StringUtils;
+import org.awaitility.Awaitility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,6 +74,9 @@ public class CarbonLogReader {
         Thread thread = new Thread(tailer);
         thread.setDaemon(true);
         thread.start();
+        Awaitility.await().pollInterval(10, TimeUnit.MILLISECONDS).
+                atMost(5, TimeUnit.SECONDS).
+                until(hasThreadStarted(thread));
     }
 
     /**
@@ -177,5 +182,14 @@ public class CarbonLogReader {
             TimeUnit.SECONDS.sleep(1);
         }
         return false;
+    }
+
+    private Callable<Boolean> hasThreadStarted(final Thread thread) {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return thread.isAlive();
+            }
+        };
     }
 }
