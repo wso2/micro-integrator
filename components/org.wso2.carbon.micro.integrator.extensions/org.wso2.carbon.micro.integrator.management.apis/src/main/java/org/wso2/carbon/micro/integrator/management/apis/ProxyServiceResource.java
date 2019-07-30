@@ -19,10 +19,14 @@
 
 package org.wso2.carbon.micro.integrator.management.apis;
 
+import com.google.gson.JsonObject;
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.ServerConfigurationInformation;
+import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.ProxyServiceSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
@@ -32,11 +36,17 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
 import org.wso2.carbon.service.mgt.ServiceMetaData;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.ACTIVE_STATUS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.NAME;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.STATUS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class ProxyServiceResource extends APIResource {
@@ -51,6 +61,7 @@ public class ProxyServiceResource extends APIResource {
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
+        methods.add(Constants.HTTP_POST);
         return methods;
     }
 
@@ -58,19 +69,34 @@ public class ProxyServiceResource extends APIResource {
     public boolean invoke(MessageContext messageContext) {
 
         buildMessage(messageContext);
-
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        String param = Utils.getQueryParameter(messageContext, "proxyServiceName");
-
-        if (Objects.nonNull(param)) {
-            populateProxyServiceData(messageContext, param);
+        if (messageContext.isDoingGET()) {
+            String param = Utils.getQueryParameter(messageContext, "proxyServiceName");
+            if (Objects.nonNull(param)) {
+                populateProxyServiceData(messageContext, param);
+            } else {
+                populateProxyServiceList(messageContext);
+            }
+            axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         } else {
-            populateProxyServiceList(messageContext);
+            try {
+                if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
+                    Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("JSON payload is missing"));
+                    return  true;
+                }
+                JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
+                if (payload.has(NAME) && payload.has(STATUS)) {
+                    changeProxyState(messageContext, axis2MessageContext, payload);
+                } else {
+                    Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Missing parameters in payload"));
+                }
+            } catch (IOException e) {
+                LOG.error("Error when parsing JSON payload", e);
+                Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Error when parsing JSON payload"));
+            }
         }
-
-        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
     }
 
@@ -160,4 +186,56 @@ public class ProxyServiceResource extends APIResource {
         proxyObject.put(SYNAPSE_CONFIGURATION, proxyConfiguration.toString());
         return proxyObject;
     }
+
+    /**
+     * Change the state of the proxy based on the payload.
+     *
+     * @param messageContext      Synapse message context
+     * @param axis2MessageContext AXIS2 message context
+     * @param payload             json payload
+     */
+    private void changeProxyState(MessageContext messageContext,
+                                  org.apache.axis2.context.MessageContext axis2MessageContext, JsonObject payload) {
+
+        SynapseConfiguration synapseConfiguration = messageContext.getConfiguration();
+        String name = payload.get(NAME).getAsString();
+        String status = payload.get(STATUS).getAsString();
+        ProxyService proxyService = synapseConfiguration.getProxyService(name);
+        if (proxyService == null) {
+            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Proxy service could not be found."));
+            return;
+        }
+        List pinnedServers = proxyService.getPinnedServers();
+        JSONObject jsonResponse = new JSONObject();
+        if (ACTIVE_STATUS.equalsIgnoreCase(status)) {
+            if (pinnedServers.isEmpty() ||
+                    pinnedServers.contains(getServerConfigInformation(synapseConfiguration).getServerName())) {
+                proxyService.start(synapseConfiguration);
+                jsonResponse.put("Message", "Proxy service " + name + " started successfully");
+                Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
+            }
+        } else if (INACTIVE_STATUS.equalsIgnoreCase(status)) {
+            if (pinnedServers.isEmpty() ||
+                    pinnedServers.contains(getServerConfigInformation(synapseConfiguration).getSynapseXMLLocation())) {
+                proxyService.stop(synapseConfiguration);
+                jsonResponse.put("Message", "Proxy service " + name + " stopped successfully");
+                Utils.setJsonPayLoad(axis2MessageContext, jsonResponse);
+            }
+        } else {
+            Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("Defined state is invalid."));
+        }
+    }
+
+    /**
+     * Return ServerConfigurationInformation of a given SynapseConfiguration.
+     *
+     * @param synapseConfiguration synapse configuration of the proxy
+     * @return ServerConfigurationInformation
+     */
+    private ServerConfigurationInformation getServerConfigInformation(SynapseConfiguration synapseConfiguration) {
+
+        return (ServerConfigurationInformation) synapseConfiguration.getAxisConfiguration().
+                getParameter(SynapseConstants.SYNAPSE_SERVER_CONFIG_INFO).getValue();
+    }
+
 }
