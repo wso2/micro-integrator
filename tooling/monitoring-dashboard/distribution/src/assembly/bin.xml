@@ -25,7 +25,7 @@
 
     <fileSets>
         <fileSet>
-            <directory>target/wso2carbon-kernel-${carbon.kernel.version}</directory>
+            <directory>target/wso2carbon-kernel-${carbon.kernel5.version}</directory>
             <outputDirectory>.</outputDirectory>
             <excludes>
                 <exclude>README.txt</exclude>
@@ -89,22 +89,6 @@
             </includes>
             <fileMode>444</fileMode>
         </fileSet>
-        <!--<fileSet>-->
-            <!--<directory>target/extensions</directory>-->
-            <!--<outputDirectory>lib</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>**/*.jar</include>-->
-            <!--</includes>-->
-            <!--<fileMode>664</fileMode>-->
-        <!--</fileSet>-->
-        <!--<fileSet>-->
-            <!--<directory>carbon-home/external-libs</directory>-->
-            <!--<outputDirectory>lib</outputDirectory>-->
-            <!--<includes>-->
-                <!--<include>**/*.jar</include>-->
-            <!--</includes>-->
-            <!--<fileMode>664</fileMode>-->
-        <!--</fileSet>-->
     </fileSets>
     <files>
         <file>
@@ -114,13 +98,13 @@
             <fileMode>444</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-kernel-${carbon.kernel.version}/bin/kernel-version.txt</source>
+            <source>target/wso2carbon-kernel-${carbon.kernel5.version}/bin/kernel-version.txt</source>
             <outputDirectory>bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>444</fileMode>
         </file>
         <file>
-            <source>target/wso2carbon-kernel-${carbon.kernel.version}/bin/README.txt</source>
+            <source>target/wso2carbon-kernel-${carbon.kernel5.version}/bin/README.txt</source>
             <outputDirectory>bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>444</fileMode>

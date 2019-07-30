@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>monitoring-dashboard-distribution</artifactId>
-    <name>Micro Integrator Monitoring Dashboard</name>
+    <name>MI Monitoring Dashboard - Distribution</name>
     <packaging>pom</packaging>
 
     <dependencies>
@@ -42,15 +42,20 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.touchpoint</groupId>
-            <artifactId>org.wso2.carbon.touchpoint.feature</artifactId>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.osgi.feature</artifactId>
             <type>zip</type>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.wso2.carbon.config</groupId>-->
-        <!--<artifactId>org.wso2.carbon.config.feature</artifactId>-->
-        <!--<type>zip</type>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.carbon</groupId>
+            <artifactId>org.wso2.carbon.runtime.feature</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.config</groupId>
+            <artifactId>org.wso2.carbon.config.feature</artifactId>
+            <type>zip</type>
+        </dependency>
         <dependency>
             <groupId>org.wso2.carbon.secvault</groupId>
             <artifactId>org.wso2.carbon.secvault.feature</artifactId>
@@ -67,13 +72,13 @@
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.osgi.feature</artifactId>
+            <groupId>org.wso2.carbon.touchpoint</groupId>
+            <artifactId>org.wso2.carbon.touchpoint.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.runtime.feature</artifactId>
+            <groupId>org.wso2.carbon.deployment</groupId>
+            <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
             <type>zip</type>
         </dependency>
         <dependency>
@@ -84,16 +89,6 @@
         <dependency>
             <groupId>org.wso2.carbon.jndi</groupId>
             <artifactId>org.wso2.carbon.jndi.feature</artifactId>
-            <type>zip</type>
-        </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.wso2.carbon.caching</groupId>-->
-        <!--<artifactId>org.wso2.carbon.caching.feature</artifactId>-->
-        <!--<type>zip</type>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>org.wso2.carbon.deployment</groupId>
-            <artifactId>org.wso2.carbon.deployment.engine.feature</artifactId>
             <type>zip</type>
         </dependency>
 
@@ -150,6 +145,14 @@
             <artifactId>org.wso2.carbon.uiserver.feature</artifactId>
             <type>zip</type>
         </dependency>
+
+        <!-- Monitoring Dashboard -->
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.carbon.micro.integrator.dashboard.web.feature</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
@@ -197,12 +200,16 @@
                             <features>
                                 <!-- Carbon -->
                                 <feature>
-                                    <id>org.wso2.carbon.utils.feature</id>
-                                    <version>${carbon.utils.version}</version>
+                                    <id>org.wso2.carbon.server.feature</id>
+                                    <version>${carbon.kernel5.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.touchpoint.feature</id>
-                                    <version>${carbon.touchpoint.version}</version>
+                                    <id>org.wso2.carbon.osgi.feature</id>
+                                    <version>${carbon.kernel5.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.runtime.feature</id>
+                                    <version>${carbon.kernel5.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.config.feature</id>
@@ -217,16 +224,16 @@
                                     <version>${carbon.securevault.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.osgi.feature</id>
-                                    <version>${carbon.kernel.version}</version>
+                                    <id>org.wso2.carbon.utils.feature</id>
+                                    <version>${carbon.utils.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.server.feature</id>
-                                    <version>${carbon.kernel.version}</version>
+                                    <id>org.wso2.carbon.touchpoint.feature</id>
+                                    <version>${carbon.touchpoint.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.runtime.feature</id>
-                                    <version>${carbon.kernel.version}</version>
+                                    <id>org.wso2.carbon.deployment.engine.feature</id>
+                                    <version>${carbon.deployment.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.datasource.core.feature</id>
@@ -235,10 +242,6 @@
                                 <feature>
                                     <id>org.wso2.carbon.jndi.feature</id>
                                     <version>${carbon.jndi.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.deployment.engine.feature</id>
-                                    <version>${carbon.deployment.version}</version>
                                 </feature>
 
                                 <!-- Metrics -->
@@ -280,6 +283,12 @@
                                     <id>org.wso2.carbon.uiserver.feature</id>
                                     <version>${carbon.uis.version}</version>
                                 </feature>
+
+                                <!-- Monitoring Dashboard -->
+                                <feature>
+                                    <id>org.wso2.carbon.micro.integrator.dashboard.web.feature</id>
+                                    <version>${project.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -297,7 +306,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>materialize-editor</id>
+                        <id>materialize-monitoring-dashboard</id>
                         <phase>package</phase>
                         <goals>
                             <goal>generate-runtime</goal>
@@ -305,13 +314,13 @@
                         <configuration>
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
                             <targetPath>
-                                file:${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/wso2
+                                file:${basedir}/target/wso2carbon-kernel-${carbon.kernel5.version}/wso2
                             </targetPath>
                             <runtime>server</runtime>
                         </configuration>
                     </execution>
                     <execution>
-                        <id>feature-installation-editor</id>
+                        <id>feature-installation-monitoring-dashboard</id>
                         <phase>package</phase>
                         <goals>
                             <goal>install</goal>
@@ -320,14 +329,22 @@
                             <runtime>server</runtime>
                             <repositoryURL>file:${basedir}/target/p2-repo</repositoryURL>
                             <destination>
-                                ${basedir}/target/wso2carbon-kernel-${carbon.kernel.version}/wso2
+                                ${basedir}/target/wso2carbon-kernel-${carbon.kernel5.version}/wso2
                             </destination>
                             <deleteOldRuntimeFiles>true</deleteOldRuntimeFiles>
                             <features>
                                 <!-- Carbon -->
                                 <feature>
-                                    <id>org.wso2.carbon.touchpoint.feature.group</id>
-                                    <version>${carbon.touchpoint.version}</version>
+                                    <id>org.wso2.carbon.server.feature.group</id>
+                                    <version>${carbon.kernel5.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.osgi.feature.group</id>
+                                    <version>${carbon.kernel5.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.runtime.feature.group</id>
+                                    <version>${carbon.kernel5.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.config.feature.group</id>
@@ -346,24 +363,16 @@
                                     <version>${carbon.utils.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.osgi.feature.group</id>
-                                    <version>${carbon.kernel.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.server.feature.group</id>
-                                    <version>${carbon.kernel.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.runtime.feature.group</id>
-                                    <version>${carbon.kernel.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.wso2.carbon.jndi.feature.group</id>
-                                    <version>${carbon.jndi.version}</version>
+                                    <id>org.wso2.carbon.touchpoint.feature.group</id>
+                                    <version>${carbon.touchpoint.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.datasource.core.feature.group</id>
                                     <version>${carbon.datasources.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.carbon.jndi.feature.group</id>
+                                    <version>${carbon.jndi.version}</version>
                                 </feature>
 
                                 <!-- Metrics -->
@@ -405,6 +414,12 @@
                                     <id>org.wso2.carbon.uiserver.feature.group</id>
                                     <version>${carbon.uis.version}</version>
                                 </feature>
+
+                                <!-- Monitoring Dashboard -->
+                                <feature>
+                                    <id>org.wso2.carbon.micro.integrator.dashboard.web.feature</id>
+                                    <version>${project.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -419,7 +434,7 @@
                         <phase>package</phase>
                         <configuration>
                             <tasks>
-                                <replace dir="target/wso2carbon-kernel-${carbon.kernel.version}/wso2" token="false" value="true">
+                                <replace dir="target/wso2carbon-kernel-${carbon.kernel5.version}/wso2" token="false" value="true">
                                     <include name="**/bundles.info" />
                                 </replace>
                             </tasks>
@@ -438,7 +453,7 @@
                                 <delete dir="target/org.eclipse.equinox.executable-3.5.0.v20110530-7P7NFUFFLWUl76mart" />
                                 <delete dir="target/p2-repo" />
                                 <delete file="target/tmp" />
-                                <delete dir="target/wso2carbon-kernel-${carbon.kernel.version}" />
+                                <delete dir="target/wso2carbon-kernel-${carbon.kernel5.version}" />
                                 <delete dir="target/antrun" />
                                 <delete dir="target/maven-shared-archive-resources" />
                                 <delete dir="target/findbugs" />
@@ -492,6 +507,4 @@
             </resource>
         </resources>
     </build>
-
-
 </project>
