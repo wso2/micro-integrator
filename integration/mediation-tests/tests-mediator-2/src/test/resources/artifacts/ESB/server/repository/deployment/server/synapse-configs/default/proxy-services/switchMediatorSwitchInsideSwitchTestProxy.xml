@@ -39,11 +39,8 @@
                     </log>
                 </default>
             </switch>
-            <send/>
+            <respond/>
         </inSequence>
-        <outSequence>
-            <send/>
-        </outSequence>
     </target>
     <description/>
 </proxy>

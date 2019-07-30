@@ -314,10 +314,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         //Related proxy : VFSProxy7
         File sourceFile = new File(pathToVfsDir + File.separator + "test.txt");
         File targetFile = new File(proxyVFSRoots.get("VFSProxy7") + File.separator + "in" + File.separator + "test.txt");
+        File targetLockFile = new File(proxyVFSRoots.get("VFSProxy7") + File.separator + "in" + File.separator +
+                "test.txt.lock");
         File outfile = new File(proxyVFSRoots.get("VFSProxy7") + File.separator + "out" + File.separator + "out.txt");
         File originalFile = new File(proxyVFSRoots.get("VFSProxy7") + File.separator + "original" + File.separator + "test.txt");
 
-        FileUtils.copyFile(sourceFile, targetFile);
+        FileUtils.copyFile(sourceFile, targetLockFile);
+        FileUtils.moveFile(targetLockFile, targetFile);
 
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
@@ -653,10 +656,13 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
         File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
         File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
+        File targetLockFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator +
+                "test.xml.lock");
         File originalFileAfterProcessed = new File(
                 proxyVFSRoots.get(proxyName) + File.separator + "processed" + File.separator + "test.xml");
 
-        FileUtils.copyFile(sourceFile, targetFile);
+        FileUtils.copyFile(sourceFile, targetLockFile);
+        FileUtils.moveFile(targetLockFile, targetFile);
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
 
