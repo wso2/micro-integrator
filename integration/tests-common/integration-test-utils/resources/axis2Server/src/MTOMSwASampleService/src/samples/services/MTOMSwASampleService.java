@@ -73,7 +73,7 @@ public class MTOMSwASampleService {
         MessageContext outMsgCtx = MessageContext.getCurrentMessageContext().getOperationContext()
                 .getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
         outMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.ENABLE_MTOM,
-                org.apache.axis2.Constants.VALUE_TRUE);
+                              org.apache.axis2.Constants.VALUE_TRUE);
 
         return payload;
     }
@@ -98,7 +98,7 @@ public class MTOMSwASampleService {
         MessageContext outMsgCtx = msgCtx.getOperationContext().
                 getMessageContext(WSDLConstants.MESSAGE_LABEL_OUT_VALUE);
         outMsgCtx.setProperty(org.apache.axis2.Constants.Configuration.ENABLE_SWA,
-                org.apache.axis2.Constants.VALUE_TRUE);
+                              org.apache.axis2.Constants.VALUE_TRUE);
 
         OMFactory factory = request.getOMFactory();
         OMNamespace ns = factory.createOMNamespace("http://services.samples", "m0");

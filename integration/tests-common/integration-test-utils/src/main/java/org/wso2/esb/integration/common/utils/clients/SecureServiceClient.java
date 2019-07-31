@@ -39,12 +39,12 @@ public class SecureServiceClient {
             throws Exception {
 
         return sendSecuredRequest(userInfo, trpUrl, securityPolicyId, createSimpleStockQuoteRequest(symbol),
-                "getQuote");
+                                  "getQuote");
 
     }
 
     public OMElement sendSecuredRequest(User userInfo, String trpUrl, int securityPolicyId, OMElement payload,
-            String action) throws Exception {
+                                        String action) throws Exception {
         //todo isTenat
         boolean isTenant = false;
         String policyPath =
@@ -73,7 +73,7 @@ public class SecureServiceClient {
         }
         return secureClient
                 .sendReceive(userInfo.getUserName(), userInfo.getPassword(), trpUrl, action, payload, policyPath,
-                        userCertAlias, encryptionUser, keyStorePath, keyStorePassword);
+                             userCertAlias, encryptionUser, keyStorePath, keyStorePassword);
 
     }
 
@@ -103,8 +103,8 @@ public class SecureServiceClient {
             keyStorePassword = "wso2carbon";
         }
         return secureClient.sendReceive(userInfo.getUserName(), userInfo.getPassword(), trpUrl, "getQuote",
-                createSimpleStockQuoteRequest(symbol), null, userCertAlias, encryptionUser, keyStorePath,
-                keyStorePassword);
+                                        createSimpleStockQuoteRequest(symbol), null, userCertAlias, encryptionUser,
+                                        keyStorePath, keyStorePassword);
 
     }
 

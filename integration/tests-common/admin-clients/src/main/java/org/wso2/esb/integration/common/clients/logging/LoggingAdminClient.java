@@ -40,8 +40,6 @@ public class LoggingAdminClient {
     private String endpoint = null;
     private LoggingAdminStub loggingAdminStub;
 
-    public enum LogLevel {OFF, TRACE, DEBUG, INFO, WARN, ERROR, FATAL}
-
     public LoggingAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
         this.endpoint = backEndUrl + serviceName;
         loggingAdminStub = new LoggingAdminStub(this.endpoint);
@@ -139,4 +137,6 @@ public class LoggingAdminClient {
             throw e;
         }
     }
+
+    public enum LogLevel {OFF, TRACE, DEBUG, INFO, WARN, ERROR, FATAL}
 }

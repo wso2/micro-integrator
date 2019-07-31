@@ -28,13 +28,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 class WireMonitor extends Thread {
-    private Log log = LogFactory.getLog(WireMonitor.class);
     private static final int TIMEOUT_VALUE = 30000;
+    private Log log = LogFactory.getLog(WireMonitor.class);
     private int port;
     private ServerSocket providerSocket;
     private Socket connection = null;
     private WireMonitorServer trigger;
     private boolean started;
+
+    public WireMonitor(int listenPort, WireMonitorServer trigger) {
+        port = listenPort;
+        this.trigger = trigger;
+    }
 
     public void run() {
         try {
@@ -102,11 +107,6 @@ class WireMonitor extends Thread {
         }
         trigger.isFinished = true;
 
-    }
-
-    public WireMonitor(int listenPort, WireMonitorServer trigger) {
-        port = listenPort;
-        this.trigger = trigger;
     }
 
     /**

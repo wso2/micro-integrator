@@ -32,9 +32,8 @@ import javax.activation.DataHandler;
 
 public class AARServiceUploaderClient {
     private static final Log log = LogFactory.getLog(AARServiceUploaderClient.class);
-
-    private ServiceUploaderStub serviceUploaderStub;
     private final String serviceName = "ServiceUploader";
+    private ServiceUploaderStub serviceUploaderStub;
 
     public AARServiceUploaderClient(String backEndUrl, String sessionCookie) throws AxisFault {
 

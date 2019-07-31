@@ -29,10 +29,10 @@ import java.rmi.RemoteException;
 
 public class ProfilesAdminServiceClient {
 
+    private static final Log log = LogFactory.getLog(ProfilesAdminServiceClient.class);
     private final String serviceName = "ProfilesAdminService";
     private ProfilesAdminServiceStub profilesAdminServiceStub;
     private String endPoint;
-    private static final Log log = LogFactory.getLog(ProfilesAdminServiceClient.class);
 
     public ProfilesAdminServiceClient(String backEndUrl, String sessionCookie) throws RemoteException {
         this.endPoint = backEndUrl + serviceName;

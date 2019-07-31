@@ -67,6 +67,28 @@ public class SimpleHttpClient {
     }
 
     /**
+     * Function to extract response body as a string
+     *
+     * @param response org.apache.http.HttpResponse object containing response entity body
+     * @return returns the response entity body as a string
+     * @throws IOException
+     */
+    public static String responseEntityBodyToString(HttpResponse response) throws IOException {
+        if (response != null && response.getEntity() != null) {
+            BufferedReader bufferedReader = new BufferedReader(
+                    new InputStreamReader(response.getEntity().getContent()));
+            StringBuilder strBuilder = new StringBuilder();
+            strBuilder.append("");
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                strBuilder.append(line);
+            }
+            return strBuilder.toString();
+        }
+        return null;
+    }
+
+    /**
      * Send a HTTP GET request to the specified URL
      *
      * @param url     Target endpoint URL
@@ -185,7 +207,7 @@ public class SimpleHttpClient {
      * @throws IOException If an error occurs while making the invocation
      */
     public HttpResponse doOptions(String url, final Map<String, String> headers, final String payload,
-            String contentType) throws IOException {
+                                  String contentType) throws IOException {
         HttpUriRequest request = new HttpOptions(url);
         setHeaders(headers, request);
         if (payload != null) {
@@ -249,7 +271,7 @@ public class SimpleHttpClient {
      * @throws IOException If an error occurs while making the invocation
      */
     public HttpResponse doDeleteWithPayload(String url, final Map<String, String> headers, final String payload,
-            String contentType) throws IOException {
+                                            String contentType) throws IOException {
 
         boolean zip = false;
         HttpUriRequest request = new HttpDeleteWithEntity(url);
@@ -305,28 +327,6 @@ public class SimpleHttpClient {
         }
         entityEncReq.setEntity(ent);
         return client.execute(request);
-    }
-
-    /**
-     * Function to extract response body as a string
-     *
-     * @param response org.apache.http.HttpResponse object containing response entity body
-     * @return returns the response entity body as a string
-     * @throws IOException
-     */
-    public static String responseEntityBodyToString(HttpResponse response) throws IOException {
-        if (response != null && response.getEntity() != null) {
-            BufferedReader bufferedReader = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
-            StringBuilder strBuilder = new StringBuilder();
-            strBuilder.append("");
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                strBuilder.append(line);
-            }
-            return strBuilder.toString();
-        }
-        return null;
     }
 
     private void setHeaders(Map<String, String> headers, HttpUriRequest request) {

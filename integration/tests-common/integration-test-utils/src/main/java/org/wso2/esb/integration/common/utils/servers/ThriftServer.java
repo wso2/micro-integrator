@@ -18,6 +18,16 @@
 
 package org.wso2.esb.integration.common.utils.servers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Matcher;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
@@ -36,16 +46,6 @@ import org.wso2.carbon.databridge.core.exception.StreamDefinitionStoreException;
 import org.wso2.carbon.databridge.core.internal.authentication.AuthenticationHandler;
 import org.wso2.carbon.databridge.receiver.thrift.ThriftDataReceiver;
 import org.wso2.carbon.user.api.UserStoreException;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.regex.Matcher;
 
 public class ThriftServer implements Runnable {
     private static Log log = LogFactory.getLog(ThriftServer.class);
@@ -170,7 +170,9 @@ public class ThriftServer implements Runnable {
     }
 
     public void resetPreservedEventList() {
-        preservedEventList.clear();
+        if (preservedEventList != null) {
+            preservedEventList.clear();
+        }
     }
 
     public List<StreamDefinition> loadStreamDefinitions() {
@@ -231,6 +233,27 @@ public class ThriftServer implements Runnable {
         return relativeFilePath.replaceAll("[\\\\/]", Matcher.quoteReplacement(File.separator));
     }
 
+    public void waitToReceiveEvents(int maxWaitTime, int expectedCount) {
+        for (int i = 0; i < maxWaitTime; i = i + 5000) {
+            if (msgCount.get() >= expectedCount) {
+                break;
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                //ignored
+            }
+        }
+    }
+
+    public void waitToReceiveEvents(int maxWaitTime) {
+        try {
+            Thread.sleep(maxWaitTime);
+        } catch (InterruptedException e) {
+            //ignored
+        }
+    }
+
     // Inner class, generic extension filter
     public class GenericExtFilter implements FilenameFilter {
 
@@ -242,19 +265,6 @@ public class ThriftServer implements Runnable {
 
         public boolean accept(File dir, String name) {
             return (name.endsWith(ext));
-        }
-    }
-
-    public void waitToReceiveEvents(int maxWaitTime, int expectedCount) {
-        for (int i = 0; i < maxWaitTime; i = i + 5000) {
-            if (msgCount.get() >= expectedCount) {
-                break;
-            }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                //ignored
-            }
         }
     }
 }

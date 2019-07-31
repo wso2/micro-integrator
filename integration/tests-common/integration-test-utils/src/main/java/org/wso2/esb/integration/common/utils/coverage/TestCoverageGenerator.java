@@ -60,7 +60,9 @@ public class TestCoverageGenerator {
                         + File.separator);
 
         ReportGenerator reportGenerator = new ReportGenerator(new File(FrameworkPathUtil.getCoverageMergeFilePath()),
-                carbonPluginDir, new File(CodeCoverageUtils.getJacocoReportDirectory()), null);
+                                                              carbonPluginDir,
+                                                              new File(CodeCoverageUtils.getJacocoReportDirectory()),
+                                                              null);
         reportGenerator.create();
 
         File carbonHomeDir = new File(carbonHome);
@@ -72,6 +74,6 @@ public class TestCoverageGenerator {
         log.info("Jacoco coverage merged file : " + FrameworkPathUtil.getCoverageMergeFilePath());
         log.info("Jacoco class file path : " + carbonPluginDir.getAbsolutePath());
         log.info("Jacoco coverage HTML report path : " + CodeCoverageUtils.getJacocoReportDirectory() + File.separator
-                + "index.html");
+                         + "index.html");
     }
 }

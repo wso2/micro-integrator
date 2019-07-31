@@ -39,8 +39,8 @@ import javax.xml.stream.XMLStreamReader;
 public class MessageStoreAdminClient {
 
     private static final Log log = LogFactory.getLog(MessageStoreAdminClient.class);
-    private MessageStoreAdminServiceStub messageStoreAdminServiceStub;
     private final String serviceName = "MessageStoreAdminService";
+    private MessageStoreAdminServiceStub messageStoreAdminServiceStub;
 
     public MessageStoreAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;

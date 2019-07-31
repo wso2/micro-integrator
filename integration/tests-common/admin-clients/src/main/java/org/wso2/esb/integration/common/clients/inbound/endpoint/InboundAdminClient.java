@@ -110,7 +110,8 @@ public class InboundAdminClient {
      * @throws InboundAdminInboundManagementException
      */
     public void addInboundEndpoint(String name, String sequence, String onError, String protocol, String classImpl,
-            Map<String, String> paramsMap) throws RemoteException, InboundAdminInboundManagementException {
+                                   Map<String, String> paramsMap)
+            throws RemoteException, InboundAdminInboundManagementException {
         try {
             ParameterDTO[] parameterDTOs = null;
             if (paramsMap != null) {
@@ -160,7 +161,8 @@ public class InboundAdminClient {
      * @throws InboundAdminInboundManagementException
      */
     public void updateInboundEndpoint(String name, String sequence, String onError, String protocol, String classImpl,
-            Map<String, String> paramsMap) throws RemoteException, InboundAdminInboundManagementException {
+                                      Map<String, String> paramsMap)
+            throws RemoteException, InboundAdminInboundManagementException {
         try {
             ParameterDTO[] parameterDTOs = null;
             if (paramsMap != null) {
@@ -196,7 +198,7 @@ public class InboundAdminClient {
             endpointAdminStub.removeInboundEndpoint(name);
         } catch (RemoteException e) {
             throw new RemoteException("RemoteException when removing inbound endpoint " + name + " InboundAdmin Client",
-                    e);
+                                      e);
         } catch (InboundAdminInboundManagementException e) {
             throw new InboundAdminInboundManagementException(
                     "InboundAdminInboundManagementException when removing " + "inbound endpoint " + name

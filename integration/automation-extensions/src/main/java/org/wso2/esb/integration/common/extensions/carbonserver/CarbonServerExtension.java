@@ -23,6 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.context.ContextXpathConstants;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.engine.extensions.ExecutionListenerExtension;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.ExtensionConstants;
@@ -32,7 +33,7 @@ import java.io.IOException;
 import javax.xml.xpath.XPathExpressionException;
 
 public class CarbonServerExtension extends ExecutionListenerExtension {
-    private TestServerManager serverManager;
+    private static TestServerManager serverManager;
     private static final Log log = LogFactory.getLog(CarbonServerExtension.class);
     private String executionEnvironment;
 
@@ -80,6 +81,7 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
 
     private void copyResources(String carbonHome, String destCarbonHome) {
         String repository = carbonHome + File.separator + "repository";
+        File registrySource  = new File(carbonHome + File.separator + "registry");
         File deploymentSource = new File(repository + File.separator + "deployment");
         File confSource = new File(carbonHome + File.separator + "conf");
         File libDirectorySource = new File(carbonHome + File.separator + "lib");
@@ -87,6 +89,7 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
                 destCarbonHome + File.separator + "repository" + File.separator + "deployment");
         File confDestination = new File(destCarbonHome + File.separator + "conf");
         File libDestination = new File(destCarbonHome + File.separator + "lib");
+        File registryDestination = new File(destCarbonHome + File.separator + "registry");
         if (confSource.exists() && confSource.isDirectory()) {
             try {
                 log.info("Copying " + confSource.getPath() + " to " + confDestination.getPath());
@@ -109,6 +112,14 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
                 FileUtils.copyDirectory(libDirectorySource, libDestination);
             } catch (IOException e) {
                 log.error("Error while copying lib directory.", e);
+            }
+        }
+        if (registrySource.exists() && registrySource.isDirectory()) {
+            try {
+                log.info("Copying " + registrySource.getPath() + " to " + registryDestination.getPath());
+                FileUtils.copyDirectory(registrySource, registryDestination);
+            } catch (IOException e) {
+                log.error("Error while copying registry directory.", e);
             }
         }
     }
@@ -137,5 +148,22 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
     private static void handleException(String msg, Exception e) {
         log.error(msg, e);
         throw new RuntimeException(msg, e);
+    }
+
+    public static void restartServer()  {
+
+        try {
+            serverManager.restartServer();
+        } catch (AutomationFrameworkException e) {
+            throw new RuntimeException("Exception occurred while restarting the server" , e);
+        }
+    }
+
+    public static void shutdownServer() {
+        try {
+            serverManager.stopServer();
+        } catch (AutomationFrameworkException e) {
+            throw new RuntimeException("Exception occurred while shutdown the server" , e);
+        }
     }
 }

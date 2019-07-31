@@ -40,9 +40,6 @@ import javax.mail.search.SubjectTerm;
  * Util class for GreenMail Server.
  */
 public class GreenMailServer {
-    protected static Log log = LogFactory.getLog(GreenMailServer.class);
-    private static GreenMail greenMail;
-    private static GreenMailUser primaryUser;
     private static final String EMAIL_INBOX = "INBOX";
     private static final String EMAIL_TRASH = "Trash";
     private static final int WAIT_TIME_MS = 180 * 1000;
@@ -52,6 +49,9 @@ public class GreenMailServer {
     private static final String PROTOCOL_IMAP = "imap";
     private static final String PROTOCOL_POP3 = "pop3";
     private static final String BIND_ADDRESS = "127.0.0.1";
+    protected static Log log = LogFactory.getLog(GreenMailServer.class);
+    private static GreenMail greenMail;
+    private static GreenMailUser primaryUser;
 
     /**
      * Start the server and add the user.
@@ -127,7 +127,7 @@ public class GreenMailServer {
      * @throws MessagingException if we're unable to connect to the store
      */
     private static boolean isMailReceivedBySubject(String emailSubject, String folder, String protocol,
-            GreenMailUser user) throws MessagingException {
+                                                   GreenMailUser user) throws MessagingException {
         boolean emailReceived = false;
         Folder mailFolder;
         Store store = getConnection(user, protocol);

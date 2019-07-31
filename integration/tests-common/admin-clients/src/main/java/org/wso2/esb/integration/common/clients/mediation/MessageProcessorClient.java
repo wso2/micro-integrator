@@ -36,9 +36,8 @@ import javax.xml.stream.XMLStreamReader;
 public class MessageProcessorClient {
 
     private static final Log log = LogFactory.getLog(MessageProcessorClient.class);
-
-    private MessageProcessorAdminServiceStub messageProcessorAdminServiceStub;
     private final String serviceName = "MessageProcessorAdminService";
+    private MessageProcessorAdminServiceStub messageProcessorAdminServiceStub;
 
     public MessageProcessorClient(String backEndUrl, String sessionCookie) throws AxisFault {
         String endPoint = backEndUrl + serviceName;

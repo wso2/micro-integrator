@@ -1,0 +1,12 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="publishevent" startOnLoad="true" trace="disable" transports="https http">
+        <description/>
+        <target faultSequence="myfault">
+            <inSequence>
+                <property name="number" value="a"/>
+                <call-template target="mytemplate">
+                    <with-param name="num" value="a"/>
+                </call-template>
+                <respond/>
+            </inSequence>
+        </target>
+    </proxy>

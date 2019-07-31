@@ -1,0 +1,3 @@
+<endpoint xmlns="http://ws.apache.org/ns/synapse" name="WireEP4">
+        <address uri="http://localhost:8993/services/SimpleStockQuoteService"/>
+    </endpoint>

@@ -44,19 +44,15 @@ import javax.xml.namespace.QName;
 
 public class EventBrokerAdminClient {
 
+    public static final String WSE_EVENTING_NS = "http://schemas.xmlsoap.org/ws/2004/08/eventing";
+    public static final String WSE_EN_IDENTIFIER = "Identifier";
     private static final Log log = LogFactory.getLog(EventBrokerAdminClient.class);
-
+    private static final String TOPIC_HEADER_NAME = "topic";
+    private static final String TOPIC_HEADER_NS = "http://wso2.org/ns/2009/09/eventing/notify";
+    private static OMFactory omFactory = OMAbstractFactory.getOMFactory();
     String backendUrl = null;
     String SessionCookie = null;
     ConfigurationContext configurationContext = null;
-    private static final String TOPIC_HEADER_NAME = "topic";
-
-    private static final String TOPIC_HEADER_NS = "http://wso2.org/ns/2009/09/eventing/notify";
-
-    public static final String WSE_EVENTING_NS = "http://schemas.xmlsoap.org/ws/2004/08/eventing";
-    public static final String WSE_EN_IDENTIFIER = "Identifier";
-
-    private static OMFactory omFactory = OMAbstractFactory.getOMFactory();
 
     public EventBrokerAdminClient(String backendUrl, String sessionCookie, ConfigurationContext configurationContext) {
 
@@ -64,6 +60,12 @@ public class EventBrokerAdminClient {
         this.SessionCookie = sessionCookie;
         this.configurationContext = configurationContext;
 
+    }
+
+    private static AttributedURI createURI(String uriAddress) throws URI.MalformedURIException {
+        AttributedURI address = new AttributedURI();
+        address.setAnyURI(new URI(uriAddress));
+        return address;
     }
 
     public String subscribe(String topic, String eventSinkUrl) throws RemoteException {
@@ -120,7 +122,7 @@ public class EventBrokerAdminClient {
     public void publish(String topic, OMElement element) throws AxisFault {
         log.debug("published element to " + topic);
         EventBrokerServiceStub service = new EventBrokerServiceStub(configurationContext,
-                backendUrl + "/publish/" + topic);
+                                                                    backendUrl + "/publish/" + topic);
         configureCookie(service._getServiceClient());
         ServiceClient serviceClient = service._getServiceClient();
 
@@ -157,11 +159,5 @@ public class EventBrokerAdminClient {
             option.setManageSession(true);
             option.setProperty(org.apache.axis2.transport.http.HTTPConstants.COOKIE_STRING, SessionCookie);
         }
-    }
-
-    private static AttributedURI createURI(String uriAddress) throws URI.MalformedURIException {
-        AttributedURI address = new AttributedURI();
-        address.setAnyURI(new URI(uriAddress));
-        return address;
     }
 }

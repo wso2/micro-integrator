@@ -1,0 +1,5 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="cnd51_seq">
+        <log>
+            <property name="message" value="**********Conditional Router Test Condition Satisfied **************"/>
+        </log>
+    </sequence>

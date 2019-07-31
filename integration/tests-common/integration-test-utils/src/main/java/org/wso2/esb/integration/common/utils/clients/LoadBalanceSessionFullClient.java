@@ -59,13 +59,10 @@ import javax.xml.namespace.QName;
 public class LoadBalanceSessionFullClient {
 
     protected static final Log log = LogFactory.getLog(LoadBalanceSessionFullClient.class);
-
-    protected ServiceClient serviceClient;
-
     private final static String DEFAULT_CLIENT_REPO = "client_repo";
     private final static String COOKIE = "Cookie";
     private final static String SET_COOKIE = "Set-Cookie";
-
+    protected ServiceClient serviceClient;
     private SOAPEnvelope[] envelopes = null;
     private long sleepTime = -1;
 
@@ -127,7 +124,7 @@ public class LoadBalanceSessionFullClient {
      * @throws org.apache.axis2.AxisFault if error occurs when sending request
      */
     public List<ResponseData> sendLoadBalanceRequest(String trpUrl, String addUrl, String prxUrl, String session,
-            int iterations) throws AxisFault {
+                                                     int iterations) throws AxisFault {
         updateServiceClientOptions(trpUrl, addUrl, prxUrl);
         return makeRequest(session, iterations, sleepTime, envelopes, serviceClient);
     }
@@ -145,7 +142,7 @@ public class LoadBalanceSessionFullClient {
      * @throws org.apache.axis2.AxisFault if error occurs when sending request
      */
     public List<ResponseData> sendLoadBalanceRequest(String trpUrl, String addUrl, String prxUrl, String session,
-            int iterations, long sleepTime) throws AxisFault {
+                                                     int iterations, long sleepTime) throws AxisFault {
         updateServiceClientOptions(trpUrl, addUrl, prxUrl);
         return makeRequest(session, iterations, sleepTime, envelopes, serviceClient);
     }
@@ -187,7 +184,7 @@ public class LoadBalanceSessionFullClient {
     }
 
     private List<ResponseData> makeRequest(String session, int iterations, long sleepTime, SOAPEnvelope[] envelopes,
-            ServiceClient client) throws AxisFault {
+                                           ServiceClient client) throws AxisFault {
         List<ResponseData> responseList = new ArrayList<ResponseData>();
 
         int i = 0;
@@ -235,7 +232,7 @@ public class LoadBalanceSessionFullClient {
                 OMElement vElement = responseEnvelope.getBody().getFirstChildWithName(new QName("Value"));
                 if (log.isDebugEnabled()) {
                     log.debug("Request: " + i + " with Session ID: " + (httpSession ? cookie : sessionNumber) + " ---- "
-                            + "Response : with  " + (httpSession && receivedCookie != null ?
+                                      + "Response : with  " + (httpSession && receivedCookie != null ?
                             (receivedSetCookie != null ? receivedSetCookie : receivedCookie) :
                             " ") + " " + vElement.getText());
                 }
@@ -249,7 +246,7 @@ public class LoadBalanceSessionFullClient {
                 }
 
                 responseList.add(new ResponseData(false, "" + (httpSession ? cookie : sessionNumber),
-                        axisFault.getMessage()));
+                                                  axisFault.getMessage()));
             }
         }
 

@@ -56,9 +56,8 @@ import javax.xml.transform.stream.StreamResult;
 public class SynapseConfigAdminClient {
 
     private static final Log log = LogFactory.getLog(SynapseConfigAdminClient.class);
-
-    private ConfigServiceAdminStub configServiceAdminStub;
     private final String serviceName = "ConfigServiceAdmin";
+    private ConfigServiceAdminStub configServiceAdminStub;
 
     public SynapseConfigAdminClient(String backEndUrl, String sessionCookie) throws AxisFault {
 
@@ -72,6 +71,13 @@ public class SynapseConfigAdminClient {
         String endPoint = backEndUrl + serviceName;
         configServiceAdminStub = new ConfigServiceAdminStub(endPoint);
         AuthenticateStub.authenticateStub(userName, password, configServiceAdminStub);
+    }
+
+    private static OMElement createOMElement(String xml) throws ServletException, XMLStreamException {
+        XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xml));
+        StAXOMBuilder builder = new StAXOMBuilder(reader);
+        return builder.getDocumentElement();
+
     }
 
     /**
@@ -162,7 +168,7 @@ public class SynapseConfigAdminClient {
      */
     public boolean updateConfiguration(File file)
             throws IOException, SAXException, ParserConfigurationException, TransformerException, XMLStreamException,
-            ServletException {
+                   ServletException {
         boolean success = false;
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder docBuilder = factory.newDocumentBuilder();
@@ -197,13 +203,6 @@ public class SynapseConfigAdminClient {
      */
     public ValidationError[] validateConfiguration(OMElement configuration) throws RemoteException {
         return configServiceAdminStub.validateConfiguration(configuration);
-    }
-
-    private static OMElement createOMElement(String xml) throws ServletException, XMLStreamException {
-        XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(new StringReader(xml));
-        StAXOMBuilder builder = new StAXOMBuilder(reader);
-        return builder.getDocumentElement();
-
     }
 
     private String getStringFromDocument(Document doc) throws TransformerException {

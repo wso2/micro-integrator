@@ -1,0 +1,3 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="pocmt_seqStart">
+        <sequence key="pocmt_seqMakeSoapCall"/>
+    </sequence>

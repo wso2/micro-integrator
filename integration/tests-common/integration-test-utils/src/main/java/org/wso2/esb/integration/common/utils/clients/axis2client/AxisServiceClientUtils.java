@@ -127,7 +127,7 @@ public class AxisServiceClientUtils {
     }
 
     public static void sendRequest(String eprUrl, String operation, String payload, int numberOfInstances,
-            List<String> expectedStrings, boolean twoWay) throws Exception {
+                                   List<String> expectedStrings, boolean twoWay) throws Exception {
         waitForServiceDeployment(eprUrl);
         assertFalse(!AxisServiceClientUtils.isServiceAvailable(eprUrl));
 
@@ -155,7 +155,7 @@ public class AxisServiceClientUtils {
     }
 
     public static void sendRequest(String eprUrl, String operation, String payload, int numberOfInstances,
-            String expectedException, boolean twoWay) throws XMLStreamException, AxisFault {
+                                   String expectedException, boolean twoWay) throws XMLStreamException, AxisFault {
         assertFalse(!AxisServiceClientUtils.isServiceAvailable(eprUrl));
 
         for (int i = 0; i < numberOfInstances; i++) {

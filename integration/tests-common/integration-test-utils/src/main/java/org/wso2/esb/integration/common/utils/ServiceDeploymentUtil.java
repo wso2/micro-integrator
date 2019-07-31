@@ -37,12 +37,12 @@ public class ServiceDeploymentUtil {
     private static Log log = LogFactory.getLog(ServiceDeploymentUtil.class);
 
     public static void deployArrService(String backEndUrl, String sessionCookie, String serviceName,
-            String serviceFilePath, int deploymentDelay)
+                                        String serviceFilePath, int deploymentDelay)
             throws RemoteException, MalformedURLException, LoginAuthenticationExceptionException,
-            org.wso2.carbon.aarservices.stub.ExceptionException {
+                   org.wso2.carbon.aarservices.stub.ExceptionException {
 
         AARServiceUploaderClient adminServiceAARServiceUploader = new AARServiceUploaderClient(backEndUrl,
-                sessionCookie);
+                                                                                               sessionCookie);
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         if (adminServiceService.isServiceExists(serviceName)) {
             adminServiceService.deleteService(new String[] { serviceName });
@@ -51,20 +51,11 @@ public class ServiceDeploymentUtil {
 
         adminServiceAARServiceUploader.uploadAARFile(serviceName + ".aar", serviceFilePath, "");
         Assert.assertTrue(isServiceDeployed(backEndUrl, sessionCookie, serviceName, deploymentDelay),
-                serviceName + " deployment failed in Application Server");
-    }
-
-    public void unDeployArrService(String backEndUrl, String sessionCookie, String serviceName, int deploymentDelay)
-            throws RemoteException, MalformedURLException, LoginAuthenticationExceptionException {
-        ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
-        if (adminServiceService.isServiceExists(serviceName)) {
-            adminServiceService.deleteService(new String[] { serviceName });
-            isServiceUnDeployed(backEndUrl, sessionCookie, serviceName, deploymentDelay);
-        }
+                          serviceName + " deployment failed in Application Server");
     }
 
     public static boolean isServiceDeployed(String backEndUrl, String sessionCookie, String serviceName,
-            int deploymentDelay) throws RemoteException {
+                                            int deploymentDelay) throws RemoteException {
         log.info("waiting " + deploymentDelay + " millis for Service deployment " + serviceName);
 
         boolean isServiceDeployed = false;
@@ -89,7 +80,7 @@ public class ServiceDeploymentUtil {
     }
 
     public static boolean isServiceUnDeployed(String backEndUrl, String sessionCookie, String serviceName,
-            int deploymentDelay) throws RemoteException {
+                                              int deploymentDelay) throws RemoteException {
         log.info("waiting " + deploymentDelay + " millis for Service undeployment");
         ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
         boolean isServiceDeleted = false;
@@ -199,5 +190,14 @@ public class ServiceDeploymentUtil {
         }
         return isWsdlExist;
 
+    }
+
+    public void unDeployArrService(String backEndUrl, String sessionCookie, String serviceName, int deploymentDelay)
+            throws RemoteException, MalformedURLException, LoginAuthenticationExceptionException {
+        ServiceAdminClient adminServiceService = new ServiceAdminClient(backEndUrl, sessionCookie);
+        if (adminServiceService.isServiceExists(serviceName)) {
+            adminServiceService.deleteService(new String[] { serviceName });
+            isServiceUnDeployed(backEndUrl, sessionCookie, serviceName, deploymentDelay);
+        }
     }
 }

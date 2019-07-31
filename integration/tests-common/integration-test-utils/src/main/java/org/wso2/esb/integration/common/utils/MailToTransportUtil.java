@@ -50,13 +50,6 @@ import javax.xml.xpath.XPathExpressionException;
  */
 public class MailToTransportUtil {
 
-    protected static Log log = LogFactory.getLog(MailToTransportUtil.class);
-    private static String sender;
-    private static char[] senderPassword;
-    private static String receiver;
-    private static char[] receiverPassword;
-    private static String domain;
-    private static int WAIT_TIME_MS = 180 * 1000; // Max time to wait for a email and string search in log
     private static final String EMAIL_INBOX = "INBOX";
     private static final String EMAIL_CREDENTIAL_PARENT_XPATH = "//emailCredentials";
     private static final String EMAIL_CREDENTIAL_SENDER_XPATH = "//emailCredentials/sender";
@@ -64,6 +57,13 @@ public class MailToTransportUtil {
     private static final String EMAIL_CREDENTIAL_RECEIVER_XPATH = "//emailCredentials/receiver";
     private static final String EMAIL_CREDENTIAL_RECEIVER_PASSWORD_XPATH = "//emailCredentials/receiverPassword";
     private static final String EMAIL_CREDENTIAL_DOMAIN_XPATH = "//emailCredentials/domain";
+    protected static Log log = LogFactory.getLog(MailToTransportUtil.class);
+    private static String sender;
+    private static char[] senderPassword;
+    private static String receiver;
+    private static char[] receiverPassword;
+    private static String domain;
+    private static int WAIT_TIME_MS = 180 * 1000; // Max time to wait for a email and string search in log
 
     /**
      * @return SMTP properties of Gmail server
@@ -91,7 +91,7 @@ public class MailToTransportUtil {
         Properties props = getSMTPProperties();
         boolean isEmailReceived = false;
         EmailSender emailSender = new EmailSender(props, sender, String.valueOf(senderPassword), domain,
-                receiver + "@" + domain);
+                                                  receiver + "@" + domain);
         if (emailSender.createSession()) {
             emailSender.setSubject(emailSubject);
             emailSender.setBody("Body : " + emailSubject);

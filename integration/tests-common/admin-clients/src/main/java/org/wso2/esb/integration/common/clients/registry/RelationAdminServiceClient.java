@@ -16,9 +16,8 @@ import java.rmi.RemoteException;
 public class RelationAdminServiceClient {
 
     private static final Log log = LogFactory.getLog(RelationAdminServiceClient.class);
-
-    private RelationAdminServiceStub relationAdminServiceStub;
     private final String serviceName = "RelationAdminService";
+    private RelationAdminServiceStub relationAdminServiceStub;
 
     public RelationAdminServiceClient(String backendURL, String sessionCookie) throws AxisFault {
         String endPoint = backendURL + serviceName;

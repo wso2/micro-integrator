@@ -28,8 +28,8 @@ import javax.xml.xpath.XPathExpressionException;
 
 public class TestConfigurationProvider {
     private static Log log = LogFactory.getLog(TestConfigurationProvider.class);
-    private AutomationContext context;
     private static TestConfigurationProvider instance = new TestConfigurationProvider();
+    private AutomationContext context;
 
     private TestConfigurationProvider() {
         try {
@@ -92,7 +92,7 @@ public class TestConfigurationProvider {
         } catch (XPathExpressionException e) {
             log.error("Error reading deploymentDelay from automation.xml", e);
             log.warn("Service deployment Delay configuration not found. Running with default value " + "30000"
-                    + " mils");
+                             + " mils");
         }
         //if there is an error, setting to default value 30000 milliseconds
         return 30000;

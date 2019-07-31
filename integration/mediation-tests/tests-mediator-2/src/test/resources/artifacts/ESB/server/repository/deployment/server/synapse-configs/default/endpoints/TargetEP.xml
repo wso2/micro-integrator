@@ -1,0 +1,3 @@
+<endpoint xmlns="http://ws.apache.org/ns/synapse" name="TargetEP">
+		<address uri="http://en.wikipedia.org"/>
+	</endpoint>

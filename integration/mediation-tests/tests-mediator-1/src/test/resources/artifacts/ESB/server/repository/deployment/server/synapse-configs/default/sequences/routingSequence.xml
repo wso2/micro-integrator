@@ -1,0 +1,10 @@
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="routingSequence">
+        <router>
+            <route xmlns:m0="http://services.samples" expression="//m0:getQuote/m0:request/m0:symbol" match="WSO2">
+                <target sequence="namedSequence"/>
+            </route>
+            <route xmlns:m0="http://services.samples" expression="//m0:getQuote/m0:request/m0:symbol" match="IBM">
+                <target sequence="gov:/sequences/router/routerSequence"/>
+            </route>
+        </router>
+    </sequence>

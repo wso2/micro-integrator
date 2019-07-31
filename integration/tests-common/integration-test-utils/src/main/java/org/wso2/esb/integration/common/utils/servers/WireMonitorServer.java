@@ -28,8 +28,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class WireMonitorServer {
 
-    private static Log log = LogFactory.getLog(WireMonitorServer.class);
     private static final int TIMEOUT_VALUE = 30000;
+    private static Log log = LogFactory.getLog(WireMonitorServer.class);
     boolean isFinished = false;
     String response;
     int port;

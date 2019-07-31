@@ -40,15 +40,13 @@ import javax.activation.DataHandler;
 
 public class ResourceAdminServiceClient {
     private static final Log log = LogFactory.getLog(ResourceAdminServiceClient.class);
-
-    private final String serviceName = "ResourceAdminService";
-    private ResourceAdminServiceStub resourceAdminServiceStub;
-
     private static final String MEDIA_TYPE_WSDL = "application/wsdl+xml";
     private static final String MEDIA_TYPE_WADL = "application/wadl+xml";
     private static final String MEDIA_TYPE_SCHEMA = "application/x-xsd+xml";
     private static final String MEDIA_TYPE_POLICY = "application/policy+xml";
     private static final String MEDIA_TYPE_GOVERNANCE_ARCHIVE = "application/vnd.wso2.governance-archive";
+    private final String serviceName = "ResourceAdminService";
+    private ResourceAdminServiceStub resourceAdminServiceStub;
 
     public ResourceAdminServiceClient(String serviceUrl, String sessionCookie) throws AxisFault {
         String endPoint = serviceUrl + serviceName;
@@ -183,13 +181,14 @@ public class ResourceAdminServiceClient {
     }
 
     public void addTextResource(String parentPath, String fileName, String mediaType, String description,
-            String content) throws RemoteException, ResourceAdminServiceExceptionException {
+                                String content) throws RemoteException, ResourceAdminServiceExceptionException {
 
         resourceAdminServiceStub.addTextResource(parentPath, fileName, mediaType, description, content);
     }
 
     public void addResourcePermission(String pathToAuthorize, String roleToAuthorize, String actionToAuthorize,
-            String permissionType) throws RemoteException, ResourceAdminServiceResourceServiceExceptionException {
+                                      String permissionType)
+            throws RemoteException, ResourceAdminServiceResourceServiceExceptionException {
 
         resourceAdminServiceStub.addRolePermission(pathToAuthorize, roleToAuthorize, actionToAuthorize, permissionType);
 
@@ -458,7 +457,7 @@ public class ResourceAdminServiceClient {
     }
 
     public boolean importResource(String parentPath, String resourceName, String mediaType, String description,
-            String fetchURL, String symLink) throws RemoteException, RegistryExceptionException {
+                                  String fetchURL, String symLink) throws RemoteException, RegistryExceptionException {
         try {
             return resourceAdminServiceStub
                     .importResource(parentPath, resourceName, mediaType, description, fetchURL, symLink, null);

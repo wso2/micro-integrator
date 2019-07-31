@@ -31,17 +31,47 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.rmi.RemoteException;
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
+import javax.xml.stream.XMLStreamException;
 
 public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
+
+    public enum ArtifactType {
+        API("api"),
+        ENDPOINT("endpoints"),
+        INBOUND_ENDPOINT("inbound-endpoints"),
+        LOCAL_ENTRY("local-entries"),
+        MESSAGE_PROCESSOR("message-processors"),
+        MESSAGE_STORES("message-stores"),
+        PROXY("proxy-services"),
+        SEQUENCE("sequences"),
+        TEMPLATE("templates");
+
+        private String type;
+
+        ArtifactType(String type) {
+            this.type = type;
+        }
+
+        public String getDirName() {
+            return type;
+        }
+    }
 
     public static OMElement getSimpleQuoteRequest(String symbol) {
         OMFactory fac = OMAbstractFactory.getOMFactory();
@@ -169,6 +199,22 @@ public class Utils {
         return matchFound;
     }
 
+    /**
+     * Check if the log contains the expected string. The search will be done for maximum 10 seconds.
+     *
+     * @param carbonLogReader carbon log reader
+     * @param expected        expected string
+     * @return true if a match found, false otherwise
+     */
+    public static boolean assertIfSystemLogContains(CarbonLogReader carbonLogReader, String expected) {
+        boolean matchFound = false;
+        long startTime = System.currentTimeMillis();
+        while (!matchFound && (System.currentTimeMillis() - startTime) < 10000) {
+            matchFound = assertIfLogExists(carbonLogReader, expected);
+        }
+        return matchFound;
+    }
+
     private static boolean assertIfLogExists(LogViewerClient logViewerClient, String expected)
             throws RemoteException, LogViewerLogViewerException {
 
@@ -189,6 +235,17 @@ public class Utils {
         return matchFound;
     }
 
+    private static boolean assertIfLogExists(CarbonLogReader carbonLogReader, String expected) {
+        boolean matchFound = false;
+        if (carbonLogReader != null) {
+            if (carbonLogReader.getLogs().contains(expected)) {
+                carbonLogReader.stop();
+                matchFound = true;
+            }
+        }
+        return matchFound;
+    }
+
     /**
      * Check whether a log found with expected string of given priority
      *
@@ -200,7 +257,8 @@ public class Utils {
      * @throws LogViewerLogViewerException
      */
     private static boolean assertIfLogExistsWithGivenPriority(LogViewerClient logViewerClient, String priority,
-            String expected) throws RemoteException, LogViewerLogViewerException {
+                                                              String expected)
+            throws RemoteException, LogViewerLogViewerException {
 
         LogEvent[] systemLogs;
         systemLogs = logViewerClient.getAllRemoteSystemLogs();
@@ -244,6 +302,51 @@ public class Utils {
     }
 
     /**
+     * Checks if the expected string is available in the tailed logs of carbon log reader. Stops the log reader once found.
+     * The polling will happen in one second intervals
+     *
+     * @param logReader Carbon log reader
+     * @param expected  expected log string
+     * @param timeout   max time to do polling
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public static boolean logExists(CarbonLogReader logReader, String expected, int timeout)
+            throws InterruptedException {
+        boolean logExists = false;
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (logReader.getLogs().contains(expected)) {
+                logExists = true;
+                logReader.stop();
+                break;
+            }
+        }
+        return logExists;
+    }
+
+    /**
+     * Check for the existence of the given log message. Does not stop the log reader
+     * The polling will happen in one second intervals
+     *
+     * @param logReader Carbon log reader
+     * @param expected  expected log string
+     * @param timeout   max time to do polling
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public static boolean checkForLog(CarbonLogReader logReader, String expected, int timeout)
+            throws InterruptedException {
+        boolean logExists = false;
+        for (int i = 0; i < timeout; i++) {
+            TimeUnit.SECONDS.sleep(1);
+            if (logReader.getLogs().contains(expected)) {
+                logExists = true;
+                break;
+            }
+        }
+        return logExists;
+    }
+
+    /**
      * Check for the existence of a given log message of given priority within the given timeout
      *
      * @param logViewerClient LogViewerClient object
@@ -256,7 +359,8 @@ public class Utils {
      * @throws RemoteException
      */
     public static boolean checkForLogsWithPriority(LogViewerClient logViewerClient, String priority, String expected,
-            int timeout) throws InterruptedException, LogViewerLogViewerException, RemoteException {
+                                                   int timeout)
+            throws InterruptedException, LogViewerLogViewerException, RemoteException {
         boolean logExists = false;
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
@@ -277,7 +381,8 @@ public class Utils {
      * @return true if the expected message count found, false otherwise
      */
     public static boolean waitForMessageCount(MessageStoreAdminClient messageStoreAdminClient, String messageStoreName,
-            int expectedCount, long timeout) throws InterruptedException, RemoteException {
+                                              int expectedCount, long timeout)
+            throws InterruptedException, RemoteException {
         long elapsedTime = 0;
         boolean messageCountFound = false;
         while (elapsedTime < timeout && !messageCountFound) {
@@ -297,7 +402,7 @@ public class Utils {
      * @return true if the car file deployed successfully else, false
      */
     public static boolean isCarFileDeployed(String carFileName, ApplicationAdminClient applicationAdminClient,
-            int timeout) throws Exception {
+                                            int timeout) throws Exception {
 
         log.info("waiting " + timeout + " millis for car deployment " + carFileName);
         boolean isCarFileDeployed = false;
@@ -323,4 +428,62 @@ public class Utils {
         }
         return isCarFileDeployed;
     }
+
+    public static void deploySynapseConfiguration(OMElement config, String artifactName, ArtifactType type,
+                                                  boolean isRestartRequired) throws IOException {
+        deploySynapseConfiguration(config, artifactName, type.getDirName(), isRestartRequired);
+    }
+
+    public static void deploySynapseConfiguration(OMElement config, String artifactName, String artifactType,
+                                                  boolean isRestartRequired) throws IOException {
+
+        String directory = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+                + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
+                + File.separator + artifactType;
+        String path = directory + File.separator + artifactName + ".xml";
+
+        if (!Files.exists(FileSystems.getDefault().getPath(directory))) {
+            try {
+                Files.createDirectories(FileSystems.getDefault().getPath(directory));
+            } catch (IOException e) {
+                throw new IOException("Error while creating the directory, " + directory + ".", e);
+            }
+        }
+        try (OutputStream outputStream = new FileOutputStream(path)) {
+            config.serialize(outputStream);
+            config.serialize(System.out);
+            if (isRestartRequired) {
+                CarbonServerExtension.restartServer();
+            }
+        } catch (IOException exception) {
+            log.error("Error when creating file", exception);
+        } catch (XMLStreamException e) {
+            log.error("Error when serializing synapse config", e);
+        }
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, ArtifactType type, boolean restartServer) {
+        undeploySynapseConfiguration(artifactName, type.getDirName(), restartServer);
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, String artifactType) {
+        undeploySynapseConfiguration(artifactName, artifactType, true);
+    }
+
+    public static void undeploySynapseConfiguration(String artifactName, String artifactType, boolean restartServer) {
+        CarbonServerExtension.shutdownServer();
+        String pathString = System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+                + File.separator + "server" + File.separator + "synapse-configs" + File.separator + "default"
+                + File.separator + artifactType + File.separator + artifactName + ".xml";
+        Path path = FileSystems.getDefault().getPath(pathString);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            log.error("Error while deleting the file", e);
+        }
+        if (restartServer) {
+            CarbonServerExtension.restartServer();
+        }
+    }
+
 }

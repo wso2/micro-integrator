@@ -32,7 +32,7 @@ public class JMSEndpointManager {
             //changing the configurations to work with WSO2 MB instead of ActiveMQ
             String config = synapseConfig.toString();
             config = config.replace("org.apache.activemq.jndi.ActiveMQInitialContextFactory",
-                    "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
+                                    "org.wso2.andes.jndi.PropertiesFileInitialContextFactory");
 
             config = config.replace("tcp://127.0.0.1:61616", "repository/conf/jndi.properties");
             config = config.replace("tcp://localhost:61616", "repository/conf/jndi.properties");
