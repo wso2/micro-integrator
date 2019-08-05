@@ -296,26 +296,26 @@
         <!-- Maven Plugin Version -->
         <maven.build.helper.plugin.version>3.0.0</maven.build.helper.plugin.version>
         <maven.xmlbeans-maven-plugin.plugin.version>2.3.3</maven.xmlbeans-maven-plugin.plugin.version>
-        <carbon.p2.plugin.version>1.5.8</carbon.p2.plugin.version>
+        <carbon.p2.plugin.version>5.1.2</carbon.p2.plugin.version>
 
         <!-- Carbon kernel version-->
-        <carbon.kernel.version>4.4.40</carbon.kernel.version>
+        <carbon.kernel.version>4.5.0-m1</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <synapse.version>2.1.7-wso2v111</synapse.version>
+        <synapse.version>2.1.7-wso2v115</synapse.version>
         <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
         <carbon.mediation.version>4.7.4</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
-        <carbon.data.version>4.4.107</carbon.data.version>
-        <securevault.version>1.0.0-wso2v2</securevault.version>
+        <carbon.data.version>4.5.1</carbon.data.version>
+        <securevault.version>1.1.2</securevault.version>
 
         <cipher.tool.version>1.1.1</cipher.tool.version>
-        <axis2.transport.version>2.0.0-wso2v34</axis2.transport.version>
-        <axis2.wso2.version>1.6.1-wso2v35</axis2.wso2.version>
-        <carbon.analytics.common.version>5.1.57</carbon.analytics.common.version>
-        <carbon.commons.version>4.6.65</carbon.commons.version>
-        <carbon.rule.version>4.4.11</carbon.rule.version>
-        <carbon.deployment.version>4.8.3</carbon.deployment.version>
+        <axis2.transport.version>2.0.0-wso2v35</axis2.transport.version>
+        <axis2.wso2.version>1.6.1-wso2v37</axis2.wso2.version>
+        <carbon.analytics.common.version>5.2.1</carbon.analytics.common.version>
+        <carbon.commons.version>4.7.1</carbon.commons.version>
+        <carbon.rule.version>4.5.1</carbon.rule.version>
+        <carbon.deployment.version>4.9.3</carbon.deployment.version>
         <wss4j.version>1.5.11-wso2v18</wss4j.version>
         <rampart.wso2.version>1.6.1-wso2v34</rampart.wso2.version>
         <siddhi.version>3.2.3</siddhi.version>
@@ -341,7 +341,7 @@
         <orbit.version.tiles>2.0.5.wso2v1</orbit.version.tiles>
         <version.ant>1.7.0.wso2v1</version.ant>
         <version.xmlbeans>2.3.0.wso2v1</version.xmlbeans>
-        <orbit.version.axiom>1.2.11.wso2v13</orbit.version.axiom>
+        <orbit.version.axiom>1.2.11-wso2v16</orbit.version.axiom>
         <neethi.osgi.version>2.0.4.wso2v5</neethi.osgi.version>
         <version.woden>1.0.0.M9-wso2v1</version.woden>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
@@ -373,6 +373,8 @@
         <testng.version>6.11</testng.version>
         <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <commons-text.orbit.version>1.6.wso2v1</commons-text.orbit.version>
+        <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
     </properties>
 
     <repositories>
@@ -489,7 +491,7 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>4.2.0</version>
+                    <version>3.2.0</version>
                     <extensions>true</extensions>
                     <configuration>
                         <obrRepository>NONE</obrRepository>

@@ -188,6 +188,10 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.core.common:${carbon.kernel.version}
                                 </bundleDef>
+                                <bundleDef>org.wso2.orbit.commons-text:commons-text:${commons-text.orbit.version}
+                                </bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.commons:commons-lang3:${commons-lang3.orbit.version}
+                                </bundleDef>
                                 <!--<bundleDef>org.wso2.carbon:org.wso2.carbon.core:${carbon.kernel.version}</bundleDef>-->
                                 <bundleDef>
                                     org.wso2.carbon:org.wso2.carbon.server.admin.common:${carbon.kernel.version}
