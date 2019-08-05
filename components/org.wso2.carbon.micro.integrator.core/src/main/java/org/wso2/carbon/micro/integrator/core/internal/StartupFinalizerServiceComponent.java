@@ -29,6 +29,12 @@ import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.ServerStatus;
@@ -51,17 +57,10 @@ import java.util.TimerTask;
  * once all the required OSGi services in the system become available. This is because of the
  * fact  that requests from external parties should only be serviced after the Axis2 engine
  * & Carbon has  reached a stable and consistent state.
- *
- * @scr.component name="org.wso2.carbon.core.internal.StartupFinalizerServiceComponent"
- * immediate="true"
- * @scr.reference name="org.wso2.carbon.configCtx"
- * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
- * policy="dynamic" bind="setConfigurationContext" unbind="unsetConfigurationContext"
- * @scr.reference name="org.wso2.carbon.micro.integrator.core.deployment.DeploymentService"
- * interface="org.wso2.carbon.micro.integrator.core.deployment.DeploymentService"
- * cardinality="1..1" policy="dynamic" bind="setDeploymentService"
- * unbind="unsetDeploymentService"
- **/
+ */
+@Component(
+        name = "org.wso2.carbon.micro.integrator.core.internal.StartupFinalizerServiceComponent",
+        immediate = true)
 public class StartupFinalizerServiceComponent implements ServiceListener {
     private static final Log log = LogFactory.getLog(StartupFinalizerServiceComponent.class);
     private static final String TRANSPORT_MANAGER =
@@ -75,6 +74,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
     private CarbonCoreDataHolder dataHolder = CarbonCoreDataHolder.getInstance();
     private ServiceRegistration listerManagerServiceRegistration;
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
         try {
 
@@ -117,6 +117,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         listerManagerServiceRegistration.unregister();
     }
@@ -238,6 +239,12 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         System.getProperties().remove("setup"); // Clear the setup System property
     }
 
+    @Reference(
+            name = "org.wso2.carbon.configCtx",
+            service = org.wso2.carbon.utils.ConfigurationContextService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetConfigurationContext")
     protected void setConfigurationContext(ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
     }
@@ -246,6 +253,12 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         this.configCtx = null;
     }
 
+    @Reference(
+            name = "org.wso2.carbon.micro.integrator.core.deployment.DeploymentService",
+            service = org.wso2.carbon.micro.integrator.core.deployment.DeploymentService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetDeploymentService")
     protected void setDeploymentService(DeploymentService deploymentService) {
         log.debug("Set DeploymentService");
     }
