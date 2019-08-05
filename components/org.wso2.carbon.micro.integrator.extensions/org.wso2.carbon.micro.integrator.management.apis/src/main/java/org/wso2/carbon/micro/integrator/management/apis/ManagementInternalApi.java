@@ -23,8 +23,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_APIS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
@@ -47,6 +49,7 @@ public class ManagementInternalApi implements InternalAPI {
     private String name;
     private static Log LOG = LogFactory.getLog(ManagementInternalApi.class);
     private APIResource[] resources;
+    private List<InternalAPIHandler> handlerList = null;
 
     public ManagementInternalApi() {
 
@@ -72,7 +75,6 @@ public class ManagementInternalApi implements InternalAPI {
         resources = resourcesList.toArray(resources);
     }
 
-
     public APIResource[] getResources() {
         return resources;
     }
@@ -88,4 +90,15 @@ public class ManagementInternalApi implements InternalAPI {
     public void setName(String name) {
         this.name = name;
     }
+
+    @Override
+    public void setHandlers(List<InternalAPIHandler> handlerList) {
+        this.handlerList = handlerList;
+    }
+
+    @Override
+    public List<InternalAPIHandler> getHandlers() {
+        return this.handlerList;
+    }
+
 }
