@@ -39,6 +39,7 @@ public class Constants {
     public static final String COUNT = "count";
     public static final String LIST = "list";
     public static final String NAME = "name";
+    public static final String STATUS = "status";
     public static final String URL = "url";
     public static final String VERSION = "version";
     public static final String CONTAINER = "container";
@@ -74,4 +75,8 @@ public class Constants {
 
     // Types of functional components
     public static final int ITEM_TYPE_IMPORT = 14;
+
+    // Synapse service statuses
+    public static final String ACTIVE_STATUS = "active";
+    public static final String INACTIVE_STATUS = "inactive";
 }
