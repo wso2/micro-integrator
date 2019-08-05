@@ -17,6 +17,13 @@
 
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+// import { IntlProvider } from 'react-intl';
+import { BrowserRouter} from 'react-router-dom';
+import { Route, Switch } from 'react-router';
+
+import Login from './auth/Login';
+import '../public/css/dashboard.css';
+
 
 class App extends Component {
     constructor() {
@@ -24,8 +31,26 @@ class App extends Component {
     }
 
     render() {
-        return <h1>Hello, World!</h1>;
+        return (
+            <BrowserRouter basename={window.contextPath}>
+                <Switch>
+                    {/* Authentication */}
+                    <Route path='/login' component={Login} />
+                    {/* Secured routes */}
+                    {/*<Route component={SecuredRouter} />*/}
+                    <Route component={AnonPage}/>
+                </Switch>
+            </BrowserRouter>
+        );
     }
-}
+};
+
+class AnonPage extends Component {
+    render() {
+        return (
+            <h1>This is anon page.</h1>
+        );
+    }
+};
 
 ReactDOM.render(<App/>, document.getElementById('content'));
