@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="MI-Sample-Tests">
+    <parameter name="useDefaultListeners" value="false"/>
+
+
+    <test name="is-usr-mgt-scim2" preserve-order="true" parallel="false">
+        <classes>
+            <class name="SampleTest"/>
+        </classes>
+    </test>
+</suite>

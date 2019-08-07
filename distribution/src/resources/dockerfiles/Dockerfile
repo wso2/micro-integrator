@@ -18,7 +18,8 @@
 
 # Base image
 
-FROM wso2/micro-integrator:latest
-
+FROM wso2/micro-integrato:1.1.0-SNAPSHOT
 COPY files/carbonapps /home/wso2carbon/wso2mi/repository/deployment/server/carbonapps
+
+
 
