@@ -22,6 +22,7 @@ import { BrowserRouter} from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
 import Login from './auth/Login';
+ import ProxyServiceListPage from './resource-pages/ProxyServiceListPage';
 import '../public/css/dashboard.css';
 
 
@@ -36,6 +37,7 @@ class App extends Component {
                 <Switch>
                     {/* Authentication */}
                     <Route path='/login' component={Login} />
+                    <Route path='/proxy' component={ProxyServiceListPage} />
                     {/* Secured routes */}
                     {/*<Route component={SecuredRouter} />*/}
                     <Route component={AnonPage}/>

@@ -24,6 +24,7 @@ import { AppBar } from 'material-ui';
 
 import defaultTheme from '../utils/Theme';
 
+import UserMenu from './UserMenu';
 
 export default class Header extends Component {
     render() {
@@ -31,12 +32,13 @@ export default class Header extends Component {
             <AppBar
                 style={{ zIndex: this.props.theme.zIndex.drawer + 100 }}
                 title={this.props.title}
-               // iconElementRight={this.props.rightElement}
+                iconElementRight={this.props.rightElement}
                 iconElementLeft={this.props.logo}
                 onLeftIconButtonClick={this.props.onLogoClick}
                 iconStyleLeft={{ margin: '0 15px 0 0', display: 'flex', alignItems: 'center' }}
                 titleStyle={{ fontSize: 16 }}
                 zDepth={2}
+                position="absolute"
             />
         );
     }
@@ -50,7 +52,7 @@ Header.propTypes = {
         PropTypes.string,
         PropTypes.element,
     ]).isRequired,
-    //rightElement: PropTypes.element,
+    rightElement: PropTypes.element,
     theme: PropTypes.shape({}),
 };
 
@@ -59,12 +61,12 @@ Header.defaultProps = {
         <Link style={{ height: '17px' }} to={'/'}>
             <img
                 height='17'
-                src={`${window.contextPath}/public/images/wso2-logo.svg`}
+                src={`${window.contextPath}/public/app/images/logo.svg`}
                 alt='logo'
             />
         </Link>
     ),
     onLogoClick: null,
-    //rightElement: <UserMenu />,
+    rightElement: <UserMenu />,
     theme: defaultTheme,
 };
