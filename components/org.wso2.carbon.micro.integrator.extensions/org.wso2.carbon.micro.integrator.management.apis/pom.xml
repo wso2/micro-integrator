@@ -32,6 +32,11 @@
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.carbon.micro.integrator.core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.carbon.micro.integrator.security</artifactId>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>
