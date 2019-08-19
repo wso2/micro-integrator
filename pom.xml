@@ -304,7 +304,7 @@
 
         <synapse.version>2.1.7-wso2v115</synapse.version>
         <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
-        <carbon.mediation.version>4.7.4</carbon.mediation.version>
+        <carbon.mediation.version>4.7.6</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
         <carbon.data.version>4.5.1</carbon.data.version>
         <securevault.version>1.1.2</securevault.version>
@@ -312,7 +312,7 @@
         <cipher.tool.version>1.1.1</cipher.tool.version>
         <axis2.transport.version>2.0.0-wso2v35</axis2.transport.version>
         <axis2.wso2.version>1.6.1-wso2v37</axis2.wso2.version>
-        <carbon.analytics.common.version>5.2.1</carbon.analytics.common.version>
+        <carbon.analytics.common.version>5.2.2</carbon.analytics.common.version>
         <carbon.commons.version>4.7.1</carbon.commons.version>
         <carbon.rule.version>4.5.1</carbon.rule.version>
         <carbon.deployment.version>4.9.3</carbon.deployment.version>
