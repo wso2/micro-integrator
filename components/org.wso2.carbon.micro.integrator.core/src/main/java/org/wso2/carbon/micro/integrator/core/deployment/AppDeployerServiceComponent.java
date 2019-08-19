@@ -23,6 +23,12 @@ import org.apache.axis2.deployment.DeploymentException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.carbon.application.deployer.synapse.FileRegistryResourceDeployer;
@@ -41,20 +47,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-/**
- * @scr.component name="application.deployer.dscomponent" immediate="true"
- * @scr.reference name="org.wso2.carbon.configCtx"
- * interface="org.wso2.carbon.utils.ConfigurationContextService" cardinality="1..1"
- * policy="dynamic" bind="setConfigurationContext" unbind="unsetConfigurationContext"
- * @scr.reference name="synapse.env.service"
- * interface="org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService"
- * cardinality="1..n" policy="dynamic" bind="setSynapseEnvironmentService"
- * unbind="unsetSynapseEnvironmentService"
- * @scr.reference name="ntask.service"
- * interface="org.wso2.carbon.ntask.core.service.TaskService"
- * cardinality="1..1" policy="dynamic" bind="setTaskService"
- * unbind="unsetTaskService"
- */
+@Component(
+        name = "micro.application.deployer.dscomponent",
+        immediate = true)
 public class AppDeployerServiceComponent {
 
     private static final Log log = LogFactory.getLog(AppDeployerServiceComponent.class);
@@ -63,6 +58,7 @@ public class AppDeployerServiceComponent {
     private SynapseEnvironmentService synapseEnvironmentService;
     private TaskService taskService;
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
 
         log.debug("Activating AppDeployerServiceComponent");
@@ -103,6 +99,7 @@ public class AppDeployerServiceComponent {
         log.debug("MicroIntegrator artifact/Capp Deployment completed");
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         log.debug("Deactivating AppDeployerServiceComponent");
     }
@@ -112,6 +109,12 @@ public class AppDeployerServiceComponent {
      *
      * @param configCtx Instance of ConfigurationContextService which wraps server configuration context
      */
+    @Reference(
+            name = "org.wso2.carbon.configCtx",
+            service = org.wso2.carbon.utils.ConfigurationContextService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetConfigurationContext")
     protected void setConfigurationContext(ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
     }
@@ -125,6 +128,12 @@ public class AppDeployerServiceComponent {
         this.configCtx = null;
     }
 
+    @Reference(
+            name = "ntask.service",
+            service = org.wso2.carbon.ntask.core.service.TaskService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetTaskService")
     protected void setTaskService(TaskService taskService) {
         this.taskService = taskService;
     }
@@ -140,6 +149,12 @@ public class AppDeployerServiceComponent {
      * @param synapseEnvironmentService SynapseEnvironmentService which contains information
      *                                  about the new Synapse Instance
      */
+    @Reference(
+            name = "synapse.env.service",
+            service = org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService.class,
+            cardinality = ReferenceCardinality.AT_LEAST_ONE,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetSynapseEnvironmentService")
     protected void setSynapseEnvironmentService(SynapseEnvironmentService synapseEnvironmentService) {
         this.synapseEnvironmentService = synapseEnvironmentService;
     }

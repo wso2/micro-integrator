@@ -44,6 +44,12 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
@@ -103,16 +109,9 @@ import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
 
 //import org.wso2.carbon.core.CarbonAxisConfigurator;
 
-/**
- * @scr.component name="micro.server.dscomponent"" immediate="true"
- * @scr.reference name="server.configuration.service" interface="org.wso2.carbon.base.api.ServerConfigurationService"
- * cardinality="1..1" policy="dynamic"  bind="setServerConfigurationService" unbind="unsetServerConfigurationService"
- * @scr.reference name="http.service" interface="org.osgi.service.http.HttpService"
- * cardinality="1..1" policy="dynamic"  bind="setHttpService" unbind="unsetHttpService"
- * @scr.reference name="application.manager"
- * interface="org.wso2.carbon.application.deployer.service.ApplicationManagerService"
- * cardinality="0..1" policy="dynamic" bind="setAppManager" unbind="unsetAppManager"
- **/
+@Component(
+        name = "micro.server.dscomponent",
+        immediate = true)
 public class ServiceComponent {
 
     private static Log log = LogFactory.getLog(ServiceComponent.class);
@@ -163,6 +162,7 @@ public class ServiceComponent {
         return bundleContext;
     }
 
+    @Activate
     protected void activate(ComponentContext ctxt) {
         try {
             // for new caching, every thread should has its own populated CC. During the deployment time we assume super tenant
@@ -193,6 +193,7 @@ public class ServiceComponent {
         }
     }
 
+    @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         try {
         } catch (Throwable e) {
@@ -697,6 +698,12 @@ public class ServiceComponent {
 
     protected static HttpService httpService;
 
+    @Reference(
+            name = "server.configuration.service",
+            service = org.wso2.carbon.base.api.ServerConfigurationService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetServerConfigurationService")
     protected void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
         this.serverConfigurationService = serverConfigurationService;
         CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
@@ -706,6 +713,12 @@ public class ServiceComponent {
         this.serverConfigurationService = null;
     }
 
+    @Reference(
+            name = "http.service",
+            service = org.osgi.service.http.HttpService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetHttpService")
     protected void setHttpService(HttpService httpService) {
         this.httpService = httpService;
         CarbonCoreDataHolder.getInstance().setHttpService(httpService);
@@ -715,7 +728,12 @@ public class ServiceComponent {
         this.httpService = null;
     }
 
-
+    @Reference(
+            name = "application.manager",
+            service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class,
+            cardinality = ReferenceCardinality.OPTIONAL,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetAppManager")
     protected void setAppManager(ApplicationManagerService applicationManager) {
         this.applicationManager = applicationManager;
         CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
