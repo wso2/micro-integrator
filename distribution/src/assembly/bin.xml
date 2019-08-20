@@ -145,7 +145,7 @@
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/axis2/tenant-axis2.xml</exclude>
                 <exclude>**/synapse.xml</exclude>
-                <exclude>**/log4j.properties</exclude>
+                <exclude>**/log4j2.properties</exclude>
                 <exclude>**/services/sample01.aar</exclude>
                 <exclude>**/repository/services/version/**</exclude>
                 <exclude>**/version.txt</exclude>
@@ -343,13 +343,13 @@
             <fileMode>644</fileMode>
         </file>
 
-        <!--<file>
-            <source>src/conf/log4j.properties</source>
+        <file>
+            <source>src/conf/log4j2.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>log4j.properties</destName>
+            <destName>log4j2.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>-->
+        </file>
 
         <file>
             <source>src/conf/carbon.xml</source>

@@ -73,7 +73,7 @@ public class AppDeployerServiceComponent {
 
         // Initialize Tasks Service
         if (taskService != null && !taskService.isServerInit()) {
-            log.info("Initialize Task Service");
+            log.debug("Initialize Task Service");
             taskService.serverInitialized();
         }
 
