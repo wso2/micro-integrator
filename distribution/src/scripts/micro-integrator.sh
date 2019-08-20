@@ -216,7 +216,7 @@ do
         CARBON_CLASSPATH="$CARBON_CLASSPATH":$f
     fi
 done
-for t in "$CARBON_HOME"/wso2/lib/commons-lang*.jar
+for t in "$CARBON_HOME"/wso2/lib/*.jar
 do
     CARBON_CLASSPATH="$CARBON_CLASSPATH":$t
 done

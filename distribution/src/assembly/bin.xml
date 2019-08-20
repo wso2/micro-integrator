@@ -88,7 +88,7 @@
                 <exclude>**/wso2/components/plugins/axis2-transport-sms_1.1.1.wso2v2.jar</exclude>
                 <exclude>**/wso2/components/plugins/axis2-transport-mail_1.1.1.wso2v2.jar</exclude>
                 <exclude>**/wso2/components/plugins/jsch_0.1.49.wso2v1.jar</exclude>
-		        <exclude>**/features/**</exclude>
+                <exclude>**/features/**</exclude>
             </excludes>
         </fileSet>
 
@@ -298,13 +298,6 @@
 
         <fileSet>
             <directory>src/resources</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
-            <includes>
-                <include>**/saxon9he.jar</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/resources</directory>
             <outputDirectory>wso2mi-${pom.version}/wso2/lib/</outputDirectory>
             <includes>
                 <include>esapi-2.0.1.jar</include>
@@ -350,13 +343,13 @@
             <fileMode>644</fileMode>
         </file>
 
-        <file>
+        <!--<file>
             <source>src/conf/log4j.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>log4j.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
+        </file>-->
 
         <file>
             <source>src/conf/carbon.xml</source>
@@ -471,6 +464,13 @@
         <file>
             <source>src/conf/etc/logging-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/etc/pax-logging.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/
+            </outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
