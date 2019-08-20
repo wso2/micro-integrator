@@ -19,7 +19,6 @@ package org.wso2.carbon.micro.integrator.server;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
 import org.wso2.carbon.server.ChildFirstURLClassLoader;
 import org.wso2.carbon.server.LauncherConstants;
 import org.wso2.carbon.server.extensions.DefaultBundleCreator;
@@ -52,14 +51,9 @@ import java.util.UUID;
 
 public class Main {
 
-    private static Log log = LogFactory.getLog(org.wso2.carbon.server.Main.class);
-
-   static File platformDirectory;
     protected static final String FRAMEWORK_BUNDLE_NAME = "org.eclipse.osgi";
-    protected static final String STARTER =
-            "org.eclipse.core.runtime.adaptor.EclipseStarter";
-    protected static final String FRAMEWORKPROPERTIES =
-            "org.eclipse.osgi.framework.internal.core.FrameworkProperties";
+    protected static final String STARTER = "org.eclipse.core.runtime.adaptor.EclipseStarter";
+    protected static final String FRAMEWORKPROPERTIES = "org.eclipse.osgi.framework.internal.core.FrameworkProperties";
     protected static final String NULL_IDENTIFIER = "@null";
     protected static final String OSGI_FRAMEWORK = "osgi.framework";
     protected static final String OSGI_INSTANCE_AREA = "osgi.instance.area";
@@ -67,8 +61,18 @@ public class Main {
     protected static final String OSGI_INSTALL_AREA = "osgi.install.area";
     protected static final String P2_DATA_AREA = "eclipse.p2.data.area";
     protected static final String ENABLE_EXTENSIONS = "wso2.enableExtensions";
+    static File platformDirectory;
+    private static Log logger = LogFactory.getLog(org.wso2.carbon.server.Main.class);
 
     public static void main(String[] args) {
+
+        //Setting pax-logging configurations
+        String confPath = System.getProperty(LauncherConstants.CARBON_CONFIG_DIR_PATH);
+        System.setProperty(LauncherConstants.PAX_DEFAULT_SERVICE_LOG_LEVEL, LauncherConstants.LOG_LEVEL_WARN);
+        System.setProperty(LauncherConstants.PAX_LOGGING_PROPERTY_FILE_KEY,
+                           confPath + File.separator + "etc" + File.separator
+                                   + LauncherConstants.PAX_LOGGING_PROPERTIES_FILE);
+
         //Setting Carbon Home
         if (System.getProperty(LauncherConstants.CARBON_HOME) == null) {
             System.setProperty(LauncherConstants.CARBON_HOME, ".");
@@ -98,25 +102,7 @@ public class Main {
         processCmdLineArgs(args);
 
         invokeExtensions();
-        removeAllAppendersFromCarbon();
         startEquinox();
-
-    }
-
-
-    /**
-     * Removing all the appenders which were added in the non osigi environment, after the carbon starts up.
-     * Since another appender thread is there from osgi environment, it will be a conflict to access the log file by
-     * non osgi and osgi appenders which resulted log rotation fails in windows.
-     * This fix was introduced  for this jira: https://wso2.org/jira/browse/ESBJAVA-1614 .
-     */
-
-    private static void removeAllAppendersFromCarbon() {
-        try {
-            Logger.getRootLogger().removeAllAppenders();
-        } catch (Throwable e) {
-            System.err.println("couldn't remove appnders from Carbon non osgi environment");
-        }
     }
 
     /**
@@ -126,8 +112,8 @@ public class Main {
 
         // disables loading extensions such as patches, libs and ext jars only if the value of
         // property is false
-        if (System.getProperty(ENABLE_EXTENSIONS) == null ||
-                System.getProperty(ENABLE_EXTENSIONS).equalsIgnoreCase("true")) {
+        if (System.getProperty(ENABLE_EXTENSIONS) == null || System.getProperty(ENABLE_EXTENSIONS)
+                .equalsIgnoreCase("true")) {
             //converting jars found under components/lib and putting them in components/dropins dir
             new DefaultBundleCreator().perform();
             new SystemBundleExtensionCreator().perform();
@@ -154,7 +140,7 @@ public class Main {
         String jvmName = ManagementFactory.getRuntimeMXBean().getName();
         int indexOfAt = jvmName.indexOf('@');
         if (indexOfAt < 1) {
-            log.warn("Cannot extract current process ID from JVM name '" + jvmName + "'.");
+            logger.warn("Cannot extract current process ID from JVM name '" + jvmName + "'.");
             return;
         }
         String pid = jvmName.substring(0, indexOfAt);
@@ -163,7 +149,7 @@ public class Main {
         try {
             Files.write(runtimePidFile, pid.getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {
-            log.warn("Cannot write process ID '" + pid + "' to '" + runtimePidFile.toString() + "' file.", e);
+            logger.warn("Cannot write process ID '" + pid + "' to '" + runtimePidFile.toString() + "' file.", e);
         }
     }
 
@@ -205,7 +191,6 @@ public class Main {
         }
     }
 
-
     private static void startEquinox() {
         /**
          * Launches Equinox OSGi framework by  invoking EclipseStarter.startup() method using reflection.
@@ -215,8 +200,7 @@ public class Main {
         URLClassLoader frameworkClassLoader = null;
         platformDirectory = Utils.getCarbonComponentRepo();
         if (platformDirectory == null) {
-            throw new IllegalStateException(
-                    "Could not start the Framework - (not deployed)");
+            throw new IllegalStateException("Could not start the Framework - (not deployed)");
         }
 
         if (frameworkClassLoader != null) {
@@ -230,29 +214,24 @@ public class Main {
         try {
             System.setProperty("osgi.framework.useSystemProperties", "false");
 
-            frameworkClassLoader = java.security.AccessController.doPrivileged(
-                    new java.security.PrivilegedAction<URLClassLoader>() {
+            frameworkClassLoader = java.security.AccessController
+                    .doPrivileged(new java.security.PrivilegedAction<URLClassLoader>() {
                         public URLClassLoader run() {
                             URLClassLoader cl = null;
                             try {
                                 cl = new ChildFirstURLClassLoader(
-                                        new URL[]{new URL(initialPropsMap.get(OSGI_FRAMEWORK))}, null);
+                                        new URL[] { new URL(initialPropsMap.get(OSGI_FRAMEWORK)) }, null);
                             } catch (MalformedURLException e) {
-                                log.error(e.getMessage(), e);
+                                logger.error(e.getMessage(), e);
                             }
                             return cl;
                         }
-                    }
-            );
+                    });
 
-//            frameworkClassLoader =
-
-            //Loads EclipseStarter class.
             Class clazz = frameworkClassLoader.loadClass(STARTER);
 
             //Set the propertyMap by invoking setInitialProperties method.
-            Method setInitialProperties =
-                    clazz.getMethod("setInitialProperties", Map.class);
+            Method setInitialProperties = clazz.getMethod("setInitialProperties", Map.class);
             setInitialProperties.invoke(null, initialPropsMap);
 
             //Invokes the startup method with some arguments.
@@ -272,7 +251,6 @@ public class Main {
         }
     }
 
-
     /**
      * buildInitialPropertyMap create the initial set of properties from the contents of launch.ini
      * and for a few other properties necessary to launch defaults are supplied if not provided.
@@ -286,9 +264,11 @@ public class Main {
         Properties launchProperties;
         if (carbonConfigHome == null) {
             String carbonHome = System.getProperty(LauncherConstants.CARBON_HOME);
-            launchProperties = Utils.loadProperties(Paths.get(carbonHome, "repository", "conf", "etc", LauncherConstants.LAUNCH_INI).toString());
+            launchProperties = Utils.loadProperties(
+                    Paths.get(carbonHome, "repository", "conf", "etc", LauncherConstants.LAUNCH_INI).toString());
         } else {
-            launchProperties = Utils.loadProperties(Paths.get(carbonConfigHome, "etc", LauncherConstants.LAUNCH_INI).toString());
+            launchProperties = Utils
+                    .loadProperties(Paths.get(carbonConfigHome, "etc", LauncherConstants.LAUNCH_INI).toString());
         }
         for (Object o : launchProperties.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
@@ -296,8 +276,7 @@ public class Main {
             String value = (String) entry.getValue();
             if (key.endsWith("*")) { //$NON-NLS-1$
                 if (value.equals(NULL_IDENTIFIER)) {
-                    Utils.clearPrefixedSystemProperties(key.substring(0, key.length() - 1),
-                            initialPropertyMap);
+                    Utils.clearPrefixedSystemProperties(key.substring(0, key.length() - 1), initialPropertyMap);
                 }
             } else if (value.equals(NULL_IDENTIFIER)) {
                 initialPropertyMap.put(key, null);
@@ -316,25 +295,23 @@ public class Main {
                 //specifying the install.area according to the running Profile
                 File installDir = new File(platformDirectory, System.getProperty(LauncherConstants.PROFILE_ID));
 
-                initialPropertyMap
-                        .put(OSGI_INSTALL_AREA, installDir.toURL().toExternalForm());
+                initialPropertyMap.put(OSGI_INSTALL_AREA, installDir.toURL().toExternalForm());
             }
 
             // configuration.area if not specified
             if (initialPropertyMap.get(OSGI_CONFIGURATION_AREA) == null) {
                 File configurationDirectory = new File(platformDirectory,
-                        System.getProperty(LauncherConstants.PROFILE_ID) +
-                                File.separator + "configuration");
-                initialPropertyMap.put(OSGI_CONFIGURATION_AREA,
-                        configurationDirectory.toURL().toExternalForm());
+                                                       System.getProperty(LauncherConstants.PROFILE_ID) + File.separator
+                                                               + "configuration");
+                initialPropertyMap.put(OSGI_CONFIGURATION_AREA, configurationDirectory.toURL().toExternalForm());
             }
 
             // instance.area if not specified
             if (initialPropertyMap.get(OSGI_INSTANCE_AREA) == null) {
-                File workspaceDirectory = new File(platformDirectory, System.getProperty(LauncherConstants.PROFILE_ID) +
-                        File.separator + "workspace");
-                initialPropertyMap
-                        .put(OSGI_INSTANCE_AREA, workspaceDirectory.toURL().toExternalForm());
+                File workspaceDirectory = new File(platformDirectory,
+                                                   System.getProperty(LauncherConstants.PROFILE_ID) + File.separator
+                                                           + "workspace");
+                initialPropertyMap.put(OSGI_INSTANCE_AREA, workspaceDirectory.toURL().toExternalForm());
             }
 
             // osgi.framework if not specified
@@ -354,8 +331,7 @@ public class Main {
                     throw new RuntimeException("Could not find framework");
                 }
 
-                initialPropertyMap.put(OSGI_FRAMEWORK,
-                        new File(path).toURL().toExternalForm());
+                initialPropertyMap.put(OSGI_FRAMEWORK, new File(path).toURL().toExternalForm());
             }
             if (initialPropertyMap.get(P2_DATA_AREA) == null) {
                 /*initialPropertyMap.put(P2_DATA_AREA, new File(platformDirectory, System.getProperty(LauncherConstants.PROFILE_ID) +

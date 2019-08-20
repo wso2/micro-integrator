@@ -22,7 +22,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.clients.logging.LoggingAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import javax.xml.namespace.QName;
@@ -52,17 +51,16 @@ public class RubyScriptSupportTestCase extends ESBIntegrationTest {
         assertEquals(response.getFirstElement().getQName().getLocalPart(), "Code", "Fault localpart mismatched");
 
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")),
-                "Fault response null localpart");
+                      "Fault response null localpart");
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb", "localOnly" }, description = "Script Mediator -Run a Ruby script with the mediator"
             + " -Script from gov registry")
     public void testJRubyScriptMediationScriptFromGovRegistry() throws Exception {
-        enableDebugLogging();
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorRubyStoredInRegistryTestProxy"), null,
-                        "WSO2");
+                                        "WSO2");
 
         assertNotNull(response, "Fault response message null");
 
@@ -73,11 +71,7 @@ public class RubyScriptSupportTestCase extends ESBIntegrationTest {
         assertEquals(response.getFirstElement().getQName().getLocalPart(), "Code", "Fault localpart mismatched");
 
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")),
-                "Fault response null localpart");
+                      "Fault response null localpart");
     }
 
-    private void enableDebugLogging() throws Exception {
-        LoggingAdminClient logAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logAdminClient.updateLoggerData("org.apache.synapse", "DEBUG", true, false);
-    }
 }

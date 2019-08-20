@@ -16,19 +16,16 @@
  */
 package org.wso2.carbon.micro.integrator.management.apis;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
 import com.google.gson.Gson;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.description.query.Query;
@@ -41,8 +38,13 @@ import org.wso2.carbon.micro.integrator.management.apis.models.dataServices.Quer
 import org.wso2.carbon.service.mgt.ServiceAdmin;
 import org.wso2.carbon.service.mgt.ServiceMetaData;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 public class DataServiceResource extends APIResource {
-    private static final Logger log = LoggerFactory.getLogger(DataServiceResource.class);
+
+    private static final Log log = LogFactory.getLog(DataServiceResource.class);
 
     public DataServiceResource(String urlTemplate) {
         super(urlTemplate);
@@ -73,8 +75,8 @@ public class DataServiceResource extends APIResource {
             msgCtx.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         }
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
+        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) msgCtx)
+                .getAxis2MessageContext();
 
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
         return true;
@@ -100,9 +102,8 @@ public class DataServiceResource extends APIResource {
             dataServicesList.addServiceSummary(summary);
         }
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
-
+        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) msgCtx)
+                .getAxis2MessageContext();
 
         String stringPayload = new Gson().toJson(dataServicesList);
         Utils.setJsonPayLoad(axis2MessageContext, new JSONObject(stringPayload));
@@ -111,8 +112,8 @@ public class DataServiceResource extends APIResource {
     private void populateDataServiceByName(MessageContext msgCtx, String serviceName) throws AxisFault {
         DataService dataService = getDataServiceByName(msgCtx, serviceName);
 
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) msgCtx).getAxis2MessageContext();
+        org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) msgCtx)
+                .getAxis2MessageContext();
 
         if (dataService == null) {
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.NOT_FOUND);
@@ -122,12 +123,13 @@ public class DataServiceResource extends APIResource {
 
             if (serviceMetaData != null) {
                 dataServiceInfo = new DataServiceInfo(serviceMetaData.getName(), serviceMetaData.getDescription(),
-                        serviceMetaData.getServiceGroupName(), serviceMetaData.getWsdlURLs());
+                                                      serviceMetaData.getServiceGroupName(),
+                                                      serviceMetaData.getWsdlURLs());
 
                 Map<String, Query> queries = dataService.getQueries();
                 for (Map.Entry<String, Query> stringQuery : queries.entrySet()) {
                     QuerySummary querySummary = new QuerySummary(stringQuery.getKey(),
-                            stringQuery.getValue().getNamespace());
+                                                                 stringQuery.getValue().getNamespace());
                     dataServiceInfo.addQuery(querySummary);
                 }
             }
@@ -143,7 +145,7 @@ public class DataServiceResource extends APIResource {
         if (axisService != null) {
             dataService = (DataService) axisService.getParameter(DBConstants.DATA_SERVICE_OBJECT).getValue();
         } else {
-            log.debug("DataService {} is null.", serviceName);
+            log.debug("DataService {} is null.");
         }
         return dataService;
     }
