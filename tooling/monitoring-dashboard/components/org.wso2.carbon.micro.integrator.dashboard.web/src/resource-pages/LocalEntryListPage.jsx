@@ -16,41 +16,40 @@
  * under the License.
  */
 
-import React, {Component} from 'react';
+
+import React, { Component } from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
-import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
-export default class ProxyServiceListPage extends Component {
+export default class LocalEntryListPage extends Component {
 
     constructor(props) {
         super(props);
-        this.proxies = null;
+        this.localEntries = null;
         this.state = {
             data: [],
         };
     }
 
     /**
-     * Retrieve proxies from the MI.
+     * Retrieve local entries from the MI.
      */
     componentDidMount() {
-        this.retrieveProxies();
+        this.retrieveLocalEntries();
     }
 
-    retrieveProxies() {
+    retrieveLocalEntries() {
         const data = [];
 
-        new ResourceAPI().getResourceList(`/proxy-services`).then((response) => {
-            this.proxies = response.data.list || [];
+        new ResourceAPI().getResourceList(`/local-entries`).then((response) => {
+            this.localEntries = response.data.list || [];
 
-            this.proxies.forEach((element) => {
+            this.localEntries.forEach((element) => {
                 const rowData = [];
                 rowData.push(element.name);
-                rowData.push(element.wsdl1_1);
-                rowData.push(element.wsdl2_0);
+                rowData.push(element.type);
                 data.push(rowData);
 
             });
@@ -64,36 +63,20 @@ export default class ProxyServiceListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Service", "WSDL1.1", "WSDL2.0",
-            {
-                name: "Action",
-                options: {
-                    customBodyRender: (value, tableMeta, updateValue) => {
-                        return (
-                            <Link component="button" variant="body2" onClick={() => {
-                                this.props.history.push(`/proxy/sourceView?name=${tableMeta.rowData[0]}`)
-                            }}>
-                                Source View
-                            </Link>
-                        );
-                    }
-                }
-
-            }];
+        const columns = ["Entry Name", "Type"];
         const options = {
             selectableRows: 'none'
         };
 
         return (
             <MUIDataTable
-                title={"Proxy Services"}
+                title={"Local Registry Entries'"}
                 data={this.state.data}
                 columns={columns}
                 options={options}
             />
         );
     }
-
     render() {
         return (
             <ListViewParent

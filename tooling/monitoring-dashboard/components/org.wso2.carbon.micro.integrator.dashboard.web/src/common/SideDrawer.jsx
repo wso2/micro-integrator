@@ -53,43 +53,43 @@ export default function SideDrawer() {
                 <div className={classes.toolbar} />
                 <List>
                     <ListItem button component={Link} to="/proxy">
-                        <ListItemIcon><NotesIcon/></ListItemIcon>
+                        <ListItemIcon><NotesIcon color="primary" /></ListItemIcon>
                         <ListItemText primary="Proxy services"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><SendIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="/endpoint">
+                        <ListItemIcon><SendIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Endpoints"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><TransformIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="/inbound-endpoint">
+                        <ListItemIcon><TransformIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Inbound Endpoints"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><MessageProcessorIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="/message-processor">
+                        <ListItemIcon><MessageProcessorIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Message Processors"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><MessageStoreIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="/message-store">
+                        <ListItemIcon><MessageStoreIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Message Stores"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><ApiIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="/api">
+                        <ListItemIcon><ApiIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="API"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><TemplateIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="/template">
+                        <ListItemIcon><TemplateIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Templates"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><SequenceIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="sequence">
+                        <ListItemIcon><SequenceIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Sequences"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><LocalEntryIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="local-entry">
+                        <ListItemIcon><LocalEntryIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Local Entries"/>
                     </ListItem>
-                    <ListItem button component={Link} to="">
-                        <ListItemIcon><ConnectorIcon/></ListItemIcon>
+                    <ListItem button component={Link} to="connector">
+                        <ListItemIcon><ConnectorIcon color="primary"/></ListItemIcon>
                         <ListItemText primary="Connectors"/>
                     </ListItem>
                 </List>
