@@ -20,6 +20,7 @@ package utils
 
 import (
 	"bufio"
+	"bytes"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -187,6 +188,11 @@ func GetUrlAndParams(urlPrefix, key, value string) (string, map[string]string) {
 	return url, params
 }
 
+func PutQueryParamsToMap(paramMap map[string]string, key string, value string) map[string]string {
+	paramMap[key] = value
+	return paramMap
+}
+
 func GetCmdFlags(cmd string) string {
 	var showCmdFlags = "Flags:\n" +
 		"  -h, --help\t\thelp for " + cmd + "\n" +
@@ -199,6 +205,12 @@ func GetCmdUsage(program, cmd, subcmd, arg string) string {
 	var showCmdUsage = "Usage:\n" +
 		"  " + program + " " + cmd + " " + subcmd + "\n" +
 		"  " + program + " " + cmd + " " + subcmd + " " + arg + "\n\n"
+	return showCmdUsage
+}
+
+func GetCmdUsageForNonArguments(program, cmd, subcmd string) string {
+	var showCmdUsage = "Usage:\n" +
+		"  " + program + " " + cmd + " " + subcmd + "\n\n"
 	return showCmdUsage
 }
 
@@ -266,4 +278,19 @@ func PrintItemList(itemList IterableStringArray, columnData []string, emptyWarni
 	} else {
 		fmt.Println(emptyWarning)
 	}
+}
+
+func CreateKeyValuePairs(mapData map[string]string) string {
+	if len(mapData) > 0 {
+		builder := new(bytes.Buffer)
+		_, _ = fmt.Fprintf(builder, " {\n")
+		for key, value := range mapData {
+			_, _ = fmt.Fprintf(builder, "\t\t  %s = \"%s\"\n", key, value)
+		}
+		_, _ = fmt.Fprintf(builder, " \t\t}")
+		return builder.String()
+	} else {
+		return "{}"
+	}
+
 }

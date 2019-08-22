@@ -77,6 +77,25 @@ type Endpoint struct {
 	Stats  string `json:"stats"`
 }
 
+type TemplateList struct {
+	SequenceTemplates  []Template    `json:"sequenceTemplateList"`
+	EndpointTemplates  []Template    `json:"endpointTemplateList"`
+}
+
+type TemplateListByType struct {
+	Count       int32        `json:"count"`
+	Templates  []Template    `json:"list"`
+}
+
+type TemplateListByName struct {
+	Parameters []string  `json:"Parameters"`
+	Name  	   string    `json:"name"`
+}
+
+type Template struct {
+	Name  string   `json:"name"`
+}
+
 type InboundEndpointList struct {
 	Count            int32                    `json:"count"`
 	InboundEndpoints []InboundEndpointSummary `json:"list"`
@@ -264,4 +283,74 @@ type DataServiceSummary struct {
 type QuerySummary struct {
 	Id        string `json:"id"`
 	Namespace string `json:"namespace"`
+}
+
+type ConnectorList struct {
+	Count      int32              `json:"count"`
+	Connectors []ConnectorSummary `json:"list"`
+}
+
+type ConnectorSummary struct {
+	Name        string `json:"name"`
+	Status      string `json:"status"`
+	Package     string `json:"package"`
+	Description string `json:"description"`
+}
+
+type MessageProcessorList struct {
+	Count             int32              `json:"count"`
+	MessageProcessors []MessageProcessor `json:"list"`
+}
+
+type MessageProcessor struct {
+	Name      string     `json:"name"`
+	Type 	  string	 `json:"type"`
+	Status 	  string	 `json:"status"`
+}
+
+type MessageProcessorData struct {
+	Name       string   			`json:"name"`
+	FileName   string   			`json:"fileName"`
+	Type       string   			`json:"type"`
+	Store      string   			`json:"messageStore"`
+	Container  string   			`json:"artifactContainer"`
+	Parameters map[string]string    `json:"parameters"`
+	Status     string   			`json:"status"`
+}
+
+type MessageStoreList struct {
+	Count         int32           `json:"count"`
+	MessageStores []MessageStore  `json:"list"`
+}
+
+type MessageStore struct {
+	Name      string     `json:"name"`
+	Size 	  int	 	 `json:"size"`
+	Type 	  string	 `json:"type"`
+}
+
+type MessageStoreData struct {
+	Name         string   			  `json:"name"`
+	FileName     string   			  `json:"file"`
+	Container    string   			  `json:"container"`
+	Properties   map[string]string    `json:"properties"`
+	Producer     string   			  `json:"producer"`
+	Consumer     string   			  `json:"consumer"`
+	Size         int   			      `json:"size"`
+}
+
+type LocalEntryList struct {
+	Count         int32           `json:"count"`
+	LocalEntries  []LocalEntry    `json:"list"`
+}
+
+type LocalEntry struct {
+	Name      string     `json:"name"`
+	Type 	  string	 `json:"type"`
+}
+
+type LocalEntryData struct {
+	Name     string   	`json:"name"`
+	Type     string   	`json:"type"`
+	Value    string   	`json:"value"`
 }
