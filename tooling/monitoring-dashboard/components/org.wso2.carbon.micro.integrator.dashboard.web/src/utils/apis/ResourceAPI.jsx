@@ -41,7 +41,16 @@ export default class ResourceAPI {
         return httpClient;
     }
 
-    getProxyList() {
-        return this.getHTTPClient().get(`/proxy-services`);
+    getResourceList(resource) {
+        return this.getHTTPClient().get(resource);
     }
+
+    getProxyServiceByName(name){
+        return this.getHTTPClient().get(`/proxy-services?proxyServiceName=${name}`);
+    }
+
+    getApiByName(name){
+        return this.getHTTPClient().get(`/apis?apiName=${name}`);
+    }
+
 }

@@ -23,34 +23,33 @@ import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
-export default class ProxyServiceListPage extends Component {
+export default class ApiListPage extends Component {
 
     constructor(props) {
         super(props);
-        this.proxies = null;
+        this.apis = null;
         this.state = {
             data: [],
         };
     }
 
     /**
-     * Retrieve proxies from the MI.
+     * Retrieve apis from the MI.
      */
     componentDidMount() {
-        this.retrieveProxies();
+        this.retrieveApis();
     }
 
-    retrieveProxies() {
+    retrieveApis() {
         const data = [];
 
-        new ResourceAPI().getResourceList(`/proxy-services`).then((response) => {
-            this.proxies = response.data.list || [];
+        new ResourceAPI().getResourceList(`/apis`).then((response) => {
+            this.apis = response.data.list || [];
 
-            this.proxies.forEach((element) => {
+            this.apis.forEach((element) => {
                 const rowData = [];
                 rowData.push(element.name);
-                rowData.push(element.wsdl1_1);
-                rowData.push(element.wsdl2_0);
+                rowData.push(element.url);
                 data.push(rowData);
 
             });
@@ -64,14 +63,14 @@ export default class ProxyServiceListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Service", "WSDL1.1", "WSDL2.0",
+        const columns = ["API Name", "URL",
             {
                 name: "Action",
                 options: {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
                             <Link component="button" variant="body2" onClick={() => {
-                                this.props.history.push(`/proxy/sourceView?name=${tableMeta.rowData[0]}`)
+                                this.props.history.push(`/api/sourceView?name=${tableMeta.rowData[0]}`)
                             }}>
                                 Source View
                             </Link>
@@ -86,7 +85,7 @@ export default class ProxyServiceListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Proxy Services"}
+                title={"APIs'"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

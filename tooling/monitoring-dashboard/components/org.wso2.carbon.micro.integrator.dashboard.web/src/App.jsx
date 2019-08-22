@@ -22,7 +22,22 @@ import { BrowserRouter} from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
 import Login from './auth/Login';
- import ProxyServiceListPage from './resource-pages/ProxyServiceListPage';
+
+import APIListPage from './resource-pages/ApiListPage';
+import ApiSourceViewPage from './resource-pages/APISourceViewPage';
+import ConnectorListPage from './resource-pages/ConnectorListPage';
+import EndpointListPage from './resource-pages/EndpointListPage';
+import InboundEndpointListPage from './resource-pages/InboundEndpointListPage';
+import LocalEntryListPage from './resource-pages/LocalEntryListPage';
+import MessageProcessorListPage from './resource-pages/MessageProcessorListPage';
+import MessageStoreListPage from './resource-pages/MessageStoreListPage';
+import ProxyServiceListPage from './resource-pages/ProxyServiceListPage';
+import ProxySourceViewPage from './resource-pages/ProxySourceViewPage';
+import SequenceListPage from './resource-pages/SequenceListPage';
+import TemplateListPage from './resource-pages/TemplateListPage';
+
+
+
 import '../public/css/dashboard.css';
 
 
@@ -36,8 +51,20 @@ class App extends Component {
             <BrowserRouter basename={window.contextPath}>
                 <Switch>
                     {/* Authentication */}
-                    <Route path='/login' component={Login} />
-                    <Route path='/proxy' component={ProxyServiceListPage} />
+                    <Route exact path='/login' component={Login} />
+                    <Route exact path='/proxy' component={ProxyServiceListPage} />
+                    <Route exact path='/endpoint' component={EndpointListPage} />
+                    <Route exact path='/message-processor' component={MessageProcessorListPage} />
+                    <Route exact path='/message-store' component={MessageStoreListPage} />
+                    <Route exact path='/api' component={APIListPage} />
+                    <Route path='/proxy/sourceView' component={ProxySourceViewPage} />
+                    <Route exact path='/connector' component={ConnectorListPage} />
+                    <Route exact path='/template' component={TemplateListPage} />
+                    <Route exact path='/inbound-endpoint' component={InboundEndpointListPage} />
+                    <Route exact path='/local-entry' component={LocalEntryListPage} />
+                    <Route exact path='/sequence' component={SequenceListPage} />
+                    <Route path='/api/sourceView' component={ApiSourceViewPage} />
+
                     {/* Secured routes */}
                     {/*<Route component={SecuredRouter} />*/}
                     <Route component={AnonPage}/>

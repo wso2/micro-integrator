@@ -16,40 +16,48 @@
  * under the License.
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 
 import defaultTheme from '../utils/Theme';
 import Header from './Header';
 import SideDrawer from './SideDrawer';
-import { MuiThemeProvider } from 'material-ui/styles';
+import {MuiThemeProvider} from 'material-ui/styles';
+import Paper from '@material-ui/core/Paper';
 
 /**
  * Style constants.
  */
 const styles = {
-    contentDiv: {
-        height:'100vh',
+    contentPaper: {
+        height: '100vh',
         width: 'calc(100% - 240px)',
-        float:'right'
+        float: 'right',
+        paddingTop: '40px',
+    },
+    contentDiv: {
+        // width:'80%',
+        // float:'left',
     },
 };
 
-export default class ListViewParent extends Component{
+export default class ListViewParent extends Component {
 
     /**
      * Render the general view of the synapse artifacts listing pages
      */
     renderParentView() {
-        return(
+        return (
             <MuiThemeProvider muiTheme={this.props.theme}>
                 <Header
                     title={this.props.title} theme={this.props.theme}
                 />
                 <SideDrawer/>
-                <div style={styles.contentDiv}>
-                    {this.props.data}
-                </div>
+                <Paper style={styles.contentPaper}>
+                    <div style={styles.contentDiv}>
+                        {this.props.data}
+                    </div>
+                </Paper>
             </MuiThemeProvider>
         );
     }
@@ -63,12 +71,12 @@ export default class ListViewParent extends Component{
 ListViewParent.propTypes = {
     title: PropTypes.string,
     theme: PropTypes.shape({}),
-    data:  PropTypes.element,
+    data: PropTypes.element,
 
 };
 
 ListViewParent.defaultProps = {
     title: 'Micro Integrator',
-    data: <span />,
+    data: <span/>,
     theme: defaultTheme,
 };

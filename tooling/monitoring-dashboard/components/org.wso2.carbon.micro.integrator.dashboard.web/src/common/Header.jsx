@@ -30,7 +30,7 @@ export default class Header extends Component {
     render() {
         return (
             <AppBar
-                style={{ zIndex: this.props.theme.zIndex.drawer + 100 }}
+                style={{ zIndex: this.props.theme.zIndex.drawer + 100, position:'fixed' }}
                 title={this.props.title}
                 iconElementRight={this.props.rightElement}
                 iconElementLeft={this.props.logo}
@@ -38,7 +38,6 @@ export default class Header extends Component {
                 iconStyleLeft={{ margin: '0 15px 0 0', display: 'flex', alignItems: 'center' }}
                 titleStyle={{ fontSize: 16 }}
                 zDepth={2}
-                position="absolute"
             />
         );
     }

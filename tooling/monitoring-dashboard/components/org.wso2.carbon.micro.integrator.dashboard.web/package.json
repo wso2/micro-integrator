@@ -22,13 +22,17 @@
     "@material-ui/icons": "^4.2.1",
     "axios": "^0.19.0",
     "https": "^1.0.0",
+    "material-tabs": "0.0.8",
     "material-ui": "^0.20.2",
     "mui-datatables": "^2.8.0",
+    "query-string": "^6.8.2",
     "react": "^16.4.0",
     "react-dom": "^16.4.0",
     "react-intl": "^2.9.0",
     "react-router": "^5.0.1",
-    "react-router-dom": "^5.0.1"
+    "react-router-dom": "^5.0.1",
+    "react-syntax-highlighter": "^11.0.2",
+    "xml-formatter": "^1.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.2.2",
