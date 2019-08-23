@@ -80,6 +80,6 @@ echo Using CARBON_HOME:   %CARBON_HOME%
 echo Using JAVA_HOME:    %JAVA_HOME%
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 
-%_RUNJAVA% %JAVA_OPTS% -Dcarbon.home="%CARBON_HOME%" -cp "%CARBON_CLASSPATH%" org.wso2.micro.integrator.security.vault.VaultTool %*
+%_RUNJAVA% %JAVA_OPTS% -Dcarbon.home="%CARBON_HOME%" -Dconf.location="%CARBON_HOME%/conf" -cp "%CARBON_CLASSPATH%" org.wso2.micro.integrator.security.vault.VaultTool %*
 endlocal
 :end
