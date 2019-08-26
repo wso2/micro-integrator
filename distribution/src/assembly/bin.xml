@@ -358,34 +358,34 @@
             <fileMode>644</fileMode>
         </file>
 
-        <file>
-            <source>src/conf/tasks-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/
-            </outputDirectory>
-        </file>
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-broker.xml
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+<!--        <file>-->
+<!--            <source>src/conf/tasks-config.xml</source>-->
+<!--            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/-->
+<!--            </outputDirectory>-->
+<!--        </file>-->
+<!--        <file>-->
+<!--            <source>-->
+<!--                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-broker.xml-->
+<!--            </source>-->
+<!--            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>-->
+<!--            <fileMode>644</fileMode>-->
+<!--        </file>-->
 
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/data-bridge/data-agent-config.xml
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/conf/data-bridge</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+<!--        <file>-->
+<!--            <source>-->
+<!--                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/data-bridge/data-agent-config.xml-->
+<!--            </source>-->
+<!--            <outputDirectory>wso2mi-${pom.version}/conf/data-bridge</outputDirectory>-->
+<!--            <fileMode>644</fileMode>-->
+<!--        </file>-->
 
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/rule-engine-config.xml
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+<!--        <file>-->
+<!--            <source>-->
+<!--                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/rule-engine-config.xml-->
+<!--            </source>-->
+<!--            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>-->
+<!--            <fileMode>644</fileMode>-->
+<!--        </file>-->
 
         <file>
             <source>src/conf/axis2.xml</source>
@@ -510,13 +510,13 @@
         </file>
 
         <!-- Cipher Tool Files -->
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-${cipher.tool.version}.jar
-            </source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/lib</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+<!--        <file>-->
+<!--            <source>-->
+<!--                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-${cipher.tool.version}.jar-->
+<!--            </source>-->
+<!--            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/lib</outputDirectory>-->
+<!--            <fileMode>644</fileMode>-->
+<!--        </file>-->
         <file>
             <source>src/conf/synapse-handlers.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>

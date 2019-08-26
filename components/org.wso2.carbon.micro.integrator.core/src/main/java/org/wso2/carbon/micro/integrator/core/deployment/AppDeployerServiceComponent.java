@@ -32,7 +32,8 @@ import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.CarbonException;
 import org.wso2.carbon.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.carbon.application.deployer.synapse.FileRegistryResourceDeployer;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.dataservices.core.DBDeployer;
 import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
 import org.wso2.carbon.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager;
@@ -109,7 +110,7 @@ public class AppDeployerServiceComponent {
      *
      * @param configCtx Instance of ConfigurationContextService which wraps server configuration context
      */
-    @Reference(
+    /*@Reference(
             name = "org.wso2.carbon.configCtx",
             service = org.wso2.carbon.utils.ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
@@ -117,7 +118,7 @@ public class AppDeployerServiceComponent {
             unbind = "unsetConfigurationContext")
     protected void setConfigurationContext(ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
-    }
+    }*/
 
     /**
      * Receive an event about destroying ConfigurationContext

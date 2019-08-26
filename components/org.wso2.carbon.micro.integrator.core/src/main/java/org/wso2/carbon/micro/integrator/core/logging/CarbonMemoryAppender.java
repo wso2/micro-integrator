@@ -22,7 +22,7 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.wso2.carbon.bootstrap.logging.LoggingBridge;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.utils.logging.CircularBuffer;
 import org.wso2.carbon.utils.logging.LoggingUtils;
 import org.wso2.carbon.utils.logging.TenantAwareLoggingEvent;
@@ -31,6 +31,8 @@ import org.wso2.carbon.utils.logging.handler.TenantDomainSetter;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.logging.LogRecord;
+
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
 
 /**
  * This appender will be used to capture the logs and later send to clients, if

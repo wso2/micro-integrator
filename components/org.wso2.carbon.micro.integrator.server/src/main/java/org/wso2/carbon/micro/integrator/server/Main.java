@@ -81,6 +81,7 @@ public class Main {
 
         //To keep track of the time taken to start the Carbon server.
         System.setProperty("wso2carbon.start.time", System.currentTimeMillis() + "");
+        logger.info("Starting at : " + System.getProperty("wso2carbon.start.time"));
         if (System.getProperty("carbon.instance.name") == null) {
             InetAddress addr;
             String ipAddr;

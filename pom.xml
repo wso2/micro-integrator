@@ -43,11 +43,11 @@
 
     <modules>
         <module>components</module>
-        <!--<module>samples</module>-->
+<!--        <module>samples</module>-->
         <module>features</module>
         <module>p2-profile</module>
         <module>distribution</module>
-        <module>integration</module>
+<!--        <module>integration</module>-->
     </modules>
 
     <dependencyManagement>

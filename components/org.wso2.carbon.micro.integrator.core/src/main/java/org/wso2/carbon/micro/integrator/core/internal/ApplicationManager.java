@@ -34,7 +34,8 @@ import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.utils.FileManipulator;
 
 import javax.xml.stream.XMLStreamException;

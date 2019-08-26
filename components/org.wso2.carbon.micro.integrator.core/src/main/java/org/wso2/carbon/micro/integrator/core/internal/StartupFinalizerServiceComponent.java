@@ -15,10 +15,10 @@
  */
 package org.wso2.carbon.micro.integrator.core.internal;
 
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.description.Parameter;
-import org.apache.axis2.engine.ListenerManager;
+//import org.apache.axis2.AxisFault;
+//import org.apache.axis2.context.ConfigurationContext;
+//import org.apache.axis2.description.Parameter;
+//import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
@@ -36,10 +36,12 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.ServerStatus;
+import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.micro.integrator.core.deployment.DeploymentService;
-import org.wso2.carbon.utils.CarbonUtils;
+//import org.wso2.carbon.utils.CarbonUtils;
+//import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -63,10 +65,10 @@ import java.util.TimerTask;
         immediate = true)
 public class StartupFinalizerServiceComponent implements ServiceListener {
     private static final Log log = LogFactory.getLog(StartupFinalizerServiceComponent.class);
-    private static final String TRANSPORT_MANAGER =
-            "org.wso2.carbon.tomcat.ext.transport.ServletTransportManager";
+//    private static final String TRANSPORT_MANAGER =
+//            "org.wso2.carbon.tomcat.ext.transport.ServletTransportManager";
 
-    private ConfigurationContext configCtx;
+//    private ConfigurationContext configCtx;
     private List<String> requiredServices = new ArrayList<String>();
     private BundleContext bundleContext;
 
@@ -79,11 +81,11 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         try {
 
             bundleContext = ctxt.getBundleContext();
-            PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext
-                    .getThreadLocalCarbonContext();
-            privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-            privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-            populateRequiredServices();
+//            PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext
+//                    .getThreadLocalCarbonContext();
+//            privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+//            privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+//            populateRequiredServices();
             if (requiredServices.isEmpty()) {
                 completeInitialization(bundleContext);
                 return;
@@ -158,27 +160,27 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
 
         bundleContext.removeServiceListener(this);
         pendingServicesObservationTimer.cancel();
-        ListenerManager listenerManager = configCtx.getListenerManager();
-        if (listenerManager == null) {
-            listenerManager = new ListenerManager();
-        }
-        listenerManager.setShutdownHookRequired(false);
-        listenerManager.startSystem(configCtx);
+//        ListenerManager listenerManager = configCtx.getListenerManager();
+//        if (listenerManager == null) {
+//            listenerManager = new ListenerManager();
+//        }
+//        listenerManager.setShutdownHookRequired(false);
+//        listenerManager.startSystem(configCtx);
 
-        if (CarbonUtils.isRunningInStandaloneMode()) {
-            try {
-                Class<?> transportManagerClass = Class.forName(TRANSPORT_MANAGER);
-                Object transportManager = transportManagerClass.newInstance();
-                Method method = transportManagerClass.getMethod("startTransports");
-                method.invoke(transportManager);
-            } catch (Exception e) {
-                String msg = "Cannot start transports";
-                log.fatal(msg, e);
-                return;
-            }
-        }
-        listerManagerServiceRegistration =
-                bundleContext.registerService(ListenerManager.class.getName(), listenerManager, null);
+        //if (CarbonUtils.isRunningInStandaloneMode()) {
+//            try {
+//                Class<?> transportManagerClass = Class.forName(TRANSPORT_MANAGER);
+//                Object transportManager = transportManagerClass.newInstance();
+//                Method method = transportManagerClass.getMethod("startTransports");
+//                method.invoke(transportManager);
+//            } catch (Exception e) {
+//                String msg = "Cannot start transports";
+//                log.fatal(msg, e);
+//                return;
+//            }
+       // }
+//        listerManagerServiceRegistration =
+//                bundleContext.registerService(ListenerManager.class.getName(), listenerManager, null);
 /*        try {
             new JMXServerManager().startJMXService();
         } catch (ServerException e) {
@@ -195,30 +197,30 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
     }
     
     private void setServerStartTimeParam() {
-        Parameter startTimeParam = new Parameter();
-        startTimeParam.setName(CarbonConstants.SERVER_START_TIME);
-        startTimeParam.setValue(System.getProperty(CarbonConstants.START_TIME));
-        try {
-            configCtx.getAxisConfiguration().addParameter(startTimeParam);
-        } catch (AxisFault e) {
-            log.error("Could not set the  server start time parameter", e);
-        }
+//        Parameter startTimeParam = new Parameter();
+//        startTimeParam.setName(CarbonConstants.SERVER_START_TIME);
+//        startTimeParam.setValue(System.getProperty(CarbonConstants.START_TIME));
+//        try {
+//            configCtx.getAxisConfiguration().addParameter(startTimeParam);
+//        } catch (AxisFault e) {
+//            log.error("Could not set the  server start time parameter", e);
+//        }
     }
     
     private void setServerStartUpDurationParam(String startupTime) {
-        Parameter startupDurationParam = new Parameter();
-        startupDurationParam.setName(CarbonConstants.START_UP_DURATION);
-        startupDurationParam.setValue(startupTime);
-        try {
-            configCtx.getAxisConfiguration().addParameter(startupDurationParam);
-        } catch (AxisFault e) {
-            log.error("Could not set the  server start up duration parameter", e);
-        }
+//        Parameter startupDurationParam = new Parameter();
+//        startupDurationParam.setName(CarbonConstants.START_UP_DURATION);
+//        startupDurationParam.setValue(startupTime);
+//        try {
+//            configCtx.getAxisConfiguration().addParameter(startupDurationParam);
+//        } catch (AxisFault e) {
+//            log.error("Could not set the  server start up duration parameter", e);
+//        }
     }
 
     private void printInfo() {
         long startTime = Long.parseLong(System.getProperty(CarbonConstants.START_TIME));
-        long startupTime = (System.currentTimeMillis() - startTime) / 1000;
+        long startupTime = (System.currentTimeMillis() - startTime) ;
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Server           :  " + dataHolder.getServerConfigurationService().getFirstProperty("Name") + "-" +
@@ -227,33 +229,33 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         } catch (Exception e) {
             log.debug("Error while retrieving server configuration",e);
         }
-        try {
-            ServerStatus.setServerRunning();
-        } catch (AxisFault e) {
-            String msg = "Cannot set server to running mode";
-            log.error(msg, e);
-        }
-        log.info("WSO2 Micro Integrator started in " + startupTime + " sec");
+//        try {
+//            ServerStatus.setServerRunning();
+//        } catch (AxisFault e) {
+//            String msg = "Cannot set server to running mode";
+//            log.error(msg, e);
+//        }
+        log.info("WSO2 Micro Integrator started in " + startupTime + " milli sec");
         setServerStartUpDurationParam(String.valueOf(startupTime));
 //        System.getProperties().remove(CarbonConstants.START_TIME);
         System.getProperties().remove("setup"); // Clear the setup System property
     }
 
-    @Reference(
-            name = "org.wso2.carbon.configCtx",
-            service = org.wso2.carbon.utils.ConfigurationContextService.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetConfigurationContext")
-    protected void setConfigurationContext(ConfigurationContextService configCtx) {
-        this.configCtx = configCtx.getServerConfigContext();
-    }
+       /* @Reference(
+                name = "org.wso2.carbon.configCtx",
+                service = org.wso2.carbon.utils.ConfigurationContextService.class,
+                cardinality = ReferenceCardinality.MANDATORY,
+                policy = ReferencePolicy.DYNAMIC,
+                unbind = "unsetConfigurationContext")
+        protected void setConfigurationContext(ConfigurationContextService configCtx) {
+            this.configCtx = configCtx.getServerConfigContext();
+        }*/
 
-    protected void unsetConfigurationContext(ConfigurationContextService configCtx) {
-        this.configCtx = null;
-    }
+//    protected void unsetConfigurationContext(ConfigurationContextService configCtx) {
+//        this.configCtx = null;
+//    }
 
-    @Reference(
+  /*  @Reference(
             name = "org.wso2.carbon.micro.integrator.core.deployment.DeploymentService",
             service = org.wso2.carbon.micro.integrator.core.deployment.DeploymentService.class,
             cardinality = ReferenceCardinality.MANDATORY,
@@ -261,7 +263,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
             unbind = "unsetDeploymentService")
     protected void setDeploymentService(DeploymentService deploymentService) {
         log.debug("Set DeploymentService");
-    }
+    }*/
 
     protected void unsetDeploymentService(DeploymentService deploymentService) {
         log.debug("Unset DeploymentService");

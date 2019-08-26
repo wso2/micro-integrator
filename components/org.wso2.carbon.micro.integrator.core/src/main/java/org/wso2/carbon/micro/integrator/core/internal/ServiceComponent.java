@@ -61,7 +61,7 @@ import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.base.CarbonBaseConstants;
 import org.wso2.carbon.base.api.ServerConfigurationService;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.CarbonAxisConfigurator;
 import org.wso2.carbon.core.CarbonConfigurationContextFactory;
 import org.wso2.carbon.core.CarbonThreadCleanup;
@@ -74,6 +74,7 @@ import org.wso2.carbon.core.deployment.OSGiAxis2ServiceDeployer;
 import org.wso2.carbon.core.init.PreAxis2ConfigItemListener;
 import org.wso2.carbon.core.internal.DeploymentServerStartupObserver;
 import org.wso2.carbon.core.internal.HTTPGetProcessorListener;
+import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.core.multitenancy.GenericArtifactUnloader;
 import org.wso2.carbon.core.transports.CarbonServlet;
 import org.wso2.carbon.core.util.HouseKeepingTask;
@@ -110,7 +111,7 @@ import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
 //import org.wso2.carbon.core.CarbonAxisConfigurator;
 
 @Component(
-        name = "micro.server.dscomponent",
+        name = "org.wso2.carbon.micro.integrator.core.internal.ServiceComponent",
         immediate = true)
 public class ServiceComponent {
 
