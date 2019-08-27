@@ -1,3 +1,4 @@
+
 #!/bin/bash
 
 # Copyright (c) 2019, WSO2 Inc. (http://www.wso2.com). All Rights Reserved.
@@ -34,5 +35,4 @@ tar zxvf ../../cmd/build
 
 #start the application
 cd ../../cmd/build/wso2mi-cli--f/bin
-
 ./mi
