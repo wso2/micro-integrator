@@ -731,6 +731,12 @@
                 <artifactId>synapse-commons</artifactId>
                 <version>${synapse.version}</version>
             </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -778,6 +784,7 @@
         <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
         <opensaml.version>2.2.3</opensaml.version>
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
+        <junit.version>4.12</junit.version>
         <testng.suiteXml.location>src/test/resources/testng.xml</testng.suiteXml.location>
 
         <!-- TODO Remove after fixing the test cases, kept for compilation purposes.-->

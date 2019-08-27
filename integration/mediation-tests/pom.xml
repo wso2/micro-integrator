@@ -32,7 +32,6 @@
     <name>WSO2 Enterprise Integrator - Mediation Integration Tests</name>
     <packaging>pom</packaging>
 
-
     <profiles>
         <profile>
             <id>default</id>
