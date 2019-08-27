@@ -84,7 +84,7 @@ mvn clean install -Ddocker.skip=false
 If you are looking for enterprise level support for the solutions you develop using WSO2 Micro Integrator please visit
 https://wso2.com/integration/.
 
-## Licence
+## License
 
 WSO2 Micro Integrator is licensed under the [Apache License](http://www.apache.org/licenses/LICENSE-2.0).
 

@@ -29,8 +29,8 @@ Command Line tool for managing the WSO2 Micro Integrator
 
     NOTE: To execute the tool from anywhere, append the location of the executable (mi) to your $PATH variable.
 
-- ### Command Autocompletion
-    Copy the file mi_bash_completion.sh to /etc/bash_completion.d/ and source it with source /etc/bash_completion.d/mi_bash_completion.sh to enable bash auto-completion.
+- ### Command Autocompletion (For Bash Only)
+    Copy the file `mi_bash_completion.sh` to `/etc/bash_completion.d/` and source it with `source /etc/bash_completion.d/mi_bash_completion.sh` to enable bash auto-completion.
 
 ### Configuration 
 
@@ -38,9 +38,9 @@ Command Line tool for managing the WSO2 Micro Integrator
     By default the Management Api is disabled. To use the Management Api you must use the system property `-DenableManagementApi` when starting the micro integrator
 
 - ### Management API Address and Port
-    To configure the address and the port of the Management Api in the CLI use the [**init**](#init) command. This will generate a file called server_config.yaml which contains the address and the port. If the init command was not used, the address and the port will have the default values
+    To configure the address and the port of the Management Api in the CLI use the [**remote**](#remote) command. If no configuration is done, the address and the port will have the default values
 
-    NOTE: The default address is https://localhost and the port is 9164
+    NOTE: The default hostname is localhost and the port is 9164.
 
 ## Usage 
 ```bash
@@ -56,44 +56,170 @@ Command Line tool for managing the WSO2 Micro Integrator
 ```
 
 ### Commands
-   * #### init
+   * #### remote
 ```bash
         Usage:
-            mi init
-
-        Examples:
-            mi init
-            Enter following parameters to configure the cli
-            Host name(default localhost): abc.com
-            Port number(default 9164): 9595
-            CLI configuration is successful
-```
-
-* #### show
-```bash
-        Usage:
-            mi show [command] [argument] [flag]
-               
+            mi remote [command] [arguments]
+                       
         Available Commands:
-            api [api-name]                  Get information about one or more Apis
-            carbonapp [app-name]            Get information about one or more Carbon Apps
-            endpoint [endpoint-name]        Get information about one or more Endpoints
-            inboundendpoint [inbound-name]  Get information about one or more Inbounds
-            proxyservice [proxy-name]       Get information about one or more Proxies 
-            sequence [sequence-name]        Get information about one or more Sequences
-            task [task-name]                Get information about one or more Task
-        
+            add [nick-name] [host] [port]        Add a Micro Integrator
+            remove [nick-name]                   Remove a Micro Integrator
+            update [nick-name] [host] [port]     Update a Micro Integrator
+            select [nick-name]                   Select a Micro Integrator on which commands are executed
+            show                                 Show available Micro Integrators
+
         Examples:
-            # To list all the apis
-            mi show api
-
-            # To get details about specific proxy service
-            mi show proxyService SampleProxyService
-
-        Flags:
-            -h, --help   Display information and example usage of the command
+            # To add a Micro Integrator
+            mi remote add TestServer 192.168.1.15 9164
+            
+            # To remove a Micro Integrator
+            mi remote remove TestServer
+            
+            # To update a Micro Integrator
+            mi remote update TestServer 192.168.1.17 9164
+            
+            # To select a Micro Integrator
+            mi remote select TestServer
+            
+            # To show available Micro Integrators
+            mi remote show
 ```
+   * #### log-level
+```bash
+        Usage:
+            mi log-level [command] [arguments]
 
+        Available Commands:
+            show [logger-name]                   Show information about a logger
+            update [logger-name] [log-level]     Update the log level of a logger
+
+        Examples:
+            # Show information about a logger
+            mi log-level show org.apache.coyote
+
+            # Update the log level of a logger
+            mi log-level update org.apache.coyote DEBUG
+```
+   * #### api
+```bash
+        Usage:
+            mi api [command] [argument]
+
+        Available Commands:
+            show [api-name]                      Get information about one or more Apis
+
+        Examples:
+            # To List all the apis
+            mi api show
+
+            # To get details about a specific api
+            mi api show sampleApi
+```
+   * #### compositeapp
+```bash
+        Usage:
+            mi compositeapp [command] [argument]
+
+        Available Commands:
+            show [app-name]                      Get information about one or more Composite apps
+
+        Examples:
+            # To List all the composite apps
+            mi compositeapp show
+
+            # To get details about a specific composite app
+            mi compositeapp show sampleApp
+```
+   * #### endpoint
+```bash
+        Usage:
+            mi endpoint [command] [argument]
+
+        Available Commands:
+            show [endpoint-name]                 Get information about one or more Endpoints
+
+        Examples:
+            # To List all the endpoints
+            mi endpoint show
+
+            # To get details about a specific endpoint
+            mi endpoint show sampleEndpoint
+```
+   * #### inboundendpoint
+```bash
+        Usage:
+            mi inboundendpoint [command] [argument]
+
+        Available Commands:
+            show [inboundendpoint-name]          Get information about one or more Inbounds
+
+        Examples:
+            # To List all the inbound endpoints
+            mi inboundendpoint show
+
+            # To get details about a specific inbound endpoint
+            mi inboundendpoint show sampleEndpoint
+```
+   * #### proxyservice
+```bash
+        Usage:
+            mi proxyservice [command] [argument]
+
+        Available Commands:
+            show [proxyservice-name]             Get information about one or more Proxies
+
+        Examples:
+            # To List all the proxy services
+            mi proxyservice show
+
+            # To get details about a specific proxy service
+            mi proxyservice show sampleProxy
+```
+   * #### sequence
+```bash
+        Usage:
+            mi sequence [command] [argument]
+
+        Available Commands:
+            show [sequence-name]                 Get information about one or more Sequences
+
+        Examples:
+            # To List all the sequences
+            mi sequence show
+
+            # To get details about a specific sequence
+            mi sequence show sampleProxy
+```
+   * #### task
+```bash
+        Usage:
+            mi task [command] [argument]
+
+        Available Commands:
+            show [task-name]                     Get information about one or more Tasks
+
+        Examples:
+            # To List all the tasks
+            mi task show
+
+            # To get details about a specific task
+            mi task show sampleProxy
+```
+   * #### dataservice
+```bash
+        Usage:
+            mi dataservice [command] [argument]
+
+        Available Commands:
+            show [data-service-name]             Get information about one or more Dataservices
+
+        Examples:
+            # To List all the dataservices
+            mi dataservice show
+
+            # To get details about a specific task
+            mi dataservice show SampleDataService
+```
 * #### version
 ```bash
         mi version 

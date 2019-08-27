@@ -19,62 +19,13 @@
 package utils
 
 import (
-	"errors"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"os"
+	"path/filepath"
 )
 
-// Write Server configuration to the yaml file
-// @param c : data
-// @param serverConfigFilePath : Path to file where env endpoints are stored
-func WriteServerConfigFile(c interface{}, envConfigFilePath string) {
-	data, err := yaml.Marshal(&c)
-	if err != nil {
-		HandleErrorAndExit("Unable to write configuration to file.", err)
-	}
-
-	err = ioutil.WriteFile(envConfigFilePath, data, 0644)
-	if err != nil {
-		HandleErrorAndExit("Unable to write configuration to file.", err)
-	}
-}
-
-// Read and return Server Configuration from the yaml file
-func GetServerConfigFromFile(filePath string) *ServerConfig {
-	data, err := ioutil.ReadFile(filePath)
-	if err != nil {
-		HandleErrorAndExit("ServerConfig: File Not Found: "+filePath, err)
-	}
-
-	var serverConfig ServerConfig
-	if err := serverConfig.ParseServerConfigFromFile(data); err != nil {
-		HandleErrorAndExit("ServerConfig: Error parsing "+filePath, err)
-	}
-
-	return &serverConfig
-}
-
-// Read and validate contents of server_config.yaml
-// will throw errors if the any of the lines is blank
-func (serverConfig *ServerConfig) ParseServerConfigFromFile(data []byte) error {
-
-	if err := yaml.Unmarshal(data, serverConfig); err != nil {
-		return err
-	}
-
-	if serverConfig.Url == "" {
-		return errors.New("Blank Host")
-	}
-	if serverConfig.Port == "" {
-		return errors.New("Blank Port")
-	}
-
-	return nil
-}
-
 // Check whether the file exists.
-func IsFileExist(path string) (isFileExist bool) {
+func IsFileExist(path string) bool {
 	if _, err := os.Stat(path); err != nil {
 		if os.IsNotExist(err) {
 			return false
@@ -83,4 +34,23 @@ func IsFileExist(path string) (isFileExist bool) {
 		}
 	}
 	return true
+}
+
+func GetServerConfigFilePath() string {
+
+	userHomeDir, err := os.UserHomeDir()
+	if err != nil {
+		HandleErrorAndExit("Error getting user home directory: ", err)
+	}
+	serverConfigFilePath := filepath.Join(userHomeDir, ServerConfigFileName)
+	return serverConfigFilePath
+}
+
+func GetFileContent(filePath string) string {
+	data, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		HandleErrorAndExit("Error reading: "+filePath, err)
+	}
+
+	return string(data)
 }
