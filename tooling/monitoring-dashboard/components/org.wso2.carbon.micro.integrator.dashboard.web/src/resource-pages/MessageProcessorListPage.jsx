@@ -19,6 +19,7 @@
 import React, { Component } from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
+import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
@@ -63,7 +64,20 @@ export default class MessageProcessorListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Message Processor Name", "Type", "Status"];
+        const columns = [{
+            name: "Message Processor Name",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <Link component="button" variant="body2" onClick={() => {
+                            this.props.history.push(`/message-processor/explore?name=${tableMeta.rowData[0]}`)
+                        }}>
+                            {tableMeta.rowData[0]}
+                        </Link>
+                    );
+                }
+            }
+        }, "Type", "Status"];
         const options = {
             selectableRows: 'none'
         };

@@ -16,3 +16,83 @@
  * under the License.
  */
 
+
+import React, {Component} from 'react';
+import ListViewParent from '../common/ListViewParent';
+import ResourceAPI from '../utils/apis/ResourceAPI';
+
+import MUIDataTable from "mui-datatables";
+
+export default class TemplateListPage extends Component {
+
+    constructor(props) {
+        super(props);
+        this.endpointTemplates = null;
+        this.sequenceTemplates = null;
+        this.state = {
+            templateData: []
+        };
+    }
+
+    /**
+     * Retrieve local entries from the MI.
+     */
+    componentDidMount() {
+        this.retrieveLocalEntries();
+    }
+
+    retrieveLocalEntries() {
+        const templateData = [];
+        new ResourceAPI().getResourceList(`/templates`).then((response) => {
+            this.endpointTemplates = response.data.endpointTemplateList || [];
+            this.endpointTemplates.forEach((element) => {
+                const endpointTemplateRowData = [];
+                endpointTemplateRowData.push(element.name);
+                endpointTemplateRowData.push('Endpoint Template');
+                templateData.push(endpointTemplateRowData);
+
+            });
+
+            this.sequenceTemplates = response.data.sequenceTemplateList || [];
+            this.sequenceTemplates.forEach((element) => {
+                const sequenceTemplateRowData = [];
+                sequenceTemplateRowData.push(element.name);
+                sequenceTemplateRowData.push('Sequence Template');
+                templateData.push(sequenceTemplateRowData);
+
+            });
+            this.setState({
+                templateData: templateData
+            });
+
+        }).catch((error) => {
+            //Handle errors here
+        });
+        console.log(this.state.templateData);
+    }
+
+    renderResourceList() {
+
+        const columns = ["Template Name", "Type"];
+        const options = {
+            selectableRows: 'none'
+        };
+
+        return (
+            <MUIDataTable
+                title={"Templates"}
+                data={this.state.templateData}
+                columns={columns}
+                options={options}
+            />
+        );
+    }
+
+    render() {
+        return (
+            <ListViewParent
+                data={this.renderResourceList()}
+            />
+        );
+    }
+}

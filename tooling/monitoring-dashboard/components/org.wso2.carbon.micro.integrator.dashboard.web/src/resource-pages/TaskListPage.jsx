@@ -15,44 +15,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
-import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
-export default class MessageStoreListPage extends Component {
-
+export default class TaskListPage extends Component{
     constructor(props) {
         super(props);
-        this.messageStores = null;
+        this.tasks = null;
         this.state = {
             data: [],
         };
     }
 
     /**
-     * Retrieve message stores from the MI.
+     * Retrieve tasks from the MI.
      */
     componentDidMount() {
-        this.retrieveMessageStores();
+        this.retrieveTasks();
     }
 
-    retrieveMessageStores() {
+    retrieveTasks() {
         const data = [];
 
-        new ResourceAPI().getResourceList(`/message-stores`).then((response) => {
-            this.messageStores = response.data.list || [];
-
-            this.messageStores.forEach((element) => {
+        new ResourceAPI().getResourceList(`/tasks`).then((response) => {
+            this.tasks = response.data.list || [];
+            this.tasks.forEach((element) => {
                 const rowData = [];
                 rowData.push(element.name);
-                rowData.push(element.type);
-                rowData.push(element.size);
                 data.push(rowData);
-
             });
             this.setState({data: data});
 
@@ -64,27 +57,14 @@ export default class MessageStoreListPage extends Component {
 
     renderResourceList() {
 
-        const columns = [{
-            name: "Message Store",
-            options: {
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <Link component="button" variant="body2" onClick={() => {
-                            this.props.history.push(`/message-store/explore?name=${tableMeta.rowData[0]}`)
-                        }}>
-                            {tableMeta.rowData[0]}
-                        </Link>
-                    );
-                }
-            }
-        }, "Type", "Messages"];
+        const columns = ["Task Name"];
         const options = {
             selectableRows: 'none'
         };
 
         return (
             <MUIDataTable
-                title={"Message Stores"}
+                title={"Scheduled Tasks"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

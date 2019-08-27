@@ -70,7 +70,7 @@ export default class LocalEntryListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Local Registry Entries'"}
+                title={"Local Registry Entries"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

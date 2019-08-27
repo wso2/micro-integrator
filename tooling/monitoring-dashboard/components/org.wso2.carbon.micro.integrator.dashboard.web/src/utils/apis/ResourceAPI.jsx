@@ -49,8 +49,16 @@ export default class ResourceAPI {
         return this.getHTTPClient().get(`/proxy-services?proxyServiceName=${name}`);
     }
 
+    getMessageStoreServiceByName(name){
+        return this.getHTTPClient().get(`/message-stores?name=${name}`);
+    }
+
     getApiByName(name){
         return this.getHTTPClient().get(`/apis?apiName=${name}`);
+    }
+
+    getMessageProcessorByName(name){
+        return this.getHTTPClient().get(`/message-processors?name=${name}`);
     }
 
 }

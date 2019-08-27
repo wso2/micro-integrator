@@ -85,7 +85,7 @@ export default class ApiListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"APIs'"}
+                title={"APIs"}
                 data={this.state.data}
                 columns={columns}
                 options={options}
