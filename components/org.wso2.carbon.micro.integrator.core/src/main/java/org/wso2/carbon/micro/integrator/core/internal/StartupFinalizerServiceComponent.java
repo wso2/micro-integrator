@@ -65,6 +65,7 @@ import java.util.TimerTask;
         immediate = true)
 public class StartupFinalizerServiceComponent implements ServiceListener {
     private static final Log log = LogFactory.getLog(StartupFinalizerServiceComponent.class);
+    private static final String START_TIME = "wso2carbon.start.time";
 //    private static final String TRANSPORT_MANAGER =
 //            "org.wso2.carbon.tomcat.ext.transport.ServletTransportManager";
 
@@ -219,7 +220,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
     }
 
     private void printInfo() {
-        long startTime = Long.parseLong(System.getProperty(CarbonConstants.START_TIME));
+        long startTime = Long.parseLong(System.getProperty(START_TIME));
         long startupTime = (System.currentTimeMillis() - startTime) ;
         try {
             if (log.isDebugEnabled()) {
