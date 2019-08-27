@@ -27,7 +27,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>mediation-integration</artifactId>
+    <artifactId>cli-test</artifactId>
     <name>WSO2 Enterprise Integrator - CLI Tests</name>
     <packaging>pom</packaging>
 
