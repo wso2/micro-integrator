@@ -304,7 +304,6 @@
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
         <synapse.version>2.1.7-wso2v118</synapse.version>
-        <orbit.version.axis2>${axis2.wso2.version}</orbit.version.axis2>
         <carbon.mediation.version>4.7.10</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
         <carbon.data.version>4.5.2</carbon.data.version>
@@ -312,7 +311,11 @@
 
         <cipher.tool.version>1.1.1</cipher.tool.version>
         <axis2.transport.version>2.0.0-wso2v35</axis2.transport.version>
-        <axis2.wso2.version>1.6.1-wso2v37</axis2.wso2.version>
+
+        <!-- Apache Axis2 -->
+        <axis2.wso2.version>1.6.1-wso2v3</axis2.wso2.version>
+        <imp.pkg.version.axis2>[1.6.1, 1.7.0)</imp.pkg.version.axis2>
+
         <carbon.analytics.common.version>5.2.5</carbon.analytics.common.version>
         <carbon.commons.version>4.7.6</carbon.commons.version>
         <carbon.rule.version>4.5.3</carbon.rule.version>
