@@ -32,6 +32,9 @@
     <packaging>pom</packaging>
     <name>WSO2 Micro Integrator - Integration Tests</name>
     <url>http://wso2.org</url>
+    <modules>
+        <module>cli-tests</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -794,6 +797,7 @@
                 <module>tests-common</module>
                 <module>mediation-tests</module>
                 <module>dataservice-hosting-tests</module>
+                <module>cli-tests</module>
             </modules>
         </profile>
         <profile>
@@ -810,6 +814,7 @@
                 <module>dataservice-hosting-tests/samples</module>
                 <module>dataservice-hosting-tests/tests-common</module>
                 <module>dataservice-hosting-tests/tests-integration/tests</module>
+                <module>cli-tests</module>
             </modules>
         </profile>
     </profiles>
