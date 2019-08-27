@@ -127,12 +127,12 @@
 <!--                                <bundleDef>au.com.bytecode.opencsv.wso2:opencsv:${version.opencsv}</bundleDef>-->
 <!--                                <bundleDef>org.wso2.securevault:org.wso2.securevault:${securevault.version}</bundleDef>-->
 <!--                                <bundleDef>org.wso2.orbit.com.h2database:h2:${version.h2.engine}</bundleDef>-->
-<!--                                <bundleDef>org.apache.axis2.wso2:axis2-json:${orbit.version.axis2}</bundleDef>-->
+<!--                                <bundleDef>org.apache.axis2.wso2:axis2-json:${axis2.wso2.version}</bundleDef>-->
 <!--                                <bundleDef>org.codehaus.jettison.wso2:jettison:${orbit.version.jettison}</bundleDef>-->
 <!--                                <bundleDef>commons-pool.wso2:commons-pool:${orbit.version.commons.pool}</bundleDef>-->
 <!--                                <bundleDef>commons-dbcp.wso2:commons-dbcp:${orbit.version.commons.dbcp}</bundleDef>-->
 <!--                                <bundleDef>org.apache.abdera.wso2:abdera:${orbit.version.abdera}</bundleDef>-->
-                                <bundleDef>org.apache.axis2.wso2:axis2:${orbit.version.axis2}</bundleDef>
+                                <bundleDef>org.apache.axis2.wso2:axis2:${axis2.wso2.version}</bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.com.hazelcast:hazelcast:${orbit.version.hazelcast}</bundleDef>-->
 <!--                                <bundleDef>org.apache.tiles.wso2:tiles-jsp:${orbit.version.tiles}</bundleDef>-->
 <!--                                <bundleDef>org.apache.ant.wso2:ant:${version.ant}</bundleDef>-->

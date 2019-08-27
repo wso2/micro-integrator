@@ -101,6 +101,16 @@
             <artifactId>org.wso2.carbon.dataservices.core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.igniterealtime</groupId>
+                    <artifactId>smack</artifactId>
+                </exclusion>
+            </exclusions>
+         </dependency>
+         <dependency>
             <groupId>org.ops4j.pax.logging</groupId>
             <artifactId>pax-logging-api</artifactId>
         </dependency>
@@ -151,7 +161,8 @@
                         <Import-Package>
 <!--                            org.wso2.carbon.utils;version="${carbon.kernel.imp.pkg.version}"-->
                             javax.activation.*;version="[0.0.0, 1.0.0)",
-                            *;resolution:=optional
+                            *;resolution:=optional,
+                            org.apache.axis2.*; version="${imp.pkg.version.axis2}",
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>

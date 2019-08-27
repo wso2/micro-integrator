@@ -82,7 +82,6 @@ import org.wso2.carbon.core.util.ParameterUtil;
 import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.utils.Axis2ConfigItemHolder;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.NetworkUtils;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.ServerException;
