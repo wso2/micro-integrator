@@ -72,7 +72,7 @@ export default class ConnectorListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Connectors'"}
+                title={"Connectors"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

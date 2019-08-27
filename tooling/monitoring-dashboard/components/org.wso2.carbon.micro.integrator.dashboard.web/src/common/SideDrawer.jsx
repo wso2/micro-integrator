@@ -19,6 +19,7 @@ import ApiIcon from '@material-ui/icons/Apps';
 import LocalEntryIcon from '@material-ui/icons/Assignment';
 import SequenceIcon from '@material-ui/icons/CompareArrows';
 import TemplateIcon from '@material-ui/icons/Description';
+import TaskIcon from '@material-ui/icons/Today';
 
 const drawerWidth = 240;
 
@@ -53,43 +54,47 @@ export default function SideDrawer() {
                 <div className={classes.toolbar} />
                 <List>
                     <ListItem button component={Link} to="/proxy">
-                        <ListItemIcon><NotesIcon color="primary" /></ListItemIcon>
+                        <ListItemIcon><NotesIcon color="error" /></ListItemIcon>
                         <ListItemText primary="Proxy services"/>
                     </ListItem>
                     <ListItem button component={Link} to="/endpoint">
-                        <ListItemIcon><SendIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><SendIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Endpoints"/>
                     </ListItem>
                     <ListItem button component={Link} to="/inbound-endpoint">
-                        <ListItemIcon><TransformIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><TransformIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Inbound Endpoints"/>
                     </ListItem>
                     <ListItem button component={Link} to="/message-processor">
-                        <ListItemIcon><MessageProcessorIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><MessageProcessorIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Message Processors"/>
                     </ListItem>
                     <ListItem button component={Link} to="/message-store">
-                        <ListItemIcon><MessageStoreIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><MessageStoreIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Message Stores"/>
                     </ListItem>
                     <ListItem button component={Link} to="/api">
-                        <ListItemIcon><ApiIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><ApiIcon color="error"/></ListItemIcon>
                         <ListItemText primary="API"/>
                     </ListItem>
                     <ListItem button component={Link} to="/template">
-                        <ListItemIcon><TemplateIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><TemplateIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Templates"/>
                     </ListItem>
-                    <ListItem button component={Link} to="sequence">
-                        <ListItemIcon><SequenceIcon color="primary"/></ListItemIcon>
+                    <ListItem button component={Link} to="/sequence">
+                        <ListItemIcon><SequenceIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Sequences"/>
                     </ListItem>
+                    <ListItem button component={Link} to="/task">
+                        <ListItemIcon><TaskIcon color="error"/></ListItemIcon>
+                        <ListItemText primary="Tasks"/>
+                    </ListItem>
                     <ListItem button component={Link} to="local-entry">
-                        <ListItemIcon><LocalEntryIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><LocalEntryIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Local Entries"/>
                     </ListItem>
                     <ListItem button component={Link} to="connector">
-                        <ListItemIcon><ConnectorIcon color="primary"/></ListItemIcon>
+                        <ListItemIcon><ConnectorIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Connectors"/>
                     </ListItem>
                 </List>

@@ -35,9 +35,8 @@ const styles = {
         float: 'right',
         paddingTop: '40px',
     },
-    contentDiv: {
-        // width:'80%',
-        // float:'left',
+    footer:{
+
     },
 };
 
@@ -54,10 +53,12 @@ export default class ListViewParent extends Component {
                 />
                 <SideDrawer/>
                 <Paper style={styles.contentPaper}>
-                    <div style={styles.contentDiv}>
+                    <div>
                         {this.props.data}
                     </div>
+
                 </Paper>
+
             </MuiThemeProvider>
         );
     }

@@ -17,13 +17,14 @@
  */
 
 
-
-import { Checkbox, RaisedButton, Snackbar, TextField } from 'material-ui';
-import { MuiThemeProvider } from 'material-ui/styles';
-import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+import {Checkbox, RaisedButton, Snackbar, TextField} from 'material-ui';
+import {MuiThemeProvider} from 'material-ui/styles';
+import React, {Component} from 'react';
+import {FormattedMessage} from 'react-intl';
 import FormPanel from '../common/FormPanel';
 import Header from '../common/Header';
+import AuthManager from './utils/AuthManager';
+import {Redirect} from 'react-router';
 
 import defaultTheme from '../utils/Theme';
 
@@ -42,8 +43,8 @@ const styles = {
         color: '#8a6d3b'
     },
     contentDiv: {
-        backgroundColor:'black',
-        height:'100vh'
+        backgroundColor: 'black',
+        height: '100vh'
     },
 };
 
@@ -57,7 +58,7 @@ export default class Login extends Component {
      *
      * @param {{}} props Props
      */
-     constructor(props) {
+    constructor(props) {
         super(props);
         this.state = {
             username: '',
@@ -67,6 +68,35 @@ export default class Login extends Component {
             authenticated: false,
             rememberMe: false,
         };
+        this.authenticate = this.authenticate.bind(this);
+    }
+
+
+    componentWillMount() {
+        this.initAuthenticationFlow();
+    }
+
+    /**
+     * Check if the user has already signed in and remember me is set
+     */
+    initAuthenticationFlow(){
+        if (AuthManager.isRememberMeSet() && !AuthManager.isLoggedIn()){
+            //Refresh token
+        }
+    }
+
+    authenticate(e) {
+        const {username, password, rememberMe} = this.state;
+        e.preventDefault();
+        AuthManager.authenticate(username, password, rememberMe)
+            .then(() => this.setState({authenticated: true}))
+            .catch((error) => {
+                this.setState({
+                    username: '',
+                    password: '',
+                });
+            });
+
     }
 
     /**
@@ -75,16 +105,17 @@ export default class Login extends Component {
      * @return {XML} HTML content
      */
     renderDefaultLogin() {
-        const { username, password, host, port } = this.state;
+        const {username, password, host, port} = this.state;
         return (
             <MuiThemeProvider muiTheme={defaultTheme}>
                 <div style={styles.contentDiv}>
                     <Header
-                        title={<FormattedMessage id='portal.title' defaultMessage='Micro Integrator' />}
-                        rightElement={<span />}
+                        title={<FormattedMessage id='portal.title' defaultMessage='Micro Integrator'/>}
+                        rightElement={<span/>}
                     />
                     <FormPanel
-                        title={<FormattedMessage id="login.title" defaultMessage="Login" />}
+                        title={<FormattedMessage id="login.title" defaultMessage="Login"/>}
+                        onSubmit={this.authenticate}
                     >
                         <TextField
                             autoFocus
@@ -98,7 +129,7 @@ export default class Login extends Component {
                                 });
                             }}
                         />
-                        <br />
+                        <br/>
                         <TextField
                             autoFocus
                             fullWidth
@@ -111,7 +142,7 @@ export default class Login extends Component {
                                 });
                             }}
                         />
-                        <br />
+                        <br/>
                         <TextField
                             autoFocus
                             fullWidth
@@ -124,7 +155,7 @@ export default class Login extends Component {
                                 });
                             }}
                         />
-                        <br />
+                        <br/>
                         <TextField
                             fullWidth
                             type="password"
@@ -137,7 +168,7 @@ export default class Login extends Component {
                                 });
                             }}
                         />
-                        <br />
+                        <br/>
                         <Checkbox
                             label={<FormattedMessage id="login.rememberMe" defaultMessage="Remember Me"/>}
                             checked={this.state.rememberMe}
@@ -146,18 +177,18 @@ export default class Login extends Component {
                                     rememberMe: checked,
                                 });
                             }}
-                            style={{ margin: '30px 0' }}
+                            style={{margin: '30px 0'}}
                         />
-                        <br />
+                        <br/>
                         <RaisedButton
                             primary
                             type="submit"
-                            disabled={username === '' || password === ''|| host === '' || port ===''}
+                            disabled={username === '' || password === '' || host === '' || port === ''}
                             label={<FormattedMessage id="login.title" defaultMessage="Login"/>}
                             disabledBackgroundColor="rgb(27, 40, 47)"
                         />
-                        <br />
-                        <br />
+                        <br/>
+                        <br/>
                         <div>
                             <div style={styles.cookiePolicy}>
                                 <FormattedMessage
@@ -166,23 +197,23 @@ export default class Login extends Component {
                                     track your session. You can refer our "
                                 />
                                 <a style={styles.cookiePolicyAnchor} href=""
-                                    target="_blank"
+                                   target="_blank"
                                 >
                                     <FormattedMessage id="login.cookie.policy" defaultMessage="Cookie Policy"/>
-                                </a >
+                                </a>
                                 <FormattedMessage id="login.cookie.policy.after" defaultMessage=" for more details."/>
                             </div>
                         </div>
-                        <br />
-                        <div style= {styles.cookiePolicy}>
+                        <br/>
+                        <div style={styles.cookiePolicy}>
                             <div>
                                 <FormattedMessage
                                     id="login.privacy.policy.before"
                                     defaultMessage="By signing in, you agree to our "
                                 />
                                 <a style={styles.cookiePolicyAnchor}
-                                    href=""
-                                    target="_blank">
+                                   href=""
+                                   target="_blank">
                                     <FormattedMessage id="login.privacy.policy" defaultMessage="Privacy Policy"/>
                                 </a>
                                 <FormattedMessage id="login.privacy.policy.after" defaultMessage="."/>
@@ -193,13 +224,12 @@ export default class Login extends Component {
                         message={this.state.error}
                         open={this.state.showError}
                         autoHideDuration="4000"
-                        onRequestClose={() => this.setState({ error: '', showError: false })}
+                        onRequestClose={() => this.setState({error: '', showError: false})}
                     />
                 </div>
             </MuiThemeProvider>
         );
     }
-
 
 
     /**
@@ -208,6 +238,12 @@ export default class Login extends Component {
      * @return {XML} HTML content
      */
     render() {
+        const authenticated = this.state.authenticated;
+        if (authenticated) {
+            return (
+                <Redirect to='/proxy'/>
+            );
+        }
         return this.renderDefaultLogin();
     }
 }

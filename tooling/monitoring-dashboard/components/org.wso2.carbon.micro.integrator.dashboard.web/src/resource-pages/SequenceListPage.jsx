@@ -71,7 +71,7 @@ export default class SequenceListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Sequences'"}
+                title={"Sequences"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

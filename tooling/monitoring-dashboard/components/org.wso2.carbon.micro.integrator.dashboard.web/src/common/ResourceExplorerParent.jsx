@@ -18,26 +18,36 @@
 
 import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
-import SyntaxHighlighter from 'react-syntax-highlighter';
 import {docco} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import PropTypes from 'prop-types';
-var format = require('xml-formatter');
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
 
-export default class SourceViewParent extends Component {
+const styles = {
+    contentDiv: {
+        margin: '3%',
+    },
+    explorerHeaderDiv:{
+        paddingTop:'1%',
+    }
+};
+
+export default class ResourceExplorerParent extends Component {
 
     renderSourceViewContent() {
-        var formatterConfiguration = format(this.props.config);
         return (
             <Paper>
-                <Typography variant="h6" component="h3">
-                    {this.props.title}
-                </Typography>
+                <div id="exploreHeader" style={styles.explorerHeaderDiv}>
+                    <Typography variant="h5" id="tableTitle">
+                        Service Dashboard
+                    </Typography>
+                </div>
+                <Divider/>
 
-                <SyntaxHighlighter language={this.props.language} style={docco} showLineNumbers={true} wrapLines={true}>
-                    {formatterConfiguration}
-                </SyntaxHighlighter>
+                <div id="content" style={styles.contentDiv}>
+                    {this.props.content}
+                </div>
             </Paper>
         );
     }
@@ -47,16 +57,19 @@ export default class SourceViewParent extends Component {
     }
 }
 
-SourceViewParent.propTypes = {
+ResourceExplorerParent.propTypes = {
     config: PropTypes.string,
     theme: PropTypes.shape({}),
     language: PropTypes.string,
     title: PropTypes.string,
+    content: PropTypes.element,
 };
 
-SourceViewParent.defaultProps = {
+ResourceExplorerParent.defaultProps = {
     config: 'no config',
     theme: docco,
     language: 'xml',
     title: 'Source View',
+    content: '<span/>'
+
 };

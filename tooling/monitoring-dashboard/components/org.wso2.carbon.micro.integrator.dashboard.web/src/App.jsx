@@ -32,11 +32,13 @@ import LocalEntryListPage from './resource-pages/LocalEntryListPage';
 import MessageProcessorListPage from './resource-pages/MessageProcessorListPage';
 import MessageStoreListPage from './resource-pages/MessageStoreListPage';
 import ProxyServiceListPage from './resource-pages/ProxyServiceListPage';
+import ProxyDetailsPage from './resource-pages/ProxyDetailsPage';
 import ProxySourceViewPage from './resource-pages/ProxySourceViewPage';
 import SequenceListPage from './resource-pages/SequenceListPage';
 import TemplateListPage from './resource-pages/TemplateListPage';
-
-
+import TaskListPage from './resource-pages/TaskListPage';
+import MessageStoreDetailsPage from './resource-pages/MessageStoreDetailsPage';
+import MessageProcessorDetailPage from './resource-pages/MessageProcessorDetailPage';
 
 import '../public/css/dashboard.css';
 
@@ -55,15 +57,19 @@ class App extends Component {
                     <Route exact path='/proxy' component={ProxyServiceListPage} />
                     <Route exact path='/endpoint' component={EndpointListPage} />
                     <Route exact path='/message-processor' component={MessageProcessorListPage} />
+                    <Route path='/message-processor/explore' component={MessageProcessorDetailPage} />
                     <Route exact path='/message-store' component={MessageStoreListPage} />
+                    <Route path='/message-store/explore' component={MessageStoreDetailsPage} />
                     <Route exact path='/api' component={APIListPage} />
                     <Route path='/proxy/sourceView' component={ProxySourceViewPage} />
+                    <Route path='/proxy/explore' component={ProxyDetailsPage} />
                     <Route exact path='/connector' component={ConnectorListPage} />
                     <Route exact path='/template' component={TemplateListPage} />
                     <Route exact path='/inbound-endpoint' component={InboundEndpointListPage} />
                     <Route exact path='/local-entry' component={LocalEntryListPage} />
                     <Route exact path='/sequence' component={SequenceListPage} />
                     <Route path='/api/sourceView' component={ApiSourceViewPage} />
+                    <Route exact path='/task' component={TaskListPage} />
 
                     {/* Secured routes */}
                     {/*<Route component={SecuredRouter} />*/}

@@ -64,7 +64,21 @@ export default class ProxyServiceListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Service", "WSDL1.1", "WSDL2.0",
+        const columns = [
+            {
+                name: "Service",
+                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link component="button" variant="body2" onClick={() => {
+                                this.props.history.push(`/proxy/explore?name=${tableMeta.rowData[0]}`)
+                            }}>
+                                {tableMeta.rowData[0]}
+                            </Link>
+                        );
+                    }
+                }
+            }, "WSDL1.1", "WSDL2.0",
             {
                 name: "Action",
                 options: {
