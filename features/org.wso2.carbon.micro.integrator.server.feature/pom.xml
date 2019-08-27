@@ -99,6 +99,10 @@
 <!--                                    org.json.wso2:json:${org.wso2.json.version}-->
 <!--                                </bundleDef>-->
 
+                                <bundleDef>
+                                    org.wso2.orbit.sun.xml.ws:jaxws-ri:${org.wso2.orbit.sun.xml.ws.version}
+                                </bundleDef>
+
 <!--                                <bundleDef>-->
 <!--                                    org.eclipse.equinox:org.eclipse.equinox.http.servlet:${version.equinox.http.servlet}-->
 <!--                                </bundleDef>-->
@@ -110,9 +114,11 @@
 <!--                                </bundleDef>-->
 <!--                                <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat-el-api:${orbit.version.tomcat.el.api}-->
 <!--                                </bundleDef>-->
-<!--                                <bundleDef>-->
-<!--                                    org.wso2.orbit.org.apache.tomcat:tomcat-servlet-api:${orbit.version.tomcat.servlet.api}-->
-<!--                                </bundleDef>-->
+
+<!--                                for javax.servelt pkg-->
+                                <bundleDef>
+                                    org.wso2.orbit.org.apache.tomcat:tomcat-servlet-api:${orbit.version.tomcat.servlet.api}
+                                </bundleDef>
 <!--                                <bundleDef>antlr.wso2:antlr:${antlr.wso2.version}</bundleDef>-->
 <!--                                <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat:${orbit.version.tomcat}</bundleDef>-->
 <!--                                <bundleDef>-->
@@ -126,16 +132,18 @@
 <!--                                <bundleDef>commons-pool.wso2:commons-pool:${orbit.version.commons.pool}</bundleDef>-->
 <!--                                <bundleDef>commons-dbcp.wso2:commons-dbcp:${orbit.version.commons.dbcp}</bundleDef>-->
 <!--                                <bundleDef>org.apache.abdera.wso2:abdera:${orbit.version.abdera}</bundleDef>-->
-<!--                                <bundleDef>org.apache.axis2.wso2:axis2:${orbit.version.axis2}</bundleDef>-->
+                                <bundleDef>org.apache.axis2.wso2:axis2:${orbit.version.axis2}</bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.com.hazelcast:hazelcast:${orbit.version.hazelcast}</bundleDef>-->
 <!--                                <bundleDef>org.apache.tiles.wso2:tiles-jsp:${orbit.version.tiles}</bundleDef>-->
 <!--                                <bundleDef>org.apache.ant.wso2:ant:${version.ant}</bundleDef>-->
 <!--                                <bundleDef>org.apache.xmlbeans.wso2:xmlbeans:${version.xmlbeans}</bundleDef>-->
-<!--                                <bundleDef>org.apache.ws.commons.axiom.wso2:axiom:${orbit.version.axiom}</bundleDef>-->
-<!--                                <bundleDef>org.wso2.orbit.org.apache.neethi:neethi:${neethi.osgi.version}</bundleDef>-->
+                                <bundleDef>org.apache.ws.commons.axiom.wso2:axiom:${orbit.version.axiom}</bundleDef>
+                                <bundleDef>org.wso2.orbit.org.apache.neethi:neethi:${neethi.osgi.version}</bundleDef>
 <!--                                <bundleDef>org.apache.woden.wso2:woden:${version.woden}</bundleDef>-->
-<!--                                <bundleDef>wsdl4j.wso2:wsdl4j:${orbit.version.wsdl4j}</bundleDef>-->
-<!--                                <bundleDef>org.apache.ws.commons.schema.wso2:XmlSchema:${version.XmlSchema}</bundleDef>-->
+
+<!--                                for javax.wsdl pkg -->
+                                <bundleDef>wsdl4j.wso2:wsdl4j:${orbit.version.wsdl4j}</bundleDef>
+                                <bundleDef>org.apache.ws.commons.schema.wso2:XmlSchema:${version.XmlSchema}</bundleDef>
 <!--                                <bundleDef>commons-codec:commons-codec:${version.commons.codec}</bundleDef>-->
 <!--                                <bundleDef>annogen.wso2:annogen:${version.annogen}</bundleDef>-->
 <!--                                <bundleDef>-->
@@ -147,13 +155,13 @@
                                 <bundleDef>
                                     org.wso2.orbit.commons-httpclient:commons-httpclient:${orbit.version.commons.httpclient}
                                 </bundleDef>
-<!--                                <bundleDef>commons-io.wso2:commons-io:${orbit.version.commons.io}</bundleDef>-->
+                                <bundleDef>commons-io.wso2:commons-io:${orbit.version.commons.io}</bundleDef>
 <!--                                <bundleDef>-->
 <!--                                    org.wso2.orbit.commons-collections:commons-collections:${orbit.version.commons.collection}-->
 <!--                                </bundleDef>-->
 <!--                                <bundleDef>org.apache.httpcomponents.wso2:httpcore:${orbit.version.httpcore}</bundleDef>-->
 <!--                                <bundleDef>org.compass-project.wso2:compass:${version.compass}</bundleDef>-->
-<!--                                <bundleDef>commons-lang.wso2:commons-lang:${orbit.version.commons.lang}</bundleDef>-->
+                                <bundleDef>commons-lang.wso2:commons-lang:${orbit.version.commons.lang}</bundleDef>
 <!--                                <bundleDef>-->
 <!--                                    org.wso2.orbit.org.apache.geronimo.specs:geronimo-saaj_1.3_spec:${version.geronimo.saaj.spec}-->
 <!--                                </bundleDef>-->
@@ -175,10 +183,10 @@
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.tomcat.ext:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
 
-<!--                                &lt;!&ndash;Log4j 2 packages &ndash;&gt;-->
-<!--                                <bundleDef>org.ops4j.pax.logging:pax-logging-api:${pax.logging.api.version}</bundleDef>-->
-<!--                                <bundleDef>org.ops4j.pax.logging:pax-logging-log4j2:${pax.logging.log4j2.version}-->
-<!--                                </bundleDef>-->
+                                <!--Log4j 2 packages -->
+                                <bundleDef>org.ops4j.pax.logging:pax-logging-api:${pax.logging.api.version}</bundleDef>
+                                <bundleDef>org.ops4j.pax.logging:pax-logging-log4j2:${pax.logging.log4j2.version}
+                                </bundleDef>
 <!--                                <bundleDef>-->
 <!--                                    org.wso2.carbon:org.wso2.carbon.pax-logging-log4j2-plugins:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
@@ -224,8 +232,8 @@
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.ndatasource.rdbms:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.user.api:${carbon.kernel.version}</bundleDef>-->
-<!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.framework.exporter:${carbon.kernel.version}-->
-<!--                                </bundleDef>-->
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.framework.exporter:${carbon.kernel.version}
+                                </bundleDef>
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.addressing:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
 <!--                                &lt;!&ndash;Management API&ndash;&gt;-->
