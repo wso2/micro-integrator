@@ -144,7 +144,7 @@
 <!--                                for javax.wsdl pkg -->
                                 <bundleDef>wsdl4j.wso2:wsdl4j:${orbit.version.wsdl4j}</bundleDef>
                                 <bundleDef>org.apache.ws.commons.schema.wso2:XmlSchema:${version.XmlSchema}</bundleDef>
-<!--                                <bundleDef>commons-codec:commons-codec:${version.commons.codec}</bundleDef>-->
+                                <bundleDef>commons-codec:commons-codec:${version.commons.codec}</bundleDef>
 <!--                                <bundleDef>annogen.wso2:annogen:${version.annogen}</bundleDef>-->
 <!--                                <bundleDef>-->
 <!--                                    backport-util-concurrent.wso2:backport-util-concurrent:${version.backport.util.concurrent}-->
