@@ -100,6 +100,10 @@
             <groupId>org.wso2.carbon.data</groupId>
             <artifactId>org.wso2.carbon.dataservices.core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -139,10 +143,10 @@
                         <Export-Package>
                             !org.wso2.carbon.micro.integrator.core.internal,
                             !org.wso2.carbon.application.deployer.synapse.*,
-                            org.wso2.carbon.micro.integrator.core.*;version="${project.version}",
+                            org.wso2.carbon.micro.integrator.core.*;version="${project.version}"<!--,
                             org.wso2.carbon.core.*;version="${carbon.kernel.version}",
                             org.wso2.carbon.application.deployer.*;version="${carbon.kernel.version}",
-                            org.wso2.carbon.service.mgt.*;version="${carbon.deployment.version}"
+                            org.wso2.carbon.service.mgt.*;version="${carbon.deployment.version}"-->
                         </Export-Package>
                         <Import-Package>
 <!--                            org.wso2.carbon.utils;version="${carbon.kernel.imp.pkg.version}"-->

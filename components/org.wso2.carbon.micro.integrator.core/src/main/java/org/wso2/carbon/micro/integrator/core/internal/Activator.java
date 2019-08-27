@@ -53,32 +53,13 @@ public class Activator implements BundleActivator {
 //                    .getThreadLocalCarbonContext();
 //            privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
 //            privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-//            if (log.isDebugEnabled()) {
-                log.info("Starting WSO2 Micro Integrator ...");
-                log.info("Operating System : " + System.getProperty("os.name") + " " +
-                                  System.getProperty("os.version") + ", " + System.getProperty("os.arch"));
-                log.info("Java Home        : " + System.getProperty("java.home"));
-                log.info("Java Version     : " + System.getProperty("java.version"));
-                log.info("Java VM          : " + System.getProperty("java.vm.name") + " "
-                                  + System.getProperty("java.vm.version") + "," + System.getProperty("java.vendor"));
-//            }
 
-            String carbonHome;
-            if ((carbonHome = System.getProperty("carbon.home")).equals(".")) {
-                carbonHome = new File(".").getAbsolutePath();
+            logServerInfo();
+
+            Security.addProvider(new BouncyCastleProvider());
+            if (log.isDebugEnabled()){
+                log.debug("BouncyCastle security provider is successfully registered in JVM.");
             }
-
-//            if (log.isDebugEnabled()) {
-                log.info("Micro Integrator Home      : " + carbonHome);
-                log.info("Java Temp Dir    : " + System.getProperty("java.io.tmpdir"));
-                log.info("User             : " + System.getProperty("user.name") + ", "
-                                 + System.getProperty("user.language") + "-" + System.getProperty("user.country")
-                                 + ", " + System.getProperty("user.timezone"));
-//            }
-//            Security.addProvider(new BouncyCastleProvider());
-//            if (log.isDebugEnabled()){
-//                log.debug("BouncyCastle security provider is successfully registered in JVM.");
-//            }
 //            bundleContext.registerService(CarbonCoreInitializedEvent.class.getName(), new CarbonCoreInitializedEventImpl(), null);
 //            GhostServiceMetaArtifactsLoader serviceMetaArtifactsLoader = new GhostServiceMetaArtifactsLoader();
 //            bundleContext.registerService(GhostMetaArtifactsLoader.class.getName(), serviceMetaArtifactsLoader, null);
@@ -91,6 +72,29 @@ public class Activator implements BundleActivator {
     @Override
     public void stop(BundleContext bundleContext) throws Exception {
         log.debug("Stopping Micro Integrator");
+    }
+
+    private void logServerInfo() {
+
+        log.info("Starting WSO2 Micro Integrator ...");
+        log.info("Operating System         : " + System.getProperty("os.name") + " " +
+                System.getProperty("os.version") + ", " + System.getProperty("os.arch"));
+        log.info("Java Home                : " + System.getProperty("java.home"));
+        log.info("Java Version             : " + System.getProperty("java.version"));
+        log.info("Java VM                  : " + System.getProperty("java.vm.name") + " "
+                + System.getProperty("java.vm.version") + "," + System.getProperty("java.vendor"));
+
+        String carbonHome;
+        if ((carbonHome = System.getProperty("carbon.home")).equals(".")) {
+            carbonHome = new File(".").getAbsolutePath();
+        }
+
+        log.info("Micro Integrator Home    : " + carbonHome);
+        log.info("Java Temp Dir            : " + System.getProperty("java.io.tmpdir"));
+        log.info("User                     : " + System.getProperty("user.name") + ", "
+                + System.getProperty("user.language") + "-" + System.getProperty("user.country")
+                + ", " + System.getProperty("user.timezone"));
+
     }
 
 }

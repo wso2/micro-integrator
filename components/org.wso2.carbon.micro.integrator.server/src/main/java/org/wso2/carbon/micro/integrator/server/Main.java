@@ -62,7 +62,7 @@ public class Main {
     protected static final String P2_DATA_AREA = "eclipse.p2.data.area";
     protected static final String ENABLE_EXTENSIONS = "wso2.enableExtensions";
     static File platformDirectory;
-    private static Log logger = LogFactory.getLog(org.wso2.carbon.server.Main.class);
+    private static Log logger = LogFactory.getLog(Main.class);
 
     public static void main(String[] args) {
 
