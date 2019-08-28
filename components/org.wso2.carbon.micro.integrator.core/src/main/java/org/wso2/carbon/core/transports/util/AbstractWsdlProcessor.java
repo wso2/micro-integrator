@@ -61,20 +61,20 @@ public abstract class AbstractWsdlProcessor implements HttpGetRequestProcessor {
 
         }
 
-        String hideAdminServiceWSDLs =
-                CarbonCoreDataHolder.getInstance().
-                        getServerConfigurationService().getFirstProperty(CarbonConstants.AXIS2_CONFIG_PARAM +
-                                                                         "." + CarbonConstants.HIDE_ADMIN_SERVICE_WSDLS);
+//        String hideAdminServiceWSDLs =
+//                CarbonCoreDataHolder.getInstance().
+//                        getServerConfigurationService().getFirstProperty(CarbonConstants.AXIS2_CONFIG_PARAM +
+//                                                                         "." + CarbonConstants.HIDE_ADMIN_SERVICE_WSDLS);
 
         OutputStream outputStream = response.getOutputStream();
         if (axisService != null) {
-            if (SystemFilter.isFilteredOutService(axisService) &&
-                    "true".equals(hideAdminServiceWSDLs)) {
-                response.setError(HttpStatus.SC_FORBIDDEN,
-                        "Access to service metadata for service: " + serviceName +
-                                " has been forbidden");
-                return;
-            }
+//            if (SystemFilter.isFilteredOutService(axisService) &&
+//                    "true".equals(hideAdminServiceWSDLs)) {
+//                response.setError(HttpStatus.SC_FORBIDDEN,
+//                        "Access to service metadata for service: " + serviceName +
+//                                " has been forbidden");
+//                return;
+//            }
 
             if(!RequestProcessorUtil.canExposeServiceMetadata(axisService)){
                 response.setError(HttpStatus.SC_FORBIDDEN,
