@@ -17,8 +17,8 @@
 package org.wso2.carbon.core.services.version;
 
 
-import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
+import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
 
 /**
  * This service returns the product version
@@ -26,7 +26,7 @@ import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
 public class Version {
 
     public String getVersion() throws Exception {
-        ServerConfigurationService serverConfig =
+        CarbonServerConfigurationService serverConfig =
                 CarbonCoreDataHolder.getInstance().getServerConfigurationService();
         return serverConfig.getFirstProperty("Name") + "-" +
                serverConfig.getFirstProperty("Version") ;

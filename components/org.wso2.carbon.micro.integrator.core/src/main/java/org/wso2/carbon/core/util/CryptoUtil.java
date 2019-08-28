@@ -21,11 +21,11 @@ import org.apache.axiom.om.util.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.core.RegistryResources.SecurityManagement;
 import org.wso2.carbon.core.encryption.SymmetricEncryption;
 
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
+import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 import javax.crypto.Cipher;
@@ -49,7 +49,7 @@ public class CryptoUtil {
     private String internalKeyStoreAlias;
     private String primaryKeyStoreKeyPass;
     private String internalKeyStoreKeyPass;
-    private ServerConfigurationService serverConfigService;
+    private CarbonServerConfigurationService serverConfigService;
     private RegistryService registryService;
     private Gson gson = new Gson();
     private static CryptoUtil instance = null;
@@ -64,8 +64,7 @@ public class CryptoUtil {
      * @return
      */
     public static CryptoUtil getDefaultCryptoUtil() {
-        return getDefaultCryptoUtil(CarbonCoreDataHolder.getInstance().
-                getServerConfigurationService());
+        return getDefaultCryptoUtil(CarbonCoreDataHolder.getInstance().getServerConfigurationService());
     }
 
     public static RegistryService lookupRegistryService() {
@@ -81,15 +80,14 @@ public class CryptoUtil {
      * @param serverConfigService The ServerConfigurationService object
      * @return The created or cached CryptoUtil instance
      */
-    public synchronized static CryptoUtil getDefaultCryptoUtil(
-            ServerConfigurationService serverConfigService) {
+    public synchronized static CryptoUtil getDefaultCryptoUtil(CarbonServerConfigurationService serverConfigService) {
         if (instance == null) {
             instance = new CryptoUtil(serverConfigService);
         }
         return instance;
     }
 
-    private CryptoUtil(ServerConfigurationService serverConfigService) {
+    private CryptoUtil(CarbonServerConfigurationService serverConfigService) {
         this.serverConfigService = serverConfigService;
         this.registryService = registryService;
         this.primaryKeyStoreAlias = this.serverConfigService.getFirstProperty(SecurityManagement.
@@ -102,7 +100,7 @@ public class CryptoUtil {
                 SERVER_INTERNAL_PRIVATE_KEY_PASSWORD);
     }
 
-    public ServerConfigurationService getServerConfigService() {
+    public CarbonServerConfigurationService getServerConfigService() {
         return serverConfigService;
     }
 

@@ -24,20 +24,29 @@ import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceRegistration;
 import org.wso2.carbon.context.CarbonCoreInitializedEvent;
 import org.wso2.carbon.context.CarbonCoreInitializedEventImpl;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.deployment.GhostMetaArtifactsLoader;
 import org.wso2.carbon.utils.multitenancy.GhostServiceMetaArtifactsLoader;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
+import javax.servlet.ServletException;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.management.ManagementPermission;
 import java.security.Security;
 
 public class Activator implements BundleActivator {
 
     private static Log log = LogFactory.getLog(Activator.class);
+
+    private ServiceRegistration registration;
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
@@ -64,8 +73,56 @@ public class Activator implements BundleActivator {
 //            GhostServiceMetaArtifactsLoader serviceMetaArtifactsLoader = new GhostServiceMetaArtifactsLoader();
 //            bundleContext.registerService(GhostMetaArtifactsLoader.class.getName(), serviceMetaArtifactsLoader, null);
 //            CarbonCoreDataHolder.getInstance().setBundleContext(bundleContext);
+
+            initializeCarbonServerConfigurationService(bundleContext);
+
         } catch (Throwable e) {
             throw new Exception(e);
+        }
+    }
+
+    /**
+     * Registers a service to read configurations from the carbon.xml
+     *
+     * @param bundleContext
+     * @throws MicroIntegratorConfigurationException if an
+     */
+    private void initializeCarbonServerConfigurationService(BundleContext bundleContext)
+            throws MicroIntegratorConfigurationException {
+        CarbonServerConfigurationService carbonServerConfiguration = CarbonServerConfigurationService.getInstance();
+        initServerConfiguration(carbonServerConfiguration);
+        String portOffset = System.getProperty("portOffset",
+                                               carbonServerConfiguration.getFirstProperty("Ports.Offset"));
+        //setting the the retrieved ports.offset value as a system propery, in case it was not defined.
+        //NIO transport make use of this system property
+        System.setProperty("portOffset", portOffset);
+        //register carbon server confg as an OSGi service
+        registration = bundleContext.registerService(CarbonServerConfigurationService.class.getName(),
+                                                     carbonServerConfiguration,
+                                                     null);
+    }
+
+    private void initServerConfiguration(CarbonServerConfigurationService carbonServerConfiguration)
+            throws MicroIntegratorConfigurationException {
+        File carbonXML = new File(MicroIntegratorBaseUtils.getServerXml());
+        InputStream in = null;
+        try {
+            in = new FileInputStream(carbonXML);
+            carbonServerConfiguration.forceInit(in);
+        } catch (MicroIntegratorConfigurationException e) {
+            String msg = "Could not initialize server configuration";
+            log.fatal(msg);
+            throw e;
+        } catch (FileNotFoundException e) {
+            throw new MicroIntegratorConfigurationException("File: " + carbonXML + " could not be located.");
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    log.warn("Cannot close FileInputStream of file " + carbonXML.getAbsolutePath());
+                }
+            }
         }
     }
 
