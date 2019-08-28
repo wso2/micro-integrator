@@ -244,15 +244,15 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
 
        /* @Reference(
                 name = "org.wso2.carbon.configCtx",
-                service = org.wso2.carbon.utils.ConfigurationContextService.class,
+                service = org.wso2.carbon.micro.integrator.core.internal.Axis2ConfigurationContextService.class,
                 cardinality = ReferenceCardinality.MANDATORY,
                 policy = ReferencePolicy.DYNAMIC,
                 unbind = "unsetConfigurationContext")
-        protected void setConfigurationContext(ConfigurationContextService configCtx) {
+        protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
             this.configCtx = configCtx.getServerConfigContext();
         }*/
 
-//    protected void unsetConfigurationContext(ConfigurationContextService configCtx) {
+//    protected void unsetConfigurationContext(Axis2ConfigurationContextService configCtx) {
 //        this.configCtx = null;
 //    }
 

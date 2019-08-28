@@ -17,11 +17,11 @@ package org.wso2.carbon.micro.integrator.core.internal;
 
 import org.apache.axis2.context.ConfigurationContext;
 
-public class ConfigurationContextService {
+public class Axis2ConfigurationContextService {
     private ConfigurationContext serverConfigContext;
     private ConfigurationContext clientConfigContext;
 
-    public ConfigurationContextService(ConfigurationContext serverConfigContext, ConfigurationContext clientConfigContext){
+    public Axis2ConfigurationContextService(ConfigurationContext serverConfigContext, ConfigurationContext clientConfigContext){
         this.serverConfigContext = serverConfigContext;
         this.clientConfigContext = clientConfigContext;
     }
