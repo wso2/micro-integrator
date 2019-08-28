@@ -318,7 +318,7 @@
         <axis2.transport.version>2.0.0-wso2v35</axis2.transport.version>
 
         <!-- Apache Axis2 -->
-        <axis2.wso2.version>1.6.1-wso2v3</axis2.wso2.version>
+        <axis2.wso2.version>1.6.1-wso2v37</axis2.wso2.version>
         <imp.pkg.version.axis2>[1.6.1, 1.7.0)</imp.pkg.version.axis2>
 
         <carbon.analytics.common.version>5.2.5</carbon.analytics.common.version>
