@@ -74,7 +74,6 @@ import org.wso2.carbon.core.deployment.OSGiAxis2ServiceDeployer;
 import org.wso2.carbon.core.init.PreAxis2ConfigItemListener;
 import org.wso2.carbon.core.internal.DeploymentServerStartupObserver;
 import org.wso2.carbon.core.internal.HTTPGetProcessorListener;
-import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.core.multitenancy.GenericArtifactUnloader;
 import org.wso2.carbon.core.transports.CarbonServlet;
 import org.wso2.carbon.core.util.HouseKeepingTask;
@@ -417,12 +416,12 @@ public class ServiceComponent {
 
             //Registering the configuration contexts as an OSGi service.
             if (log.isDebugEnabled()) {
-                log.debug("Registering ConfigurationContextService...");
+                log.debug("Registering Axis2ConfigurationContextService...");
             }
-            bundleContext.registerService(ConfigurationContextService.class.getName(),
-                    new ConfigurationContextService(serverConfigContext,
-                            clientConfigContext),
-                    null);
+            bundleContext.registerService(Axis2ConfigurationContextService.class.getName(),
+                                          new Axis2ConfigurationContextService(serverConfigContext,
+                                                                               clientConfigContext),
+                                          null);
 
         } catch (Throwable e) {
             log.fatal("WSO2 Carbon initialization Failed", e);

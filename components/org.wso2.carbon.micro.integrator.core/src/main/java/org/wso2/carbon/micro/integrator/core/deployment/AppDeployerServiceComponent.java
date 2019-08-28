@@ -108,15 +108,15 @@ public class AppDeployerServiceComponent {
     /**
      * Receive an event about creation of ConfigurationContext.
      *
-     * @param configCtx Instance of ConfigurationContextService which wraps server configuration context
+     * @param configCtx Instance of Axis2ConfigurationContextService which wraps server configuration context
      */
     /*@Reference(
             name = "org.wso2.carbon.configCtx",
-            service = org.wso2.carbon.utils.ConfigurationContextService.class,
+            service = org.wso2.carbon.micro.integrator.core.internal.Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContext")
-    protected void setConfigurationContext(ConfigurationContextService configCtx) {
+    protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
     }*/
 
