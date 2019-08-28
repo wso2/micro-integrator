@@ -798,11 +798,11 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <modules>
-                <module>samples/product</module>
-                <module>automation-extensions</module>
-                <module>tests-common</module>
-                <module>mediation-tests</module>
-                <module>dataservice-hosting-tests</module>
+<!--                <module>samples/product</module>-->
+<!--                <module>automation-extensions</module>-->
+<!--                <module>tests-common</module>-->
+<!--                <module>mediation-tests</module>-->
+<!--                <module>dataservice-hosting-tests</module>-->
                 <module>cli-tests</module>
             </modules>
         </profile>
@@ -812,14 +812,14 @@
                 <testng.suiteXml.location>src/test/resources/smokeTestng.xml</testng.suiteXml.location>
             </properties>
             <modules>
-                <module>samples/product</module>
-                <module>automation-extensions</module>
-                <module>tests-common</module>
-                <module>mediation-tests/service-samples</module>
-                <module>mediation-tests/tests-mediator-1</module>
-                <module>dataservice-hosting-tests/samples</module>
-                <module>dataservice-hosting-tests/tests-common</module>
-                <module>dataservice-hosting-tests/tests-integration/tests</module>
+<!--                <module>samples/product</module>-->
+<!--                <module>automation-extensions</module>-->
+<!--                <module>tests-common</module>-->
+<!--                <module>mediation-tests/service-samples</module>-->
+<!--                <module>mediation-tests/tests-mediator-1</module>-->
+<!--                <module>dataservice-hosting-tests/samples</module>-->
+<!--                <module>dataservice-hosting-tests/tests-common</module>-->
+<!--                <module>dataservice-hosting-tests/tests-integration/tests</module>-->
                 <module>cli-tests</module>
             </modules>
         </profile>
