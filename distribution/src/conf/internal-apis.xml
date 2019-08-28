@@ -21,7 +21,7 @@
     <apis>
         <api name="PrometheusApi" protocol="http" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>
         <api name="ManagementApi" protocol="https"
-             class="org.wso2.carbon.micro.integrator.management.apis.ManagementInternalAPI"/>
+             class="org.wso2.carbon.micro.integrator.management.apis.ManagementInternalApi"/>
     </apis>
     <sslConfig>
         <parameter name="keystore">

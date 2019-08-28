@@ -42,8 +42,7 @@ public class SequenceResource extends APIResource {
     @Override
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
-        methods.add("GET");
-        methods.add("POST");
+        methods.add(Constants.HTTP_GET);
         return methods;
     }
 
@@ -114,10 +113,10 @@ public class SequenceResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         SequenceMediator sequence = configuration.getDefinedSequences().get(sequenceName);
-        return convertInboundEndpointToOMElement(sequence);
+        return convertInboundEndpointToJsonObject(sequence);
     }
 
-    private JSONObject convertInboundEndpointToOMElement(SequenceMediator sequenceMediator) {
+    private JSONObject convertInboundEndpointToJsonObject(SequenceMediator sequenceMediator) {
 
         if (Objects.isNull(sequenceMediator)) {
             return null;

@@ -140,6 +140,7 @@ public class RegistryMigrator {
         map.put(".xslt", "application/xslt+xml");
         map.put(".zip", "application/zip");
         map.put(".wsdl", "WSDL");
+        map.put(".xqy", "XQuery");
 
         return map;
     }

@@ -39,8 +39,7 @@ public class TaskResource extends APIResource {
     @Override
     public Set<String> getMethods() {
         Set<String> methods = new HashSet<>();
-        methods.add("GET");
-        methods.add("POST");
+        methods.add(Constants.HTTP_GET);
         return methods;
     }
 
@@ -104,13 +103,13 @@ public class TaskResource extends APIResource {
         String []taskNames = configuration.getTaskManager().getTaskNames();
         for (String task : taskNames) {
             if (task.equals(taskName)) {
-                return convertTaskToOMElement(configuration.getTaskManager().getTask(taskName));
+                return convertTaskToJsonObject(configuration.getTaskManager().getTask(taskName));
             }
         }
         return null;
     }
 
-    private JSONObject convertTaskToOMElement(TaskDescription task) {
+    private JSONObject convertTaskToJsonObject(TaskDescription task) {
 
         if (Objects.isNull(task)) {
             return null;

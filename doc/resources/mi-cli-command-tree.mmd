@@ -1,0 +1,28 @@
+%% Use mermaid.cli (https://github.com/mermaidjs/mermaid.cli) to generate the image from this file
+
+graph LR
+A(mi) -->B(remote)
+B -->K(add)
+B -->L(remove)
+B -->M(update)
+B -->N(select)
+B -->O(show)
+A(mi) -->C(api)
+C -->O
+A(mi) -->D(compositeapp)
+D -->O
+A(mi) -->E(endpoint)
+E -->O
+A(mi) -->F(inboundendpoint)
+F -->O
+A(mi) -->G(proxyservice)
+G -->O
+A(mi) -->H(sequence)
+H -->O
+A(mi) -->I(task)
+I -->O
+A(mi) -->J(dataservice)
+J -->O
+A(mi) -->P(log-level)
+P -->O
+P -->Q(update)

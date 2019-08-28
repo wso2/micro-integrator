@@ -47,8 +47,7 @@ public class EndpointResource extends APIResource {
     public Set<String> getMethods() {
 
         Set<String> methods = new HashSet<>();
-        methods.add("GET");
-        methods.add("POST");
+        methods.add(Constants.HTTP_GET);
         return methods;
     }
 
@@ -126,10 +125,10 @@ public class EndpointResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         Endpoint ep = configuration.getEndpoint(endpointName);
-        return convertEndpointToOMElement(ep);
+        return convertEndpointToJsonObject(ep);
     }
 
-    private JSONObject convertEndpointToOMElement(Endpoint endpoint) {
+    private JSONObject convertEndpointToJsonObject(Endpoint endpoint) {
 
         if (Objects.isNull(endpoint)) {
             return null;
