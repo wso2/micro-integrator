@@ -4,7 +4,7 @@
     <parameter name="useDefaultListeners" value="false"/>
 
 
-    <test name="is-usr-mgt-scim2" preserve-order="true" parallel="false">
+    <test name="hello-world-sample" preserve-order="true" parallel="false">
         <classes>
             <class name="SampleTest"/>
         </classes>
