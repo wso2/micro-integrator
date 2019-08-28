@@ -146,7 +146,7 @@ public class ServiceComponent {
     private ConfigurationContext clientConfigContext;
 
     private static ServiceRegistration appManagerRegistration;
-    private static ApplicationManagerService applicationManager;
+  //  private static ApplicationManagerService applicationManager;
     private static Map<String, List<Feature>> requiredFeatures;
     private List<AppDeploymentHandler> appHandlers = new ArrayList<AppDeploymentHandler>();
 
@@ -174,6 +174,7 @@ public class ServiceComponent {
             // register ApplicationManager as a service
             appManagerRegistration = ctxt.getBundleContext().registerService(
                     ApplicationManagerService.class.getName(), applicationManager, null);
+            CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
 
             // read required-features.xml
             URL reqFeaturesResource = bundleContext.getBundle()
@@ -727,19 +728,19 @@ public class ServiceComponent {
 //        this.httpService = null;
 //    }
 
-    @Reference(
-            name = "application.manager",
-            service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class,
-            cardinality = ReferenceCardinality.OPTIONAL,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetAppManager")
-    protected void setAppManager(ApplicationManagerService applicationManager) {
-        this.applicationManager = applicationManager;
-        CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
-    }
-
-    protected void unsetAppManager(ApplicationManagerService applicationManager) {
-        this.applicationManager = null;
-    }
+//    @Reference(
+//            name = "application.manager",
+//            service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class,
+//            cardinality = ReferenceCardinality.OPTIONAL,
+//            policy = ReferencePolicy.DYNAMIC,
+//            unbind = "unsetAppManager")
+//    protected void setAppManager(ApplicationManagerService applicationManager) {
+//        this.applicationManager = applicationManager;
+//        CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
+//    }
+//
+//    protected void unsetAppManager(ApplicationManagerService applicationManager) {
+//        this.applicationManager = null;
+//    }
 
 }
