@@ -213,9 +213,9 @@
                                 <featureArtifactDef>
                                     org.apache.axis2.transport:org.apache.axis2.transport.mqtt.feature:${axis2.transport.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher.tool.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher.tool.version}
+                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -246,9 +246,6 @@
 <!--                                </featureArtifactDef>-->
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.identity.xacml.mediator.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher.tool.version}-->
 <!--                                </featureArtifactDef>-->
                             </featureArtifacts>
                         </configuration>
@@ -474,11 +471,11 @@
                                     <version>${axis2.transport.version}</version>
                                 </feature>
 
-<!--                                &lt;!&ndash; 12 Ciphertool &ndash;&gt;-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.ciphertool.feature.group</id>-->
-<!--                                    <version>${cipher.tool.version}</version>-->
-<!--                                </feature>-->
+                                <!-- 12 Ciphertool -->
+                                <feature>
+                                    <id>org.wso2.ciphertool.feature.group</id>
+                                    <version>${cipher.tool.version}</version>
+                                </feature>
 
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.dataservices.server.feature.group</id>-->
@@ -502,11 +499,6 @@
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.crypto.feature.group</id>-->
 <!--                                    <version>${carbon.crypto.version}</version>-->
-<!--                                </feature>-->
-<!--                                &lt;!&ndash; 12 Ciphertool &ndash;&gt;-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.ciphertool.feature.group</id>-->
-<!--                                    <version>${cipher.tool.version}</version>-->
 <!--                                </feature>-->
                             </features>
                         </configuration>

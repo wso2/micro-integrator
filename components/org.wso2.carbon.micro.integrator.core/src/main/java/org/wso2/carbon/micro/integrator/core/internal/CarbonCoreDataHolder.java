@@ -21,7 +21,6 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.http.HttpService;
 import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
-import org.wso2.carbon.base.api.ServerConfigurationService;
 
 /**
  * This singleton data holder contains all the data required by the Carbon core OSGi bundle
@@ -39,7 +38,7 @@ public class CarbonCoreDataHolder {
     private ApplicationManagerService applicationManager;
     private  HttpService httpService;
     private  ConfigurationContext mainServerConfigContext;
-    private ServerConfigurationService serverConfigurationService;
+    private CarbonServerConfigurationService serverConfigurationService;
 
 
     public  static CarbonCoreDataHolder getInstance() {
@@ -57,7 +56,7 @@ public class CarbonCoreDataHolder {
         this.bundleContext = bundleContext;
     }
 
-    public  void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
+    public  void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         this.serverConfigurationService = serverConfigurationService;
     }
 
@@ -76,7 +75,7 @@ public class CarbonCoreDataHolder {
     }
 
 
-    public ServerConfigurationService getServerConfigurationService() {
+    public CarbonServerConfigurationService getServerConfigurationService() {
         if (this.serverConfigurationService == null) {
             String msg = "Before activating Carbon Core bundle, an instance of "
                     + "ServerConfigurationService should be in existance";

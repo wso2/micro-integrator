@@ -125,7 +125,7 @@
 <!--                                    org.wso2.orbit.org.apache.tomcat:tomcat-catalina-ha:${orbit.version.tomcat.ha}-->
 <!--                                </bundleDef>-->
 <!--                                <bundleDef>au.com.bytecode.opencsv.wso2:opencsv:${version.opencsv}</bundleDef>-->
-<!--                                <bundleDef>org.wso2.securevault:org.wso2.securevault:${securevault.version}</bundleDef>-->
+                                <bundleDef>org.wso2.securevault:org.wso2.securevault:${securevault.version}</bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.com.h2database:h2:${version.h2.engine}</bundleDef>-->
 <!--                                <bundleDef>org.apache.axis2.wso2:axis2-json:${axis2.wso2.version}</bundleDef>-->
 <!--                                <bundleDef>org.codehaus.jettison.wso2:jettison:${orbit.version.jettison}</bundleDef>-->
@@ -205,8 +205,8 @@
 <!--                                    org.wso2.orbit.javax.xml.bind:jaxb-api:${version.org.wso2.orbit.javax.xml.bind.jaxb-api}-->
 <!--                                </bundleDef>-->
 
-<!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.securevault:${carbon.kernel.version}-->
-<!--                                </bundleDef>-->
+                                <bundleDef>org.wso2.carbon:org.wso2.carbon.securevault:${carbon.kernel.version}
+                                </bundleDef>
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.core.common:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
 <!--                                <bundleDef>org.wso2.orbit.commons-text:commons-text:${commons-text.orbit.version}-->

@@ -24,11 +24,11 @@ import org.apache.http.protocol.HTTP;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyReference;
 import org.apache.neethi.PolicyRegistry;
-import org.wso2.carbon.base.api.ServerConfigurationService;
 import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
 import org.wso2.carbon.core.transports.HttpGetRequestProcessor;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
+import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
 import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.carbon.utils.NetworkUtils;
 import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
@@ -144,7 +144,7 @@ public class PolicyProcessor implements HttpGetRequestProcessor {
                         } else {
                             String ipAddress = "http://" + NetworkUtils.getLocalHostname() + ":" +
                                                CarbonUtils.getTransportPort(configCtx, "http");
-                            ServerConfigurationService serverCofig =
+                            CarbonServerConfigurationService serverCofig =
                                     CarbonCoreDataHolder.getInstance().getServerConfigurationService();
                             outputStream.write(("<html><head>" +
                                                 "<title>WSO2 Server v" +

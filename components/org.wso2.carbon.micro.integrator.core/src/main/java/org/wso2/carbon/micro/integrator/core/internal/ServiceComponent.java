@@ -60,7 +60,6 @@ import org.wso2.carbon.application.deployer.Feature;
 import org.wso2.carbon.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
 import org.wso2.carbon.base.CarbonBaseConstants;
-import org.wso2.carbon.base.api.ServerConfigurationService;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.CarbonAxisConfigurator;
 import org.wso2.carbon.core.CarbonConfigurationContextFactory;
@@ -134,7 +133,7 @@ public class ServiceComponent {
     protected String serverName;
 
     private String carbonHome;
-    private ServerConfigurationService serverConfig;
+    private CarbonServerConfigurationService serverConfig;
     private Thread shutdownHook;
     public boolean isEmbedEnv = false;
 
@@ -360,7 +359,7 @@ public class ServiceComponent {
 
             //TODO As a tempory solution this part is added here. But when ui bundle are seperated from the core bundles
             //TODO this should be fixed.
-            ServerConfigurationService config = getServerConfigurationService();
+            CarbonServerConfigurationService config = getServerConfigurationService();
             String type = config.getFirstProperty("Security.TrustStore.Type");
             String password = config.getFirstProperty("Security.TrustStore.Password");
             String storeFile = new File(config.getFirstProperty("Security.TrustStore.Location")).getAbsolutePath();
@@ -686,7 +685,7 @@ public class ServiceComponent {
         NetworkUtils.init(hostName, mgtHostName);
     }
 
-    public static ServerConfigurationService getServerConfigurationService() {
+    public static CarbonServerConfigurationService getServerConfigurationService() {
         return serverConfigurationService;
     }
 
@@ -694,22 +693,22 @@ public class ServiceComponent {
         return httpService;
     }
 
-    protected static ServerConfigurationService serverConfigurationService;
+    protected static CarbonServerConfigurationService serverConfigurationService;
 
     protected static HttpService httpService;
 
     @Reference(
             name = "server.configuration.service",
-            service = org.wso2.carbon.base.api.ServerConfigurationService.class,
+            service = org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetServerConfigurationService")
-    protected void setServerConfigurationService(ServerConfigurationService serverConfigurationService) {
+    protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         this.serverConfigurationService = serverConfigurationService;
         CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
     }
 
-    protected void unsetServerConfigurationService(ServerConfigurationService serverConfigurationService) {
+    protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         this.serverConfigurationService = null;
     }
 
