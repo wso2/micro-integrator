@@ -217,9 +217,9 @@ public class ServiceComponent {
 
     private void initializeCarbon() {
 
-        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+//        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+//        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+//        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
 
         // Reset the SAAJ Interfaces
         System.getProperties().remove("javax.xml.soap.MessageFactory");
@@ -390,10 +390,10 @@ public class ServiceComponent {
                 new OSGiAxis2ServiceDeployer(serverConfigContext, bundleContext).registerBundleListener(); // This will register the OSGi bundle listener
             }
 
-            HttpService httpService = getHttpService();
-            HttpContext defaultHttpContext = httpService.createDefaultHttpContext();
+          //  HttpService httpService = getHttpService();
+          //  HttpContext defaultHttpContext = httpService.createDefaultHttpContext();
 
-            registerCarbonServlet(httpService, defaultHttpContext);
+          //  registerCarbonServlet(httpService, defaultHttpContext);
 
             if (log.isDebugEnabled()) {
                 log.debug("Repository       : " + axis2RepoLocation);
@@ -713,20 +713,20 @@ public class ServiceComponent {
         this.serverConfigurationService = null;
     }
 
-    @Reference(
-            name = "http.service",
-            service = org.osgi.service.http.HttpService.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetHttpService")
-    protected void setHttpService(HttpService httpService) {
-        this.httpService = httpService;
-        CarbonCoreDataHolder.getInstance().setHttpService(httpService);
-    }
-
-    protected void unsetHttpService(HttpService httpService) {
-        this.httpService = null;
-    }
+//    @Reference(
+//            name = "http.service",
+//            service = org.osgi.service.http.HttpService.class,
+//            cardinality = ReferenceCardinality.MANDATORY,
+//            policy = ReferencePolicy.DYNAMIC,
+//            unbind = "unsetHttpService")
+//    protected void setHttpService(HttpService httpService) {
+//        this.httpService = httpService;
+//        CarbonCoreDataHolder.getInstance().setHttpService(httpService);
+//    }
+//
+//    protected void unsetHttpService(HttpService httpService) {
+//        this.httpService = null;
+//    }
 
     @Reference(
             name = "application.manager",
