@@ -73,7 +73,7 @@ import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
 import org.wso2.carbon.task.services.TaskSchedulerService;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.micro.integrator.core.internal.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.securevault.SecurityConstants;
@@ -92,7 +92,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @SuppressWarnings({"JavaDoc", "UnusedDeclaration"})
 @Component(
-        name = "esb.core.initializer",
+        name = "mi.core.initializer",
         immediate = true)
 public class ServiceBusInitializer {
 
@@ -103,7 +103,7 @@ public class ServiceBusInitializer {
 
     private static String configPath;
 
-    private ConfigurationContextService configCtxSvc;
+    private Axis2ConfigurationContextService configCtxSvc;
 
     // private SynapseRegistryService synRegSvc;
     // private DataSourceInformationRepositoryService dataSourceInformationRepositoryService;
@@ -412,11 +412,11 @@ public class ServiceBusInitializer {
 
     @Reference(
             name = "config.context.service",
-            service = org.wso2.carbon.utils.ConfigurationContextService.class,
+            service = org.wso2.carbon.micro.integrator.core.internal.Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContextService")
-    protected void setConfigurationContextService(ConfigurationContextService configurationContextService) {
+    protected void setConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
 
         if (log.isDebugEnabled()) {
             log.debug("ConfigurationContextService bound to the ESB initialization process");
@@ -425,7 +425,7 @@ public class ServiceBusInitializer {
         this.configCtxSvc = configurationContextService;
     }
 
-    protected void unsetConfigurationContextService(ConfigurationContextService configurationContextService) {
+    protected void unsetConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
 
         if (log.isDebugEnabled()) {
             log.debug("ConfigurationContextService unbound from the ESB environment");
