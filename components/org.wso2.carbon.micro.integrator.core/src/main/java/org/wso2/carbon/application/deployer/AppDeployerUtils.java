@@ -31,7 +31,7 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.QueryUtil;
 import org.osgi.framework.Bundle;
-import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.util.CarbonException;
 import org.wso2.carbon.application.deployer.config.Artifact;
 import org.wso2.carbon.application.deployer.config.CappFile;
 import org.wso2.carbon.application.deployer.config.RegistryConfig;
@@ -40,7 +40,7 @@ import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.feature.mgt.core.util.ProvisioningUtils;
 import org.wso2.carbon.micro.integrator.core.internal.ApplicationManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.namespace.QName;
@@ -194,9 +194,9 @@ public final class AppDeployerUtils {
      * @return - repo path
      */
     public static String getAxis2Repo() {
-        String axis2Repo = CarbonUtils.getAxis2Repo();
+        String axis2Repo = MicroIntegratorBaseUtils.getAxis2Repo();
         if (axis2Repo == null) {
-            axis2Repo = CarbonUtils.getCarbonRepository();
+            axis2Repo = MicroIntegratorBaseUtils.getCarbonRepository();
         }
         return axis2Repo;
     }
@@ -427,7 +427,7 @@ public final class AppDeployerUtils {
         //compute app file path
         String bundlePath = b.getLocation();
         bundlePath = formatPath(bundlePath);
-        return CarbonUtils.getComponentsRepo() + File.separator +
+        return MicroIntegratorBaseUtils.getComponentsRepo() + File.separator +
                 bundlePath.substring(bundlePath.lastIndexOf('/') + 1);
     }
 

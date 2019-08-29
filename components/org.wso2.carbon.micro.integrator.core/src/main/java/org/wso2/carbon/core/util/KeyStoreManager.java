@@ -19,13 +19,13 @@ package org.wso2.carbon.core.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.util.CarbonException;
 import org.wso2.carbon.core.RegistryResources;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
 import org.wso2.carbon.registry.core.Resource;
 import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.File;
@@ -102,7 +102,7 @@ public class KeyStoreManager {
     public static KeyStoreManager getInstance(int tenantId,
                                               CarbonServerConfigurationService serverConfigService,
                                               RegistryService registryService) {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         String tenantIdStr = Integer.toString(tenantId);
         if (!mtKeyStoreManagers.containsKey(tenantIdStr)) {
             mtKeyStoreManagers.put(tenantIdStr, new KeyStoreManager(tenantId, serverConfigService, registryService));
@@ -111,7 +111,7 @@ public class KeyStoreManager {
     }
 
     public static KeyStoreManager getInstance(int tenantId, CarbonServerConfigurationService serverConfigService) {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         String tenantIdStr = Integer.toString(tenantId);
         if (!mtKeyStoreManagers.containsKey(tenantIdStr)) {
             mtKeyStoreManagers.put(tenantIdStr, new KeyStoreManager(tenantId, serverConfigService));
@@ -395,7 +395,7 @@ public class KeyStoreManager {
 
 
     public KeyStore loadKeyStoreFromFileSystem(String keyStorePath, String password, String type) {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         String absolutePath = new File(keyStorePath).getAbsolutePath();
         FileInputStream inputStream = null;
         try {

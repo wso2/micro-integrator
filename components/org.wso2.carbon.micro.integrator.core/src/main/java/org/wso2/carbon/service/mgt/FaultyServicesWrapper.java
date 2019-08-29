@@ -15,7 +15,7 @@
  */
 package org.wso2.carbon.service.mgt;
 
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.Pageable;
 
 import java.util.List;
@@ -29,11 +29,11 @@ public class FaultyServicesWrapper implements Pageable {
     private int numberOfPages;
 
     public FaultyService[] getFaultyServices() {
-        return CarbonUtils.arrayCopyOf(faultyServices);
+        return MicroIntegratorBaseUtils.arrayCopyOf(faultyServices);
     }
 
     public void setFaultyServices(FaultyService[] faultyServices) {
-        this.faultyServices = CarbonUtils.arrayCopyOf(faultyServices);
+        this.faultyServices = MicroIntegratorBaseUtils.arrayCopyOf(faultyServices);
     }
 
     public int getNumberOfFaultyServiceGroups() {

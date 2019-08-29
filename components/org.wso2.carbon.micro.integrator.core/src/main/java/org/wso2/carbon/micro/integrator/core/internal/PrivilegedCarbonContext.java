@@ -32,7 +32,7 @@ import org.wso2.carbon.user.api.TenantManager;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserRealmService;
 import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class PrivilegedCarbonContext extends CarbonContext {
      * @see CarbonContextDataHolder#startTenantFlow()
      */
     public static void startTenantFlow() {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         getThreadLocalCarbonContext().getCarbonContextDataHolder().startTenantFlow();
     }
 
@@ -72,17 +72,17 @@ public class PrivilegedCarbonContext extends CarbonContext {
      * @see CarbonContextDataHolder#endTenantFlow()
      */
     public static void endTenantFlow() {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         getThreadLocalCarbonContext().getCarbonContextDataHolder().endTenantFlow();
     }
 
     public static void unloadTenant(int tenantId) {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         CarbonContextDataHolder.unloadTenant(tenantId);
     }
 
     public static void destroyCurrentContext() {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         CarbonContextDataHolder.destroyCurrentCarbonContextHolder();
     }
 
@@ -91,7 +91,7 @@ public class PrivilegedCarbonContext extends CarbonContext {
      * @return PrivilegedCarbonContext from the current thread
      */
     public static PrivilegedCarbonContext getThreadLocalCarbonContext(){
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         return new PrivilegedCarbonContext(CarbonContextDataHolder.getThreadLocalCarbonContextHolder());
     }
 

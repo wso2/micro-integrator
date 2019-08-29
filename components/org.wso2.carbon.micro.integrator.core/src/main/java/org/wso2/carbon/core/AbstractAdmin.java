@@ -25,7 +25,7 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.CarbonContext;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +45,7 @@ public abstract class AbstractAdmin {
 
     protected AbstractAdmin() {
         // Need permissions in order to instantiate AbstractAdmin
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
     }
 
     protected AbstractAdmin(AxisConfiguration axisConfig) throws Exception {

@@ -15,7 +15,7 @@
  */
 package org.wso2.carbon.service.mgt;
 
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.Pageable;
 
 import java.util.List;
@@ -35,7 +35,7 @@ public class ServiceGroupMetaDataWrapper implements Pageable {
     }
 
     public ServiceGroupMetaData[] getServiceGroups() {
-        return CarbonUtils.arrayCopyOf(serviceGroups);
+        return MicroIntegratorBaseUtils.arrayCopyOf(serviceGroups);
     }
 
     public int getNumberOfPages() {
@@ -43,7 +43,7 @@ public class ServiceGroupMetaDataWrapper implements Pageable {
     }
 
     public void setServiceGroups(ServiceGroupMetaData[] serviceGroups) {
-        this.serviceGroups = CarbonUtils.arrayCopyOf(serviceGroups);
+        this.serviceGroups = MicroIntegratorBaseUtils.arrayCopyOf(serviceGroups);
     }
 
     public void setNumberOfPages(int numberOfPages) {
@@ -79,10 +79,10 @@ public class ServiceGroupMetaDataWrapper implements Pageable {
     }
 
     public String[] getServiceTypes() {
-        return CarbonUtils.arrayCopyOf(serviceTypes);
+        return MicroIntegratorBaseUtils.arrayCopyOf(serviceTypes);
     }
 
     public void setServiceTypes(String[] serviceTypes) {
-        this.serviceTypes = CarbonUtils.arrayCopyOf(serviceTypes);
+        this.serviceTypes = MicroIntegratorBaseUtils.arrayCopyOf(serviceTypes);
     }
 }

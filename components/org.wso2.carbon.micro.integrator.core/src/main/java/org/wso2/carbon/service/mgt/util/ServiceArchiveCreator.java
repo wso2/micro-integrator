@@ -54,9 +54,9 @@ import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.util.SystemFilter;
 import org.wso2.carbon.service.mgt.PolicyUtil;
 import org.wso2.carbon.utils.ArchiveManipulator;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.FileManipulator;
-import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.core.util.NetworkUtils;
 import org.wso2.carbon.utils.ServerConstants;
 
 import javax.xml.namespace.QName;
@@ -103,7 +103,7 @@ public final class ServiceArchiveCreator {
 
         String axis2Repo = ServerConfiguration.getInstance().getFirstProperty(
                 ServerConfiguration.AXIS2_CONFIG_REPO_LOCATION);
-        if (CarbonUtils.isURL(axis2Repo)) {
+        if (MicroIntegratorBaseUtils.isURL(axis2Repo)) {
             String message = "Archive creation is not supported with a URL based Axis2 repository. "
                              + "The repository in use is " + axis2Repo;
             log.error(message);

@@ -29,7 +29,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.util.CarbonException;
 import org.wso2.carbon.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.carbon.application.deployer.synapse.FileRegistryResourceDeployer;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;

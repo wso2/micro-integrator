@@ -28,7 +28,7 @@ import org.wso2.carbon.core.transports.HttpGetRequestProcessor;
 import org.wso2.carbon.core.util.SystemFilter;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,7 +44,7 @@ public abstract class AbstractWsdlProcessor implements HttpGetRequestProcessor {
                              WSDLPrinter wsdlPrinter) throws IOException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
         AxisService axisService = axisConfig.getServiceForActivation(serviceName);
-        if (GhostDeployerUtils.isGhostService(axisService) && axisConfig != null) {
+       /* if (GhostDeployerUtils.isGhostService(axisService) && axisConfig != null) {
             String serviceGroupName = null;
             if (axisService != null) {
                 if (axisService.getAxisServiceGroup() != null) {
@@ -60,7 +60,7 @@ public abstract class AbstractWsdlProcessor implements HttpGetRequestProcessor {
 //            GhostDispatcherUtils.deployServiceMetaFile(serviceGroupName, axisConfig);
 
         }
-
+*/
 //        String hideAdminServiceWSDLs =
 //                CarbonCoreDataHolder.getInstance().
 //                        getServerConfigurationService().getFirstProperty(CarbonConstants.AXIS2_CONFIG_PARAM +

@@ -16,7 +16,7 @@
 
 package org.wso2.carbon.core.transports.util;
 
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 /**
  *
@@ -33,19 +33,19 @@ public class TransportDetails {
     }
 
     public TransportParameter[] getInParameters() {
-        return CarbonUtils.arrayCopyOf(inParameters);
+        return MicroIntegratorBaseUtils.arrayCopyOf(inParameters);
     }
 
     public void setInParameters(TransportParameter[] parameters) {
-        this.inParameters = CarbonUtils.arrayCopyOf(parameters);
+        this.inParameters = MicroIntegratorBaseUtils.arrayCopyOf(parameters);
     }
 
     public TransportParameter[] getOutParameters() {
-        return CarbonUtils.arrayCopyOf(outParameters);
+        return MicroIntegratorBaseUtils.arrayCopyOf(outParameters);
     }
 
     public void setOutParameters(TransportParameter[] parameters) {
-        this.outParameters = CarbonUtils.arrayCopyOf(parameters);
+        this.outParameters = MicroIntegratorBaseUtils.arrayCopyOf(parameters);
     }
 
     public boolean isListenerActive() {

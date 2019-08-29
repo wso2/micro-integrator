@@ -21,7 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.util.CarbonException;
 import org.wso2.carbon.application.deployer.AppDeployerConstants;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
 

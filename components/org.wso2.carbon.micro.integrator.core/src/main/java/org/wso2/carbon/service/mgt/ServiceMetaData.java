@@ -19,7 +19,7 @@ import org.apache.axis2.description.AxisEndpoint;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.service.mgt.util.Utils;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -99,11 +99,11 @@ public class ServiceMetaData {
     private String securityScenarioId;
 
     public String[] getEprs() {
-        return CarbonUtils.arrayCopyOf(eprs);
+        return MicroIntegratorBaseUtils.arrayCopyOf(eprs);
     }
 
     public void setEprs(String[] eprs) {
-        this.eprs = CarbonUtils.arrayCopyOf(eprs);
+        this.eprs = MicroIntegratorBaseUtils.arrayCopyOf(eprs);
     }
 
     public String getServiceId() {
@@ -147,11 +147,11 @@ public class ServiceMetaData {
     }
 
     public String[] getOperations() {
-        return CarbonUtils.arrayCopyOf(operations);
+        return MicroIntegratorBaseUtils.arrayCopyOf(operations);
     }
 
     public void setOperations(String[] operations) {
-        this.operations = CarbonUtils.arrayCopyOf(operations);
+        this.operations = MicroIntegratorBaseUtils.arrayCopyOf(operations);
     }
 
     public boolean isFoundWebResources() {
@@ -196,11 +196,11 @@ public class ServiceMetaData {
     }
 
     public String[] getWsdlURLs() {
-        return CarbonUtils.arrayCopyOf(wsdlURLs);
+        return MicroIntegratorBaseUtils.arrayCopyOf(wsdlURLs);
     }
 
     public void setWsdlURLs(String[] wsdlURLs) {
-        this.wsdlURLs = CarbonUtils.arrayCopyOf(wsdlURLs);
+        this.wsdlURLs = MicroIntegratorBaseUtils.arrayCopyOf(wsdlURLs);
     }
 
     public boolean isDisableTryit() {

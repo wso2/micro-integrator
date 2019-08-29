@@ -25,7 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.wso2.carbon.CarbonException;
+import org.wso2.carbon.core.util.CarbonException;
 import org.wso2.carbon.application.deployer.AppDeployerUtils;
 import org.wso2.carbon.application.deployer.CarbonApplication;
 import org.wso2.carbon.application.deployer.config.ApplicationConfiguration;

@@ -27,7 +27,8 @@ import org.apache.axis2.engine.AxisConfigurator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+//import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 import static org.wso2.carbon.utils.WSO2Constants.PRIMARY_BUNDLE_CONTEXT;
 
@@ -46,7 +47,7 @@ public class CarbonConfigurationContextFactory {
      * @return The server ConfigurationContext
      */
     public static ConfigurationContext getConfigurationContext() {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         return configCtx;
     }
 
@@ -61,14 +62,14 @@ public class CarbonConfigurationContextFactory {
     public static ConfigurationContext createNewConfigurationContext(AxisConfigurator configurator,
                                                                      BundleContext bundleContext)
             throws AxisFault {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         configCtx = ConfigurationContextFactory.createConfigurationContext(configurator);
         configCtx.setProperty(PRIMARY_BUNDLE_CONTEXT, bundleContext);
         return configCtx;
     }
 
     public static void clear(){
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         if (configCtx != null) {
             AxisConfiguration axisConfig = configCtx.getAxisConfiguration();
             if (axisConfig != null) {

@@ -25,7 +25,7 @@ import org.apache.ws.commons.schema.XmlSchema;
 import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
@@ -47,11 +47,12 @@ public final class XsdUtil {
                                 ConfigurationContext configCtx,
                                 String serviceName,
                                 AxisService axisService) throws IOException {
-        if (GhostDeployerUtils.isGhostService(axisService)) {
+
+        /*if (GhostDeployerUtils.isGhostService(axisService)) {
             // if the existing service is a ghost service, deploy the actual one
             axisService = GhostDeployerUtils.deployActualService(configCtx
                     .getAxisConfiguration(), axisService);
-        }
+        }*/
         if (!RequestProcessorUtil.canExposeServiceMetadata(axisService)) {
             response.setError(HttpStatus.SC_FORBIDDEN,
                               "Access to service metadata for service: " + serviceName +
