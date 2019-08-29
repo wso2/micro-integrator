@@ -132,7 +132,7 @@ public class ServiceBusInitializer {
         // configuration returning the non blocking https transport. Ideally we should be able
         // to fix this by making it possible to let the authentication of carbon be done through
         // the non blocking https transport
-        setHttpsProtForConsole();
+
         // clean up temp folder created for connector class loader reference
         String javaTempDir = System.getProperty("java.io.tmpdir");
         String APP_UNZIP_DIR = javaTempDir.endsWith(File.separator) ? javaTempDir + "libs" : javaTempDir + File
@@ -240,57 +240,6 @@ public class ServiceBusInitializer {
         } else {
             log.info("Persistence for mediation configuration is disabled");
         }
-    }
-
-    private void setHttpsProtForConsole() {
-
-        CarbonServerConfigurationService config = CarbonServerConfigurationService.getInstance();
-        //todo: handle properly when clustering is implemented
-//        if (CarbonUtils.isRunningInStandaloneMode()) {
-            // Try to get the port information from the Carbon TransportManager
-            // -- Standalone Mode --
-            final String TRANSPORT_MANAGER = "org.wso2.carbon.tomcat.ext.transport.ServletTransportManager";
-            try {
-                Class transportManagerClass = Class.forName(TRANSPORT_MANAGER);
-                Object transportManager = transportManagerClass.newInstance();
-                Method method = transportManagerClass.getMethod("getPort", String.class);
-                int httpsPort = (Integer) method.invoke(transportManager, "https");
-                int httpPort = (Integer) method.invoke(transportManager, "http");
-                // required to properly log the management console URL
-                System.setProperty("carbon.https.port", Integer.toString(httpsPort));
-                System.setProperty("carbon.http.port", Integer.toString(httpPort));
-                System.setProperty("httpPort", Integer.toString(httpPort));
-                System.setProperty("httpsPort", Integer.toString(httpsPort));
-                // this is required for the dashboard to work
-                config.setConfigurationProperty("RegistryHttpPort", Integer.toString(httpPort));
-            } catch (ClassNotFoundException e) {
-                log.error("Failed to load the transport manager class using reflection", e);
-            } catch (Exception e) {
-                log.error("failed to set ports http/https", e);
-            }
-        /*} else {
-            // -- Webapp Deployment Mode --
-            if (log.isDebugEnabled()) {
-                log.debug("TransportManager implementation not found. Switching to " + "webapp deployment mode. " +
-                        "Reading HTTPS port from the carbon.xml.");
-            }
-            String serverURL = config.getFirstProperty("ServerURL");
-            if (serverURL != null) {
-                try {
-                    URL url = new URL(serverURL);
-                    if ("https".equals(url.getProtocol())) {
-                        System.setProperty("carbon.https.port", String.valueOf(url.getPort()));
-                    } else {
-                        log.warn("Invalid protocol " + url.getProtocol() + " in Carbon server URL");
-                    }
-                } catch (MalformedURLException ex) {
-                    log.error("Error while parsing the server URL " + serverURL, ex);
-                }
-            } else {
-                log.warn("Server URL is not specified in the carbon.xml. Unable to " + "set the HTTPS port as a " +
-                        "system property");
-            }
-        }*/
     }
 
     private ServerContextInformation initESB(String name) throws AxisFault {
