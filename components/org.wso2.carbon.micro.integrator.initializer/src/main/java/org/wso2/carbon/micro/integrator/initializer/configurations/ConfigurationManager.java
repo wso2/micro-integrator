@@ -41,7 +41,7 @@ import org.apache.synapse.task.TaskDescriptionRepository;
 import org.apache.synapse.task.TaskScheduler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.carbon.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.carbon.micro.integrator.initializer.persistence.MediationPersistenceManager;
@@ -105,8 +105,6 @@ public class ConfigurationManager {
             synpaseConfigurationsRoot = parameter.getValue().toString();
         }
 
-        tenantId = PrivilegedCarbonContext.
-                getThreadLocalCarbonContext().getTenantId();
     }
 
     /**

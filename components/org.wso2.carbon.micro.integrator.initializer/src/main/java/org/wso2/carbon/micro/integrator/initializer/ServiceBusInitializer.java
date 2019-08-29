@@ -50,8 +50,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
+//import org.wso2.carbon.base.ServerConfiguration;
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
@@ -76,6 +76,7 @@ import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.securevault.SecurityConstants;
 
 import java.io.File;
@@ -121,9 +122,9 @@ public class ServiceBusInitializer {
     protected void activate(ComponentContext ctxt) {
 
         log.debug("Activating Micro Integrator...");
-        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+//        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+//        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+//        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
         if (taskService != null && !taskService.isServerInit()) {
             log.debug("Initialize Task Service");
             taskService.serverInitialized();
@@ -217,7 +218,7 @@ public class ServiceBusInitializer {
 
     private void initPersistence(SynapseConfigurationService synCfgSvc, String configName) throws AxisFault {
         // Initialize the mediation persistence manager if required
-        ServerConfiguration serverConf = ServerConfiguration.getInstance();
+        CarbonServerConfigurationService serverConf = CarbonServerConfigurationService.getInstance();
         String persistence = serverConf.getFirstProperty(ServiceBusConstants.PERSISTENCE);
         // Check whether persistence is disabled
         if (!ServiceBusConstants.DISABLED.equals(persistence)) {
@@ -244,7 +245,7 @@ public class ServiceBusInitializer {
 
     private void setHttpsProtForConsole() {
 
-        ServerConfiguration config = ServerConfiguration.getInstance();
+        CarbonServerConfigurationService config = CarbonServerConfigurationService.getInstance();
         if (CarbonUtils.isRunningInStandaloneMode()) {
             // Try to get the port information from the Carbon TransportManager
             // -- Standalone Mode --
@@ -594,7 +595,8 @@ public class ServiceBusInitializer {
                 .ARTIFACT_EXTENSION);
     }
 
-    @Reference(
+    // TODO uncomment after having this service
+  /*  @Reference(
             name = "inbound.endpoint.persistence.service",
             service = org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService.class,
             cardinality = ReferenceCardinality.OPTIONAL,
@@ -607,7 +609,7 @@ public class ServiceBusInitializer {
 
     protected void unsetInboundPersistenceService(InboundEndpointPersistenceService inboundEndpoint) {
 
-    }
+    }*/
 
     protected void setTaskService(TaskService taskService) {
 

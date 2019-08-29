@@ -22,7 +22,7 @@ import org.wso2.carbon.registry.core.exceptions.RegistryException;
 import org.wso2.carbon.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.carbon.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.base.ServerConfiguration;
+//import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.xml.MultiXMLConfigurationSerializer;
 import org.apache.synapse.core.axis2.ProxyService;
@@ -38,6 +38,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.AxisFault;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import java.util.Collection;
 
@@ -50,7 +51,7 @@ public class ConfigurationUtils {
             return value;
         }
 
-        ServerConfiguration serverConf = ServerConfiguration.getInstance();
+        CarbonServerConfigurationService serverConf = CarbonServerConfigurationService.getInstance();
         return serverConf.getFirstProperty(name);
     }
     
@@ -157,7 +158,7 @@ public class ConfigurationUtils {
                                        AxisConfiguration axisConfiguration,
                                        String name) throws ConfigurationInitilizerException {
         // Initialize the mediation persistence manager if required
-        ServerConfiguration serverConf = ServerConfiguration.getInstance();
+        CarbonServerConfigurationService serverConf = CarbonServerConfigurationService.getInstance();
         String persistence = serverConf.getFirstProperty(ServiceBusConstants.PERSISTENCE);
 
         // Check whether persistence is disabled
