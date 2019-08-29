@@ -50,7 +50,6 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
@@ -72,10 +71,11 @@ import org.wso2.carbon.micro.integrator.initializer.utils.SynapseArtifactInitUti
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
 import org.wso2.carbon.task.services.TaskSchedulerService;
-import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.securevault.SecurityConstants;
 
 import java.io.File;
@@ -121,9 +121,9 @@ public class ServiceBusInitializer {
     protected void activate(ComponentContext ctxt) {
 
         log.info("Activating Micro Integrator...");
-        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+//        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+//        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+//        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
 //        if (taskService != null && !taskService.isServerInit()) {
 //            log.info("Initialize Task Service");
 //            taskService.serverInitialized();
@@ -217,7 +217,7 @@ public class ServiceBusInitializer {
 
     private void initPersistence(SynapseConfigurationService synCfgSvc, String configName) throws AxisFault {
         // Initialize the mediation persistence manager if required
-        ServerConfiguration serverConf = ServerConfiguration.getInstance();
+        CarbonServerConfigurationService serverConf = CarbonServerConfigurationService.getInstance();
         String persistence = serverConf.getFirstProperty(ServiceBusConstants.PERSISTENCE);
         // Check whether persistence is disabled
         if (!ServiceBusConstants.DISABLED.equals(persistence)) {
@@ -244,8 +244,9 @@ public class ServiceBusInitializer {
 
     private void setHttpsProtForConsole() {
 
-        ServerConfiguration config = ServerConfiguration.getInstance();
-        if (CarbonUtils.isRunningInStandaloneMode()) {
+        CarbonServerConfigurationService config = CarbonServerConfigurationService.getInstance();
+        //todo: handle properly when clustering is implemented
+//        if (CarbonUtils.isRunningInStandaloneMode()) {
             // Try to get the port information from the Carbon TransportManager
             // -- Standalone Mode --
             final String TRANSPORT_MANAGER = "org.wso2.carbon.tomcat.ext.transport.ServletTransportManager";
@@ -267,7 +268,7 @@ public class ServiceBusInitializer {
             } catch (Exception e) {
                 log.error("failed to set ports http/https", e);
             }
-        } else {
+        /*} else {
             // -- Webapp Deployment Mode --
             if (log.isDebugEnabled()) {
                 log.debug("TransportManager implementation not found. Switching to " + "webapp deployment mode. " +
@@ -289,7 +290,7 @@ public class ServiceBusInitializer {
                 log.warn("Server URL is not specified in the carbon.xml. Unable to " + "set the HTTPS port as a " +
                         "system property");
             }
-        }
+        }*/
     }
 
     private ServerContextInformation initESB(String name) throws AxisFault {
@@ -389,7 +390,7 @@ public class ServiceBusInitializer {
 
         try {
             String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-            File synapseProperties = Paths.get(CarbonUtils.getCarbonConfigDirPath(), "synapse.properties").toFile();
+            File synapseProperties = Paths.get(MicroIntegratorBaseUtils.getCarbonConfigDirPath(), "synapse.properties").toFile();
             Properties properties = new Properties();
             InputStream inputStream = new FileInputStream(synapseProperties);
             properties.load(inputStream);

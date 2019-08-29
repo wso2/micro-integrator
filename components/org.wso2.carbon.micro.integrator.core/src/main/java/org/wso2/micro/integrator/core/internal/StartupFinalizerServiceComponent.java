@@ -32,12 +32,15 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.CarbonConstants;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.integrator.core.deployment.DeploymentService;
 //import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 //import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.util.ArrayList;
@@ -238,7 +241,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
 
     @Reference(
             name = "org.wso2.carbon.configCtx",
-            service = org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService.class,
+            service = org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContext")
