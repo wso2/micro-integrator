@@ -105,6 +105,10 @@
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.carbon.micro.integrator.core</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
