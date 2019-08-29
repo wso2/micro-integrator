@@ -26,7 +26,7 @@ import org.apache.synapse.ServerConfigurationInformation;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.SynapseEnvironment;
-import org.wso2.carbon.core.AbstractAdmin;
+import org.wso2.micro.core.AbstractAdmin;
 import org.wso2.carbon.micro.integrator.initializer.persistence.MediationPersistenceManager;
 
 import java.util.concurrent.locks.Lock;
