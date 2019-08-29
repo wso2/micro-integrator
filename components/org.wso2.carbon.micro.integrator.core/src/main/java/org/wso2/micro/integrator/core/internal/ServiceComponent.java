@@ -17,7 +17,6 @@
  */
 package org.wso2.micro.integrator.core.internal;
 
-
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
@@ -54,13 +53,12 @@ import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.base.CarbonBaseConstants;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.Feature;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.application.deployer.service.ApplicationManagerService;
-import org.wso2.carbon.base.CarbonBaseConstants;
-//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.CarbonConfigurationContextFactory;
 import org.wso2.micro.core.CarbonThreadCleanup;
@@ -69,23 +67,20 @@ import org.wso2.micro.core.ServerInitializer;
 import org.wso2.micro.core.ServerManagement;
 import org.wso2.micro.core.ServerStartupObserver;
 import org.wso2.micro.core.ServerStatus;
-import org.wso2.micro.core.util.HouseKeepingTask;
-import org.wso2.micro.core.util.ParameterUtil;
-import org.wso2.micro.core.util.ServerException;
-import org.wso2.micro.core.util.Utils;
-import org.wso2.micro.core.util.Axis2ConfigItemHolder;
-import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
-import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
-import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.micro.core.util.NetworkUtils;
-import org.wso2.carbon.utils.ServerConstants;
-//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.core.init.PreAxis2ConfigItemListener;
 import org.wso2.micro.core.internal.DeploymentServerStartupObserver;
 import org.wso2.micro.core.internal.HTTPGetProcessorListener;
 import org.wso2.micro.core.multitenancy.GenericArtifactUnloader;
 import org.wso2.micro.core.transports.CarbonServlet;
+import org.wso2.micro.core.util.Axis2ConfigItemHolder;
+import org.wso2.micro.core.util.HouseKeepingTask;
+import org.wso2.micro.core.util.NetworkUtils;
+import org.wso2.micro.core.util.ParameterUtil;
+import org.wso2.micro.core.util.ServerException;
+import org.wso2.micro.core.util.Utils;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 import java.io.File;
 import java.io.InputStream;
@@ -104,52 +99,44 @@ import javax.servlet.ServletException;
 
 import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
 
+//import org.wso2.carbon.context.PrivilegedCarbonContext;
+
 //import org.wso2.carbon.core.CarbonAxisConfigurator;
 
-@Component(
-        name = "org.wso2.carbon.micro.integrator.core.internal.ServiceComponent",
-        immediate = true)
+@Component(name = "org.wso2.carbon.micro.integrator.core.internal.ServiceComponent", immediate = true)
 public class ServiceComponent {
+
 
     private static Log log = LogFactory.getLog(ServiceComponent.class);
 
-    private final Map<String, String> pendingItemMap = new ConcurrentHashMap<String, String>();
-
-    private static BundleContext bundleContext;
-    private org.wso2.micro.core.init.PreAxis2ConfigItemListener configItemListener;
-    private Timer timer = new Timer();
-
     private static final String CLIENT_REPOSITORY_LOCATION = "Axis2Config.ClientRepositoryLocation";
     private static final String CLIENT_AXIS2_XML_LOCATION = "Axis2Config.clientAxis2XmlLocation";
-
     private static final String SERVICE_PATH = "service-path";
     private static final String BUNDLE_CONTEXT_ROOT = "bundleContext-root";
     private static final String HOST_NAME = "host-name";
-
-    private org.wso2.micro.core.multitenancy.GenericArtifactUnloader genericArtifactUnloader = new GenericArtifactUnloader();
-    private static final ScheduledExecutorService artifactsCleanupExec =
-            Executors.newScheduledThreadPool(1, new CarbonThreadFactory(new ThreadGroup("ArtifactCleanupThread")));
+    private static final ScheduledExecutorService artifactsCleanupExec = Executors
+            .newScheduledThreadPool(1, new CarbonThreadFactory(new ThreadGroup("ArtifactCleanupThread")));
+    protected static CarbonServerConfigurationService serverConfigurationService;
+    protected static HttpService httpService;
+    private static BundleContext bundleContext;
+    private static ServiceRegistration appManagerRegistration;
+    //  private static ApplicationManagerService applicationManager;
+    private static Map<String, List<Feature>> requiredFeatures;
+    private final Map<String, String> pendingItemMap = new ConcurrentHashMap<String, String>();
+    public boolean isEmbedEnv = false;
+    public String serverWorkDir;
+    public String axis2RepoLocation;
     protected String serverName;
-
+    private org.wso2.micro.core.init.PreAxis2ConfigItemListener configItemListener;
+    private Timer timer = new Timer();
+    private org.wso2.micro.core.multitenancy.GenericArtifactUnloader genericArtifactUnloader = new GenericArtifactUnloader();
     private String carbonHome;
     private CarbonServerConfigurationService serverConfig;
     private Thread shutdownHook;
-    public boolean isEmbedEnv = false;
-
-    public String serverWorkDir;
-
-    public String axis2RepoLocation;
-
     private ConfigurationContext serverConfigContext;
     private ConfigurationContext clientConfigContext;
-
-    private static ServiceRegistration appManagerRegistration;
-  //  private static ApplicationManagerService applicationManager;
-    private static Map<String, List<Feature>> requiredFeatures;
     private List<AppDeploymentHandler> appHandlers = new ArrayList<AppDeploymentHandler>();
-
     private List<String> requiredServices = new ArrayList<String>();
-
     /**
      * Indicates whether the shutdown of the server was triggered by the Carbon shutdown hook
      */
@@ -159,30 +146,48 @@ public class ServiceComponent {
         return bundleContext;
     }
 
+    public static Map<String, List<Feature>> getRequiredFeatures() {
+        return requiredFeatures;
+    }
+
+    public static CarbonServerConfigurationService getServerConfigurationService() {
+        return serverConfigurationService;
+    }
+
+    @Reference(name = "server.configuration.service", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
+    protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
+        ServiceComponent.serverConfigurationService = serverConfigurationService;
+        CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
+    }
+
+    public static HttpService getHttpService() {
+        return httpService;
+    }
+
     @Activate
     protected void activate(ComponentContext ctxt) {
         try {
             // for new caching, every thread should has its own populated CC. During the deployment time we assume super tenant
-            ctxt.getBundleContext().registerService(ServerStartupObserver.class.getName(),
-                                                    new DeploymentServerStartupObserver(), null) ;
+            ctxt.getBundleContext()
+                    .registerService(ServerStartupObserver.class.getName(), new DeploymentServerStartupObserver(),
+                                     null);
             bundleContext = ctxt.getBundleContext();
             ApplicationManager applicationManager = ApplicationManager.getInstance();
             applicationManager.init(); // this will allow application manager to register deployment handlers
 
             // register ApplicationManager as a service
-            appManagerRegistration = ctxt.getBundleContext().registerService(
-                    ApplicationManagerService.class.getName(), applicationManager, null);
+            appManagerRegistration = ctxt.getBundleContext()
+                    .registerService(ApplicationManagerService.class.getName(), applicationManager, null);
             CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
 
             // read required-features.xml
-            URL reqFeaturesResource = bundleContext.getBundle()
-                    .getResource(AppDeployerConstants.REQ_FEATURES_XML);
+            URL reqFeaturesResource = bundleContext.getBundle().getResource(AppDeployerConstants.REQ_FEATURES_XML);
             if (reqFeaturesResource != null) {
                 InputStream xmlStream = reqFeaturesResource.openStream();
                 requiredFeatures = AppDeployerUtils
                         .readRequiredFeaturs(new StAXOMBuilder(xmlStream).getDocumentElement());
             }
-           // CarbonCoreDataHolder.getInstance().setBundleContext(ctxt.getBundleContext());
+            // CarbonCoreDataHolder.getInstance().setBundleContext(ctxt.getBundleContext());
             //Initializing ConfigItem Listener - Modules and Deployers
             configItemListener = new PreAxis2ConfigItemListener(bundleContext);
             initializeCarbon();
@@ -209,20 +214,15 @@ public class ServiceComponent {
         log.debug("Carbon Core bundle is deactivated ");
     }
 
-    public static Map<String, List<Feature>> getRequiredFeatures() {
-        return requiredFeatures;
-    }
-
     private void initializeCarbon() {
 
-//        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-//        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-//        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+        //        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        //        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+        //        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
 
         // Reset the SAAJ Interfaces
         System.getProperties().remove("javax.xml.soap.MessageFactory");
         System.getProperties().remove("javax.xml.soap.SOAPConnectionFactory");
-
 
         try {
             if (log.isDebugEnabled()) {
@@ -234,14 +234,12 @@ public class ServiceComponent {
             // Location for expanding web content within AAR files
             String webLocation = System.getProperty(CarbonConstants.WEB_RESOURCE_LOCATION);
             if (webLocation == null) {
-                webLocation = System.getProperty("carbon.home") + File.separator +
-                        "repository" + File.separator + "deployment" +
-                        File.separator + "server" +
-                        File.separator + "webapps" +
-                        File.separator + "wservices";
+                webLocation = System.getProperty("carbon.home") + File.separator + "repository" + File.separator
+                        + "deployment" + File.separator + "server" + File.separator + "webapps" + File.separator
+                        + "wservices";
             }
 
-            String temp = System.getProperty(ServerConstants.STANDALONE_MODE);
+            String temp = System.getProperty(MicroIntegratorBaseConstants.STANDALONE_MODE);
             if (temp != null) {
                 temp = temp.trim();
                 isEmbedEnv = temp.equals("true");
@@ -251,17 +249,16 @@ public class ServiceComponent {
 
             serverConfig = getServerConfigurationService();
             //Checking Carbon home
-            carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+            carbonHome = System.getProperty(MicroIntegratorBaseConstants.CARBON_HOME);
             if (carbonHome == null) {
-                String msg = ServerConstants.CARBON_HOME +
-                        "System property has not been set.";
+                String msg = MicroIntegratorBaseConstants.CARBON_HOME + "System property has not been set.";
                 log.fatal(msg);
                 log.fatal(serverName + " startup failed.");
                 throw new ServletException(msg);
             }
 
             try {
-                System.setProperty(ServerConstants.LOCAL_IP_ADDRESS, NetworkUtils.getLocalHostname());
+                System.setProperty(MicroIntegratorBaseConstants.LOCAL_IP_ADDRESS, NetworkUtils.getLocalHostname());
             } catch (SocketException ignored) {
             }
             /* we create the serverconfiguration in the carbon base. There we don't know the local.ip property.
@@ -269,26 +266,24 @@ public class ServiceComponent {
             //TODO: proper fix would be to move the networkUtil class to carbon.base level
             String serverURL = serverConfig.getFirstProperty(CarbonConstants.SERVER_URL);
             serverURL = Utils.replaceSystemProperty(serverURL);
-            serverConfig.overrideConfigurationProperty(CarbonConstants.SERVER_URL,serverURL);
+            serverConfig.overrideConfigurationProperty(CarbonConstants.SERVER_URL, serverURL);
             serverName = serverConfig.getFirstProperty("Name");
 
-
             String hostName = serverConfig.getFirstProperty("ClusteringHostName");
-            if (System.getProperty(ClusteringConstants.LOCAL_IP_ADDRESS) == null &&
-                    hostName != null && hostName.trim().length() != 0) {
+            if (System.getProperty(ClusteringConstants.LOCAL_IP_ADDRESS) == null && hostName != null
+                    && hostName.trim().length() != 0) {
                 System.setProperty(ClusteringConstants.LOCAL_IP_ADDRESS, hostName);
             }
 
             // Set the JGroups bind address for the use of the Caching Implementation based on
             // Infinispan.
             if (System.getProperty("bind.address") == null) {
-                System.setProperty("bind.address",
-                        (hostName != null && hostName.trim().length() != 0) ?
-                                hostName.trim() : NetworkUtils.getLocalHostname());
+                System.setProperty("bind.address", (hostName != null && hostName.trim().length() != 0) ?
+                        hostName.trim() :
+                        NetworkUtils.getLocalHostname());
             }
 
-            serverWorkDir =
-                    new File(serverConfig.getFirstProperty("WorkDirectory")).getAbsolutePath();
+            serverWorkDir = new File(serverConfig.getFirstProperty("WorkDirectory")).getAbsolutePath();
             System.setProperty("axis2.work.dir", serverWorkDir);
 
             setAxis2RepoLocation();
@@ -313,13 +308,12 @@ public class ServiceComponent {
             if (log.isDebugEnabled()) {
                 log.debug("Creating super-tenant Axis2 ConfigurationContext");
             }
-            serverConfigContext =
-                    CarbonConfigurationContextFactory.
-                            createNewConfigurationContext(carbonAxisConfigurator, bundleContext);
+            serverConfigContext = CarbonConfigurationContextFactory.
+                    createNewConfigurationContext(carbonAxisConfigurator, bundleContext);
             long end = System.currentTimeMillis();
             if (log.isDebugEnabled()) {
-                log.debug("Completed super-tenant Axis2 ConfigurationContext creation in " +
-                        ((double) (end - start) / 1000) + " sec");
+                log.debug("Completed super-tenant Axis2 ConfigurationContext creation in " + ((double) (end - start)
+                        / 1000) + " sec");
             }
 
             // Initialize ListenerManager
@@ -339,7 +333,6 @@ public class ServiceComponent {
 
             initNetworkUtils(serverConfigContext.getAxisConfiguration());
 
-
             // Enabling http binding generation
             Parameter enableHttp = new Parameter("enableHTTP", "true");
             AxisConfiguration axisConfig = serverConfigContext.getAxisConfiguration();
@@ -352,9 +345,9 @@ public class ServiceComponent {
             runInitializers();
 
             serverConfigContext.setProperty(Constants.CONTAINER_MANAGED, "true");
-            serverConfigContext.setProperty(ServerConstants.WORK_DIR, serverWorkDir);
+            serverConfigContext.setProperty(MicroIntegratorBaseConstants.WORK_DIR, serverWorkDir);
             // This is used inside the sever-admin component.
-            serverConfigContext.setProperty(ServerConstants.CARBON_INSTANCE, this);
+            serverConfigContext.setProperty(MicroIntegratorBaseConstants.CARBON_INSTANCE, this);
 
             //TODO As a tempory solution this part is added here. But when ui bundle are seperated from the core bundles
             //TODO this should be fixed.
@@ -368,7 +361,7 @@ public class ServiceComponent {
             System.setProperty("javax.net.ssl.trustStorePassword", password);
 
             addShutdownHook();
-//            registerHouseKeepingTask(serverConfigContext);
+            //            registerHouseKeepingTask(serverConfigContext);
 
             // Creating the Client side configuration context
             clientConfigContext = getClientConfigurationContext();
@@ -376,22 +369,22 @@ public class ServiceComponent {
             //TOa house keeping taskDO add this map to a house keeping task
             //Adding FILE_RESOURCE_MAP
             Object property = new TreeBidiMap();
-            clientConfigContext.setProperty(ServerConstants.FILE_RESOURCE_MAP, property);
+            clientConfigContext.setProperty(MicroIntegratorBaseConstants.FILE_RESOURCE_MAP, property);
             clientConfigContext.setContextRoot(carbonContextRoot);
 
             // If Carbon Kernel is running in the optimized mode, we do not deploy service resided in bundles.
             // Most of these services are either admin services or hidden services.
-//            if (!CarbonUtils.isOptimized()) {
-//                //Deploying Web service which resides in bundles
-//                Axis2ServiceRegistry serviceRegistry = new Axis2ServiceRegistry(serverConfigContext);
-//                serviceRegistry.register(bundleContext.getBundles());
-//                new OSGiAxis2ServiceDeployer(serverConfigContext, bundleContext).registerBundleListener(); // This will register the OSGi bundle listener
-//            }
+            //            if (!CarbonUtils.isOptimized()) {
+            //                //Deploying Web service which resides in bundles
+            //                Axis2ServiceRegistry serviceRegistry = new Axis2ServiceRegistry(serverConfigContext);
+            //                serviceRegistry.register(bundleContext.getBundles());
+            //                new OSGiAxis2ServiceDeployer(serverConfigContext, bundleContext).registerBundleListener(); // This will register the OSGi bundle listener
+            //            }
 
-          //  HttpService httpService = getHttpService();
-          //  HttpContext defaultHttpContext = httpService.createDefaultHttpContext();
+            //  HttpService httpService = getHttpService();
+            //  HttpContext defaultHttpContext = httpService.createDefaultHttpContext();
 
-          //  registerCarbonServlet(httpService, defaultHttpContext);
+            //  registerCarbonServlet(httpService, defaultHttpContext);
 
             if (log.isDebugEnabled()) {
                 log.debug("Repository       : " + axis2RepoLocation);
@@ -407,9 +400,9 @@ public class ServiceComponent {
             //Exposing metering.enabled system property. This is needed by the
             //tomcat.patch bundle to decide whether or not to publish bandwidth stat data
             String isMeteringEnabledStr = serverConfig.getFirstProperty("EnableMetering");
-            if(isMeteringEnabledStr!=null){
+            if (isMeteringEnabledStr != null) {
                 System.setProperty("metering.enabled", isMeteringEnabledStr);
-            }else{
+            } else {
                 System.setProperty("metering.enabled", "false");
             }
 
@@ -419,8 +412,7 @@ public class ServiceComponent {
             }
             bundleContext.registerService(Axis2ConfigurationContextService.class.getName(),
                                           new Axis2ConfigurationContextService(serverConfigContext,
-                                                                               clientConfigContext),
-                                          null);
+                                                                               clientConfigContext), null);
 
         } catch (Throwable e) {
             log.fatal("WSO2 Carbon initialization Failed", e);
@@ -434,11 +426,11 @@ public class ServiceComponent {
         shutdownHook = new Thread() {
             public void run() {
                 // During shutdown we assume it is triggered by super tenant
-                PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext
-                        .getThreadLocalCarbonContext();
-                privilegedCarbonContext
-                        .setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-                privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+                //                PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext
+                //                        .getThreadLocalCarbonContext();
+                //                privilegedCarbonContext
+                //                        .setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
+                //                privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
 
                 log.debug("Shutdown hook triggered....");
                 isShutdownTriggeredByShutdownHook = true;
@@ -448,17 +440,10 @@ public class ServiceComponent {
         Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
-    private void createSuperTenantCarbonContext() {
-        PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        carbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-        carbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-    }
-
     /**
      * Forced shutdown
      */
     public void shutdown() {
-        createSuperTenantCarbonContext();
         SecurityManager secMan = System.getSecurityManager();
         if (secMan != null) {
             secMan.checkPermission(new ManagementPermission("control"));
@@ -476,8 +461,8 @@ public class ServiceComponent {
                 String msg = "Cannot set server to shutdown mode";
                 log.error(msg, e);
             }
-//            CarbonCoreServiceComponent.shutdown();
-//            stopListenerManager();
+            //            CarbonCoreServiceComponent.shutdown();
+            //            stopListenerManager();
             log.debug("Shutting down OSGi framework...");
             EclipseStarter.shutdown();
             log.info("Micro Integrator Shutdown complete");
@@ -497,7 +482,7 @@ public class ServiceComponent {
      * Graceful shutdown
      */
     public void shutdownGracefully() {
-        createSuperTenantCarbonContext();
+
         try {
             ServerStatus.setServerShuttingDown();
         } catch (Exception e) {
@@ -508,8 +493,8 @@ public class ServiceComponent {
             if (log.isDebugEnabled()) {
                 log.debug("Gracefully shutting down " + serverName + "...");
             }
-            Map<String, TransportInDescription> inTransports =
-                    serverConfigContext.getAxisConfiguration().getTransportsIn();
+            Map<String, TransportInDescription> inTransports = serverConfigContext.getAxisConfiguration()
+                    .getTransportsIn();
             new ServerManagement(inTransports, serverConfigContext).startMaintenanceForShutDown();
         } catch (Exception e) {
             String msg = "Cannot put transports into maintenance mode";
@@ -519,30 +504,28 @@ public class ServiceComponent {
     }
 
     private ConfigurationContext getClientConfigurationContext() throws AxisFault {
-        String clientRepositoryLocation =
-                serverConfig.getFirstProperty(CLIENT_REPOSITORY_LOCATION);
+        String clientRepositoryLocation = serverConfig.getFirstProperty(CLIENT_REPOSITORY_LOCATION);
         String clientAxis2XmlLocationn = serverConfig.getFirstProperty(CLIENT_AXIS2_XML_LOCATION);
-        ConfigurationContext clientConfigContextToReturn =
-                ConfigurationContextFactory.createConfigurationContextFromFileSystem(
-                        clientRepositoryLocation, clientAxis2XmlLocationn);
+        ConfigurationContext clientConfigContextToReturn = ConfigurationContextFactory
+                .createConfigurationContextFromFileSystem(clientRepositoryLocation, clientAxis2XmlLocationn);
         MultiThreadedHttpConnectionManager httpConnectionManager = new MultiThreadedHttpConnectionManager();
         HttpConnectionManagerParams params = new HttpConnectionManagerParams();
 
         // Set the default max connections per host
         int defaultMaxConnPerHost = 500;
-        Parameter defaultMaxConnPerHostParam =
-                clientConfigContextToReturn.getAxisConfiguration().getParameter("defaultMaxConnPerHost");
-        if(defaultMaxConnPerHostParam != null){
-            defaultMaxConnPerHost = Integer.parseInt((String)defaultMaxConnPerHostParam.getValue());
+        Parameter defaultMaxConnPerHostParam = clientConfigContextToReturn.getAxisConfiguration()
+                .getParameter("defaultMaxConnPerHost");
+        if (defaultMaxConnPerHostParam != null) {
+            defaultMaxConnPerHost = Integer.parseInt((String) defaultMaxConnPerHostParam.getValue());
         }
         params.setDefaultMaxConnectionsPerHost(defaultMaxConnPerHost);
 
         // Set the max total connections
         int maxTotalConnections = 15000;
-        Parameter maxTotalConnectionsParam =
-                clientConfigContextToReturn.getAxisConfiguration().getParameter("maxTotalConnections");
-        if(maxTotalConnectionsParam != null){
-            maxTotalConnections = Integer.parseInt((String)maxTotalConnectionsParam.getValue());
+        Parameter maxTotalConnectionsParam = clientConfigContextToReturn.getAxisConfiguration()
+                .getParameter("maxTotalConnections");
+        if (maxTotalConnectionsParam != null) {
+            maxTotalConnections = Integer.parseInt((String) maxTotalConnectionsParam.getValue());
         }
         params.setMaxTotalConnections(maxTotalConnections);
 
@@ -550,36 +533,32 @@ public class ServiceComponent {
         params.setConnectionTimeout(600000);
 
         httpConnectionManager.setParams(params);
-        clientConfigContextToReturn.setProperty(HTTPConstants.MULTITHREAD_HTTP_CONNECTION_MANAGER,
-                httpConnectionManager);
-//        registerHouseKeepingTask(clientConfigContextToReturn);
-        clientConfigContextToReturn.setProperty(ServerConstants.WORK_DIR, serverWorkDir);
+        clientConfigContextToReturn
+                .setProperty(HTTPConstants.MULTITHREAD_HTTP_CONNECTION_MANAGER, httpConnectionManager);
+        //        registerHouseKeepingTask(clientConfigContextToReturn);
+        clientConfigContextToReturn.setProperty(MicroIntegratorBaseConstants.WORK_DIR, serverWorkDir);
         return clientConfigContextToReturn;
     }
 
     private void registerHouseKeepingTask(ConfigurationContext configurationContext) {
         if (Boolean.valueOf(serverConfig.getFirstProperty("HouseKeeping.AutoStart"))) {
             Timer houseKeepingTimer = new Timer();
-            long houseKeepingInterval =
-                    Long.parseLong(serverConfig.
-                            getFirstProperty("HouseKeeping.Interval")) * 60 * 1000;
-            Object property =
-                    configurationContext.getProperty(ServerConstants.FILE_RESOURCE_MAP);
+            long houseKeepingInterval = Long.parseLong(serverConfig.
+                    getFirstProperty("HouseKeeping.Interval")) * 60 * 1000;
+            Object property = configurationContext.getProperty(MicroIntegratorBaseConstants.FILE_RESOURCE_MAP);
             if (property == null) {
                 property = new TreeBidiMap();
-                configurationContext.setProperty(ServerConstants.FILE_RESOURCE_MAP, property);
+                configurationContext.setProperty(MicroIntegratorBaseConstants.FILE_RESOURCE_MAP, property);
             }
             houseKeepingTimer.
-                    scheduleAtFixedRate(new HouseKeepingTask(serverWorkDir, (BidiMap) property),
-                            houseKeepingInterval,
-                            houseKeepingInterval);
+                    scheduleAtFixedRate(new HouseKeepingTask(serverWorkDir, (BidiMap) property), houseKeepingInterval,
+                                        houseKeepingInterval);
         }
     }
 
     private void runInitializers() throws ServerException {
 
-        String[] initializers =
-                serverConfig.getProperties("ServerInitializers.Initializer");
+        String[] initializers = serverConfig.getProperties("ServerInitializers.Initializer");
         for (String clazzName : initializers) {
             try {
                 Class clazz = bundleContext.getBundle().loadClass(clazzName);
@@ -593,6 +572,7 @@ public class ServiceComponent {
             }
         }
     }
+
     private void setAxis2RepoLocation() {
         if (System.getProperty("axis2.repo") != null) {
             axis2RepoLocation = System.getProperty("axis2.repo");
@@ -604,21 +584,17 @@ public class ServiceComponent {
                     axis2RepoLocation = MicroIntegratorBaseUtils.getCarbonHome();
                 }
             }
-            serverConfig.setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION,
-                    axis2RepoLocation);
+            serverConfig.setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation);
         } else {
-            axis2RepoLocation = serverConfig
-                    .getFirstProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION);
+            axis2RepoLocation = serverConfig.getFirstProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION);
         }
 
         if (!axis2RepoLocation.endsWith("/")) {
-            serverConfig.setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION,
-                    axis2RepoLocation + "/");
+            serverConfig
+                    .setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation + "/");
             axis2RepoLocation = axis2RepoLocation + "/";
         }
     }
-
-
 
     private void registerCarbonServlet(HttpService httpService, HttpContext defaultHttpContext)
             throws ServletException, NamespaceException, InvalidSyntaxException {
@@ -635,34 +611,32 @@ public class ServiceComponent {
             ServiceReference filterServiceReference = bundleContext.getServiceReference(Filter.class.getName());
             if (filterServiceReference != null) {
                 Filter filter = (Filter) bundleContext.getService(filterServiceReference);
-                httpService.registerServlet(servicePath, new FilterServletAdaptor(filter, null, carbonServlet), null, defaultHttpContext);
+                httpService.registerServlet(servicePath, new FilterServletAdaptor(filter, null, carbonServlet), null,
+                                            defaultHttpContext);
             } else {
                 httpService.registerServlet(servicePath, carbonServlet, null, defaultHttpContext);
             }
-            org.wso2.micro.core.internal.HTTPGetProcessorListener getProcessorListener =
-                    new HTTPGetProcessorListener(carbonServlet, bundleContext);
+            org.wso2.micro.core.internal.HTTPGetProcessorListener getProcessorListener = new HTTPGetProcessorListener(
+                    carbonServlet, bundleContext);
             // Check whether there are any services that expose HTTPGetRequestProcessors
-            ServiceReference[] getRequestProcessors =
-                    bundleContext.getServiceReferences((String)null,
-                            "(" + CarbonConstants.HTTP_GET_REQUEST_PROCESSOR_SERVICE + "=*)");
+            ServiceReference[] getRequestProcessors = bundleContext.getServiceReferences((String) null, "("
+                    + CarbonConstants.HTTP_GET_REQUEST_PROCESSOR_SERVICE + "=*)");
 
             // If there are any we need to register them explicitly
             if (getRequestProcessors != null) {
                 for (ServiceReference getRequestProcessor : getRequestProcessors) {
-                    getProcessorListener.addHTTPGetRequestProcessor(getRequestProcessor,
-                            ServiceEvent.REGISTERED);
+                    getProcessorListener.addHTTPGetRequestProcessor(getRequestProcessor, ServiceEvent.REGISTERED);
                 }
             }
 
             // We also add a service listener to make sure we react to changes in the bundles that
             // expose HTTPGetRequestProcessors
             bundleContext.addServiceListener(getProcessorListener,
-                    "(" + CarbonConstants.HTTP_GET_REQUEST_PROCESSOR_SERVICE + "=*)");
+                                             "(" + CarbonConstants.HTTP_GET_REQUEST_PROCESSOR_SERVICE + "=*)");
         }
     }
 
-    private void initNetworkUtils(AxisConfiguration axisConfiguration)
-            throws AxisFault, SocketException {
+    private void initNetworkUtils(AxisConfiguration axisConfiguration) throws AxisFault, SocketException {
         String hostName = serverConfig.getFirstProperty("HostName");
         String mgtHostName = serverConfig.getFirstProperty("MgtHostName");
         if (hostName != null) {
@@ -684,61 +658,38 @@ public class ServiceComponent {
         NetworkUtils.init(hostName, mgtHostName);
     }
 
-    public static CarbonServerConfigurationService getServerConfigurationService() {
-        return serverConfigurationService;
-    }
-
-    public static HttpService getHttpService() {
-        return httpService;
-    }
-
-    protected static CarbonServerConfigurationService serverConfigurationService;
-
-    protected static HttpService httpService;
-
-    @Reference(
-            name = "server.configuration.service",
-            service = CarbonServerConfigurationService.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetServerConfigurationService")
-    protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
-        this.serverConfigurationService = serverConfigurationService;
-        CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
-    }
-
     protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
-        this.serverConfigurationService = null;
+        ServiceComponent.serverConfigurationService = null;
     }
 
-//    @Reference(
-//            name = "http.service",
-//            service = org.osgi.service.http.HttpService.class,
-//            cardinality = ReferenceCardinality.MANDATORY,
-//            policy = ReferencePolicy.DYNAMIC,
-//            unbind = "unsetHttpService")
-//    protected void setHttpService(HttpService httpService) {
-//        this.httpService = httpService;
-//        CarbonCoreDataHolder.getInstance().setHttpService(httpService);
-//    }
-//
-//    protected void unsetHttpService(HttpService httpService) {
-//        this.httpService = null;
-//    }
+    //    @Reference(
+    //            name = "http.service",
+    //            service = org.osgi.service.http.HttpService.class,
+    //            cardinality = ReferenceCardinality.MANDATORY,
+    //            policy = ReferencePolicy.DYNAMIC,
+    //            unbind = "unsetHttpService")
+    //    protected void setHttpService(HttpService httpService) {
+    //        this.httpService = httpService;
+    //        CarbonCoreDataHolder.getInstance().setHttpService(httpService);
+    //    }
+    //
+    //    protected void unsetHttpService(HttpService httpService) {
+    //        this.httpService = null;
+    //    }
 
-//    @Reference(
-//            name = "application.manager",
-//            service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class,
-//            cardinality = ReferenceCardinality.OPTIONAL,
-//            policy = ReferencePolicy.DYNAMIC,
-//            unbind = "unsetAppManager")
-//    protected void setAppManager(ApplicationManagerService applicationManager) {
-//        this.applicationManager = applicationManager;
-//        CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
-//    }
-//
-//    protected void unsetAppManager(ApplicationManagerService applicationManager) {
-//        this.applicationManager = null;
-//    }
+    //    @Reference(
+    //            name = "application.manager",
+    //            service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class,
+    //            cardinality = ReferenceCardinality.OPTIONAL,
+    //            policy = ReferencePolicy.DYNAMIC,
+    //            unbind = "unsetAppManager")
+    //    protected void setAppManager(ApplicationManagerService applicationManager) {
+    //        this.applicationManager = applicationManager;
+    //        CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
+    //    }
+    //
+    //    protected void unsetAppManager(ApplicationManagerService applicationManager) {
+    //        this.applicationManager = null;
+    //    }
 
 }
