@@ -16,7 +16,7 @@
 package org.wso2.carbon.micro.integrator.core.internal;
 
 //import org.apache.axis2.AxisFault;
-//import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.context.ConfigurationContext;
 //import org.apache.axis2.description.Parameter;
 //import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.logging.Log;
@@ -42,7 +42,7 @@ import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.micro.integrator.core.deployment.DeploymentService;
 //import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 //import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.utils.ConfigurationContextService;
+import org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.lang.reflect.Method;
@@ -69,7 +69,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
 //    private static final String TRANSPORT_MANAGER =
 //            "org.wso2.carbon.tomcat.ext.transport.ServletTransportManager";
 
-//    private ConfigurationContext configCtx;
+    private ConfigurationContext configCtx;
     private List<String> requiredServices = new ArrayList<String>();
     private BundleContext bundleContext;
 
@@ -242,19 +242,19 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         System.getProperties().remove("setup"); // Clear the setup System property
     }
 
-       /* @Reference(
-                name = "org.wso2.carbon.configCtx",
-                service = org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService.class,
-                cardinality = ReferenceCardinality.MANDATORY,
-                policy = ReferencePolicy.DYNAMIC,
-                unbind = "unsetConfigurationContext")
-        protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
-            this.configCtx = configCtx.getServerConfigContext();
-        }*/
+    @Reference(
+            name = "org.wso2.carbon.configCtx",
+            service = org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetConfigurationContext")
+    protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
+        this.configCtx = configCtx.getServerConfigContext();
+    }
 
-//    protected void unsetConfigurationContext(Axis2ConfigurationContextService configCtx) {
-//        this.configCtx = null;
-//    }
+    protected void unsetConfigurationContext(Axis2ConfigurationContextService configCtx) {
+        this.configCtx = null;
+    }
 
   /*  @Reference(
             name = "org.wso2.carbon.micro.integrator.core.deployment.DeploymentService",

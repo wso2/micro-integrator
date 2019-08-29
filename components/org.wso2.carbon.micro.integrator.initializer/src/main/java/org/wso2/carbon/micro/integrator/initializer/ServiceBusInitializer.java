@@ -54,7 +54,7 @@ import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.ServerShutdownHandler;
 import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
-import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
+//import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
 import org.wso2.carbon.micro.integrator.initializer.configurations.ConfigurationManager;
 import org.wso2.carbon.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.carbon.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
@@ -67,8 +67,8 @@ import org.wso2.carbon.micro.integrator.initializer.services.SynapseRegistration
 import org.wso2.carbon.micro.integrator.initializer.services.SynapseRegistrationsServiceImpl;
 import org.wso2.carbon.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.carbon.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
-import org.wso2.carbon.mediation.ntask.internal.NtaskService;
-import org.wso2.carbon.ntask.core.service.TaskService;
+//import org.wso2.carbon.mediation.ntask.internal.NtaskService;
+//import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
 import org.wso2.carbon.task.services.TaskSchedulerService;
@@ -115,19 +115,19 @@ public class ServiceBusInitializer {
 
     private ServerManager serverManager;
 
-    private TaskService taskService;
+//    private TaskService taskService;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
 
-        log.debug("Activating Micro Integrator...");
+        log.info("Activating Micro Integrator...");
         PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
         privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-        if (taskService != null && !taskService.isServerInit()) {
-            log.debug("Initialize Task Service");
-            taskService.serverInitialized();
-        }
+//        if (taskService != null && !taskService.isServerInit()) {
+//            log.info("Initialize Task Service");
+//            taskService.serverInitialized();
+//        }
         // FIXME: this is a hack to get rid of the https port retrieval from the axis2
         // configuration returning the non blocking https transport. Ideally we should be able
         // to fix this by making it possible to let the authentication of carbon be done through
@@ -499,19 +499,19 @@ public class ServiceBusInitializer {
         this.secretCallbackHandlerService = null;
     }
 
-    @Reference(
-            name = "esbntask.taskservice",
-            service = org.wso2.carbon.mediation.ntask.internal.NtaskService.class,
-            cardinality = ReferenceCardinality.OPTIONAL,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetTaskService")
-    protected void setTaskService(NtaskService taskService) {
+//    @Reference(
+//            name = "esbntask.taskservice",
+//            service = org.wso2.carbon.mediation.ntask.internal.NtaskService.class,
+//            cardinality = ReferenceCardinality.OPTIONAL,
+//            policy = ReferencePolicy.DYNAMIC,
+//            unbind = "unsetTaskService")
+    /*protected void setTaskService(NtaskService taskService) {
 
     }
 
     protected void unsetTaskService(NtaskService ntaskService) {
 
-    }
+    }*/
 
     public static ServerConfigurationInformation getConfigurationInformation() {
 
@@ -594,29 +594,29 @@ public class ServiceBusInitializer {
                 .ARTIFACT_EXTENSION);
     }
 
-    @Reference(
-            name = "inbound.endpoint.persistence.service",
-            service = org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService.class,
-            cardinality = ReferenceCardinality.OPTIONAL,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetInboundPersistenceService")
-    protected void setInboundPersistenceService(InboundEndpointPersistenceService inboundEndpoint) {
+//    @Reference(
+//            name = "inbound.endpoint.persistence.service",
+//            service = org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService.class,
+//            cardinality = ReferenceCardinality.OPTIONAL,
+//            policy = ReferencePolicy.DYNAMIC,
+//            unbind = "unsetInboundPersistenceService")
+    /*protected void setInboundPersistenceService(InboundEndpointPersistenceService inboundEndpoint) {
         // This service is just here to make sure that ServiceBus is not getting initialized
         // before the Inbound Endpoint Persistence component is up and running
     }
 
     protected void unsetInboundPersistenceService(InboundEndpointPersistenceService inboundEndpoint) {
 
-    }
+    }*/
 
-    protected void setTaskService(TaskService taskService) {
+    /*protected void setTaskService(TaskService taskService) {
 
-        log.debug("Set Task Service");
+        log.info("Set Task Service");
         this.taskService = taskService;
     }
 
     protected void unsetTaskService(TaskService taskService) {
 
         this.taskService = null;
-    }
+    }*/
 }
