@@ -36,7 +36,7 @@ import org.wso2.carbon.micro.integrator.management.apis.models.dataServices.Data
 import org.wso2.carbon.micro.integrator.management.apis.models.dataServices.DataServicesList;
 import org.wso2.carbon.micro.integrator.management.apis.models.dataServices.QuerySummary;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
-import org.wso2.carbon.service.mgt.ServiceMetaData;
+import org.wso2.micro.service.mgt.ServiceMetaData;
 
 import java.util.HashSet;
 import java.util.Map;

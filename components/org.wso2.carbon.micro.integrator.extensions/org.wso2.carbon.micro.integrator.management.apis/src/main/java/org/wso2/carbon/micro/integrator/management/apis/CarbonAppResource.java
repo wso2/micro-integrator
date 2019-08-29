@@ -23,9 +23,9 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.application.deployer.AppDeployerUtils;
-import org.wso2.carbon.application.deployer.CarbonApplication;
-import org.wso2.carbon.application.deployer.config.Artifact;
+import org.wso2.micro.application.deployer.AppDeployerUtils;
+import org.wso2.micro.application.deployer.CarbonApplication;
+import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.wso2.carbon.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager.getCarbonApps;
+import static org.wso2.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager.getCarbonApps;
 
 public class CarbonAppResource extends APIResource {
 
