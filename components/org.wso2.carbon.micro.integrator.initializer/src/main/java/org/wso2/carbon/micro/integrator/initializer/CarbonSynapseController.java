@@ -22,7 +22,6 @@ package org.wso2.carbon.micro.integrator.initializer;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.DeploymentEngine;
-import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.Handler;
 import org.apache.axis2.engine.Phase;
@@ -40,17 +39,12 @@ import org.apache.synapse.commons.snmp.SynapseSNMPAgent;
 import org.apache.synapse.config.Entry;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.config.SynapsePropertiesLoader;
-import org.apache.synapse.config.xml.MultiXMLConfigurationSerializer;
-import org.apache.synapse.core.axis2.MessageContextCreatorForAxis2;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.deployers.ClassMediatorDeployer;
 import org.apache.synapse.deployers.ExtensionDeployer;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.multitenancy.MultitenantDispatcher;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.exceptions.RegistryException;
-import org.wso2.carbon.registry.core.session.UserRegistry;
 
 import java.io.File;
 import java.io.IOException;
@@ -147,10 +141,8 @@ public class CarbonSynapseController extends Axis2SynapseController {
 
     public SynapseConfiguration createSynapseConfiguration() {
 
-        SynapseConfiguration synapseConfig = null;
-//        UserRegistry registry = getRegistry();
-
         Properties properties = SynapsePropertiesLoader.loadSynapseProperties();
+
         if (serverConfigurationInformation.getResolveRoot() != null) {
             properties.put(SynapseConstants.RESOLVE_ROOT,
                     serverConfigurationInformation.getResolveRoot());
@@ -162,21 +154,9 @@ public class CarbonSynapseController extends Axis2SynapseController {
         }
 
         //TODO load synapse config from the file
-
-        if (synapseConfig == null) {
-            // If the configuration has not been loaded from the registry load it
-            // from the file system
-            log.debug("Loading the mediation configuration from the file system");
-            synapseConfig = super.createSynapseConfiguration();
-
-
-        } else if ("true".equals(getParameter(ServiceBusConstants.SAVE_TO_FILE))) {
-            // If the configuration was loaded from the registry and the 'saveConfigToFile'
-            // system property is set we should serialize the current configuration to the
-            // file system
-            saveToFileSystem(synapseConfig);
-        }
-        return synapseConfig;
+        // Load the synapse configuration from the file system
+        log.debug("Loading the mediation configuration from the file system");
+        return super.createSynapseConfiguration();
     }
 
     public void destroySynapseEnvironment() {
@@ -197,99 +177,6 @@ public class CarbonSynapseController extends Axis2SynapseController {
         super.destroySynapseEnvironment();
     }
 
-    private void saveToFileSystem(SynapseConfiguration synapseConfig) {
-        log.info("Saving the mediation configuration to the file system");
-        String confPath = synapseConfig.getPathToConfigFile();
-        MultiXMLConfigurationSerializer serializer = new MultiXMLConfigurationSerializer(confPath);
-        serializer.serialize(synapseConfig);
-    }
-
-  /*  private void saveToRegistry(UserRegistry registry, SynapseConfiguration synapseConfig) {
-        if (registry == null) {
-            log.warn("Unable to persist the mediation configuration to the registry. System " +
-                    "registry is not available.");
-            return;
-        }
-
-        RegistryBasedSynapseConfigSerializer serializer =
-                new RegistryBasedSynapseConfigSerializer(registry, currentConfigurationName);
-        serializer.serializeConfiguration(synapseConfig);
-
-        try {
-            Resource resource;
-            if (registry.resourceExists(ServiceBusConstants.META_INF_REGISTRY_PATH)) {
-                resource = registry.get(
-                        ServiceBusConstants.META_INF_REGISTRY_PATH);
-            } else {
-                resource = registry.newResource();
-            }
-
-            resource.setProperty(ServiceBusConstants.CONFIGURATION_SERIALIZATION,
-                    ServiceBusConstants.SERIALIZED_TO_REGISTRY);
-            registry.put(ServiceBusConstants.META_INF_REGISTRY_PATH, resource);
-
-        } catch (RegistryException e) {
-            log.warn("Error ocured while saving the mediation configuration in the registry. " +
-                    "Mediation configuration might get loaded from the file system next time.", e);
-        }
-    }*/
-
-    private SynapseConfiguration loadFromRegistry(UserRegistry registry, Properties properties) {
-        if (registry == null) {
-            log.warn("Unable to load the mediation configuration from the registry. System " +
-                    "registry is not available.");
-            return null;
-        }
-
-        if (isInitialStartup(registry)) {
-            log.warn("Unable to load the mediation configuration from the registry. Mediation " +
-                    "configuration data is not available in the registry.");
-            return null;
-        }
-        String registryFailSafeProperty = getParameter(ServiceBusConstants.REGISTRY_FAIL_SAFE);
-        boolean registryFailSafe = true;
-        if ("false".equals(registryFailSafeProperty)) {
-            registryFailSafe = false;
-        }
-
-        log.debug("Loading the mediation configuration from the registry");
-        //TODO
-/*        RegistryBasedSynapseConfigBuilder builder =
-                new RegistryBasedSynapseConfigBuilder(registry, currentConfigurationName,
-                        synapseXMLLocation, properties, registryFailSafe);*/
-        SynapseConfiguration synapseConfig = null;
-
-        synapseConfig.setProperties(SynapsePropertiesLoader.loadSynapseProperties());
-
-        // Set the Axis2 ConfigurationContext to the SynapseConfiguration
-        AxisConfiguration axisConfiguration
-                = ((ConfigurationContext) getContext()).getAxisConfiguration();
-        synapseConfig.setAxisConfiguration(axisConfiguration);
-        MessageContextCreatorForAxis2.setSynConfig(synapseConfig);
-
-        // set the Synapse configuration into the Axis2 configuration as a parameter.
-        // Every component that accesses the synapse configuration should get it from
-        // the axis configuration
-        Parameter synapseConfigurationParameter = new Parameter(
-                SynapseConstants.SYNAPSE_CONFIG, synapseConfig);
-        try {
-            axisConfiguration.addParameter(synapseConfigurationParameter);
-        } catch (AxisFault e) {
-            log.warn("Could not set parameter '" + SynapseConstants.SYNAPSE_CONFIG
-                    + "' to the Axis2 configuration : " + e.getMessage());
-        }
-
-        addServerIPAndHostEnrties(synapseConfig);
-
-        // even though we are starting from the registry still we need to specify
-        // the xml config file location, just in case for a file export of the
-        // configuration
-        synapseConfig.setPathToConfigFile(ServiceBusInitializer
-                .getServerConfigurationInformation().getSynapseXMLLocation());
-        return synapseConfig;
-    }
-
-
     private void addServerIPAndHostEnrties(SynapseConfiguration configuration) {
         String hostName = ServiceBusInitializer.getServerConfigurationInformation().getHostName();
         String ipAddress = ServiceBusInitializer.getServerConfigurationInformation().getIpAddress();
@@ -306,23 +193,6 @@ public class CarbonSynapseController extends Axis2SynapseController {
         }
     }
 
-    private boolean isInitialStartup(UserRegistry registry) {
-        // this logic checks whether this is a initial startup or not
-        // by reading a registry META-INF resource
-        try {
-            if (registry.resourceExists(ServiceBusConstants.META_INF_REGISTRY_PATH)) {
-                Resource resource = registry.get(ServiceBusConstants.META_INF_REGISTRY_PATH);
-                if (resource != null && ServiceBusConstants.SERIALIZED_TO_REGISTRY.equals(
-                        resource.getProperty(ServiceBusConstants.CONFIGURATION_SERIALIZATION))) {
-                    return false;
-                }
-            }
-        } catch (RegistryException e) {
-            log.error("Error while validating mediation configuration data in the registry", e);
-        }
-
-        return true;
-    }
 
     private String  getParameter(String name) {
         String value = System.getProperty(name);
