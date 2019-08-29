@@ -156,6 +156,10 @@ public class ApiResource extends APIResource {
         JSONArray resourceListObject = new JSONArray();
         apiObject.put("resources", resourceListObject);
 
+        apiObject.put("host", api.getHost());
+        apiObject.put("context", api.getContext());
+        apiObject.put("port", api.getPort());
+
         OMElement apiConfiguration = APISerializer.serializeAPI(api);
         apiObject.put(Constants.SYNAPSE_CONFIGURATION, apiConfiguration.toString());
         Resource[] resources = api.getResources();

@@ -21,6 +21,7 @@ package org.wso2.carbon.micro.integrator.management.apis;
 
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.inbound.InboundEndpointSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.inbound.InboundEndpoint;
 import org.json.JSONArray;
@@ -32,6 +33,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 public class InboundEndpointResource extends APIResource {
 
@@ -115,17 +118,18 @@ public class InboundEndpointResource extends APIResource {
         if (Objects.isNull(inboundEndpoint)) {
             return null;
         }
-
         JSONObject inboundObject = new JSONObject();
-
         inboundObject.put(Constants.NAME, inboundEndpoint.getName());
         inboundObject.put("protocol", inboundEndpoint.getProtocol());
+        inboundObject.put("sequence", inboundEndpoint.getInjectingSeq());
+        inboundObject.put("error", inboundEndpoint.getOnErrorSeq());
 
         String statisticState = inboundEndpoint.getAspectConfiguration().isStatisticsEnable() ? Constants.ENABLED : Constants.DISABLED;
         inboundObject.put(Constants.STATS, statisticState);
 
         String tracingState = inboundEndpoint.getAspectConfiguration().isTracingEnabled() ? Constants.ENABLED : Constants.DISABLED;
         inboundObject.put(Constants.TRACING, tracingState);
+        inboundObject.put(SYNAPSE_CONFIGURATION, InboundEndpointSerializer.serializeInboundEndpoint(inboundEndpoint));
 
         JSONArray parameterListObject = new JSONArray();
 

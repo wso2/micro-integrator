@@ -26,6 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.MessageProcessorSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.message.processor.MessageProcessor;
 import org.apache.synapse.message.processor.impl.failover.FailoverScheduledMessageForwardingProcessor;
@@ -46,6 +47,7 @@ import static org.wso2.carbon.micro.integrator.management.apis.Constants.ACTIVE_
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.INACTIVE_STATUS;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.NAME;
 import static org.wso2.carbon.micro.integrator.management.apis.Constants.STATUS;
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 /**
  * Represents message processor resources defined in the synapse configuration.
@@ -176,6 +178,7 @@ public class MessageProcessorResource extends APIResource {
         jsonBody.put(PARAMETER_PROPERTY, messageProcessor.getParameters());
         jsonBody.put(MESSAGE_STORE_PROPERTY, messageProcessor.getMessageStoreName());
         jsonBody.put(STATUS, getProcessorState(messageProcessor.isDeactivated()));
+        jsonBody.put(SYNAPSE_CONFIGURATION, MessageProcessorSerializer.serializeMessageProcessor(null, messageProcessor));
 
         return jsonBody;
     }

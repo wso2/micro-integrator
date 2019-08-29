@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.MessageStoreSerializer;
 import org.apache.synapse.message.store.MessageStore;
 import org.apache.synapse.message.store.impl.jdbc.JDBCMessageStore;
 import org.apache.synapse.message.store.impl.jms.JmsStore;
@@ -35,6 +36,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+
+import static org.wso2.carbon.micro.integrator.management.apis.Constants.SYNAPSE_CONFIGURATION;
 
 /**
  * Represents Message store resource defined in the synapse configuration.
@@ -169,6 +172,7 @@ public class MessageStoreResource implements MiApiResource {
         jsonObject.put(PRODUCER_ATTRIBUTE, messageStore.getProducer());
         jsonObject.put(PROPERTIES_ATTRIBUTE, messageStore.getParameters());
         jsonObject.put(STORE_SIZE_ATTRIBUTE, messageStore.size());
+        jsonObject.put(SYNAPSE_CONFIGURATION, MessageStoreSerializer.serializeMessageStore(null, messageStore));
 
         return jsonObject;
     }
