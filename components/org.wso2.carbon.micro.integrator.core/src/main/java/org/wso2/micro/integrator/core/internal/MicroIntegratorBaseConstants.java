@@ -34,6 +34,16 @@ public class MicroIntegratorBaseConstants {
     public static final String AXIS2_CONFIG_REPO_LOCATION = "Axis2Config.RepositoryLocation";
 
     /**
+     * This is the key of the System property which indicates whether the server is running
+     * is standalone mode.
+     */
+    public static final String STANDALONE_MODE = "wso2.server.standalone";
+    public static final String FILE_RESOURCE_MAP = "file.resource.map";
+    public static final String WORK_DIR = "WORK_DIR";
+    public static final String CARBON_INSTANCE = "local_WSO2_WSAS";
+    public static final String LOCAL_IP_ADDRESS = "carbon.local.ip";
+
+    /**
      * Remove default constructor and make it not available to initialize.
      */
 
