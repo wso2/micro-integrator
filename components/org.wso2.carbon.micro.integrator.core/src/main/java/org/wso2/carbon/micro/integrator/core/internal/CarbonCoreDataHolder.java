@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.http.HttpService;
 import org.wso2.carbon.application.deployer.service.ApplicationManagerService;
+import org.wso2.carbon.micro.integrator.core.services.CarbonServerConfigurationService;
 
 /**
  * This singleton data holder contains all the data required by the Carbon core OSGi bundle

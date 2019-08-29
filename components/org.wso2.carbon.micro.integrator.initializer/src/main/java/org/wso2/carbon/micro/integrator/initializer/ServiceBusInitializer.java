@@ -73,7 +73,7 @@ import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
 import org.wso2.carbon.task.services.TaskSchedulerService;
 import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.micro.integrator.core.internal.Axis2ConfigurationContextService;
+import org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.securevault.SecurityConstants;
@@ -412,7 +412,7 @@ public class ServiceBusInitializer {
 
     @Reference(
             name = "config.context.service",
-            service = org.wso2.carbon.micro.integrator.core.internal.Axis2ConfigurationContextService.class,
+            service = Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContextService")

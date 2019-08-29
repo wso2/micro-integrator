@@ -25,7 +25,7 @@ import org.wso2.carbon.core.RegistryResources.SecurityManagement;
 import org.wso2.carbon.core.encryption.SymmetricEncryption;
 
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
+import org.wso2.carbon.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.registry.core.service.RegistryService;
 
 import javax.crypto.Cipher;

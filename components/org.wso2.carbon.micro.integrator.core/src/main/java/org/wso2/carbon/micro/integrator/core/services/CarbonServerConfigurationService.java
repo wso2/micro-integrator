@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.micro.integrator.core.internal;
+package org.wso2.carbon.micro.integrator.core.services;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
@@ -24,6 +24,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.impl.Constants;
 import org.apache.xerces.util.SecurityManager;
 import org.w3c.dom.Element;
+import org.wso2.carbon.micro.integrator.core.internal.MicroIntegratorBaseConstants;
+import org.wso2.carbon.micro.integrator.core.internal.MicroIntegratorConfigurationException;
 import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.securevault.SecretManagerInitializer;
 import org.wso2.securevault.SecretResolver;
@@ -130,7 +132,7 @@ public class CarbonServerConfigurationService {
 	 *             if the operation failed.
 	 */
 	public synchronized void init(InputStream xmlInputStream)
-			throws MicroIntegratorConfigurationException {
+            throws MicroIntegratorConfigurationException {
 		if (isInitialized) {
 			return;
 		}

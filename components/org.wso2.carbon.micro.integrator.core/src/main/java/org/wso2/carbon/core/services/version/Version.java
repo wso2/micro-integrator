@@ -18,7 +18,7 @@ package org.wso2.carbon.core.services.version;
 
 
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
+import org.wso2.carbon.micro.integrator.core.services.CarbonServerConfigurationService;
 
 /**
  * This service returns the product version
