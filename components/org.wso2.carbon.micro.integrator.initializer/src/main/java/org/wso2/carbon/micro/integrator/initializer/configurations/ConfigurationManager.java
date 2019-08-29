@@ -104,9 +104,6 @@ public class ConfigurationManager {
         if (parameter != null && parameter.getValue() != null) {
             synpaseConfigurationsRoot = parameter.getValue().toString();
         }
-
-        tenantId = PrivilegedCarbonContext.
-                getThreadLocalCarbonContext().getTenantId();
     }
 
     /**
