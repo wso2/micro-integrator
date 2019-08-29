@@ -77,14 +77,14 @@ import org.wso2.carbon.core.multitenancy.GenericArtifactUnloader;
 import org.wso2.carbon.core.transports.CarbonServlet;
 import org.wso2.carbon.core.util.HouseKeepingTask;
 import org.wso2.carbon.core.util.ParameterUtil;
+import org.wso2.carbon.core.util.ServerException;
 import org.wso2.carbon.core.util.Utils;
-import org.wso2.carbon.utils.Axis2ConfigItemHolder;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.core.util.Axis2ConfigItemHolder;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.carbon.core.util.NetworkUtils;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.ServerException;
 import org.wso2.carbon.utils.deployment.Axis2ServiceRegistry;
-import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.File;
@@ -183,7 +183,7 @@ public class ServiceComponent {
                 requiredFeatures = AppDeployerUtils
                         .readRequiredFeaturs(new StAXOMBuilder(xmlStream).getDocumentElement());
             }
-            CarbonCoreDataHolder.getInstance().setBundleContext(ctxt.getBundleContext());
+           // CarbonCoreDataHolder.getInstance().setBundleContext(ctxt.getBundleContext());
             //Initializing ConfigItem Listener - Modules and Deployers
             configItemListener = new PreAxis2ConfigItemListener(bundleContext);
             initializeCarbon();
@@ -382,12 +382,12 @@ public class ServiceComponent {
 
             // If Carbon Kernel is running in the optimized mode, we do not deploy service resided in bundles.
             // Most of these services are either admin services or hidden services.
-            if (!CarbonUtils.isOptimized()) {
-                //Deploying Web service which resides in bundles
-                Axis2ServiceRegistry serviceRegistry = new Axis2ServiceRegistry(serverConfigContext);
-                serviceRegistry.register(bundleContext.getBundles());
-                new OSGiAxis2ServiceDeployer(serverConfigContext, bundleContext).registerBundleListener(); // This will register the OSGi bundle listener
-            }
+//            if (!CarbonUtils.isOptimized()) {
+//                //Deploying Web service which resides in bundles
+//                Axis2ServiceRegistry serviceRegistry = new Axis2ServiceRegistry(serverConfigContext);
+//                serviceRegistry.register(bundleContext.getBundles());
+//                new OSGiAxis2ServiceDeployer(serverConfigContext, bundleContext).registerBundleListener(); // This will register the OSGi bundle listener
+//            }
 
           //  HttpService httpService = getHttpService();
           //  HttpContext defaultHttpContext = httpService.createDefaultHttpContext();
@@ -399,11 +399,11 @@ public class ServiceComponent {
             }
 
             // schedule the services cleanup task
-            if (GhostDeployerUtils.isGhostOn()) {
+           /* if (GhostDeployerUtils.isGhostOn()) {
                 artifactsCleanupExec.scheduleAtFixedRate(genericArtifactUnloader,
                         CarbonConstants.SERVICE_CLEANUP_PERIOD_SECS,
                         CarbonConstants.SERVICE_CLEANUP_PERIOD_SECS, TimeUnit.SECONDS);
-            }
+            }*/
 
             //Exposing metering.enabled system property. This is needed by the
             //tomcat.patch bundle to decide whether or not to publish bandwidth stat data
@@ -598,11 +598,11 @@ public class ServiceComponent {
         if (System.getProperty("axis2.repo") != null) {
             axis2RepoLocation = System.getProperty("axis2.repo");
             /* First see whether this is the -n scenario */
-            if (CarbonUtils.isMultipleInstanceCase()) {
+            if (MicroIntegratorBaseUtils.isMultipleInstanceCase()) {
                 /* Now check whether this is a ChildNode or not, if this is the
                    a ChildNode we do not deploy services to this */
-                if (!CarbonUtils.isChildNode()) {
-                    axis2RepoLocation = CarbonUtils.getCarbonHome();
+                if (!MicroIntegratorBaseUtils.isChildNode()) {
+                    axis2RepoLocation = MicroIntegratorBaseUtils.getCarbonHome();
                 }
             }
             serverConfig.setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION,

@@ -29,9 +29,9 @@ import org.wso2.carbon.core.transports.CarbonHttpResponse;
 import org.wso2.carbon.core.transports.HttpGetRequestProcessor;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.NetworkUtils;
-import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.carbon.core.util.NetworkUtils;
+//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -51,11 +51,11 @@ public class PolicyProcessor implements HttpGetRequestProcessor {
                 configCtx.getAxisConfiguration().getServiceForActivation(serviceName);
         OutputStream outputStream = response.getOutputStream();
         if (axisService != null) {
-            if (GhostDeployerUtils.isGhostService(axisService)) {
+           /* if (GhostDeployerUtils.isGhostService(axisService)) {
                 // if the existing service is a ghost service, deploy the actual one
                 axisService = GhostDeployerUtils.deployActualService(configCtx
                         .getAxisConfiguration(), axisService);
-            }
+            }*/
             if (!axisService.isActive()) {
                 response.addHeader(HTTP.CONTENT_TYPE, "text/html");
                 outputStream.write(("<h4>Service " +
@@ -142,8 +142,8 @@ public class PolicyProcessor implements HttpGetRequestProcessor {
                             response.addHeader(HTTP.CONTENT_TYPE, "text/html");
                             outputStream.write("<h4>Policy not found!</h4>".getBytes());
                         } else {
-                            String ipAddress = "http://" + NetworkUtils.getLocalHostname() + ":" +
-                                               CarbonUtils.getTransportPort(configCtx, "http");
+                            String ipAddress = "http://" + NetworkUtils.getLocalHostname() + ":" /*+
+                                               MicroIntegratorBaseUtils.getTransportPort(configCtx, "http")*/;
                             CarbonServerConfigurationService serverCofig =
                                     CarbonCoreDataHolder.getInstance().getServerConfigurationService();
                             outputStream.write(("<html><head>" +

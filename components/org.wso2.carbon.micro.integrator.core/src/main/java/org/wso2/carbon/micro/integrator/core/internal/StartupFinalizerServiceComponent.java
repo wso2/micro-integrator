@@ -40,8 +40,8 @@ import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.core.ServerStatus;
 import org.wso2.carbon.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.micro.integrator.core.deployment.DeploymentService;
-//import org.wso2.carbon.utils.CarbonUtils;
-//import org.wso2.carbon.utils.CarbonUtils;
+//import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+//import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 

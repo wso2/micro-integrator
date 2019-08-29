@@ -15,7 +15,7 @@
  */
 package org.wso2.carbon.service.mgt;
 
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 /*
 * 
@@ -38,11 +38,11 @@ public class ServiceGroupMetaData {
     }
 
     public ServiceMetaData[] getServices() {
-        return CarbonUtils.arrayCopyOf(services);
+        return MicroIntegratorBaseUtils.arrayCopyOf(services);
     }
 
     public void setServices(ServiceMetaData[] services) {
-        this.services = CarbonUtils.arrayCopyOf(services);
+        this.services = MicroIntegratorBaseUtils.arrayCopyOf(services);
     }
 
     public String getServiceContextPath() {
@@ -72,11 +72,11 @@ public class ServiceGroupMetaData {
     }
 
     public String[] getEngagedModules() {
-        return CarbonUtils.arrayCopyOf(engagedModules);
+        return MicroIntegratorBaseUtils.arrayCopyOf(engagedModules);
     }
 
     public void setEngagedModules(String[] engagedModules) {
-        this.engagedModules = CarbonUtils.arrayCopyOf(engagedModules);
+        this.engagedModules = MicroIntegratorBaseUtils.arrayCopyOf(engagedModules);
     }
 
     public boolean isDisableDeletion() {

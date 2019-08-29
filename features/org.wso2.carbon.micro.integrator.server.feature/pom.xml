@@ -79,15 +79,25 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.core</bundleDef>
-<!--                                <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.security:${product.mi.version}-->
+<!--                    mct            <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.security:${product.mi
+.version}-->
 <!--                                </bundleDef>-->
-<!--                                <bundleDef>org.apache.ws.security.wso2:wss4j:${wss4j.version}</bundleDef>-->
-<!--                                <bundleDef>org.apache.rampart.wso2:rampart-core:${rampart.wso2.version}</bundleDef>-->
-<!--                                <bundleDef>org.apache.rampart.wso2:rampart-policy:${rampart.wso2.version}</bundleDef>-->
-<!--                                <bundleDef>org.apache.rampart.wso2:rampart-trust:${rampart.wso2.version}</bundleDef>-->
+                                <bundleDef>org.apache.ws.security.wso2:wss4j:${wss4j.version}</bundleDef>
+
+
+<!--                                for axis2-->
+                                <bundleDef>org.apache.rampart.wso2:rampart-core:${rampart.wso2.version}</bundleDef>
+                                <bundleDef>org.apache.rampart.wso2:rampart-policy:${rampart.wso2.version}</bundleDef>
+                                <bundleDef>org.apache.rampart.wso2:rampart-trust:${rampart.wso2.version}</bundleDef>
+
+<!--                                rampart-core dep-->
+                                <bundleDef>
+                                    org.wso2.orbit.joda-time:joda-time:${joda-time.version}
+                                </bundleDef>
 <!--                                <bundleDef>org.wso2.siddhi:siddhi-core:${siddhi.version}</bundleDef>-->
 
-<!--                                <bundleDef>org.wso2.orbit.org.opensaml:opensaml:${opensaml.orbit.version}</bundleDef>-->
+<!--                                for rampart-core-->
+                                <bundleDef>org.wso2.orbit.org.opensaml:opensaml:${opensaml.orbit.version}</bundleDef>
 
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.user.core:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
@@ -109,9 +119,10 @@
 <!--                                <bundleDef>-->
 <!--                                    org.eclipse.equinox:org.eclipse.equinox.http.helper:${version.equinox.http.helper}-->
 <!--                                </bundleDef>-->
-<!--                                <bundleDef>-->
-<!--                                    org.wso2.orbit.org.apache.tomcat:tomcat-jsp-api:${orbit.version.tomcat.jsp.api}-->
-<!--                                </bundleDef>-->
+                                <!--javax.servlet.jsp-->
+                                <bundleDef>
+                                    org.wso2.orbit.org.apache.tomcat:tomcat-jsp-api:${orbit.version.tomcat.jsp.api}
+                                </bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat-el-api:${orbit.version.tomcat.el.api}-->
 <!--                                </bundleDef>-->
 
@@ -127,8 +138,8 @@
 <!--                                <bundleDef>au.com.bytecode.opencsv.wso2:opencsv:${version.opencsv}</bundleDef>-->
                                 <bundleDef>org.wso2.securevault:org.wso2.securevault:${securevault.version}</bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.com.h2database:h2:${version.h2.engine}</bundleDef>-->
-<!--                                <bundleDef>org.apache.axis2.wso2:axis2-json:${axis2.wso2.version}</bundleDef>-->
-<!--                                <bundleDef>org.codehaus.jettison.wso2:jettison:${orbit.version.jettison}</bundleDef>-->
+                                <bundleDef>org.apache.axis2.wso2:axis2-json:${axis2.wso2.version}</bundleDef>
+                                <bundleDef>org.codehaus.jettison.wso2:jettison:${orbit.version.jettison}</bundleDef>
 <!--                                <bundleDef>commons-pool.wso2:commons-pool:${orbit.version.commons.pool}</bundleDef>-->
 <!--                                <bundleDef>commons-dbcp.wso2:commons-dbcp:${orbit.version.commons.dbcp}</bundleDef>-->
 <!--                                <bundleDef>org.apache.abdera.wso2:abdera:${orbit.version.abdera}</bundleDef>-->
@@ -139,7 +150,7 @@
 <!--                                <bundleDef>org.apache.xmlbeans.wso2:xmlbeans:${version.xmlbeans}</bundleDef>-->
                                 <bundleDef>org.apache.ws.commons.axiom.wso2:axiom:${orbit.version.axiom}</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.neethi:neethi:${neethi.osgi.version}</bundleDef>
-<!--                                <bundleDef>org.apache.woden.wso2:woden:${version.woden}</bundleDef>-->
+                                <bundleDef>org.apache.woden.wso2:woden:${version.woden}</bundleDef>
 
 <!--                                for javax.wsdl pkg -->
                                 <bundleDef>wsdl4j.wso2:wsdl4j:${orbit.version.wsdl4j}</bundleDef>
@@ -149,16 +160,17 @@
 <!--                                <bundleDef>-->
 <!--                                    backport-util-concurrent.wso2:backport-util-concurrent:${version.backport.util.concurrent}-->
 <!--                                </bundleDef>-->
-<!--                                <bundleDef>-->
-<!--                                    org.wso2.orbit.commons-fileupload:commons-fileupload:${version.commons.fileupload}-->
-<!--                                </bundleDef>-->
+                                <bundleDef>
+                                    org.wso2.orbit.commons-fileupload:commons-fileupload:${version.commons.fileupload}
+                                </bundleDef>
                                 <bundleDef>
                                     org.wso2.orbit.commons-httpclient:commons-httpclient:${orbit.version.commons.httpclient}
                                 </bundleDef>
                                 <bundleDef>commons-io.wso2:commons-io:${orbit.version.commons.io}</bundleDef>
-<!--                                <bundleDef>-->
-<!--                                    org.wso2.orbit.commons-collections:commons-collections:${orbit.version.commons.collection}-->
-<!--                                </bundleDef>-->
+<!--                                org.apache.commons.collections.bidimap-->
+                                <bundleDef>
+                                    org.wso2.orbit.commons-collections:commons-collections:${orbit.version.commons.collection}
+                                </bundleDef>
 <!--                                <bundleDef>org.apache.httpcomponents.wso2:httpcore:${orbit.version.httpcore}</bundleDef>-->
 <!--                                <bundleDef>org.compass-project.wso2:compass:${version.compass}</bundleDef>-->
                                 <bundleDef>commons-lang.wso2:commons-lang:${orbit.version.commons.lang}</bundleDef>

@@ -159,9 +159,9 @@
                             !org.wso2.carbon.micro.integrator.core.internal,
                             !org.wso2.carbon.application.deployer.synapse.*,
                             org.wso2.carbon.micro.integrator.core.*;version="${project.version}",
-                            <!--org.wso2.carbon.core.*;version="${project.version}",
+                            org.wso2.carbon.core.*;version="${project.version}",
                             org.wso2.carbon.application.deployer.*;version="${project.version}",
-                            org.wso2.carbon.service.mgt.*;version="${project.version}"-->
+                            org.wso2.carbon.service.mgt.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
 <!--                            org.wso2.carbon.utils;version="${carbon.kernel.imp.pkg.version}"-->

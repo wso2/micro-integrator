@@ -20,7 +20,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisService;
 import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
-import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.core.util.NetworkUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

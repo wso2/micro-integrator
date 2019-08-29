@@ -15,29 +15,30 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.carbon.service.mgt;
+package org.wso2.carbon.core.util;
 
-import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.osgi.framework.Bundle;
 
-public class PolicyMetaData {
+import java.util.Arrays;
 
-    private String wrapper;
-    private String[] polycies;
+public class Axis2ConfigItemHolder {
 
-    public String getWrapper() {
-        return wrapper;
+    private Bundle[] moduleBundles;
+    private Bundle[] deployerBundles;
+
+    public Bundle[] getModuleBundles(){
+        return moduleBundles;
     }
 
-    public void setWrapper(String wrapper) {
-        this.wrapper = wrapper;
+    public Bundle[] getDeployerBundles(){
+        return deployerBundles;    
     }
 
-    public String[] getPolycies() {
-        return MicroIntegratorBaseUtils.arrayCopyOf(polycies);
+    public void setModuleBundles(Bundle[] bundles){
+        moduleBundles = Arrays.copyOf(bundles, bundles.length);
     }
 
-    public void setPolycies(String[] polycies) {
-        this.polycies = MicroIntegratorBaseUtils.arrayCopyOf(polycies);
+    public void setDeployerBundles(Bundle[] bundles){
+        deployerBundles = Arrays.copyOf(bundles, bundles.length);
     }
-
 }

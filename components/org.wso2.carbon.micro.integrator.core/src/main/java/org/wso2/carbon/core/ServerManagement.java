@@ -24,7 +24,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.carbon.utils.ManagementFactory;
 import org.wso2.carbon.utils.ServerConstants;
@@ -101,7 +101,7 @@ public class ServerManagement {
     }
 
     private void waitForServerTaskCompletion() {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         log.info("Waiting for server task completion...");
         BundleContext bundleContext = dataHolder.getBundleContext();
         if (bundleContext != null) {
@@ -135,7 +135,7 @@ public class ServerManagement {
      * Wait until all deployment tasks have completed
      */
     private void waitForDeploymentThreadCompletion() {
-        CarbonUtils.checkSecurity();
+        MicroIntegratorBaseUtils.checkSecurity();
         log.info("Waiting for deployment completion...");
 
         // Stop all deployment tasks by calling cleanup on the super-tenant & tenant configurators

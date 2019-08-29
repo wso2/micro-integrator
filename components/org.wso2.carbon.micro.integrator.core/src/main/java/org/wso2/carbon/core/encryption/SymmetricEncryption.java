@@ -21,7 +21,8 @@ package org.wso2.carbon.core.encryption;
 import org.apache.axiom.om.util.Base64;
 import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.core.util.CryptoException;
-import org.wso2.carbon.utils.CarbonUtils;
+//import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
@@ -78,7 +79,7 @@ public class SymmetricEncryption {
             symmetricKeyEncryptAlgo = serverConfiguration.getFirstProperty("SymmetricEncryption.Algorithm");
             symmetricKeySecureVaultAlias = serverConfiguration.getFirstProperty("SymmetricEncryption.SecureVaultAlias");
 
-            String filePath = CarbonUtils.getCarbonHome() + File.separator + "repository" + File.separator + "resources" +
+            String filePath = MicroIntegratorBaseUtils.getCarbonHome() + File.separator + "repository" + File.separator + "resources" +
                     File.separator + "security" + File.separator + "symmetric-key.properties";
 
             File file = new File(filePath);

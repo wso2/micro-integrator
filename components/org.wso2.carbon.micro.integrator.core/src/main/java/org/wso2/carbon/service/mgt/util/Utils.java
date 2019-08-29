@@ -23,8 +23,9 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.core.transports.http.HttpTransportListener;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.NetworkUtils;
+import org.wso2.carbon.core.util.NetworkUtils;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+//import org.wso2.carbon.core.util.NetworkUtils;
 
 import java.io.File;
 import java.net.SocketException;
@@ -94,35 +95,6 @@ public final class Utils {
             isServletTransportSet = true;
         }
         return isServletTransport;
-    }
-
-    public static String getTryitURL(String serviceName,
-                                     ConfigurationContext configurationContext)
-            throws AxisFault {
-        AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
-        // If axis2 uses the servlet transport then we could use the prefix of its endpoint URL to
-        // determine the tryit url
-        String wsdlURL = getWsdlInformation(serviceName, axisConfig)[0];
-        String tryitPrefix = wsdlURL.substring(0, wsdlURL.length() - serviceName.length() - 5);
-        if (!isServletTransport(axisConfig)) {
-            int tenantIndex = tryitPrefix.indexOf("/t/");
-            if (tenantIndex != -1) {
-                String tmpTryitPrefix = tryitPrefix.substring(
-                        tryitPrefix.substring(0, tryitPrefix.indexOf("/t/")).lastIndexOf("/"));  
-                //Check if the  Webapp context root of WSO2 Carbon is set.
-                tryitPrefix = tryitPrefix.replaceFirst("//", "");
-                if(tryitPrefix.substring(0, tryitPrefix.indexOf("/services/")).lastIndexOf("/") > -1){
-                    tryitPrefix = tryitPrefix.substring(
-                            tryitPrefix.substring(0, tryitPrefix.indexOf("/services/")).lastIndexOf("/"));                
-                }else{
-                	tryitPrefix = tmpTryitPrefix;	
-                }
-                
-            } else {
-                tryitPrefix = configurationContext.getServiceContextPath() + "/";
-            }
-        }
-        return CarbonUtils.getProxyContextPath(false) + tryitPrefix + serviceName + "?tryit";
     }
 
     /**

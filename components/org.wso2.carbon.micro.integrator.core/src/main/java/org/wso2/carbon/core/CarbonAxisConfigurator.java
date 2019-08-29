@@ -16,6 +16,7 @@
 
 package org.wso2.carbon.core;
 
+import com.sun.xml.bind.v2.TODO;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -37,16 +38,21 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.utils.Axis2ConfigItemHolder;
-import org.wso2.carbon.utils.CarbonUtils;
-import org.wso2.carbon.utils.ServerException;
+//import org.wso2.carbon.core.util.Axis2ConfigItemHolder;
+//import org.wso2.carbon.core.services.listners.Axis2ConfigServiceListener;
+import org.wso2.carbon.application.deployer.Axis2DeployerProvider;
+import org.wso2.carbon.core.services.listners.Axis2ConfigServiceListener;
+import org.wso2.carbon.core.util.Axis2ConfigItemHolder;
+import org.wso2.carbon.core.util.ServerException;
+import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+//import org.wso2.carbon.utils.ServerException;
 import org.wso2.carbon.utils.component.xml.config.DeployerConfig;
-import org.wso2.carbon.utils.deployment.Axis2DeployerProvider;
-import org.wso2.carbon.utils.deployment.Axis2DeployerRegistry;
-import org.wso2.carbon.utils.deployment.Axis2ModuleRegistry;
+//import org.wso2.carbon.utils.deployment.Axis2DeployerProvider;
+//import org.wso2.carbon.utils.deployment.Axis2DeployerRegistry;
+//import org.wso2.carbon.utils.deployment.Axis2ModuleRegistry;
 import org.wso2.carbon.utils.deployment.GhostArtifactRepository;
-import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
-import org.wso2.carbon.utils.deployment.service.listeners.Axis2ConfigServiceListener;
+//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
+//import org.wso2.carbon.utils.deployment.service.listeners.Axis2ConfigServiceListener;
 
 import javax.xml.namespace.QName;
 import java.io.File;
@@ -113,15 +119,14 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
      * @param weblocation  weblocation
      * @throws ServerException ServerException
      */
-    public void init(String repoLocation, String weblocation) throws
-            ServerException {
+    public void init(String repoLocation, String weblocation) throws ServerException {
         if (repoLocation == null) {
             throw new ServerException("Axis2 repository not specified!");
         }
         this.webLocation = weblocation;
 
         // Check whether this is a URL
-        isUrlRepo = CarbonUtils.isURL(repoLocation);
+        isUrlRepo = MicroIntegratorBaseUtils.isURL(repoLocation);
 
         if (isUrlRepo) { // Is repoLocation a URL Repo?
             try {
@@ -147,9 +152,9 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
             }
         }
 
-        axis2xml = CarbonUtils.getAxis2Xml();
+        axis2xml = MicroIntegratorBaseUtils.getAxis2Xml();
 
-        isUrlAxis2Xml = CarbonUtils.isURL(axis2xml);
+        isUrlAxis2Xml = MicroIntegratorBaseUtils.isURL(axis2xml);
 
         if (!isUrlAxis2Xml) { // Is axis2xml a URL to the axis2.xml file?
             File configFile = new File(axis2xml);
@@ -209,20 +214,21 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
             }
         }
         List<DeployerConfig> deployerConfigs = readDeployerConfigs(axis2DeployerProviderList);
-        if (GhostDeployerUtils.isGhostOn()) {
+       /* if (GhostDeployerUtils.isGhostOn()) {
             GhostArtifactRepository ghostArtifactRepository = new GhostArtifactRepository(axisConfig);
             GhostDeployerUtils.setGhostArtifactRepository(ghostArtifactRepository, axisConfig);
-        }
+        }*/
 
         // Adding deployers from vhosts and deployers which come inside bundles
-        new Axis2DeployerRegistry(axisConfig).register(configItemHolder.getDeployerBundles(),
-                deployerConfigs);
+  //   TODO
+        /*  new Axis2DeployerRegistry(axisConfig).register(configItemHolder.getDeployerBundles(),
+                deployerConfigs);*/
 
         //Deploying modules which come inside bundles.
-        Axis2ModuleRegistry moduleRegistry = new Axis2ModuleRegistry(axisConfig);
-        if (configItemHolder.getModuleBundles() != null) {
+      // TODO  Axis2ModuleRegistry moduleRegistry = new Axis2ModuleRegistry(axisConfig);
+       /* if (configItemHolder.getModuleBundles() != null) {
             moduleRegistry.register(configItemHolder.getModuleBundles());
-        }
+        }*/
 
         globallyEngagedModules = axisConfig.getEngagedModules();
         if (repoLocation != null && repoLocation.trim().length() != 0) {
@@ -242,17 +248,17 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
             loadFromClassPath();
         }
 
-        if (GhostDeployerUtils.isGhostOn()) {
+        /*if (GhostDeployerUtils.isGhostOn()) {
             // set the service class loader in the axisConfig, this is needed due to ghost deployer
             // as the service deployer is no longer treated as a special case, we have to do this
             File axis2ServicesDir = new File(repoLocation,
-                    CarbonUtils.getAxis2ServicesDir(axisConfig));
+                    MicroIntegratorBaseUtils.getAxis2ServicesDir(axisConfig));
             if (axis2ServicesDir.exists()) {
                 axisConfig.setServiceClassLoader(
                         Utils.getClassLoader(axisConfig.getSystemClassLoader(), axis2ServicesDir,
                                 axisConfig.isChildFirstClassLoading()));
             }
-        }
+        }*/
 
         for (Object globallyEngagedModule : globallyEngagedModules) {
             AxisModule module = (AxisModule) globallyEngagedModule;
@@ -331,7 +337,7 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
                 new AxisConfigBuilder(in, axisConfig, this);
         builder.populateConfig();
         /* if user is starting multiple instances change the default port numbers before starting Transports */
-        if (CarbonUtils.isChildNode()) {
+        if (MicroIntegratorBaseUtils.isChildNode()) {
             try {
                 OMElement element = (OMElement) XMLUtils.toOM(getAxis2XmlInputStream());
                 Iterator trs_Reivers =
@@ -485,7 +491,7 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
     protected void prepareRepository(String repositoryName) {
         repositoryDir = new File(repositoryName);
         // set a fake services dir which is not there
-        if (servicesPath != null && !GhostDeployerUtils.isGhostOn()) {
+        if (servicesPath != null /*&& !GhostDeployerUtils.isGhostOn()*/) {
             servicesDir = new File(servicesPath);
             if (!servicesDir.exists()) {
                 servicesDir = new File(repositoryDir, servicesPath);

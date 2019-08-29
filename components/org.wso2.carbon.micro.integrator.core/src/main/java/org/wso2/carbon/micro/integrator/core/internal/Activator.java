@@ -100,6 +100,7 @@ public class Activator implements BundleActivator {
         registration = bundleContext.registerService(CarbonServerConfigurationService.class.getName(),
                                                      carbonServerConfiguration,
                                                      null);
+        CarbonCoreDataHolder.getInstance().setBundleContext(bundleContext);
     }
 
     private void initServerConfiguration(CarbonServerConfigurationService carbonServerConfiguration)

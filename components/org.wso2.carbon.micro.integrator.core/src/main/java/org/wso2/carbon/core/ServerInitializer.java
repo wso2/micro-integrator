@@ -18,7 +18,8 @@ package org.wso2.carbon.core;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
-import org.wso2.carbon.utils.ServerException;
+
+import org.wso2.carbon.core.util.ServerException;
 
 /*
  * Server intializing code which will be run when the Carbon server is initialized
