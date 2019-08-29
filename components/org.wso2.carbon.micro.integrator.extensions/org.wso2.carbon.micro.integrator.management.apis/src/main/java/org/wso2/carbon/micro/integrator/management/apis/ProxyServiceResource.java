@@ -34,7 +34,7 @@ import org.apache.synapse.core.axis2.ProxyService;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.carbon.service.mgt.ServiceAdmin;
-import org.wso2.carbon.service.mgt.ServiceMetaData;
+import org.wso2.micro.service.mgt.ServiceMetaData;
 
 import java.io.IOException;
 import java.util.Collection;
