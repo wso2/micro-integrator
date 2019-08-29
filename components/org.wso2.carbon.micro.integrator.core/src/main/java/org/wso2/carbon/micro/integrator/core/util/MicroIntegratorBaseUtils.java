@@ -23,7 +23,7 @@ import org.apache.axis2.deployment.DeploymentConstants;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
+import org.wso2.carbon.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.carbon.utils.ServerConstants;
 

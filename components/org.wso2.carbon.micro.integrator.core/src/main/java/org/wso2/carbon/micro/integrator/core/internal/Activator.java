@@ -25,15 +25,10 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-import org.wso2.carbon.context.CarbonCoreInitializedEvent;
-import org.wso2.carbon.context.CarbonCoreInitializedEventImpl;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.utils.deployment.GhostMetaArtifactsLoader;
-import org.wso2.carbon.utils.multitenancy.GhostServiceMetaArtifactsLoader;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
-import javax.servlet.ServletException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

@@ -112,7 +112,7 @@ public class AppDeployerServiceComponent {
      */
     /*@Reference(
             name = "org.wso2.carbon.configCtx",
-            service = org.wso2.carbon.micro.integrator.core.internal.Axis2ConfigurationContextService.class,
+            service = org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContext")

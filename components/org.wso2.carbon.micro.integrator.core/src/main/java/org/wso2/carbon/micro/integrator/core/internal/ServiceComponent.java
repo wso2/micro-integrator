@@ -69,7 +69,6 @@ import org.wso2.carbon.core.ServerInitializer;
 import org.wso2.carbon.core.ServerManagement;
 import org.wso2.carbon.core.ServerStartupObserver;
 import org.wso2.carbon.core.ServerStatus;
-import org.wso2.carbon.core.deployment.OSGiAxis2ServiceDeployer;
 import org.wso2.carbon.core.init.PreAxis2ConfigItemListener;
 import org.wso2.carbon.core.internal.DeploymentServerStartupObserver;
 import org.wso2.carbon.core.internal.HTTPGetProcessorListener;
@@ -80,10 +79,11 @@ import org.wso2.carbon.core.util.ParameterUtil;
 import org.wso2.carbon.core.util.ServerException;
 import org.wso2.carbon.core.util.Utils;
 import org.wso2.carbon.core.util.Axis2ConfigItemHolder;
+import org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService;
+import org.wso2.carbon.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.core.util.NetworkUtils;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.deployment.Axis2ServiceRegistry;
 //import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -99,7 +99,6 @@ import java.util.Timer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 import javax.servlet.Filter;
 import javax.servlet.ServletException;
 
@@ -699,7 +698,7 @@ public class ServiceComponent {
 
     @Reference(
             name = "server.configuration.service",
-            service = org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService.class,
+            service = CarbonServerConfigurationService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetServerConfigurationService")

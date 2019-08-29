@@ -28,8 +28,7 @@ import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
 import org.wso2.carbon.core.transports.HttpGetRequestProcessor;
 import org.wso2.carbon.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.carbon.micro.integrator.core.internal.CarbonServerConfigurationService;
-import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.carbon.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.core.util.NetworkUtils;
 //import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
