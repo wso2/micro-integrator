@@ -26,9 +26,7 @@ import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.FileManipulator;
-import org.wso2.carbon.utils.ManagementFactory;
 import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.WaitBeforeShutdownObserver;
 
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
@@ -106,9 +104,9 @@ public class ServerManagement {
         BundleContext bundleContext = dataHolder.getBundleContext();
         if (bundleContext != null) {
             @SuppressWarnings("unchecked")
-            ServiceTracker tracker =
-                    new ServiceTracker(bundleContext,
-                            WaitBeforeShutdownObserver.class.getName(), null);
+            ServiceTracker tracker = new ServiceTracker(bundleContext,
+                                                        WaitBeforeShutdownObserver.class.getName(),
+                                                        null);
             tracker.open();
             Object[] services = tracker.getServices();
             if (services != null) {
@@ -199,7 +197,7 @@ public class ServerManagement {
          * Get all MBeans with names such as Catalina:type=RequestProcessor,worker=http-9762,name=HttpRequest<n>
          * & Catalina:type=RequestProcessor,worker=http-9762,name=HttpsRequest<n>
          */
-        MBeanServer mbs = ManagementFactory.getMBeanServer();
+        MBeanServer mbs = MbeanManagementFactory.getMBeanServer();
         boolean areRequestsInService;
         long start = System.currentTimeMillis();
         do {
