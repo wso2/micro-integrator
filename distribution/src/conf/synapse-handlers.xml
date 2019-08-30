@@ -17,5 +17,5 @@
   -->
 
 <handlers>
-  <handler name="IntegratorHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorSynapseHandler"/>
+<!--  <handler name="IntegratorHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorSynapseHandler"/>-->
 </handlers>
