@@ -42,9 +42,7 @@ import org.apache.synapse.config.SynapsePropertiesLoader;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.deployers.ClassMediatorDeployer;
 import org.apache.synapse.deployers.ExtensionDeployer;
-import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.base.ServerConfiguration;
-import org.wso2.carbon.core.multitenancy.MultitenantDispatcher;
 
 import java.io.File;
 import java.io.IOException;
@@ -56,6 +54,10 @@ public class CarbonSynapseController extends Axis2SynapseController {
     private static final Log log = LogFactory.getLog(CarbonSynapseController.class);
 
     private static final String PARAMETER_VALUE_TRUE = Boolean.toString(true);
+
+    public static final String MULTI_TENANT_DISPATCHER_NAME = "MultitenantDispatcher";
+
+    public static final String KEEP_SERVICE_HISTORY_PARAM = "keepServiceHistory";
 
     private String currentConfigurationName;
 
@@ -127,7 +129,8 @@ public class CarbonSynapseController extends Axis2SynapseController {
                 if (PhaseMetadata.PHASE_DISPATCH.equals(inPhase.getPhaseName())) {
 
                     for (Handler handler : inPhase.getHandlers()) {
-                        if (MultitenantDispatcher.NAME.equals(handler.getName())) {
+                        // TODO : need to investigate and remove this logic since no support for Multi tenancy in MI
+                        if (MULTI_TENANT_DISPATCHER_NAME.equals(handler.getName())) {
                             return;
                         }
                     }
@@ -165,7 +168,7 @@ public class CarbonSynapseController extends Axis2SynapseController {
         // history being deleted on undeploying services at destroy time
         for(ProxyService proxy : synapseConfiguration.getProxyServices()) {
             try {
-                proxy.getAxisService().addParameter(CarbonConstants.KEEP_SERVICE_HISTORY_PARAM, PARAMETER_VALUE_TRUE);
+                proxy.getAxisService().addParameter(KEEP_SERVICE_HISTORY_PARAM, PARAMETER_VALUE_TRUE);
             } catch (AxisFault axisFault) {
                 log.error("Error while accessing the Proxy Service " + proxy.getName()
                         + ". Service configuration history might get lost", axisFault);
