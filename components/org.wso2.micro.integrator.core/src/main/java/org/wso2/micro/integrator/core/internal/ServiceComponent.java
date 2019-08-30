@@ -103,7 +103,7 @@ import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
 
 //import org.wso2.carbon.core.CarbonAxisConfigurator;
 
-@Component(name = "org.wso2.carbon.micro.integrator.core.internal.ServiceComponent", immediate = true)
+@Component(name = "org.wso2.micro.integrator.core.internal.ServiceComponent", immediate = true)
 public class ServiceComponent {
 
 

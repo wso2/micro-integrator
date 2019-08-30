@@ -28,7 +28,7 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.micro.integrator.core</artifactId>
+    <artifactId>org.wso2.micro.integrator.core</artifactId>
     <name>WSO2 Micro Integrator - Core Component</name>
     <url>http://wso2.org</url>
 

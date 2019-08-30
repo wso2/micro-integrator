@@ -84,7 +84,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.carbon.micro.integrator.core</artifactId>
+                <artifactId>org.wso2.micro.integrator.core</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>

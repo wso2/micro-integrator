@@ -91,9 +91,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @SuppressWarnings({"JavaDoc", "UnusedDeclaration"})
-@Component(
-        name = "mi.core.initializer",
-        immediate = true)
+@Component(name = "org.wso2.carbon.micro.integrator.initializer.ServiceBusInitializer", immediate = true)
 public class ServiceBusInitializer {
 
     private static final Log log = LogFactory.getLog(ServiceBusInitializer.class);
