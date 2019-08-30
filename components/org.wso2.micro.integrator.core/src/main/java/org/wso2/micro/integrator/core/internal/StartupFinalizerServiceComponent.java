@@ -117,7 +117,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-        listerManagerServiceRegistration.unregister();
+//        listerManagerServiceRegistration.unregister();
     }
 
     private void populateRequiredServices() {
