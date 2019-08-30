@@ -41,7 +41,6 @@ import org.apache.synapse.message.processor.MessageProcessor;
 import org.apache.synapse.message.store.MessageStore;
 import org.apache.synapse.rest.API;
 import org.wso2.carbon.micro.integrator.initializer.ServiceBusConstants;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -335,9 +334,6 @@ public class MediationPersistenceManager {
                 log.debug("Starting the mediation persistence worker thread");
             }
 
-            if(CarbonUtils.isWorkerNode()){
-                log.info("This is a worker node, Mediation persistance manager will be disabled.");
-            }
             while (proceed) {
                 PersistenceRequest request;
 
@@ -354,10 +350,6 @@ public class MediationPersistenceManager {
                     }
 
                     // Simply go to the next iteration
-                    continue;
-                }
-                if(CarbonUtils.isWorkerNode()){
-                    log.debug("Ignoring persist request because this is a worker node");
                     continue;
                 }
                 try {
