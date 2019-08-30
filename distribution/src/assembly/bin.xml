@@ -96,6 +96,8 @@
             <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
             <outputDirectory>wso2mi-${pom.version}</outputDirectory>
             <excludes>
+<!--                TODO add version and echo services-->
+                <exclude>**/*.aar</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2</exclude>
                 <exclude>**/repository/conf/**</exclude>
