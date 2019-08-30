@@ -24,7 +24,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
+import TableHeaderBox from '../common/TableHeaderBox';
 
 var format = require('xml-formatter');
 import Box from '@material-ui/core/Box';
@@ -79,9 +79,7 @@ export default class ProxyDetailsPage extends Component {
         return (
             <div>
                 <Box pb={5}>
-                    <Typography variant="h6" id="tableTitle">
-                        Service Details
-                    </Typography>
+                    <TableHeaderBox title="Proxy Details"/>
                     <Table size="small">
                         <TableBody>
                             {
@@ -97,9 +95,7 @@ export default class ProxyDetailsPage extends Component {
                 </Box>
 
                 <Box pb={5}>
-                    <Typography variant="h6" id="tableTitle">
-                        Endpoints
-                    </Typography>
+                    <TableHeaderBox title="Endpoints"/>
                     <Table size="small">
                         <TableBody>
                             {

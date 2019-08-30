@@ -24,7 +24,7 @@ import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
+import TableHeaderBox from '../common/TableHeaderBox';
 
 import Box from '@material-ui/core/Box';
 
@@ -73,9 +73,7 @@ export default class MessageStoreDetailsPage extends Component {
         return (
             <div>
                 <Box pb={5}>
-                    <Typography variant="h6" id="tableTitle">
-                        Store Details
-                    </Typography>
+                    <TableHeaderBox title="Store Details"/>
                     <Table size="small">
                         <TableBody>
                             {
@@ -91,9 +89,7 @@ export default class MessageStoreDetailsPage extends Component {
                 </Box>
 
                 <Box pb={5}>
-                    <Typography variant="h6" id="tableTitle">
-                        Parameters
-                    </Typography>
+                    <TableHeaderBox title="Parameters"/>
                     <Table size="small">
                         <TableBody>
                             {

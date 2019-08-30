@@ -28,41 +28,39 @@ import TableHeaderBox from '../common/TableHeaderBox';
 
 import Box from '@material-ui/core/Box';
 
-export default class MessageProcessorDetailPage extends Component {
+export default class ApiDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            metaData: [],
-            parameters: {}
+            metaData: []
         };
     }
 
     /**
-     * Retrieve message-store details from the MI.
+     * Retrieve api details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveMessageProcessorInfo(values.name);
+        this.retrieveApiInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveMessageProcessorInfo(name) {
+    retrieveApiInfo(name) {
         const metaData = [];
-        new ResourceAPI().getMessageProcessorByName(name).then((response) => {
+        new ResourceAPI().getApiByName(name).then((response) => {
 
-            metaData.push(this.createData("Processor Name", response.data.name));
-            metaData.push(this.createData("Message Store", response.data.messageStore));
-            metaData.push(this.createData("Type", response.data.type));
-            const parameters = response.data.parameters || {};
+            metaData.push(this.createData("API Name", response.data.name));
+            metaData.push(this.createData("Context", response.data.context));
+            metaData.push(this.createData("Host Name", response.data.host));
+            metaData.push(this.createData("Port", response.data.port));
             this.setState(
                 {
-                    metaData: metaData,
-                    parameters: parameters
+                    metaData: metaData
                 });
 
         }).catch((error) => {
@@ -70,11 +68,11 @@ export default class MessageProcessorDetailPage extends Component {
         });
     }
 
-    renderMessageProcessorDetails() {
+    renderApiDetails() {
         return (
             <div>
                 <Box pb={5}>
-                    <TableHeaderBox title="Processor Details"/>
+                    <TableHeaderBox title="API Details"/>
                     <Table size="small">
                         <TableBody>
                             {
@@ -88,29 +86,14 @@ export default class MessageProcessorDetailPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
-
-                <Box pb={5}>
-                    <TableHeaderBox title="Parameters"/>
-                    <Table size="small">
-                        <TableBody>
-                            {
-                                Object.keys(this.state.parameters).map(key => (
-                                    <TableRow>
-                                        <TableCell>{key}</TableCell>
-                                        <TableCell>{this.state.parameters[key]}</TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </Box>
             </div>
         );
     }
 
     render() {
+        console.log(this.state.config);
         return (
-            <ResourceExplorerParent content={this.renderMessageProcessorDetails()}/>
+            <ResourceExplorerParent content={this.renderApiDetails()}/>
         );
     }
 }

@@ -61,4 +61,8 @@ export default class ResourceAPI {
         return this.getHTTPClient().get(`/message-processors?name=${name}`);
     }
 
+    getLocalEntryByName(name){
+        return this.getHTTPClient().get(`/local-entries?name=${name}`);
+    }
+
 }

@@ -28,41 +28,39 @@ import TableHeaderBox from '../common/TableHeaderBox';
 
 import Box from '@material-ui/core/Box';
 
-export default class MessageProcessorDetailPage extends Component {
+export default class LocalEntryDetailsPage extends Component{
 
     constructor(props) {
         super(props);
         this.state = {
             metaData: [],
-            parameters: {}
+            value: "",
         };
     }
 
     /**
-     * Retrieve message-store details from the MI.
+     * Retrieve local entry details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveMessageProcessorInfo(values.name);
+        this.retrieveLocalEntryInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveMessageProcessorInfo(name) {
+    retrieveLocalEntryInfo(name) {
         const metaData = [];
-        new ResourceAPI().getMessageProcessorByName(name).then((response) => {
+        new ResourceAPI().getLocalEntryByName(name).then((response) => {
 
-            metaData.push(this.createData("Processor Name", response.data.name));
-            metaData.push(this.createData("Message Store", response.data.messageStore));
+            metaData.push(this.createData("Local Entry Name", response.data.name));
             metaData.push(this.createData("Type", response.data.type));
-            const parameters = response.data.parameters || {};
             this.setState(
                 {
                     metaData: metaData,
-                    parameters: parameters
+                    value: response.data.value
                 });
 
         }).catch((error) => {
@@ -70,11 +68,11 @@ export default class MessageProcessorDetailPage extends Component {
         });
     }
 
-    renderMessageProcessorDetails() {
+    renderLocalEntryDetails() {
         return (
             <div>
                 <Box pb={5}>
-                    <TableHeaderBox title="Processor Details"/>
+                    <TableHeaderBox title="Entry Details"/>
                     <Table size="small">
                         <TableBody>
                             {
@@ -90,27 +88,19 @@ export default class MessageProcessorDetailPage extends Component {
                 </Box>
 
                 <Box pb={5}>
-                    <TableHeaderBox title="Parameters"/>
-                    <Table size="small">
-                        <TableBody>
-                            {
-                                Object.keys(this.state.parameters).map(key => (
-                                    <TableRow>
-                                        <TableCell>{key}</TableCell>
-                                        <TableCell>{this.state.parameters[key]}</TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
+                    <TableHeaderBox title="Value"/>
+                    <Box boxShadow={1} minHeight={100} color="text.secondary">
+                        {this.state.value}
+                    </Box>
                 </Box>
             </div>
         );
     }
 
     render() {
+        console.log(this.state.config);
         return (
-            <ResourceExplorerParent content={this.renderMessageProcessorDetails()}/>
+            <ResourceExplorerParent content={this.renderLocalEntryDetails()}/>
         );
     }
 }
