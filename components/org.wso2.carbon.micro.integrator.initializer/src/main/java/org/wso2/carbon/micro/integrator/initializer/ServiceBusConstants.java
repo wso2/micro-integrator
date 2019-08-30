@@ -16,8 +16,6 @@
 
 package org.wso2.carbon.micro.integrator.initializer;
 
-import org.wso2.carbon.core.RegistryResources;
-import org.wso2.carbon.registry.core.RegistryConstants;
 
 /**
  * Mediation initializer constants
@@ -25,10 +23,10 @@ import org.wso2.carbon.registry.core.RegistryConstants;
 @SuppressWarnings({"UnusedDeclaration"})
 public final class ServiceBusConstants {
 
-    public static final String META_INF_REGISTRY_PATH = RegistryResources.ROOT + "esb"
-            + RegistryConstants.PATH_SEPARATOR + "configuration";
-    public static final String SYNAPSE_CONFIG_REGISTRY_SPACE
-            = RegistryResources.ROOT + "synapse";
+    public static final String REGISTRY_PATH_SEPARATOR = "/";
+    public static final String REGISTRY_ROOT = "/repository/";
+    public static final String META_INF_REGISTRY_PATH = REGISTRY_ROOT + "esb" + REGISTRY_PATH_SEPARATOR + "configuration";
+    public static final String SYNAPSE_CONFIG_REGISTRY_SPACE = REGISTRY_ROOT + "synapse";
     public static final String STRUCTURE_CREATED = "created";
     public static final String DEFAULT_COLLECTIONS_PROPERTY = "defaultCollections";
     public static final String DEFAULT_ESBREGISTRY_ITEM = "DefaultESBRegistry.Item";
