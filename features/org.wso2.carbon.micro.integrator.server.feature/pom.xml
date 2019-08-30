@@ -36,7 +36,7 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.carbon.micro.integrator.core</artifactId>
+            <artifactId>org.wso2.micro.integrator.core</artifactId>
         </dependency>
     </dependencies>
 
@@ -78,7 +78,7 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.core</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.core</bundleDef>
 <!--                    mct            <bundleDef>org.wso2.ei:org.wso2.carbon.micro.integrator.security:${product.mi
 .version}-->
 <!--                                </bundleDef>-->

@@ -41,16 +41,14 @@ import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.dataservices.core.DBDeployer;
 import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
 import org.wso2.carbon.ntask.core.service.TaskService;
-import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-@Component(
-        name = "micro.application.deployer.dscomponent",
-        immediate = true)
+@Component(name = "org.wso2.micro.integrator.core.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
 
     private static final Log log = LogFactory.getLog(AppDeployerServiceComponent.class);
@@ -110,22 +108,22 @@ public class AppDeployerServiceComponent {
      *
      * @param configCtx Instance of Axis2ConfigurationContextService which wraps server configuration context
      */
-    /*@Reference(
-            name = "org.wso2.carbon.configCtx",
-            service = org.wso2.carbon.micro.integrator.core.services.Axis2ConfigurationContextService.class,
+    @Reference(
+            name = "org.wso2.micro.integrator.axis2ConfigurationContextService",
+            service = org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContext")
     protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
-    }*/
+    }
 
     /**
      * Receive an event about destroying ConfigurationContext
      *
      * @param configCtx
      */
-    protected void unsetConfigurationContext(ConfigurationContextService configCtx) {
+    protected void unsetConfigurationContext(Axis2ConfigurationContextService configCtx) {
         this.configCtx = null;
     }
 
