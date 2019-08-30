@@ -198,9 +198,9 @@ public class ServiceBusInitializer {
                     configurationManager);
             // Start Inbound Endpoint Listeners
             // tOdO need to fix inbound endpoints
-            EndpointListenerLoader.loadListeners();
-            registerInboundDeployer(configCtxSvc.getServerConfigContext().getAxisConfiguration(), contextInfo
-                    .getSynapseEnvironment());
+//            EndpointListenerLoader.loadListeners();
+//            registerInboundDeployer(configCtxSvc.getServerConfigContext().getAxisConfiguration(), contextInfo
+//                    .getSynapseEnvironment());
         } catch (Exception e) {
             handleFatal("Couldn't initialize the ESB...", e);
         } catch (Throwable t) {
@@ -529,7 +529,7 @@ public class ServiceBusInitializer {
     /**
      * Register for inbound hot depoyment
      */
-    private void registerInboundDeployer(AxisConfiguration axisConfig, SynapseEnvironment synEnv) {
+    /*private void registerInboundDeployer(AxisConfiguration axisConfig, SynapseEnvironment synEnv) {
 
         DeploymentEngine deploymentEngine = (DeploymentEngine) axisConfig.getConfigurator();
         SynapseArtifactDeploymentStore deploymentStore = synEnv.getSynapseConfiguration().getArtifactDeploymentStore();
@@ -542,7 +542,7 @@ public class ServiceBusInitializer {
         }
         deploymentEngine.addDeployer(new InboundEndpointDeployer(), inboundDirPath, ServiceBusConstants
                 .ARTIFACT_EXTENSION);
-    }
+    }*/
 
 //    @Reference(
 //            name = "inbound.endpoint.persistence.service",
