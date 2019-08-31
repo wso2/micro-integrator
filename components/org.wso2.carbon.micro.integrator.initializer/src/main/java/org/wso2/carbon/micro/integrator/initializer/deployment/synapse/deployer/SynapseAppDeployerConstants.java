@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.core.deployment.synapse.deployer;
+package org.wso2.carbon.micro.integrator.initializer.deployment.synapse.deployer;
 
 public class SynapseAppDeployerConstants {
 

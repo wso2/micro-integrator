@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import static org.wso2.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager.getCarbonApps;
+import static org.wso2.carbon.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager.getCarbonApps;
 
 public class CarbonAppResource extends APIResource {
 

@@ -33,7 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.carbon.mediation.initializer.ServiceBusUtils;
 import org.wso2.carbon.mediation.initializer.persistence.MediationPersistenceManager;
-import org.wso2.micro.integrator.core.deployment.synapse.deployer.SynapseAppDeployer;
+import org.wso2.carbon.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 
 import java.io.IOException;
 import java.util.HashSet;

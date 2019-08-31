@@ -16,11 +16,11 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.core.deployment.internal;
+package org.wso2.carbon.micro.integrator.initializer.deployment.internal;
 
-import org.wso2.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager;
-import org.wso2.micro.integrator.core.deployment.DeploymentService;
-import org.wso2.micro.integrator.core.deployment.artifact.deployer.ArtifactDeploymentManager;
+import org.wso2.carbon.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
+import org.wso2.carbon.micro.integrator.initializer.deployment.DeploymentService;
+import org.wso2.carbon.micro.integrator.initializer.deployment.artifact.deployer.ArtifactDeploymentManager;
 
 public class DeploymentServiceImpl implements DeploymentService{
 

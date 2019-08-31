@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.core.deployment.synapse.deployer;
+package org.wso2.carbon.micro.integrator.initializer.deployment.synapse.deployer;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
@@ -51,11 +51,11 @@ import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
-import org.wso2.carbon.mediation.initializer.ServiceBusConstants;
-import org.wso2.carbon.mediation.initializer.ServiceBusUtils;
-import org.wso2.carbon.mediation.initializer.persistence.MediationPersistenceManager;
+import org.wso2.carbon.micro.integrator.initializer.ServiceBusConstants;
+import org.wso2.carbon.micro.integrator.initializer.ServiceBusUtils;
+import org.wso2.carbon.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.carbon.mediation.library.util.LocalEntryUtil;
-import org.wso2.micro.integrator.core.deployment.DataHolder;
+import org.wso2.carbon.micro.integrator.initializer.deployment.DataHolder;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;

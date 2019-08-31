@@ -123,6 +123,7 @@
                             org.wso2.carbon.micro.integrator.initializer.services.SynapseEnvironmentService
                         </CAPP_MANAGER-RequiredServices>
                         <Export-Package>
+                            !org.wso2.carbon.micro.integrator.initializer.deployment.internal,
                             org.wso2.carbon.micro.integrator.initializer.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>

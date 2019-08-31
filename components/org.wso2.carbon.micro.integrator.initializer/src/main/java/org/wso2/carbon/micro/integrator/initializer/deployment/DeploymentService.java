@@ -16,16 +16,27 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.core.deployment;
+package org.wso2.carbon.micro.integrator.initializer.deployment;
 
-public class DeploymentConstants {
+import org.wso2.carbon.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
+import org.wso2.carbon.micro.integrator.initializer.deployment.artifact.deployer.ArtifactDeploymentManager;
 
-    public static final String CAPP_DIR_NAME = "carbonapps";
-    public static final String DSS_DIR_NAME = "dataservices";
-    public static final String EVENT_STREAMS_DIR_NAME = "eventstreams";
-    public static final String EVENT_PUBLISHERS_DIR_NAME = "eventpublishers";
+/**
+ * This interface represent the task OSGI service
+ */
+public interface DeploymentService {
 
-    public static final String DSS_TYPE_DBS = "dbs";
-    public static final String XML_TYPE_EXTENSION = "xml";
-    public static final String DSS_TYPE_EXTENSION = ".dbs";
+     /**
+      * Return ArtifactDeploymentManager
+      *
+      * @return
+      */
+     public ArtifactDeploymentManager getArtifactDeploymentManager();
+
+     /**
+      * Return CAppDeploymentManager
+      *
+      * @return
+      */
+     public CAppDeploymentManager getCAppDeploymentManager();
 }

@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.core.deployment.artifact.deployer;
+package org.wso2.carbon.micro.integrator.initializer.deployment.artifact.deployer;
 
 import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentException;
