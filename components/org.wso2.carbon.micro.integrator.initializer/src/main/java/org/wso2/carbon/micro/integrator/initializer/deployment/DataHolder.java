@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.core.deployment;
+package org.wso2.carbon.micro.integrator.initializer.deployment;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.Deployer;
@@ -27,13 +27,12 @@ import org.apache.synapse.deployers.InboundEndpointDeployer;
 import org.apache.synapse.deployers.MessageProcessorDeployer;
 import org.apache.synapse.deployers.MessageStoreDeployer;
 import org.apache.synapse.deployers.TemplateDeployer;
-import org.wso2.carbon.endpoint.EndpointDeployer;
-import org.wso2.micro.integrator.core.deployment.synapse.deployer.SynapseAppDeployerConstants;
-import org.wso2.carbon.localentry.LocalEntryDeployer;
-import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
-import org.wso2.carbon.mediation.startup.StartupTaskDeployer;
+//import org.wso2.carbon.endpoint.EndpointDeployer;
+import org.wso2.carbon.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployerConstants;
+//import org.wso2.carbon.localentry.LocalEntryDeployer;
+//import org.wso2.carbon.mediation.startup.StartupTaskDeployer;
+import org.wso2.carbon.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.carbon.proxyadmin.ProxyServiceDeployer;
-import org.wso2.carbon.sequences.SequenceDeploymentInterceptor;
 
 import java.util.HashMap;
 
@@ -101,16 +100,19 @@ public class DataHolder {
      * Function to initialize deployers with default deployers. Need to invoke this before adding custom implementations
      */
     public void initializeDefaultSynapseDeployers() {
-        addSynapseDeployer(SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE, new LocalEntryDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.ENDPOINT_TYPE, new EndpointDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.SEQUENCE_TYPE, new SequenceDeploymentInterceptor());
+        // TODO :- uncomment after having these.
+      //  addSynapseDeployer(SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE, new LocalEntryDeployer());
+     //   addSynapseDeployer(SynapseAppDeployerConstants.ENDPOINT_TYPE, new EndpointDeployer());
+       // addSynapseDeployer(SynapseAppDeployerConstants.SEQUENCE_TYPE, new SequenceDeploymentInterceptor());
         addSynapseDeployer(SynapseAppDeployerConstants.TEMPLATE_TYPE, new TemplateDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.TASK_TYPE, new StartupTaskDeployer());
+// TODO Caused by: java.lang.ClassNotFoundException: org.wso2.carbon.mediation.initializer.ServiceBusUtils cannot be
+        //  found by org.wso2.carbon.mediation.startup_4.7.10
+      //  addSynapseDeployer(SynapseAppDeployerConstants.TASK_TYPE, new StartupTaskDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_STORE_TYPE, new MessageStoreDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE, new MessageProcessorDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.INBOUND_ENDPOINT_TYPE, new InboundEndpointDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.API_TYPE, new APIDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.PROXY_SERVICE_TYPE, new ProxyServiceDeployer());
+//        addSynapseDeployer(SynapseAppDeployerConstants.PROXY_SERVICE_TYPE, new ProxyServiceDeployer());
     }
 
     /**

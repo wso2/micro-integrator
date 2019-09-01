@@ -15,11 +15,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.micro.integrator.core.deployment;
+package org.wso2.carbon.micro.integrator.initializer.deployment;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.DeploymentEngine;
-import org.apache.axis2.deployment.DeploymentException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -29,26 +28,22 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
-import org.wso2.carbon.application.deployer.synapse.FileRegistryResourceDeployer;
-//import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.micro.integrator.core.deployment.application.deployer.CAppDeploymentManager;
-import org.wso2.micro.integrator.core.deployment.artifact.deployer.ArtifactDeploymentManager;
-import org.wso2.micro.integrator.core.deployment.internal.DeploymentServiceImpl;
-import org.wso2.micro.integrator.core.deployment.synapse.deployer.SynapseAppDeployer;
-import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
-import org.wso2.carbon.dataservices.core.DBDeployer;
-import org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService;
+import org.wso2.carbon.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
+import org.wso2.carbon.micro.integrator.initializer.deployment.artifact.deployer.ArtifactDeploymentManager;
+import org.wso2.carbon.micro.integrator.initializer.deployment.internal.DeploymentServiceImpl;
+import org.wso2.carbon.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
+//import org.wso2.carbon.dataservices.core.DBDeployer;
 import org.wso2.carbon.ntask.core.service.TaskService;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-@Component(name = "org.wso2.micro.integrator.core.deployment.AppDeployerServiceComponent", immediate = true)
+@Component(name = "org.wso2.carbon.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
 
     private static final Log log = LogFactory.getLog(AppDeployerServiceComponent.class);
@@ -62,10 +57,6 @@ public class AppDeployerServiceComponent {
 
         log.debug("Activating AppDeployerServiceComponent");
 
-        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext
-                .getThreadLocalCarbonContext();
-        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
         // Update DataHolder with SynapseEnvironmentService
         DataHolder.getInstance().setSynapseEnvironmentService(this.synapseEnvironmentService);
         DataHolder.getInstance().setConfigContext(this.configCtx);
@@ -127,7 +118,8 @@ public class AppDeployerServiceComponent {
         this.configCtx = null;
     }
 
-    @Reference(
+    // TODO :- uncomment when satisfied
+  /*  @Reference(
             name = "ntask.service",
             service = org.wso2.carbon.ntask.core.service.TaskService.class,
             cardinality = ReferenceCardinality.MANDATORY,
@@ -138,7 +130,7 @@ public class AppDeployerServiceComponent {
     }
 
     protected void unsetTaskService(TaskService taskService) {
-    }
+    }*/
 
     /**
      * Receive an event about the creation of a SynapseEnvironment. If this is
@@ -150,7 +142,7 @@ public class AppDeployerServiceComponent {
      */
     @Reference(
             name = "synapse.env.service",
-            service = org.wso2.carbon.mediation.initializer.services.SynapseEnvironmentService.class,
+            service = org.wso2.carbon.micro.integrator.initializer.services.SynapseEnvironmentService.class,
             cardinality = ReferenceCardinality.AT_LEAST_ONE,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetSynapseEnvironmentService")
@@ -181,17 +173,18 @@ public class AppDeployerServiceComponent {
 
         log.debug("Initializing ArtifactDeploymentManager deployment manager");
 
+        // TODO :- unComment after installing DSS
         // Create data services deployer
-        DBDeployer dbDeployer = new DBDeployer();
-        dbDeployer.setDirectory(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME);
-        dbDeployer.setExtension(DeploymentConstants.DSS_TYPE_EXTENSION);
+//        DBDeployer dbDeployer = new DBDeployer();
+//        dbDeployer.setDirectory(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME);
+//        dbDeployer.setExtension(DeploymentConstants.DSS_TYPE_EXTENSION);
 
         // Register artifact deployers in ArtifactDeploymentManager
-        try {
-            artifactDeploymentManager.registerDeployer(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME, dbDeployer);
-        } catch (DeploymentException e) {
-            log.error("Error occurred while registering data services deployer");
-        }
+//        try {
+//            artifactDeploymentManager.registerDeployer(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME, dbDeployer);
+//        } catch (DeploymentException e) {
+//            log.error("Error occurred while registering data services deployer");
+//        }
 
         Properties properties = new Properties();
         try (FileInputStream fis = new FileInputStream(System.getProperty("conf.location") + File.separator + "synapse.properties")) {
@@ -208,7 +201,8 @@ public class AppDeployerServiceComponent {
 
         // Register deployers in DeploymentEngine (required for CApp deployment)
         DeploymentEngine deploymentEngine = (DeploymentEngine) configCtx.getAxisConfiguration().getConfigurator();
-        deploymentEngine.addDeployer(dbDeployer, DeploymentConstants.DSS_DIR_NAME, DeploymentConstants.DSS_TYPE_DBS);
+      // TODO :- Uncomment after having DSS
+        //  deploymentEngine.addDeployer(dbDeployer, DeploymentConstants.DSS_DIR_NAME, DeploymentConstants.DSS_TYPE_DBS);
 
         // Register application deployment handlers
         //TODO

@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.core.deployment.application.deployer;
+package org.wso2.carbon.micro.integrator.initializer.deployment.application.deployer;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
