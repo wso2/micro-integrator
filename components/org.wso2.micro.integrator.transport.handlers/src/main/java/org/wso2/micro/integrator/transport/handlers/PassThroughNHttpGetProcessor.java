@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.wso2.carbon.mediation.transport.handlers;
+package org.wso2.micro.integrator.transport.handlers;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.xpath.AXIOMXPath;
@@ -48,7 +48,7 @@ import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
-import org.wso2.carbon.mediation.transport.handlers.utils.RequestProcessorDispatcherUtil;
+import org.wso2.micro.integrator.transport.handlers.utils.RequestProcessorDispatcherUtil;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 

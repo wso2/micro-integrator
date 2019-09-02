@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.mediation.transport.handlers.requestprocessors.swagger;
+package org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger;
 
 import java.util.regex.Pattern;
 

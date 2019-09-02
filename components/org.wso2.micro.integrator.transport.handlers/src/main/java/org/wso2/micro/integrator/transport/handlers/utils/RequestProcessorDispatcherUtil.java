@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.mediation.transport.handlers.utils;
+package org.wso2.micro.integrator.transport.handlers.utils;
 
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.mediation.transport.handlers.requestprocessors.swagger.format;
+package org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format;
 
 import org.apache.axiom.ext.io.StreamCopyException;
 import org.apache.axiom.util.blob.BlobOutputStream;
@@ -26,7 +26,7 @@ import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.rest.API;
 import org.wso2.carbon.core.transports.CarbonHttpRequest;
 import org.wso2.carbon.core.transports.CarbonHttpResponse;
-import org.wso2.carbon.mediation.transport.handlers.requestprocessors.swagger.SwaggerConstants;
+import org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.SwaggerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 

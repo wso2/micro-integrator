@@ -24,9 +24,9 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.carbon.mediation.transport.handlers</artifactId>
+    <artifactId>org.wso2.micro.integrator.transport.handlers</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon Mediation - Transport Handlers</name>
+    <name>WSO2 Micro Integrator - Transport Handlers</name>
 
     <build>
 
@@ -42,7 +42,7 @@
                         <Private-Package>
                         </Private-Package>
                         <Export-Package>
-                            org.wso2.carbon.mediation.transport.handlers.*
+                            org.wso2.micro.integrator.transport.handlers.*
                         </Export-Package>
                         <Import-Package>
                             !javax.xml.namespace,
