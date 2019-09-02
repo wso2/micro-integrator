@@ -16,7 +16,7 @@
  * under the License.
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
 import Link from '@material-ui/core/Link';
@@ -91,6 +91,7 @@ export default class MessageStoreListPage extends Component {
             />
         );
     }
+
     render() {
         return (
             <ListViewParent

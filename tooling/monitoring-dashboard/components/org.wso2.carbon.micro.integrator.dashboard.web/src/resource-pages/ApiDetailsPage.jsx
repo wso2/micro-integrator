@@ -25,6 +25,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
+import SourceViewComponent from '../common/SourceViewComponent';
 
 import Box from '@material-ui/core/Box';
 
@@ -33,7 +34,8 @@ export default class ApiDetailsPage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            metaData: []
+            metaData: [],
+            response: {},
         };
     }
 
@@ -60,7 +62,8 @@ export default class ApiDetailsPage extends Component {
             metaData.push(this.createData("Port", response.data.port));
             this.setState(
                 {
-                    metaData: metaData
+                    metaData: metaData,
+                    response: response.data,
                 });
 
         }).catch((error) => {
@@ -70,7 +73,7 @@ export default class ApiDetailsPage extends Component {
 
     renderApiDetails() {
         return (
-            <div>
+            <Box>
                 <Box pb={5}>
                     <TableHeaderBox title="API Details"/>
                     <Table size="small">
@@ -86,14 +89,15 @@ export default class ApiDetailsPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
-            </div>
+                <SourceViewComponent config={this.state.response.configuration}/>
+            </Box>
         );
     }
 
     render() {
         console.log(this.state.config);
         return (
-            <ResourceExplorerParent content={this.renderApiDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderApiDetails()}/>
         );
     }
 }

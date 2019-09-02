@@ -25,6 +25,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
+import SourceViewComponent from '../common/SourceViewComponent';
 
 import Box from '@material-ui/core/Box';
 
@@ -34,7 +35,8 @@ export default class MessageStoreDetailsPage extends Component {
         super(props);
         this.state = {
             metaData: [],
-            parameters: {}
+            parameters: {},
+            response: {}
         };
     }
 
@@ -61,7 +63,8 @@ export default class MessageStoreDetailsPage extends Component {
             this.setState(
                 {
                     metaData: metaData,
-                    parameters: parameters
+                    parameters: parameters,
+                    response: response.data
                 });
 
         }).catch((error) => {
@@ -71,7 +74,7 @@ export default class MessageStoreDetailsPage extends Component {
 
     renderMessageStoreDetails() {
         return (
-            <div>
+            <Box>
                 <Box pb={5}>
                     <TableHeaderBox title="Store Details"/>
                     <Table size="small">
@@ -93,24 +96,26 @@ export default class MessageStoreDetailsPage extends Component {
                     <Table size="small">
                         <TableBody>
                             {
-                               Object.keys(this.state.parameters).map(key => (
-                                   <TableRow>
-                                       <TableCell>{key}</TableCell>
-                                       <TableCell>{this.state.parameters[key]}</TableCell>
-                                   </TableRow>
-                               ))
+                                Object.keys(this.state.parameters).map(key => (
+                                    <TableRow>
+                                        <TableCell>{key}</TableCell>
+                                        <TableCell>{this.state.parameters[key]}</TableCell>
+                                    </TableRow>
+                                ))
                             }
                         </TableBody>
                     </Table>
                 </Box>
-            </div>
+                <SourceViewComponent config={this.state.response.configuration}/>
+            </Box>
         );
     }
 
     render() {
         console.log(this.state.config);
         return (
-            <ResourceExplorerParent content={this.renderMessageStoreDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
+                                    content={this.renderMessageStoreDetails()}/>
         );
     }
 }

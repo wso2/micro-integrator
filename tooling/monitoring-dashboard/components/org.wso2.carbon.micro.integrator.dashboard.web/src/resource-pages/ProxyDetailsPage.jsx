@@ -25,8 +25,8 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
+import SourceViewComponent from '../common/SourceViewComponent';
 
-var format = require('xml-formatter');
 import Box from '@material-ui/core/Box';
 
 export default class ProxyDetailsPage extends Component {
@@ -36,7 +36,8 @@ export default class ProxyDetailsPage extends Component {
         this.state = {
             config: " ",
             tableData: [],
-            endpoints: []
+            endpoints: [],
+            response: {}
         };
     }
 
@@ -56,18 +57,18 @@ export default class ProxyDetailsPage extends Component {
     retrieveProxyInfo(name) {
         const tableData = [];
         new ResourceAPI().getProxyServiceByName(name).then((response) => {
-            const config = response.data.configuration || '';
+
             tableData.push(this.createData("Service Name", response.data.name));
             tableData.push(this.createData("Statistics", response.data.stats));
             tableData.push(this.createData("Tracing", response.data.tracing));
 
-            const endpoints = response.data.endpoints || []
+            const endpoints = response.data.eprs || []
 
             this.setState(
                 {
-                    config: format(config),
                     tableData: tableData,
-                    endpoints: endpoints
+                    endpoints: endpoints,
+                    response: response.data,
                 });
 
         }).catch((error) => {
@@ -77,7 +78,7 @@ export default class ProxyDetailsPage extends Component {
 
     renderProxyDetails() {
         return (
-            <div>
+            <Box>
                 <Box pb={5}>
                     <TableHeaderBox title="Proxy Details"/>
                     <Table size="small">
@@ -93,7 +94,6 @@ export default class ProxyDetailsPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
-
                 <Box pb={5}>
                     <TableHeaderBox title="Endpoints"/>
                     <Table size="small">
@@ -108,14 +108,14 @@ export default class ProxyDetailsPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
-            </div>
+                <SourceViewComponent config={this.state.response.configuration}/>
+            </Box>
         );
     }
 
     render() {
-        console.log(this.state.config);
         return (
-            <ResourceExplorerParent content={this.renderProxyDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderProxyDetails()}/>
         );
     }
 }

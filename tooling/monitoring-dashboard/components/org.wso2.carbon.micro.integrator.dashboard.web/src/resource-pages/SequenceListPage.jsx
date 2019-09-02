@@ -17,9 +17,10 @@
  */
 
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
+import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
@@ -64,7 +65,20 @@ export default class SequenceListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Sequence Name", "Tracing", "Statistics"];
+        const columns = [            {
+            name: "Sequence",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <Link component="button" variant="body2" onClick={() => {
+                            this.props.history.push(`/sequence/explore?name=${tableMeta.rowData[0]}`)
+                        }}>
+                            {tableMeta.rowData[0]}
+                        </Link>
+                    );
+                }
+            }
+        }, "Tracing", "Statistics"];
         const options = {
             selectableRows: 'none'
         };
@@ -78,6 +92,7 @@ export default class SequenceListPage extends Component {
             />
         );
     }
+
     render() {
         return (
             <ListViewParent

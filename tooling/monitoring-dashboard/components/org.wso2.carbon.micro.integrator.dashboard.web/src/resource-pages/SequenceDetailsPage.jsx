@@ -25,44 +25,43 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
-
+import SourceViewComponent from '../common/SourceViewComponent';
 import Box from '@material-ui/core/Box';
 
-export default class LocalEntryDetailsPage extends Component {
+export default class SequenceDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            metaData: [],
-            value: "",
             response: {},
+            metaData: [],
         };
     }
 
     /**
-     * Retrieve local entry details from the MI.
+     * Retrieve sequence details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveLocalEntryInfo(values.name);
+        this.retrieveSequenceInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveLocalEntryInfo(name) {
+    retrieveSequenceInfo(name) {
         const metaData = [];
-        new ResourceAPI().getLocalEntryByName(name).then((response) => {
+        new ResourceAPI().getSequenceByName(name).then((response) => {
 
-            metaData.push(this.createData("Local Entry Name", response.data.name));
-            metaData.push(this.createData("Type", response.data.type));
+            metaData.push(this.createData("Sequence Name", response.data.name));
+            metaData.push(this.createData("Tracing", response.data.tracing));
+            metaData.push(this.createData("Statistics", response.data.stats));
             this.setState(
                 {
-                    metaData: metaData,
-                    value: response.data.value,
                     response: response.data,
+                    metaData: metaData,
                 });
 
         }).catch((error) => {
@@ -70,11 +69,11 @@ export default class LocalEntryDetailsPage extends Component {
         });
     }
 
-    renderLocalEntryDetails() {
+    renderMessageProcessorDetails() {
         return (
-            <div>
+            <Box>
                 <Box pb={5}>
-                    <TableHeaderBox title="Entry Details"/>
+                    <TableHeaderBox title="Processor Details"/>
                     <Table size="small">
                         <TableBody>
                             {
@@ -89,20 +88,15 @@ export default class LocalEntryDetailsPage extends Component {
                     </Table>
                 </Box>
 
-                <Box pb={5}>
-                    <TableHeaderBox title="Value"/>
-                    <Box boxShadow={1} minHeight={100} color="text.secondary">
-                        {this.state.value}
-                    </Box>
-                </Box>
-            </div>
+                <SourceViewComponent config={this.state.response.configuration}/>
+            </Box>
         );
     }
 
     render() {
-        console.log(this.state.config);
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderLocalEntryDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
+                                    content={this.renderMessageProcessorDetails()}/>
         );
     }
 }

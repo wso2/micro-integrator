@@ -25,7 +25,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
-
+import SourceViewComponent from '../common/SourceViewComponent';
 import Box from '@material-ui/core/Box';
 
 export default class MessageProcessorDetailPage extends Component {
@@ -34,7 +34,8 @@ export default class MessageProcessorDetailPage extends Component {
         super(props);
         this.state = {
             metaData: [],
-            parameters: {}
+            parameters: {},
+            response: {},
         };
     }
 
@@ -62,7 +63,8 @@ export default class MessageProcessorDetailPage extends Component {
             this.setState(
                 {
                     metaData: metaData,
-                    parameters: parameters
+                    parameters: parameters,
+                    response: response.data,
                 });
 
         }).catch((error) => {
@@ -72,7 +74,7 @@ export default class MessageProcessorDetailPage extends Component {
 
     renderMessageProcessorDetails() {
         return (
-            <div>
+            <Box>
                 <Box pb={5}>
                     <TableHeaderBox title="Processor Details"/>
                     <Table size="small">
@@ -104,13 +106,14 @@ export default class MessageProcessorDetailPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
-            </div>
+                <SourceViewComponent config={this.state.response.configuration}/>
+            </Box>
         );
     }
 
     render() {
         return (
-            <ResourceExplorerParent content={this.renderMessageProcessorDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderMessageProcessorDetails()}/>
         );
     }
 }

@@ -89,11 +89,11 @@ export default function SideDrawer() {
                         <ListItemIcon><TaskIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Tasks"/>
                     </ListItem>
-                    <ListItem button component={Link} to="local-entry">
+                    <ListItem button component={Link} to="/local-entry">
                         <ListItemIcon><LocalEntryIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Local Entries"/>
                     </ListItem>
-                    <ListItem button component={Link} to="connector">
+                    <ListItem button component={Link} to="/connector">
                         <ListItemIcon><ConnectorIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Connectors"/>
                     </ListItem>

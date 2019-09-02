@@ -16,9 +16,10 @@
  * under the License.
  */
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
+import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
@@ -62,7 +63,20 @@ export default class EndpointListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Endpoint Name", "Type"];
+        const columns = [{
+            name: "Endpoint Name",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <Link component="button" variant="body2" onClick={() => {
+                            this.props.history.push(`/endpoint/explore?name=${tableMeta.rowData[0]}`)
+                        }}>
+                            {tableMeta.rowData[0]}
+                        </Link>
+                    );
+                }
+            }
+        }, "Type"];
         const options = {
             selectableRows: 'none'
         };
@@ -76,6 +90,7 @@ export default class EndpointListPage extends Component {
             />
         );
     }
+
     render() {
         return (
             <ListViewParent

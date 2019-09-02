@@ -23,13 +23,17 @@ import PropTypes from 'prop-types';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
+import Box from '@material-ui/core/Box';
 
 const styles = {
     contentDiv: {
         margin: '3%',
     },
     explorerHeaderDiv:{
-        paddingTop:'1%',
+        padding:'1%',
+    },
+    paper:{
+        height:'100%'
     }
 };
 
@@ -37,10 +41,10 @@ export default class ResourceExplorerParent extends Component {
 
     renderSourceViewContent() {
         return (
-            <Paper>
+            <Box>
                 <div id="exploreHeader" style={styles.explorerHeaderDiv}>
                     <Typography variant="h5" id="tableTitle">
-                        Service Dashboard
+                        {this.props.title}
                     </Typography>
                 </div>
                 <Divider/>
@@ -48,7 +52,7 @@ export default class ResourceExplorerParent extends Component {
                 <div id="content" style={styles.contentDiv}>
                     {this.props.content}
                 </div>
-            </Paper>
+            </Box>
         );
     }
 
@@ -69,7 +73,7 @@ ResourceExplorerParent.defaultProps = {
     config: 'no config',
     theme: docco,
     language: 'xml',
-    title: 'Source View',
+    title: 'Explorer',
     content: '<span/>'
 
 };

@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 import React, {Component} from 'react';
 import ResourceExplorerParent from '../common/ResourceExplorerParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
@@ -25,43 +24,43 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
-
+import SourceViewComponent from '../common/SourceViewComponent';
 import Box from '@material-ui/core/Box';
 
-export default class LocalEntryDetailsPage extends Component {
+export default class TaskDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             metaData: [],
-            value: "",
             response: {},
         };
     }
 
     /**
-     * Retrieve local entry details from the MI.
+     * Retrieve task details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveLocalEntryInfo(values.name);
+        this.retrieveTaskInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveLocalEntryInfo(name) {
-        const metaData = [];
-        new ResourceAPI().getLocalEntryByName(name).then((response) => {
 
-            metaData.push(this.createData("Local Entry Name", response.data.name));
-            metaData.push(this.createData("Type", response.data.type));
+    retrieveTaskInfo(name) {
+        const metaData = [];
+        new ResourceAPI().getTaskByName(name).then((response) => {
+
+            metaData.push(this.createData("Task Name", response.data.name));
+            metaData.push(this.createData("Task Group", response.data.taskGroup));
+            metaData.push(this.createData("Task Implementation", response.data.implementation));
             this.setState(
                 {
                     metaData: metaData,
-                    value: response.data.value,
                     response: response.data,
                 });
 
@@ -70,11 +69,11 @@ export default class LocalEntryDetailsPage extends Component {
         });
     }
 
-    renderLocalEntryDetails() {
+    renderTaskDetails() {
         return (
-            <div>
+            <Box>
                 <Box pb={5}>
-                    <TableHeaderBox title="Entry Details"/>
+                    <TableHeaderBox title="Scheduled Task Details"/>
                     <Table size="small">
                         <TableBody>
                             {
@@ -88,21 +87,66 @@ export default class LocalEntryDetailsPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
-
                 <Box pb={5}>
-                    <TableHeaderBox title="Value"/>
-                    <Box boxShadow={1} minHeight={100} color="text.secondary">
-                        {this.state.value}
-                    </Box>
+                    <TableHeaderBox title="Trigger Details"/>
+                    {this.renderTriggerInformation(this.state.response)}
                 </Box>
-            </div>
+                <SourceViewComponent config={this.state.response.configuration}/>
+            </Box>
+        );
+    }
+
+    renderTriggerInformation(task) {
+        if (task.triggerType === "simple") {
+            return this.renderSimpleTriggerDetails(task);
+        } else {
+            return this.renderCronTriggerDetails(task);
+        }
+    }
+
+    renderSimpleTriggerDetails(task) {
+        const details = [];
+        details.push(this.createData("Trigger", task.triggerType));
+        details.push(this.createData("Count", task.triggerCount));
+        details.push(this.createData("Interval (In seconds)", task.triggerInterval));
+        return (
+            <Table size="small">
+                <TableBody>
+                    {this.renderRowsFromData(details)}
+                </TableBody>
+            </Table>
+        );
+    }
+
+    renderCronTriggerDetails(task) {
+        const details = [];
+        details.push(this.createData("Trigger", task.triggerType));
+        details.push(this.createData("Cron", task.cronExpression));
+        return (
+            <Table size="small">
+                <TableBody>
+                    {this.renderRowsFromData(details)}
+                </TableBody>
+            </Table>
+        );
+
+    }
+
+    renderRowsFromData(data) {
+        return (
+            data.map(row => (
+                <TableRow>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.value}</TableCell>
+                </TableRow>
+            ))
         );
     }
 
     render() {
         console.log(this.state.config);
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderLocalEntryDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name+ " Explorer"} content={this.renderTaskDetails()}/>
         );
     }
 }

@@ -16,6 +16,7 @@
  * under the License.
  */
 
+
 import React, {Component} from 'react';
 import ResourceExplorerParent from '../common/ResourceExplorerParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
@@ -28,40 +29,45 @@ import TableHeaderBox from '../common/TableHeaderBox';
 
 import Box from '@material-ui/core/Box';
 
-export default class LocalEntryDetailsPage extends Component {
+export default class InboundEndpointDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             metaData: [],
-            value: "",
-            response: {},
+            parameters: [],
+            response: {}
         };
     }
 
     /**
-     * Retrieve local entry details from the MI.
+     * Retrieve inbound-endpoint details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveLocalEntryInfo(values.name);
+        this.retrieveEndpointInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveLocalEntryInfo(name) {
+    retrieveEndpointInfo(name) {
         const metaData = [];
-        new ResourceAPI().getLocalEntryByName(name).then((response) => {
+        new ResourceAPI().getInboundEndpointByName(name).then((response) => {
 
-            metaData.push(this.createData("Local Entry Name", response.data.name));
-            metaData.push(this.createData("Type", response.data.type));
+            metaData.push(this.createData("Inbound Endpoint Name", response.data.name));
+            metaData.push(this.createData("Protocol", response.data.protocol));
+            metaData.push(this.createData("Tracing", response.data.tracing));
+            metaData.push(this.createData("Statistics", response.data.stats));
+            metaData.push(this.createData("Sequence", response.data.sequence));
+            metaData.push(this.createData("On Error", response.data.error));
+
             this.setState(
                 {
                     metaData: metaData,
-                    value: response.data.value,
+                    parameters: response.data.parameters,
                     response: response.data,
                 });
 
@@ -70,11 +76,11 @@ export default class LocalEntryDetailsPage extends Component {
         });
     }
 
-    renderLocalEntryDetails() {
+    renderInboundEndpointDetails() {
         return (
             <div>
                 <Box pb={5}>
-                    <TableHeaderBox title="Entry Details"/>
+                    <TableHeaderBox title="Inbound Endpoint Details"/>
                     <Table size="small">
                         <TableBody>
                             {
@@ -90,10 +96,19 @@ export default class LocalEntryDetailsPage extends Component {
                 </Box>
 
                 <Box pb={5}>
-                    <TableHeaderBox title="Value"/>
-                    <Box boxShadow={1} minHeight={100} color="text.secondary">
-                        {this.state.value}
-                    </Box>
+                    <TableHeaderBox title="Parameters"/>
+                    <Table size="small">
+                        <TableBody>
+                            {
+                                this.state.parameters.map(row => (
+                                    <TableRow>
+                                        <TableCell>{row.name}</TableCell>
+                                        <TableCell>{row.value}</TableCell>
+                                    </TableRow>
+                                ))
+                            }
+                        </TableBody>
+                    </Table>
                 </Box>
             </div>
         );
@@ -102,7 +117,8 @@ export default class LocalEntryDetailsPage extends Component {
     render() {
         console.log(this.state.config);
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderLocalEntryDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
+                                    content={this.renderInboundEndpointDetails()}/>
         );
     }
 }

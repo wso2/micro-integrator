@@ -65,34 +65,19 @@ export default class ApiListPage extends Component {
 
         const columns = [
             {
-            name: "API Name",
-            options: {
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <Link component="button" variant="body2" onClick={() => {
-                            this.props.history.push(`/api/explore?name=${tableMeta.rowData[0]}`)
-                        }}>
-                            {tableMeta.rowData[0]}
-                        </Link>
-                    );
-                }
-            }
-        }, "URL",
-            {
-                name: "Action",
+                name: "API Name",
                 options: {
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
                             <Link component="button" variant="body2" onClick={() => {
-                                this.props.history.push(`/api/sourceView?name=${tableMeta.rowData[0]}`)
+                                this.props.history.push(`/api/explore?name=${tableMeta.rowData[0]}`)
                             }}>
-                                Source View
+                                {tableMeta.rowData[0]}
                             </Link>
                         );
                     }
                 }
-
-            }];
+            }, "URL"];
         const options = {
             selectableRows: 'none'
         };
