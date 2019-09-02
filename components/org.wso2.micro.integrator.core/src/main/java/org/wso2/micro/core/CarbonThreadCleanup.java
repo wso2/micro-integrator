@@ -19,7 +19,7 @@ package org.wso2.micro.core;
 
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.base.threads.ThreadCleanup;
-import org.wso2.carbon.base.CarbonContextHolderBase;
+import org.wso2.micro.base.CarbonContextHolderBase;
 
 /**
  * This ThreadCleanup implementation wil clear out all the ThreadLocal variables, and do other
