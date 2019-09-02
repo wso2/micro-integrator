@@ -545,7 +545,7 @@
        org.wso2.carbon.transport.HttpGetRequestProcessor
     -->
     <HttpGetRequestProcessors>
-        <Processor>
+       <!-- <Processor>
             <Item>info</Item>
             <Class>org.wso2.carbon.core.transports.util.InfoProcessor</Class>
         </Processor>
@@ -560,7 +560,7 @@
         <Processor>
             <Item>xsd</Item>
             <Class>org.wso2.carbon.core.transports.util.XsdProcessor</Class>
-        </Processor>
+        </Processor>-->
     </HttpGetRequestProcessors>
 
     <!-- Deployment Synchronizer is not supported in Micro Integrator -->

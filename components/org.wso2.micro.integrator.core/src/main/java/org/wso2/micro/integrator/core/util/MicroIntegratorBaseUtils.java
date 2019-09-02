@@ -22,7 +22,6 @@ import org.apache.axis2.Constants;
 import org.apache.axis2.deployment.DeploymentConstants;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.utils.ServerConstants;
@@ -185,13 +184,13 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getCarbonRepository() {
-        ServerConfiguration serverConfig = getServerConfiguration();
+        CarbonServerConfigurationService serverConfig = getServerConfiguration();
         return serverConfig
                 .getFirstProperty("Axis2Config.RepositoryLocation"); //TODO: Change to Carbon.Repository in carbon.xml
     }
 
-    public static ServerConfiguration getServerConfiguration() {
-        ServerConfiguration serverConfig = ServerConfiguration.getInstance();
+    public static CarbonServerConfigurationService getServerConfiguration() {
+        CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
         if (!isServerConfigInitialized) {
             String serverXml = MicroIntegratorBaseUtils.getServerXml();
             File carbonXML = new File(serverXml);

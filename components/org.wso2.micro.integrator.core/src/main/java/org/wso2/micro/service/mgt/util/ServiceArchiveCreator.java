@@ -50,8 +50,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyReference;
 import org.apache.neethi.PolicyRegistry;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.carbon.utils.ArchiveManipulator;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.FileManipulator;
 import org.wso2.micro.core.util.NetworkUtils;
@@ -101,8 +101,8 @@ public final class ServiceArchiveCreator {
     public static String createArchive(ConfigurationContext configurationContext,
                                        String serviceGroupName) throws AxisFault {
 
-        String axis2Repo = ServerConfiguration.getInstance().getFirstProperty(
-                ServerConfiguration.AXIS2_CONFIG_REPO_LOCATION);
+        String axis2Repo = CarbonServerConfigurationService.getInstance().getFirstProperty(
+                CarbonServerConfigurationService.AXIS2_CONFIG_REPO_LOCATION);
         if (MicroIntegratorBaseUtils.isURL(axis2Repo)) {
             String message = "Archive creation is not supported with a URL based Axis2 repository. "
                              + "The repository in use is " + axis2Repo;

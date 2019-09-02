@@ -30,13 +30,13 @@ import org.apache.http.protocol.HTTP;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
 import org.osgi.util.tracker.ServiceTracker;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.micro.core.CarbonThreadFactory;
 import org.wso2.micro.core.transports.metering.MeteredServletRequest;
 import org.wso2.micro.core.transports.metering.MeteredServletResponse;
 import org.wso2.micro.core.transports.metering.RequestDataPersister;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -84,7 +84,7 @@ public class CarbonServlet extends AxisServlet {
         populateGetRequestProcessors();
         configContext.setProperty("GETRequestProcessorMap", getRequestProcessors);
         initParams();
-        String isMeteringEnabledStr = ServerConfiguration.getInstance().getFirstProperty("EnableMetering");
+        String isMeteringEnabledStr = CarbonServerConfigurationService.getInstance().getFirstProperty("EnableMetering");
         if(isMeteringEnabledStr!=null){
             isMeteringEnabled = Boolean.parseBoolean(isMeteringEnabledStr);
         }
