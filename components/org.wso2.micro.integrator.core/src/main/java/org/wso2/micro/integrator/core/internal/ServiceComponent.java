@@ -175,11 +175,6 @@ public class ServiceComponent {
             ApplicationManager applicationManager = ApplicationManager.getInstance();
             applicationManager.init(); // this will allow application manager to register deployment handlers
 
-            // register ApplicationManager as a service
-            appManagerRegistration = ctxt.getBundleContext()
-                    .registerService(ApplicationManagerService.class.getName(), applicationManager, null);
-            CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
-
             // read required-features.xml
             URL reqFeaturesResource = bundleContext.getBundle().getResource(AppDeployerConstants.REQ_FEATURES_XML);
             if (reqFeaturesResource != null) {
@@ -371,20 +366,6 @@ public class ServiceComponent {
             Object property = new TreeBidiMap();
             clientConfigContext.setProperty(MicroIntegratorBaseConstants.FILE_RESOURCE_MAP, property);
             clientConfigContext.setContextRoot(carbonContextRoot);
-
-            // If Carbon Kernel is running in the optimized mode, we do not deploy service resided in bundles.
-            // Most of these services are either admin services or hidden services.
-            //            if (!CarbonUtils.isOptimized()) {
-            //                //Deploying Web service which resides in bundles
-            //                Axis2ServiceRegistry serviceRegistry = new Axis2ServiceRegistry(serverConfigContext);
-            //                serviceRegistry.register(bundleContext.getBundles());
-            //                new OSGiAxis2ServiceDeployer(serverConfigContext, bundleContext).registerBundleListener(); // This will register the OSGi bundle listener
-            //            }
-
-            //  HttpService httpService = getHttpService();
-            //  HttpContext defaultHttpContext = httpService.createDefaultHttpContext();
-
-            //  registerCarbonServlet(httpService, defaultHttpContext);
 
             if (log.isDebugEnabled()) {
                 log.debug("Repository       : " + axis2RepoLocation);
@@ -661,35 +642,5 @@ public class ServiceComponent {
     protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         ServiceComponent.serverConfigurationService = null;
     }
-
-    //    @Reference(
-    //            name = "http.service",
-    //            service = org.osgi.service.http.HttpService.class,
-    //            cardinality = ReferenceCardinality.MANDATORY,
-    //            policy = ReferencePolicy.DYNAMIC,
-    //            unbind = "unsetHttpService")
-    //    protected void setHttpService(HttpService httpService) {
-    //        this.httpService = httpService;
-    //        CarbonCoreDataHolder.getInstance().setHttpService(httpService);
-    //    }
-    //
-    //    protected void unsetHttpService(HttpService httpService) {
-    //        this.httpService = null;
-    //    }
-
-    //    @Reference(
-    //            name = "application.manager",
-    //            service = org.wso2.carbon.application.deployer.service.ApplicationManagerService.class,
-    //            cardinality = ReferenceCardinality.OPTIONAL,
-    //            policy = ReferencePolicy.DYNAMIC,
-    //            unbind = "unsetAppManager")
-    //    protected void setAppManager(ApplicationManagerService applicationManager) {
-    //        this.applicationManager = applicationManager;
-    //        CarbonCoreDataHolder.getInstance().setApplicationManager(applicationManager);
-    //    }
-    //
-    //    protected void unsetAppManager(ApplicationManagerService applicationManager) {
-    //        this.applicationManager = null;
-    //    }
 
 }
