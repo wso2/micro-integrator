@@ -19,9 +19,8 @@
 package org.wso2.micro.core.encryption;
 
 import org.apache.axiom.om.util.Base64;
-import org.wso2.carbon.base.ServerConfiguration;
 import org.wso2.micro.core.util.CryptoException;
-//import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
@@ -69,7 +68,7 @@ public class SymmetricEncryption {
         Properties properties;
 
         try {
-            ServerConfiguration serverConfiguration = ServerConfiguration.getInstance();
+            CarbonServerConfigurationService serverConfiguration = CarbonServerConfigurationService.getInstance();
             symmetricKeyEncryptEnabled = serverConfiguration.getFirstProperty("SymmetricEncryption.IsEnabled");
 
             if (!Boolean.parseBoolean(symmetricKeyEncryptEnabled)) {

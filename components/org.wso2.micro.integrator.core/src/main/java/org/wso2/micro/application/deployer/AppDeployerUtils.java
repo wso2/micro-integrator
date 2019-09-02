@@ -35,11 +35,10 @@ import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.config.RegistryConfig;
-import org.wso2.carbon.base.ServerConfiguration;
-//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.feature.mgt.core.util.ProvisioningUtils;
 import org.wso2.micro.integrator.core.internal.ApplicationManager;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -411,7 +410,7 @@ public final class AppDeployerUtils {
             serverRoles = temp.split(",");
         } else {
             // now try to read from carbon.xml
-            ServerConfiguration serverConfig = ServerConfiguration.getInstance();
+            CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
             serverRoles = serverConfig.getProperties(AppDeployerConstants.CARBON_SERVER_ROLE);
         }
         return serverRoles;
