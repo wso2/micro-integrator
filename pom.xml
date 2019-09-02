@@ -321,6 +321,16 @@
                 <artifactId>snakeyaml</artifactId>
                 <version>${orbit.version.snakeyaml}</version>
             </dependency>
+            <dependency>
+                <groupId>net.minidev</groupId>
+                <artifactId>json-smart</artifactId>
+                <version>${json.smart.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.synapse</groupId>
+                <artifactId>synapse-nhttp-transport</artifactId>
+                <version>${synapse.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -473,6 +483,12 @@
         <apache.felix.scr.ds.annotations.version>1.2.4</apache.felix.scr.ds.annotations.version>
         <org.wso2.carbon.caching.core.version>4.2.0</org.wso2.carbon.caching.core.version>
         <orbit.version.snakeyaml>1.16.0.wso2v1</orbit.version.snakeyaml>
+        <json.smart.version>2.3</json.smart.version>
+
+        <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
+        <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>
+        <orbit.snakeyaml.import.version.range>[1.16.0.wso2v1, 2.0.0)</orbit.snakeyaml.import.version.range>
+        <axis2.osgi.version.range>[1.6.1, 1.7.0)</axis2.osgi.version.range>
     </properties>
 
     <repositories>
