@@ -56,7 +56,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.carbon.micro.integrator.initializer</artifactId>
+            <artifactId>org.wso2.micro.integrator.initializer</artifactId>
         </dependency>
     </dependencies>
 

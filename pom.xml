@@ -79,7 +79,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.carbon.micro.integrator.server</artifactId>
+                <artifactId>org.wso2.micro.integrator.server</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>
@@ -89,12 +89,12 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.carbon.micro.integrator.initializer</artifactId>
+                <artifactId>org.wso2.micro.integrator.initializer</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.carbon.micro.integrator.security</artifactId>
+                <artifactId>org.wso2.micro.integrator.security</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>

@@ -35,9 +35,9 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.mediation.initializer.ServiceBusConstants;
-import org.wso2.carbon.micro.integrator.initializer.ServiceBusUtils;
-import org.wso2.carbon.micro.integrator.initializer.services.SynapseEnvironmentService;
-import org.wso2.carbon.micro.integrator.initializer.services.SynapseRegistrationsService;
+import org.wso2.micro.integrator.initializer.ServiceBusUtils;
+import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
+import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsService;
 import org.wso2.carbon.task.services.JobMetaDataProviderService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.mediation.startup.StartupAdminService;
@@ -109,7 +109,7 @@ public class StartupAdminServiceComponent {
         }
     }
 
-    @Reference(name = "synapse.env.service", service = org.wso2.carbon.micro.integrator.initializer.services.SynapseEnvironmentService.class, cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, unbind = "unsetSynapseEnvironmentService")
+    @Reference(name = "synapse.env.service", service = org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService.class, cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, unbind = "unsetSynapseEnvironmentService")
     protected void setSynapseEnvironmentService(SynapseEnvironmentService synEnvSvc) {
 
         synapseEnvironmentServices.put(synEnvSvc.getTenantId(), synEnvSvc);
@@ -120,7 +120,7 @@ public class StartupAdminServiceComponent {
         synapseEnvironmentServices.remove(synapseEnvironmentService.getTenantId());
     }
 
-    @Reference(name = "synapse.registrations.service", service = org.wso2.carbon.micro.integrator.initializer.services.SynapseRegistrationsService.class, cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, unbind = "unsetSynapseRegistrationsService")
+    @Reference(name = "synapse.registrations.service", service = org.wso2.micro.integrator.initializer.services.SynapseRegistrationsService.class, cardinality = ReferenceCardinality.AT_LEAST_ONE, policy = ReferencePolicy.DYNAMIC, unbind = "unsetSynapseRegistrationsService")
     protected void setSynapseRegistrationsService(SynapseRegistrationsService synapseRegistrationsService) {
 
     }

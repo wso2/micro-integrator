@@ -28,7 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-//import org.wso2.carbon.micro.integrator.core.util.MicroIntegratorBaseUtils;
+//import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 import static org.wso2.carbon.utils.WSO2Constants.PRIMARY_BUNDLE_CONTEXT;
 

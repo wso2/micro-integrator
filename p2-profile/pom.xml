@@ -100,7 +100,7 @@
                                     org.wso2.carbon.mediation:org.wso2.carbon.mediation.light.initializer.server.feature:${carbon.mediation.version}
                                 </featureArtifactDef>-->
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.carbon.micro.integrator.initializer.feature:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.initializer.feature:${product.mi.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.task.server.feature:${carbon.mediation.version}
@@ -240,7 +240,7 @@
 <!--                                </featureArtifactDef>-->
 
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.carbon.micro.integrator.server.feature:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.server.feature:${product.mi.version}
                                 </featureArtifactDef>
 
 <!--                                &lt;!&ndash;Identity&ndash;&gt;-->
@@ -496,11 +496,11 @@
 <!--                                </feature>-->
 
                                 <feature>
-                                    <id>org.wso2.carbon.micro.integrator.server.feature.group</id>
+                                    <id>org.wso2.micro.integrator.server.feature.group</id>
                                     <version>${product.mi.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.wso2.carbon.micro.integrator.initializer.feature.group</id>
+                                    <id>org.wso2.micro.integrator.initializer.feature.group</id>
                                     <version>${product.mi.version}</version>
                                 </feature>
 <!--                                <feature>-->
