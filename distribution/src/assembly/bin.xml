@@ -596,7 +596,7 @@
             <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
             <includes>
-                <include>org.wso2.ei:org.wso2.carbon.micro.integrator.server:jar</include>
+                <include>org.wso2.ei:org.wso2.micro.integrator.server:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
