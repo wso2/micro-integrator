@@ -303,7 +303,7 @@ do
     -Dcarbon.external.lib.dir.path="$CARBON_HOME/lib" \
     -Dcarbon.patches.dir.path="$CARBON_HOME/patches" \
     -Dcarbon.internal.lib.dir.path="$CARBON_HOME/wso2/lib" \
-    -Dei.extendedURIBasedDispatcher=org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler \
+    -Dei.extendedURIBasedDispatcher=org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler \
     -Djava.util.logging.config.file="$CARBON_HOME/conf/etc/logging-bridge.properties" \
     -Dcomponents.repo="$CARBON_HOME/wso2/components/plugins" \
     -Dconf.location="$CARBON_HOME/conf" \
