@@ -25,7 +25,7 @@ import org.apache.synapse.ServerConfigurationInformation;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.SynapseException;
 import org.wso2.carbon.micro.integrator.initializer.persistence.MediationPersistenceManager;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 import java.io.File;
 
@@ -38,7 +38,7 @@ public class ServiceBusUtils {
     private static final Log log = LogFactory.getLog(ServiceBusUtils.class);
 
     public static String getSynapseConfigAbsPath(ServerContextInformation contextInformation) {
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = MicroIntegratorBaseUtils.getCarbonHome();
         ServerConfigurationInformation configInfo = getSynapseServerConfigInfo(contextInformation);
         if (configInfo == null) {
             String msg = "Unable to obtain ESB server configuration information";
