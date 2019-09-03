@@ -269,4 +269,11 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
             }
         }
     }
+
+    /**
+     * Finalizes the server startup.
+     */
+    public static void finalizeStartup() {
+        //todo implement this
+    }
 }

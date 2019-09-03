@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMException;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.deployment.DeploymentException;
@@ -38,9 +39,14 @@ import org.apache.synapse.config.xml.EntryFactory;
 import org.apache.synapse.config.xml.SynapseImportFactory;
 import org.apache.synapse.config.xml.SynapseImportSerializer;
 import org.apache.synapse.config.xml.XMLConfigConstants;
+import org.apache.synapse.deployers.APIDeployer;
 import org.apache.synapse.deployers.AbstractSynapseArtifactDeployer;
+import org.apache.synapse.deployers.InboundEndpointDeployer;
 import org.apache.synapse.deployers.LibraryArtifactDeployer;
+import org.apache.synapse.deployers.MessageProcessorDeployer;
+import org.apache.synapse.deployers.MessageStoreDeployer;
 import org.apache.synapse.deployers.SynapseArtifactDeploymentStore;
+import org.apache.synapse.deployers.TemplateDeployer;
 import org.apache.synapse.libraries.imports.SynapseImport;
 import org.apache.synapse.libraries.model.Library;
 import org.apache.synapse.libraries.util.LibDeployerUtils;
@@ -64,6 +70,7 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +89,13 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
     private static String FAULT_XML="<sequence xmlns=\"http://ws.apache.org/ns/synapse\" name=\"fault\"/>";
     private static String MAIN_SEQ_REGEX = "main-\\d+\\.\\d+\\.\\d+\\.xml";
     private static String FAULT_SEQ_REGEX = "fault-\\d+\\.\\d+\\.\\d+\\.xml";
+
+
+    private HashMap<String, Deployer> synapseDeployers = new HashMap<>();
+
+    public SynapseAppDeployer(){
+        initializeDefaultSynapseDeployers();
+    }
 
     /**
      * Deploy the artifacts which can be deployed through this deployer (endpoints, sequences,
@@ -874,15 +888,6 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
     }
 
     /**
-     * Finds the correct deployer for the given artifact type
-     *
-     * @return Deployer instance
-     */
-    private Deployer getDeployer(String type) {
-        return DataHolder.getInstance().getDeployer(type);
-    }
-
-    /**
      * Get the deployer for the Class Mediators
      *
      * @param axisConfig AxisConfiguration instance
@@ -1063,6 +1068,57 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 }
             }
         }
+    }
+
+    /**
+     * Function to initialize deployers with default deployers. Need to invoke this before adding custom implementations
+     */
+    private void initializeDefaultSynapseDeployers() {
+        // TODO :- uncomment after having these.
+        //  addSynapseDeployer(SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE, new LocalEntryDeployer());
+        //   addSynapseDeployer(SynapseAppDeployerConstants.ENDPOINT_TYPE, new EndpointDeployer());
+        // addSynapseDeployer(SynapseAppDeployerConstants.SEQUENCE_TYPE, new SequenceDeploymentInterceptor());
+        addSynapseDeployer(SynapseAppDeployerConstants.TEMPLATE_TYPE, new TemplateDeployer());
+        // TODO Caused by: java.lang.ClassNotFoundException: org.wso2.carbon.mediation.initializer.ServiceBusUtils
+        //  cannot be found by org.wso2.carbon.mediation.startup_4.7.10
+        //  addSynapseDeployer(SynapseAppDeployerConstants.TASK_TYPE, new StartupTaskDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_STORE_TYPE, new MessageStoreDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE, new MessageProcessorDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.INBOUND_ENDPOINT_TYPE, new InboundEndpointDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.API_TYPE, new APIDeployer());
+        //        addSynapseDeployer(SynapseAppDeployerConstants.PROXY_SERVICE_TYPE, new ProxyServiceDeployer());
+    }
+
+    /**
+     * Function to retrieve related deployer for the given artifact type
+     *
+     * @param type artifact type
+     * @return related deployer, returns null if no deployer registered for given artifact type
+     */
+    private Deployer getDeployer(String type) {
+        return synapseDeployers.get(type);
+    }
+
+    /**
+     * Function to add synapse deployer
+     *
+     * @param type     artifact type that deployed by the deployer
+     * @param deployer deployer implementation
+     */
+    private void addSynapseDeployer(String type, Deployer deployer) {
+        ConfigurationContext configContext = DataHolder.getInstance().getConfigContext();
+        if (deployer == null) {
+            log.error("Failed to add Deployer : deployer is null");
+            return;
+        }
+        if (configContext != null) {
+            // Initialize the Deployer
+            deployer.init(configContext);
+        } else {
+            log.warn("ConfigurationContext has not been set. Deployer: " +
+                     deployer.getClass() + "is not initialized");
+        }
+        synapseDeployers.put(type, deployer);
     }
 }
 
