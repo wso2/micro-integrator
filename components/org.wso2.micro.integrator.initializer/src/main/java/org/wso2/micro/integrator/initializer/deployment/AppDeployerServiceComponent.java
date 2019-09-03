@@ -28,7 +28,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-//import org.wso2.micro.integrator.initializer.StartupFinalizerServiceComponent;
+import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
@@ -45,6 +45,7 @@ public class AppDeployerServiceComponent {
 
     private ConfigurationContext configCtx;
     private SynapseEnvironmentService synapseEnvironmentService;
+    private StartupFinalizer startupFinalizer;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -66,12 +67,16 @@ public class AppDeployerServiceComponent {
             log.error("Error occurred while deploying carbon application", e);
         }
         log.debug("MicroIntegrator artifact/Capp Deployment completed");
-//        StartupFinalizerServiceComponent.finalizeStartup();
+
+        // Finalize server startup
+        startupFinalizer = new StartupFinalizer(configCtx, ctxt.getBundleContext());
+        startupFinalizer.finalizeStartup();
     }
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         log.debug("Deactivating AppDeployerServiceComponent");
+        startupFinalizer.cleanup();
     }
 
     /**
