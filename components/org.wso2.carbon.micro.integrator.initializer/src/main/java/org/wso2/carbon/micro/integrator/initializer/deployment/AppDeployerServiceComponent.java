@@ -28,20 +28,15 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+//import org.wso2.carbon.micro.integrator.initializer.StartupFinalizerServiceComponent;
 import org.wso2.carbon.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.carbon.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
 import org.wso2.carbon.micro.integrator.initializer.deployment.artifact.deployer.ArtifactDeploymentManager;
-import org.wso2.carbon.micro.integrator.initializer.deployment.internal.DeploymentServiceImpl;
 import org.wso2.carbon.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 //import org.wso2.carbon.dataservices.core.DBDeployer;
-import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.util.Properties;
 
 @Component(name = "org.wso2.carbon.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
@@ -50,22 +45,11 @@ public class AppDeployerServiceComponent {
 
     private ConfigurationContext configCtx;
     private SynapseEnvironmentService synapseEnvironmentService;
-    private TaskService taskService;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
 
         log.debug("Activating AppDeployerServiceComponent");
-
-        // Update DataHolder with SynapseEnvironmentService
-        DataHolder.getInstance().setSynapseEnvironmentService(this.synapseEnvironmentService);
-        DataHolder.getInstance().setConfigContext(this.configCtx);
-
-        // Initialize Tasks Service
-        if (taskService != null && !taskService.isServerInit()) {
-            log.debug("Initialize Task Service");
-            taskService.serverInitialized();
-        }
 
         // Initialize deployers
         ArtifactDeploymentManager artifactDeploymentManager = new ArtifactDeploymentManager(configCtx.getAxisConfiguration());
@@ -81,12 +65,8 @@ public class AppDeployerServiceComponent {
         } catch (CarbonException e) {
             log.error("Error occurred while deploying carbon application", e);
         }
-
-        // Register deployment service. This will allow to activate StartupFinalizerServiceComponent
-        DeploymentService deploymentService = new DeploymentServiceImpl(artifactDeploymentManager, cAppDeploymentManager);
-        ctxt.getBundleContext().registerService(DeploymentService.class.getName(),deploymentService, null);
-
         log.debug("MicroIntegrator artifact/Capp Deployment completed");
+//        StartupFinalizerServiceComponent.finalizeStartup();
     }
 
     @Deactivate
@@ -107,6 +87,7 @@ public class AppDeployerServiceComponent {
             unbind = "unsetConfigurationContext")
     protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
         this.configCtx = configCtx.getServerConfigContext();
+        DataHolder.getInstance().setConfigContext(this.configCtx);
     }
 
     /**
@@ -148,6 +129,7 @@ public class AppDeployerServiceComponent {
             unbind = "unsetSynapseEnvironmentService")
     protected void setSynapseEnvironmentService(SynapseEnvironmentService synapseEnvironmentService) {
         this.synapseEnvironmentService = synapseEnvironmentService;
+        DataHolder.getInstance().setSynapseEnvironmentService(this.synapseEnvironmentService);
     }
 
     /**
@@ -186,18 +168,8 @@ public class AppDeployerServiceComponent {
 //            log.error("Error occurred while registering data services deployer");
 //        }
 
-        Properties properties = new Properties();
-        try (FileInputStream fis = new FileInputStream(System.getProperty("conf.location") + File.separator + "synapse.properties")) {
-            properties.load(fis);
-        } catch (Exception e) {
-            log.debug("Retrieving Meta file is failed.");
-        }
-
         // Initialize micro integrator carbon application deployer
         log.debug("Initializing carbon application deployment manager");
-
-        // Initialize synapse deployers
-        DataHolder.getInstance().initializeDefaultSynapseDeployers();
 
         // Register deployers in DeploymentEngine (required for CApp deployment)
         DeploymentEngine deploymentEngine = (DeploymentEngine) configCtx.getAxisConfiguration().getConfigurator();
@@ -208,6 +180,7 @@ public class AppDeployerServiceComponent {
         //TODO
 //        cAppDeploymentManager.registerDeploymentHandler(new FileRegistryResourceDeployer(
 //                synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
+
         cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
 
