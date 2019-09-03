@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.wso2.micro.integrator.core.internal;
+package org.wso2.carbon.micro.integrator.initializer;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
@@ -36,6 +36,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.CarbonConstants;
+import org.wso2.carbon.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.core.ServerStatus;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 
@@ -53,7 +54,7 @@ import java.util.TimerTask;
  * fact  that requests from external parties should only be serviced after the Axis2 engine
  * & Carbon has  reached a stable and consistent state.
  */
-@Component(name = "org.wso2.micro.integrator.core.internal.StartupFinalizerServiceComponent", immediate = true)
+@Component(name = "org.wso2.carbon.micro.integrator.initializer.StartupFinalizerServiceComponent", immediate = true)
 public class StartupFinalizerServiceComponent implements ServiceListener {
     private static final Log log = LogFactory.getLog(StartupFinalizerServiceComponent.class);
     private static final String START_TIME = "wso2carbon.start.time";
@@ -63,7 +64,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
     private BundleContext bundleContext;
 
     private Timer pendingServicesObservationTimer = new Timer();
-    private CarbonCoreDataHolder dataHolder = CarbonCoreDataHolder.getInstance();
+    private ConfigurationHolder dataHolder = ConfigurationHolder.getInstance();
     private ServiceRegistration listerManagerServiceRegistration;
 
     @Activate
@@ -209,8 +210,9 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
         long startupTime = (System.currentTimeMillis() - startTime) ;
         try {
             if (log.isDebugEnabled()) {
-                log.debug("Server           :  " + dataHolder.getServerConfigurationService().getFirstProperty("Name") + "-" +
-                        dataHolder.getServerConfigurationService().getFirstProperty("Version"));
+                log.debug("Server           :  " +
+                        dataHolder.getCarbonServerConfigurationService().getFirstProperty("Name") + "-" +
+                        dataHolder.getCarbonServerConfigurationService().getFirstProperty("Version"));
             }
         } catch (Exception e) {
             log.debug("Error while retrieving server configuration",e);
@@ -228,7 +230,7 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
     }
 
     @Reference(
-            name = "org.wso2.carbon.configCtx",
+            name = "org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService",
             service = org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
@@ -268,5 +270,12 @@ public class StartupFinalizerServiceComponent implements ServiceListener {
                 completeInitialization(bundleContext);
             }
         }
+    }
+
+    /**
+     * Finalizes the server startup.
+     */
+    public static void finalizeStartup() {
+        //todo implement this
     }
 }

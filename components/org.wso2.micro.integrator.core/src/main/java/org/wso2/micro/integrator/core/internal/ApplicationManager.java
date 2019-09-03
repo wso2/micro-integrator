@@ -82,11 +82,11 @@ public final class ApplicationManager implements ApplicationManagerService {
      * Constructor initializes public instances and finds the initial handlers
      */
     private ApplicationManager() {
-        tenantcAppMap = new ConcurrentHashMap<String, ArrayList<CarbonApplication>>();
-        tenantfaultycAppMap = new ConcurrentHashMap<String, HashMap<String, Exception>>();
+        tenantcAppMap = new ConcurrentHashMap<>();
+        tenantfaultycAppMap = new ConcurrentHashMap<>();
 
-        appDeploymentHandlers = new ArrayList<AppDeploymentHandler>();
-        pendingCarbonApps = new ArrayList<PendingApplication>();
+        appDeploymentHandlers = new ArrayList<>();
+        pendingCarbonApps = new ArrayList<>();
 
         // Register default deployment handlers. These two handlers must be registered first before the other handlers
         registerDeploymentHandler(new DefaultAppDeployer());
@@ -95,7 +95,7 @@ public final class ApplicationManager implements ApplicationManagerService {
     // this init method should called by AppDeployerServiceComponent.activate method
     public void init() {
         // set the initial handler counter. default handler and registry handler are always there
-        initialHandlers = 2 + findInitialHandlerCount();
+        initialHandlers = 1 + findInitialHandlerCount();
         isInitialized = true;
         tryDeployPendingCarbonApps();
     }

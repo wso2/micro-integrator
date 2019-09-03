@@ -28,9 +28,9 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.startup.quartz.SimpleQuartzFactory;
 import org.apache.synapse.startup.AbstractStartup;
 import org.apache.synapse.task.TaskDescription;
-import org.wso2.carbon.mediation.initializer.ServiceBusUtils;
-import org.wso2.carbon.mediation.initializer.persistence.MediationPersistenceManager;
-import org.wso2.carbon.mediation.initializer.ServiceBusConstants;
+import org.wso2.carbon.micro.integrator.initializer.ServiceBusConstants;
+import org.wso2.carbon.micro.integrator.initializer.ServiceBusUtils;
+import org.wso2.carbon.micro.integrator.initializer.persistence.MediationPersistenceManager;
 
 import java.util.Iterator;
 

@@ -25,7 +25,7 @@ import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.task.TaskDescription;
 import org.apache.synapse.task.TaskDescriptionSerializer;
 import org.apache.synapse.task.service.TaskManagementService;
-import org.wso2.carbon.mediation.initializer.AbstractServiceBusAdmin;
+import org.wso2.carbon.micro.integrator.initializer.AbstractServiceBusAdmin;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

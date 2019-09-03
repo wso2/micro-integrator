@@ -23,6 +23,7 @@ package org.wso2.carbon.micro.integrator.initializer.utils;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -31,6 +32,7 @@ public class ConfigurationHolder {
     private static ConfigurationHolder ourInstance = new ConfigurationHolder();
 
     private BundleContext bundleContext;
+    private CarbonServerConfigurationService carbonServerConfigurationService;
 
     private Map<Integer, ServiceRegistration> synapseRegistrations =
             new HashMap<Integer, ServiceRegistration>(); 
@@ -56,5 +58,13 @@ public class ConfigurationHolder {
 
     public ServiceRegistration getSynapseRegistration(int tenantId) {
         return synapseRegistrations.get(tenantId);
+    }
+
+    public CarbonServerConfigurationService getCarbonServerConfigurationService() {
+        return carbonServerConfigurationService;
+    }
+
+    public void setCarbonServerConfigurationService(CarbonServerConfigurationService carbonServerConfigurationService) {
+        this.carbonServerConfigurationService = carbonServerConfigurationService;
     }
 }

@@ -45,7 +45,6 @@ public class DataHolder {
 
     private static DataHolder instance;
     private SynapseEnvironmentService synapseEnvironmentService;
-    private HashMap<String, Deployer> synapseDeployers = new HashMap<String, Deployer>();
     private ConfigurationContext configContext;
 
     private DataHolder() {
@@ -74,53 +73,4 @@ public class DataHolder {
         this.configContext = configContext;
     }
 
-    /**
-     * Function to add synapse deployer
-     *
-     * @param type artifact type that deployed by the deployer
-     * @param deployer deployer implementation
-     */
-    public void addSynapseDeployer(String type, Deployer deployer) {
-        if (deployer == null) {
-            log.error("Failed to add Deployer : deployer is null");
-            return;
-        }
-        if (configContext != null) {
-            // Initialize the Deployer
-            deployer.init(configContext);
-        } else {
-            log.warn("ConfigurationContext has not been set. Deployer: " +
-                    deployer.getClass() + "is not initialized");
-        }
-        synapseDeployers.put(type, deployer);
-
-    }
-
-    /**
-     * Function to initialize deployers with default deployers. Need to invoke this before adding custom implementations
-     */
-    public void initializeDefaultSynapseDeployers() {
-        // TODO :- uncomment after having these.
-      //  addSynapseDeployer(SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE, new LocalEntryDeployer());
-     //   addSynapseDeployer(SynapseAppDeployerConstants.ENDPOINT_TYPE, new EndpointDeployer());
-       // addSynapseDeployer(SynapseAppDeployerConstants.SEQUENCE_TYPE, new SequenceDeploymentInterceptor());
-        addSynapseDeployer(SynapseAppDeployerConstants.TEMPLATE_TYPE, new TemplateDeployer());
-// TODO Caused by: java.lang.ClassNotFoundException: org.wso2.carbon.mediation.initializer.ServiceBusUtils cannot be
-        //  found by org.wso2.carbon.mediation.startup_4.7.10
-      //  addSynapseDeployer(SynapseAppDeployerConstants.TASK_TYPE, new StartupTaskDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_STORE_TYPE, new MessageStoreDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE, new MessageProcessorDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.INBOUND_ENDPOINT_TYPE, new InboundEndpointDeployer());
-        addSynapseDeployer(SynapseAppDeployerConstants.API_TYPE, new APIDeployer());
-//        addSynapseDeployer(SynapseAppDeployerConstants.PROXY_SERVICE_TYPE, new ProxyServiceDeployer());
-    }
-
-    /**
-     * Function to retrieve related deployer for the given artifact type
-     * @param type artifact type
-     * @return related deployer, returns null if no deployer registered for given artifact type
-     */
-    public Deployer getDeployer(String type) {
-        return synapseDeployers.get(type);
-    }
 }

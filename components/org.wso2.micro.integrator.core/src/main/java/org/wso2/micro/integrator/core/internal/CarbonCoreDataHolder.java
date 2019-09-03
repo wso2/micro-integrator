@@ -24,21 +24,17 @@ import org.wso2.micro.application.deployer.service.ApplicationManagerService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 /**
- * This singleton data holder contains all the data required by the Carbon core OSGi bundle
+ * This singleton data holder contains all the data required by the micro integrator core OSGi bundle
  */
 public class CarbonCoreDataHolder {
+
     private  static CarbonCoreDataHolder instance = new CarbonCoreDataHolder();
-    private  Log log = LogFactory.getLog(CarbonCoreDataHolder.class);
+    private  static Log log = LogFactory.getLog(CarbonCoreDataHolder.class);
 
-    private  BundleContext bundleContext;
-
-    public ApplicationManagerService getApplicationManager() {
-        return applicationManager;
-    }
-
+    private BundleContext bundleContext;
     private ApplicationManagerService applicationManager;
-    private  HttpService httpService;
-    private  ConfigurationContext mainServerConfigContext;
+    private HttpService httpService;
+    private ConfigurationContext mainServerConfigContext;
     private CarbonServerConfigurationService serverConfigurationService;
 
 
@@ -97,4 +93,7 @@ public class CarbonCoreDataHolder {
         this.applicationManager = applicationManager;
     }
 
+    public ApplicationManagerService getApplicationManager() {
+        return applicationManager;
+    }
 }
