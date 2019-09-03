@@ -154,12 +154,6 @@ public class ServiceComponent {
         return serverConfigurationService;
     }
 
-    @Reference(name = "server.configuration.service", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
-    protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
-        ServiceComponent.serverConfigurationService = serverConfigurationService;
-        CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
-    }
-
     public static HttpService getHttpService() {
         return httpService;
     }
@@ -637,6 +631,12 @@ public class ServiceComponent {
             }
         }
         NetworkUtils.init(hostName, mgtHostName);
+    }
+
+    @Reference(name = "org.wso2.micro.integrator.core.services.CarbonServerConfigurationService", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
+    protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
+        ServiceComponent.serverConfigurationService = serverConfigurationService;
+        CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
     }
 
     protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
