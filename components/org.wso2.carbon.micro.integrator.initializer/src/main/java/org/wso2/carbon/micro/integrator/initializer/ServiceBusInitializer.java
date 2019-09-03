@@ -71,6 +71,8 @@ import org.wso2.carbon.micro.integrator.initializer.utils.SynapseArtifactInitUti
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
 import org.wso2.carbon.task.services.TaskSchedulerService;
+import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
+import org.wso2.micro.integrator.core.internal.ServiceComponent;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -379,6 +381,15 @@ public class ServiceBusInitializer {
             log.debug("ConfigurationContextService unbound from the ESB environment");
         }
         this.configCtxSvc = null;
+    }
+
+    @Reference(name = "org.wso2.micro.integrator.core.services.CarbonServerConfigurationService", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
+    protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
+        ConfigurationHolder.getInstance().setCarbonServerConfigurationService(serverConfigurationService);
+    }
+
+    protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
+        //nothing to do here since we put this reference to populate the ConfigurationHolder
     }
 
     @Reference(
