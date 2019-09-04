@@ -360,11 +360,11 @@
             <fileMode>644</fileMode>
         </file>
 
-<!--        <file>-->
-<!--            <source>src/conf/tasks-config.xml</source>-->
-<!--            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/-->
-<!--            </outputDirectory>-->
-<!--        </file>-->
+        <file>
+            <source>src/conf/tasks-config.xml</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/
+            </outputDirectory>
+        </file>
 <!--        <file>-->
 <!--            <source>-->
 <!--                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-broker.xml-->
