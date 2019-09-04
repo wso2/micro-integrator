@@ -504,12 +504,12 @@
         </file>
 
         <!--File based Synapse registry for Micro EI-->
-        <file>
+        <!--<file>
             <source>src/conf/registry.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/synapse-configs/default
             </outputDirectory>
             <filtered>true</filtered>
-        </file>
+        </file>-->
 
         <!-- Cipher Tool Files -->
 <!--        <file>-->

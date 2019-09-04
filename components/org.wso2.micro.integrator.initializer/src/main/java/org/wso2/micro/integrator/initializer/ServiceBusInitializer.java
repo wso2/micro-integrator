@@ -19,7 +19,6 @@ package org.wso2.micro.integrator.initializer;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.description.AxisServiceGroup;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -31,13 +30,9 @@ import org.apache.synapse.ServerConfigurationInformationFactory;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.ServerManager;
 import org.apache.synapse.SynapseConstants;
-import org.apache.synapse.config.xml.MultiXMLConfigurationBuilder;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
-import org.apache.synapse.deployers.InboundEndpointDeployer;
-import org.apache.synapse.deployers.SynapseArtifactDeploymentStore;
-import org.apache.synapse.inbound.InboundEndpoint;
 import org.apache.synapse.task.TaskConstants;
 import org.apache.synapse.task.TaskDescriptionRepository;
 import org.apache.synapse.task.TaskScheduler;
@@ -50,11 +45,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.core.ServerShutdownHandler;
-import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 //import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
-import org.wso2.micro.integrator.initializer.configurations.ConfigurationManager;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
@@ -71,8 +63,6 @@ import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
 import org.wso2.carbon.task.services.TaskSchedulerService;
-import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.micro.integrator.core.internal.ServiceComponent;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
@@ -84,9 +74,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.locks.Lock;
@@ -148,8 +135,8 @@ public class ServiceBusInitializer {
             // first check which configuration should be active
             // UserRegistry registry = registryService.getConfigSystemRegistry();
             // init the multiple configuration tracker
-            ConfigurationManager configurationManager = new ConfigurationManager(configCtxSvc.getServerConfigContext());
-            configurationManager.init();
+            //ConfigurationManager configurationManager = new ConfigurationManager(configCtxSvc.getServerConfigContext());
+            //configurationManager.init();
             // set the event broker as a property
             /*
             if (eventBroker != null) {
@@ -194,8 +181,8 @@ public class ServiceBusInitializer {
             SynapseRegistrationsService synRegistrationsSvc = new SynapseRegistrationsServiceImpl(synCfgRegistration,
                     synEnvRegistration, MultitenantConstants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
-            configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
-                    configurationManager);
+            /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
+                    configurationManager);*/
             // Start Inbound Endpoint Listeners
             // tOdO need to fix inbound endpoints
 //            EndpointListenerLoader.loadListeners();
