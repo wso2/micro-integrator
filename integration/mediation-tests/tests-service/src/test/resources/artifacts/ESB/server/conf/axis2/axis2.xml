@@ -484,7 +484,7 @@
         </phase>
         <phase name="Validation"/>
         <phase name="Transport">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler">
+            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
                 <order phase="Transport"/>
                 <handler name="JSONMessageHandler"
                          class="org.apache.axis2.json.gson.JSONMessageHandler" />
@@ -515,7 +515,7 @@
             <!--class="org.wso2.carbon.utils.logging.handler.TenantDomainSetter"/>-->
         </phase>
         <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler"/>
+            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"/>
             <handler name="JSONMessageHandler" class="org.apache.axis2.json.gson.JSONMessageHandler" />
             <handler name="SOAPActionBasedDispatcher"
                      class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
@@ -579,7 +579,7 @@
         <phase name="MsgInObservation"/>
         <phase name="Validation"/>
         <phase name="Transport">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler">
+            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
                 <order phase="Transport"/>
                 <handler name="JSONMessageHandler"
                          class="org.apache.axis2.json.gson.JSONMessageHandler" />
@@ -598,7 +598,7 @@
         <phase name="Security"/>
         <phase name="PreDispatch"/>
         <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler"/>
+            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"/>
             <handler name="SOAPActionBasedDispatcher"
                      class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
             <handler name="RequestURIOperationDispatcher"

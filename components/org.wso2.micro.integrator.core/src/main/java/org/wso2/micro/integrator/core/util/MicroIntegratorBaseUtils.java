@@ -18,8 +18,10 @@
 
 package org.wso2.micro.integrator.core.util;
 
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.deployment.DeploymentConstants;
+import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
@@ -212,6 +214,19 @@ public class MicroIntegratorBaseUtils {
             }
         }
         return serverConfig;
+    }
+
+
+    public static boolean isDataService(org.apache.axis2.context.MessageContext messageContext) throws AxisFault {
+        AxisService axisService = messageContext.getAxisService();
+        if (axisService != null) {
+            URL file = axisService.getFileName();
+            if (file != null) {
+                String filePath = file.getPath();
+                return filePath.endsWith(".dbs");
+            }
+        }
+        return false;
     }
 
 }
