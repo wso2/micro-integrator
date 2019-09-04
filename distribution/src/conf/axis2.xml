@@ -142,8 +142,8 @@
         <!--  <messageFormatter contentType="application/octet-stream"
                             class="org.wso2.carbon.relay.ExpandingMessageFormatter"/> -->
         <!--JSON Message Formatters-->
-        <!--  <messageFormatter contentType="application/json"
-                            class="org.wso2.carbon.integrator.core.json.JsonStreamFormatter"/>-->
+        <messageFormatter contentType="application/json"
+                            class="org.wso2.micro.integrator.core.json.JsonStreamFormatter"/>
         <!--messageFormatter contentType="application/x-www-form-urlencoded"
                         class="org.wso2.carbon.relay.ExpandingMessageFormatter"/-->
         <!--messageFormatter contentType="multipart/form-data"
@@ -183,8 +183,8 @@
         <!-- <messageBuilder contentType="application/octet-stream"
                          class="org.wso2.carbon.relay.BinaryRelayBuilder"/> -->
         <!--JSON Message Builders-->
-        <!--  <messageBuilder contentType="application/json"
-                          class="org.wso2.carbon.integrator.core.json.JsonStreamBuilder"/> -->
+        <messageBuilder contentType="application/json"
+                          class="org.wso2.micro.integrator.core.json.JsonStreamBuilder"/>
         <!--messageBuilder contentType="application/xml"
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/-->
         <!--messageBuilder contentType="application/x-www-form-urlencoded"
