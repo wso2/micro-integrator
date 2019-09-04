@@ -392,7 +392,8 @@ public class ServiceBusInitializer {
         //nothing to do here since we put this reference to populate the ConfigurationHolder
     }
 
-    @Reference(
+    // TODO :- check whether we need this when we bring in tasks
+   /* @Reference(
             name = "task.description.repository.service",
             service = org.wso2.carbon.task.services.TaskDescriptionRepositoryService.class,
             cardinality = ReferenceCardinality.MANDATORY,
@@ -434,7 +435,7 @@ public class ServiceBusInitializer {
             log.debug("TaskSchedulerService unbound from the ESB environment");
         }
         this.taskSchedulerService = null;
-    }
+    }*/
 
     @Reference(
             name = "secret.callback.handler.service",
