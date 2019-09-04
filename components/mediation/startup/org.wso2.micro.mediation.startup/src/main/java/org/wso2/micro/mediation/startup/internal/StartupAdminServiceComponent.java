@@ -70,8 +70,9 @@ public class StartupAdminServiceComponent {
             if (synEnvService != null) {
                 context.getBundleContext()
                         .registerService(TaskManagementService.class.getName(), new StartupAdminService(), null);
-                context.getBundleContext().registerService(JobMetaDataProviderService.class.getName(),
-                                                           new StartupJobMetaDataProviderService(), null);
+                // TODO:- check whether we need this we bring in the tasks
+//                context.getBundleContext().registerService(JobMetaDataProviderService.class.getName(),
+//                                                           new StartupJobMetaDataProviderService(), null);
                 registerDeployer(synEnvService.getConfigurationContext().getAxisConfiguration(),
                                  synEnvService.getSynapseEnvironment());
             } else {
