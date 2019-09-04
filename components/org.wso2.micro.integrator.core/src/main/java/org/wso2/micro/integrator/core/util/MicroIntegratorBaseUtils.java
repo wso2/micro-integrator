@@ -18,11 +18,13 @@
 
 package org.wso2.micro.integrator.core.util;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.deployment.DeploymentConstants;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.util.XMLUtils;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
@@ -36,6 +38,11 @@ import java.lang.management.ManagementPermission;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
+import java.util.Iterator;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 import static java.lang.Boolean.TRUE;
 
@@ -43,6 +50,7 @@ public class MicroIntegratorBaseUtils {
 
     private static final String REPOSITORY = "repository";
     private static boolean isServerConfigInitialized;
+    private static OMElement axis2Config;
 
     public static String getServerXml() {
         String carbonXML = System.getProperty(MicroIntegratorBaseConstants.CARBON_CONFIG_DIR_PATH);
@@ -229,4 +237,60 @@ public class MicroIntegratorBaseUtils {
         return false;
     }
 
+    public static String getPassThroughJsonBuilder() throws IOException, XMLStreamException {
+        String psJsonBuilder = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.PASSTHRU_JSON_BUILDER);
+        if (psJsonBuilder == null) {
+            return "org.apache.synapse.commons.json.JsonStreamBuilder";
+        } else {
+            return psJsonBuilder;
+        }
+    }
+
+    public static String getPassThroughJsonFormatter() throws IOException, XMLStreamException {
+        String psJsonFormatter = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.PASSTHRU_JSON_FORMATTER);
+        if (psJsonFormatter == null) {
+            return "org.apache.synapse.commons.json.JsonStreamFormatter";
+        } else {
+            return psJsonFormatter;
+        }
+    }
+
+    public static String getDSSJsonBuilder() throws IOException, XMLStreamException {
+        String dssJsonBuilder = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.DATASERVICE_JSON_BUILDER);
+        if (dssJsonBuilder == null) {
+            return "org.apache.axis2.json.gson.JsonBuilder";
+        } else {
+            return dssJsonBuilder;
+        }
+    }
+
+    public static String getDSSJsonFormatter() throws IOException, XMLStreamException {
+        String dssJsonFormatter = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.DATASERVICE_JSON_FORMATTER);
+        if (dssJsonFormatter == null) {
+            return "org.apache.axis2.json.gson.JsonFormatter";
+        } else {
+            return dssJsonFormatter;
+        }
+    }
+
+    private static String getPropertyFromAxisConf(String parameter) throws IOException, XMLStreamException {
+        try (InputStream file = new FileInputStream(Paths.get(getCarbonConfigDirPath(), "axis2",
+                "axis2.xml").toString())) {
+            if(axis2Config == null) {
+                OMElement element = (OMElement) XMLUtils.toOM(file);
+                element.build();
+                axis2Config = element;
+            }
+            Iterator parameters = axis2Config.getChildrenWithName(new QName("parameter"));
+            while (parameters.hasNext()) {
+                OMElement parameterElement = (OMElement) parameters.next();
+                if (parameter.equals(parameterElement.getAttribute(new QName("name")).getAttributeValue())) {
+                    return parameterElement.getText();
+                }
+            }
+            return null;
+        } catch (IOException | XMLStreamException e) {
+            throw e;
+        }
+    }
 }
