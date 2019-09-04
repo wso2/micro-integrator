@@ -103,7 +103,7 @@
                                     org.wso2.ei:org.wso2.micro.integrator.initializer.feature:${product.mi.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.task.server.feature:${carbon.mediation.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.task.server.feature:${project.version}
                                 </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.relay.server.feature:${carbon.mediation.version}-->
@@ -329,8 +329,8 @@
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
                                 <feature>
-                                    <id>org.wso2.carbon.task.server.feature.group</id>
-                                    <version>${carbon.mediation.version}</version>
+                                    <id>org.wso2.micro.integrator.task.server.feature.group</id>
+                                    <version>${project.version}</version>
                                 </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.relay.server.feature.group</id>-->
