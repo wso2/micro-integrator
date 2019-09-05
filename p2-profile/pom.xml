@@ -111,9 +111,6 @@
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.smooks.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
-                                <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediator.cache.server.feature:${product.mi.version}
-                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.datamapper.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -340,10 +337,6 @@
 <!--                                    <id>org.wso2.carbon.mediator.smooks.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
-                                <feature>
-                                    <id>org.wso2.micro.integrator.mediator.cache.server.feature.group</id>
-                                    <version>${product.mi.version}</version>
-                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.mediator.datamapper.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
