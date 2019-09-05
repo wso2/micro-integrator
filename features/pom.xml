@@ -37,6 +37,7 @@
         <module>org.wso2.micro.integrator.initializer.feature</module>
         <module>mediation-features</module>
         <module>org.wso2.micro.integrator.ntask.core.feature</module>
+        <module>mediator-features</module>
     </modules>
 
 </project>
