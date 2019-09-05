@@ -46,7 +46,7 @@ import java.util.concurrent.Executors;
 /**
  * This class represents the Tasks declarative service component.
  */
-@Component(name = "tasks.component",
+@Component(name = "org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent",
         immediate = true)
 public class TasksDSComponent {
 
