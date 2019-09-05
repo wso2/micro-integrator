@@ -33,6 +33,8 @@
 
     <modules>
         <module>scheduled-tasks</module>
+        <module>ntask-feature</module>
+        <module>builtin-mediators</module>
     </modules>
 
 </project>

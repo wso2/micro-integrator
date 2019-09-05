@@ -111,9 +111,6 @@
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.smooks.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
-                                <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediator.cache.server.feature:${product.mi.version}
-                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.datamapper.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -126,9 +123,9 @@
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.inbound.endpoints.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.ntask.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                               <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.mediation.ntask.feature:${project.version}
+                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.configadmin.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -165,9 +162,9 @@
 <!--                                </featureArtifactDef>-->
 
 
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.ntask.core.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.ntask.core.feature:${project.version}
+                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.commons:org.wso2.carbon.ndatasource.datasources.feature:${carbon.commons.version}-->
 <!--                                </featureArtifactDef>-->
@@ -340,10 +337,6 @@
 <!--                                    <id>org.wso2.carbon.mediator.smooks.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
-                                <feature>
-                                    <id>org.wso2.micro.integrator.mediator.cache.server.feature.group</id>
-                                    <version>${product.mi.version}</version>
-                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.mediator.datamapper.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
@@ -357,10 +350,10 @@
 <!--                                    <id>org.wso2.carbon.inbound.endpoints.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.mediation.ntask.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.mediation.ntask.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.mediation.configadmin.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
@@ -406,10 +399,10 @@
 
                                 <!-- 3 Carbon Commons -->
                                 <!--Need to remove Registry dependency-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.ntask.core.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.ntask.core.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>-->
 <!--                                    <version>${carbon.analytics.common.version}</version>-->

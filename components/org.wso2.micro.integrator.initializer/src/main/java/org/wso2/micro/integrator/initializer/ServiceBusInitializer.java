@@ -45,7 +45,16 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.securevault.SecretCallbackHandlerService;
+import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
+import org.wso2.carbon.task.services.TaskSchedulerService;
+import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.core.ServerShutdownHandler;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.initializer.configurations.ConfigurationManager;
 //import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
@@ -68,6 +77,8 @@ import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.mediation.ntask.internal.NtaskService;
+import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
 
 import java.io.File;
@@ -78,6 +89,10 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+//import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
+//import org.wso2.carbon.mediation.ntask.internal.NtaskService;
+//import org.wso2.carbon.ntask.core.service.TaskService;
 
 @SuppressWarnings({"JavaDoc", "UnusedDeclaration"})
 @Component(name = "org.wso2.micro.integrator.initializer.ServiceBusInitializer", immediate = true)
@@ -102,23 +117,17 @@ public class ServiceBusInitializer {
 
     private ServerManager serverManager;
 
-//    private TaskService taskService;
+    private TaskService taskService;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
 
         log.info("Activating Micro Integrator...");
-//        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-//        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-//        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-//        if (taskService != null && !taskService.isServerInit()) {
-//            log.info("Initialize Task Service");
-//            taskService.serverInitialized();
-//        }
-        // FIXME: this is a hack to get rid of the https port retrieval from the axis2
-        // configuration returning the non blocking https transport. Ideally we should be able
-        // to fix this by making it possible to let the authentication of carbon be done through
-        // the non blocking https transport
+
+        if (taskService != null && !taskService.isServerInit()) {
+            log.info("Initialize Task Service");
+            taskService.serverInitialized();
+        }
 
         // clean up temp folder created for connector class loader reference
         String javaTempDir = System.getProperty("java.io.tmpdir");
@@ -446,20 +455,6 @@ public class ServiceBusInitializer {
         this.secretCallbackHandlerService = null;
     }
 
-//    @Reference(
-//            name = "esbntask.taskservice",
-//            service = org.wso2.carbon.mediation.ntask.internal.NtaskService.class,
-//            cardinality = ReferenceCardinality.OPTIONAL,
-//            policy = ReferencePolicy.DYNAMIC,
-//            unbind = "unsetTaskService")
-    /*protected void setTaskService(NtaskService taskService) {
-
-    }
-
-    protected void unsetTaskService(NtaskService ntaskService) {
-
-    }*/
-
     public static ServerConfigurationInformation getConfigurationInformation() {
 
         return configurationInformation;
@@ -556,7 +551,13 @@ public class ServiceBusInitializer {
 
     }*/
 
-    /*protected void setTaskService(TaskService taskService) {
+    @Reference(
+            name = "org.wso2.micro.integrator.ntask.core.service.TaskService",
+            service = org.wso2.micro.integrator.ntask.core.service.TaskService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetTaskService")
+    protected void setTaskService(TaskService taskService) {
 
         log.info("Set Task Service");
         this.taskService = taskService;
@@ -565,5 +566,5 @@ public class ServiceBusInitializer {
     protected void unsetTaskService(TaskService taskService) {
 
         this.taskService = null;
-    }*/
+    }
 }

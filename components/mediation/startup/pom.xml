@@ -32,7 +32,7 @@
     <artifactId>startup</artifactId>
 
     <modules>
-        <module>org.wso2.micro.mediation.startup</module>
+        <module>mediation-startup</module>
     </modules>
 
 </project>
