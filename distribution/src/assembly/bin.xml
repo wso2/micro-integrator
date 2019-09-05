@@ -79,7 +79,6 @@
                 <exclude>**/lib/endorsed/xalan*.jar</exclude>
                 <exclude>**/conf/tomcat/catalina-server.xml</exclude>
                 <exclude>**/conf/tomcat/webapp-classloading-environments.xml</exclude>
-                <exclude>**/conf/registry.xml</exclude>
                 <exclude>**/conf/tomcat/web.xml</exclude>
                 <exclude>**/webapp-mode/WEB-INF/web.xml</exclude>
                 <exclude>**/conf/tomcat/carbon/WEB-INF/web.xml</exclude>
@@ -501,14 +500,6 @@
             <destName>synapse.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-
-        <!--File based Synapse registry for Micro EI-->
-        <file>
-            <source>src/conf/registry.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/synapse-configs/default
-            </outputDirectory>
-            <filtered>true</filtered>
         </file>
 
         <!-- Cipher Tool Files -->
