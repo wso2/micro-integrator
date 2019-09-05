@@ -91,7 +91,7 @@
                                     org.wso2.carbon.mediation:org.wso2.carbon.mediation.dependency.mgt:${carbon.mediation.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.micro.mediation.startup:${project.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.mediation.startup:${project.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.mediation.registry:${carbon.mediation.version}

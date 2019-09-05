@@ -33,6 +33,7 @@
 
     <modules>
         <module>scheduled-tasks</module>
+        <module>ntask-feature</module>
     </modules>
 
 </project>
