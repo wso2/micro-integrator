@@ -112,6 +112,7 @@
                 <artifactId>org.wso2.micro.integrator.registry</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.server</artifactId>
                 <version>${carbon.kernel.version}</version>
