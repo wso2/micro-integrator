@@ -103,6 +103,11 @@
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.carbon.mediator.cache</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.server</artifactId>
                 <version>${carbon.kernel.version}</version>
@@ -239,6 +244,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.mediation</groupId>
+                <artifactId>org.wso2.carbon.mediator.router.impl</artifactId>
+                <version>${carbon.mediation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.mediation</groupId>
                 <artifactId>org.wso2.carbon.inbound.endpoint</artifactId>
                 <version>${carbon.mediation.version}</version>
                 <scope>compile</scope>
@@ -350,6 +360,13 @@
                 <groupId>org.apache.synapse</groupId>
                 <artifactId>synapse-nhttp-transport</artifactId>
                 <version>${synapse.version}</version>
+            </dependency>
+
+            <!--For Cache Mediator-->
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${google.guava.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -504,6 +521,7 @@
         <org.wso2.carbon.caching.core.version>4.2.0</org.wso2.carbon.caching.core.version>
         <orbit.version.snakeyaml>1.16.0.wso2v1</orbit.version.snakeyaml>
         <json.smart.version>2.3</json.smart.version>
+        <google.guava.version>27.0-jre</google.guava.version>
 
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>

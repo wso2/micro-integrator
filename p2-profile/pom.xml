@@ -93,9 +93,9 @@
                                     org.apache.synapse:org.apache.synapse.transport.vfs.feature:${synapse.version}
                                 </featureArtifactDef>
 <!--                                &lt;!&ndash;1. Carbon-Mediation&ndash;&gt;-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediators.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.mediators.server.feature:${product.mi.version}
+                                </featureArtifactDef>
                                 <!--<featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.mediation.light.initializer.server.feature:${carbon.mediation.version}
                                 </featureArtifactDef>-->
@@ -111,9 +111,9 @@
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.smooks.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.cache.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.cache.server.feature:${product.mi.version}
+                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.datamapper.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -324,10 +324,10 @@
                                     <id>org.wso2.carbon.mediation.light.initializer.server.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
                                 </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.mediators.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.mediators.server.feature.group</id>
+                                    <version>${product.mi.version}</version>
+                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.micro.integrator.task.server.feature.group</id>-->
 <!--                                    <version>${project.version}</version>-->
@@ -340,10 +340,10 @@
 <!--                                    <id>org.wso2.carbon.mediator.smooks.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.mediator.cache.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.mediator.cache.server.feature.group</id>
+                                    <version>${product.mi.version}</version>
+                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.mediator.datamapper.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
