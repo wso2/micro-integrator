@@ -88,9 +88,6 @@
                                     org.wso2.ei:org.wso2.micro.integrator.transport.handlers:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.dependency.mgt:${carbon.mediation.version}
-                                </bundleDef>
-                                <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediation.startup:${project.version}
                                 </bundleDef>
                                 <bundleDef>
