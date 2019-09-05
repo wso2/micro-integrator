@@ -17,9 +17,9 @@
  */
 package org.wso2.micro.integrator.ntask.core;
 
-import java.util.List;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 
-import org.wso2.carbon.ntask.common.TaskException;
+import java.util.List;
 
 /**
  * This represents a factory class used to create task managers.

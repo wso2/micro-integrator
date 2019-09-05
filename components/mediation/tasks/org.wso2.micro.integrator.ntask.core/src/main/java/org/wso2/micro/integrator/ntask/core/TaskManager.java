@@ -17,7 +17,7 @@
  */
 package org.wso2.micro.integrator.ntask.core;
 
-import org.wso2.carbon.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.core.impl.LocalTaskActionListener;
 
 import java.util.List;
@@ -29,12 +29,14 @@ public interface TaskManager {
 
     /**
      * Initialize the startup tasks.
+     *
      * @throws TaskException
      */
     public void initStartupTasks() throws TaskException;
 
     /**
      * Starts a task with the given name.
+     *
      * @param taskName The name of the task
      * @throws TaskException
      */
@@ -42,7 +44,8 @@ public interface TaskManager {
 
     /**
      * Reschedules a task with the given name, only the trigger information will be updated in the
-     * reschedule. 
+     * reschedule.
+     *
      * @param taskName The task to be rescheduled
      * @throws TaskException
      */
@@ -50,6 +53,7 @@ public interface TaskManager {
 
     /**
      * Stops and deletes a task with the given name.
+     *
      * @param taskName The name of the task
      * @return true if the task was found and deleted
      * @throws TaskException
@@ -58,6 +62,7 @@ public interface TaskManager {
 
     /**
      * Pauses a task with the given name.
+     *
      * @param taskName The name of the task
      * @throws TaskException
      */
@@ -65,6 +70,7 @@ public interface TaskManager {
 
     /**
      * Resumes a paused task with the given name.
+     *
      * @param taskName The name of the task
      * @throws TaskException
      */
@@ -72,13 +78,15 @@ public interface TaskManager {
 
     /**
      * Registers a new task or updates if one already exists.
-     * @param taskInfo The task information 
+     *
+     * @param taskInfo The task information
      * @throws TaskException
      */
     public void registerTask(org.wso2.micro.integrator.ntask.core.TaskInfo taskInfo) throws TaskException;
 
     /**
      * Gets tasks state information
+     *
      * @param taskName The name of the task
      * @return State of the task
      * @throws TaskException
@@ -87,14 +95,16 @@ public interface TaskManager {
 
     /**
      * Get task information.
+     *
      * @param taskName The name of the task
-     * @return The task information 
+     * @return The task information
      * @throws TaskException if the task cannot be found
      */
     public org.wso2.micro.integrator.ntask.core.TaskInfo getTask(String taskName) throws TaskException;
 
     /**
      * Get all task information.
+     *
      * @return Task information list
      * @throws TaskException
      */
@@ -102,18 +112,12 @@ public interface TaskManager {
 
     /**
      * Checks if the given task is already scheduled.
+     *
      * @param taskName The task name
      * @return true if already scheduled
      * @throws TaskException
      */
     public boolean isTaskScheduled(String taskName) throws TaskException;
-
-    /**
-     * Task states.
-     */
-    public enum TaskState {
-        NORMAL, PAUSED, ERROR, FINISHED, NONE, BLOCKED, UNKNOWN
-    }
 
     /**
      * Registers a listener to be notified when an action is performed on a task.
@@ -122,5 +126,12 @@ public interface TaskManager {
      * @param taskName the name of the task for which the listener should be registered
      */
     void registerLocalTaskActionListener(LocalTaskActionListener listener, String taskName);
+
+    /**
+     * Task states.
+     */
+    public enum TaskState {
+        NORMAL, PAUSED, ERROR, FINISHED, NONE, BLOCKED, UNKNOWN
+    }
 
 }

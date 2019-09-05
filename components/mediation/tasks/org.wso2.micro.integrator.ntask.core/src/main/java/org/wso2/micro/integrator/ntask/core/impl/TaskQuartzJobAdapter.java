@@ -23,7 +23,7 @@ import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
-import org.wso2.carbon.ntask.common.TaskConstants;
+import org.wso2.micro.integrator.ntask.common.TaskConstants;
 import org.wso2.micro.integrator.ntask.core.Task;
 import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
 
@@ -39,7 +39,9 @@ public class TaskQuartzJobAdapter implements Job {
     public TaskQuartzJobAdapter() {
     }
 
-    @SuppressWarnings("unchecked") @Override public void execute(JobExecutionContext ctx) throws JobExecutionException {
+    @SuppressWarnings("unchecked")
+    @Override
+    public void execute(JobExecutionContext ctx) throws JobExecutionException {
         /* if task execution node is not fully started yet, ignore this trigger */
         if (!TasksDSComponent.getTaskService().isServerInit()) {
             if (log.isDebugEnabled()) {

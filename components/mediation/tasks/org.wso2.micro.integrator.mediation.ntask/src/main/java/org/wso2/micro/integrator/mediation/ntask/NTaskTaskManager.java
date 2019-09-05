@@ -25,7 +25,7 @@ import org.apache.synapse.task.TaskDescription;
 import org.apache.synapse.task.TaskManager;
 import org.apache.synapse.task.TaskManagerObserver;
 import org.wso2.micro.core.ServerStartupHandler;
-import org.wso2.carbon.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.impl.LocalTaskActionListener;
 import org.wso2.carbon.ntask.core.impl.clustered.ClusteredTaskManager;
@@ -456,20 +456,7 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
         } else {
             return false;
         }
-        synchronized (lock) {
-            if (taskManager == null) {
-                logger.warn("#isTaskRunning Could not determine the state of the task [" + taskName + "]. Task manager is not available.");
-                return false;
-            }
-            try {
-                return taskManager.getTaskState(taskName)
-                        .equals(org.wso2.micro.integrator.ntask.core.TaskManager.TaskState.NORMAL);
-            } catch (Exception e) {
-                logger.error("Cannot return task status [" + taskName
-                        + "]. Error: " + e.getLocalizedMessage(), e);
-            }
-        }
-        return false;
+        return checkTaskRunning(taskName);
     }
 
     @Override
@@ -632,6 +619,10 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
         if (!isInitialized()) {
             return false;
         }
+        return checkTaskRunning(taskName);
+    }
+
+    private boolean checkTaskRunning(String taskName) {
         synchronized (lock) {
             if (taskManager == null) {
                 logger.warn("#isTaskRunning Could not determine the state of the task [" +
@@ -648,7 +639,6 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
         }
         return false;
     }
-    
 
     public boolean isTaskExist(String taskName) {
         if (!isInitialized()) {
@@ -706,17 +696,8 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
     @Override
     public void sendClusterMessage(Callable<Void> callable) {
         if (taskManager instanceof ClusteredTaskManager) {
-            try {
-                IExecutorService executorService =
-                                                   ((ClusteredTaskManager) taskManager).getClusterComm()
-                                                                                       .getHazelcast()
-                                                                                       .getExecutorService(NTASK_P2P_COMM_EXECUTOR);
-                executorService.submitToAllMembers(callable);
-            } catch (TaskException e) {
-                logger.error("Can not submit a cluster message.", e);
-            }
+           throw new RuntimeException("Clustering is not supported .");
         }
-
     }
 
     /**

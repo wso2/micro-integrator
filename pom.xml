@@ -329,16 +329,6 @@
                 <version>${carbon.commons.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.ntask.solutions</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.commons</groupId>
-                <artifactId>org.wso2.carbon.ntask.common</artifactId>
-                <version>${carbon.commons.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.quartz-scheduler.wso2</groupId>
                 <artifactId>quartz</artifactId>
                 <version>2.1.1.wso2v1</version>

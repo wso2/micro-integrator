@@ -17,17 +17,15 @@
  */
 package org.wso2.micro.integrator.ntask.core;
 
-import org.wso2.carbon.ntask.common.TaskConstants.TaskMisfirePolicy;
-import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
-
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
-import javax.xml.bind.annotation.XmlRootElement;
+import org.wso2.micro.integrator.ntask.common.TaskConstants;
 
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * This class represents a task job definition.
@@ -35,16 +33,14 @@ import java.util.Map;
 @XmlRootElement(name = "taskInfo")
 public class TaskInfo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-
     public static final String TENANT_ID_PROP = "__TENANT_ID_PROP__";
-
+    private static final long serialVersionUID = 1L;
     private String name;
 
     private String taskClass;
 
     private Map<String, String> properties;
-    
+
     private Map<String, String> locationResolverProperties;
 
     private String locationResolverClass;
@@ -53,79 +49,50 @@ public class TaskInfo implements Serializable {
 
     @Deprecated
     public TaskInfo() {
-    	this.setProperties(null);
-    	this.setLocationResolverClass(TasksDSComponent.getTaskService()
-                .getServerConfiguration().getLocationResolverClass());
-        this.setLocationResolverProperties(TasksDSComponent.getTaskService()
-                .getServerConfiguration().getLocationResolverProperties());
+        this.setProperties(null);
     }
 
     /**
      * TaskInfo constructor.
-     * 
-     * @param name The name of the task
-     * @param taskClass The task implementation class
-     * @param properties The properties that will be passed into the task implementation at runtime
+     *
+     * @param name        The name of the task
+     * @param taskClass   The task implementation class
+     * @param properties  The properties that will be passed into the task implementation at runtime
      * @param triggerInfo Task trigger information
      */
-    public TaskInfo(String name, String taskClass, Map<String, String> properties,
-            TriggerInfo triggerInfo) {
-    	this.name = name;
+    public TaskInfo(String name, String taskClass, Map<String, String> properties, TriggerInfo triggerInfo) {
+        this.name = name;
         this.taskClass = taskClass;
         this.setProperties(properties);
         this.triggerInfo = triggerInfo;
         if (this.getTriggerInfo() == null) {
             throw new IllegalArgumentException("Trigger information cannot be null");
         }
-        this.setLocationResolverClass(TasksDSComponent.getTaskService()
-                .getServerConfiguration().getLocationResolverClass());
-        this.setLocationResolverProperties(TasksDSComponent.getTaskService()
-                .getServerConfiguration().getLocationResolverProperties());
     }
 
     /**
      * TaskInfo constructor with custom TaskLocationResolver.
-     * @param name The name of the task
-     * @param taskClass The task implementation class
-     * @param properties The properties that will be passed into the task implementation at runtime
+     *
+     * @param name                  The name of the task
+     * @param taskClass             The task implementation class
+     * @param properties            The properties that will be passed into the task implementation at runtime
      * @param locationResolverClass The TaskLocationResolver implementation, which is used to
-     *            resolve the server location of the task at schedule time.
-     * @param triggerInfo Task trigger information
+     *                              resolve the server location of the task at schedule time.
+     * @param triggerInfo           Task trigger information
      * @deprecated use setters to set location resolver related properties, if set explicitly,
      * users must have a way of changing this, i.e. using the UI, or else, the global tasks configuration
      * based settings must be used
      */
     @Deprecated
-    public TaskInfo(String name, String taskClass, Map<String, String> properties,
-            String locationResolverClass, TriggerInfo triggerInfo) {
+    public TaskInfo(String name, String taskClass, Map<String, String> properties, String locationResolverClass,
+                    TriggerInfo triggerInfo) {
         this.name = name;
         this.taskClass = taskClass;
         this.setProperties(properties);
-        this.setLocationResolverClass(TasksDSComponent.getTaskService()
-                .getServerConfiguration().getLocationResolverClass());
         this.triggerInfo = triggerInfo;
         if (this.getTriggerInfo() == null) {
             throw new IllegalArgumentException("Trigger information cannot be null");
         }
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setTaskClass(String taskClass) {
-        this.taskClass = taskClass;
-    }
-
-    public void setProperties(Map<String, String> properties) {
-    	this.properties = new HashMap<String, String>();
-    	if (properties != null) {
-            this.properties.putAll(properties);
-    	}
-    }
-
-    public void setTriggerInfo(TriggerInfo triggerInfo) {
-        this.triggerInfo = triggerInfo;
     }
 
     @XmlElement(name = "triggerInfo")
@@ -133,14 +100,26 @@ public class TaskInfo implements Serializable {
         return triggerInfo;
     }
 
+    public void setTriggerInfo(TriggerInfo triggerInfo) {
+        this.triggerInfo = triggerInfo;
+    }
+
     @XmlElement(name = "name")
     public String getName() {
         return name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @XmlElement(name = "taskClass")
     public String getTaskClass() {
         return taskClass;
+    }
+
+    public void setTaskClass(String taskClass) {
+        this.taskClass = taskClass;
     }
 
     @XmlElement(name = "locationResolverClass")
@@ -151,22 +130,31 @@ public class TaskInfo implements Serializable {
     public void setLocationResolverClass(String locationResolverClass) {
         this.locationResolverClass = locationResolverClass;
     }
-    
-    @XmlElementWrapper(name = "locationResolverProperties", required = false, nillable = true)
+
+    @XmlElementWrapper(name = "locationResolverProperties",
+            required = false,
+            nillable = true)
     public Map<String, String> getLocationResolverProperties() {
         return locationResolverProperties;
     }
 
     public void setLocationResolverProperties(Map<String, String> locationResolverProperties) {
-    	this.locationResolverProperties = new HashMap<String, String>();
-    	if (locationResolverProperties != null) {
+        this.locationResolverProperties = new HashMap<String, String>();
+        if (locationResolverProperties != null) {
             this.locationResolverProperties.putAll(locationResolverProperties);
-    	}
+        }
     }
 
     @XmlElementWrapper(name = "properties")
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    public void setProperties(Map<String, String> properties) {
+        this.properties = new HashMap<String, String>();
+        if (properties != null) {
+            this.properties.putAll(properties);
+        }
     }
 
     @Override
@@ -177,7 +165,7 @@ public class TaskInfo implements Serializable {
     @Override
     public boolean equals(Object rhs) {
         if (!(rhs instanceof TaskInfo)) {
-        	return false;
+            return false;
         }
         return ((TaskInfo) rhs).getName().equals(this.getName());
     }
@@ -200,7 +188,7 @@ public class TaskInfo implements Serializable {
 
         private String cronExpression;
 
-        private TaskMisfirePolicy misfirePolicy = TaskMisfirePolicy.DEFAULT;
+        private TaskConstants.TaskMisfirePolicy misfirePolicy = TaskConstants.TaskMisfirePolicy.DEFAULT;
 
         private boolean disallowConcurrentExecution;
 
@@ -218,42 +206,22 @@ public class TaskInfo implements Serializable {
             this.cronExpression = cronExpression;
         }
 
-        public void setDisallowConcurrentExecution(boolean disallowConcurrentExecution) {
-            this.disallowConcurrentExecution = disallowConcurrentExecution;
-        }
-
-        public void setMisfirePolicy(TaskMisfirePolicy misfirePolicy) {
-            this.misfirePolicy = misfirePolicy;
-        }
-
-        public void setStartTime(Date startTime) {
-            this.startTime = startTime;
-        }
-
-        public void setEndTime(Date endTime) {
-            this.endTime = endTime;
-        }
-
-        public void setIntervalMillis(long intervalMillis) {
-            this.intervalMillis = intervalMillis;
-        }
-
-        public void setRepeatCount(int repeatCount) {
-            this.repeatCount = repeatCount;
-        }
-
-        public void setCronExpression(String cronExpression) {
-            this.cronExpression = cronExpression;
-        }
-
         @XmlElement(name = "disallowConcurrentExecution")
         public boolean isDisallowConcurrentExecution() {
             return disallowConcurrentExecution;
         }
 
+        public void setDisallowConcurrentExecution(boolean disallowConcurrentExecution) {
+            this.disallowConcurrentExecution = disallowConcurrentExecution;
+        }
+
         @XmlElement(name = "misfirePolicy")
-        public TaskMisfirePolicy getMisfirePolicy() {
+        public TaskConstants.TaskMisfirePolicy getMisfirePolicy() {
             return misfirePolicy;
+        }
+
+        public void setMisfirePolicy(TaskConstants.TaskMisfirePolicy misfirePolicy) {
+            this.misfirePolicy = misfirePolicy;
         }
 
         @XmlElement(name = "cronExpression")
@@ -261,9 +229,17 @@ public class TaskInfo implements Serializable {
             return cronExpression;
         }
 
+        public void setCronExpression(String cronExpression) {
+            this.cronExpression = cronExpression;
+        }
+
         @XmlElement(name = "startTime")
         public Date getStartTime() {
             return startTime;
+        }
+
+        public void setStartTime(Date startTime) {
+            this.startTime = startTime;
         }
 
         @XmlElement(name = "endTime")
@@ -271,14 +247,26 @@ public class TaskInfo implements Serializable {
             return endTime;
         }
 
+        public void setEndTime(Date endTime) {
+            this.endTime = endTime;
+        }
+
         @XmlElement(name = "intervalMillis")
         public long getIntervalMillis() {
             return intervalMillis;
         }
 
+        public void setIntervalMillis(long intervalMillis) {
+            this.intervalMillis = intervalMillis;
+        }
+
         @XmlElement(name = "repeatCount")
         public int getRepeatCount() {
             return repeatCount;
+        }
+
+        public void setRepeatCount(int repeatCount) {
+            this.repeatCount = repeatCount;
         }
 
     }

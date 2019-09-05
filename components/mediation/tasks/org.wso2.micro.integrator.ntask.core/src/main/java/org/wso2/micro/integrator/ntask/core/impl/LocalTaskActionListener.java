@@ -28,6 +28,7 @@ public interface LocalTaskActionListener {
 
     /**
      * Method to notify when a local task is deleted.
+     *
      * @param taskName
      */
     void notifyLocalTaskDeletion(String taskName);

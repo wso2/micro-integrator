@@ -17,14 +17,14 @@
  */
 package org.wso2.micro.integrator.ntask.core.impl;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import org.quartz.SchedulerConfigException;
 import org.quartz.spi.ThreadPool;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
- * Quartz thread pool implementation which uses a cached thread executor service. 
+ * Quartz thread pool implementation which uses a cached thread executor service.
  */
 public class QuartzCachedThreadPool implements ThreadPool {
 

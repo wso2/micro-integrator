@@ -17,9 +17,8 @@
  */
 package org.wso2.micro.integrator.ntask.core;
 
-import org.wso2.carbon.ntask.common.TaskException;
-
 import com.hazelcast.core.Member;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 
 import java.net.InetSocketAddress;
 import java.util.List;
@@ -30,16 +29,12 @@ import java.util.Map;
  */
 public class TaskServiceContext {
 
+    private static final String LOCAL_MEMBER_IDENTIFIER = "localMemberIdentifier";
     private TaskRepository taskRepo;
-
     private List<String> memberIds;
-    
     private Map<String, Member> memberMap;
 
-    private static final String LOCAL_MEMBER_IDENTIFIER = "localMemberIdentifier";
-
-    public TaskServiceContext(TaskRepository taskRepo, List<String> memberIds, 
-            Map<String, Member> memberMap) {
+    public TaskServiceContext(TaskRepository taskRepo, List<String> memberIds, Map<String, Member> memberMap) {
         this.taskRepo = taskRepo;
         this.memberIds = memberIds;
         this.memberMap = memberMap;
@@ -60,7 +55,7 @@ public class TaskServiceContext {
     public int getServerCount() {
         return this.memberIds.size();
     }
-    
+
     public InetSocketAddress getServerAddress(int index) {
         String memberId = this.memberIds.get(index);
         Member member = this.memberMap.get(memberId);

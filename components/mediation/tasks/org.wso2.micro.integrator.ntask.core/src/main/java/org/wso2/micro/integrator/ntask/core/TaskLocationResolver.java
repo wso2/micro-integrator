@@ -17,9 +17,9 @@
  */
 package org.wso2.micro.integrator.ntask.core;
 
-import java.util.Map;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 
-import org.wso2.carbon.ntask.common.TaskException;
+import java.util.Map;
 
 /**
  * This interface represents the contract that must be implemented to retrieve
@@ -27,18 +27,19 @@ import org.wso2.carbon.ntask.common.TaskException;
  */
 public interface TaskLocationResolver {
 
-	/**
-	 * Initializes the task location resolver with the given properties.
-	 * @param properties The property map
-	 * @throws TaskException
-	 */
-	public void init(Map<String, String> properties) throws TaskException;
-	
+    /**
+     * Initializes the task location resolver with the given properties.
+     *
+     * @param properties The property map
+     * @throws TaskException
+     */
+    public void init(Map<String, String> properties) throws TaskException;
+
     /**
      * Returns the location the given task should be scheduled in.
-     * 
-     * @param ctx The task context, which contains environmental information on
-     *            other tasks etc..
+     *
+     * @param ctx      The task context, which contains environmental information on
+     *                 other tasks etc..
      * @param taskInfo The task information of the task to be scheduled
      * @return The location of the task to be scheduled
      * @throws TaskException

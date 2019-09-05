@@ -19,15 +19,11 @@ package org.wso2.micro.integrator.ntask.core.impl;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.TaskManagerId;
 import org.wso2.micro.integrator.ntask.core.TaskRepository;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,6 +36,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.Unmarshaller;
 
 /**
  * Files based task repository implementation.
@@ -50,21 +50,11 @@ public class FileBasedTaskRepository implements TaskRepository {
     private static final String REG_TASK_BASE_PATH = "/repository/components/org.wso2.carbon.tasks";
 
     private static final String REG_TASK_REPO_BASE_PATH = REG_TASK_BASE_PATH + "/" + "definitions";
-
-    private static String resourcePath = getHome() + File.separator + "registry" + File.separator + "governance" + File.separator;
-
-
     private static final char URL_SEPARATOR_CHAR = '/';
-
-    private String taskType;
-
+    private static String resourcePath =
+            getHome() + File.separator + "registry" + File.separator + "governance" + File.separator;
     private static Marshaller taskMarshaller;
-
     private static Unmarshaller taskUnmarshaller;
-
-    private int tenantId;
-
-    HashMap<String, Properties> taskMetaPropMap = new HashMap<>();
 
     static {
         try {
@@ -72,18 +62,17 @@ public class FileBasedTaskRepository implements TaskRepository {
             taskMarshaller = ctx.createMarshaller();
             taskUnmarshaller = ctx.createUnmarshaller();
         } catch (JAXBException e) {
-            throw new RuntimeException("Error creating task marshaller/unmarshaller: "
-                    + e.getMessage());
+            throw new RuntimeException("Error creating task marshaller/unmarshaller: " + e.getMessage());
         }
     }
+
+    HashMap<String, Properties> taskMetaPropMap = new HashMap<>();
+    private String taskType;
+    private int tenantId;
 
     public FileBasedTaskRepository(int tenantId, String taskType) {
         this.tenantId = tenantId;
         this.taskType = taskType;
-    }
-
-    private String getMyTasksPath() {
-        return REG_TASK_REPO_BASE_PATH + "/" + this.getTenantId() + "/" + this.getTasksType();
     }
 
     private static String getHome() {
@@ -96,6 +85,71 @@ public class FileBasedTaskRepository implements TaskRepository {
 
     private static String getSystemDependentPath(String path) {
         return path.replace(URL_SEPARATOR_CHAR, File.separatorChar);
+    }
+
+    private static Marshaller getTaskMarshaller() {
+        return taskMarshaller;
+    }
+
+    private static Unmarshaller getTaskUnmarshaller() {
+        return taskUnmarshaller;
+    }
+
+    public static List<org.wso2.micro.integrator.ntask.core.TaskManagerId> getAllTenantTaskManagersForType(
+            String taskType) throws TaskException {
+        List<org.wso2.micro.integrator.ntask.core.TaskManagerId> tmList = getAvailableTenantTasksInRepo();
+        for (Iterator<org.wso2.micro.integrator.ntask.core.TaskManagerId> itr = tmList.iterator(); itr.hasNext(); ) {
+            if (!itr.next().getTaskType().equals(taskType)) {
+                itr.remove();
+            }
+        }
+        return tmList;
+    }
+
+    private static List<org.wso2.micro.integrator.ntask.core.TaskManagerId> getAvailableTenantTasksInRepo()
+            throws TaskException {
+        List<org.wso2.micro.integrator.ntask.core.TaskManagerId> tmList = new ArrayList<org.wso2.micro.integrator.ntask.core.TaskManagerId>();
+        try {
+            File file = new File(getSystemDependentPath(resourcePath + REG_TASK_BASE_PATH));
+            boolean result = file.exists();
+            int tid;
+            if (result) {
+                if (!(file.isDirectory())) {
+                    return tmList;
+                }
+                if (file.listFiles() != null) {
+                    for (File tidPath : file.listFiles()) {
+                        if (!(tidPath.isDirectory())) {
+                            continue;
+                        }
+                        if (tidPath.listFiles() != null) {
+                            for (File taskTypePath : tidPath.listFiles()) {
+                                if (!(taskTypePath.isDirectory())) {
+                                    continue;
+                                }
+                                if (taskTypePath.listFiles() != null && taskTypePath.listFiles().length > 0) {
+                                    try {
+                                        tid = Integer.parseInt(tidPath.getAbsolutePath().substring(
+                                                tidPath.getAbsolutePath().lastIndexOf('/') + 1));
+                                        tmList.add(new TaskManagerId(tid, taskTypePath.getAbsolutePath()
+                                                .substring(taskTypePath.getAbsolutePath().lastIndexOf('/') + 1)));
+                                    } catch (NumberFormatException ignore) {
+                                        continue;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new TaskException(e.getMessage(), TaskException.Code.UNKNOWN, e);
+        }
+        return tmList;
+    }
+
+    private String getMyTasksPath() {
+        return REG_TASK_REPO_BASE_PATH + "/" + this.getTenantId() + "/" + this.getTasksType();
     }
 
     @Override
@@ -118,16 +172,8 @@ public class FileBasedTaskRepository implements TaskRepository {
             return new ArrayList<org.wso2.micro.integrator.ntask.core.TaskInfo>(result);
         } catch (Exception e) {
             throw new TaskException("Error in getting all tasks from repository: " + e.getMessage(),
-                    TaskException.Code.CONFIG_ERROR, e);
+                                    TaskException.Code.CONFIG_ERROR, e);
         }
-    }
-
-    private static Marshaller getTaskMarshaller() {
-        return taskMarshaller;
-    }
-
-    private static Unmarshaller getTaskUnmarshaller() {
-        return taskUnmarshaller;
     }
 
     private org.wso2.micro.integrator.ntask.core.TaskInfo getTaskInfoRegistryPath(String path) throws Exception {
@@ -162,68 +208,16 @@ public class FileBasedTaskRepository implements TaskRepository {
             File task = new File(getSystemDependentPath(resourcePath + currentTaskPath));
             if (!task.exists()) {
                 throw new TaskException("The task '" + taskName + "' does not exist",
-                        TaskException.Code.NO_TASK_EXISTS);
+                                        TaskException.Code.NO_TASK_EXISTS);
             }
             return this.getTaskInfoRegistryPath(resourcePath + currentTaskPath);
         } catch (TaskException e) {
             throw e;
         } catch (Exception e) {
             throw new TaskException("Error in loading task '" + taskName + "' from registry: " + e.getMessage(),
-                    TaskException.Code.CONFIG_ERROR, e);
+                                    TaskException.Code.CONFIG_ERROR, e);
         }
     }
-
-    public static List<org.wso2.micro.integrator.ntask.core.TaskManagerId> getAllTenantTaskManagersForType(String taskType)
-            throws TaskException {
-        List<org.wso2.micro.integrator.ntask.core.TaskManagerId> tmList = getAvailableTenantTasksInRepo();
-        for (Iterator<org.wso2.micro.integrator.ntask.core.TaskManagerId> itr = tmList.iterator(); itr.hasNext(); ) {
-            if (!itr.next().getTaskType().equals(taskType)) {
-                itr.remove();
-            }
-        }
-        return tmList;
-    }
-
-    private static List<org.wso2.micro.integrator.ntask.core.TaskManagerId> getAvailableTenantTasksInRepo() throws TaskException {
-        List<org.wso2.micro.integrator.ntask.core.TaskManagerId> tmList = new ArrayList<org.wso2.micro.integrator.ntask.core.TaskManagerId>();
-        try {
-            File file = new File(getSystemDependentPath(resourcePath + REG_TASK_BASE_PATH));
-            boolean result = file.exists();
-            int tid;
-            if (result) {
-                if (!(file.isDirectory())) {
-                    return tmList;
-                }
-                if (file.listFiles() != null) {
-                    for (File tidPath : file.listFiles()) {
-                        if (!(tidPath.isDirectory())) {
-                            continue;
-                        }
-                        if (tidPath.listFiles() != null) {
-                            for (File taskTypePath : tidPath.listFiles()) {
-                                if (!(taskTypePath.isDirectory())) {
-                                    continue;
-                                }
-                                if (taskTypePath.listFiles() != null && taskTypePath.listFiles().length > 0) {
-                                    try {
-                                        tid = Integer.parseInt(tidPath.getAbsolutePath().substring(tidPath.getAbsolutePath().lastIndexOf('/') + 1));
-                                        tmList.add(new TaskManagerId(tid, taskTypePath.getAbsolutePath()
-                                                .substring(taskTypePath.getAbsolutePath().lastIndexOf('/') + 1)));
-                                    } catch (NumberFormatException ignore) {
-                                        continue;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new TaskException(e.getMessage(), TaskException.Code.UNKNOWN, e);
-        }
-        return tmList;
-    }
-
 
     @Override
     public void addTask(TaskInfo taskInfo) throws TaskException {
@@ -238,11 +232,11 @@ public class FileBasedTaskRepository implements TaskRepository {
             getTaskMarshaller().marshal(taskInfo, out);
             fos.write(out.toByteArray());
         } catch (Exception e) {
-            throw new TaskException("Error in adding task '" + taskInfo.getName()
-                    + "' to the repository: " + e.getMessage(), TaskException.Code.CONFIG_ERROR, e);
+            throw new TaskException(
+                    "Error in adding task '" + taskInfo.getName() + "' to the repository: " + e.getMessage(),
+                    TaskException.Code.CONFIG_ERROR, e);
         }
     }
-
 
     @Override
     public boolean deleteTask(String taskName) throws TaskException {
@@ -251,12 +245,12 @@ public class FileBasedTaskRepository implements TaskRepository {
         boolean deleteSuccess = false;
         try {
             File file = new File(getSystemDependentPath(resourcePath + currentTaskPath));
-            if (file.exists()){
+            if (file.exists()) {
                 if (file.delete()) {
                     deleteSuccess = true;
                 } else {
-                    log.error("Error occurred while deleting task. Unable to delete: " +
-                            getSystemDependentPath(resourcePath + currentTaskPath));
+                    log.error("Error occurred while deleting task. Unable to delete: " + getSystemDependentPath(
+                            resourcePath + currentTaskPath));
                 }
             }
 
@@ -265,14 +259,14 @@ public class FileBasedTaskRepository implements TaskRepository {
                 if (metaFile.delete()) {
                     deleteSuccess = true;
                 } else {
-                    log.error("Error occurred while deleting task. Unable to delete: " +
-                            getSystemDependentPath(resourcePath + tasksPath + "/_meta_" + taskName));
+                    log.error("Error occurred while deleting task. Unable to delete: " + getSystemDependentPath(
+                            resourcePath + tasksPath + "/_meta_" + taskName));
                 }
             }
             return deleteSuccess;
         } catch (Exception e) {
             throw new TaskException("Error in deleting task '" + taskName + "' in the repository",
-                    TaskException.Code.CONFIG_ERROR, e);
+                                    TaskException.Code.CONFIG_ERROR, e);
         }
     }
 
@@ -298,7 +292,7 @@ public class FileBasedTaskRepository implements TaskRepository {
             writeToMetaFile(propertyMap, taskName);
         } catch (Exception e) {
             throw new TaskException("Error in setting task metadata properties: " + e.getMessage(),
-                    TaskException.Code.UNKNOWN, e);
+                                    TaskException.Code.UNKNOWN, e);
         }
     }
 
@@ -309,7 +303,6 @@ public class FileBasedTaskRepository implements TaskRepository {
             properties.store(fos, null);
         }
     }
-
 
     private Properties loadFromMetaFile(String taskName) throws Exception {
         Properties properties = new Properties();
@@ -334,7 +327,7 @@ public class FileBasedTaskRepository implements TaskRepository {
             return propertyMap.getProperty(key);
         } catch (Exception e) {
             throw new TaskException("Error in getting task metadata properties: " + e.getMessage(),
-                    TaskException.Code.UNKNOWN, e);
+                                    TaskException.Code.UNKNOWN, e);
         }
     }
 }

@@ -17,7 +17,7 @@
  */
 package org.wso2.micro.integrator.ntask.core.impl.standalone;
 
-import org.wso2.carbon.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.TaskManagerFactory;
 import org.wso2.micro.integrator.ntask.core.TaskManagerId;
@@ -32,27 +32,27 @@ import java.util.List;
  */
 public class StandaloneTaskManagerFactory implements TaskManagerFactory {
 
-    private String taskRepositoryClass;
-
     @Override
-    public org.wso2.micro.integrator.ntask.core.TaskManager getTaskManager(org.wso2.micro.integrator.ntask.core.TaskManagerId tmId) throws TaskException {
+    public org.wso2.micro.integrator.ntask.core.TaskManager getTaskManager(
+            org.wso2.micro.integrator.ntask.core.TaskManagerId tmId) throws TaskException {
         /* the best effort is made to not to cache the task managers, since the tenant loading/unloading/
          * relocation would make the stored cache managers invalid, and won't be gc'ed */
         return this.createTaskManager(tmId);
     }
 
-    protected org.wso2.micro.integrator.ntask.core.TaskManager createTaskManager(org.wso2.micro.integrator.ntask.core.TaskManagerId tmId) throws TaskException {
-        TaskRepository taskRepo = new org.wso2.micro.integrator.ntask.core.impl.FileBasedTaskRepository(tmId.getTenantId(),
-                                                                                                        tmId.getTaskType());
+    protected org.wso2.micro.integrator.ntask.core.TaskManager createTaskManager(
+            org.wso2.micro.integrator.ntask.core.TaskManagerId tmId) throws TaskException {
+        TaskRepository taskRepo = new org.wso2.micro.integrator.ntask.core.impl.FileBasedTaskRepository(
+                tmId.getTenantId(), tmId.getTaskType());
 
         return new StandaloneTaskManager(taskRepo);
     }
 
     @Override
-    public List<org.wso2.micro.integrator.ntask.core.TaskManager> getStartupSchedulingTaskManagersForType(String taskType)
-            throws TaskException {
+    public List<org.wso2.micro.integrator.ntask.core.TaskManager> getStartupSchedulingTaskManagersForType(
+            String taskType) throws TaskException {
         List<org.wso2.micro.integrator.ntask.core.TaskManagerId> tmIds = org.wso2.micro.integrator.ntask.core.impl.FileBasedTaskRepository
-                    .getAllTenantTaskManagersForType(taskType);
+                .getAllTenantTaskManagersForType(taskType);
 
         List<org.wso2.micro.integrator.ntask.core.TaskManager> result = new ArrayList<org.wso2.micro.integrator.ntask.core.TaskManager>();
         for (org.wso2.micro.integrator.ntask.core.TaskManagerId tmId : tmIds) {
@@ -62,10 +62,11 @@ public class StandaloneTaskManagerFactory implements TaskManagerFactory {
     }
 
     @Override
-    public List<org.wso2.micro.integrator.ntask.core.TaskManager> getAllTenantTaskManagersForType(String taskType) throws TaskException {
+    public List<org.wso2.micro.integrator.ntask.core.TaskManager> getAllTenantTaskManagersForType(String taskType)
+            throws TaskException {
 
         List<org.wso2.micro.integrator.ntask.core.TaskManagerId> tmIds = FileBasedTaskRepository
-                    .getAllTenantTaskManagersForType(taskType);
+                .getAllTenantTaskManagersForType(taskType);
 
         List<org.wso2.micro.integrator.ntask.core.TaskManager> result = new ArrayList<TaskManager>();
         for (TaskManagerId tmId : tmIds) {
@@ -74,11 +75,4 @@ public class StandaloneTaskManagerFactory implements TaskManagerFactory {
         return result;
     }
 
-    public String getTaskRepositoryClass() {
-        return taskRepositoryClass;
-    }
-
-    public void setTaskRepositoryClass(String taskRepositoryClass) {
-        this.taskRepositoryClass = taskRepositoryClass;
-    }
 }

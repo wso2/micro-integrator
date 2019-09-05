@@ -21,7 +21,7 @@ import java.util.Map;
 
 /**
  * This represents an abstract class implementation of a Task.
- * 
+ *
  * @see Task
  */
 public abstract class AbstractTask implements Task {
@@ -29,16 +29,16 @@ public abstract class AbstractTask implements Task {
     private Map<String, String> properties;
 
     @Override
-    public void setProperties(Map<String, String> properties) {
-        this.properties = properties;
-    }
-
-    @Override
     public void init() {
     }
 
     public Map<String, String> getProperties() {
         return properties;
+    }
+
+    @Override
+    public void setProperties(Map<String, String> properties) {
+        this.properties = properties;
     }
 
 }

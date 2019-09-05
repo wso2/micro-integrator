@@ -25,9 +25,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.ntask.common.TaskException;
-import org.wso2.carbon.ntask.common.TaskException.Code;
 import org.wso2.micro.core.util.CryptoException;
+import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
@@ -62,8 +61,8 @@ public class TaskUtils {
             fac.setAttribute(Constants.XERCES_PROPERTY_PREFIX + Constants.SECURITY_MANAGER_PROPERTY, securityManager);
             return fac.newDocumentBuilder().parse(file);
         } catch (Exception e) {
-            throw new TaskException("Error in creating an XML document from file: "
-                    + e.getMessage(), Code.CONFIG_ERROR, e);
+            throw new TaskException("Error in creating an XML document from file: " + e.getMessage(),
+                                    TaskException.Code.CONFIG_ERROR, e);
         }
     }
 
@@ -87,8 +86,7 @@ public class TaskUtils {
     private static synchronized String loadFromSecureVault(String alias) {
         if (secretResolver == null) {
             secretResolver = SecretResolverFactory.create((OMElement) null, false);
-            secretResolver.init(TasksDSComponent.getSecretCallbackHandlerService()
-                    .getSecretCallbackHandler());
+            secretResolver.init(TasksDSComponent.getSecretCallbackHandlerService().getSecretCallbackHandler());
         }
         return secretResolver.resolve(alias);
     }
@@ -100,7 +98,7 @@ public class TaskUtils {
                 secureLoadElement(element);
             } catch (CryptoException e) {
                 throw new TaskException("Error in secure load of document: " + e.getMessage(),
-                        Code.UNKNOWN, e);
+                                        TaskException.Code.UNKNOWN, e);
             }
         }
     }
@@ -110,8 +108,8 @@ public class TaskUtils {
         taskRepo.setTaskMetadataProp(taskName, TASK_STATE_PROPERTY, taskState.toString());
     }
 
-    public static TaskManager.TaskState getTaskState(org.wso2.micro.integrator.ntask.core.TaskRepository taskRepo, String taskName)
-            throws TaskException {
+    public static TaskManager.TaskState getTaskState(org.wso2.micro.integrator.ntask.core.TaskRepository taskRepo,
+                                                     String taskName) throws TaskException {
         String currentTaskState = taskRepo.getTaskMetadataProp(taskName, TASK_STATE_PROPERTY);
         if (currentTaskState != null) {
             for (TaskManager.TaskState taskState : TaskManager.TaskState.values()) {
@@ -123,8 +121,8 @@ public class TaskUtils {
         return null;
     }
 
-    public static void setTaskPaused(org.wso2.micro.integrator.ntask.core.TaskRepository taskRepo, String taskName, boolean paused)
-            throws TaskException {
+    public static void setTaskPaused(org.wso2.micro.integrator.ntask.core.TaskRepository taskRepo, String taskName,
+                                     boolean paused) throws TaskException {
         if (paused) {
             setTaskState(taskRepo, taskName, TaskManager.TaskState.PAUSED);
         } else {
@@ -141,8 +139,8 @@ public class TaskUtils {
             return true;
     }
 
-    public static void setTaskFinished(org.wso2.micro.integrator.ntask.core.TaskRepository taskRepo, String taskName, boolean finished)
-            throws TaskException {
+    public static void setTaskFinished(org.wso2.micro.integrator.ntask.core.TaskRepository taskRepo, String taskName,
+                                       boolean finished) throws TaskException {
         if (finished) {
             setTaskState(taskRepo, taskName, TaskManager.TaskState.FINISHED);
         } else {
@@ -150,8 +148,7 @@ public class TaskUtils {
         }
     }
 
-    public static boolean isTaskFinished(TaskRepository taskRepo, String taskName)
-            throws TaskException {
+    public static boolean isTaskFinished(TaskRepository taskRepo, String taskName) throws TaskException {
         TaskManager.TaskState currentState = getTaskState(taskRepo, taskName);
         if (currentState == null || !currentState.equals(TaskManager.TaskState.FINISHED)) {
             return false;

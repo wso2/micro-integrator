@@ -41,14 +41,6 @@
             <artifactId>org.wso2.micro.integrator.ntask.core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
-            <artifactId>org.wso2.carbon.ntask.solutions</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
-            <artifactId>org.wso2.carbon.ntask.common</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.quartz-scheduler.wso2</groupId>
             <artifactId>quartz</artifactId>
         </dependency>
@@ -89,9 +81,6 @@
                             <bundles>
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.ntask.core
-                                </bundleDef>
-                                <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.ntask.common</bundleDef>
-                                <bundleDef>org.wso2.carbon.commons:org.wso2.carbon.ntask.solutions
                                 </bundleDef>
                                 <bundleDef>org.quartz-scheduler.wso2:quartz</bundleDef>
                                 <bundleDef>org.slf4j:slf4j-log4j12</bundleDef>

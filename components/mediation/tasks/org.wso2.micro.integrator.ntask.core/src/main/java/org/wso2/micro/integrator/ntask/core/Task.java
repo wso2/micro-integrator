@@ -26,9 +26,8 @@ public interface Task {
 
     /**
      * This method is called initially to set the task properties.
-     * 
-     * @param properties
-     *            The task properties
+     *
+     * @param properties The task properties
      */
     public void setProperties(Map<String, String> properties);
 
