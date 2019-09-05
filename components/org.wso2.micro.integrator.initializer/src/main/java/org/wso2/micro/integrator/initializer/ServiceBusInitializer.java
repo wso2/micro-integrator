@@ -444,20 +444,6 @@ public class ServiceBusInitializer {
         this.secretCallbackHandlerService = null;
     }
 
-    @Reference(
-            name = "esbntask.taskservice",
-            service = org.wso2.micro.integrator.mediation.ntask.internal.NtaskService.class,
-            cardinality = ReferenceCardinality.OPTIONAL,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetTaskService")
-    protected void setTaskService(NtaskService taskService) {
-
-    }
-
-    protected void unsetTaskService(NtaskService ntaskService) {
-
-    }
-
     public static ServerConfigurationInformation getConfigurationInformation() {
 
         return configurationInformation;
