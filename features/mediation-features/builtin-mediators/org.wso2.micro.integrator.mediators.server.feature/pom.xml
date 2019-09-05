@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" ?>
 <!--
   ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
@@ -16,31 +16,33 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <parent>
         <groupId>org.wso2.ei</groupId>
-        <artifactId>mediator-features</artifactId>
+        <artifactId>mediators</artifactId>
         <version>1.1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
+    <artifactId>org.wso2.micro.integrator.mediators.server.feature</artifactId>
+
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.micro.integrator.mediator.cache.server.feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Micro Integrator - Cache Mediator Feature</name>
+    <name>WSO2 Carbon - All Mediators Server Feature</name>
     <url>http://wso2.org</url>
-    <description>This feature contains the Cache Mediator Backend</description>
+    <description>This feature contains the bundles required for All mediator Back-ends</description>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.carbon.mediator.cache</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.mediation</groupId>
+            <artifactId>org.wso2.carbon.mediator.router.impl</artifactId>
+        </dependency>
     </dependencies>
-
     <build>
         <plugins>
             <plugin>
@@ -55,16 +57,21 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.wso2.micro.integrator.mediator.cache.server</id>
-                            <propertiesFile>../../../etc/feature.properties</propertiesFile>
+                            <id>org.wso2.micro.integrator.mediators.server</id>
+                            <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
                                     <propertyDef>org.wso2.carbon.p2.category.type:server</propertyDef>
-                                    <propertyDef>org.eclipse.equinox.p2.type.group:true</propertyDef>
+                                    <propertyDef>org.eclipse.equinox.p2.type.group:false</propertyDef>
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.ei:org.wso2.carbon.mediator.cache:${product.mi.version}</bundleDef>
+                                <bundleDef>
+                                    org.wso2.ei:org.wso2.carbon.mediator.cache:${product.mi.version}
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.router.impl:${carbon.mediation.version}
+                                </bundleDef>
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>
