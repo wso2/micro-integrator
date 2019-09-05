@@ -79,6 +79,8 @@ import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.mediation.ntask.internal.NtaskService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
+import org.wso2.micro.integrator.mediation.ntask.internal.NtaskService;
+import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
 
 import java.io.File;
