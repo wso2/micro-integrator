@@ -100,7 +100,7 @@
                             </bundles>
                             <importFeatures>
                                 <importFeatureDef>org.apache.synapse.wso2:${synapse.version}</importFeatureDef>
-                                <importFeatureDef>org.wso2.carbon.task.server:${carbon.mediation.version}</importFeatureDef>
+<!--                                <importFeatureDef>org.wso2.micro.integrator.task.server:${project.version}</importFeatureDef>-->
                                 <!--<importFeatureDef>org.wso2.carbon.event.server:${carbon.commons.version}</importFeatureDef>-->
                             </importFeatures>
                         </configuration>

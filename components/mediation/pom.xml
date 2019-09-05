@@ -33,8 +33,10 @@
 
     <modules>
         <module>extensions</module>
+        <module>mediators</module>
         <module>startup</module>
         <module>registry</module>
+        <module>tasks</module>
     </modules>
 
 </project>
