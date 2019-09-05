@@ -38,10 +38,6 @@
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.carbon.mediator.cache</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.mediator.router.impl</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -68,9 +64,6 @@
                             <bundles>
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.carbon.mediator.cache:${product.mi.version}
-                                </bundleDef>
-                                <bundleDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.router.impl:${carbon.mediation.version}
                                 </bundleDef>
                             </bundles>
                             <importFeatures>
