@@ -54,7 +54,7 @@ import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.micro.integrator.initializer.configurations.ConfigurationManager;
+//import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
@@ -66,7 +66,8 @@ import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServic
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServiceImpl;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
-import org.wso2.micro.integrator.mediation.ntask.internal.NtaskService;
+//import org.wso2.carbon.mediation.ntask.internal.NtaskService;
+//import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
 
@@ -133,8 +134,8 @@ public class ServiceBusInitializer {
             // first check which configuration should be active
             // UserRegistry registry = registryService.getConfigSystemRegistry();
             // init the multiple configuration tracker
-            ConfigurationManager configurationManager = new ConfigurationManager(configCtxSvc.getServerConfigContext());
-            configurationManager.init();
+            //ConfigurationManager configurationManager = new ConfigurationManager(configCtxSvc.getServerConfigContext());
+            //configurationManager.init();
             // set the event broker as a property
             /*
             if (eventBroker != null) {
@@ -179,8 +180,8 @@ public class ServiceBusInitializer {
             SynapseRegistrationsService synRegistrationsSvc = new SynapseRegistrationsServiceImpl(synCfgRegistration,
                     synEnvRegistration, MultitenantConstants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
-            configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
-                    configurationManager);
+            /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
+                    configurationManager);*/
             // Start Inbound Endpoint Listeners
             // tOdO need to fix inbound endpoints
 //            EndpointListenerLoader.loadListeners();
