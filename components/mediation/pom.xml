@@ -37,6 +37,7 @@
         <module>startup</module>
         <module>registry</module>
         <module>tasks</module>
+        <module>inbound-endpoints</module>
     </modules>
 
 </project>
