@@ -1,17 +1,17 @@
-/**
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * <p>
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -28,13 +28,13 @@ import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.factory.CachedJMSConnectionFactory;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.factory.JMSConnectionFactory;
 
+import java.util.Properties;
 import javax.jms.Connection;
 import javax.jms.MessageConsumer;
 import javax.jms.Queue;
 import javax.jms.QueueConnection;
 import javax.jms.Session;
 import javax.jms.TopicConnection;
-import java.util.Properties;
 
 public class JMSConnectionFactoryTestCase extends TestCase {
 
@@ -58,10 +58,10 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             Connection connection1 = cachedJMSConnectionFactory.getConnection(null, null);
             String clientID1 = connection1.getClientID();
             Session session1 = cachedJMSConnectionFactory.getSession(connection1);
-            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1,queue);
+            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1, queue);
             Connection connection2 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session2 = cachedJMSConnectionFactory.getSession(connection2);
-            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2,queue);
+            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2, queue);
             Assert.assertEquals("Connection should be cached", clientID1, connection2.getClientID());
             Assert.assertNotSame("Session should not be cached", session1, session2);
             Assert.assertNotSame("Message Consumer should not be cached", ((ActiveMQMessageConsumer) consumer1).
@@ -92,10 +92,10 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
             Connection connection1 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session1 = cachedJMSConnectionFactory.getSession(connection1);
-            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1,queue);
+            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1, queue);
             Connection connection2 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session2 = cachedJMSConnectionFactory.getSession(connection2);
-            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2,queue);
+            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2, queue);
             Assert.assertEquals("Connection should be cached", connection1.getClientID(), connection2.getClientID());
             Assert.assertEquals("Session should be cached", session1, session2);
             Assert.assertNotSame("Message Consumer should not be cached", ((ActiveMQMessageConsumer) consumer1).
@@ -124,10 +124,10 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
             Connection connection1 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session1 = cachedJMSConnectionFactory.getSession(connection1);
-            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1,queue);
+            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1, queue);
             Connection connection2 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session2 = cachedJMSConnectionFactory.getSession(connection2);
-            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2,queue);
+            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2, queue);
             Assert.assertEquals("Connection should be cached", connection1.getClientID(), connection2.getClientID());
             Assert.assertEquals("Session should be cached", session1, session2);
             Assert.assertEquals("Message Consumer should be cached", ((ActiveMQMessageConsumer) consumer1).
@@ -155,10 +155,10 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
             Connection connection1 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session1 = cachedJMSConnectionFactory.getSession(connection1);
-            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1,queue);
+            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1, queue);
             Connection connection2 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session2 = cachedJMSConnectionFactory.getSession(connection2);
-            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2,queue);
+            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2, queue);
             Assert.assertEquals("Connection should be cached", connection1.getClientID(), connection2.getClientID());
             Assert.assertEquals("Session should be cached", session1, session2);
             Assert.assertEquals("Message Consumer should be cached", ((ActiveMQMessageConsumer) consumer1).
@@ -186,13 +186,13 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
             Connection connection1 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session1 = cachedJMSConnectionFactory.getSession(connection1);
-            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1,queue);
+            MessageConsumer consumer1 = cachedJMSConnectionFactory.getMessageConsumer(session1, queue);
             cachedJMSConnectionFactory.closeConnection(connection1);
             cachedJMSConnectionFactory.closeSession(session1);
             cachedJMSConnectionFactory.closeConsumer(consumer1);
             Connection connection2 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session2 = cachedJMSConnectionFactory.getSession(connection2);
-            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2,queue);
+            MessageConsumer consumer2 = cachedJMSConnectionFactory.getMessageConsumer(session2, queue);
             Assert.assertEquals("Connection should be cached", connection1.getClientID(), connection2.getClientID());
             Assert.assertEquals("Session should be cached", session1, session2);
             Assert.assertEquals("Message Consumer should be cached", ((ActiveMQMessageConsumer) consumer1).
@@ -219,7 +219,7 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
             Connection connection1 = cachedJMSConnectionFactory.getConnection(null, null);
             CachedJMSConnectionFactory cachedJMSConnectionFactory2 = new CachedJMSConnectionFactory(jmsProperties,
-                    connection1);
+                                                                                                    connection1);
             Connection connection2 = cachedJMSConnectionFactory2.getConnection(null, null);
             Assert.assertEquals("Connection should be cached", connection1.getClientID(), connection2.getClientID());
         } finally {
@@ -267,7 +267,7 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
             Connection connection1 = cachedJMSConnectionFactory.getConnection(null, null);
             Session session1 = cachedJMSConnectionFactory.getSession(connection1);
-            cachedJMSConnectionFactory.getMessageConsumer(session1,queue);
+            cachedJMSConnectionFactory.getMessageConsumer(session1, queue);
             Assert.assertNotNull("The connection should be created", connection1);
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -337,11 +337,12 @@ public class JMSConnectionFactoryTestCase extends TestCase {
         jmsProperties.put(JMSConstants.SESSION_ACK, "CLIENT_ACKNOWLEDGE");
         jmsProperties.put(JMSConstants.SESSION_TRANSACTED, "true");
         JMSConnectionFactory connectionFactory = new JMSConnectionFactory(jmsProperties);
-        Assert.assertEquals("The JMS connection factory string mismatch", jmsProperties.getProperty
-                (JMSConstants.CONNECTION_FACTORY_JNDI_NAME), connectionFactory.getConnectionFactoryString());
+        Assert.assertEquals("The JMS connection factory string mismatch",
+                            jmsProperties.getProperty(JMSConstants.CONNECTION_FACTORY_JNDI_NAME),
+                            connectionFactory.getConnectionFactoryString());
         Assert.assertEquals("The session acknowledgement mismatch", 2, connectionFactory.getSessionAckMode());
         Assert.assertEquals("The destination type mismatch", JMSConstants.JMSDestinationType.QUEUE,
-                connectionFactory.getDestinationType());
+                            connectionFactory.getDestinationType());
         Assert.assertTrue("The transacted property mismatch", connectionFactory.isTransactedSession());
     }
 
@@ -361,14 +362,15 @@ public class JMSConnectionFactoryTestCase extends TestCase {
             JMSConnectionFactory connectionFactory = new JMSConnectionFactory(jmsProperties);
             Connection connection = connectionFactory.getConnection();
             connectionFactory.start(connection);
-            Assert.assertTrue("The connection should be started", ((ActiveMQConnection)connection).isStarted());
+            Assert.assertTrue("The connection should be started", ((ActiveMQConnection) connection).isStarted());
             connectionFactory.stop(connection);
             Assert.assertFalse("The connection should be stopped", ((ActiveMQConnection) connection).isStarted());
             boolean isClosed = connectionFactory.closeConnection(connection);
             Assert.assertTrue("The connection should be closed", isClosed);
             //Exception should be thrown and caught thrown when trying to start/stop/close closed connection
             connectionFactory.start(connection);
-            connectionFactory.stop(connection);;
+            connectionFactory.stop(connection);
+            ;
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();

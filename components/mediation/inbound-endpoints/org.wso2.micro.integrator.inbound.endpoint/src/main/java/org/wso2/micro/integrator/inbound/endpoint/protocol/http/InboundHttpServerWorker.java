@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -20,7 +20,6 @@ package org.wso2.micro.integrator.inbound.endpoint.protocol.http;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.context.OperationContext;
 import org.apache.axis2.context.ServiceContext;
@@ -30,8 +29,8 @@ import org.apache.axis2.util.Utils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
-import org.apache.synapse.SynapseException;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.SynapseException;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.core.axis2.MessageContextCreatorForAxis2;
@@ -72,19 +71,15 @@ public class InboundHttpServerWorker extends ServerWorker {
     private boolean isInternalHttpInboundEndpoint;
     private boolean isInternalHttpsInboundEndpoint;
 
-    public InboundHttpServerWorker(int port, String tenantDomain,
-                                   SourceRequest sourceRequest,
-                                   SourceConfiguration sourceConfiguration,
-                                   OutputStream outputStream) {
+    public InboundHttpServerWorker(int port, String tenantDomain, SourceRequest sourceRequest,
+                                   SourceConfiguration sourceConfiguration, OutputStream outputStream) {
         super(sourceRequest, sourceConfiguration, outputStream);
         this.request = sourceRequest;
         this.port = port;
         this.tenantDomain = tenantDomain;
         restHandler = new RESTRequestHandler();
-        isInternalHttpInboundEndpoint = (
-                HTTPEndpointManager.getInstance().getInternalInboundHttpPort() == port);
-        isInternalHttpsInboundEndpoint = (
-                HTTPEndpointManager.getInstance().getInternalInboundHttpsPort() == port);
+        isInternalHttpInboundEndpoint = (HTTPEndpointManager.getInstance().getInternalInboundHttpPort() == port);
+        isInternalHttpsInboundEndpoint = (HTTPEndpointManager.getInstance().getInternalInboundHttpsPort() == port);
     }
 
     public void run() {
@@ -94,8 +89,7 @@ public class InboundHttpServerWorker extends ServerWorker {
                 MessageContext axis2MsgContext = getRequestContext();
 
                 //create Synapse Message Context
-                org.apache.synapse.MessageContext synCtx =
-                        createSynapseMessageContext(request, axis2MsgContext);
+                org.apache.synapse.MessageContext synCtx = createSynapseMessageContext(request, axis2MsgContext);
                 updateAxis2MessageContextForSynapse(synCtx);
 
                 setInboundProperties(synCtx);
@@ -119,12 +113,9 @@ public class InboundHttpServerWorker extends ServerWorker {
                     return;
                 }
 
-                String endpointName =
-                        HTTPEndpointManager
-                                .getInstance().getEndpointName(port, tenantDomain);
+                String endpointName = HTTPEndpointManager.getInstance().getEndpointName(port, tenantDomain);
                 if (endpointName == null) {
-                    handleException("Endpoint not found for port : " + port + "" +
-                                    " tenant domain : " + tenantDomain);
+                    handleException("Endpoint not found for port : " + port + "" + " tenant domain : " + tenantDomain);
                 }
                 InboundEndpoint endpoint = synCtx.getConfiguration().getInboundEndpoint(endpointName);
 
@@ -133,8 +124,8 @@ public class InboundHttpServerWorker extends ServerWorker {
                     return;
                 }
 
-//                OpenEventCollector.reportEntryEvent(synCtx, endpointName, endpoint.getAspectConfiguration(),
-//                                                    ComponentType.INBOUNDENDPOINT);
+                //                OpenEventCollector.reportEntryEvent(synCtx, endpointName, endpoint.getAspectConfiguration(),
+                //                                                    ComponentType.INBOUNDENDPOINT);
 
                 CustomLogSetter.getInstance().setLogAppender(endpoint.getArtifactContainerName());
 
@@ -160,8 +151,8 @@ public class InboundHttpServerWorker extends ServerWorker {
                     // Trying to dispatch to an API
                     processedByAPI = restHandler.process(synCtx);
                     if (log.isDebugEnabled()) {
-                        log.debug("Dispatch to API state : enabled, Message is "
-                                  + (!processedByAPI ? "NOT" : "") + "processed by an API");
+                        log.debug("Dispatch to API state : enabled, Message is " + (!processedByAPI ? "NOT" : "")
+                                          + "processed by an API");
                     }
 
                     if (!processedByAPI) {
@@ -186,7 +177,7 @@ public class InboundHttpServerWorker extends ServerWorker {
                             } else {
                                 String contentTypeHeader = request.getHeaders().get(HTTP.CONTENT_TYPE);
                                 SOAPEnvelope soapEnvelope = handleRESTUrlPost(contentTypeHeader);
-                                processNonEntityEnclosingRESTHandler(soapEnvelope,axis2MsgContext,true);
+                                processNonEntityEnclosingRESTHandler(soapEnvelope, axis2MsgContext, true);
                             }
                         } else {
                             //this case can only happen regex exists and it DOES match
@@ -234,8 +225,7 @@ public class InboundHttpServerWorker extends ServerWorker {
         }
     }
 
-    private void injectToMainSequence(org.apache.synapse.MessageContext synCtx,
-                                      InboundEndpoint endpoint) {
+    private void injectToMainSequence(org.apache.synapse.MessageContext synCtx, InboundEndpoint endpoint) {
 
         SequenceMediator injectingSequence = (SequenceMediator) synCtx.getMainSequence();
 
@@ -336,8 +326,7 @@ public class InboundHttpServerWorker extends ServerWorker {
 
         //Get the operation part from the request URL
         // e.g. '/services/TestProxy/' > TestProxy when service path is '/service/' > result 'TestProxy/'
-        String serviceOpPart = Utils.getServiceAndOperationPart(reqUri,
-                                                                servicePath);
+        String serviceOpPart = Utils.getServiceAndOperationPart(reqUri, servicePath);
         //if proxy, then check whether it is deployed in the environment
         if (serviceOpPart != null) {
             isProxy = isProxyDeployed(synapseMsgContext, serviceOpPart);
@@ -352,12 +341,11 @@ public class InboundHttpServerWorker extends ServerWorker {
     /**
      * Checks whether the given proxy is deployed in synapse environment
      *
-     * @param synapseContext   Synapse Message Context of incoming message
-     * @param serviceOpPart String name of the service operation
+     * @param synapseContext Synapse Message Context of incoming message
+     * @param serviceOpPart  String name of the service operation
      * @return true if the proxy is deployed, false otherwise
      */
-    private boolean isProxyDeployed(org.apache.synapse.MessageContext synapseContext,
-                                    String serviceOpPart) {
+    private boolean isProxyDeployed(org.apache.synapse.MessageContext synapseContext, String serviceOpPart) {
         boolean isDeployed = false;
 
         //extract proxy name from serviceOperation, get the first portion split by '/'
@@ -378,8 +366,9 @@ public class InboundHttpServerWorker extends ServerWorker {
      * @return Synapse Message Context instance
      * @throws AxisFault
      */
-    private org.apache.synapse.MessageContext createSynapseMessageContext(
-            SourceRequest inboundSourceRequest, MessageContext axis2Context) throws AxisFault {
+    private org.apache.synapse.MessageContext createSynapseMessageContext(SourceRequest inboundSourceRequest,
+                                                                          MessageContext axis2Context)
+            throws AxisFault {
 
         return MessageContextCreatorForAxis2.getSynapseMessageContext(axis2Context);
     }
@@ -392,7 +381,7 @@ public class InboundHttpServerWorker extends ServerWorker {
      * @throws AxisFault
      */
     private org.apache.synapse.MessageContext updateAxis2MessageContextForSynapse(
-               org.apache.synapse.MessageContext synCtx) throws AxisFault {
+            org.apache.synapse.MessageContext synCtx) throws AxisFault {
 
         ServiceContext svcCtx = new ServiceContext();
         OperationContext opCtx = new OperationContext(new InOutAxisOperation(), svcCtx);
@@ -404,7 +393,8 @@ public class InboundHttpServerWorker extends ServerWorker {
     }
 
     /**
-     *Sends the respond back to the client.
+     * Sends the respond back to the client.
+     *
      * @param synCtx the MessageContext
      * @param result the result of API Call
      */
@@ -413,8 +403,7 @@ public class InboundHttpServerWorker extends ServerWorker {
         synCtx.setResponse(true);
         Axis2MessageContext axis2smc = (Axis2MessageContext) synCtx;
         org.apache.axis2.context.MessageContext axis2MessageCtx = axis2smc.getAxis2MessageContext();
-        axis2MessageCtx.getOperationContext()
-                .setProperty(Constants.RESPONSE_WRITTEN, "SKIP");
+        axis2MessageCtx.getOperationContext().setProperty(Constants.RESPONSE_WRITTEN, "SKIP");
         if (!result) {
             if (axis2MessageCtx.getProperty(PassThroughConstants.HTTP_SC) == null) {
                 axis2MessageCtx.setProperty(PassThroughConstants.HTTP_SC, "404");

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -17,10 +17,6 @@
  */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.generic;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
@@ -30,25 +26,25 @@ import org.apache.synapse.task.TaskStartupObserver;
 import org.wso2.micro.integrator.inbound.endpoint.common.InboundOneTimeTriggerEventBasedProcessor;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.PollingConstants;
 
-public class GenericEventBasedListener extends InboundOneTimeTriggerEventBasedProcessor
-                              implements TaskStartupObserver {
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
+
+public class GenericEventBasedListener extends InboundOneTimeTriggerEventBasedProcessor implements TaskStartupObserver {
 
     private GenericEventBasedConsumer eventConsumer;
     private Properties properties;
     private String injectingSeq;
-    private String onErrorSeq;    
+    private String onErrorSeq;
     private String classImpl;
     private boolean sequential;
     private static final Log log = LogFactory.getLog(GenericEventBasedListener.class);
-    
-    private static final String ENDPOINT_POSTFIX = "CLASS" +
-                                                   COMMON_ENDPOINT_POSTFIX;
 
-    public GenericEventBasedListener(String name, String classImpl,
-                            Properties properties,
-                            String injectingSeq, String onErrorSeq,
-                            SynapseEnvironment synapseEnvironment,
-                            boolean coordination, boolean sequential) {
+    private static final String ENDPOINT_POSTFIX = "CLASS" + COMMON_ENDPOINT_POSTFIX;
+
+    public GenericEventBasedListener(String name, String classImpl, Properties properties, String injectingSeq,
+                                     String onErrorSeq, SynapseEnvironment synapseEnvironment, boolean coordination,
+                                     boolean sequential) {
         this.name = name;
         this.properties = properties;
         this.injectingSeq = injectingSeq;
@@ -68,7 +64,8 @@ public class GenericEventBasedListener extends InboundOneTimeTriggerEventBasedPr
         }
         this.sequential = true;
         if (properties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL) != null) {
-            this.sequential = Boolean.parseBoolean(properties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
+            this.sequential = Boolean
+                    .parseBoolean(properties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
         }
         this.injectingSeq = params.getInjectingSeq();
         this.onErrorSeq = params.getOnErrorSeq();
@@ -77,26 +74,17 @@ public class GenericEventBasedListener extends InboundOneTimeTriggerEventBasedPr
     }
 
     public void init() {
-        log.info("Inbound event based listener " + name + " for class " + classImpl +
-                 " starting ...");
+        log.info("Inbound event based listener " + name + " for class " + classImpl + " starting ...");
         try {
             Class c = Class.forName(classImpl);
-            Constructor cons = c.getConstructor(Properties.class, String.class,
-                                                SynapseEnvironment.class,
-                                                String.class,
-                                                String.class, boolean.class,
-                                                boolean.class);
-            eventConsumer = (GenericEventBasedConsumer) cons.newInstance(properties,
-                                                                         name,
-                                                                         synapseEnvironment,
-                                                                         injectingSeq,
-                                                                         onErrorSeq,
-                                                                         coordination,
-                                                                         sequential);
+            Constructor cons = c.getConstructor(Properties.class, String.class, SynapseEnvironment.class, String.class,
+                                                String.class, boolean.class, boolean.class);
+            eventConsumer = (GenericEventBasedConsumer) cons
+                    .newInstance(properties, name, synapseEnvironment, injectingSeq, onErrorSeq, coordination,
+                                 sequential);
         } catch (ClassNotFoundException e) {
-            handleException("Class " + classImpl +
-                            " not found. Please check the required class is added to the classpath.",
-                            e);
+            handleException(
+                    "Class " + classImpl + " not found. Please check the required class is added to the classpath.", e);
         } catch (NoSuchMethodException e) {
             handleException("Required constructor is not implemented.", e);
         } catch (InvocationTargetException e) {
@@ -117,8 +105,8 @@ public class GenericEventBasedListener extends InboundOneTimeTriggerEventBasedPr
             GenericOneTimeTask task = new GenericOneTimeTask(eventConsumer);
             start(task, ENDPOINT_POSTFIX);
         } catch (Exception e) {
-            log.error("Could not start Generic Event Based Processor. Error starting up scheduler. Error: " +
-                      e.getLocalizedMessage());
+            log.error("Could not start Generic Event Based Processor. Error starting up scheduler. Error: " + e
+                    .getLocalizedMessage());
         }
     }
 

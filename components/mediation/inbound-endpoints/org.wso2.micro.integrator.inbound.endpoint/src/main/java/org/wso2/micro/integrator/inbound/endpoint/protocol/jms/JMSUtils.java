@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.jms;
 
 import org.apache.axiom.om.OMElement;
@@ -22,6 +22,11 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 import javax.jms.BytesMessage;
 import javax.jms.Destination;
 import javax.jms.JMSException;
@@ -35,16 +40,9 @@ import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.naming.Reference;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Properties;
 
 /**
- * 
  * Maintain the common methods used by inbound JMS protocol
- *
  */
 public class JMSUtils {
 
@@ -71,13 +69,13 @@ public class JMSUtils {
             return null;
         }
     }
-    
-    public static void convertXMLtoJMSMap(OMElement element, MapMessage message) throws JMSException{
+
+    public static void convertXMLtoJMSMap(OMElement element, MapMessage message) throws JMSException {
 
         Iterator itr = element.getChildElements();
-        while (itr.hasNext()){
-            OMElement elem = (OMElement)itr.next();
-            message.setString(elem.getLocalName(),elem.getText());
+        while (itr.hasNext()) {
+            OMElement elem = (OMElement) itr.next();
+            message.setString(elem.getLocalName(), elem.getText());
         }
     }
 
@@ -85,13 +83,12 @@ public class JMSUtils {
      * Set transport headers from the axis message context, into the JMS message
      *
      * @param msgContext the axis message context
-     * @param message the JMS Message
+     * @param message    the JMS Message
      * @throws JMSException on exception
      */
-    public static void setTransportHeaders(MessageContext msgContext, Message message)
-        throws JMSException {
+    public static void setTransportHeaders(MessageContext msgContext, Message message) throws JMSException {
 
-        Map<?,?> headerMap = (Map<?,?>) msgContext.getProperty(MessageContext.TRANSPORT_HEADERS);
+        Map<?, ?> headerMap = (Map<?, ?>) msgContext.getProperty(MessageContext.TRANSPORT_HEADERS);
 
         if (headerMap == null) {
             return;
@@ -101,15 +98,13 @@ public class JMSUtils {
 
             String name = (String) headerName;
 
-            if (name.startsWith(JMSConstants.JMSX_PREFIX) &&
-                !(name.equals(JMSConstants.JMSX_GROUP_ID) || name.equals(
-                        JMSConstants.JMSX_GROUP_SEQ))) {
+            if (name.startsWith(JMSConstants.JMSX_PREFIX) && !(name.equals(JMSConstants.JMSX_GROUP_ID) || name
+                    .equals(JMSConstants.JMSX_GROUP_SEQ))) {
                 continue;
             }
 
             if (JMSConstants.JMS_COORELATION_ID.equals(name)) {
-                message.setJMSCorrelationID(
-                        (String) headerMap.get(JMSConstants.JMS_COORELATION_ID));
+                message.setJMSCorrelationID((String) headerMap.get(JMSConstants.JMS_COORELATION_ID));
             } else if (JMSConstants.JMS_DELIVERY_MODE.equals(name)) {
                 Object header = headerMap.get(JMSConstants.JMS_DELIVERY_MODE);
                 Integer value = parseHeaderToInt(header);
@@ -123,8 +118,7 @@ public class JMSUtils {
                     message.setJMSExpiration(value);
                 }
             } else if (JMSConstants.JMS_MESSAGE_ID.equals(name)) {
-                message.setJMSMessageID((String) headerMap.get(
-                        JMSConstants.JMS_MESSAGE_ID));
+                message.setJMSMessageID((String) headerMap.get(JMSConstants.JMS_MESSAGE_ID));
             } else if (JMSConstants.JMS_PRIORITY.equals(name)) {
                 Object header = headerMap.get(JMSConstants.JMS_PRIORITY);
                 Integer value = parseHeaderToInt(header);
@@ -174,7 +168,7 @@ public class JMSUtils {
             return (Long) header;
         } else if (header instanceof String) {
             try {
-               return Long.parseLong((String) header);
+                return Long.parseLong((String) header);
             } catch (NumberFormatException nfe) {
                 log.warn("Invalid header ignored : " + header, nfe);
             }
@@ -207,8 +201,8 @@ public class JMSUtils {
      * @param destinationType type of the destination to be looked up
      * @return the JMS destination, or null if it does not exist
      */
-    public static Destination lookupDestination(Context context, String destinationName,
-                                                String destinationType) throws NamingException {
+    public static Destination lookupDestination(Context context, String destinationName, String destinationType)
+            throws NamingException {
         if (destinationName == null) {
             return null;
         }
@@ -220,26 +214,23 @@ public class JMSUtils {
                 Properties initialContextProperties = new Properties();
                 if (context.getEnvironment() != null) {
                     if (context.getEnvironment().get(JMSConstants.NAMING_FACTORY_INITIAL) != null) {
-                        initialContextProperties.put(JMSConstants.NAMING_FACTORY_INITIAL, context.getEnvironment().get(
-                                JMSConstants.NAMING_FACTORY_INITIAL));
+                        initialContextProperties.put(JMSConstants.NAMING_FACTORY_INITIAL,
+                                                     context.getEnvironment().get(JMSConstants.NAMING_FACTORY_INITIAL));
                     }
                     if (context.getEnvironment().get(JMSConstants.CONNECTION_STRING) != null) {
-                        initialContextProperties.put(JMSConstants.CONNECTION_STRING, context.getEnvironment().get(
-                                JMSConstants.CONNECTION_STRING));
+                        initialContextProperties.put(JMSConstants.CONNECTION_STRING,
+                                                     context.getEnvironment().get(JMSConstants.CONNECTION_STRING));
                     }
                     if (context.getEnvironment().get(JMSConstants.PROVIDER_URL) != null) {
-                        initialContextProperties.put(JMSConstants.PROVIDER_URL, context.getEnvironment().get(
-                                JMSConstants.PROVIDER_URL));
+                        initialContextProperties.put(JMSConstants.PROVIDER_URL,
+                                                     context.getEnvironment().get(JMSConstants.PROVIDER_URL));
                     }
                 }
                 if (JMSConstants.DESTINATION_TYPE_TOPIC.equalsIgnoreCase(destinationType)) {
-                    initialContextProperties.put(
-                            JMSConstants.TOPIC_PREFIX + destinationName, destinationName);
-                } else if (
-                        JMSConstants.DESTINATION_TYPE_QUEUE.equalsIgnoreCase(destinationType)
-                           || JMSConstants.DESTINATION_TYPE_GENERIC.equalsIgnoreCase(destinationType)) {
-                    initialContextProperties.put(
-                            JMSConstants.QUEUE_PREFIX + destinationName, destinationName);
+                    initialContextProperties.put(JMSConstants.TOPIC_PREFIX + destinationName, destinationName);
+                } else if (JMSConstants.DESTINATION_TYPE_QUEUE.equalsIgnoreCase(destinationType)
+                        || JMSConstants.DESTINATION_TYPE_GENERIC.equalsIgnoreCase(destinationType)) {
+                    initialContextProperties.put(JMSConstants.QUEUE_PREFIX + destinationName, destinationName);
                 }
                 InitialContext initialContext = new InitialContext(initialContextProperties);
                 try {
@@ -247,9 +238,9 @@ public class JMSUtils {
                 } catch (NamingException e1) {
                     return JMSUtils.lookup(context, Destination.class,
                                            (JMSConstants.DESTINATION_TYPE_TOPIC.equalsIgnoreCase(destinationType) ?
-                                            "dynamicTopics/" : "dynamicQueues/") + destinationName);
+                                                   "dynamicTopics/" :
+                                                   "dynamicQueues/") + destinationName);
                 }
-
 
             } catch (NamingException x) {
                 log.warn("Cannot locate destination : " + destinationName);
@@ -261,8 +252,7 @@ public class JMSUtils {
         }
     }
 
-    private static <T> T lookup(Context context, Class<T> clazz, String name)
-            throws NamingException {
+    private static <T> T lookup(Context context, Class<T> clazz, String name) throws NamingException {
 
         Object object = context.lookup(name);
         try {
@@ -271,28 +261,28 @@ public class JMSUtils {
             // Instead of a ClassCastException, throw an exception with some
             // more information.
             if (object instanceof Reference) {
-                Reference ref = (Reference)object;
-                handleException("JNDI failed to de-reference Reference with name " +
-                                name + "; is the factory " + ref.getFactoryClassName() +
-                                " in your classpath?");
+                Reference ref = (Reference) object;
+                handleException("JNDI failed to de-reference Reference with name " + name + "; is the factory " + ref
+                        .getFactoryClassName() + " in your classpath?");
                 return null;
             } else {
-                handleException("JNDI lookup of name " + name + " returned a " +
-                                object.getClass().getName() + " while a " + clazz + " was expected");
+                handleException(
+                        "JNDI lookup of name " + name + " returned a " + object.getClass().getName() + " while a "
+                                + clazz + " was expected");
                 return null;
             }
         }
     }
 
-    protected static void handleException(String s) throws NamingException{
+    protected static void handleException(String s) throws NamingException {
         log.error(s);
         throw new NamingException(s);
     }
 
-
     /**
      * Extract transport level headers from JMS message into a Map
-     * @param message JMS message
+     *
+     * @param message    JMS message
      * @param msgContext axis2 message context
      * @return a Map of the transport headers
      */
@@ -340,30 +330,31 @@ public class JMSUtils {
             return false;
         }
 
-        String hyphenSupport = (String) msgContext.getProperty(
-                JMSConstants.PARAM_JMS_HYPHEN_MODE);
+        String hyphenSupport = (String) msgContext.getProperty(JMSConstants.PARAM_JMS_HYPHEN_MODE);
         if (hyphenSupport != null && hyphenSupport.equals(JMSConstants.HYPHEN_MODE_REPLACE)) {
             return true;
         }
 
         return false;
     }
+
     /**
      * This method is to fix ESBJAVA-3687 - certain brokers do not support '-' in JMS property name, in such scenarios
      * we will replace the dash with a special character sequence. This support is configurable and is turned off by
      * default.
+     *
      * @return modified string name if broker does not support name format
      */
     private static String transformHyphenatedString(String name) {
         return name.replaceAll("-", JMSConstants.HYPHEN_REPLACEMENT_STR);
     }
+
     private static boolean isHyphenDeleteMode(MessageContext msgContext) {
         if (msgContext == null) {
             return false;
         }
 
-        String hyphenSupport = (String) msgContext.getProperty(
-                JMSConstants.PARAM_JMS_HYPHEN_MODE);
+        String hyphenSupport = (String) msgContext.getProperty(JMSConstants.PARAM_JMS_HYPHEN_MODE);
         if (hyphenSupport != null && hyphenSupport.equals(JMSConstants.HYPHEN_MODE_DELETE)) {
             return true;
         }
@@ -408,7 +399,7 @@ public class JMSUtils {
      * @return whether or not the message is an ObjectMessage
      */
     private static boolean isObjectMessage(Message msg) {
-        return  (msg instanceof ObjectMessage);
+        return (msg instanceof ObjectMessage);
     }
 
     /**
@@ -420,6 +411,7 @@ public class JMSUtils {
     private static boolean isBytesMessage(Message msg) {
         return (msg instanceof BytesMessage);
     }
+
     private static String inverseTransformHyphenatedString(String name) {
         return name.replaceAll(JMSConstants.HYPHEN_REPLACEMENT_STR, "-");
     }

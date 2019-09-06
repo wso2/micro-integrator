@@ -1,7 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core;
-
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -13,10 +11,12 @@ package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core;
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -101,8 +101,8 @@ public class InboundHL7IOReactor {
         checkReactor();
 
         if (!isPortAvailable(port)) {
-            log.error("A service is already listening on port " +
-                    port + ". Please select a different port for this endpoint.");
+            log.error("A service is already listening on port " + port
+                              + ". Please select a different port for this endpoint.");
             return false;
         }
 
@@ -172,30 +172,23 @@ public class InboundHL7IOReactor {
     private static IOReactorConfig getDefaultReactorConfig() {
         IOReactorConfig.Builder builder = IOReactorConfig.custom();
 
-        return builder
-                .setSelectInterval(HL7Configuration.getInstance().getIntProperty(
-                        MLLPConstants.TCPConstants.SELECT_INTERVAL, 1000))
-                .setShutdownGracePeriod(
-                        HL7Configuration.getInstance().getIntProperty(
-                        MLLPConstants.TCPConstants.SHUTDOWN_GRACE_PERIOD, 500))
-                .setIoThreadCount(HL7Configuration.getInstance().getIntProperty(
-                        MLLPConstants.TCPConstants.IO_THREAD_COUNT, Runtime.getRuntime().availableProcessors()))
-                .setSoTimeout(HL7Configuration.getInstance().getIntProperty(
-                        MLLPConstants.TCPConstants.SO_TIMEOUT, 0))
-                .setSoKeepAlive(HL7Configuration.getInstance().getBooleanProperty(
-                        MLLPConstants.TCPConstants.SO_KEEP_ALIVE, true))
-                .setTcpNoDelay(HL7Configuration.getInstance().getBooleanProperty(
-                        MLLPConstants.TCPConstants.TCP_NO_DELAY, true))
-                .setConnectTimeout(HL7Configuration.getInstance().getIntProperty(
-                        MLLPConstants.TCPConstants.CONNECT_TIMEOUT, 0))
-                .setRcvBufSize(HL7Configuration.getInstance().getIntProperty(
-                        MLLPConstants.TCPConstants.SO_RCVBUF, 0))
-                .setSndBufSize(HL7Configuration.getInstance().getIntProperty(
-                        MLLPConstants.TCPConstants.SO_SNDBUF, 0))
-                .setInterestOpQueued(false)
-                .setSoReuseAddress(true)
-                .setSoLinger(-1)
-                .build();
+        return builder.setSelectInterval(
+                HL7Configuration.getInstance().getIntProperty(MLLPConstants.TCPConstants.SELECT_INTERVAL, 1000))
+                .setShutdownGracePeriod(HL7Configuration.getInstance()
+                                                .getIntProperty(MLLPConstants.TCPConstants.SHUTDOWN_GRACE_PERIOD, 500))
+                .setIoThreadCount(HL7Configuration.getInstance()
+                                          .getIntProperty(MLLPConstants.TCPConstants.IO_THREAD_COUNT,
+                                                          Runtime.getRuntime().availableProcessors()))
+                .setSoTimeout(HL7Configuration.getInstance().getIntProperty(MLLPConstants.TCPConstants.SO_TIMEOUT, 0))
+                .setSoKeepAlive(HL7Configuration.getInstance()
+                                        .getBooleanProperty(MLLPConstants.TCPConstants.SO_KEEP_ALIVE, true))
+                .setTcpNoDelay(HL7Configuration.getInstance()
+                                       .getBooleanProperty(MLLPConstants.TCPConstants.TCP_NO_DELAY, true))
+                .setConnectTimeout(
+                        HL7Configuration.getInstance().getIntProperty(MLLPConstants.TCPConstants.CONNECT_TIMEOUT, 0))
+                .setRcvBufSize(HL7Configuration.getInstance().getIntProperty(MLLPConstants.TCPConstants.SO_RCVBUF, 0))
+                .setSndBufSize(HL7Configuration.getInstance().getIntProperty(MLLPConstants.TCPConstants.SO_SNDBUF, 0))
+                .setInterestOpQueued(false).setSoReuseAddress(true).setSoLinger(-1).build();
     }
 
 }

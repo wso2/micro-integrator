@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -59,8 +61,8 @@ public abstract class InboundOneTimeTriggerRequestProcessor implements InboundRe
      * @param endpointPostfix
      */
     protected void start(OneTimeTriggerInboundTask task, String endpointPostfix) {
-        log.info("Starting the inbound endpoint " + name + ", with coordination " + coordination
-                + ". Type : " + endpointPostfix);
+        log.info("Starting the inbound endpoint " + name + ", with coordination " + coordination + ". Type : "
+                         + endpointPostfix);
         if (coordination) {
             try {
                 TaskDescription taskDescription = new TaskDescription();
@@ -74,17 +76,17 @@ public abstract class InboundOneTimeTriggerRequestProcessor implements InboundRe
                 startUpController.setTaskDescription(taskDescription);
                 startUpController.init(synapseEnvironment);
             } catch (Exception e) {
-                log.error("Error starting the inbound endpoint " + name
-                        + ". Unable to schedule the task. " + e.getLocalizedMessage(), e);
+                log.error("Error starting the inbound endpoint " + name + ". Unable to schedule the task. " + e
+                        .getLocalizedMessage(), e);
             }
         } else {
 
-                if (!dataStore.isPollingEndpointRegistered(SUPER_TENANT_DOMAIN_NAME, name)) {
-                    dataStore.registerPollingingEndpoint(SUPER_TENANT_DOMAIN_NAME, name);
-                }
+            if (!dataStore.isPollingEndpointRegistered(SUPER_TENANT_DOMAIN_NAME, name)) {
+                dataStore.registerPollingEndpoint(SUPER_TENANT_DOMAIN_NAME, name);
+            }
 
             inboundRunner = new OneTimeTriggerInboundRunner(task, SUPER_TENANT_DOMAIN_NAME);
-            if(task.getCallback() != null){
+            if (task.getCallback() != null) {
                 task.getCallback().setInboundRunnerMode(true);
             }
             runningThread = new Thread(inboundRunner);
@@ -99,7 +101,7 @@ public abstract class InboundOneTimeTriggerRequestProcessor implements InboundRe
     public void destroy() {
         log.info("Inbound endpoint " + name + " stopping.");
 
-            dataStore.unregisterPollingEndpoint(SUPER_TENANT_DOMAIN_NAME, name);
+        dataStore.unregisterPollingEndpoint(SUPER_TENANT_DOMAIN_NAME, name);
 
         if (startUpController != null) {
             startUpController.destroy();

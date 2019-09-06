@@ -1,17 +1,17 @@
-/**
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * <p>
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 
+import java.util.Properties;
 import javax.jms.BytesMessage;
 import javax.jms.Connection;
 import javax.jms.Destination;
@@ -38,7 +39,6 @@ import javax.jms.StreamMessage;
 import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import java.util.Properties;
 
 public class JMSBrokerController {
 
@@ -56,7 +56,7 @@ public class JMSBrokerController {
         InitialContext ctx;
         try {
             ctx = new InitialContext(properties);
-            this.connectionFactory = (QueueConnectionFactory)ctx.lookup("QueueConnectionFactory");
+            this.connectionFactory = (QueueConnectionFactory) ctx.lookup("QueueConnectionFactory");
         } catch (NamingException e) {
             log.info("Error while creating connection factory");
         }
@@ -95,7 +95,7 @@ public class JMSBrokerController {
         this.session = this.connection.createSession(false, 1);
         Queue destination = this.session.createQueue(queueName);
         this.producer = this.session.createProducer(destination);
-        if(persistMessage) {
+        if (persistMessage) {
             this.producer.setDeliveryMode(2);
         } else {
             this.producer.setDeliveryMode(1);
@@ -104,7 +104,7 @@ public class JMSBrokerController {
     }
 
     public void disconnect() {
-        if(this.producer != null) {
+        if (this.producer != null) {
             try {
                 this.producer.close();
             } catch (JMSException e) {
@@ -113,7 +113,7 @@ public class JMSBrokerController {
             }
         }
 
-        if(this.session != null) {
+        if (this.session != null) {
             try {
                 this.session.close();
             } catch (JMSException e) {
@@ -122,7 +122,7 @@ public class JMSBrokerController {
             }
         }
 
-        if(this.connection != null) {
+        if (this.connection != null) {
             try {
                 this.connection.close();
             } catch (JMSException e) {
@@ -134,7 +134,7 @@ public class JMSBrokerController {
     }
 
     public TextMessage pushMessage(String messageContent) {
-        if(this.producer == null) {
+        if (this.producer == null) {
             log.error("The producer is null");
             Assert.fail();
             return null;
@@ -168,16 +168,16 @@ public class JMSBrokerController {
         this.connection.start();
         this.session = this.connection.createSession(false, 1);
         MessageConsumer consumer = this.session.createConsumer(destination);
-        Message receivedMsg  = consumer.receive(1);
+        Message receivedMsg = consumer.receive(1);
         int count = 0;
         while (receivedMsg == null) {
-            count ++;
+            count++;
             if (count == 10) {
                 // return null to avoid hanging
                 return null;
             }
             Thread.sleep(10);
-            receivedMsg  = consumer.receive(1);
+            receivedMsg = consumer.receive(1);
         }
         return receivedMsg;
     }

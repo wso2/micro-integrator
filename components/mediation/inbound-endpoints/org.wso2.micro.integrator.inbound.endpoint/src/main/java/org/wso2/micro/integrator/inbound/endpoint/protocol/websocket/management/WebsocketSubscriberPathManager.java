@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -27,9 +29,7 @@ public class WebsocketSubscriberPathManager {
 
     private static WebsocketSubscriberPathManager instance = null;
 
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, List<InboundWebsocketChannelContext>>>
-            inboundSubscriberPathMap = new ConcurrentHashMap<String, ConcurrentHashMap<String, List<InboundWebsocketChannelContext>>>();
-
+    private ConcurrentHashMap<String, ConcurrentHashMap<String, List<InboundWebsocketChannelContext>>> inboundSubscriberPathMap = new ConcurrentHashMap<String, ConcurrentHashMap<String, List<InboundWebsocketChannelContext>>>();
 
     public static WebsocketSubscriberPathManager getInstance() {
         if (instance == null) {
@@ -38,12 +38,9 @@ public class WebsocketSubscriberPathManager {
         return instance;
     }
 
-
-    public void addChannelContext(String inboundName,
-                                  String subscriberPath,
-                                  InboundWebsocketChannelContext ctx) {
-        ConcurrentHashMap<String, List<InboundWebsocketChannelContext>> subscriberPathMap =
-                inboundSubscriberPathMap.get(inboundName);
+    public void addChannelContext(String inboundName, String subscriberPath, InboundWebsocketChannelContext ctx) {
+        ConcurrentHashMap<String, List<InboundWebsocketChannelContext>> subscriberPathMap = inboundSubscriberPathMap
+                .get(inboundName);
         if (subscriberPathMap == null) {
             subscriberPathMap = new ConcurrentHashMap<String, List<InboundWebsocketChannelContext>>();
             ArrayList<InboundWebsocketChannelContext> listContext = new ArrayList<InboundWebsocketChannelContext>();
@@ -62,15 +59,12 @@ public class WebsocketSubscriberPathManager {
         }
     }
 
-    public void removeChannelContext(String inboundName,
-                                     String subscriberPath,
-                                     InboundWebsocketChannelContext ctx) {
-        ConcurrentHashMap<String, List<InboundWebsocketChannelContext>> subscriberPathMap =
-                inboundSubscriberPathMap.get(inboundName);
+    public void removeChannelContext(String inboundName, String subscriberPath, InboundWebsocketChannelContext ctx) {
+        ConcurrentHashMap<String, List<InboundWebsocketChannelContext>> subscriberPathMap = inboundSubscriberPathMap
+                .get(inboundName);
         List<InboundWebsocketChannelContext> listContext = subscriberPathMap.get(subscriberPath);
         for (Object context : listContext.toArray()) {
-            if (((InboundWebsocketChannelContext) context).getChannelIdentifier()
-                    .equals(ctx.getChannelIdentifier())) {
+            if (((InboundWebsocketChannelContext) context).getChannelIdentifier().equals(ctx.getChannelIdentifier())) {
                 listContext.remove(context);
                 break;
             }
@@ -90,23 +84,19 @@ public class WebsocketSubscriberPathManager {
         return inboundSubscriberPathMap.get(inboundName).get(subscriberPath);
     }
 
-    public void broadcastOnSubscriberPath(WebSocketFrame frame,
-                                          String inboundName,
-                                          String subscriberPath) {
-        List<InboundWebsocketChannelContext> contextList =
-                getSubscriberPathChannelContextList(inboundName, subscriberPath);
+    public void broadcastOnSubscriberPath(WebSocketFrame frame, String inboundName, String subscriberPath) {
+        List<InboundWebsocketChannelContext> contextList = getSubscriberPathChannelContextList(inboundName,
+                                                                                               subscriberPath);
         for (InboundWebsocketChannelContext context : contextList) {
             WebSocketFrame duplicatedFrame = frame.duplicate();
             context.writeToChannel(duplicatedFrame);
         }
     }
 
-    public void exclusiveBroadcastOnSubscriberPath(WebSocketFrame frame,
-                                                   String inboundName,
-                                                   String subscriberPath,
+    public void exclusiveBroadcastOnSubscriberPath(WebSocketFrame frame, String inboundName, String subscriberPath,
                                                    InboundWebsocketChannelContext ctx) {
-        List<InboundWebsocketChannelContext> contextList =
-                getSubscriberPathChannelContextList(inboundName, subscriberPath);
+        List<InboundWebsocketChannelContext> contextList = getSubscriberPathChannelContextList(inboundName,
+                                                                                               subscriberPath);
         for (InboundWebsocketChannelContext context : contextList) {
             if (!context.getChannelIdentifier().equals(ctx.getChannelIdentifier())) {
                 WebSocketFrame duplicatedFrame = frame.duplicate();

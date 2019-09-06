@@ -1,37 +1,42 @@
 /*
- *  Copyright (c) 2005-2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.kafka;
 
-import kafka.consumer.*;
+import kafka.consumer.Blacklist;
+import kafka.consumer.Consumer;
+import kafka.consumer.ConsumerConfig;
+import kafka.consumer.ConsumerIterator;
+import kafka.consumer.ConsumerTimeoutException;
+import kafka.consumer.KafkaStream;
+import kafka.consumer.Whitelist;
 import org.I0Itec.zkclient.exception.ZkTimeoutException;
 import org.apache.synapse.SynapseException;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ArrayList;
 
 public class KAFKAMessageListener extends AbstractKafkaMessageListener {
 
-    public KAFKAMessageListener(int threadCount, List<String> topics,
-                                Properties kafkaProperties, InjectHandler injectHandler)
-            throws Exception {
+    public KAFKAMessageListener(int threadCount, List<String> topics, Properties kafkaProperties,
+                                InjectHandler injectHandler) throws Exception {
         this.threadCount = threadCount;
         this.topics = topics;
         this.kafkaProperties = kafkaProperties;
@@ -59,16 +64,12 @@ public class KAFKAMessageListener extends AbstractKafkaMessageListener {
             }
             isCreated = true;
         } catch (ZkTimeoutException toe) {
-            log.error(" Error in Creating Kafka Consumer Connector | ZkTimeout"
-                    + toe.getMessage());
-            throw new SynapseException(
-                    " Error in Creating Kafka Consumer Connector| ZkTimeout");
+            log.error(" Error in Creating Kafka Consumer Connector | ZkTimeout" + toe.getMessage());
+            throw new SynapseException(" Error in Creating Kafka Consumer Connector| ZkTimeout");
 
         } catch (Exception e) {
-            log.error(" Error in Creating Kafka Consumer Connector."
-                    + e.getMessage(),e);
-            throw new SynapseException(" Error in Creating Kafka Consumer Connector ",
-                    e);
+            log.error(" Error in Creating Kafka Consumer Connector." + e.getMessage(), e);
+            throw new SynapseException(" Error in Creating Kafka Consumer Connector ", e);
         }
         return isCreated;
     }
@@ -93,45 +94,31 @@ public class KAFKAMessageListener extends AbstractKafkaMessageListener {
 
                 consumerIte = new ArrayList<ConsumerIterator<byte[], byte[]>>();
                 for (String topic : topics) {
-                    List<KafkaStream<byte[], byte[]>> streams = consumerStreams
-                            .get(topic);
+                    List<KafkaStream<byte[], byte[]>> streams = consumerStreams.get(topic);
                     startConsumers(streams);
 
                 }
             } else if (kafkaProperties.getProperty(KAFKAConstants.TOPIC_FILTER) != null) {
                 // Define #threadCount thread/s for topic filter
                 List<KafkaStream<byte[], byte[]>> consumerStreams;
-                boolean isFromWhiteList = (kafkaProperties
-                        .getProperty(KAFKAConstants.FILTER_FROM_WHITE_LIST) == null || kafkaProperties
-                        .getProperty(KAFKAConstants.FILTER_FROM_WHITE_LIST)
-                        .isEmpty()) ? Boolean.TRUE
-                        : Boolean
-                        .parseBoolean(kafkaProperties
-                                .getProperty(KAFKAConstants.FILTER_FROM_WHITE_LIST));
+                boolean isFromWhiteList = (kafkaProperties.getProperty(KAFKAConstants.FILTER_FROM_WHITE_LIST) == null
+                        || kafkaProperties.getProperty(KAFKAConstants.FILTER_FROM_WHITE_LIST).isEmpty()) ?
+                        Boolean.TRUE :
+                        Boolean.parseBoolean(kafkaProperties.getProperty(KAFKAConstants.FILTER_FROM_WHITE_LIST));
                 if (isFromWhiteList) {
-                    consumerStreams = consumerConnector
-                            .createMessageStreamsByFilter(
-                                    new Whitelist(
-                                            kafkaProperties
-                                                    .getProperty(KAFKAConstants.TOPIC_FILTER)),
-                                    threadCount);
+                    consumerStreams = consumerConnector.createMessageStreamsByFilter(
+                            new Whitelist(kafkaProperties.getProperty(KAFKAConstants.TOPIC_FILTER)), threadCount);
                 } else {
-                    consumerStreams = consumerConnector
-                            .createMessageStreamsByFilter(
-                                    new Blacklist(
-                                            kafkaProperties
-                                                    .getProperty(KAFKAConstants.TOPIC_FILTER)),
-                                    threadCount);
+                    consumerStreams = consumerConnector.createMessageStreamsByFilter(
+                            new Blacklist(kafkaProperties.getProperty(KAFKAConstants.TOPIC_FILTER)), threadCount);
                 }
 
                 startConsumers(consumerStreams);
             }
 
         } catch (Exception e) {
-            log.error("Error while Starting KAFKA consumer."
-                    + e.getMessage(),e);
-            throw new SynapseException(
-                    "Error while Starting KAFKA consumer.", e);
+            log.error("Error while Starting KAFKA consumer." + e.getMessage(), e);
+            throw new SynapseException("Error while Starting KAFKA consumer.", e);
         }
     }
 
@@ -155,12 +142,13 @@ public class KAFKAMessageListener extends AbstractKafkaMessageListener {
         }
     }
 
-    public void injectMessageToESB(String sequenceName,ConsumerIterator<byte[], byte[]> consumerIterator){
+    public void injectMessageToESB(String sequenceName, ConsumerIterator<byte[], byte[]> consumerIterator) {
         byte[] msg = consumerIterator.next().message();
         injectHandler.invoke(msg, sequenceName);
     }
 
-    @Override public boolean hasNext() {
+    @Override
+    public boolean hasNext() {
         if (consumerIte.size() == 1) {
             return hasNext(consumerIte.get(0));
         } else {

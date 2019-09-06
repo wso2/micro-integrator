@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -116,7 +116,6 @@ public class RabbitMQUtils {
     }
 
     /**
-     *
      * @param connection
      * @param queueName
      * @param isDurable
@@ -124,8 +123,8 @@ public class RabbitMQUtils {
      * @param isAutoDelete
      * @throws IOException
      */
-    public static void declareQueue(Connection connection, String queueName, boolean isDurable,
-                                    boolean isExclusive, boolean isAutoDelete) throws IOException {
+    public static void declareQueue(Connection connection, String queueName, boolean isDurable, boolean isExclusive,
+                                    boolean isAutoDelete) throws IOException {
 
         boolean queueAvailable = isQueueAvailable(connection, queueName);
         Channel channel = connection.createChannel();
@@ -147,8 +146,8 @@ public class RabbitMQUtils {
         }
     }
 
-    public static void declareQueue(Connection connection, String queueName,
-                                    Hashtable<String, String> properties) throws IOException {
+    public static void declareQueue(Connection connection, String queueName, Hashtable<String, String> properties)
+            throws IOException {
         Boolean queueAvailable = isQueueAvailable(connection, queueName);
         Channel channel = connection.createChannel();
 
@@ -159,8 +158,8 @@ public class RabbitMQUtils {
                 log.debug("Channel is not open. Creating a new channel.");
             }
             try {
-                channel.queueDeclare(queueName, isDurableQueue(properties),
-                        isExclusiveQueue(properties), isAutoDeleteQueue(properties), null);
+                channel.queueDeclare(queueName, isDurableQueue(properties), isExclusiveQueue(properties),
+                                     isAutoDeleteQueue(properties), null);
 
             } catch (IOException e) {
                 handleException("Error while creating queue: " + queueName, e);
@@ -168,8 +167,8 @@ public class RabbitMQUtils {
         }
     }
 
-
-    public static void declareExchange(Connection connection, String exchangeName, Hashtable<String, String> properties) throws IOException {
+    public static void declareExchange(Connection connection, String exchangeName, Hashtable<String, String> properties)
+            throws IOException {
         Boolean exchangeAvailable = false;
         Channel channel = connection.createChannel();
         String exchangeType = properties
@@ -207,8 +206,8 @@ public class RabbitMQUtils {
             }
             try {
                 channel.exchangeDeclare(exchangeName, exchangeType, Boolean.parseBoolean(durable),
-                        Boolean.parseBoolean(autoDelete),
-                        null); // null since passing no extra arguments
+                                        Boolean.parseBoolean(autoDelete),
+                                        null); // null since passing no extra arguments
             } catch (IOException e) {
                 handleException("Error occurred while declaring exchange.", e);
             }

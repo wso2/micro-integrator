@@ -1,17 +1,17 @@
-/**
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * <p>
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -30,26 +30,20 @@ import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSPollingConsumer;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSTask;
 
-import javax.jms.Message;
 import java.util.Properties;
+import javax.jms.Message;
 
 public class JMSPollingConsumerQueueTest extends TestCase {
 
     private static final String PROVIDER_URL = "tcp://127.0.0.1:61616";
     private static final String INBOUND_EP_NAME = "testPolling";
     private static final long INTERVAL = 1000;
-    private static final String SEND_MSG = "<?xml version='1.0' encoding='UTF-8'?>" +
-            "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"" +
-            " xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">" +
-            "  <soapenv:Header/>" +
-            "  <soapenv:Body>" +
-            "    <ser:getQuote> " +
-            "      <ser:request>" +
-            "        <xsd:symbol>IBM</xsd:symbol>" +
-            "      </ser:request>" +
-            "    </ser:getQuote>" +
-            "  </soapenv:Body>" +
-            "</soapenv:Envelope>";
+    private static final String SEND_MSG = "<?xml version='1.0' encoding='UTF-8'?>"
+            + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\""
+            + " xmlns:ser=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
+            + "  <soapenv:Header/>" + "  <soapenv:Body>" + "    <ser:getQuote> " + "      <ser:request>"
+            + "        <xsd:symbol>IBM</xsd:symbol>" + "      </ser:request>" + "    </ser:getQuote>"
+            + "  </soapenv:Body>" + "</soapenv:Envelope>";
 
     /**
      * Test Run Inbound Task to poll messages from Queue
@@ -62,7 +56,7 @@ public class JMSPollingConsumerQueueTest extends TestCase {
         boolean isQueueExist = false;
         Properties jmsProperties = JMSTestsUtils.getJMSPropertiesForDestination(queueName, PROVIDER_URL, true);
         JMSBrokerController brokerController = new JMSBrokerController(PROVIDER_URL, jmsProperties);
-        JMSPollingConsumer jmsPollingConsumer = new JMSPollingConsumer( jmsProperties, INTERVAL, INBOUND_EP_NAME);
+        JMSPollingConsumer jmsPollingConsumer = new JMSPollingConsumer(jmsProperties, INTERVAL, INBOUND_EP_NAME);
         InboundTask task = new JMSTask(jmsPollingConsumer, INTERVAL);
         Assert.assertEquals(task.getInboundProperties().getProperty(JMSConstants.PROVIDER_URL), PROVIDER_URL);
         try {
@@ -100,7 +94,7 @@ public class JMSPollingConsumerQueueTest extends TestCase {
             Message receivedMsg = JMSTestsUtils.pollMessagesFromDestination(jmsPollingConsumer);
             Assert.assertNotNull("Received message is null", receivedMsg);
             Assert.assertEquals("The send message is not received.", SEND_MSG,
-                    ((ActiveMQTextMessage) receivedMsg).getText());
+                                ((ActiveMQTextMessage) receivedMsg).getText());
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -126,7 +120,7 @@ public class JMSPollingConsumerQueueTest extends TestCase {
             Message receivedMsg = JMSTestsUtils.pollMessagesFromDestination(jmsPollingConsumer);
             Assert.assertNotNull("Received message is null", receivedMsg);
             Assert.assertEquals("The send message is not received.", SEND_MSG,
-                    ((ActiveMQTextMessage) receivedMsg).getText());
+                                ((ActiveMQTextMessage) receivedMsg).getText());
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -152,7 +146,7 @@ public class JMSPollingConsumerQueueTest extends TestCase {
             Message receivedMsg = JMSTestsUtils.pollMessagesFromDestination(jmsPollingConsumer);
             Assert.assertNotNull("Received message is null", receivedMsg);
             Assert.assertEquals("The send message is not received.", SEND_MSG,
-                    ((ActiveMQTextMessage) receivedMsg).getText());
+                                ((ActiveMQTextMessage) receivedMsg).getText());
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();

@@ -1,25 +1,21 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.generic;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Properties;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,10 +28,13 @@ import org.wso2.micro.integrator.inbound.endpoint.common.InboundRequestProcessor
 import org.wso2.micro.integrator.inbound.endpoint.common.InboundTask;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.PollingConstants;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Properties;
+
 public class GenericProcessor extends InboundRequestProcessorImpl implements TaskStartupObserver {
 
-
-	private GenericPollingConsumer pollingConsumer;
+    private GenericPollingConsumer pollingConsumer;
     private Properties properties;
     private String injectingSeq;
     private String onErrorSeq;
@@ -43,12 +42,12 @@ public class GenericProcessor extends InboundRequestProcessorImpl implements Tas
     private StartUpController startUpController;
     private String classImpl;
     private boolean sequential;
-    
+
     private static final String ENDPOINT_POSTFIX = "CLASS" + COMMON_ENDPOINT_POSTFIX;
-    
-    public GenericProcessor(String name, String classImpl, Properties properties,
-            long scanInterval, String injectingSeq, String onErrorSeq,
-            SynapseEnvironment synapseEnvironment, boolean coordination, boolean sequential) {
+
+    public GenericProcessor(String name, String classImpl, Properties properties, long scanInterval,
+                            String injectingSeq, String onErrorSeq, SynapseEnvironment synapseEnvironment,
+                            boolean coordination, boolean sequential) {
         this.name = name;
         this.properties = properties;
         this.interval = scanInterval;
@@ -63,18 +62,16 @@ public class GenericProcessor extends InboundRequestProcessorImpl implements Tas
     public GenericProcessor(InboundProcessorParams params) {
         this.name = params.getName();
         this.properties = params.getProperties();
-        this.interval =
-                Long.parseLong(properties.getProperty(PollingConstants.INBOUND_ENDPOINT_INTERVAL));
+        this.interval = Long.parseLong(properties.getProperty(PollingConstants.INBOUND_ENDPOINT_INTERVAL));
         this.coordination = true;
         if (properties.getProperty(PollingConstants.INBOUND_COORDINATION) != null) {
-            this.coordination = Boolean.parseBoolean(properties
-                    .getProperty(PollingConstants.INBOUND_COORDINATION));
+            this.coordination = Boolean.parseBoolean(properties.getProperty(PollingConstants.INBOUND_COORDINATION));
         }
         this.sequential = true;
         if (properties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL) != null) {
-            this.sequential = Boolean.parseBoolean(properties
-                    .getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
-        }        
+            this.sequential = Boolean
+                    .parseBoolean(properties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
+        }
         this.injectingSeq = params.getInjectingSeq();
         this.onErrorSeq = params.getOnErrorSeq();
         this.synapseEnvironment = params.getSynapseEnvironment();
@@ -85,10 +82,15 @@ public class GenericProcessor extends InboundRequestProcessorImpl implements Tas
         log.info("Inbound listener " + name + " for class " + classImpl + " starting ...");
         try {
             Class c = Class.forName(classImpl);
-            Constructor cons = c.getConstructor(Properties.class, String.class, SynapseEnvironment.class, long.class, String.class, String.class, boolean.class, boolean.class);
-            pollingConsumer = (GenericPollingConsumer) cons.newInstance(properties, name, synapseEnvironment, interval, injectingSeq, onErrorSeq, coordination, sequential);
+            Constructor cons = c
+                    .getConstructor(Properties.class, String.class, SynapseEnvironment.class, long.class, String.class,
+                                    String.class, boolean.class, boolean.class);
+            pollingConsumer = (GenericPollingConsumer) cons
+                    .newInstance(properties, name, synapseEnvironment, interval, injectingSeq, onErrorSeq, coordination,
+                                 sequential);
         } catch (ClassNotFoundException e) {
-            handleException("Class " + classImpl + " not found. Please check the required class is added to the classpath.", e);
+            handleException(
+                    "Class " + classImpl + " not found. Please check the required class is added to the classpath.", e);
         } catch (NoSuchMethodException e) {
             handleException("Required constructor is not implemented.", e);
         } catch (InvocationTargetException e) {
@@ -103,14 +105,14 @@ public class GenericProcessor extends InboundRequestProcessorImpl implements Tas
         log.error(msg, ex);
         throw new SynapseException(ex);
     }
-         
-    
-    public void start() {        	
+
+    public void start() {
         try {
             InboundTask task = new GenericTask(pollingConsumer, interval);
-        	start(task, ENDPOINT_POSTFIX);
+            start(task, ENDPOINT_POSTFIX);
         } catch (Exception e) {
-            log.error("Could not start Generic Processor. Error starting up scheduler. Error: " + e.getLocalizedMessage());
+            log.error("Could not start Generic Processor. Error starting up scheduler. Error: " + e
+                    .getLocalizedMessage());
         }
     }
 
@@ -118,12 +120,12 @@ public class GenericProcessor extends InboundRequestProcessorImpl implements Tas
      * Stop the inbound polling processor This will be called when inbound is
      * undeployed/redeployed or when server stop
      */
-    public void destroy() {        
+    public void destroy() {
         super.destroy();
         //Terminate polling events
         pollingConsumer.destroy();
-    }    
-    
+    }
+
     public String getName() {
         return name;
     }
@@ -132,8 +134,8 @@ public class GenericProcessor extends InboundRequestProcessorImpl implements Tas
         this.name = name;
     }
 
-	public void update() {
-		start();
-	}
+    public void update() {
+        start();
+    }
 
 }

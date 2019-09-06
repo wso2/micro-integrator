@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -57,9 +59,8 @@ public class MqttInjectHandler {
      * @param sequential
      * @param synapseEnvironment
      */
-    public MqttInjectHandler(String injectingSeq, String onErrorSeq,
-                             boolean sequential, SynapseEnvironment synapseEnvironment,
-                             String contentType) {
+    public MqttInjectHandler(String injectingSeq, String onErrorSeq, boolean sequential,
+                             SynapseEnvironment synapseEnvironment, String contentType) {
         this.injectingSeq = injectingSeq;
         this.onErrorSeq = onErrorSeq;
         this.sequential = sequential;
@@ -89,12 +90,10 @@ public class MqttInjectHandler {
             String message = mqttMessage.toString();
 
             if (log.isDebugEnabled()) {
-                log.debug("Processed MQTT Message of Content-type : "
-                        + contentType);
+                log.debug("Processed MQTT Message of Content-type : " + contentType);
             }
-            MessageContext axis2MsgCtx =
-                    ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
-                            .getAxis2MessageContext();
+            MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
+                    .getAxis2MessageContext();
             // Determine the message builder to use
 
             Builder builder = null;
@@ -103,19 +102,16 @@ public class MqttInjectHandler {
                 builder = new SOAPBuilder();
             } else {
                 int index = contentType.indexOf(';');
-                String type = index > 0 ? contentType.substring(0, index)
-                        : contentType;
+                String type = index > 0 ? contentType.substring(0, index) : contentType;
                 try {
                     builder = BuilderUtil.getBuilderFromSelector(type, axis2MsgCtx);
                 } catch (AxisFault axisFault) {
-                    log.error("Error while creating message builder :: "
-                            + axisFault.getMessage());
+                    log.error("Error while creating message builder :: " + axisFault.getMessage());
 
                 }
                 if (builder == null) {
                     if (log.isDebugEnabled()) {
-                        log.debug("No message builder found for type '" + type
-                                + "'. Falling back to SOAP.");
+                        log.debug("No message builder found for type '" + type + "'. Falling back to SOAP.");
                     }
                     builder = new SOAPBuilder();
                 }
@@ -123,21 +119,17 @@ public class MqttInjectHandler {
 
             OMElement documentElement = null;
 
-            InputStream in = new AutoCloseInputStream(new ByteArrayInputStream(
-                    message.getBytes()));
-            documentElement = builder.processDocument(in, contentType,
-                    axis2MsgCtx);
+            InputStream in = new AutoCloseInputStream(new ByteArrayInputStream(message.getBytes()));
+            documentElement = builder.processDocument(in, contentType, axis2MsgCtx);
 
             // Inject the message to the sequence.
-            msgCtx.setEnvelope(TransportUtils
-                    .createSOAPEnvelope(documentElement));
+            msgCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
             if (injectingSeq == null || ("").equals(injectingSeq)) {
-                log.error("Sequence name not specified. Sequence : "
-                        + injectingSeq);
+                log.error("Sequence name not specified. Sequence : " + injectingSeq);
                 return false;
             }
-            SequenceMediator seq = (SequenceMediator) synapseEnvironment
-                    .getSynapseConfiguration().getSequence(injectingSeq);
+            SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration()
+                    .getSequence(injectingSeq);
 
             if (seq != null) {
                 if (!seq.isInitialized()) {
@@ -165,8 +157,7 @@ public class MqttInjectHandler {
      * Create the initial message context
      */
     private org.apache.synapse.MessageContext createMessageContext() {
-        org.apache.synapse.MessageContext msgCtx = synapseEnvironment
-                .createMessageContext();
+        org.apache.synapse.MessageContext msgCtx = synapseEnvironment.createMessageContext();
         MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
                 .getAxis2MessageContext();
         axis2MsgCtx.setServerSide(true);

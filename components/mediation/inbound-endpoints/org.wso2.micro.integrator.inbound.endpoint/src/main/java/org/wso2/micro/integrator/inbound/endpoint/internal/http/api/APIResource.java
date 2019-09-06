@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -28,11 +28,10 @@ import java.util.Set;
 
 /**
  * {@code APIResource} is the abstract implementation of a Resource in an Internal API.
- *
+ * <p>
  * An {@link InternalAPI} must have one or more Resources. So if we want to register an internal api into EI,
  * we need to create one or more Resources extending this abstract class and make it accessible through
  * {@link InternalAPI#getResources()} method.
- *
  */
 public abstract class APIResource {
 
@@ -56,7 +55,7 @@ public abstract class APIResource {
     /**
      * Constructor for creating an API Resource.
      *
-     * @param urlTemplate   the url template of the Resource
+     * @param urlTemplate the url template of the Resource
      */
     public APIResource(String urlTemplate) {
         dispatcherHelper = new URITemplateHelper(urlTemplate);

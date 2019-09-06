@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -22,9 +22,8 @@ import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConsumerCancelledException;
-import com.rabbitmq.client.ShutdownSignalException;
 import com.rabbitmq.client.QueueingConsumer;
-
+import com.rabbitmq.client.ShutdownSignalException;
 import org.apache.axiom.om.OMException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -61,7 +60,8 @@ public class RabbitMQConnectionConsumer {
     private volatile boolean connected = false;
     private volatile boolean idle = false;
 
-    public RabbitMQConnectionConsumer(RabbitMQConnectionFactory rabbitMQConnectionFactory, Properties rabbitMQProperties, RabbitMQInjectHandler injectHandler) {
+    public RabbitMQConnectionConsumer(RabbitMQConnectionFactory rabbitMQConnectionFactory,
+                                      Properties rabbitMQProperties, RabbitMQInjectHandler injectHandler) {
         this.rabbitMQConnectionFactory = rabbitMQConnectionFactory;
         this.rabbitMQProperties = rabbitMQProperties;
         this.injectHandler = injectHandler;
@@ -81,15 +81,13 @@ public class RabbitMQConnectionConsumer {
                     startConsumer();
                 } catch (ShutdownSignalException sse) {
                     if (!sse.isInitiatedByApplication()) {
-                        log.error("RabbitMQ Listener of the inbound " + inboundName +
-                                " was disconnected", sse);
+                        log.error("RabbitMQ Listener of the inbound " + inboundName + " was disconnected", sse);
                         waitForConnection();
                     }
-                } catch (OMException e){
+                } catch (OMException e) {
                     log.error("Invalid Message Format while consuming the message", e);
                 } catch (IOException e) {
-                    log.error("RabbitMQ Listener of the inbound " + inboundName +
-                            " was disconnected", e);
+                    log.error("RabbitMQ Listener of the inbound " + inboundName + " was disconnected", e);
                     waitForConnection();
                 }
             }
@@ -105,24 +103,24 @@ public class RabbitMQConnectionConsumer {
         int retryInterval = rabbitMQConnectionFactory.getRetryInterval();
         int retryCountMax = rabbitMQConnectionFactory.getRetryCount();
         int retryCount = 0;
-        while ((workerState == STATE_STARTED) && !connection.isOpen()
-                && ((retryCountMax == -1) || (retryCount < retryCountMax))) {
+        while ((workerState == STATE_STARTED) && !connection.isOpen() && ((retryCountMax == -1) || (retryCount
+                < retryCountMax))) {
             retryCount++;
-            log.info("Attempting to reconnect to RabbitMQ Broker for the inbound " + inboundName +
-                    " in " + retryInterval + " ms");
+            log.info(
+                    "Attempting to reconnect to RabbitMQ Broker for the inbound " + inboundName + " in " + retryInterval
+                            + " ms");
             try {
                 Thread.sleep(retryInterval);
             } catch (InterruptedException e) {
-                log.error("Error while trying to reconnect to RabbitMQ Broker for the inbound " +
-                        inboundName, e);
+                log.error("Error while trying to reconnect to RabbitMQ Broker for the inbound " + inboundName, e);
             }
         }
         if (connection.isOpen()) {
             log.info("Successfully reconnected to RabbitMQ Broker for the inbound " + inboundName);
             initConsumer();
         } else {
-            log.error("Could not reconnect to the RabbitMQ Broker for the inbound " + inboundName +
-                    ". Connection is closed.");
+            log.error("Could not reconnect to the RabbitMQ Broker for the inbound " + inboundName
+                              + ". Connection is closed.");
             workerState = STATE_FAULTY;
         }
     }
@@ -231,11 +229,9 @@ public class RabbitMQConnectionConsumer {
         channel = connection.createChannel();
         queueName = rabbitMQProperties.getProperty(RabbitMQConstants.QUEUE_NAME);
         routeKey = rabbitMQProperties.getProperty(RabbitMQConstants.QUEUE_ROUTING_KEY);
-        exchangeName = rabbitMQProperties.getProperty(
-                RabbitMQConstants.EXCHANGE_NAME);
+        exchangeName = rabbitMQProperties.getProperty(RabbitMQConstants.EXCHANGE_NAME);
 
-        String autoAckStringValue = rabbitMQProperties.getProperty(
-                RabbitMQConstants.QUEUE_AUTO_ACK);
+        String autoAckStringValue = rabbitMQProperties.getProperty(RabbitMQConstants.QUEUE_AUTO_ACK);
         if (autoAckStringValue != null) {
             try {
                 autoAck = Boolean.parseBoolean(autoAckStringValue);
@@ -246,8 +242,8 @@ public class RabbitMQConnectionConsumer {
         //If no queue name is specified then inbound factory name will be used as queue name
         if (StringUtils.isEmpty(queueName)) {
             queueName = inboundName;
-            log.info("No queue name is specified for " + inboundName + ". " +
-                    "inbound factory name will be used as queue name");
+            log.info("No queue name is specified for " + inboundName + ". "
+                             + "inbound factory name will be used as queue name");
         }
 
         if (routeKey == null) {
@@ -257,8 +253,7 @@ public class RabbitMQConnectionConsumer {
 
         if (!StringUtils.isEmpty(queueName)) {
             //declaring queue
-            RabbitMQUtils
-                    .declareQueue(connection, queueName, rabbitMQProps);
+            RabbitMQUtils.declareQueue(connection, queueName, rabbitMQProps);
         }
 
         if (!StringUtils.isEmpty(exchangeName)) {
@@ -272,7 +267,8 @@ public class RabbitMQConnectionConsumer {
                 }
             }
             channel.queueBind(queueName, exchangeName, routeKey);
-            log.debug("Bind queue '" + queueName + "' to exchange '" + exchangeName + "' with route key '" + routeKey + "'");
+            log.debug("Bind queue '" + queueName + "' to exchange '" + exchangeName + "' with route key '" + routeKey
+                              + "'");
         }
 
         if (!channel.isOpen()) {
@@ -286,21 +282,22 @@ public class RabbitMQConnectionConsumer {
             try {
                 channel.basicQos(Integer.parseInt(qos));
             } catch (NumberFormatException e) {
-                log.warn("Unable to parse given QoS value, " + qos + " as an integer. Therefore using channel " +
-                        "without QoS.");
+                log.warn("Unable to parse given QoS value, " + qos + " as an integer. Therefore using channel "
+                                 + "without QoS.");
             }
         }
 
         queueingConsumer = new QueueingConsumer(channel);
 
-        consumerTagString = rabbitMQProperties.getProperty(
-                RabbitMQConstants.CONSUMER_TAG);
+        consumerTagString = rabbitMQProperties.getProperty(RabbitMQConstants.CONSUMER_TAG);
         if (consumerTagString != null) {
             channel.basicConsume(queueName, autoAck, consumerTagString, queueingConsumer);
-            log.debug("Start consuming queue '" + queueName + "' with consumer tag '" + consumerTagString + "' for inbound " + inboundName);
+            log.debug("Start consuming queue '" + queueName + "' with consumer tag '" + consumerTagString
+                              + "' for inbound " + inboundName);
         } else {
             consumerTagString = channel.basicConsume(queueName, autoAck, queueingConsumer);
-            log.debug("Start consuming queue '" + queueName + "' with consumer tag '" + consumerTagString + "' for inbound " + inboundName);
+            log.debug("Start consuming queue '" + queueName + "' with consumer tag '" + consumerTagString
+                              + "' for inbound " + inboundName);
         }
     }
 
@@ -337,8 +334,7 @@ public class RabbitMQConnectionConsumer {
             // Content type is as set in delivered message. If not, from inbound parameters.
             String contentType = properties.getContentType();
             if (contentType == null) {
-                contentType = rabbitMQProperties.getProperty(
-                        RabbitMQConstants.CONTENT_TYPE);
+                contentType = rabbitMQProperties.getProperty(RabbitMQConstants.CONTENT_TYPE);
             }
             message.setContentType(contentType);
 
@@ -347,8 +343,7 @@ public class RabbitMQConnectionConsumer {
             if (headers != null) {
                 message.setHeaders(headers);
                 if (headers.get(RabbitMQConstants.SOAP_ACTION) != null) {
-                    message.setSoapAction(headers.get(
-                            RabbitMQConstants.SOAP_ACTION).toString());
+                    message.setSoapAction(headers.get(RabbitMQConstants.SOAP_ACTION).toString());
                 }
             }
         } else {
@@ -382,7 +377,6 @@ public class RabbitMQConnectionConsumer {
         return connection;
     }
 
-
     private Connection getConnection() throws IOException {
         if (connection == null) {
             connection = createConnection();
@@ -390,7 +384,6 @@ public class RabbitMQConnectionConsumer {
         }
         return connection;
     }
-
 
     private boolean isActive() {
         return workerState == STATE_STARTED;

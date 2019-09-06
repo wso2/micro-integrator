@@ -1,35 +1,35 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.jms;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
-import org.apache.synapse.inbound.InboundTaskProcessor;
 import org.apache.synapse.inbound.InboundProcessorParams;
+import org.apache.synapse.inbound.InboundTaskProcessor;
 import org.apache.synapse.task.TaskStartupObserver;
 import org.wso2.micro.integrator.inbound.endpoint.common.InboundRequestProcessorImpl;
 import org.wso2.micro.integrator.inbound.endpoint.common.InboundTask;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.PollingConstants;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 public class JMSProcessor extends InboundRequestProcessorImpl implements TaskStartupObserver, InboundTaskProcessor {
 
@@ -87,12 +87,13 @@ public class JMSProcessor extends InboundRequestProcessorImpl implements TaskSta
         log.info("Initializing inbound JMS listener for inbound endpoint " + name);
         for (int consumers = 0; consumers < concurrentConsumers; consumers++) {
             JMSPollingConsumer jmsPollingConsumer = new JMSPollingConsumer(jmsProperties, interval, name);
-            jmsPollingConsumer.registerHandler(new JMSInjectHandler(injectingSeq, onErrorSeq, sequential,
-                                                                    synapseEnvironment, jmsProperties));
+            jmsPollingConsumer.registerHandler(
+                    new JMSInjectHandler(injectingSeq, onErrorSeq, sequential, synapseEnvironment, jmsProperties));
             pollingConsumers.add(jmsPollingConsumer);
             start(jmsPollingConsumer, consumers);
         }
     }
+
     /**
      * Stop the inbound polling processor This will be called when inbound is
      * undeployed/redeployed or when server stop
@@ -103,9 +104,10 @@ public class JMSProcessor extends InboundRequestProcessorImpl implements TaskSta
         }
         super.destroy();
     }
+
     /**
      * Register/start the schedule service
-     * */
+     */
     public void start(JMSPollingConsumer pollingConsumer, int consumer) {
         InboundTask task = new JMSTask(pollingConsumer, interval);
         start(task, (ENDPOINT_POSTFIX + consumer));

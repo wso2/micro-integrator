@@ -1,7 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.codec;
-
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -13,18 +11,20 @@ package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.codec;
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 
+package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.codec;
+
 import ca.uhn.hl7v2.HL7Exception;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util.HL7MessageUtils;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.context.MLLPContext;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.MLLPConstants;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.MLLProtocolException;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util.HL7MessageUtils;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -33,15 +33,14 @@ import java.nio.charset.CharsetDecoder;
 public class HL7Codec {
     private static final Log log = LogFactory.getLog(HL7Codec.class);
 
+    public static final int READ_HEADER = 0;
+    public static final int READ_CONTENT = 1;
+    public static final int READ_TRAILER = 2;
+    public static final int READ_COMPLETE = 3;
 
-    public static final int READ_HEADER    = 0;
-    public static final int READ_CONTENT   = 1;
-    public static final int READ_TRAILER   = 2;
-    public static final int READ_COMPLETE  = 3;
-
-    public static final int WRITE_HEADER   = 4;
-    public static final int WRITE_CONTENT  = 5;
-    public static final int WRITE_TRAILER  = 6;
+    public static final int WRITE_HEADER = 4;
+    public static final int WRITE_CONTENT = 5;
+    public static final int WRITE_TRAILER = 6;
     public static final int WRITE_COMPLETE = 7;
 
     private CharsetDecoder charsetDecoder;
@@ -68,7 +67,7 @@ public class HL7Codec {
         }
 
         if (this.state == READ_HEADER) {
-            if(dst.get(0) == MLLPConstants.HL7_HEADER[0]) {
+            if (dst.get(0) == MLLPConstants.HL7_HEADER[0]) {
                 dst.position(1);
                 this.state = READ_CONTENT;
             } else {
@@ -80,7 +79,7 @@ public class HL7Codec {
 
             int trailerIndex = findTrailer(dst);
 
-            if(trailerIndex > -1) {
+            if (trailerIndex > -1) {
                 dst.limit(trailerIndex);
                 this.state = READ_TRAILER;
             }
@@ -92,11 +91,11 @@ public class HL7Codec {
             this.state = READ_COMPLETE;
             try {
                 if (context.isPreProcess()) {
-                    context.setHl7Message(HL7MessageUtils
-                                                  .parse(context.getRequestBuffer().toString(),
-                                                         context.getPreProcessParser()));
+                    context.setHl7Message(HL7MessageUtils.parse(context.getRequestBuffer().toString(),
+                                                                context.getPreProcessParser()));
                 } else {
-                    context.setHl7Message(HL7MessageUtils.parse(context.getRequestBuffer().toString(), context.isValidateMessage()));
+                    context.setHl7Message(
+                            HL7MessageUtils.parse(context.getRequestBuffer().toString(), context.isValidateMessage()));
                 }
                 context.getRequestBuffer().setLength(0);
             } catch (HL7Exception e) {
@@ -110,10 +109,10 @@ public class HL7Codec {
     }
 
     private int findTrailer(ByteBuffer dst) {
-        for(int i=0; i<dst.limit(); i++) {
-            if(dst.get(i) == MLLPConstants.HL7_TRAILER[0]) {
-                if(dst.get(i+1) == MLLPConstants.HL7_TRAILER[1]) {
-                    return i-1;
+        for (int i = 0; i < dst.limit(); i++) {
+            if (dst.get(i) == MLLPConstants.HL7_TRAILER[0]) {
+                if (dst.get(i + 1) == MLLPConstants.HL7_TRAILER[1]) {
+                    return i - 1;
                 }
             }
         }
@@ -166,7 +165,7 @@ public class HL7Codec {
             MAX = responseBytes.length - responseReadPosition + headerPosition;
         }
 
-        for (int i=responseReadPosition; i<MAX+responseReadPosition-headerPosition; i++) {
+        for (int i = responseReadPosition; i < MAX + responseReadPosition - headerPosition; i++) {
             count++;
             b = responseBytes[i];
             byteBuffer.put(b);

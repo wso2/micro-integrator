@@ -1,32 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.management;
-
-import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.Message;
-import ca.uhn.hl7v2.parser.Parser;
-import ca.uhn.hl7v2.parser.PipeParser;
-import org.apache.http.nio.util.HeapByteBufferAllocator;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.SynapseException;
-import org.apache.synapse.inbound.InboundProcessorParams;
-import org.apache.synapse.transport.passthru.util.BufferFactory;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.HL7MessagePreprocessor;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.HL7Processor;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.InboundHL7IOReactor;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.MLLPConstants;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util.Axis2HL7Constants;
-import org.wso2.micro.integrator.inbound.endpoint.common.AbstractInboundEndpointManager;
-import org.wso2.micro.integrator.inbound.endpoint.inboundfactory.InboundRequestProcessorFactoryImpl;
-
-import java.nio.charset.Charset;
-import java.nio.charset.UnsupportedCharsetException;
-import java.util.HashMap;
-import java.util.Map;
-
-import static org.wso2.micro.integrator.inbound.endpoint.common.Constants.SUPER_TENANT_DOMAIN_NAME;
-
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -38,10 +11,37 @@ import static org.wso2.micro.integrator.inbound.endpoint.common.Constants.SUPER_
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.management;
+
+import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.Message;
+import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.parser.PipeParser;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.nio.util.HeapByteBufferAllocator;
+import org.apache.synapse.SynapseException;
+import org.apache.synapse.inbound.InboundProcessorParams;
+import org.apache.synapse.transport.passthru.util.BufferFactory;
+import org.wso2.micro.integrator.inbound.endpoint.common.AbstractInboundEndpointManager;
+import org.wso2.micro.integrator.inbound.endpoint.inboundfactory.InboundRequestProcessorFactoryImpl;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.HL7MessagePreprocessor;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.HL7Processor;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.InboundHL7IOReactor;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.MLLPConstants;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util.Axis2HL7Constants;
+
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static org.wso2.micro.integrator.inbound.endpoint.common.Constants.SUPER_TENANT_DOMAIN_NAME;
 
 public class HL7EndpointManager extends AbstractInboundEndpointManager {
     private static final Log log = LogFactory.getLog(HL7EndpointManager.class);
@@ -88,7 +88,8 @@ public class HL7EndpointManager extends AbstractInboundEndpointManager {
             }
         } else {
             dataStore.registerListeningEndpoint(port, SUPER_TENANT_DOMAIN_NAME,
-                    InboundRequestProcessorFactoryImpl.Protocols.hl7.toString(), name, params);
+                                                InboundRequestProcessorFactoryImpl.Protocols.hl7.toString(), name,
+                                                params);
             return startListener(port, name, params);
         }
 
@@ -102,7 +103,7 @@ public class HL7EndpointManager extends AbstractInboundEndpointManager {
 
         if (!InboundHL7IOReactor.isEndpointRunning(port)) {
             log.info("Listener Endpoint is not started");
-            return ;
+            return;
         } else if (dataStore.isEndpointRegistryEmpty(port)) {
             // if no other endpoint is working on this port. close the listening endpoint
             InboundHL7IOReactor.unbind(port);
@@ -110,28 +111,27 @@ public class HL7EndpointManager extends AbstractInboundEndpointManager {
     }
 
     private void validateParameters(InboundProcessorParams params, Map<String, Object> parameters) {
-        if (!params.getProperties().getProperty(MLLPConstants.PARAM_HL7_AUTO_ACK).equalsIgnoreCase("true")
-                && !params.getProperties().getProperty(MLLPConstants.PARAM_HL7_AUTO_ACK).equalsIgnoreCase("false")) {
-            log.warn("Parameter inbound.hl7.AutoAck in HL7 inbound " + params.getName() + " is not valid. Default " +
-                    "value of true will be used.");
+        if (!params.getProperties().getProperty(MLLPConstants.PARAM_HL7_AUTO_ACK).equalsIgnoreCase("true") && !params
+                .getProperties().getProperty(MLLPConstants.PARAM_HL7_AUTO_ACK).equalsIgnoreCase("false")) {
+            log.warn("Parameter inbound.hl7.AutoAck in HL7 inbound " + params.getName() + " is not valid. Default "
+                             + "value of true will be used.");
             params.getProperties().setProperty(MLLPConstants.PARAM_HL7_AUTO_ACK, "true");
         }
 
         try {
-            Integer.valueOf(params.getProperties().getProperty(
-                    MLLPConstants.PARAM_HL7_TIMEOUT));
+            Integer.valueOf(params.getProperties().getProperty(MLLPConstants.PARAM_HL7_TIMEOUT));
         } catch (NumberFormatException e) {
-            log.warn("Parameter inbound.hl7.TimeOut in HL7 inbound " + params.getName() + " is not valid. Default timeout " +
-                    "of " + MLLPConstants.DEFAULT_HL7_TIMEOUT + " milliseconds will be used.");
-            params.getProperties().setProperty(MLLPConstants.PARAM_HL7_TIMEOUT,
-                                               String.valueOf(
-                                                       MLLPConstants.DEFAULT_HL7_TIMEOUT));
+            log.warn("Parameter inbound.hl7.TimeOut in HL7 inbound " + params.getName()
+                             + " is not valid. Default timeout " + "of " + MLLPConstants.DEFAULT_HL7_TIMEOUT
+                             + " milliseconds will be used.");
+            params.getProperties()
+                    .setProperty(MLLPConstants.PARAM_HL7_TIMEOUT, String.valueOf(MLLPConstants.DEFAULT_HL7_TIMEOUT));
         }
 
         try {
             if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_PRE_PROC) != null) {
-                final HL7MessagePreprocessor preProcessor = (HL7MessagePreprocessor) Class.forName(params.getProperties()
-                        .getProperty(MLLPConstants.PARAM_HL7_PRE_PROC)).newInstance();
+                final HL7MessagePreprocessor preProcessor = (HL7MessagePreprocessor) Class
+                        .forName(params.getProperties().getProperty(MLLPConstants.PARAM_HL7_PRE_PROC)).newInstance();
 
                 Parser preProcParser = new PipeParser() {
                     public Message parse(String message) throws HL7Exception {
@@ -149,18 +149,19 @@ public class HL7EndpointManager extends AbstractInboundEndpointManager {
 
         try {
             if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_CHARSET) == null) {
-                params.getProperties().setProperty(MLLPConstants.PARAM_HL7_CHARSET, MLLPConstants.UTF8_CHARSET.displayName());
+                params.getProperties()
+                        .setProperty(MLLPConstants.PARAM_HL7_CHARSET, MLLPConstants.UTF8_CHARSET.displayName());
                 parameters.put(MLLPConstants.HL7_CHARSET_DECODER, MLLPConstants.UTF8_CHARSET.newDecoder());
             } else {
-                parameters.put(MLLPConstants.HL7_CHARSET_DECODER, Charset
-                        .forName(params.getProperties().getProperty(
-                                MLLPConstants.PARAM_HL7_CHARSET)).newDecoder());
+                parameters.put(MLLPConstants.HL7_CHARSET_DECODER,
+                               Charset.forName(params.getProperties().getProperty(MLLPConstants.PARAM_HL7_CHARSET))
+                                       .newDecoder());
             }
         } catch (UnsupportedCharsetException e) {
             parameters.put(MLLPConstants.HL7_CHARSET_DECODER, MLLPConstants.UTF8_CHARSET.newDecoder());
-            log.error("Unsupported charset '" + params.getProperties()
-                    .getProperty(MLLPConstants.PARAM_HL7_CHARSET) + "' specified in HL7 inbound " + params.getName() +
-                    ". Default UTF-8 will be used instead.");
+            log.error("Unsupported charset '" + params.getProperties().getProperty(MLLPConstants.PARAM_HL7_CHARSET)
+                              + "' specified in HL7 inbound " + params.getName()
+                              + ". Default UTF-8 will be used instead.");
         }
 
         if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_VALIDATE) == null) {
@@ -170,9 +171,9 @@ public class HL7EndpointManager extends AbstractInboundEndpointManager {
         if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE) == null) {
             params.getProperties().setProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE, "false");
         } else {
-            if (!params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE).equalsIgnoreCase("true") &&
-                    !params.getProperties().getProperty(
-                            MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE).equalsIgnoreCase("false")) {
+            if (!params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE).equalsIgnoreCase("true")
+                    && !params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE)
+                    .equalsIgnoreCase("false")) {
                 params.getProperties().setProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE, "false");
             }
         }
@@ -180,10 +181,9 @@ public class HL7EndpointManager extends AbstractInboundEndpointManager {
         if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_PASS_THROUGH_INVALID_MESSAGES) == null) {
             params.getProperties().setProperty(MLLPConstants.PARAM_HL7_PASS_THROUGH_INVALID_MESSAGES, "false");
         } else {
-            if (!params.getProperties().getProperty(
-                    MLLPConstants.PARAM_HL7_PASS_THROUGH_INVALID_MESSAGES).equalsIgnoreCase("true") &&
-                    !params.getProperties().getProperty(
-                            MLLPConstants.PARAM_HL7_PASS_THROUGH_INVALID_MESSAGES).equalsIgnoreCase("false")) {
+            if (!params.getProperties().getProperty(MLLPConstants.PARAM_HL7_PASS_THROUGH_INVALID_MESSAGES)
+                    .equalsIgnoreCase("true") && !params.getProperties()
+                    .getProperty(MLLPConstants.PARAM_HL7_PASS_THROUGH_INVALID_MESSAGES).equalsIgnoreCase("false")) {
                 params.getProperties().setProperty(MLLPConstants.PARAM_HL7_PASS_THROUGH_INVALID_MESSAGES, "false");
             }
         }

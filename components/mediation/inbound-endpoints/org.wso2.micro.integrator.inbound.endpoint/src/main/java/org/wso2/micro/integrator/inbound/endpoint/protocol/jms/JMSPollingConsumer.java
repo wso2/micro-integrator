@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -73,7 +73,7 @@ public class JMSPollingConsumer {
     // This will create a new subscription
     private boolean resetConnectionAfterPollingSuspension = false;
 
-    public JMSPollingConsumer( Properties jmsProperties, long scanInterval, String name) {
+    public JMSPollingConsumer(Properties jmsProperties, long scanInterval, String name) {
         this.jmsConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
         strUserName = jmsProperties.getProperty(JMSConstants.PARAM_JMS_USERNAME);
         strPassword = jmsProperties.getProperty(JMSConstants.PARAM_JMS_PASSWORD);
@@ -111,12 +111,13 @@ public class JMSPollingConsumer {
                         this.pollingSuspensionPeriod = Integer.parseInt(pollingSuspensionPeriodValue);
                     } catch (NumberFormatException e) {
                         logger.warn("Invalid numeric value for " + JMSConstants.JMS_CLIENT_POLLING_SUSPENSION_PERIOD
-                                + " . Default value of " + JMSConstants.DEFAULT_JMS_CLIENT_POLLING_SUSPENSION_PERIOD
-                                + " milliseconds will be accounted.");
+                                            + " . Default value of "
+                                            + JMSConstants.DEFAULT_JMS_CLIENT_POLLING_SUSPENSION_PERIOD
+                                            + " milliseconds will be accounted.");
                     }
                 } else {
                     logger.warn("No value specified for pollingSuspensionPeriod, hence default value of 60000 "
-                            + "milliseconds will be accounted.");
+                                        + "milliseconds will be accounted.");
                 }
 
                 String connectionResetAfterPollingSuspension = jmsProperties
@@ -129,12 +130,12 @@ public class JMSPollingConsumer {
 
             }
         }
-        
+
         String strReceiveTimeout = jmsProperties.getProperty(JMSConstants.RECEIVER_TIMEOUT);
-        if(strReceiveTimeout != null){
-            try{
-                iReceiveTimeout = Integer.parseInt(strReceiveTimeout.trim());  
-            }catch(NumberFormatException e){
+        if (strReceiveTimeout != null) {
+            try {
+                iReceiveTimeout = Integer.parseInt(strReceiveTimeout.trim());
+            } catch (NumberFormatException e) {
                 logger.warn("Invalid value for transport.jms.ReceiveTimeout : " + strReceiveTimeout);
                 iReceiveTimeout = null;
             }
@@ -156,9 +157,8 @@ public class JMSPollingConsumer {
     }
 
     /**
-     * 
      * Register a handler to implement injection of the retrieved message
-     * 
+     *
      * @param injectHandler
      */
     public void registerHandler(JMSInjectHandler injectHandler) {
@@ -177,7 +177,7 @@ public class JMSPollingConsumer {
             // scan
             if (pollingSuspensionLimit == 0) {
                 logger.info("Polling is suspended permanently since \""
-                        + JMSConstants.JMS_CLIENT_POLLING_RETRIES_BEFORE_SUSPENSION + "\" is Zero.");
+                                    + JMSConstants.JMS_CLIENT_POLLING_RETRIES_BEFORE_SUSPENSION + "\" is Zero.");
                 return;
             }
 
@@ -187,7 +187,7 @@ public class JMSPollingConsumer {
                 if (lastRanTime + pollingSuspensionPeriod <= currentTime) {
                     pollingSuspended = false;
                     logger.info("Polling re-started since the suspension period of " + pollingSuspensionPeriod + " "
-                            + "milliseconds exceeded.");
+                                        + "milliseconds exceeded.");
                 } else {
                     if (logger.isDebugEnabled()) {
                         logger.debug(
@@ -228,7 +228,7 @@ public class JMSPollingConsumer {
      */
     public Message poll() {
         logger.debug("Polling JMS messages.");
-       
+
         try {
             connection = jmsConnectionFactory.getConnection(strUserName, strPassword);
             if (connection == null) {
@@ -237,8 +237,8 @@ public class JMSPollingConsumer {
                 return null;
             }
             if (retryIteration != DEFAULT_RETRY_ITERATION) {
-                logger.info("Reconnection attempt: " + retryIteration + " for the JMS Inbound: " + name +
-                        " was successful!");
+                logger.info("Reconnection attempt: " + retryIteration + " for the JMS Inbound: " + name
+                                    + " was successful!");
                 this.retryIteration = DEFAULT_RETRY_ITERATION;
                 this.retryDuration = DEFAULT_RETRY_DURATION;
             }
@@ -256,12 +256,9 @@ public class JMSPollingConsumer {
             destination = jmsConnectionFactory.getDestination(session);
             if (replyDestinationName != null && !replyDestinationName.trim().equals("")) {
                 if (logger.isDebugEnabled()) {
-                    logger.debug("Using the reply destination as " + replyDestinationName +
-                                 " in inbound endpoint.");
+                    logger.debug("Using the reply destination as " + replyDestinationName + " in inbound endpoint.");
                 }
-                replyDestination =
-                                   jmsConnectionFactory.createDestination(session,
-                                                                          replyDestinationName);
+                replyDestination = jmsConnectionFactory.createDestination(session, replyDestinationName);
             }
             messageConsumer = jmsConnectionFactory.getMessageConsumer(session, destination);
             if (messageConsumer == null) {
@@ -302,12 +299,10 @@ public class JMSPollingConsumer {
                             try {
                                 msg.acknowledge();
                                 if (logger.isDebugEnabled()) {
-                                    logger.debug("Message : " + msg.getJMSMessageID()
-                                            + " acknowledged");
+                                    logger.debug("Message : " + msg.getJMSMessageID() + " acknowledged");
                                 }
                             } catch (JMSException e) {
-                                logger.error(
-                                        "Error acknowledging message : " + msg.getJMSMessageID(), e);
+                                logger.error("Error acknowledging message : " + msg.getJMSMessageID(), e);
                             }
                         } else {
                             // Need to create a new consumer and session since
@@ -319,8 +314,7 @@ public class JMSPollingConsumer {
                                 jmsConnectionFactory.closeSession(session);
                             }
                             session = jmsConnectionFactory.getSession(connection);
-                            messageConsumer = jmsConnectionFactory.getMessageConsumer(session,
-                                    destination);
+                            messageConsumer = jmsConnectionFactory.getMessageConsumer(session, destination);
                         }
                     }
                     // if session was transacted, commit it or rollback
@@ -330,21 +324,18 @@ public class JMSPollingConsumer {
                                 if (commitOrAck) {
                                     session.commit();
                                     if (logger.isDebugEnabled()) {
-                                        logger.debug("Session for message : "
-                                                + msg.getJMSMessageID() + " committed");
+                                        logger.debug("Session for message : " + msg.getJMSMessageID() + " committed");
                                     }
                                 } else {
                                     session.rollback();
                                     if (logger.isDebugEnabled()) {
-                                        logger.debug("Session for message : "
-                                                + msg.getJMSMessageID() + " rolled back");
+                                        logger.debug("Session for message : " + msg.getJMSMessageID() + " rolled back");
                                     }
                                 }
                             }
                         } catch (JMSException e) {
                             logger.error("Error " + (commitOrAck ? "committing" : "rolling back")
-                                    + " local session txn for message : " + msg.getJMSMessageID(),
-                                    e);
+                                                 + " local session txn for message : " + msg.getJMSMessageID(), e);
                         }
                     }
 
@@ -383,18 +374,17 @@ public class JMSPollingConsumer {
             if (!isConnected) {
                 if (reconnectDuration != null) {
                     retryDuration = reconnectDuration;
-                    logger.error("Reconnection attempt : " + (retryIteration++) + " for JMS Inbound : " +
-                            name + " failed. Next retry in " + (retryDuration / SCALE_FACTOR) +
-                            " seconds. (Fixed Interval)");
+                    logger.error("Reconnection attempt : " + (retryIteration++) + " for JMS Inbound : " + name
+                                         + " failed. Next retry in " + (retryDuration / SCALE_FACTOR)
+                                         + " seconds. (Fixed Interval)");
                 } else {
                     retryDuration = (long) (retryDuration * RECONNECTION_PROGRESSION_FACTOR);
                     if (retryDuration > MAX_RECONNECTION_DURATION) {
                         retryDuration = MAX_RECONNECTION_DURATION;
                         logger.info("InitialReconnectDuration reached to MaxReconnectDuration.");
                     }
-                    logger.error("Reconnection attempt : " + (retryIteration++) + " for JMS Inbound : " +
-                            name + " failed. Next retry in " + (retryDuration / SCALE_FACTOR) +
-                            " seconds");
+                    logger.error("Reconnection attempt : " + (retryIteration++) + " for JMS Inbound : " + name
+                                         + " failed. Next retry in " + (retryDuration / SCALE_FACTOR) + " seconds");
                 }
                 try {
                     Thread.sleep(retryDuration);
@@ -416,7 +406,6 @@ public class JMSPollingConsumer {
      * Release the JMS connection, session and consumer to the pool or forcefully close the resource.
      *
      * @param forcefullyClose false if the resource needs to be released to the pool and true other wise
-     *
      */
     private void releaseResources(boolean forcefullyClose) {
         if (messageConsumer != null) {
@@ -430,7 +419,7 @@ public class JMSPollingConsumer {
         }
     }
 
-    public void destroy(){
+    public void destroy() {
         if (messageConsumer != null) {
             jmsConnectionFactory.closeConsumer(messageConsumer, true);
         }
@@ -441,14 +430,14 @@ public class JMSPollingConsumer {
             jmsConnectionFactory.closeConnection(connection, true);
         }
     }
-    
-    private Message receiveMessage(MessageConsumer messageConsumer) throws JMSException{
+
+    private Message receiveMessage(MessageConsumer messageConsumer) throws JMSException {
         Message msg = null;
-        if(iReceiveTimeout == null){
+        if (iReceiveTimeout == null) {
             msg = messageConsumer.receive(1);
-        }else if(iReceiveTimeout > 0){
+        } else if (iReceiveTimeout > 0) {
             msg = messageConsumer.receive(iReceiveTimeout);
-        }else{
+        } else {
             msg = messageConsumer.receive();
         }
         return msg;

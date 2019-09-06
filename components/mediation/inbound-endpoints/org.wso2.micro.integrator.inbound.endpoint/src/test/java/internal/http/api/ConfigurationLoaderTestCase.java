@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -41,12 +41,12 @@ public class ConfigurationLoaderTestCase {
         ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis.xml");
         List<InternalAPI> apis = ConfigurationLoader.getHttpInternalApis();
         Assert.assertEquals("Expected number of APIs not found", 1, apis.size());
-        Assert.assertEquals("Loaded API name is not correct", "SampleAPI" , apis.get(0).getName());
-        Assert.assertEquals("Loaded API context is not correct", "/foo" , apis.get(0).getContext());
+        Assert.assertEquals("Loaded API name is not correct", "SampleAPI", apis.get(0).getName());
+        Assert.assertEquals("Loaded API context is not correct", "/foo", apis.get(0).getContext());
     }
 
     @After
-    public void cleanup(){
+    public void cleanup() {
         ConfigurationLoader.destroy();
     }
 

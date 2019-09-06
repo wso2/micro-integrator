@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,12 +11,11 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.http;
-
 
 public class InboundHttpConstants {
 
@@ -42,7 +41,7 @@ public class InboundHttpConstants {
     /**
      * Defines the core size (number of threads) of the worker thread pool.
      */
-    public static  final String INBOUND_WORKER_POOL_SIZE_CORE = "inbound.worker.pool.size.core";
+    public static final String INBOUND_WORKER_POOL_SIZE_CORE = "inbound.worker.pool.size.core";
 
     /**
      * Defines the maximum size (number of threads) of the worker thread pool.
@@ -64,7 +63,9 @@ public class InboundHttpConstants {
 
     public static final String INBOUND_THREAD_ID = "inbound.thread.id";
 
-    /** Parameter name for preferred ciphers in inbound endpoint configs **/
+    /**
+     * Parameter name for preferred ciphers in inbound endpoint configs
+     **/
     public static final String PREFERRED_CIPHERS = "PreferredCiphers";
 
     public static final String INTERNAL_HTTP_INBOUND_ENDPOINT_NAME = "EI_INTERNAL_HTTP_INBOUND_ENDPOINT";

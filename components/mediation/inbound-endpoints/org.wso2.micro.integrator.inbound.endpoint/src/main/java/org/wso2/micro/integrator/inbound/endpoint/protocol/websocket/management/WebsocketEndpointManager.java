@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -26,18 +28,18 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.inbound.InboundEndpoint;
 import org.apache.synapse.inbound.InboundProcessorParams;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketConfiguration;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketConstants;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.PipelineHandlerBuilderUtil;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.SubprotocolBuilderUtil;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.ssl.InboundWebsocketSSLConfiguration;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketSourceHandler;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketEventExecutor;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketChannelInitializer;
 import org.wso2.micro.integrator.inbound.endpoint.common.AbstractInboundEndpointManager;
 import org.wso2.micro.integrator.inbound.endpoint.persistence.InboundEndpointInfoDTO;
 import org.wso2.micro.integrator.inbound.endpoint.persistence.PersistenceUtils;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketChannelInitializer;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketConfiguration;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketConstants;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketEventExecutor;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebsocketSourceHandler;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.PipelineHandlerBuilderUtil;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.SubprotocolBuilderUtil;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.configuration.NettyThreadPoolConfiguration;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.ssl.InboundWebsocketSSLConfiguration;
 
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
@@ -77,7 +79,8 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
                 throw new SynapseException(msg);
             }
         } else {
-            dataStore.registerListeningEndpoint(port, SUPER_TENANT_DOMAIN_NAME, InboundWebsocketConstants.WS, name, params);
+            dataStore.registerListeningEndpoint(port, SUPER_TENANT_DOMAIN_NAME, InboundWebsocketConstants.WS, name,
+                                                params);
             boolean start = startListener(port, name, params);
 
             if (start) {
@@ -118,19 +121,16 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
     }
 
     public boolean startListener(int port, String name, InboundProcessorParams params) {
-        if (WebsocketEventExecutorManager
-                .getInstance().isRegisteredExecutor(port)) {
+        if (WebsocketEventExecutorManager.getInstance().isRegisteredExecutor(port)) {
             log.info("Netty Listener already started on port " + port);
             return true;
         }
 
         InboundWebsocketConfiguration config = buildConfiguration(port, name, params);
-        NettyThreadPoolConfiguration threadPoolConfig =
-                new NettyThreadPoolConfiguration(config.getBossThreadPoolSize(),
-                        config.getWorkerThreadPoolSize());
+        NettyThreadPoolConfiguration threadPoolConfig = new NettyThreadPoolConfiguration(config.getBossThreadPoolSize(),
+                                                                                         config.getWorkerThreadPoolSize());
         InboundWebsocketEventExecutor eventExecutor = new InboundWebsocketEventExecutor(threadPoolConfig);
-        WebsocketEventExecutorManager
-                .getInstance().registerEventExecutor(port, eventExecutor);
+        WebsocketEventExecutorManager.getInstance().registerEventExecutor(port, eventExecutor);
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(eventExecutor.getBossGroupThreadPool(), eventExecutor.getWorkerGroupThreadPool())
                 .channel(NioServerSocketChannel.class);
@@ -138,10 +138,9 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
         handler.setClientBroadcastLevel(config.getBroadcastLevel());
         handler.setOutflowDispatchSequence(config.getOutFlowDispatchSequence());
         handler.setOutflowErrorSequence(config.getOutFlowErrorSequence());
-        handler.setSubprotocolHandlers(SubprotocolBuilderUtil
-                                               .stringToSubprotocolHandlers(config.getSubprotocolHandler()));
-        handler.setPipelineHandler(PipelineHandlerBuilderUtil
-                                           .stringToPipelineHandlers(config.getPipelineHandler()));
+        handler.setSubprotocolHandlers(
+                SubprotocolBuilderUtil.stringToSubprotocolHandlers(config.getSubprotocolHandler()));
+        handler.setPipelineHandler(PipelineHandlerBuilderUtil.stringToPipelineHandlers(config.getPipelineHandler()));
         handler.setDispatchToCustomSequence(config.getDispatchToCustomSequence());
         handler.setPortOffset(PersistenceUtils.getPortOffset(params.getProperties()));
         bootstrap.childHandler(handler);
@@ -155,20 +154,17 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
     }
 
     public boolean startSSLListener(int port, String name, InboundProcessorParams params) {
-        if (WebsocketEventExecutorManager
-                .getInstance().isRegisteredExecutor(port)) {
+        if (WebsocketEventExecutorManager.getInstance().isRegisteredExecutor(port)) {
             log.info("Netty Listener already started on port " + port);
             return true;
         }
 
         InboundWebsocketConfiguration config = buildConfiguration(port, name, params);
         InboundWebsocketSSLConfiguration sslConfiguration = buildSSLConfiguration(params);
-        NettyThreadPoolConfiguration threadPoolConfig =
-                new NettyThreadPoolConfiguration(config.getBossThreadPoolSize(),
-                        config.getWorkerThreadPoolSize());
+        NettyThreadPoolConfiguration threadPoolConfig = new NettyThreadPoolConfiguration(config.getBossThreadPoolSize(),
+                                                                                         config.getWorkerThreadPoolSize());
         InboundWebsocketEventExecutor eventExecutor = new InboundWebsocketEventExecutor(threadPoolConfig);
-        WebsocketEventExecutorManager
-                .getInstance().registerEventExecutor(port, eventExecutor);
+        WebsocketEventExecutorManager.getInstance().registerEventExecutor(port, eventExecutor);
         ServerBootstrap bootstrap = new ServerBootstrap();
         bootstrap.group(eventExecutor.getBossGroupThreadPool(), eventExecutor.getWorkerGroupThreadPool())
                 .channel(NioServerSocketChannel.class);
@@ -177,7 +173,8 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
         handler.setClientBroadcastLevel(config.getBroadcastLevel());
         handler.setOutflowDispatchSequence(config.getOutFlowDispatchSequence());
         handler.setOutflowErrorSequence(config.getOutFlowErrorSequence());
-        handler.setSubprotocolHandlers(SubprotocolBuilderUtil.stringToSubprotocolHandlers(config.getSubprotocolHandler()));
+        handler.setSubprotocolHandlers(
+                SubprotocolBuilderUtil.stringToSubprotocolHandlers(config.getSubprotocolHandler()));
         handler.setPipelineHandler(PipelineHandlerBuilderUtil.stringToPipelineHandlers(config.getPipelineHandler()));
         handler.setDispatchToCustomSequence(config.getDispatchToCustomSequence());
         handler.setPortOffset(PersistenceUtils.getPortOffset(params.getProperties()));
@@ -193,11 +190,9 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
 
     public void closeEndpoint(int port) {
         if (sourceHandler != null) {
-            WebsocketSubscriberPathManager pathManager = WebsocketSubscriberPathManager
-                    .getInstance();
-            String endpointName =
-                    WebsocketEndpointManager.getInstance().getEndpointName(sourceHandler.getPort(),
-                            sourceHandler.getTenantDomain());
+            WebsocketSubscriberPathManager pathManager = WebsocketSubscriberPathManager.getInstance();
+            String endpointName = WebsocketEndpointManager.getInstance()
+                    .getEndpointName(sourceHandler.getPort(), sourceHandler.getTenantDomain());
             Integer shutdownStatusCode;
             String shutdownStatusMessage;
             try {
@@ -211,7 +206,7 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
                         shutdownStatusCode = Integer.parseInt(shutdownStatusCodeValue);
                     } catch (NumberFormatException ex) {
                         log.warn("Please specify a valid Integer for \"ws.shutdown.status.code\" parameter. Assigning"
-                                + " the default value 1001");
+                                         + " the default value 1001");
                         shutdownStatusCode = 1001;
                     }
                 } else {
@@ -222,17 +217,16 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
                     shutdownStatusMessage = "shutdown";
                 }
             } catch (AxisFault fault) {
-                log.error("Error while getting synapse message context. "+ fault);
+                log.error("Error while getting synapse message context. " + fault);
                 throw new SynapseException(fault);
             }
             pathManager.broadcastOnSubscriberPath(new CloseWebSocketFrame(shutdownStatusCode, shutdownStatusMessage),
-                    endpointName, sourceHandler.getSubscriberPath());
+                                                  endpointName, sourceHandler.getSubscriberPath());
         }
 
         dataStore.unregisterListeningEndpoint(port, SUPER_TENANT_DOMAIN_NAME);
 
-        if (!WebsocketEventExecutorManager
-                .getInstance().isRegisteredExecutor(port)) {
+        if (!WebsocketEventExecutorManager.getInstance().isRegisteredExecutor(port)) {
             log.info("Listener Endpoint is not started");
             return;
         } else if (dataStore.isEndpointRegistryEmpty(port)) {
@@ -242,27 +236,24 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
     }
 
     public InboundWebsocketConfiguration buildConfiguration(int port, String name, InboundProcessorParams params) {
-        return new InboundWebsocketConfiguration.InboundWebsocketConfigurationBuilder(port, name)
-                .bossThreadPoolSize(params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_BOSS_THREAD_POOL_SIZE))
-                .workerThreadPoolSize(params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_WORKER_THREAD_POOL_SIZE))
+        return new InboundWebsocketConfiguration.InboundWebsocketConfigurationBuilder(port, name).bossThreadPoolSize(
+                params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_BOSS_THREAD_POOL_SIZE))
+                .workerThreadPoolSize(
+                        params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_WORKER_THREAD_POOL_SIZE))
                 .broadcastLevel(validateBroadcastLevelParam(params.getProperties().getProperty(
-                        InboundWebsocketConstants.WEBSOCKET_CLIENT_SIDE_BROADCAST_LEVEL)))
-                .outFlowDispatchSequence(params.getProperties().getProperty(
-                        InboundWebsocketConstants.WEBSOCKET_OUTFLOW_DISPATCH_SEQUENCE))
+                        InboundWebsocketConstants.WEBSOCKET_CLIENT_SIDE_BROADCAST_LEVEL))).outFlowDispatchSequence(
+                        params.getProperties()
+                                .getProperty(InboundWebsocketConstants.WEBSOCKET_OUTFLOW_DISPATCH_SEQUENCE))
                 .outFlowErrorSequence(params.getProperties().getProperty(
-                        InboundWebsocketConstants.WEBSOCKET_OUTFLOW_DISPATCH_FAULT_SEQUENCE))
-                .subprotocolHandler(params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_SUBPROTOCOL_HANDLER_CLASS))
-                .defaultContentType(params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_DEFAULT_CONTENT_TYPE))
-                .pipelineHandler(params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_PIPELINE_HANDLER_CLASS))
-                .dispatchToCustomSequence(params.getProperties().getProperty(
-                        InboundWebsocketConstants.CUSTOM_SEQUENCE))
-                .usePortOffset(Boolean.valueOf(params.getProperties().getProperty(
-                        InboundWebsocketConstants.WEBSOCKET_USE_PORT_OFFSET)))
+                        InboundWebsocketConstants.WEBSOCKET_OUTFLOW_DISPATCH_FAULT_SEQUENCE)).subprotocolHandler(
+                        params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_SUBPROTOCOL_HANDLER_CLASS))
+                .defaultContentType(
+                        params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_DEFAULT_CONTENT_TYPE))
+                .pipelineHandler(
+                        params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_PIPELINE_HANDLER_CLASS))
+                .dispatchToCustomSequence(params.getProperties().getProperty(InboundWebsocketConstants.CUSTOM_SEQUENCE))
+                .usePortOffset(Boolean.valueOf(
+                        params.getProperties().getProperty(InboundWebsocketConstants.WEBSOCKET_USE_PORT_OFFSET)))
                 .build();
     }
 
@@ -287,20 +278,13 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
 
     public InboundWebsocketSSLConfiguration buildSSLConfiguration(InboundProcessorParams params) {
         return new InboundWebsocketSSLConfiguration.SSLConfigurationBuilder(
-                params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_SSL_KEY_STORE_FILE),
-                params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_SSL_KEY_STORE_PASS),
-                params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_SSL_TRUST_STORE_FILE),
-                params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_SSL_TRUST_STORE_PASS),
-                params.getProperties().getProperty(
-                        InboundWebsocketConstants.INBOUND_SSL_CERT_PASS),
-                params.getProperties().getProperty(
-                        InboundWebsocketConstants.SSL_PROTOCOLS),
-                params.getProperties().getProperty(
-                        InboundWebsocketConstants.CIPHER_SUITES)).build();
+                params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_SSL_KEY_STORE_FILE),
+                params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_SSL_KEY_STORE_PASS),
+                params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_SSL_TRUST_STORE_FILE),
+                params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_SSL_TRUST_STORE_PASS),
+                params.getProperties().getProperty(InboundWebsocketConstants.INBOUND_SSL_CERT_PASS),
+                params.getProperties().getProperty(InboundWebsocketConstants.SSL_PROTOCOLS),
+                params.getProperties().getProperty(InboundWebsocketConstants.CIPHER_SUITES)).build();
     }
 
     public void loadEndpointListeners() {
@@ -308,14 +292,15 @@ public class WebsocketEndpointManager extends AbstractInboundEndpointManager {
         for (Map.Entry tenantInfoEntry : tenantData.entrySet()) {
             int port = (Integer) tenantInfoEntry.getKey();
 
-            InboundEndpointInfoDTO inboundEndpointInfoDTO =
-                    (InboundEndpointInfoDTO) ((ArrayList) tenantInfoEntry.getValue()).get(0);
+            InboundEndpointInfoDTO inboundEndpointInfoDTO = (InboundEndpointInfoDTO) ((ArrayList) tenantInfoEntry
+                    .getValue()).get(0);
 
-            if (inboundEndpointInfoDTO.getProtocol().equals(
-                    InboundWebsocketConstants.WS)) {
-                startListener(port, inboundEndpointInfoDTO.getEndpointName(), inboundEndpointInfoDTO.getInboundParams());
+            if (inboundEndpointInfoDTO.getProtocol().equals(InboundWebsocketConstants.WS)) {
+                startListener(port, inboundEndpointInfoDTO.getEndpointName(),
+                              inboundEndpointInfoDTO.getInboundParams());
             } else if (inboundEndpointInfoDTO.getProtocol().equals(InboundWebsocketConstants.WSS)) {
-                startSSLListener(port, inboundEndpointInfoDTO.getEndpointName(), inboundEndpointInfoDTO.getInboundParams());
+                startSSLListener(port, inboundEndpointInfoDTO.getEndpointName(),
+                                 inboundEndpointInfoDTO.getInboundParams());
             }
 
         }

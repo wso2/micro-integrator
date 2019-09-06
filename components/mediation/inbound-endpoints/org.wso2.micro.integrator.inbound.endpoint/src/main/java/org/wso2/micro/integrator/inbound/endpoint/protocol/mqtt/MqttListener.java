@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -26,7 +28,6 @@ import org.wso2.micro.integrator.inbound.endpoint.common.InboundOneTimeTriggerRe
 import org.wso2.micro.integrator.inbound.endpoint.protocol.PollingConstants;
 
 import java.util.Properties;
-
 import javax.net.ssl.SSLSocketFactory;
 
 import static org.wso2.micro.integrator.inbound.endpoint.common.Constants.SUPER_TENANT_ID;
@@ -63,7 +64,6 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
 
     private SSLSocketFactory socketFactory;
 
-
     /**
      * constructor for the MQTT inbound endpoint listener     *
      *
@@ -81,25 +81,21 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
         //assign default value if sequential mode parameter is not present
         this.sequential = true;
         if (mqttProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL) != null) {
-            this.sequential =
-                    Boolean.parseBoolean(mqttProperties.getProperty
-                            (PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
+            this.sequential = Boolean
+                    .parseBoolean(mqttProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
         }
 
         //assign default value if coordination mode parameter is not present
         this.coordination = true;
         if (mqttProperties.getProperty(PollingConstants.INBOUND_COORDINATION) != null) {
-            this.coordination =
-                    Boolean.parseBoolean(mqttProperties.getProperty
-                            (PollingConstants.INBOUND_COORDINATION));
+            this.coordination = Boolean.parseBoolean(mqttProperties.getProperty(PollingConstants.INBOUND_COORDINATION));
         }
 
         this.confac = new MqttConnectionFactory(mqttProperties);
         this.contentType = confac.getContent();
 
-        this.injectHandler =
-                new MqttInjectHandler(injectingSeq, onErrorSeq, sequential,
-                        synapseEnvironment, contentType);
+        this.injectHandler = new MqttInjectHandler(injectingSeq, onErrorSeq, sequential, synapseEnvironment,
+                                                   contentType);
         this.synapseEnvironment = params.getSynapseEnvironment();
         this.socketFactory = confac.getSSLSocketFactory();
 
@@ -113,8 +109,7 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
         }
 
         if (mqttProperties.getProperty(MqttConstants.MQTT_SESSION_CLEAN) != null) {
-            this.cleanSession =
-                    Boolean.parseBoolean(mqttProperties.getProperty(MqttConstants.MQTT_SESSION_CLEAN));
+            this.cleanSession = Boolean.parseBoolean(mqttProperties.getProperty(MqttConstants.MQTT_SESSION_CLEAN));
         }
     }
 
@@ -122,8 +117,8 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
     public void destroy() {
         log.info("Mqtt Inbound endpoint: " + name + " Started destroying context.");
         MqttClientManager clientManager = MqttClientManager.getInstance();
-        String inboundIdentifier = clientManager.buildIdentifier(mqttAsyncClient.getClientId(),
-                confac.getServerHost(), confac.getServerPort());
+        String inboundIdentifier = clientManager
+                .buildIdentifier(mqttAsyncClient.getClientId(), confac.getServerHost(), confac.getServerPort());
         //we should ignore the case of manually loading of tenant
         //we maintain a flag for cases where we load the tenant manually
         if (!clientManager.isInboundTenantLoadingFlagSet(inboundIdentifier)) {
@@ -139,11 +134,9 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
                 }
                 mqttAsyncClient.close();
 
-                String nameIdentifier = clientManager
-                        .buildNameIdentifier(name, String.valueOf(SUPER_TENANT_ID));
+                String nameIdentifier = clientManager.buildNameIdentifier(name, String.valueOf(SUPER_TENANT_ID));
                 //here we unregister it because this is not a case of tenant loading
-                MqttClientManager.getInstance()
-                        .unregisterMqttClient(inboundIdentifier, nameIdentifier);
+                MqttClientManager.getInstance().unregisterMqttClient(inboundIdentifier, nameIdentifier);
 
                 log.info("Disconnected from the remote MQTT server.");
             } catch (MqttException e) {
@@ -165,8 +158,8 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
         mqttAsyncClient = confac.getMqttAsyncClient(this.name);
 
         MqttClientManager clientManager = MqttClientManager.getInstance();
-        String inboundIdentifier = clientManager.buildIdentifier(mqttAsyncClient.getClientId(),
-                confac.getServerHost(), confac.getServerPort());
+        String inboundIdentifier = clientManager
+                .buildIdentifier(mqttAsyncClient.getClientId(), confac.getServerHost(), confac.getServerPort());
 
         if (!clientManager.hasMqttCallback(inboundIdentifier)) {
             //registering callback for the first time
@@ -179,11 +172,11 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
             if (socketFactory != null) {
                 connectOptions.setSocketFactory(socketFactory);
             }
-            mqttAsyncCallback = new MqttAsyncCallback(mqttAsyncClient, injectHandler,
-                                                      confac, connectOptions, mqttProperties);
+            mqttAsyncCallback = new MqttAsyncCallback(mqttAsyncClient, injectHandler, confac, connectOptions,
+                                                      mqttProperties);
             mqttAsyncCallback.setName(params.getName());
-            connectionConsumer = new MqttConnectionConsumer(connectOptions, mqttAsyncClient,
-                    confac, mqttProperties, name);
+            connectionConsumer = new MqttConnectionConsumer(connectOptions, mqttAsyncClient, confac, mqttProperties,
+                                                            name);
             mqttAsyncCallback.setMqttConnectionConsumer(connectionConsumer);
             mqttAsyncClient.setCallback(mqttAsyncCallback);
             //here we register the callback handler
@@ -196,7 +189,7 @@ public class MqttListener extends InboundOneTimeTriggerRequestProcessor {
             clientManager.unRegisterInboundTenantLoadingFlag(inboundIdentifier);
 
             mqttAsyncCallback = clientManager.getMqttCallback(inboundIdentifier);
-            
+
             mqttAsyncCallback.setName(params.getName());
             connectOptions = mqttAsyncCallback.getMqttConnectionOptions();
             connectionConsumer = mqttAsyncCallback.getMqttConnectionConsumer();

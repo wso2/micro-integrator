@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -29,7 +29,6 @@ import org.apache.synapse.inbound.InboundProcessorParams;
 import org.apache.synapse.transport.passthru.core.ssl.SSLConfiguration;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
-import javax.xml.namespace.QName;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -38,6 +37,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.xml.namespace.QName;
 
 public class PersistenceUtils {
 
@@ -54,7 +54,7 @@ public class PersistenceUtils {
 
     private static final String KEYSTORE_ATT = "keystore";
     private static final String TRUSTSTORE_ATT = "truststore";
-    private static final String CLIENTAUTH_ATT ="SSLVerifyClient";
+    private static final String CLIENTAUTH_ATT = "SSLVerifyClient";
     private static final String SSLPROTOCOL_ATT = "SSLProtocol";
     private static final String HTTPSPROTOCOLS_ATT = "HttpsProtocols";
     private static final String REVOCATIONVERIFIER_ATT = "CertificateRevocationVerifier";
@@ -90,8 +90,7 @@ public class PersistenceUtils {
     private static final String PORT_OFFSET_CONFIG = "Ports.Offset";
     public static final String WEBSOCKET_USE_PORT_OFFSET = "ws.use.port.offset";
     private static OMFactory fac = OMAbstractFactory.getOMFactory();
-    private static final OMNamespace nullNS =
-            fac.createOMNamespace(XMLConfigConstants.NULL_NAMESPACE, "");
+    private static final OMNamespace nullNS = fac.createOMNamespace(XMLConfigConstants.NULL_NAMESPACE, "");
     private static final Log log = LogFactory.getLog(PersistenceUtils.class);
 
     /**
@@ -100,8 +99,8 @@ public class PersistenceUtils {
      * @param endpointInfo tenant data map
      * @return equivalent OMElement for EndpointInfo
      */
-    public static OMElement convertEndpointInfoToOM(
-               Map<Integer, List<InboundEndpointInfoDTO>> endpointInfo, Map<String,Set<String>> endpointPollingInfo) {
+    public static OMElement convertEndpointInfoToOM(Map<Integer, List<InboundEndpointInfoDTO>> endpointInfo,
+                                                    Map<String, Set<String>> endpointPollingInfo) {
 
         OMElement rootElement = fac.createOMElement(INBOUND_ENDPOINTS_QN);
         OMElement parentElement = fac.createOMElement(INBOUND_LISTENING_ENDPOINTS_QN, rootElement);
@@ -124,21 +123,22 @@ public class PersistenceUtils {
 
                     if (inboundEndpointInfoDTO.getInboundParams().getInjectingSeq() != null) {
                         endpointElem.addAttribute(INJECT_SEQ_ATT,
-                            inboundEndpointInfoDTO.getInboundParams().getInjectingSeq(), nullNS);
+                                                  inboundEndpointInfoDTO.getInboundParams().getInjectingSeq(), nullNS);
                     }
 
-                    if (inboundEndpointInfoDTO.getInboundParams().getOnErrorSeq()    != null) {
+                    if (inboundEndpointInfoDTO.getInboundParams().getOnErrorSeq() != null) {
                         endpointElem.addAttribute(ONERROR_SEQ_ATT,
-                            inboundEndpointInfoDTO.getInboundParams().getOnErrorSeq(), nullNS);
+                                                  inboundEndpointInfoDTO.getInboundParams().getOnErrorSeq(), nullNS);
                     }
 
                     if (inboundEndpointInfoDTO.getInboundParams().getClassImpl() != null) {
-                        endpointElem.addAttribute(CLASS_IMPL_ATT,
-                                inboundEndpointInfoDTO.getInboundParams().getClassImpl(), nullNS);
+                        endpointElem
+                                .addAttribute(CLASS_IMPL_ATT, inboundEndpointInfoDTO.getInboundParams().getClassImpl(),
+                                              nullNS);
                     }
 
-                    for (Map.Entry<Object, Object> e :
-                            inboundEndpointInfoDTO.getInboundParams().getProperties().entrySet()) {
+                    for (Map.Entry<Object, Object> e : inboundEndpointInfoDTO.getInboundParams().getProperties()
+                            .entrySet()) {
                         OMElement paramElem = fac.createOMElement(PARAM_QN, paramsElem);
 
                         paramElem.addAttribute(PARAM_NAME_ATT, (String) e.getKey(), nullNS);
@@ -146,30 +146,40 @@ public class PersistenceUtils {
                     }
                 }
 
-
                 if (inboundEndpointInfoDTO.getSslConfiguration() != null) {
                     if (inboundEndpointInfoDTO.getSslConfiguration().getKeyStore() != null) {
-                        endpointElem.addAttribute(KEYSTORE_ATT, inboundEndpointInfoDTO.getSslConfiguration().getKeyStore(), nullNS);
+                        endpointElem
+                                .addAttribute(KEYSTORE_ATT, inboundEndpointInfoDTO.getSslConfiguration().getKeyStore(),
+                                              nullNS);
                     }
                     if (inboundEndpointInfoDTO.getSslConfiguration().getTrustStore() != null) {
-                        endpointElem.addAttribute(TRUSTSTORE_ATT, inboundEndpointInfoDTO.getSslConfiguration().getTrustStore(), nullNS);
+                        endpointElem.addAttribute(TRUSTSTORE_ATT,
+                                                  inboundEndpointInfoDTO.getSslConfiguration().getTrustStore(), nullNS);
                     }
                     if (inboundEndpointInfoDTO.getSslConfiguration().getClientAuthEl() != null) {
-                        endpointElem.addAttribute(CLIENTAUTH_ATT, inboundEndpointInfoDTO.getSslConfiguration().getClientAuthEl(), nullNS);
+                        endpointElem.addAttribute(CLIENTAUTH_ATT,
+                                                  inboundEndpointInfoDTO.getSslConfiguration().getClientAuthEl(),
+                                                  nullNS);
                     }
                     if (inboundEndpointInfoDTO.getSslConfiguration().getSslProtocol() != null) {
-                        endpointElem.addAttribute(SSLPROTOCOL_ATT, inboundEndpointInfoDTO.getSslConfiguration().getSslProtocol(), nullNS);
+                        endpointElem.addAttribute(SSLPROTOCOL_ATT,
+                                                  inboundEndpointInfoDTO.getSslConfiguration().getSslProtocol(),
+                                                  nullNS);
                     }
                     if (inboundEndpointInfoDTO.getSslConfiguration().getHttpsProtocolsEl() != null) {
-                        endpointElem.addAttribute(HTTPSPROTOCOLS_ATT, inboundEndpointInfoDTO.getSslConfiguration().getHttpsProtocolsEl(), nullNS);
+                        endpointElem.addAttribute(HTTPSPROTOCOLS_ATT,
+                                                  inboundEndpointInfoDTO.getSslConfiguration().getHttpsProtocolsEl(),
+                                                  nullNS);
                     }
                     if (inboundEndpointInfoDTO.getSslConfiguration().getRevocationVerifier() != null) {
-                        endpointElem.addAttribute(REVOCATIONVERIFIER_ATT, inboundEndpointInfoDTO.getSslConfiguration().getRevocationVerifier(), nullNS);
+                        endpointElem.addAttribute(REVOCATIONVERIFIER_ATT,
+                                                  inboundEndpointInfoDTO.getSslConfiguration().getRevocationVerifier(),
+                                                  nullNS);
                     }
                 }
             }
         }
-        
+
         parentElement = fac.createOMElement(INBOUND_POLLING_ENDPOINTS_QN, rootElement);
         for (Map.Entry<String, Set<String>> mapEntry : endpointPollingInfo.entrySet()) {
             String tenantDomain = mapEntry.getKey();
@@ -182,7 +192,7 @@ public class PersistenceUtils {
                 endpointElem.addAttribute(NAME_ATT, strName, nullNS);
                 endpointElem.addAttribute(DOMAIN_ATT, tenantDomain, nullNS);
             }
-        }        
+        }
         return rootElement;
     }
 
@@ -192,21 +202,19 @@ public class PersistenceUtils {
      * @param endpointInfoOM OMElement containing endpoint information
      * @return equivalent EndpointInfo for OMElement
      */
-    public static Map<Integer,List<InboundEndpointInfoDTO>> convertOMToEndpointListeningInfo(
+    public static Map<Integer, List<InboundEndpointInfoDTO>> convertOMToEndpointListeningInfo(
             OMElement endpointInfoOM) {
 
-        Map<Integer, List<InboundEndpointInfoDTO>> endpointInfo =
-                new ConcurrentHashMap<Integer, List<InboundEndpointInfoDTO>>();
+        Map<Integer, List<InboundEndpointInfoDTO>> endpointInfo = new ConcurrentHashMap<Integer, List<InboundEndpointInfoDTO>>();
 
-        Iterator rootElementsItr =
-           endpointInfoOM.getChildrenWithName(INBOUND_LISTENING_ENDPOINTS_QN);
-        
-        if(!rootElementsItr.hasNext()){
-      	  return endpointInfo;
+        Iterator rootElementsItr = endpointInfoOM.getChildrenWithName(INBOUND_LISTENING_ENDPOINTS_QN);
+
+        if (!rootElementsItr.hasNext()) {
+            return endpointInfo;
         }
-                    
-        Iterator listenerElementsItr =
-      	  ((OMElement)rootElementsItr.next()).getChildrenWithName(INBOUND_ENDPOINT_LISTENER_QN);
+
+        Iterator listenerElementsItr = ((OMElement) rootElementsItr.next())
+                .getChildrenWithName(INBOUND_ENDPOINT_LISTENER_QN);
         while (listenerElementsItr.hasNext()) {
 
             List<InboundEndpointInfoDTO> tenantList = new ArrayList<InboundEndpointInfoDTO>();
@@ -218,10 +226,9 @@ public class PersistenceUtils {
                 OMElement endpointElement = (OMElement) endpointsItr.next();
 
                 InboundProcessorParams params = deserializeInboundParameters(endpointElement);
-                InboundEndpointInfoDTO inboundEndpointInfoDTO =
-                        new InboundEndpointInfoDTO(endpointElement.getAttributeValue(DOMAIN_QN),
-                                          endpointElement.getAttributeValue(PROTOCOL_QN),
-                                          endpointElement.getAttributeValue(NAME_QN), params);
+                InboundEndpointInfoDTO inboundEndpointInfoDTO = new InboundEndpointInfoDTO(
+                        endpointElement.getAttributeValue(DOMAIN_QN), endpointElement.getAttributeValue(PROTOCOL_QN),
+                        endpointElement.getAttributeValue(NAME_QN), params);
                 if (endpointElement.getAttributeValue(PROTOCOL_QN).equals("https")) {
                     SSLConfiguration sslConfiguration = new SSLConfiguration(
                             endpointElement.getAttributeValue(KEYSTORE_QN),
@@ -248,21 +255,17 @@ public class PersistenceUtils {
      * @param endpointInfoOM OMElement containing endpoint information
      * @return equivalent EndpointInfo for OMElement
      */
-    public static Map<String,Set<String>> convertOMToEndpointPollingInfo(
-            OMElement endpointInfoOM) {
+    public static Map<String, Set<String>> convertOMToEndpointPollingInfo(OMElement endpointInfoOM) {
 
-        Map<String,Set<String>> endpointInfo =
-                new ConcurrentHashMap<String,Set<String>>();
-        
-        Iterator rootElementsItr =
-           endpointInfoOM.getChildrenWithName(INBOUND_POLLING_ENDPOINTS_QN);
-        
-        if(!rootElementsItr.hasNext()){
-      	  return endpointInfo;
+        Map<String, Set<String>> endpointInfo = new ConcurrentHashMap<String, Set<String>>();
+
+        Iterator rootElementsItr = endpointInfoOM.getChildrenWithName(INBOUND_POLLING_ENDPOINTS_QN);
+
+        if (!rootElementsItr.hasNext()) {
+            return endpointInfo;
         }
-        
-        Iterator pollElementsItr =
-      	  ((OMElement)rootElementsItr.next()).getChildrenWithName(INBOUND_ENDPOINT_POLL_QN);
+
+        Iterator pollElementsItr = ((OMElement) rootElementsItr.next()).getChildrenWithName(INBOUND_ENDPOINT_POLL_QN);
         while (pollElementsItr.hasNext()) {
 
             List<InboundEndpointInfoDTO> tenantList = new ArrayList<InboundEndpointInfoDTO>();
@@ -274,16 +277,16 @@ public class PersistenceUtils {
                 String iTenantDomain = endpointElement.getAttributeValue(DOMAIN_QN);
                 String strEndpointName = endpointElement.getAttributeValue(NAME_QN);
                 Set lNames = endpointInfo.get(iTenantDomain);
-                if(lNames == null){
-               	 lNames = new HashSet<String>();
+                if (lNames == null) {
+                    lNames = new HashSet<String>();
                 }
                 lNames.add(strEndpointName);
                 endpointInfo.put(iTenantDomain, lNames);
             }
         }
         return endpointInfo;
-    }    
-    
+    }
+
     private static InboundProcessorParams deserializeInboundParameters(OMElement endpointElement) {
         InboundProcessorParams inboundParams = new InboundProcessorParams();
 

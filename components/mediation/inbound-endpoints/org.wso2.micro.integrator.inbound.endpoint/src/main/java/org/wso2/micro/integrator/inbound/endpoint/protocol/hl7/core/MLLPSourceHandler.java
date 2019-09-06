@@ -1,7 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core;
-
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -13,10 +11,13 @@ package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core;
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core;
+
 import ca.uhn.hl7v2.HL7Exception;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,8 +27,8 @@ import org.apache.synapse.transport.passthru.util.BufferFactory;
 import org.apache.synapse.transport.passthru.util.ControlledByteBuffer;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.codec.HL7Codec;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.context.MLLPContext;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util.HL7MessageUtils;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.context.MLLPContextFactory;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util.HL7MessageUtils;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -48,17 +49,15 @@ public class MLLPSourceHandler implements IOEventDispatch {
     public MLLPSourceHandler(HL7Processor hl7Processor) {
         super();
         this.hl7Processor = hl7Processor;
-        this.bufferFactory = (BufferFactory) hl7Processor.getInboundParameterMap().get(
-                MLLPConstants.INBOUND_HL7_BUFFER_FACTORY);
+        this.bufferFactory = (BufferFactory) hl7Processor.getInboundParameterMap()
+                .get(MLLPConstants.INBOUND_HL7_BUFFER_FACTORY);
     }
-
-
 
     @Override
     public void connected(IOSession session) {
         if (session.getAttribute(MLLPConstants.MLLP_CONTEXT) == null) {
             session.setAttribute(MLLPConstants.MLLP_CONTEXT,
-                    MLLPContextFactory.createMLLPContext(session, hl7Processor));
+                                 MLLPContextFactory.createMLLPContext(session, hl7Processor));
         }
 
         inputBuffer = bufferFactory.getBuffer();
@@ -98,7 +97,7 @@ public class MLLPSourceHandler implements IOEventDispatch {
                 }
             }
 
-            if (mllpContext.getCodec().isReadComplete())  {
+            if (mllpContext.getCodec().isReadComplete()) {
                 if (mllpContext.isAutoAck()) {
                     mllpContext.requestOutput();
                     bufferFactory.release(inputBuffer);
@@ -146,8 +145,9 @@ public class MLLPSourceHandler implements IOEventDispatch {
         }
 
         if (outputBuffer == null) {
-            handleException(session, mllpContext, new MLLProtocolException("HL7 Codec is in an inconsistent state: "
-                    + mllpContext.getCodec().getState() + ". Shutting down connection."));
+            handleException(session, mllpContext, new MLLProtocolException(
+                    "HL7 Codec is in an inconsistent state: " + mllpContext.getCodec().getState()
+                            + ". Shutting down connection."));
             return;
         }
 
@@ -158,7 +158,7 @@ public class MLLPSourceHandler implements IOEventDispatch {
                 hl7TrailerBuf.flip();
                 mllpContext.getCodec().setState(HL7Codec.WRITE_COMPLETE);
             }
-//            bufferFactory.release(outputBuffer);
+            //            bufferFactory.release(outputBuffer);
         } catch (IOException e) {
             shutdownConnection(session, mllpContext, e);
         }

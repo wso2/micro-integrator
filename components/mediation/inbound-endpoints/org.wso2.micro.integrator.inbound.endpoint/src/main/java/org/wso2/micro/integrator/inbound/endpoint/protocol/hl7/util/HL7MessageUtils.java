@@ -1,7 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util;
-
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -13,10 +11,12 @@ package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util;
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util;
 
 import ca.uhn.hl7v2.AcknowledgmentCode;
 import ca.uhn.hl7v2.DefaultHapiContext;
@@ -25,11 +25,19 @@ import ca.uhn.hl7v2.HapiContext;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v22.message.ACK;
-import ca.uhn.hl7v2.parser.*;
+import ca.uhn.hl7v2.parser.DefaultXMLParser;
+import ca.uhn.hl7v2.parser.EncodingNotSupportedException;
+import ca.uhn.hl7v2.parser.Parser;
+import ca.uhn.hl7v2.parser.PipeParser;
+import ca.uhn.hl7v2.parser.XMLParser;
 import ca.uhn.hl7v2.util.idgenerator.UUIDGenerator;
 import ca.uhn.hl7v2.validation.impl.DefaultValidation;
 import ca.uhn.hl7v2.validation.impl.NoValidation;
-import org.apache.axiom.om.*;
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axiom.om.OMText;
 import org.apache.axiom.om.impl.dom.factory.OMDOMFactory;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -50,11 +58,11 @@ import org.wso2.micro.integrator.inbound.endpoint.osgi.service.ServiceReferenceH
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.MLLPConstants;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.MLLProtocolException;
 
+import java.io.IOException;
+import java.util.NoSuchElementException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
-import java.util.NoSuchElementException;
 
 public class HL7MessageUtils {
 
@@ -76,8 +84,8 @@ public class HL7MessageUtils {
     private static XMLParser xmlParser = new DefaultXMLParser(validationContext);
 
     private static SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
-    private static OMNamespace ns = fac.createOMNamespace(
-            Axis2HL7Constants.HL7_NAMESPACE, Axis2HL7Constants.HL7_ELEMENT_NAME);
+    private static OMNamespace ns = fac
+            .createOMNamespace(Axis2HL7Constants.HL7_NAMESPACE, Axis2HL7Constants.HL7_ELEMENT_NAME);
     private static OMFactory omFactory = new OMDOMFactory();
 
     static {
@@ -103,13 +111,12 @@ public class HL7MessageUtils {
     public static MessageContext createSynapseMessageContext(Message message, InboundProcessorParams params)
             throws HL7Exception, AxisFault {
 
-        MessageContext synCtx = createSynapseMessageContext(params.getProperties()
-                .getProperty(MLLPConstants.HL7_INBOUND_TENANT_DOMAIN));
+        MessageContext synCtx = createSynapseMessageContext(
+                params.getProperties().getProperty(MLLPConstants.HL7_INBOUND_TENANT_DOMAIN));
 
         if (params.getProperties().getProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED) != null) {
             synCtx.setProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED,
-                               params.getProperties().getProperty(
-                                       Axis2HL7Constants.HL7_VALIDATION_PASSED));
+                               params.getProperties().getProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED));
         }
 
         try {
@@ -122,21 +129,21 @@ public class HL7MessageUtils {
     }
 
     public static MessageContext createErrorMessageContext(String rawMessage, Exception errorMsg,
-                                                           InboundProcessorParams params) throws AxisFault, HL7Exception {
-        MessageContext synCtx = createSynapseMessageContext(params.getProperties()
-                .getProperty(MLLPConstants.HL7_INBOUND_TENANT_DOMAIN));
+                                                           InboundProcessorParams params)
+            throws AxisFault, HL7Exception {
+        MessageContext synCtx = createSynapseMessageContext(
+                params.getProperties().getProperty(MLLPConstants.HL7_INBOUND_TENANT_DOMAIN));
 
         if (params.getProperties().getProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED) != null) {
             synCtx.setProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED,
-                               params.getProperties().getProperty(
-                                       Axis2HL7Constants.HL7_VALIDATION_PASSED));
+                               params.getProperties().getProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED));
         }
 
         try {
             synCtx.setProperty(SynapseConstants.ERROR_CODE, SynapseConstants.RCV_IO_ERROR_RECEIVING);
             synCtx.setProperty(SynapseConstants.ERROR_MESSAGE, errorMsg.getMessage());
             synCtx.setProperty(SynapseConstants.ERROR_DETAIL,
-                    (errorMsg.getCause() == null ? "null" : errorMsg.getCause().getMessage()));
+                               (errorMsg.getCause() == null ? "null" : errorMsg.getCause().getMessage()));
             synCtx.setProperty(SynapseConstants.ERROR_EXCEPTION, errorMsg);
             synCtx.setEnvelope(createErrorEnvelope(synCtx, rawMessage, errorMsg.getMessage(), params));
         } catch (Exception e) {
@@ -165,12 +172,11 @@ public class HL7MessageUtils {
         org.apache.axis2.context.MessageContext axis2MsgCtx = new org.apache.axis2.context.MessageContext();
         axis2MsgCtx.setMessageID(UIDGenerator.generateURNString());
 
-        axis2MsgCtx.setConfigurationContext(ServiceReferenceHolder.getInstance().getConfigurationContextService()
-                .getServerConfigContext());
+        axis2MsgCtx.setConfigurationContext(
+                ServiceReferenceHolder.getInstance().getConfigurationContextService().getServerConfigContext());
 
         // Axis2 spawns a new threads to send a message if this is TRUE
-        axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.CLIENT_API_NON_BLOCKING,
-                Boolean.FALSE);
+        axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.CLIENT_API_NON_BLOCKING, Boolean.FALSE);
 
         axis2MsgCtx.setServerSide(true);
 
@@ -187,13 +193,13 @@ public class HL7MessageUtils {
             synCtx.setProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED, new Boolean(true));
         } catch (HL7Exception e) {
             synCtx.setProperty(Axis2HL7Constants.HL7_VALIDATION_PASSED, new Boolean(false));
-            if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE) != null &&
-                    params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE).equals("true")) {
-                xmlDoc =  message.encode();
+            if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE) != null && params
+                    .getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE).equals("true")) {
+                xmlDoc = message.encode();
                 rawMessage = true;
             } else {
-                log.error("Could not encode HL7 message into XML. " +
-                        "Set " + MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE + " to build invalid HL7 messages containing raw HL7 message.", e);
+                log.error("Could not encode HL7 message into XML. " + "Set " + MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE
+                                  + " to build invalid HL7 messages containing raw HL7 message.", e);
                 throw new HL7Exception("Could not encode HL7 message into XML", e);
             }
         }
@@ -213,8 +219,8 @@ public class HL7MessageUtils {
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
         OMElement messageEl;
         boolean rawMessage = false;
-        if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE) != null &&
-                params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE).equals("true")) {
+        if (params.getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE) != null && params
+                .getProperties().getProperty(MLLPConstants.PARAM_HL7_BUILD_RAW_MESSAGE).equals("true")) {
             rawMessage = true;
         }
 
@@ -227,8 +233,7 @@ public class HL7MessageUtils {
 
     }
 
-    public static OMElement generateHL7MessageElement(String hl7XmlMessage)
-            throws XMLStreamException {
+    public static OMElement generateHL7MessageElement(String hl7XmlMessage) throws XMLStreamException {
         OMElement hl7Element = AXIOMUtil.stringToOM(hl7XmlMessage);
 
         OMElement messageEl = fac.createOMElement(Axis2HL7Constants.HL7_MESSAGE_ELEMENT_NAME, ns);
@@ -272,18 +277,12 @@ public class HL7MessageUtils {
 
     private static Message createDefaultNackMessage(String errorMsg) throws DataTypeException {
         ACK ack = new ACK();
-        ack.getMSH().getFieldSeparator().setValue(
-                Axis2HL7Constants.HL7_DEFAULT_FIELD_SEPARATOR);
-        ack.getMSH().getEncodingCharacters().setValue(
-                Axis2HL7Constants.HL7_DEFAULT_ENCODING_CHARS);
-        ack.getMSH().getReceivingApplication().setValue(
-                Axis2HL7Constants.HL7_DEFAULT_RECEIVING_APPLICATION);
-        ack.getMSH().getReceivingFacility().setValue(
-                Axis2HL7Constants.HL7_DEFAULT_RECEIVING_FACILITY);
-        ack.getMSH().getProcessingID().setValue(
-                Axis2HL7Constants.HL7_DEFAULT_PROCESSING_ID);
-        ack.getMSA().getAcknowledgementCode().setValue(
-                Axis2HL7Constants.HL7_DEFAULT_ACK_CODE_AR);
+        ack.getMSH().getFieldSeparator().setValue(Axis2HL7Constants.HL7_DEFAULT_FIELD_SEPARATOR);
+        ack.getMSH().getEncodingCharacters().setValue(Axis2HL7Constants.HL7_DEFAULT_ENCODING_CHARS);
+        ack.getMSH().getReceivingApplication().setValue(Axis2HL7Constants.HL7_DEFAULT_RECEIVING_APPLICATION);
+        ack.getMSH().getReceivingFacility().setValue(Axis2HL7Constants.HL7_DEFAULT_RECEIVING_FACILITY);
+        ack.getMSH().getProcessingID().setValue(Axis2HL7Constants.HL7_DEFAULT_PROCESSING_ID);
+        ack.getMSA().getAcknowledgementCode().setValue(Axis2HL7Constants.HL7_DEFAULT_ACK_CODE_AR);
         ack.getMSA().getMessageControlID().setValue(Axis2HL7Constants.HL7_DEFAULT_MESSAGE_CONTROL_ID);
         ack.getERR().getErrorCodeAndLocation(0).getCodeIdentifyingError().
                 getIdentifier().setValue(errorMsg);
@@ -300,6 +299,7 @@ public class HL7MessageUtils {
 
     /**
      * Get the hl7message from the MessageContext
+     *
      * @param ctx
      * @return
      * @throws HL7Exception
@@ -307,9 +307,8 @@ public class HL7MessageUtils {
     public static Message payloadToHL7Message(MessageContext ctx, InboundProcessorParams params)
             throws HL7Exception, NoSuchElementException {
 
-        OMElement hl7MsgEl = (OMElement) ctx.getEnvelope().getBody().getChildrenWithName(new
-                QName(Axis2HL7Constants.HL7_NAMESPACE, Axis2HL7Constants.HL7_MESSAGE_ELEMENT_NAME))
-                .next();
+        OMElement hl7MsgEl = (OMElement) ctx.getEnvelope().getBody().getChildrenWithName(
+                new QName(Axis2HL7Constants.HL7_NAMESPACE, Axis2HL7Constants.HL7_MESSAGE_ELEMENT_NAME)).next();
         String hl7XMLPayload = hl7MsgEl.getFirstElement().toString();
         String pipeMsg;
         Message msg = null;
@@ -319,11 +318,9 @@ public class HL7MessageUtils {
             msg = pipeParser.parse(pipeMsg);
             return msg;
         } catch (EncodingNotSupportedException e) {
-            log.error("Encoding error in the message",e);
-            throw new HL7Exception("Encoding error in the message: " +
-                    e.getMessage(), e);
-        }
-        catch (DataTypeException e) {
+            log.error("Encoding error in the message", e);
+            throw new HL7Exception("Encoding error in the message: " + e.getMessage(), e);
+        } catch (DataTypeException e) {
             // Make this as warning.Since some remote systems require enriched messages that violate some HL7
             //rules it would be nice to be able to still send the message.
             log.warn("Rule validation fails.", e);
@@ -332,11 +329,9 @@ public class HL7MessageUtils {
                 return msg;
             }
 
-        }
-        catch (HL7Exception e) {
-            log.error("Error in the Message :" , e);
-            throw new HL7Exception("Encoding error in the message: " +
-                    e.getMessage(), e);
+        } catch (HL7Exception e) {
+            log.error("Error in the Message :", e);
+            throw new HL7Exception("Encoding error in the message: " + e.getMessage(), e);
         }
         return msg;
     }

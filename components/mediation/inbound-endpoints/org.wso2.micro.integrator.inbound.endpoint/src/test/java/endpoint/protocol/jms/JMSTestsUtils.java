@@ -1,17 +1,17 @@
-/**
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * <p>
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -35,8 +35,8 @@ import org.apache.synapse.core.axis2.Axis2SynapseEnvironment;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSPollingConsumer;
 
-import javax.jms.Message;
 import java.util.Properties;
+import javax.jms.Message;
 
 public class JMSTestsUtils {
 
@@ -45,10 +45,12 @@ public class JMSTestsUtils {
      *
      * @return Properties
      */
-    public static Properties getJMSPropertiesForDestination(String destinationName, String providerURL, boolean isQueue) {
+    public static Properties getJMSPropertiesForDestination(String destinationName, String providerURL,
+                                                            boolean isQueue) {
         Properties jmsProperties = new Properties();
         jmsProperties.put(JMSConstants.PROVIDER_URL, providerURL);
-        jmsProperties.put(JMSConstants.NAMING_FACTORY_INITIAL, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
+        jmsProperties
+                .put(JMSConstants.NAMING_FACTORY_INITIAL, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
         jmsProperties.put(JMSConstants.CONNECTION_FACTORY_JNDI_NAME, "QueueConnectionFactory");
         if (isQueue) {
             jmsProperties.put(JMSConstants.CONNECTION_FACTORY_TYPE, JMSConstants.DESTINATION_TYPE_QUEUE);
@@ -68,17 +70,18 @@ public class JMSTestsUtils {
      * @return Message
      * @throws InterruptedException on an error polling message
      */
-    public static Message pollMessagesFromDestination (JMSPollingConsumer jmsPollingConsumer) throws InterruptedException {
-        Message receivedMsg  = jmsPollingConsumer.poll();
+    public static Message pollMessagesFromDestination(JMSPollingConsumer jmsPollingConsumer)
+            throws InterruptedException {
+        Message receivedMsg = jmsPollingConsumer.poll();
         int count = 0;
         while (receivedMsg == null) {
-            count ++;
+            count++;
             if (count == 10) {
                 // return null to avoid hanging
                 return null;
             }
             Thread.sleep(10);
-            receivedMsg  = jmsPollingConsumer.poll();
+            receivedMsg = jmsPollingConsumer.poll();
         }
         return receivedMsg;
     }
@@ -92,8 +95,7 @@ public class JMSTestsUtils {
     public static org.apache.synapse.MessageContext createMessageContext() throws AxisFault {
 
         Axis2SynapseEnvironment synapseEnvironment = new Axis2SynapseEnvironment(new SynapseConfiguration());
-        org.apache.axis2.context.MessageContext axis2MC
-                = new org.apache.axis2.context.MessageContext();
+        org.apache.axis2.context.MessageContext axis2MC = new org.apache.axis2.context.MessageContext();
         axis2MC.setConfigurationContext(new ConfigurationContext(new AxisConfiguration()));
 
         ServiceContext svcCtx = new ServiceContext();
@@ -101,11 +103,11 @@ public class JMSTestsUtils {
         axis2MC.setServiceContext(svcCtx);
         axis2MC.setOperationContext(opCtx);
         org.apache.synapse.MessageContext mc = new Axis2MessageContext(axis2MC, new SynapseConfiguration(),
-                synapseEnvironment);
+                                                                       synapseEnvironment);
         mc.setMessageID(UIDGenerator.generateURNString());
         SOAPEnvelope env = OMAbstractFactory.getSOAP11Factory().createSOAPEnvelope();
-        OMNamespace namespace = OMAbstractFactory.getSOAP11Factory().createOMNamespace(
-                "http://ws.apache.org/commons/ns/payload", "text");
+        OMNamespace namespace = OMAbstractFactory.getSOAP11Factory()
+                .createOMNamespace("http://ws.apache.org/commons/ns/payload", "text");
         env.declareNamespace(namespace);
         mc.setEnvelope(env);
         SOAPBody body = OMAbstractFactory.getSOAP11Factory().createSOAPBody();

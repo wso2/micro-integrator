@@ -1,7 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.context;
-
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -13,10 +11,12 @@ package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.context;
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.context;
 
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.parser.Parser;
@@ -50,16 +50,11 @@ public class MLLPContext {
 
     private volatile String messageId;
 
-
     private Parser preProcessorParser = null;
     private BufferFactory bufferFactory;
 
-    public MLLPContext(IOSession session,
-                       CharsetDecoder decoder,
-                       boolean autoAck,
-                       boolean validateMessage,
-                       Parser preProcessorParser,
-                       BufferFactory bufferFactory) {
+    public MLLPContext(IOSession session, CharsetDecoder decoder, boolean autoAck, boolean validateMessage,
+                       Parser preProcessorParser, BufferFactory bufferFactory) {
         this.session = session;
         this.codec = new HL7Codec(decoder);
         this.autoAck = autoAck;

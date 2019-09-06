@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -23,23 +41,6 @@ import java.util.NoSuchElementException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- *
- * WSO2 Inc. licenses this file to you under the Apache License,
- * Version 2.0 (the "License"); you may not use this file except
- * in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
 public class HL7Processor implements InboundResponseSender {
     private static final Log log = LogFactory.getLog(HL7Processor.class);
 
@@ -64,13 +65,13 @@ public class HL7Processor implements InboundResponseSender {
             autoAck = false;
         }
 
-        timeOut = HL7MessageUtils
-                .getInt(MLLPConstants.PARAM_HL7_TIMEOUT, params);
+        timeOut = HL7MessageUtils.getInt(MLLPConstants.PARAM_HL7_TIMEOUT, params);
 
     }
 
     /**
      * HL7 Request Processing logic
+     *
      * @param mllpContext
      * @throws Exception - catch any generic exceptions or else I/O Reactor may shutdown.
      */
@@ -80,8 +81,7 @@ public class HL7Processor implements InboundResponseSender {
         // Prepare Synapse Context for message injection
         MessageContext synCtx;
         try {
-            synCtx = HL7MessageUtils
-                    .createSynapseMessageContext(mllpContext.getHl7Message(), params);
+            synCtx = HL7MessageUtils.createSynapseMessageContext(mllpContext.getHl7Message(), params);
         } catch (HL7Exception e) {
             handleException(mllpContext, e.getMessage());
             return;
@@ -105,18 +105,20 @@ public class HL7Processor implements InboundResponseSender {
 
         addProperties(synCtx, mllpContext);
 
-        SequenceMediator injectSeq = (SequenceMediator) synCtx.getEnvironment().getSynapseConfiguration().getSequence(inSequence);
+        SequenceMediator injectSeq = (SequenceMediator) synCtx.getEnvironment().getSynapseConfiguration()
+                .getSequence(inSequence);
         if (injectSeq == null) {
             log.error("Could not find inbound sequence '" + inSequence + "'.");
             handleException(mllpContext, "Could not find inbound sequence.");
             return;
-        } else if (!injectSeq.isInitialized()){
+        } else if (!injectSeq.isInitialized()) {
             injectSeq.init(synCtx.getEnvironment());
         }
         injectSeq.setErrorHandler(onErrorSequence);
 
         if (!autoAck && timeOut > 0) {
-            executorService.schedule(new TimeoutHandler(mllpContext, synCtx.getMessageID()), timeOut, TimeUnit.MILLISECONDS);
+            executorService
+                    .schedule(new TimeoutHandler(mllpContext, synCtx.getMessageID()), timeOut, TimeUnit.MILLISECONDS);
         }
 
         CallableTask task = new CallableTask(synCtx, injectSeq);
@@ -161,17 +163,19 @@ public class HL7Processor implements InboundResponseSender {
 
         addProperties(synCtx, mllpContext);
 
-        SequenceMediator injectSeq = (SequenceMediator) synCtx.getEnvironment().getSynapseConfiguration().getSequence(onErrorSequence);
+        SequenceMediator injectSeq = (SequenceMediator) synCtx.getEnvironment().getSynapseConfiguration()
+                .getSequence(onErrorSequence);
         if (injectSeq == null) {
             log.error("Could not find inbound error sequence '" + onErrorSequence + "'.");
             handleException(mllpContext, "Could not find inbound error sequence.");
             return;
-        } else if (!injectSeq.isInitialized()){
+        } else if (!injectSeq.isInitialized()) {
             injectSeq.init(synCtx.getEnvironment());
         }
 
         if (!autoAck && timeOut > 0) {
-            executorService.schedule(new TimeoutHandler(mllpContext, synCtx.getMessageID()), timeOut, TimeUnit.MILLISECONDS);
+            executorService
+                    .schedule(new TimeoutHandler(mllpContext, synCtx.getMessageID()), timeOut, TimeUnit.MILLISECONDS);
         }
 
         CallableTask task = new CallableTask(synCtx, injectSeq);
@@ -182,11 +186,12 @@ public class HL7Processor implements InboundResponseSender {
     /**
      * We need to add several context properties that HL7 Axis2 transport sender depends on (also the
      * application/edi-hl7 formatter).
+     *
      * @param synCtx
      */
     private void addProperties(MessageContext synCtx, MLLPContext context) {
-        org.apache.axis2.context.MessageContext axis2MsgCtx =
-                ((org.apache.synapse.core.axis2.Axis2MessageContext) synCtx).getAxis2MessageContext();
+        org.apache.axis2.context.MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) synCtx)
+                .getAxis2MessageContext();
 
         axis2MsgCtx.setProperty(Axis2HL7Constants.HL7_MESSAGE_OBJECT, context.getHl7Message());
 
@@ -202,7 +207,8 @@ public class HL7Processor implements InboundResponseSender {
 
         if (parameters.get(MLLPConstants.HL7_CHARSET_DECODER) != null) {
             axis2MsgCtx.setProperty(Axis2HL7Constants.HL7_MESSAGE_CHARSET,
-                                    ((CharsetDecoder) parameters.get(MLLPConstants.HL7_CHARSET_DECODER)).charset().displayName());
+                                    ((CharsetDecoder) parameters.get(MLLPConstants.HL7_CHARSET_DECODER)).charset()
+                                            .displayName());
         }
 
         // Below is expensive, it is in HL7 Axis2 transport but we should not depend on this!
@@ -222,38 +228,35 @@ public class HL7Processor implements InboundResponseSender {
 
     private void sendBack(MessageContext messageContext, MLLPContext mllpContext) {
 
-        if (messageContext.getProperty(MLLPConstants.HL7_INBOUND_MSG_ID) != null
-                && !mllpContext.getMessageId().equals(messageContext.getProperty(MLLPConstants.HL7_INBOUND_MSG_ID))) {
+        if (messageContext.getProperty(MLLPConstants.HL7_INBOUND_MSG_ID) != null && !mllpContext.getMessageId()
+                .equals(messageContext.getProperty(MLLPConstants.HL7_INBOUND_MSG_ID))) {
             log.warn("Response ID does not match request ID. Response may have been received after timeout.");
             return;
         }
 
         try {
-            if ((((String) messageContext.getProperty(
-                    Axis2HL7Constants.HL7_RESULT_MODE)) != null) &&
-                    ((String) messageContext.getProperty(
-                            Axis2HL7Constants.HL7_RESULT_MODE)).equals(
-                            Axis2HL7Constants.HL7_RESULT_MODE_NACK)) {
-                String nackMessage = (String) messageContext.getProperty(
-                        Axis2HL7Constants.HL7_NACK_MESSAGE);
+            if ((((String) messageContext.getProperty(Axis2HL7Constants.HL7_RESULT_MODE)) != null)
+                    && ((String) messageContext.getProperty(Axis2HL7Constants.HL7_RESULT_MODE))
+                    .equals(Axis2HL7Constants.HL7_RESULT_MODE_NACK)) {
+                String nackMessage = (String) messageContext.getProperty(Axis2HL7Constants.HL7_NACK_MESSAGE);
                 mllpContext.setNackMode(true);
-                mllpContext.setHl7Message(HL7MessageUtils
-                                                  .createNack(mllpContext.getHl7Message(), nackMessage));
+                mllpContext.setHl7Message(HL7MessageUtils.createNack(mllpContext.getHl7Message(), nackMessage));
             } else {
                 // if HL7_APPLICATION_ACK is set then we are going to send the auto-generated ACK based on
                 // the HL7 request, so we do not set the payload contents as context HL7 Message.
-                if (messageContext.getProperty(Axis2HL7Constants.HL7_APPLICATION_ACK) != null &&
-                        messageContext.getProperty(Axis2HL7Constants.HL7_APPLICATION_ACK).equals("true")) {
+                if (messageContext.getProperty(Axis2HL7Constants.HL7_APPLICATION_ACK) != null && messageContext
+                        .getProperty(Axis2HL7Constants.HL7_APPLICATION_ACK).equals("true")) {
                     mllpContext.setApplicationAck(true);
                 } else {
-                    mllpContext.setHl7Message(HL7MessageUtils
-                                                      .payloadToHL7Message(messageContext, params));
+                    mllpContext.setHl7Message(HL7MessageUtils.payloadToHL7Message(messageContext, params));
                 }
             }
 
             mllpContext.requestOutput();
         } catch (NoSuchElementException e) {
-            log.error("Could not find HL7 response in required XML format. Please ensure XML payload contains response inside message tags with namespace http://wso2.org/hl7.", e);
+            log.error(
+                    "Could not find HL7 response in required XML format. Please ensure XML payload contains response inside message tags with namespace http://wso2.org/hl7.",
+                    e);
             handleException(mllpContext, "Error while generating HL7 response. Not in required format.");
         } catch (HL7Exception e) {
             log.error("Error while generating HL7 ACK response from payload.", e);
@@ -269,8 +272,7 @@ public class HL7Processor implements InboundResponseSender {
         if (mllpContext.isAutoAck()) {
             try {
                 mllpContext.setNackMode(true);
-                mllpContext.setHl7Message(HL7MessageUtils
-                                                  .createNack(mllpContext.getHl7Message(), msg));
+                mllpContext.setHl7Message(HL7MessageUtils.createNack(mllpContext.getHl7Message(), msg));
                 mllpContext.requestOutput();
             } catch (HL7Exception e) {
                 log.error("Error while generating NACK response.", e);

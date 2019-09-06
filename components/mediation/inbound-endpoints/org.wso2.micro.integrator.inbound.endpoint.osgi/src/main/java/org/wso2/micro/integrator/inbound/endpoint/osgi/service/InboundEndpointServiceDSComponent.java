@@ -1,7 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.osgi.service;
-
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -13,10 +11,12 @@ package org.wso2.micro.integrator.inbound.endpoint.osgi.service;
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.micro.integrator.inbound.endpoint.osgi.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,8 +30,7 @@ import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 
-@Component(
-        name = "inbound.endpoint.service",
+@Component(name = "org.wso2.micro.integrator.inbound.endpoint.osgi.service.InboundEndpointServiceDSComponent",
         immediate = true)
 public class InboundEndpointServiceDSComponent {
 
@@ -40,9 +39,8 @@ public class InboundEndpointServiceDSComponent {
     @Activate
     protected void activate(ComponentContext ctx) throws Exception {
 
-        if (log.isDebugEnabled()) {
-            log.debug("Activating Inbound Endpoint service....!");
-        }
+        log.debug("Activating Inbound Endpoint service....!");
+
         BundleContext bndCtx = ctx.getBundleContext();
         bndCtx.registerService(InboundEndpointService.class.getName(), new InboundEndpointServiceImpl(), null);
     }
@@ -52,25 +50,22 @@ public class InboundEndpointServiceDSComponent {
 
     }
 
-    @Reference(
-            name = "config.context.service",
+    @Reference(name = "config.context.service",
             service = Axis2ConfigurationContextService.class,
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContextService")
     protected void setConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("ConfigurationContextService bound to the ESB initialization process");
-        }
+        log.debug("ConfigurationContextService bound to the ESB initialization process");
+
         ServiceReferenceHolder.getInstance().setConfigurationContextService(configurationContextService);
     }
 
     protected void unsetConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
 
-        if (log.isDebugEnabled()) {
-            log.debug("ConfigurationContextService unbound from the ESB environment");
-        }
+        log.debug("ConfigurationContextService unbound from the ESB environment");
+
         ServiceReferenceHolder.getInstance().setConfigurationContextService(null);
     }
 }

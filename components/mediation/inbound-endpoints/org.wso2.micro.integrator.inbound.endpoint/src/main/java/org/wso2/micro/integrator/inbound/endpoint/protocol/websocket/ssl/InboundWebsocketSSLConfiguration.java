@@ -1,15 +1,17 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -95,11 +97,8 @@ public class InboundWebsocketSSLConfiguration {
         private String sslProtocols;
         private String cipherSuites;
 
-        public SSLConfigurationBuilder(String keyStoreFile,
-                                       String keyStorePass,
-                                       String trustStoreFile,
-                                       String trustStorePass,
-                                       String certPass) {
+        public SSLConfigurationBuilder(String keyStoreFile, String keyStorePass, String trustStoreFile,
+                                       String trustStorePass, String certPass) {
             this.keyStoreFile = keyStoreFile;
             this.keyStorePass = keyStorePass;
             this.trustStoreFile = trustStoreFile;
@@ -109,7 +108,8 @@ public class InboundWebsocketSSLConfiguration {
         }
 
         public SSLConfigurationBuilder(String keyStoreFile, String keyStorePass, String trustStoreFile,
-                String trustStorePass, String certPass, String sslProtocols, String cipherSuites) {
+                                       String trustStorePass, String certPass, String sslProtocols,
+                                       String cipherSuites) {
             this.keyStoreFile = keyStoreFile;
             this.keyStorePass = keyStorePass;
             this.trustStoreFile = trustStoreFile;
@@ -130,8 +130,8 @@ public class InboundWebsocketSSLConfiguration {
             if (!keyStore.exists()) {
                 throw new IllegalArgumentException("KeyStore File " + keyStoreFile + " not found");
             }
-            InboundWebsocketSSLConfiguration sslConfig =
-                    new InboundWebsocketSSLConfiguration(keyStore, keyStorePass).setCertPass(certPass);
+            InboundWebsocketSSLConfiguration sslConfig = new InboundWebsocketSSLConfiguration(keyStore, keyStorePass)
+                    .setCertPass(certPass);
             if (trustStoreFile != null) {
                 File trustStore = new File(trustStoreFile);
                 if (!trustStore.exists()) {
@@ -143,7 +143,7 @@ public class InboundWebsocketSSLConfiguration {
                 sslConfig.setTrustStore(trustStore).setTrustStorePass(trustStorePass);
             }
 
-            if (sslProtocols == null || sslProtocols.trim().isEmpty() ) {
+            if (sslProtocols == null || sslProtocols.trim().isEmpty()) {
                 sslProtocols = "TLS";
             }
 

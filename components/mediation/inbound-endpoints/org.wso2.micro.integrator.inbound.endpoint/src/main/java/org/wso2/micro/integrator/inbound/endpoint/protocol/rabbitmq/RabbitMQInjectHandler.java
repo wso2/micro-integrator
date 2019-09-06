@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -57,7 +57,8 @@ public class RabbitMQInjectHandler {
     /**
      * Determine the message builder to use, set the message payload to the message context and
      * inject the message.
-     * @param inboundName 
+     *
+     * @param inboundName
      */
     public boolean invoke(RabbitMQMessage message, String inboundName) {
 
@@ -79,26 +80,23 @@ public class RabbitMQInjectHandler {
         String contentType = message.getContentType();
         Builder builder = null;
         if (contentType == null) {
-            log.warn("Unable to determine content type for message " +
-                    msgCtx.getMessageID() + " setting to text/plain");
+            log.warn(
+                    "Unable to determine content type for message " + msgCtx.getMessageID() + " setting to text/plain");
             contentType = RabbitMQConstants.DEFAULT_CONTENT_TYPE;
             message.setContentType(contentType);
         }
 
         int index = contentType.indexOf(';');
-        String type = index > 0 ? contentType.substring(0, index)
-                                : contentType;
+        String type = index > 0 ? contentType.substring(0, index) : contentType;
         try {
             builder = BuilderUtil.getBuilderFromSelector(type, axis2MsgCtx);
         } catch (AxisFault axisFault) {
-            log.error("Error while creating message builder :: "
-                      + axisFault.getMessage());
+            log.error("Error while creating message builder :: " + axisFault.getMessage());
 
         }
         if (builder == null) {
             if (log.isDebugEnabled()) {
-                log.debug("No message builder found for type '" + type
-                          + "'. Falling back to SOAP.");
+                log.debug("No message builder found for type '" + type + "'. Falling back to SOAP.");
             }
             builder = new SOAPBuilder();
         }
@@ -107,19 +105,15 @@ public class RabbitMQInjectHandler {
         // set the message payload to the message context
         InputStream in = new ByteArrayInputStream(message.getBody());
         try {
-            documentElement = builder.processDocument(in, contentType,
-                    axis2MsgCtx);
+            documentElement = builder.processDocument(in, contentType, axis2MsgCtx);
         } catch (AxisFault axisFault) {
-            log.error("Error while processing message :: "
-                    + axisFault.getMessage());
+            log.error("Error while processing message :: " + axisFault.getMessage());
         }
 
         try {
-            msgCtx.setEnvelope(TransportUtils
-                    .createSOAPEnvelope(documentElement));
+            msgCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
         } catch (AxisFault axisFault) {
-            log.error("Error while setting message payload to the message context :: "
-                    + axisFault.getMessage());
+            log.error("Error while setting message payload to the message context :: " + axisFault.getMessage());
         }
         // Inject the message to the sequence.
 
@@ -127,8 +121,8 @@ public class RabbitMQInjectHandler {
             log.error("Sequence name not specified. Sequence : " + injectingSeq);
             success = false;
         }
-        SequenceMediator seq = (SequenceMediator) synapseEnvironment
-                .getSynapseConfiguration().getSequence(injectingSeq);        
+        SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration()
+                .getSequence(injectingSeq);
         if (seq != null) {
             if (log.isDebugEnabled()) {
                 log.debug("injecting message to sequence : " + injectingSeq);
@@ -145,8 +139,8 @@ public class RabbitMQInjectHandler {
         }
 
         Object rollbackProperty = msgCtx.getProperty(RabbitMQConstants.SET_ROLLBACK_ONLY);
-        if (rollbackProperty != null && (rollbackProperty instanceof Boolean && ((Boolean) rollbackProperty))
-                || (rollbackProperty instanceof String && Boolean.valueOf((String) rollbackProperty))) {
+        if (rollbackProperty != null && (rollbackProperty instanceof Boolean && ((Boolean) rollbackProperty)) || (
+                rollbackProperty instanceof String && Boolean.valueOf((String) rollbackProperty))) {
             success = false;
         }
 
@@ -157,8 +151,7 @@ public class RabbitMQInjectHandler {
      * Create the initial message context for rabbitmq
      */
     private org.apache.synapse.MessageContext createMessageContext() {
-        org.apache.synapse.MessageContext msgCtx = synapseEnvironment
-                .createMessageContext();
+        org.apache.synapse.MessageContext msgCtx = synapseEnvironment.createMessageContext();
         MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
                 .getAxis2MessageContext();
         axis2MsgCtx.setServerSide(true);

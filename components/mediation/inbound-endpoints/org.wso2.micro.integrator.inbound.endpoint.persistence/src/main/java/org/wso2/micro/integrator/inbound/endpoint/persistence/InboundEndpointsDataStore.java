@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -34,9 +34,10 @@ public class InboundEndpointsDataStore {
 
     private static final Log log = LogFactory.getLog(InboundEndpointsDataStore.class);
 
-    private Map<Integer,List<InboundEndpointInfoDTO>> endpointListeningInfo;
+    private Map<Integer, List<InboundEndpointInfoDTO>> endpointListeningInfo;
+
     //Store polling endpoints with <TenantId<Endpoint_Name>> format
-    private Map<String,Set<String>> endpointPollingInfo;
+    private Map<String, Set<String>> endpointPollingInfo;
 
     private static InboundEndpointsDataStore instance = new InboundEndpointsDataStore();
 
@@ -46,8 +47,8 @@ public class InboundEndpointsDataStore {
 
     private InboundEndpointsDataStore() {
 
-            endpointListeningInfo = new ConcurrentHashMap<>();
-            endpointPollingInfo = new ConcurrentHashMap<>();
+        endpointListeningInfo = new ConcurrentHashMap<>();
+        endpointPollingInfo = new ConcurrentHashMap<>();
 
     }
 
@@ -59,12 +60,13 @@ public class InboundEndpointsDataStore {
      * @param protocol     protocol
      * @param name         endpoint name
      */
-    public void registerListeningEndpoint(int port, String tenantDomain, String protocol, String name, InboundProcessorParams params) {
+    public void registerListeningEndpoint(int port, String tenantDomain, String protocol, String name,
+                                          InboundProcessorParams params) {
 
         List<InboundEndpointInfoDTO> tenantList = endpointListeningInfo.get(port);
         if (tenantList == null) {
             // If there is no existing listeners in the port, create a new list
-            tenantList = new ArrayList<InboundEndpointInfoDTO>();
+            tenantList = new ArrayList<>();
             port = port - PersistenceUtils.getPortOffset(params.getProperties());
             endpointListeningInfo.put(port, tenantList);
         }
@@ -77,16 +79,17 @@ public class InboundEndpointsDataStore {
      * @param tenantDomain tenant domain
      * @param name         endpoint name
      */
-    public void registerPollingingEndpoint(String tenantDomain, String name) {
+    public void registerPollingEndpoint(String tenantDomain, String name) {
 
         Set<String> lNames = endpointPollingInfo.get(tenantDomain);
+
         if (lNames == null) {
-      	   lNames = new HashSet<String>();           
+            lNames = new HashSet<>();
         }
         lNames.add(name);
         endpointPollingInfo.put(tenantDomain, lNames);
     }
-    
+
     /**
      * Register SSL endpoint in the InboundEndpointsDataStore
      *
@@ -98,13 +101,10 @@ public class InboundEndpointsDataStore {
     public void registerSSLListeningEndpoint(int port, String tenantDomain, String protocol, String name,
                                              SSLConfiguration sslConfiguration, InboundProcessorParams params) {
 
-        List<InboundEndpointInfoDTO> tenantList = endpointListeningInfo.get(port);
-        if (tenantList == null) {
-            // If there is no existing listeners in the port, create a new list
-            tenantList = new ArrayList<InboundEndpointInfoDTO>();
-            endpointListeningInfo.put(port, tenantList);
-        }
-        InboundEndpointInfoDTO inboundEndpointInfoDTO = new InboundEndpointInfoDTO(tenantDomain, protocol, name, params);
+        List<InboundEndpointInfoDTO> tenantList = endpointListeningInfo.computeIfAbsent(port, k -> new ArrayList<>());
+        // If there is no existing listeners in the port, create a new list
+        InboundEndpointInfoDTO inboundEndpointInfoDTO = new InboundEndpointInfoDTO(tenantDomain, protocol, name,
+                                                                                   params);
         inboundEndpointInfoDTO.setSslConfiguration(sslConfiguration);
         tenantList.add(inboundEndpointInfoDTO);
     }
@@ -145,49 +145,49 @@ public class InboundEndpointsDataStore {
             }
         }
         if (endpointListeningInfo.get(port) != null && endpointListeningInfo.get(port).size() == 0) {
-      	  endpointListeningInfo.remove(port);
+            endpointListeningInfo.remove(port);
         }
     }
 
     /**
      * Unregister an endpoint from data store
      *
-     * @param tenantId        
-     * @param name 
+     * @param tenantDomain
+     * @param name
      */
     public void unregisterPollingEndpoint(String tenantDomain, String name) {
         Set<String> lNames = endpointPollingInfo.get(tenantDomain);
         if (lNames != null && !lNames.isEmpty()) {
             for (String strName : lNames) {
                 if (strName.equals(name)) {
-               	  lNames.remove(strName);
+                    lNames.remove(strName);
                     break;
                 }
             }
-            if(lNames.isEmpty()){
-            	endpointPollingInfo.remove(tenantDomain);
+            if (lNames.isEmpty()) {
+                endpointPollingInfo.remove(tenantDomain);
             }
         }
-    }    
+    }
 
     /**
      * Check polling endpoint from data store
      *
-     * @param tenantDomain      
-     * @param name 
+     * @param tenantDomain
+     * @param name
      */
     public boolean isPollingEndpointRegistered(String tenantDomain, String name) {
         Set<String> lNames = endpointPollingInfo.get(tenantDomain);
         if (lNames != null && !lNames.isEmpty()) {
             for (String strName : lNames) {
                 if (strName.equals(name)) {
-               	  return true;
+                    return true;
                 }
             }
-        }        
+        }
         return false;
-    }   
-    
+    }
+
     /**
      * Check whether endpoint registry is empty for a particular port
      *
@@ -203,7 +203,7 @@ public class InboundEndpointsDataStore {
      *
      * @return information of all endpoints
      */
-    public  Map<Integer,List<InboundEndpointInfoDTO>> getAllListeningEndpointData() {
+    public Map<Integer, List<InboundEndpointInfoDTO>> getAllListeningEndpointData() {
         return endpointListeningInfo;
     }
 
@@ -212,14 +212,8 @@ public class InboundEndpointsDataStore {
      *
      * @return information of all polling endpoints
      */
-    public  Map<String,Set<String>> getAllPollingingEndpointData() {
+    public Map<String, Set<String>> getAllPollingingEndpointData() {
         return endpointPollingInfo;
     }
-
-    private void handleException(String msg, Exception ex) {
-        //TODO: check whether we need more error handling here
-        log.error(msg, ex);
-    }
-
 
 }

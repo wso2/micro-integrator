@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -53,8 +53,8 @@ public class InboundHttpResponseSender implements InboundResponseSender {
                 //send for send back the response to the source
                 passThroughHttpSender.invoke(msgContext);
             } catch (AxisFault e) {
-                log.error("Exception occurred when calling PassThroughHttpSender may be" +
-                          "message context does not have relevant properties", e);
+                log.error("Exception occurred when calling PassThroughHttpSender may be"
+                                  + "message context does not have relevant properties", e);
             }
         } else {
             log.error("Response MessageContext is null may be Response read error occurred");

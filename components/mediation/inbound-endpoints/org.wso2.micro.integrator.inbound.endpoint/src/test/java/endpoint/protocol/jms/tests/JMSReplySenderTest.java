@@ -1,17 +1,17 @@
-/**
- * Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * <p>
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * <p>
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * <p>
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -39,17 +39,17 @@ import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSReplySender;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.factory.CachedJMSConnectionFactory;
 
+import java.sql.Timestamp;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
 import javax.activation.DataHandler;
 import javax.jms.BytesMessage;
 import javax.jms.Message;
 import javax.jms.Queue;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.sql.Timestamp;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
 
 public class JMSReplySenderTest extends TestCase {
 
@@ -73,21 +73,20 @@ public class JMSReplySenderTest extends TestCase {
             String correlationID = UUID.randomUUID().toString();
             this.setSOAPEnvelopWithTextBody(messageContext);
             this.setTransportHeaders(((Axis2MessageContext) messageContext).getAxis2MessageContext(),
-                    JMSConstants.JMS_TEXT_MESSAGE, correlationID);
+                                     JMSConstants.JMS_TEXT_MESSAGE, correlationID);
             messageContext.setProperty(JMSConstants.JMS_COORELATION_ID, correlationID);
-            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory,
-                    null, null);
+            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory, null, null);
             String soapAction = "urn:test";
             ((Axis2MessageContext) messageContext).getAxis2MessageContext().setServerSide(true);
-            ((Axis2MessageContext) messageContext).getAxis2MessageContext().setProperty(BaseConstants.SOAPACTION,
-                    soapAction);
+            ((Axis2MessageContext) messageContext).getAxis2MessageContext()
+                    .setProperty(BaseConstants.SOAPACTION, soapAction);
             replySender.sendBack(messageContext);
-            Message replyMsg  = brokerController.receiveMessage(replyQueue);
+            Message replyMsg = brokerController.receiveMessage(replyQueue);
             Assert.assertNotNull("The reply message cannot be null", replyMsg);
             Assert.assertEquals("The Message type of received message does not match", JMSConstants.JMS_TEXT_MESSAGE,
-                    replyMsg.getJMSType());
+                                replyMsg.getJMSType());
             Assert.assertEquals("The Content of received message does not match", "TestSendBack",
-                    ((ActiveMQTextMessage) replyMsg).getText());
+                                ((ActiveMQTextMessage) replyMsg).getText());
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -114,19 +113,18 @@ public class JMSReplySenderTest extends TestCase {
             String correlationID = UUID.randomUUID().toString();
             this.setSOAPEnvelopWithBinaryBody(messageContext, message);
             this.setTransportHeaders(((Axis2MessageContext) messageContext).getAxis2MessageContext(),
-                    JMSConstants.JMS_BYTE_MESSAGE, correlationID);
+                                     JMSConstants.JMS_BYTE_MESSAGE, correlationID);
             messageContext.setProperty(JMSConstants.JMS_COORELATION_ID, correlationID);
-            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory,
-                    null, null);
+            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory, null, null);
             String soapAction = "urn:test";
             ((Axis2MessageContext) messageContext).getAxis2MessageContext().getOptions().setAction(soapAction);
             replySender.sendBack(messageContext);
-            Message replyMsg  = brokerController.receiveMessage(replyQueue);
+            Message replyMsg = brokerController.receiveMessage(replyQueue);
             Assert.assertNotNull("The reply message cannot be null", replyMsg);
             Assert.assertEquals("The Message type of received message does not match", JMSConstants.JMS_BYTE_MESSAGE,
-                    replyMsg.getJMSType());
+                                replyMsg.getJMSType());
             Assert.assertEquals("The Content of received message does not match", content,
-                    new String(((ActiveMQBytesMessage) replyMsg).getContent().getData()));
+                                new String(((ActiveMQBytesMessage) replyMsg).getContent().getData()));
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -151,17 +149,16 @@ public class JMSReplySenderTest extends TestCase {
             String correlationID = UUID.randomUUID().toString();
             this.setSOAPEnvelopWithMapMessageBody(messageContext);
             this.setTransportHeaders(((Axis2MessageContext) messageContext).getAxis2MessageContext(),
-                    JMSConstants.JMS_MAP_MESSAGE, correlationID);
+                                     JMSConstants.JMS_MAP_MESSAGE, correlationID);
             messageContext.setProperty(JMSConstants.JMS_COORELATION_ID, correlationID);
-            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory,
-                    null, null);
+            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory, null, null);
             replySender.sendBack(messageContext);
-            Message replyMsg  = brokerController.receiveMessage(replyQueue);
+            Message replyMsg = brokerController.receiveMessage(replyQueue);
             Assert.assertNotNull("The reply message cannot be null", replyMsg);
             Assert.assertEquals("The Message type of received message does not match", JMSConstants.JMS_MAP_MESSAGE,
-                    replyMsg.getJMSType());
+                                replyMsg.getJMSType());
             Assert.assertEquals("The Content of received message does not match", "10",
-                    ((ActiveMQMapMessage) replyMsg).getContentMap().get("Price"));
+                                ((ActiveMQMapMessage) replyMsg).getContentMap().get("Price"));
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -186,17 +183,16 @@ public class JMSReplySenderTest extends TestCase {
             String correlationID = UUID.randomUUID().toString();
             this.setSOAPEnvelopWithoutTypeTextMessageBody(messageContext);
             this.setTransportHeaders(((Axis2MessageContext) messageContext).getAxis2MessageContext(),
-                    JMSConstants.JMS_TEXT_MESSAGE, correlationID);
+                                     JMSConstants.JMS_TEXT_MESSAGE, correlationID);
             messageContext.setProperty(JMSConstants.JMS_COORELATION_ID, correlationID);
-            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory,
-                    null, null);
+            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory, null, null);
             replySender.sendBack(messageContext);
-            Message replyMsg  = brokerController.receiveMessage(replyQueue);
+            Message replyMsg = brokerController.receiveMessage(replyQueue);
             Assert.assertNotNull("The reply message cannot be null", replyMsg);
             Assert.assertEquals("The Message type of received message does not match", JMSConstants.JMS_TEXT_MESSAGE,
-                    replyMsg.getJMSType());
+                                replyMsg.getJMSType());
             Assert.assertTrue("The Content of received message does not match",
-                    ((ActiveMQTextMessage) replyMsg).getText().contains("Price"));
+                              ((ActiveMQTextMessage) replyMsg).getText().contains("Price"));
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -223,15 +219,14 @@ public class JMSReplySenderTest extends TestCase {
             String correlationID = UUID.randomUUID().toString();
             this.setSOAPEnvelopWithoutTypeByteMessageBody(messageContext, message);
             this.setTransportHeaders(((Axis2MessageContext) messageContext).getAxis2MessageContext(),
-                    JMSConstants.JMS_BYTE_MESSAGE, correlationID);
+                                     JMSConstants.JMS_BYTE_MESSAGE, correlationID);
             messageContext.setProperty(JMSConstants.JMS_COORELATION_ID, correlationID);
-            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory,
-                    null, null);
+            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory, null, null);
             replySender.sendBack(messageContext);
-            Message replyMsg  = brokerController.receiveMessage(replyQueue);
+            Message replyMsg = brokerController.receiveMessage(replyQueue);
             Assert.assertNotNull("The reply message cannot be null", replyMsg);
             Assert.assertEquals("The Message type of received message does not match", JMSConstants.JMS_BYTE_MESSAGE,
-                    replyMsg.getJMSType());
+                                replyMsg.getJMSType());
         } finally {
             brokerController.disconnect();
             brokerController.stopProcess();
@@ -253,10 +248,9 @@ public class JMSReplySenderTest extends TestCase {
             Queue replyQueue = brokerController.connect(replyQueueName, true);
             CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties);
             MessageContext messageContext = null;
-            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory,
-                    null, null);
+            JMSReplySender replySender = new JMSReplySender(replyQueue, cachedJMSConnectionFactory, null, null);
             replySender.sendBack(messageContext);
-            Message replyMsg  = brokerController.receiveMessage(replyQueue);
+            Message replyMsg = brokerController.receiveMessage(replyQueue);
             Assert.assertNull("The message should be null", replyMsg);
         } finally {
             brokerController.disconnect();
@@ -266,7 +260,7 @@ public class JMSReplySenderTest extends TestCase {
 
     private void setTransportHeaders(org.apache.axis2.context.MessageContext axis2MsgCxt, String messageType,
                                      String correlationID) {
-        Map<String,Object> headerMap = new HashMap<>();
+        Map<String, Object> headerMap = new HashMap<>();
         headerMap.put(JMSConstants.JMS_COORELATION_ID, correlationID);
         headerMap.put(JMSConstants.JMS_DELIVERY_MODE, "1");
         headerMap.put(JMSConstants.JMS_EXPIRATION, "10");
@@ -318,8 +312,8 @@ public class JMSReplySenderTest extends TestCase {
         messageContext.setEnvelope(env);
     }
 
-    private void setSOAPEnvelopWithoutTypeTextMessageBody(MessageContext messageContext) throws AxisFault,
-            XMLStreamException {
+    private void setSOAPEnvelopWithoutTypeTextMessageBody(MessageContext messageContext)
+            throws AxisFault, XMLStreamException {
         SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
         SOAPEnvelope env = fac.createSOAPEnvelope();
         fac.createSOAPBody(env);

@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -19,17 +19,16 @@ package org.wso2.micro.integrator.inbound.endpoint.protocol.jms;
 
 import javax.xml.namespace.QName;
 
-
 /**
- * 
  * Common constants used by inbound JMS protocol
- * 
  */
 public class JMSConstants {
 
     public static enum JMSDestinationType {
         QUEUE, TOPIC
-    };
+    }
+
+    ;
 
     // Fix with EI-1622
     // No. of retries for JMS client polling that occurs before suspending polling.
@@ -39,8 +38,7 @@ public class JMSConstants {
     // Default time in milliseconds for the polling suspension period.
     public static final int DEFAULT_JMS_CLIENT_POLLING_SUSPENSION_PERIOD = 60000;
     // This property need to be enabled if the connection need to be reset after polling suspension.
-    public static final String JMS_CLIENT_CONNECTION_RESET_AFTER_POLLING_SUSPENSION
-            = "transport.jms.ResetConnectionOnPollingSuspension";
+    public static final String JMS_CLIENT_CONNECTION_RESET_AFTER_POLLING_SUSPENSION = "transport.jms.ResetConnectionOnPollingSuspension";
 
     public static final String TOPIC_PREFIX = "topic.";
     public static final String QUEUE_PREFIX = "queue.";
@@ -56,12 +54,16 @@ public class JMSConstants {
     public static final String DESTINATION_TYPE_TOPIC = "topic";
     public static String SESSION_TRANSACTED = "transport.jms.SessionTransacted";
     public static String SESSION_ACK = "transport.jms.SessionAcknowledgement";
-    public static String RECEIVER_TIMEOUT = "transport.jms.ReceiveTimeout";    
+    public static String RECEIVER_TIMEOUT = "transport.jms.ReceiveTimeout";
     public static String CONTENT_TYPE = "transport.jms.ContentType";
     public static String CONTENT_TYPE_PROPERTY = "transport.jms.ContentTypeProperty";
-    /** Namespace for JMS map payload representation */
+    /**
+     * Namespace for JMS map payload representation
+     */
     public static final String JMS_MAP_NS = "http://axis.apache.org/axis2/java/transports/jms/map-payload";
-    /** Root element name of JMS Map message payload representation */
+    /**
+     * Root element name of JMS Map message payload representation
+     */
     public static final String JMS_MAP_ELEMENT_NAME = "JMSMap";
     public static final String SET_ROLLBACK_ONLY = "SET_ROLLBACK_ONLY";
     public static final QName JMS_MAP_QNAME = new QName(JMS_MAP_NS, JMS_MAP_ELEMENT_NAME, "");
@@ -85,14 +87,14 @@ public class JMSConstants {
     public static final String NAMING_FACTORY_INITIAL = "java.naming.factory.initial";
     /**
      * Default Connection Factory
-     * */
+     */
     public static final String CONNECTION_STRING = "connectionfactory.QueueConnectionFactory";
 
     public static final String PARAM_CACHE_LEVEL = "transport.jms.CacheLevel";
     /**
      * A MessageContext property or client Option indicating the JMS message type
      */
-    public static final String JMS_MESSAGE_TYPE = "JMS_MESSAGE_TYPE";    
+    public static final String JMS_MESSAGE_TYPE = "JMS_MESSAGE_TYPE";
     /**
      * A MessageContext property or client Option indicating the JMS correlation id
      */
@@ -105,7 +107,7 @@ public class JMSConstants {
      * The Service level Parameter name indicating the [default] response destination of a service
      */
     public static final String PARAM_REPLY_DESTINATION = "transport.jms.ReplyDestination";
-    
+
     /**
      * The message type indicating a BytesMessage. See {@link JMS_MESSAGE_TYPE}
      */
@@ -113,10 +115,12 @@ public class JMSConstants {
     /**
      * The message type indicating a TextMessage. See {@link JMS_MESSAGE_TYPE}
      */
-    public static final String JMS_TEXT_MESSAGE = "JMS_TEXT_MESSAGE";    
-    
+    public static final String JMS_TEXT_MESSAGE = "JMS_TEXT_MESSAGE";
+
     public static final String PARAM_JMS_USERNAME = "transport.jms.UserName";
-    /** The password to use when obtaining a JMS Connection */
+    /**
+     * The password to use when obtaining a JMS Connection
+     */
     public static final String PARAM_JMS_PASSWORD = "transport.jms.Password";
     /**
      * The parameter indicating the JMS API specification to be used - if this
@@ -125,20 +129,26 @@ public class JMSConstants {
     public static final String PARAM_JMS_SPEC_VER = "transport.jms.JMSSpecVersion";
     /**
      * Maximum number of shared JMS Connections when sending messages out
-     * */
+     */
     public static final String MAX_JMS_CONNECTIONS = "transport.jms.MaxJMSConnections";
 
     public static final String MAX_JMS_SESSIONS = "transport.jms.MaxJMSSessions";
 
     public static final String PARAM_SUB_DURABLE = "transport.jms.SubscriptionDurable";
-    /** The name for the durable subscription See {@link PARAM_SUB_DURABLE} */
+    /**
+     * The name for the durable subscription See {@link PARAM_SUB_DURABLE}
+     */
     public static final String PARAM_DURABLE_SUB_NAME = "transport.jms.DurableSubscriberName";
     public static final String PARAM_DURABLE_SUB_CLIENT_ID = "transport.jms.DurableSubscriberClientID";
 
-    /** A message selector to be used when messages are sought for this service */
+    /**
+     * A message selector to be used when messages are sought for this service
+     */
     public static final String PARAM_MSG_SELECTOR = "transport.jms.MessageSelector";
-    /** Should a pub-sub connection receive messages published by itself? */
-    public static final String PARAM_PUBSUB_NO_LOCAL = "transport.jms.PubSubNoLocal";    
+    /**
+     * Should a pub-sub connection receive messages published by itself?
+     */
+    public static final String PARAM_PUBSUB_NO_LOCAL = "transport.jms.PubSubNoLocal";
     /**
      * Do not cache any JMS resources between tasks (when sending) or JMS CF's
      * (when sending)
@@ -169,9 +179,13 @@ public class JMSConstants {
      * transaction strategy)
      */
     public static final int CACHE_AUTO = 5;
-    /** The prefix that denotes JMSX properties */
+    /**
+     * The prefix that denotes JMSX properties
+     */
     public static final String JMSX_PREFIX = "JMSX";
-    /** The JMSXGroupID property */
+    /**
+     * The JMSXGroupID property
+     */
     public static final String JMSX_GROUP_ID = "JMSXGroupID";
     /**
      * A MessageContext property or client Option indicating the JMS delivery mode as an Integer or String
@@ -179,7 +193,9 @@ public class JMSConstants {
      * Value 2 - javax.jms.DeliveryMode.PERSISTENT
      */
     public static final String JMS_DELIVERY_MODE = "JMS_DELIVERY_MODE";
-    /** The JMSXGroupSeq property */
+    /**
+     * The JMSXGroupSeq property
+     */
     public static final String JMSX_GROUP_SEQ = "JMSXGroupSeq";
     /**
      * A MessageContext property or client Option indicating the JMS message expiration - a Long value
@@ -198,7 +214,7 @@ public class JMSConstants {
      * A MessageContext property or client Option indicating the JMS timestamp (Long specified as String)
      */
     public static final String JMS_TIMESTAMP = "JMS_TIMESTAMP";
-    
+
     /**
      * Does the JMS broker support hyphen in JMS message property names.
      */
@@ -217,7 +233,7 @@ public class JMSConstants {
     public static final String JMS_RETRY_DURATION = "transport.jms.retry.duration";
 
     /**
-     *  JMS 2.0 Parameters
+     * JMS 2.0 Parameters
      */
     public static final String PARAM_IS_SHARED_SUBSCRIPTION = "transport.jms.SharedSubscription";
 

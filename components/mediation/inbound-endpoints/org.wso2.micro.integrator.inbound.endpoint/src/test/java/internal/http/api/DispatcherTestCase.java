@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -43,12 +43,13 @@ public class DispatcherTestCase {
      */
     @Test
     public void testDispatching() throws Exception {
-        System.setProperty(org.wso2.micro.integrator.inbound.endpoint.internal.http.api.Constants.PREFIX_TO_ENABLE_INTERNAL_APIS
-                + "SampleAPI", "true");
+        System.setProperty(
+                org.wso2.micro.integrator.inbound.endpoint.internal.http.api.Constants.PREFIX_TO_ENABLE_INTERNAL_APIS
+                        + "SampleAPI", "true");
 
         ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis.xml");
         List<InternalAPI> apis = ConfigurationLoader.getHttpInternalApis();
-                Assert.assertEquals("Expected API not loaded", 1, apis.size());
+        Assert.assertEquals("Expected API not loaded", 1, apis.size());
 
         InternalAPIDispatcher internalAPIDispatcher = new InternalAPIDispatcher(apis);
         MessageContext synCtx = createMessageContext();
@@ -81,7 +82,7 @@ public class DispatcherTestCase {
     }
 
     @After
-    public void cleanup(){
+    public void cleanup() {
         ConfigurationLoader.destroy();
     }
 }

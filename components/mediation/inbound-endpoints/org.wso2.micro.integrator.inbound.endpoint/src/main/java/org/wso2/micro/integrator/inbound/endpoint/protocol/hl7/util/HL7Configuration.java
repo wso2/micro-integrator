@@ -1,17 +1,5 @@
-package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.io.InputStream;
-import java.io.IOException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.Properties;
-
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -23,10 +11,23 @@ import java.util.Properties;
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
+
+package org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.util;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class HL7Configuration {
     private static final Log log = LogFactory.getLog(HL7Configuration.class);
 
@@ -37,7 +38,8 @@ public class HL7Configuration {
     private HL7Configuration() {
         try {
             props = loadProperties("hl7.properties");
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
     }
 
     public static HL7Configuration getInstance() {
@@ -62,8 +64,7 @@ public class HL7Configuration {
             try {
                 intVal = Integer.valueOf(val);
             } catch (NumberFormatException e) {
-                log.warn("Invalid HL7 tuning property value. " + name +
-                        " must be an integer");
+                log.warn("Invalid HL7 tuning property value. " + name + " must be an integer");
                 return def;
             }
             if (log.isDebugEnabled()) {
@@ -149,7 +150,7 @@ public class HL7Configuration {
             log.debug("Loading the file '" + filePath + "' from classpath");
         }
 
-        InputStream in  = null;
+        InputStream in = null;
 
         //if we reach to this assume that the we may have to looking to the customer provided external location for the
         //given properties
@@ -162,7 +163,6 @@ public class HL7Configuration {
                 log.warn(msg);
             }
         }
-
 
         if (in == null) {
             in = cl.getResourceAsStream(filePath);

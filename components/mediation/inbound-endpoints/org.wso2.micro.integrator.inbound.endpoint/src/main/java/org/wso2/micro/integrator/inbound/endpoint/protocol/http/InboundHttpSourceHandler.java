@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -19,10 +19,10 @@
 package org.wso2.micro.integrator.inbound.endpoint.protocol.http;
 
 import org.apache.axis2.transport.base.threads.WorkerPool;
-import org.apache.http.HttpException;
-import org.apache.http.nio.NHttpServerConnection;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.HttpException;
+import org.apache.http.nio.NHttpServerConnection;
 import org.apache.synapse.transport.passthru.ProtocolState;
 import org.apache.synapse.transport.passthru.SourceContext;
 import org.apache.synapse.transport.passthru.SourceHandler;
@@ -62,29 +62,31 @@ public class InboundHttpSourceHandler extends SourceHandler {
             if (request == null) {
                 return;
             }
-            String method = request.getRequest() != null ? request.getRequest().getRequestLine().getMethod().toUpperCase() : "";
+            String method =
+                    request.getRequest() != null ? request.getRequest().getRequestLine().getMethod().toUpperCase() : "";
             //Get output Stream for write response for HTTP GET and HEAD methods
             OutputStream os = getOutputStream(method, request);
             // Handover Request to Worker Pool
 
             Pattern dispatchPattern = null;
 
-                WorkerPoolConfiguration workerPoolConfiguration =
-                           HTTPEndpointManager.getInstance().getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
-                if (workerPoolConfiguration != null) {
-                    workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
-                                                                   workerPoolConfiguration.getWorkerPoolSizeMax(),
-                                                                   workerPoolConfiguration.getWorkerPoolThreadKeepAliveSec(),
-                                                                   workerPoolConfiguration.getWorkerPoolQueuLength(),
-                                                                   workerPoolConfiguration.getThreadGroupID(),
-                                                                   workerPoolConfiguration.getThreadID());
-                }
+            WorkerPoolConfiguration workerPoolConfiguration = HTTPEndpointManager.getInstance()
+                    .getWorkerPoolConfiguration(SUPER_TENANT_DOMAIN_NAME, port);
+            if (workerPoolConfiguration != null) {
+                workerPool = sourceConfiguration.getWorkerPool(workerPoolConfiguration.getWorkerPoolCoreSize(),
+                                                               workerPoolConfiguration.getWorkerPoolSizeMax(),
+                                                               workerPoolConfiguration
+                                                                       .getWorkerPoolThreadKeepAliveSec(),
+                                                               workerPoolConfiguration.getWorkerPoolQueuLength(),
+                                                               workerPoolConfiguration.getThreadGroupID(),
+                                                               workerPoolConfiguration.getThreadID());
+            }
 
             if (workerPool == null) {
                 workerPool = sourceConfiguration.getWorkerPool();
             }
-            workerPool.execute
-                    (new InboundHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request, sourceConfiguration, os));
+            workerPool.execute(
+                    new InboundHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request, sourceConfiguration, os));
         } catch (HttpException e) {
             log.error("HttpException occurred when creating Source Request", e);
             informReaderError(conn);

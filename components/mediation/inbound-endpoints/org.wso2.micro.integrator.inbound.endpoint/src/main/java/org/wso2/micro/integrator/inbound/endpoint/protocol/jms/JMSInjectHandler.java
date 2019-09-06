@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -56,9 +56,7 @@ import javax.jms.Message;
 import javax.jms.TextMessage;
 
 /**
- * 
  * JMSInjectHandler use to mediate the received JMS message
- * 
  */
 public class JMSInjectHandler {
 
@@ -72,9 +70,9 @@ public class JMSInjectHandler {
     //Following is used when using reply destination
     private Connection connection;
     private Destination replyDestination;
-    
+
     public JMSInjectHandler(String injectingSeq, String onErrorSeq, boolean sequential,
-            SynapseEnvironment synapseEnvironment, Properties jmsProperties) {
+                            SynapseEnvironment synapseEnvironment, Properties jmsProperties) {
         this.injectingSeq = injectingSeq;
         this.onErrorSeq = onErrorSeq;
         this.sequential = sequential;
@@ -85,8 +83,8 @@ public class JMSInjectHandler {
 
     /**
      * Invoke the mediation logic for the passed message
-     * */
-    public boolean invoke(Object object, String name) throws SynapseException{
+     */
+    public boolean invoke(Object object, String name) throws SynapseException {
 
         Message msg = (Message) object;
         try {
@@ -97,8 +95,7 @@ public class JMSInjectHandler {
             CustomLogSetter.getInstance().setLogAppender(inboundEndpoint.getArtifactContainerName());
             String contentType = null;
 
-            String contentTypeProperty =
-                    jmsProperties.getProperty(JMSConstants.CONTENT_TYPE_PROPERTY);
+            String contentTypeProperty = jmsProperties.getProperty(JMSConstants.CONTENT_TYPE_PROPERTY);
             if (contentTypeProperty != null) {
                 contentType = msg.getStringProperty(contentTypeProperty);
             }
@@ -118,11 +115,11 @@ public class JMSInjectHandler {
             if (log.isDebugEnabled()) {
                 log.debug("Processed JMS Message of Content-type : " + contentType);
             }
-            MessageContext axis2MsgCtx =
-                    ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx).getAxis2MessageContext();
+            MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
+                    .getAxis2MessageContext();
             //setting transport headers
-            axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS
-                    , JMSUtils.getTransportHeaders(msg, axis2MsgCtx));
+            axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS,
+                                    JMSUtils.getTransportHeaders(msg, axis2MsgCtx));
             // set the JMS Message ID as the Message ID of the MessageContext
             try {
                 msgCtx.setMessageID(msg.getJMSMessageID());
@@ -134,42 +131,32 @@ public class JMSInjectHandler {
                 }
             } catch (JMSException ignore) {
                 log.warn("Error getting the COORELATION ID from the message.");
-            }  
-                      
+            }
+
             // Handle dual channel
             Destination replyTo = msg.getJMSReplyTo();
             if (replyTo != null) {
                 // Create the cachedJMSConnectionFactory with the existing
                 // connection
-                CachedJMSConnectionFactory cachedJMSConnectionFactory =
-                                                                        new CachedJMSConnectionFactory(
-                                                                                                       jmsProperties,
+                CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties,
                                                                                                        connection);
                 String strUserName = jmsProperties.getProperty(JMSConstants.PARAM_JMS_USERNAME);
                 String strPassword = jmsProperties.getProperty(JMSConstants.PARAM_JMS_PASSWORD);
-                JMSReplySender jmsReplySender =
-                                                new JMSReplySender(replyTo,
-                                                                   cachedJMSConnectionFactory,
-                                                                   strUserName, strPassword);
-                msgCtx.setProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER,
-                                   jmsReplySender);
+                JMSReplySender jmsReplySender = new JMSReplySender(replyTo, cachedJMSConnectionFactory, strUserName,
+                                                                   strPassword);
+                msgCtx.setProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER, jmsReplySender);
             } else if (replyDestination != null) {
                 // Create the cachedJMSConnectionFactory with the existing
                 // connection
-                CachedJMSConnectionFactory cachedJMSConnectionFactory =
-                                                                        new CachedJMSConnectionFactory(
-                                                                                                       jmsProperties,
+                CachedJMSConnectionFactory cachedJMSConnectionFactory = new CachedJMSConnectionFactory(jmsProperties,
                                                                                                        connection);
                 String strUserName = jmsProperties.getProperty(JMSConstants.PARAM_JMS_USERNAME);
                 String strPassword = jmsProperties.getProperty(JMSConstants.PARAM_JMS_PASSWORD);
-                JMSReplySender jmsReplySender =
-                                                new JMSReplySender(replyDestination,
-                                                                   cachedJMSConnectionFactory,
+                JMSReplySender jmsReplySender = new JMSReplySender(replyDestination, cachedJMSConnectionFactory,
                                                                    strUserName, strPassword);
-                msgCtx.setProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER,
-                                   jmsReplySender);
+                msgCtx.setProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER, jmsReplySender);
             }
-            
+
             // Determine the message builder to use
             Builder builder;
             if (contentType == null) {
@@ -181,8 +168,7 @@ public class JMSInjectHandler {
                 builder = BuilderUtil.getBuilderFromSelector(type, axis2MsgCtx);
                 if (builder == null) {
                     if (log.isDebugEnabled()) {
-                        log.debug("No message builder found for type '" + type
-                                + "'. Falling back to SOAP.");
+                        log.debug("No message builder found for type '" + type + "'. Falling back to SOAP.");
                     }
                     builder = new SOAPBuilder();
                 }
@@ -192,36 +178,36 @@ public class JMSInjectHandler {
             try {
                 if (msg instanceof TextMessage) {
                     String message = ((TextMessage) msg).getText();
-                    InputStream in = new AutoCloseInputStream(new ByteArrayInputStream(
-                            message.getBytes()));
+                    InputStream in = new AutoCloseInputStream(new ByteArrayInputStream(message.getBytes()));
                     documentElement = builder.processDocument(in, contentType, axis2MsgCtx);
                 } else if (msg instanceof BytesMessage) {
                     if (builder instanceof DataSourceMessageBuilder) {
-                        documentElement = ((DataSourceMessageBuilder) builder).processDocument(
-                                new BytesMessageDataSource((BytesMessage) msg), contentType,
-                                axis2MsgCtx);
+                        documentElement = ((DataSourceMessageBuilder) builder)
+                                .processDocument(new BytesMessageDataSource((BytesMessage) msg), contentType,
+                                                 axis2MsgCtx);
                     } else {
-                        documentElement = builder.processDocument(new BytesMessageInputStream(
-                                (BytesMessage) msg), contentType, axis2MsgCtx);
+                        documentElement = builder
+                                .processDocument(new BytesMessageInputStream((BytesMessage) msg), contentType,
+                                                 axis2MsgCtx);
                     }
                 } else if (msg instanceof MapMessage) {
                     documentElement = convertJMSMapToXML((MapMessage) msg);
                 }
             } catch (Exception ex) {
-                    // Handle message building error
-                    log.error("Error while building the message", ex);
-                    msgCtx.setProperty(SynapseConstants.ERROR_CODE, GenericConstants.INBOUND_BUILD_ERROR);
-                    msgCtx.setProperty(SynapseConstants.ERROR_MESSAGE, ex.getMessage());
-                    SequenceMediator faultSequence = getFaultSequence(msgCtx, inboundEndpoint);
-                    faultSequence.mediate(msgCtx);
+                // Handle message building error
+                log.error("Error while building the message", ex);
+                msgCtx.setProperty(SynapseConstants.ERROR_CODE, GenericConstants.INBOUND_BUILD_ERROR);
+                msgCtx.setProperty(SynapseConstants.ERROR_MESSAGE, ex.getMessage());
+                SequenceMediator faultSequence = getFaultSequence(msgCtx, inboundEndpoint);
+                faultSequence.mediate(msgCtx);
 
-                    if (isRollback(msgCtx)) {
-                        return false;
-                    }
-                    return true;
+                if (isRollback(msgCtx)) {
+                    return false;
                 }
+                return true;
+            }
 
-                // Setting JMSXDeliveryCount header on the message context
+            // Setting JMSXDeliveryCount header on the message context
             try {
                 int deliveryCount = msg.getIntProperty("JMSXDeliveryCount");
                 msgCtx.setProperty(JMSConstants.DELIVERY_COUNT, deliveryCount);
@@ -238,7 +224,7 @@ public class JMSInjectHandler {
                 return false;
             }
             SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration()
-                    .getSequence(injectingSeq);           
+                    .getSequence(injectingSeq);
             if (seq != null) {
                 if (log.isDebugEnabled()) {
                     log.debug("injecting message to sequence : " + injectingSeq);
@@ -261,10 +247,10 @@ public class JMSInjectHandler {
                 return false;
             }
         } catch (SynapseException se) {
-            throw se;            
+            throw se;
         } catch (Exception e) {
             log.error("Error while processing the JMS Message", e);
-            throw new SynapseException("Error while processing the JMS Message", e);            
+            throw new SynapseException("Error while processing the JMS Message", e);
         }
         return true;
     }
@@ -273,32 +259,29 @@ public class JMSInjectHandler {
         // First check for rollback property from synapse context
         Object rollbackProp = msgCtx.getProperty(JMSConstants.SET_ROLLBACK_ONLY);
         if (rollbackProp != null) {
-            if ((rollbackProp instanceof Boolean && ((Boolean) rollbackProp))
-                || (rollbackProp instanceof String && Boolean.valueOf((String) rollbackProp))) {
+            if ((rollbackProp instanceof Boolean && ((Boolean) rollbackProp)) || (rollbackProp instanceof String
+                    && Boolean.valueOf((String) rollbackProp))) {
                 return true;
             }
             return false;
         }
         // Then from axis2 context - This is for make it consistent with JMS Transport config parameters
-        rollbackProp =
-                (((Axis2MessageContext) msgCtx).getAxis2MessageContext()).getProperty(JMSConstants.SET_ROLLBACK_ONLY);
-        if ((rollbackProp instanceof Boolean && ((Boolean) rollbackProp))
-            || (rollbackProp instanceof String && Boolean.valueOf((String) rollbackProp))) {
+        rollbackProp = (((Axis2MessageContext) msgCtx).getAxis2MessageContext())
+                .getProperty(JMSConstants.SET_ROLLBACK_ONLY);
+        if ((rollbackProp instanceof Boolean && ((Boolean) rollbackProp)) || (rollbackProp instanceof String && Boolean
+                .valueOf((String) rollbackProp))) {
             return true;
         }
         return false;
     }
 
     /**
-     * 
-     * @param message
-     *            JMSMap message
+     * @param message JMSMap message
      * @return XML representation of JMS Map message
      */
     public static OMElement convertJMSMapToXML(MapMessage message) {
         OMFactory fac = OMAbstractFactory.getOMFactory();
-        OMNamespace jmsMapNS = OMAbstractFactory.getOMFactory().createOMNamespace(
-                JMSConstants.JMS_MAP_NS, "");
+        OMNamespace jmsMapNS = OMAbstractFactory.getOMFactory().createOMNamespace(JMSConstants.JMS_MAP_NS, "");
         OMElement jmsMap = fac.createOMElement(JMSConstants.JMS_MAP_ELEMENT_NAME, jmsMapNS);
         try {
             Enumeration names = message.getMapNames();
@@ -318,14 +301,14 @@ public class JMSInjectHandler {
     public void setConnection(Connection connection) {
         this.connection = connection;
     }
-    
+
     public void setReplyDestination(Destination replyDestination) {
         this.replyDestination = replyDestination;
     }
 
     /**
      * Create the initial message context for the file
-     * */
+     */
     private org.apache.synapse.MessageContext createMessageContext() {
         org.apache.synapse.MessageContext msgCtx = synapseEnvironment.createMessageContext();
         //Need to set this to build the message

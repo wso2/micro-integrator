@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2005-2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,22 +16,6 @@
  * under the License.
  */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.jms;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.nio.charset.UnsupportedCharsetException;
-
-import javax.activation.DataHandler;
-import javax.jms.BytesMessage;
-import javax.jms.Connection;
-import javax.jms.Destination;
-import javax.jms.JMSException;
-import javax.jms.MapMessage;
-import javax.jms.Message;
-import javax.jms.MessageProducer;
-import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNode;
@@ -51,6 +35,21 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.inbound.InboundResponseSender;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.factory.CachedJMSConnectionFactory;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
+import java.nio.charset.UnsupportedCharsetException;
+import javax.activation.DataHandler;
+import javax.jms.BytesMessage;
+import javax.jms.Connection;
+import javax.jms.Destination;
+import javax.jms.JMSException;
+import javax.jms.MapMessage;
+import javax.jms.Message;
+import javax.jms.MessageProducer;
+import javax.jms.Session;
+import javax.jms.TextMessage;
+
 public class JMSReplySender implements InboundResponseSender {
 
     private static final Log log = LogFactory.getLog(JMSReplySender.class.getName());
@@ -60,8 +59,7 @@ public class JMSReplySender implements InboundResponseSender {
     private String strUserName;
     private String strPassword;
 
-    public JMSReplySender(Destination replyTo,
-                          CachedJMSConnectionFactory cachedJMSConnectionFactory,
+    public JMSReplySender(Destination replyTo, CachedJMSConnectionFactory cachedJMSConnectionFactory,
                           String strUserName, String strPassword) {
         this.replyTo = replyTo;
         this.strUserName = strUserName;
@@ -71,15 +69,13 @@ public class JMSReplySender implements InboundResponseSender {
 
     /**
      * Send the reply back to the response queue/topic
-     * */
+     */
     public void sendBack(MessageContext synCtx) {
         log.debug("Begin sending reply to the destination queue.");
         MessageProducer producer = null;
         Session session = null;
         try {
-            Connection connection =
-                                    cachedJMSConnectionFactory.getConnection(strUserName,
-                                                                             strPassword);
+            Connection connection = cachedJMSConnectionFactory.getConnection(strUserName, strPassword);
             session = cachedJMSConnectionFactory.getSession(connection);
             producer = cachedJMSConnectionFactory.createProducer(session, replyTo, true);
             Message message = createJMSMessage(synCtx, session, null);
@@ -98,32 +94,26 @@ public class JMSReplySender implements InboundResponseSender {
                 session.close();
             } catch (Exception e) {
                 log.debug("ERROR: Unable to close the session");
-            }            
+            }
         }
     }
 
     /**
      * Create a JMS Message from the given MessageContext and using the given
      * session
-     * 
-     * @param msgContext
-     *            the MessageContext
-     * @param session
-     *            the JMS session
-     * @param contentTypeProperty
-     *            the message property to be used to store the content type
+     *
+     * @param msgContext          the MessageContext
+     * @param session             the JMS session
+     * @param contentTypeProperty the message property to be used to store the content type
      * @return a JMS message from the context and session
-     * @throws JMSException
-     *             on exception
-     * @throws AxisFault
-     *             on exception
+     * @throws JMSException on exception
+     * @throws AxisFault    on exception
      */
-    private Message createJMSMessage(MessageContext synCtx, Session session,
-                                     String contentTypeProperty) throws JMSException {
+    private Message createJMSMessage(MessageContext synCtx, Session session, String contentTypeProperty)
+            throws JMSException {
 
         Message message = null;
-        org.apache.axis2.context.MessageContext msgContext =
-                                                             ((Axis2MessageContext) synCtx).getAxis2MessageContext();
+        org.apache.axis2.context.MessageContext msgContext = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
         String msgType = getProperty(msgContext, JMSConstants.JMS_MESSAGE_TYPE);
         String jmsPayloadType = guessMessageType(msgContext);
         if (jmsPayloadType == null) {
@@ -135,14 +125,10 @@ public class JMSReplySender implements InboundResponseSender {
                 throw new JMSException("Unable to get the message formatter to use");
             }
 
-            String contentType =
-                                 messageFormatter.getContentType(msgContext, format,
-                                                                 msgContext.getSoapAction());
+            String contentType = messageFormatter.getContentType(msgContext, format, msgContext.getSoapAction());
 
-            boolean useBytesMessage =
-                                      msgType != null &&
-                                              JMSConstants.JMS_BYTE_MESSAGE.equals(msgType) ||
-                                              contentType.indexOf(HTTPConstants.HEADER_ACCEPT_MULTIPART_RELATED) > -1;
+            boolean useBytesMessage = msgType != null && JMSConstants.JMS_BYTE_MESSAGE.equals(msgType)
+                    || contentType.indexOf(HTTPConstants.HEADER_ACCEPT_MULTIPART_RELATED) > -1;
 
             OutputStream out;
             StringWriter sw;
@@ -180,10 +166,8 @@ public class JMSReplySender implements InboundResponseSender {
         } else if (JMSConstants.JMS_BYTE_MESSAGE.equals(jmsPayloadType)) {
             message = session.createBytesMessage();
             BytesMessage bytesMsg = (BytesMessage) message;
-            OMElement wrapper =
-                                msgContext.getEnvelope()
-                                          .getBody()
-                                          .getFirstChildWithName(BaseConstants.DEFAULT_BINARY_WRAPPER);
+            OMElement wrapper = msgContext.getEnvelope().getBody()
+                    .getFirstChildWithName(BaseConstants.DEFAULT_BINARY_WRAPPER);
             OMNode omNode = wrapper.getFirstOMChild();
             if (omNode != null && omNode instanceof OMText) {
                 Object dh = ((OMText) omNode).getDataHandler();
@@ -191,10 +175,11 @@ public class JMSReplySender implements InboundResponseSender {
                     try {
                         ((DataHandler) dh).writeTo(new BytesMessageOutputStream(bytesMsg));
                     } catch (IOException e) {
-                        log.error("Error serializing binary content of element : " +
-                                  BaseConstants.DEFAULT_BINARY_WRAPPER, e);
-                        throw new JMSException("Error serializing binary content of element : " +
-                                               BaseConstants.DEFAULT_BINARY_WRAPPER);
+                        log.error(
+                                "Error serializing binary content of element : " + BaseConstants.DEFAULT_BINARY_WRAPPER,
+                                e);
+                        throw new JMSException("Error serializing binary content of element : "
+                                                       + BaseConstants.DEFAULT_BINARY_WRAPPER);
                     }
                 }
             }
@@ -202,15 +187,13 @@ public class JMSReplySender implements InboundResponseSender {
         } else if (JMSConstants.JMS_TEXT_MESSAGE.equals(jmsPayloadType)) {
             message = session.createTextMessage();
             TextMessage txtMsg = (TextMessage) message;
-            txtMsg.setText(msgContext.getEnvelope().getBody()
-                                     .getFirstChildWithName(BaseConstants.DEFAULT_TEXT_WRAPPER)
-                                     .getText());
+            txtMsg.setText(msgContext.getEnvelope().getBody().getFirstChildWithName(BaseConstants.DEFAULT_TEXT_WRAPPER)
+                                   .getText());
         } else if (JMSConstants.JMS_MAP_MESSAGE.equalsIgnoreCase(jmsPayloadType)) {
             message = session.createMapMessage();
-            JMSUtils.convertXMLtoJMSMap(msgContext.getEnvelope()
-                                                  .getBody()
-                                                  .getFirstChildWithName(JMSConstants.JMS_MAP_QNAME),
-                                        (MapMessage) message);
+            JMSUtils.convertXMLtoJMSMap(
+                    msgContext.getEnvelope().getBody().getFirstChildWithName(JMSConstants.JMS_MAP_QNAME),
+                    (MapMessage) message);
         }
 
         // set the JMS correlation ID if specified
@@ -233,8 +216,7 @@ public class JMSReplySender implements InboundResponseSender {
         return message;
     }
 
-    private void setProperty(Message message, org.apache.axis2.context.MessageContext msgCtx,
-                             String key) {
+    private void setProperty(Message message, org.apache.axis2.context.MessageContext msgCtx, String key) {
 
         String value = getProperty(msgCtx, key);
         if (value != null) {
@@ -251,7 +233,6 @@ public class JMSReplySender implements InboundResponseSender {
     }
 
     /**
-     * 
      * check the first element of the SOAP body, do we have content wrapped
      * using the
      * default wrapper elements for binary
@@ -261,11 +242,10 @@ public class JMSReplySender implements InboundResponseSender {
      * for JMS but just get the payload in its native format
      * Guess the message type to use for JMS looking at the message contexts'
      * envelope
-     * 
-     * @param msgContext
-     *            the message context
+     *
+     * @param msgContext the message context
      * @return JMSConstants.JMS_BYTE_MESSAGE or JMSConstants.JMS_TEXT_MESSAGE or
-     *         null
+     * null
      */
     private String guessMessageType(org.apache.axis2.context.MessageContext msgContext) {
         OMElement firstChild = msgContext.getEnvelope().getBody().getFirstElement();

@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -26,7 +26,6 @@ import org.apache.synapse.transport.passthru.core.ssl.SSLConfiguration;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.inbound.endpoint.persistence.PersistenceUtils;
 
-import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import javax.xml.namespace.QName;
 
 /**
  * {@code ConfigurationLoader} contains utilities to load configuration file content required for Internal APIs
@@ -143,11 +143,11 @@ public class ConfigurationLoader {
 
                                     } else {
                                         log.warn("No protocol specified for InternalAPI : " + name
-                                                + ". Hence it will not be enabled.");
+                                                         + ". Hence it will not be enabled.");
                                     }
                                 } else {
                                     log.warn("Protocol not defined for InternalAPI : " + name
-                                            + ". Hence it will not be enabled.");
+                                                     + ". Hence it will not be enabled.");
                                 }
                             } else {
                                 handleException("Class name is null for Internal InternalAPI name : " + name);
@@ -178,7 +178,8 @@ public class ConfigurationLoader {
                         handler.setName(handlerName);
                         handlerList.add(handler);
                     } else {
-                        handleException("Class attribute is not defined in " + handlerElement.getAttributeValue(NAME_ATT));
+                        handleException(
+                                "Class attribute is not defined in " + handlerElement.getAttributeValue(NAME_ATT));
                     }
                 } else {
                     handleException("Name not defined in one or more handlers");
@@ -196,7 +197,7 @@ public class ConfigurationLoader {
                 return (InternalAPIHandler) obj;
             } else {
                 throw new SynapseException("Error creating Internal InternalAPIHandler. "
-                        + "The InternalAPIHandler should be of type InternalAPIHandler");
+                                                   + "The InternalAPIHandler should be of type InternalAPIHandler");
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new SynapseException("Error creating Internal InternalAPIHandler for class name : " + classFQName, e);
@@ -210,7 +211,8 @@ public class ConfigurationLoader {
             if (obj instanceof InternalAPI) {
                 return (InternalAPI) obj;
             } else {
-                throw new SynapseException("Error creating Internal InternalAPI. The InternalAPI should be of type InternalAPI");
+                throw new SynapseException(
+                        "Error creating Internal InternalAPI. The InternalAPI should be of type InternalAPI");
             }
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new SynapseException("Error creating Internal InternalAPI for class name : " + classFQName, e);
@@ -275,7 +277,8 @@ public class ConfigurationLoader {
      */
     public static boolean isInternalApiEnabled() {
 
-        File synapseProperties = Paths.get(MicroIntegratorBaseUtils.getCarbonConfigDirPath(), "synapse.properties").toFile();
+        File synapseProperties = Paths.get(MicroIntegratorBaseUtils.getCarbonConfigDirPath(), "synapse.properties")
+                .toFile();
         Properties properties = new Properties();
         try (InputStream inputStream = new FileInputStream(synapseProperties)) {
             properties.load(inputStream);
@@ -284,15 +287,13 @@ public class ConfigurationLoader {
         } catch (IOException e) {
             handleException("Error while reading synapse.properties file", e);
         }
-        String internalInboundEnabledProperty = properties.getProperty(
-                Constants.INTERNAL_HTTP_API_ENABLED);
+        String internalInboundEnabledProperty = properties.getProperty(Constants.INTERNAL_HTTP_API_ENABLED);
         if (internalInboundEnabledProperty == null) {
             return false;
         }
         boolean isEnabled = Boolean.parseBoolean(internalInboundEnabledProperty);
         if (isEnabled) {
-            internalInboundHttpPortProperty = properties.getProperty(
-                    Constants.INTERNAL_HTTP_API_PORT);
+            internalInboundHttpPortProperty = properties.getProperty(Constants.INTERNAL_HTTP_API_PORT);
             internalInboundHttpsPortProperty = properties.getProperty(Constants.INTERNAL_HTTPS_API_PORT);
         }
         return isEnabled;
@@ -363,7 +364,7 @@ public class ConfigurationLoader {
         }
 
         return new SSLConfiguration(keyStore, trustStore, clientAuth, httpsProtocols, revocationVerifier, sslProtocol,
-                prefferedCiphers);
+                                    prefferedCiphers);
     }
 
     public static void destroy() {

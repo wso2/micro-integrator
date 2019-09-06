@@ -1,20 +1,20 @@
 /*
-*  Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
-*
-*  WSO2 Inc. licenses this file to you under the Apache License,
-*  Version 2.0 (the "License"); you may not use this file except
-*  in compliance with the License.
-*  You may obtain a copy of the License at
-*
-*    http://www.apache.org/licenses/LICENSE-2.0
-*
-* Unless required by applicable law or agreed to in writing,
-* software distributed under the License is distributed on an
-* "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-* KIND, either express or implied.  See the License for the
-* specific language governing permissions and limitations
-* under the License.
-*/
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 
 package org.wso2.micro.integrator.inbound.endpoint.protocol.mqtt;
 
@@ -80,13 +80,10 @@ public class MqttClientManager {
             MqttAsyncCallback callback = mqttCallbackMap.get(identifier);
             //this is the case where recreation of same bounded inbound endpoint for server host
             //server port, client id
-            String msg = "Client ID: " +
-                    callback.getMqttConnectionConsumer().getMqttAsyncClient().getClientId() +
-                    " Server Host: " + callback.getMqttConnectionConsumer()
-                    .getMqttConnectionFactory().getServerHost() +
-                    " Server Port: " + callback.getMqttConnectionConsumer()
-                    .getMqttConnectionFactory().getServerPort() +
-                    " is bound to existing MQTT Inbound Endpoint.";
+            String msg = "Client ID: " + callback.getMqttConnectionConsumer().getMqttAsyncClient().getClientId()
+                    + " Server Host: " + callback.getMqttConnectionConsumer().getMqttConnectionFactory().getServerHost()
+                    + " Server Port: " + callback.getMqttConnectionConsumer().getMqttConnectionFactory().getServerPort()
+                    + " is bound to existing MQTT Inbound Endpoint.";
             log.error(msg);
             throw new SynapseException(msg);
         }

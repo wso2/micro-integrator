@@ -1,17 +1,17 @@
 /*
- *  Copyright (c) 2005-2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -80,19 +80,16 @@ public class KAFKAInjectHandler implements InjectHandler {
             builder = new SOAPBuilder();
         } else {
             int index = contentType.indexOf(';');
-            String type = index > 0 ? contentType.substring(0, index)
-                    : contentType;
+            String type = index > 0 ? contentType.substring(0, index) : contentType;
             try {
                 builder = BuilderUtil.getBuilderFromSelector(type, axis2MsgCtx);
             } catch (AxisFault axisFault) {
-                log.error("Error while creating message builder :: "
-                        + axisFault.getMessage(), axisFault);
+                log.error("Error while creating message builder :: " + axisFault.getMessage(), axisFault);
 
             }
             if (builder == null) {
                 if (log.isDebugEnabled()) {
-                    log.debug("No message builder found for type '" + type
-                            + "'. Falling back to SOAP.");
+                    log.debug("No message builder found for type '" + type + "'. Falling back to SOAP.");
                 }
                 builder = new SOAPBuilder();
             }
@@ -101,19 +98,16 @@ public class KAFKAInjectHandler implements InjectHandler {
         // set the message payload to the message context
         InputStream in = new AutoCloseInputStream(new ByteArrayInputStream(msg));
         try {
-            documentElement = builder.processDocument(in, contentType,
-                    axis2MsgCtx);
+            documentElement = builder.processDocument(in, contentType, axis2MsgCtx);
         } catch (AxisFault axisFault) {
-            log.error("Error while processing message :: "
-                    + axisFault.getMessage(), axisFault);
+            log.error("Error while processing message :: " + axisFault.getMessage(), axisFault);
         }
 
         try {
-            msgCtx.setEnvelope(TransportUtils
-                    .createSOAPEnvelope(documentElement));
+            msgCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
         } catch (AxisFault axisFault) {
-            log.error("Error while setting message payload to the message context :: "
-                    + axisFault.getMessage(), axisFault);
+            log.error("Error while setting message payload to the message context :: " + axisFault.getMessage(),
+                      axisFault);
         }
         // Inject the message to the sequence.
 
@@ -121,15 +115,15 @@ public class KAFKAInjectHandler implements InjectHandler {
             log.error("Sequence name not specified. Sequence : " + injectingSeq);
             return false;
         }
-        SequenceMediator seq = (SequenceMediator) synapseEnvironment
-                .getSynapseConfiguration().getSequence(injectingSeq);        
+        SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration()
+                .getSequence(injectingSeq);
         if (seq != null) {
             if (log.isDebugEnabled()) {
                 log.debug("injecting message to sequence : " + injectingSeq);
             }
             if (!seq.isInitialized()) {
                 seq.init(synapseEnvironment);
-            }         
+            }
             seq.setErrorHandler(onErrorSeq);
             synapseEnvironment.injectInbound(msgCtx, seq, sequential);
         } else {
@@ -143,8 +137,7 @@ public class KAFKAInjectHandler implements InjectHandler {
      * Create the initial message context for kafka
      */
     private org.apache.synapse.MessageContext createMessageContext() {
-        org.apache.synapse.MessageContext msgCtx = synapseEnvironment
-                .createMessageContext();
+        org.apache.synapse.MessageContext msgCtx = synapseEnvironment.createMessageContext();
         MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
                 .getAxis2MessageContext();
         axis2MsgCtx.setServerSide(true);

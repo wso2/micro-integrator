@@ -1,5 +1,5 @@
-/**
- * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+/*
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -25,7 +25,6 @@ import org.wso2.micro.integrator.inbound.endpoint.common.InboundOneTimeTriggerRe
 import org.wso2.micro.integrator.inbound.endpoint.protocol.PollingConstants;
 
 import java.util.Properties;
-
 
 /**
  * Listener to get a rabbitmq client from the factory
@@ -56,21 +55,19 @@ public class RabbitMQListener extends InboundOneTimeTriggerRequestProcessor {
 
         this.sequential = true;
         if (rabbitmqProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL) != null) {
-            this.sequential =
-                    Boolean.parseBoolean(rabbitmqProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
+            this.sequential = Boolean
+                    .parseBoolean(rabbitmqProperties.getProperty(PollingConstants.INBOUND_ENDPOINT_SEQUENTIAL));
         }
 
         this.coordination = true;
         if (rabbitmqProperties.getProperty(PollingConstants.INBOUND_COORDINATION) != null) {
-            this.coordination =
-                    Boolean.parseBoolean(rabbitmqProperties.getProperty
-                            (PollingConstants.INBOUND_COORDINATION));
+            this.coordination = Boolean
+                    .parseBoolean(rabbitmqProperties.getProperty(PollingConstants.INBOUND_COORDINATION));
         }
 
         rabbitMQConnectionFactory = new RabbitMQConnectionFactory(rabbitmqProperties);
 
-        injectHandler =
-                new RabbitMQInjectHandler(injectingSeq, onErrorSeq, sequential, synapseEnvironment);
+        injectHandler = new RabbitMQInjectHandler(injectingSeq, onErrorSeq, sequential, synapseEnvironment);
     }
 
     @Override
@@ -83,7 +80,7 @@ public class RabbitMQListener extends InboundOneTimeTriggerRequestProcessor {
     public void init() {
         log.info("RABBITMQ inbound endpoint " + name + " initializing ...");
         connectionConsumer = new RabbitMQConnectionConsumer(rabbitMQConnectionFactory, rabbitmqProperties,
-                injectHandler);
+                                                            injectHandler);
         connectionConsumer.setInboundName(name);
         start();
     }

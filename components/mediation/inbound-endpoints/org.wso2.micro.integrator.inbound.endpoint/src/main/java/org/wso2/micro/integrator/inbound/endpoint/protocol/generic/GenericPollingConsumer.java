@@ -1,17 +1,19 @@
 /*
- *  Copyright (c) 2012, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *        http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS,
- *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied. See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
  */
 
 package org.wso2.micro.integrator.inbound.endpoint.protocol.generic;
@@ -45,10 +47,10 @@ public abstract class GenericPollingConsumer {
     protected boolean sequential;
 
     private static final Log log = LogFactory.getLog(GenericPollingConsumer.class);
-    
-    public GenericPollingConsumer(Properties properties, String name,
-            SynapseEnvironment synapseEnvironment, long scanInterval, String injectingSeq,
-            String onErrorSeq, boolean coordination, boolean sequential) {
+
+    public GenericPollingConsumer(Properties properties, String name, SynapseEnvironment synapseEnvironment,
+                                  long scanInterval, String injectingSeq, String onErrorSeq, boolean coordination,
+                                  boolean sequential) {
         this.properties = properties;
         this.name = name;
         this.synapseEnvironment = synapseEnvironment;
@@ -60,23 +62,24 @@ public abstract class GenericPollingConsumer {
     }
 
     public abstract Object poll();
-    
+
     public void destroy() {
         log.info("Default destroy invoked. Not overwritten.");
     }
 
-    protected boolean injectMessage(String strMessage, String contentType){  
+    protected boolean injectMessage(String strMessage, String contentType) {
         InputStream in = new AutoCloseInputStream(new ByteArrayInputStream(strMessage.getBytes()));
         return injectMessage(in, contentType);
     }
-    
-    protected boolean injectMessage(InputStream in, String contentType){        
+
+    protected boolean injectMessage(InputStream in, String contentType) {
         try {
             org.apache.synapse.MessageContext msgCtx = createMessageContext();
             if (log.isDebugEnabled()) {
                 log.debug("Processed Custom inbound EP Message of Content-type : " + contentType);
-            }             
-            MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext)msgCtx).getAxis2MessageContext();
+            }
+            MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
+                    .getAxis2MessageContext();
             // Determine the message builder to use
             Builder builder;
             if (contentType == null) {
@@ -88,13 +91,12 @@ public abstract class GenericPollingConsumer {
                 builder = BuilderUtil.getBuilderFromSelector(type, axis2MsgCtx);
                 if (builder == null) {
                     if (log.isDebugEnabled()) {
-                        log.debug("No message builder found for type '" + type +
-                                "'. Falling back to SOAP.");
+                        log.debug("No message builder found for type '" + type + "'. Falling back to SOAP.");
                     }
                     builder = new SOAPBuilder();
                 }
-            }           
-            OMElement documentElement = builder.processDocument(in, contentType, axis2MsgCtx);                   
+            }
+            OMElement documentElement = builder.processDocument(in, contentType, axis2MsgCtx);
             //Inject the message to the sequence.             
             msgCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
             if (injectingSeq == null || injectingSeq.equals("")) {
@@ -102,7 +104,7 @@ public abstract class GenericPollingConsumer {
                 return false;
             }
             SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration()
-                    .getSequence(injectingSeq);            
+                    .getSequence(injectingSeq);
             if (seq != null) {
                 if (log.isDebugEnabled()) {
                     log.debug("injecting message to sequence : " + injectingSeq);
@@ -114,21 +116,22 @@ public abstract class GenericPollingConsumer {
                 if (!synapseEnvironment.injectInbound(msgCtx, seq, sequential)) {
                     return false;
                 }
-            }else{
+            } else {
                 log.error("Sequence: " + injectingSeq + " not found");
-            }                          
+            }
         } catch (Exception e) {
-            log.error("Error while processing the Custom Inbound EP Message.");                
+            log.error("Error while processing the Custom Inbound EP Message.");
         }
         return true;
     }
-    
+
     /**
      * Create the initial message context for the file
-     * */
+     */
     private org.apache.synapse.MessageContext createMessageContext() {
         org.apache.synapse.MessageContext msgCtx = synapseEnvironment.createMessageContext();
-        MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext)msgCtx).getAxis2MessageContext();
+        MessageContext axis2MsgCtx = ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx)
+                .getAxis2MessageContext();
         axis2MsgCtx.setServerSide(true);
         axis2MsgCtx.setMessageID(UUIDGenerator.getUUID());
         return msgCtx;

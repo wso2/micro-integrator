@@ -1,54 +1,43 @@
 /*
- *  Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
- *  WSO2 Inc. licenses this file to you under the Apache License,
- *  Version 2.0 (the "License"); you may not use this file except
- *  in compliance with the License.
- *  You may obtain a copy of the License at
+ * WSO2 Inc. licenses this file to you under the Apache License,
+ * Version 2.0 (the "License"); you may not use this file except
+ * in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ * http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
 package org.wso2.micro.integrator.inbound.endpoint.common;
 
-import org.apache.axis2.description.Parameter;
-import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.inbound.InboundRequestProcessor;
 import org.apache.synapse.startup.quartz.StartUpController;
 import org.apache.synapse.task.TaskDescription;
 import org.apache.synapse.task.TaskManager;
-import org.wso2.micro.integrator.inbound.endpoint.osgi.service.ServiceReferenceHolder;
 import org.wso2.micro.integrator.inbound.endpoint.persistence.InboundEndpointsDataStore;
-import org.wso2.micro.integrator.mediation.ntask.NTaskTaskManager;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.PollingConstants;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSTask;
+import org.wso2.micro.integrator.mediation.ntask.NTaskTaskManager;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.StringTokenizer;
 
 import static org.wso2.micro.integrator.inbound.endpoint.common.Constants.SUPER_TENANT_DOMAIN_NAME;
 
 /**
- * 
  * This class provides the common implementation for polling protocol processors
- * 
  */
 public abstract class InboundRequestProcessorImpl implements InboundRequestProcessor {
 
@@ -61,24 +50,23 @@ public abstract class InboundRequestProcessorImpl implements InboundRequestProce
     private HashMap<Thread, InboundRunner> inboundRunnersThreadsMap = new HashMap<>();
     private static final Log log = LogFactory.getLog(InboundRequestProcessorImpl.class);
     private InboundEndpointsDataStore dataStore;
-    
+
     protected final static String COMMON_ENDPOINT_POSTFIX = "--SYNAPSE_INBOUND_ENDPOINT";
-    
-    public InboundRequestProcessorImpl(){
-   	 dataStore = InboundEndpointsDataStore.getInstance();
+
+    public InboundRequestProcessorImpl() {
+        dataStore = InboundEndpointsDataStore.getInstance();
     }
-    
+
     /**
-     * 
      * Based on the coordination option schedule the task with NTASK or run as a
      * background thread
-     * 
+     *
      * @param task
      * @param endpointPostfix
      */
     protected void start(InboundTask task, String endpointPostfix) {
-        log.info("Starting the inbound endpoint " + name + ", with coordination " + coordination
-                + ". Interval : " + interval + ". Type : " + endpointPostfix);
+        log.info("Starting the inbound endpoint " + name + ", with coordination " + coordination + ". Interval : "
+                         + interval + ". Type : " + endpointPostfix);
         if (coordination) {
             try {
                 TaskDescription taskDescription = new TaskDescription();
@@ -105,12 +93,12 @@ public abstract class InboundRequestProcessorImpl implements InboundRequestProce
                     }
                 }
             } catch (Exception e) {
-                log.error("Error starting the inbound endpoint " + name
-                        + ". Unable to schedule the task. " + e.getLocalizedMessage(), e);
+                log.error("Error starting the inbound endpoint " + name + ". Unable to schedule the task. " + e
+                        .getLocalizedMessage(), e);
             }
         } else {
 
-                startInboundRunnerThread(task, SUPER_TENANT_DOMAIN_NAME, false);
+            startInboundRunnerThread(task, SUPER_TENANT_DOMAIN_NAME, false);
         }
     }
 
@@ -137,9 +125,9 @@ public abstract class InboundRequestProcessorImpl implements InboundRequestProce
 
             Iterator itr = inboundRunnersThreadsMap.entrySet().iterator();
             while (itr.hasNext()) {
-                Map.Entry entry = (Map.Entry)itr.next();
-                Thread thread = (Thread)entry.getKey();
-                InboundRunner inboundRunner = (InboundRunner)entry.getValue();
+                Map.Entry entry = (Map.Entry) itr.next();
+                Thread thread = (Thread) entry.getKey();
+                InboundRunner inboundRunner = (InboundRunner) entry.getValue();
 
                 inboundRunner.terminate();
                 thread.interrupt();

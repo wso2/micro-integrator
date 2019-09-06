@@ -43,11 +43,11 @@
 
     <modules>
         <module>components</module>
-<!--        <module>samples</module>-->
+        <!--        <module>samples</module>-->
         <module>features</module>
         <module>p2-profile</module>
         <module>distribution</module>
-<!--        <module>integration</module>-->
+        <!--        <module>integration</module>-->
     </modules>
 
     <dependencyManagement>
@@ -105,16 +105,6 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.task</artifactId>
-                <version>${product.mi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.inbound.endpoint.persistence</artifactId>
-                <version>${product.mi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.inbound.endpoint.osgi</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>
@@ -389,7 +379,7 @@
                 <version>${google.guava.version}</version>
             </dependency>
 
-<!--            Inbound Endpoint Depedencies-->
+            <!--            Inbound Endpoint Depedencies-->
             <dependency>
                 <groupId>ca.uhn.hapi.wso2</groupId>
                 <artifactId>hapi</artifactId>
@@ -652,7 +642,8 @@
         <junit.version>4.8.2</junit.version>
         <cxf.wso2.version>3.0.9.wso2v1</cxf.wso2.version>
         <jetty.wso2.version>8.1.17.v20150415.wso2v1</jetty.wso2.version>
-        <netty.version>4.0.39.Final</netty.version><jacoco.agent.version>0.8.2</jacoco.agent.version>
+        <netty.version>4.0.39.Final</netty.version>
+        <jacoco.agent.version>0.8.2</jacoco.agent.version>
         <activemq.version>5.2.0</activemq.version>
         <activemq.broker.version>5.15.2</activemq.broker.version>
         <aries.version>1.1.0</aries.version>

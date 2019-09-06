@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2005-2014, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
+ * KIND, either express or implied. See the License for the
  * specific language governing permissions and limitations
  * under the License.
  */
@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Collection;
 
-
 /**
  * Listener class for HttpInboundEndpoint which is trigger by inbound core and
  * responsible for start ListeningEndpoint related to given port
@@ -46,8 +45,8 @@ public class InboundHttpListener implements InboundRequestProcessor {
 
     public InboundHttpListener(InboundProcessorParams params) {
         processorParams = params;
-        String portParam = params.getProperties().getProperty(
-                InboundHttpConstants.INBOUND_ENDPOINT_PARAMETER_HTTP_PORT);
+        String portParam = params.getProperties()
+                .getProperty(InboundHttpConstants.INBOUND_ENDPOINT_PARAMETER_HTTP_PORT);
         try {
             port = Integer.parseInt(portParam);
         } catch (NumberFormatException e) {
@@ -59,10 +58,10 @@ public class InboundHttpListener implements InboundRequestProcessor {
     @Override
     public void init() {
         if (isPortUsedByAnotherApplication(port)) {
-            log.warn("Port " + port + " used by inbound endpoint " + name + " is already used by another application " +
-                     "hence undeploying inbound endpoint");
-            throw new SynapseException("Port " + port + " used by inbound endpoint " + name + " is already used by " +
-                    "another application.");
+            log.warn("Port " + port + " used by inbound endpoint " + name + " is already used by another application "
+                             + "hence undeploying inbound endpoint");
+            throw new SynapseException("Port " + port + " used by inbound endpoint " + name + " is already used by "
+                                               + "another application.");
         } else {
             HTTPEndpointManager.getInstance().startEndpoint(port, name, processorParams);
         }
@@ -78,11 +77,10 @@ public class InboundHttpListener implements InboundRequestProcessor {
         throw new SynapseException(msg, e);
     }
 
-
     protected boolean isPortUsedByAnotherApplication(int port) {
-        if (PassThroughInboundEndpointHandler.isEndpointRunning(port) ){
+        if (PassThroughInboundEndpointHandler.isEndpointRunning(port)) {
             return false;
-        }  else {
+        } else {
             try {
                 ServerSocket srv = new ServerSocket(port);
                 srv.close();
@@ -94,15 +92,15 @@ public class InboundHttpListener implements InboundRequestProcessor {
         }
     }
 
-    protected void destoryInbound(){
+    protected void destoryInbound() {
         if (processorParams.getSynapseEnvironment() != null) {
             Collection<InboundEndpoint> inboundEndpoints = processorParams.getSynapseEnvironment().
-                       getSynapseConfiguration().getInboundEndpoints();
+                    getSynapseConfiguration().getInboundEndpoints();
             {
                 for (InboundEndpoint inboundEndpoint : inboundEndpoints) {
                     if (inboundEndpoint.getName().equals(name)) {
                         processorParams.getSynapseEnvironment().
-                                   getSynapseConfiguration().removeInboundEndpoint(name);
+                                getSynapseConfiguration().removeInboundEndpoint(name);
                         break;
                     }
                 }
