@@ -143,7 +143,7 @@ public class CarbonServerManager {
                 }
             }));
 
-            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 60, TimeUnit.SECONDS);
+            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 100, TimeUnit.SECONDS);
 
             if (!inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE)) {
                 throw new RuntimeException("Server initialization failed");
@@ -223,9 +223,13 @@ public class CarbonServerManager {
         String srcDirectory =
                 (System.getProperty("basedir", ".")) + File.separator + "target" + File.separator + "samples"
                         + File.separator;
-        log.info("Copying resources from " + srcDirectory);
-        FileUtils.copyDirectoryToDirectory(new File(srcDirectory), new File(carbonHome));
-        log.info("Completed copying resources");
+        File srcFile = new File(srcDirectory);
+
+        if ( srcFile.exists() ) {
+            log.info("Copying resources from " + srcDirectory);
+            FileUtils.copyDirectoryToDirectory( srcFile , new File(carbonHome));
+            log.info("Completed copying resources");
+        }
     }
 
     public synchronized void serverShutdown(int portOffset, boolean isRestart) throws AutomationFrameworkException {
