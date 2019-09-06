@@ -96,15 +96,14 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediators.server.feature:${product.mi.version}
                                 </featureArtifactDef>
-                                <!--<featureArtifactDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.light.initializer.server.feature:${carbon.mediation.version}
-                                </featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.initializer.feature:${product.mi.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.ei:org.wso2.micro.integrator.task.server.feature:${project.version}-->
-<!--                                </featureArtifactDef>-->
+                               <!-- TODO This is moved to MI but commented out as it seems to be unnecessary.
+                                Check later and remvoe
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.task.server.feature:${project.version}
+                                </featureArtifactDef> -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.relay.server.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
@@ -127,16 +126,10 @@
                                     org.wso2.ei:org.wso2.micro.integrator.mediation.ntask.feature:${project.version}
                                 </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.configadmin.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.admin.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.application.mgt.synapse.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.application.deployer.synapse.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.event.sink.server.feature:${carbon.mediation.version}-->
@@ -317,18 +310,10 @@
                                     <version>${synapse.version}</version>
                                 </feature>
                                 <!--1 Carbon Mediation -->
-                                <!--<feature>
-                                    <id>org.wso2.carbon.mediation.light.initializer.server.feature.group</id>
-                                    <version>${carbon.mediation.version}</version>
-                                </feature>-->
                                 <feature>
                                     <id>org.wso2.micro.integrator.mediators.server.feature.group</id>
                                     <version>${product.mi.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.micro.integrator.task.server.feature.group</id>-->
-<!--                                    <version>${project.version}</version>-->
-<!--                                </feature>-->
                                 <feature>
                                     <id>org.wso2.carbon.relay.server.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
@@ -354,10 +339,11 @@
                                     <id>org.wso2.micro.integrator.mediation.ntask.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.mediation.configadmin.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                               <!--TODO This feature corresponds to Admin Services, hence we might not need this
+                                <feature>
+                                    <id>org.wso2.carbon.mediation.configadmin.server.feature.group</id>
+                                    <version>${carbon.mediation.version}</version>
+                                </feature>-->
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.mediation.admin.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
@@ -380,10 +366,6 @@
 <!--                                </feature>-->
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.application.mgt.synapse.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.application.deployer.synapse.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
 <!--                                <feature>-->
