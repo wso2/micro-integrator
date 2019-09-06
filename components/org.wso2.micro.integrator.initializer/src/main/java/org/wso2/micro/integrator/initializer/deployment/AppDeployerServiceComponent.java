@@ -28,6 +28,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.core.util.CarbonException;
@@ -183,8 +184,8 @@ public class AppDeployerServiceComponent {
 
         // Register application deployment handlers
         //TODO
-//        cAppDeploymentManager.registerDeploymentHandler(new FileRegistryResourceDeployer(
-//                synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
+       cAppDeploymentManager.registerDeploymentHandler(new FileRegistryResourceDeployer(
+                synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
 
         cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
