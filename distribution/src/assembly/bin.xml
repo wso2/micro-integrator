@@ -332,6 +332,13 @@
                 <exclude>empty.txt</exclude>
             </excludes>
         </fileSet>
+        <fileSet>
+            <directory>./src/resources/config-tool</directory>
+            <outputDirectory>wso2mi-${pom.version}/repository/resources/conf</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
     </fileSets>
 
     <files>
@@ -394,6 +401,13 @@
             <fileMode>644</fileMode>
         </file>
 
+        <file>
+            <source>src/conf/deployment.toml</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>deployment.toml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
         <file>
             <source>src/conf/axis2.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
@@ -587,6 +601,20 @@
             <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
             <includes>
                 <include>org.wso2.ei:org.wso2.carbon.micro.integrator.server:jar</include>
+                <include>org.wso2.config.mapper:config-mapper:jar</include>
+                <include>org.antlr:antlr4-runtime:jar</include>
+                <include>com.hubspot.jinjava:jinjava:jar</include>
+                <include>net.consensys.cava:cava-toml:jar</include>
+                <include>com.google.code.gson:gson:jar</include>
+                <include>com.google.guava:guava:jar</include>
+                <include>org.slf4j:slf4j-api:jar</include>
+                <include>org.jsoup:jsoup:jar</include>
+                <include>com.google.re2j:re2j:jar</include>
+                <include>com.fasterxml.jackson.core:jackson-core:jar</include>
+                <include>com.fasterxml.jackson.core:jackson-databind:jar</include>
+                <include>com.fasterxml.jackson.core:jackson-annotations:jar</include>
+                <include>org.apache.commons:commons-lang3:jar</include>
+                <include>commons-codec:commons-codec:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>

@@ -319,6 +319,7 @@ do
     -Dcarbon.use.registry.repo=false \
     -DworkerNode=false \
     -Dorg.apache.cxf.io.CachedOutputStream.Threshold=104857600 \
+    -Dcarbon.new.config.dir.path="$CARBON_HOME/repository/resources/conf" \
     $NODE_PARAMS \
     org.wso2.carbon.bootstrap.Bootstrap $*
     status=$?

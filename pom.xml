@@ -235,6 +235,11 @@
                 <type>mar</type>
                 <version>${axis2.wso2.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.config.mapper</groupId>
+                <artifactId>config-mapper</artifactId>
+                <version>${config.mapper.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -368,6 +373,7 @@
         <testng.version>6.11</testng.version>
         <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
+        <config.mapper.version>1.0.2</config.mapper.version>
     </properties>
 
     <repositories>

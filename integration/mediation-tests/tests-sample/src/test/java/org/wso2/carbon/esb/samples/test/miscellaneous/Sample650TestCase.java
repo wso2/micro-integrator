@@ -72,7 +72,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
         carbonLogReader.start();
         serverManager.applyMIConfigurationWithRestart(new File(
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
-                        + File.separator + "miscellaneous" + File.separator + "axis2.xml"));
+                        + File.separator + "miscellaneous" + File.separator + "deployment.toml"));
 
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(50, TimeUnit.SECONDS).
                 until(isManagementApiAwailable(carbonLogReader));

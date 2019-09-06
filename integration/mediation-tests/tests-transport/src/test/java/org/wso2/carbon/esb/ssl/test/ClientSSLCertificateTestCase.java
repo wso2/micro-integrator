@@ -47,7 +47,7 @@ public class ClientSSLCertificateTestCase extends ESBIntegrationTest {
     public void initialize() throws Exception {
         super.init();
         serverManager = new ServerConfigurationManager(new AutomationContext());
-        serverManager.applyMIConfigurationWithRestart(new File(CONFIG_LOCATION + "axis2.xml"));
+        serverManager.applyMIConfigurationWithRestart(new File(CONFIG_LOCATION + "deployment.toml"));
         super.init();
     }
 

@@ -46,7 +46,7 @@ public class NhttpBaseTestCase extends ESBIntegrationTest {
                 .applyMIConfiguration(Paths.get(getESBResourceLocation(), "nhttp", "transport", "axis2.xml").toFile());
         serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
-                        + "json" + File.separator + "synapse.properties"));
+                        + "json" + File.separator + "deployment.toml"));
 
     }
 

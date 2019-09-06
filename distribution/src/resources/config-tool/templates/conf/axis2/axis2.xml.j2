@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<axisconfig name="AxisJava2.0" xmlns:svns="http://org.wso2.securevault/configuration">
+
+    <!-- ================================================= -->
+    <!--                  Parameters                       -->
+    <!-- ================================================= -->
+
+    <!-- Change this to true if you want to enable hot deployment of services -->
+    <parameter name="hotdeployment" locked="false">true</parameter>
+    <!-- Change this to true if you want to enable hot update of services -->
+    <parameter name="hotupdate" locked="false">true</parameter>
+
+    <!-- Change this to true if you want to enable MTOM -->
+    <parameter name="enableMTOM" locked="false">{{server.enableMTOM}}</parameter>
+    <!-- Change this to true if you want to enable SwA -->
+    <parameter name="enableSwA" locked="false">{{server.enableSwA}}</parameter>
+
+    <!-- If you want to enable file caching for attachments change this to true -->
+    <parameter name="cacheAttachments" locked="false">false</parameter>
+    <!-- Attachment file caching location relative to CARBON_HOME -->
+    <parameter name="attachmentDIR" locked="false">work/mtom</parameter>
+    <!-- Attachment file cache threshold size -->
+    <parameter name="sizeThreshold" locked="false">4000</parameter>
+
+    <!-- Completely disable REST handling in Axis2/Synapse if the value is true -->
+    <parameter name="disableREST" locked="false">false</parameter>
+
+    <!-- Sandesha2 persistance storage manager -->
+    <parameter name="Sandesha2StorageManager" locked="false">inmemory</parameter>
+
+    <!-- Our HTTP endpoints can handle both REST and SOAP under the following service path. In -->
+    <!-- case of a servlet container, if you change this you have to manually change the -->
+    <!-- settings of your servlet container to map this context path to proper Axis2 servlets -->
+    <parameter name="servicePath" locked="false">services</parameter>
+
+    <!--the directory in which .aar services are deployed inside axis2 repository-->
+    <parameter name="ServicesDirectory">axis2services</parameter>
+
+    <!--If turned on with use the Accept header of the request to determine the contentType of the
+    response-->
+    <parameter name="httpContentNegotiation">{{server.http_content_negotiation | default('true')}}</parameter>
+
+    <!--the directory in which modules are deployed inside axis2 repository-->
+    <parameter name="ModulesDirectory">axis2modules</parameter>
+
+    <!-- User agent and the server details to be used in the http communication -->
+    <parameter name="userAgent" locked="true">{{server.userAgent}}</parameter>
+    <parameter name="server" locked="true">{{server.serverDetails}}</parameter>
+
+    <!-- During a fault, stacktrace can be sent with the fault message. The following flag -->
+    <!-- will control that behaviour -->
+    <parameter name="sendStacktraceDetailsWithFaults" locked="false">false</parameter>
+
+    <!-- If there aren't any information available to find out the fault reason, we set the -->
+    <!-- message of the exception as the faultreason/Reason. But when a fault is thrown from -->
+    <!-- a service or some where, it will be wrapped by different levels. Due to this the -->
+    <!-- initial exception message can be lost. If this flag is set then, Axis2 tries to get -->
+    <!-- the first exception and set its message as the faultreason/Reason. -->
+    <parameter name="DrillDownToRootCauseForFaultReason" locked="false">false</parameter>
+
+    <!-- Set the flag to true if you want to enable transport level session management -->
+    <parameter name="manageTransportSession" locked="false">true</parameter>
+
+    <!-- This will give out the timout of the configuration contexts, in milliseconds -->
+    <parameter name="ConfigContextTimeoutInterval" locked="false">30000</parameter>
+
+    <!-- Synapse Configuration file location relative to CARBON_HOME -->
+    <parameter name="SynapseConfig.ConfigurationFile" locked="false">{{server.synapse_config_file}}</parameter>
+    <!-- Synapse Home parameter -->
+    <parameter name="SynapseConfig.HomeDirectory" locked="false">.</parameter>
+    <!-- Resolve root used to resolve synapse references like schemas inside a WSDL -->
+    <parameter name="SynapseConfig.ResolveRoot" locked="false">.</parameter>
+    <!-- Synapse Server name parameter -->
+    <parameter name="SynapseConfig.ServerName" locked="false">localhost</parameter>
+    <!-- Returns 401 for UT secured scenario with incorrect/missing credentials -->
+    <parameter name="enableBasicAuth" locked="false">true</parameter>
+
+    <!-- To override repository/services you need to uncomment following parameter and value -->
+    <!-- SHOULD be absolute file path. -->
+    <!--<parameter name="ServicesDirectory" locked="false">service</parameter>-->
+
+    <!-- To override repository/modules you need to uncomment following parameter and value -->
+    <!-- SHOULD be absolute file path. -->
+    <!--<parameter name="ModulesDirectory" locked="false">modules</parameter>-->
+
+    <!-- If you have a frontend host which exposes this webservice using a different public URL -->
+    <!-- use this parameter to override autodetected url -->
+    <!--<parameter name="httpFrontendHostUrl" locked="false">https://someotherhost/context</parameter>-->
+
+    <!-- ================================================= -->
+    <!--                Message Receivers                  -->
+    <!-- ================================================= -->
+
+    <!-- This is the set of default Message Receivers for the system, if you want to have -->
+    <!-- message receivers for any of the other Message exchange Patterns (MEP) implement it -->
+    <!-- and add the implementation class to here, so that you can refer from any operation -->
+    <!-- Note : You can override this for particular service by adding this same element to the -->
+    <!-- services.xml with your preferences -->
+    <messageReceivers>
+        <messageReceiver mep="http://www.w3.org/ns/wsdl/in-only"
+                         class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+        <messageReceiver mep="http://www.w3.org/ns/wsdl/robust-in-only"
+                         class="org.apache.axis2.rpc.receivers.RPCInOnlyMessageReceiver"/>
+        <messageReceiver mep="http://www.w3.org/ns/wsdl/in-out"
+                         class="org.apache.axis2.rpc.receivers.RPCMessageReceiver"/>
+    </messageReceivers>
+
+    <!-- ================================================= -->
+    <!--                Message Formatters                 -->
+    <!-- ================================================= -->
+
+    <!-- Following content type to message formatter mapping can be used to implement support -->
+    <!-- for different message format serializations in Axis2. These message formats are -->
+    <!-- expected to be resolved based on the content type. -->
+    <messageFormatters>
+        <messageFormatter contentType="application/x-www-form-urlencoded"
+                          class="{{message_formatters.form_urlencoded}}"/>
+        <messageFormatter contentType="multipart/form-data"
+                          class="{{message_formatters.multipart_form_data}}"/>
+        <messageFormatter contentType="application/xml"
+                          class="{{message_formatters.application_xml}}"/>
+        <messageFormatter contentType="text/xml"
+                          class="{{message_formatters.text_xml}}"/>
+        <messageFormatter contentType="application/soap+xml"
+                          class="{{message_formatters.soap_xml}}"/>
+        <messageFormatter contentType="text/plain"
+                          class="{{message_formatters.text_plain}}"/>
+        <messageFormatter contentType="application/json"
+                          class="{{message_formatters.application_json}}"/>
+        <messageFormatter contentType="application/json/badgerfish"
+                          class="{{message_formatters.json_badgerfish}}"/>
+        <messageFormatter contentType="text/javascript"
+                          class="{{message_formatters.text_javascript}}"/>
+        <messageFormatter contentType="application/octet-stream"
+                          class="{{message_formatters.octet_stream}}"/>
+        <messageFormatter contentType="application/binary"
+                          class="{{message_formatters.application_binary}}"/>
+        {% for message_formatter in custom_message_formatters %}
+        <messageFormatter contentType="{{message_formatter.content_type}}"
+                          class="{{message_formatter.class}}"/>
+        {% endfor %}
+    </messageFormatters>
+
+    <!-- ================================================= -->
+    <!--                Message Builders                   -->
+    <!-- ================================================= -->
+
+    <!-- Following content type to builder mapping can be used to implement support for -->
+    <!-- different message formats in Axis2. These message formats are expected to be -->
+    <!-- resolved based on the content type. -->
+    <messageBuilders>
+        <messageBuilder contentType="application/xml"
+                        class="{{message_builders.application_xml}}"/>
+        <messageBuilder contentType="application/x-www-form-urlencoded"
+                        class="{{message_builders.form_urlencoded}}"/>
+        <messageBuilder contentType="multipart/form-data"
+                        class="{{message_builders.multipart_form_data}}"/>
+        <messageBuilder contentType="application/json"
+                        class="{{message_builders.application_json}}"/>
+        <messageBuilder contentType="application/json/badgerfish"
+                        class="{{message_builders.json_badgerfish}}"/>
+        <messageBuilder contentType="text/javascript"
+                        class="{{message_builders.text_javascript}}"/>
+        <messageBuilder contentType="text/plain"
+                        class="{{message_builders.text_plain}}"/>
+        <messageBuilder contentType="application/octet-stream"
+                        class="{{message_builders.octet_stream}}"/>
+        <messageBuilder contentType="application/binary"
+                        class="{{message_builders.application_binary}}"/>
+        {% for message_builder in custom_message_builders %}
+        <messageBuilder contentType="{{message_builder.content_type}}"
+                        class="{{message_builder.class}}"/>
+        {% endfor %}
+    </messageBuilders>
+
+    <!-- ================================================= -->
+    <!--             Transport Ins (Listeners)             -->
+    <!-- ================================================= -->
+
+    {% if transport.http.listener.enable == true %}
+    <transportReceiver name="http" class="{{transport.http.listener.class}}">
+        {% for parameter_key,parameter_value in transport.http.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportReceiver>
+    {% endif %}
+
+    <transportReceiver name="https" class="{{transport.https.listener.class}}">
+        {% for parameter_key,parameter_value in transport.https.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+        <parameter name="keystore" locked="false">
+            <KeyStore>
+                <Location>{{transport.http.listener.keystore.file_name}}</Location>
+                <Type>{{transport.http.listener.keystore.type}}</Type>
+                <Password>{{transport.http.listener.keystore.password}}</Password>
+                <KeyPassword>{{transport.http.listener.keystore.key_password}}</KeyPassword>
+            </KeyStore>
+        </parameter>
+        <parameter name="truststore" locked="false">
+            <TrustStore>
+                <Location>{{transport.http.listener.truststore.file_name}}</Location>
+                <Type>{{transport.http.listener.truststore.type}}</Type>
+                <Password>{{transport.http.listener.truststore.password}}</Password>
+            </TrustStore>
+        </parameter>
+        {% if transport.http.listener.verify_client is defined %}
+        <parameter name="SSLVerifyClient">{{transport.http.listener.verify_client}}</parameter>
+        {% endif %}
+
+        {% if transport.http.listener.ssl_profile.file_path is defined %}
+        <!-- ============================================== -->
+        <!-- Configuration for Listener Dynamic SSL Profile loading. -->
+        <!-- Configured for 10 mins. -->
+        <!-- ============================================== -->
+        <parameter name="dynamicSSLProfilesConfig">
+            <filePath>{{transport.http.listener.ssl_profile.file_path}}</filePath>
+            <fileReadInterval>{{transport.http.listener.ssl_profile.read_interval}}</fileReadInterval>
+        </parameter>
+        {% endif %}
+    </transportReceiver>
+    <transportReceiver name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportReceiver"/>
+    {% if transport.vfs.listener.enable == true %}
+    <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener">
+        <parameter locked="false" name="keystore.identity.location">{{transport.vfs.listener.keystore.file_name}}</parameter>
+        <parameter locked="false" name="keystore.identity.type">{{transport.vfs.listener.keystore.type}}</parameter>
+        <parameter locked="false" name="keystore.identity.store.password">{{transport.vfs.listener.keystore.password}}</parameter>
+        <parameter locked="false" name="keystore.identity.key.password">{{transport.vfs.listener.keystore.key_password}}</parameter>
+        <parameter locked="false" name="keystore.identity.alias">{{transport.vfs.listener.keystore.alias}}</parameter>
+    </transportReceiver>
+    {% endif %}
+    {% if transport.mail.listener.enable == true %}
+    <transportReceiver name="{{transport.mail.listener.name}}" class="org.apache.axis2.transport.mail.MailTransportListener">
+    </transportReceiver>
+    {% endif %}
+    {% if transport.jms.listener is defined %}
+    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
+        {% for listener in transport.jms.listener %}
+        <parameter name="{{listener.name}}" locked="false">
+            {% for name,value in listener.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+            {% endfor %}
+        </parameter>
+        {% endfor %}
+    </transportReceiver>
+    {% endif %}
+    {% if transport.fix.listener.enable == true %}
+    <transportReceiver name="fix" class="org.apache.synapse.transport.fix.FIXTransportListener"/>
+    {% endif %}
+    {% if transport.hl7.listener.enable == true %}
+    <transportReceiver name="hl7" class="org.wso2.carbon.business.messaging.hl7.transport.HL7TransportListener">
+        {% for parameter_key,parameter_value in transport.hl7.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportReceiver>
+    {% endif %}
+    <!-- SAP Transport Listeners -->
+    {% if transport.sap.listener.idoc.enable == true %}
+    <transportReceiver name="idoc" class="{{transport.sap.listener.idoc.class}}"/>
+    {% endif %}
+    {% if transport.sap.listener.bapi.enable == true %}
+    <transportReceiver name="bapi" class="{{transport.sap.listener.bapi.class}}"/>
+    {% endif %}
+    {% if transport.rabbitmq.listener.AMQPConnectionFactory is defined %}
+    <transportReceiver name="{{transport.rabbitmq.listener.name}}" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
+        <parameter name="AMQPConnectionFactory" locked="false">
+            {% for parameter_key,parameter_value in transport.rabbitmq.listener.AMQPConnectionFactory.parameter.items() %}
+            <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+            {% endfor %}
+        </parameter>
+    </transportReceiver>
+    {% endif %}
+    {% if transport.mqtt.listener.enable == true %}
+    <transportReceiver name="mqtt" class="org.apache.axis2.transport.mqtt.MqttListener">
+        <parameter locked="false" name="mqttConFactory">
+            {% for parameter_key,parameter_value in transport.mqtt.listener.parameter.items() %}
+            <parameter locked="false" name="{{parameter_key}}">{{parameter_value}}</parameter>
+            {% endfor %}
+        </parameter>
+    </transportReceiver>
+    {% endif %}
+
+    {% for transport_item in custom_transport.listener %}
+    <transportReceiver name="{{transport_item.protocol}}" class="{{transport_item.class}}">
+        {% for parameter_key,parameter_value in transport_item.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+        {% if transport_item.key_store is defined %}
+        <parameter name="keystore" locked="false">
+            <KeyStore>
+                <Location>{{transport_item.keystore.file_name}}</Location>
+                <Type>{{transport_item.keystore.type}}</Type>
+                <Password>{{transport_item.keystore.password}}</Password>
+                <KeyPassword>{{transport_item.keystore.key_password}}</KeyPassword>
+            </KeyStore>
+        </parameter>
+        {% endif %}
+        {% if transport_item.trust_store is defined %}
+        <parameter name="truststore" locked="false">
+            <TrustStore>
+                <Location>{{transport_item.truststore.file_name}}</Location>
+                <Type>{{transport_item.truststore.type}}</Type>
+                <Password>{{transport_item.truststore.password}}</Password>
+            </TrustStore>
+        </parameter>
+        {% endif %}
+        {% if transport_item.ssl_profile.file_path is defined %}
+        <parameter name="dynamicSSLProfilesConfig">
+            <filePath>{{transport_item.ssl_profile.file_path}}</filePath>
+            <fileReadInterval>{{transport_item.ssl_profile.read_interval}}</fileReadInterval>
+        </parameter>
+        {% endif %}
+    </transportReceiver>
+    {% endfor %}
+    {% if transport.tcp.listener.enable == true %}
+    <transportReceiver name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportListener">
+        {% for parameter_key,parameter_value in transport.tcp.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
+        {% endfor %}
+        <parameter name="transport.tcp.contentType">{% for content_item in transport.tcp.listener.content_type %}{{content_item}}{% if loop.index < transport.tcp.listener.content_type|length %},{% endif %}{% endfor %}</parameter>
+    </transportReceiver>
+    {% endif %}
+    {% if transport.udp.listener.enable == true %}
+    <transportReceiver name="udp" class="org.apache.axis2.transport.udp.UDPListener"/>
+    {% endif %}
+    {% if transport.msmq.listener.enable == true %}
+    <transportReceiver name="msmq" class="org.apache.axis2.transport.msmq.MSMQListener">
+        {% for parameter_key,parameter_value in transport.msmq.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportReceiver>
+    {% endif %}
+    <!-- ================================================= -->
+    <!--             Transport Outs (Senders)              -->
+    <!-- ================================================= -->
+
+    {% if transport.http.sender.enable == true %}
+    <transportSender name="http" class="{{transport.http.sender.class}}">
+        <parameter name="non-blocking" locked="false">true</parameter>
+        {% if transport.http.sender.non_proxy_hosts is defined %}
+        <parameter name="http.nonProxyHosts" locked="false">{% for parameter_value in transport.http.sender.non_proxy_hosts %}{{parameter_value}}{% if loop.index < transport.http.sender.non_proxy_hosts|length %}|{% endif %}{% endfor %}</parameter>
+        {% endif %}
+        {% for parameter_key,parameter_value in transport.http.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+        {% if transport.http.proxy_profile is defined %}
+        <parameter name="proxyProfiles">
+            {% for profile in transport.http.proxy_profile %}
+            <profile>
+                <targetHosts>{% for hostitem in profile.target_hosts.toList() %}{{hostitem}}{% if loop.index < profile.target_hosts.toList()|length %},{% endif %}{% endfor %}</targetHosts>
+                <proxyHost>{{profile.proxy_host}}</proxyHost>
+                <proxyPort>{{profile.proxy_port}}</proxyPort>
+                {% if profile.proxy_username is defined %}
+                <proxyUserName>{{profile.proxy_username}}</proxyUserName>
+                {% endif %}
+                {% if profile.proxy_password is defined %}
+                <proxyPassword>{{profile.proxy_password}}</proxyPassword>
+                {% endif %}
+                {% if profile.bypass_hosts is defined %}
+                <bypass>{% for bypassitem in profile.bypass_hosts.toList() %}{{bypassitem}}{% if loop.index < profile.bypass_hosts.toList()|length %},{% endif %}{% endfor %}</bypass>
+                {% endif %}
+            </profile>
+            {% endfor %}
+        </parameter>
+        {% endif %}
+    </transportSender>
+    {% endif %}
+    <transportSender name="https" class="{{transport.https.sender.class}}">
+        <parameter name="non-blocking" locked="false">true</parameter>
+        {% for parameter_key,parameter_value in transport.https.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+        <parameter name="keystore" locked="false">
+            <KeyStore>
+                <Location>{{transport.http.sender.keystore.file_name}}</Location>
+                <Type>{{transport.http.sender.keystore.type}}</Type>
+                <Password>{{transport.http.sender.keystore.password}}</Password>
+                <KeyPassword>{{transport.http.sender.keystore.key_password}}</KeyPassword>
+            </KeyStore>
+        </parameter>
+        <parameter name="truststore" locked="false">
+            <TrustStore>
+                <Location>{{transport.http.sender.truststore.file_name}}</Location>
+                <Type>{{transport.http.sender.truststore.type}}</Type>
+                <Password>{{transport.http.sender.truststore.password}}</Password>
+            </TrustStore>
+        </parameter>
+        {% if transport.http.sender.ssl_profile.file_path is defined %}
+        <!-- ============================================== -->
+        <!-- Configuration for Dynamic SSL Profile loading. -->
+        <!-- Configured for 10 mins. -->
+        <!-- ============================================== -->
+        <parameter name="dynamicSSLProfilesConfig">
+            <filePath>{{transport.http.sender.ssl_profile.file_path}}</filePath>
+            <fileReadInterval>{{transport.http.sender.ssl_profile.read_interval}}</fileReadInterval>
+        </parameter>
+        {% endif %}
+    </transportSender>
+    {% if transport.jms.sender is defined %}
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
+        {% for sender in transport.jms.sender %}
+        <parameter name="{{sender.name}}" locked="false">
+            {% for name,value in sender.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+            {% endfor %}
+        </parameter>
+        {% endfor %}
+    </transportSender>
+    {% endif %}
+    <transportSender name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportSender"/>
+    {% if transport.local.sender.nonblocking.enable == true %}
+    <transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>
+    {% endif %}
+    {% if transport.vfs.sender.enable == true %}
+    <transportSender name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportSender"/>
+    {% endif %}
+    {% for mail_sender in transport.mail.sender %}
+    <transportSender name="{{mail_sender.name}}" class="org.apache.axis2.transport.mail.MailTransportSender">
+        {% for parameter_key,parameter_value in mail_sender.parameter.items() %}
+        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
+    {% endfor %}
+    {% if transport.fix.sender.enable == true %}
+    <transportSender name="fix" class="org.apache.synapse.transport.fix.FIXTransportSender"/>
+    {% endif %}
+    {% if transport.hl7.sender.enable == true %}
+    <transportSender name="hl7" class="org.wso2.carbon.business.messaging.hl7.transport.HL7TransportSender">
+        {% for parameter_key,parameter_value in transport.hl7.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
+    {% endif %}
+    <!-- SAP Transport Senders -->
+    {% if transport.sap.sender.idoc.enable == true %}
+    <transportSender name="idoc" class="{{transport.sap.sender.idoc.class}}"/>
+    {% endif %}
+    {% if transport.sap.sender.bapi.enable == true %}
+    <transportSender name="bapi" class="{{transport.sap.sender.bapi.class}}"/>
+    {% endif %}
+    {% if transport.rabbitmq.sender.AMQPConnectionFactory is defined %}
+    <transportReceiver name="{{transport.rabbitmq.sender.name}}" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender">
+        <parameter name="AMQPConnectionFactory" locked="false">
+            {% for parameter_key,parameter_value in transport.rabbitmq.sender.AMQPConnectionFactory.parameter.items() %}
+            <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+            {% endfor %}
+        </parameter>
+    </transportReceiver>
+    {% endif %}
+    {% if transport.ws.sender.enable == true %}
+    <transportSender name="ws" class="org.wso2.carbon.websocket.transport.WebsocketTransportSender">
+        {% for name,value in transport.ws.sender.parameter.items() %}
+        <parameter name="{{name}}" locked="false">{{value}}</parameter>
+        {% endfor %}
+    </transportSender>
+    {% endif %}
+    {% if transport.wss.sender.enable == true %}
+    <transportSender name="wss" class="org.wso2.carbon.websocket.transport.WebsocketTransportSender">
+        {% for name,value in transport.wss.sender.parameter.items() %}
+        <parameter name="{{name}}" locked="false">{{value}}</parameter>
+        {% endfor %}
+        <parameter name="ws.trust.store" locked="false">
+            <ws.trust.store.location>{{transport.wss.sender.truststore_location}}</ws.trust.store.location>
+            <ws.trust.store.Password>{{transport.wss.sender.truststore_password}}</ws.trust.store.Password>
+        </parameter>
+    </transportSender>
+    {% endif %}
+    {% for transport_item in custom_transport.sender %}
+    <transportSender name="{{transport_item.protocol}}" class="{{transport_item.class}}">
+        {% for parameter_key,parameter_value in transport_item.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+        {% if transport_item.key_store is defined %}
+        <parameter name="keystore" locked="false">
+            <KeyStore>
+                <Location>{{transport_item.keystore.file_name}}</Location>
+                <Type>{{transport_item.keystore.type}}</Type>
+                <Password>{{transport_item.keystore.password}}</Password>
+                <KeyPassword>{{transport_item.keystore.key_password}}</KeyPassword>
+            </KeyStore>
+        </parameter>
+        {% endif %}
+        {% if transport_item.trust_store is defined %}
+        <parameter name="truststore" locked="false">
+            <TrustStore>
+                <Location>{{transport_item.truststore.file_name}}</Location>
+                <Type>{{transport_item.truststore.type}}</Type>
+                <Password>{{transport_item.truststore.password}}</Password>
+            </TrustStore>
+        </parameter>
+        {% endif %}
+        {% if transport_item.ssl_profile.file_path is defined %}
+        <parameter name="dynamicSSLProfilesConfig">
+            <filePath>{{transport_item.ssl_profile.file_path}}</filePath>
+            <fileReadInterval>{{transport_item.ssl_profile.read_interval}}</fileReadInterval>
+        </parameter>
+        {% endif %}
+    </transportSender>
+    {% endfor %}
+    {% if transport.tcp.sender.enable == true %}
+    <transportSender name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportSender"/>
+    {% endif %}
+    {% if transport.udp.sender.enable == true %}
+    <transportSender name="udp" class="org.apache.axis2.transport.udp.UDPSender"/>
+    {% endif %}
+    {% if transport.msmq.sender.enable == true %}
+    <transportSender name="msmq" class="org.apache.axis2.transport.msmq.MSMQSender"/>
+    {% endif %}
+    {% if transport.mqtt.sender.enable == true %}
+    <transportSender name="mqtt" class="org.apache.axis2.transport.mqtt.MqttSender"/>
+    {% endif %}
+    <!-- ================================================= -->
+    <!--             Global Engaged Modules                -->
+    <!-- ================================================= -->
+
+    <!-- Comment this out to disable Addressing -->
+    <module ref="addressing"/>
+
+    <!-- ================================================= -->
+    <!--                   Transactions                    -->
+    <!-- ================================================= -->
+
+    <!--
+        Uncomment and configure the following section to enable transactions support
+    -->
+    <!--<transaction timeout="30000">
+        <parameter name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
+        <parameter name="java.naming.provider.url">tcp://localhost:61616</parameter>
+        <parameter name="UserTransactionJNDIName">UserTransaction</parameter>
+        <parameter name="TransactionManagerJNDIName">TransactionManager</parameter>
+    </transaction>-->
+
+    <!-- ================================================= -->
+    <!--                    Phases                         -->
+    <!-- ================================================= -->
+
+    <phaseOrder type="InFlow">
+        <!--  System pre defined phases       -->
+        <!--
+           The MsgInObservation phase is used to observe messages as soon as they are
+           received. In this phase, we could do some things such as SOAP message tracing & keeping
+           track of the time at which a particular message was received
+
+           NOTE: This should be the very first phase in this flow
+        -->
+        <phase name="MsgInObservation">
+            <handler name="TraceMessageBuilderDispatchHandler"
+                     class="org.apache.synapse.transport.passthru.util.TraceMessageBuilderDispatchHandler"/>
+        </phase>
+        <phase name="Validation"/>
+        <phase name="Transport">
+            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler">
+                <order phase="Transport"/>
+                <handler name="JSONMessageHandler"
+                         class="org.apache.axis2.json.gson.JSONMessageHandler" />
+            </handler>
+            <handler name="CarbonContextConfigurator"
+                     class="org.wso2.carbon.mediation.initializer.handler.CarbonContextConfigurator"/>
+            <handler name="RelaySecuirtyMessageBuilderDispatchandler"
+                     class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"/>
+            <handler name="SOAPActionBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
+                <order phase="Transport"/>
+            </handler>
+            <!--handler name="SMTPFaultHandler"
+                     class="org.wso2.carbon.core.transports.smtp.SMTPFaultHandler">
+                <order phase="Transport"/>
+            </handler-->
+        </phase>
+        <phase name="Addressing">
+            <handler name="AddressingBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
+                <order phase="Addressing"/>
+            </handler>
+        </phase>
+        <phase name="Security"/>
+        <phase name="PreDispatch">
+            <!--Uncomment following handler to enable logging in EI log UI-->
+            <!--<handler name="TenantDomainSetter"-->
+            <!--class="org.wso2.carbon.utils.logging.handler.TenantDomainSetter"/>-->
+        </phase>
+        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
+            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler"/>
+            <handler name="JSONMessageHandler" class="org.apache.axis2.json.gson.JSONMessageHandler" />
+            <handler name="SOAPActionBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
+            <handler name="RequestURIOperationDispatcher"
+                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher"/>
+            <handler name="SOAPMessageBodyBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"/>
+
+            <handler name="HTTPLocationBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
+            <handler name="SynapseDispatcher"
+                     class="org.apache.synapse.core.axis2.SynapseDispatcher"/>
+            <handler name="SynapseMustUnderstandHandler"
+                     class="org.apache.synapse.core.axis2.SynapseMustUnderstandHandler"/>
+        </phase>
+        <!--  System pre defined phases       -->
+        <phase name="RMPhase"/>
+        <phase name="OpPhase"/>
+        <phase name="AuthPhase"/>
+        <phase name="MUPhase"/>
+        <!-- After Postdispatch phase module author or or service author can add any phase he want -->
+        <phase name="OperationInPhase"/>
+    </phaseOrder>
+
+    <phaseOrder type="OutFlow">
+        <!-- Handlers related to unified-endpoint component are added to the UEPPhase -->
+        <phase name="UEPPhase" />
+        <!--      user can add his own phases to this area  -->
+        <phase name="RMPhase"/>
+        <phase name="MUPhase"/>
+        <phase name="OpPhase"/>
+        <phase name="OperationOutPhase"/>
+        <!--system predefined phase-->
+        <!--these phase will run irrespective of the service-->
+        <phase name="PolicyDetermination"/>
+        <phase name="PTSecurityOutPhase">
+            <handler name="RelaySecuirtyMessageBuilderDispatchandler"
+                     class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"/>
+        </phase>
+        <phase name="MessageOut"/>
+        <phase name="Security"/>
+
+        <!--
+           The MsgOutObservation phase is used to observe messages just before the
+           responses are sent out. In this phase, we could do some things such as SOAP message
+           tracing & keeping track of the time at which a particular response was sent.
+
+           NOTE: This should be the very last phase in this flow
+        -->
+        <phase name="MsgOutObservation"/>
+    </phaseOrder>
+
+    <phaseOrder type="InFaultFlow">
+        <!--
+           The MsgInObservation phase is used to observe messages as soon as they are
+           received. In this phase, we could do some things such as SOAP message tracing & keeping
+           track of the time at which a particular message was received
+
+           NOTE: This should be the very first phase in this flow
+        -->
+        <phase name="MsgInObservation"/>
+        <phase name="Validation"/>
+        <phase name="Transport">
+            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler">
+                <order phase="Transport"/>
+                <handler name="JSONMessageHandler"
+                         class="org.apache.axis2.json.gson.JSONMessageHandler" />
+            </handler>
+            <handler name="SOAPActionBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
+                <order phase="Transport"/>
+            </handler>
+        </phase>
+        <phase name="Addressing">
+            <handler name="AddressingBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
+                <order phase="Addressing"/>
+            </handler>
+        </phase>
+        <phase name="Security"/>
+        <phase name="PreDispatch"/>
+        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
+            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler"/>
+            <handler name="SOAPActionBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
+            <handler name="RequestURIOperationDispatcher"
+                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher"/>
+            <handler name="SOAPMessageBodyBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"/>
+
+            <handler name="HTTPLocationBasedDispatcher"
+                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
+        </phase>
+        <!--      user can add his own phases to this area  -->
+        <phase name="RMPhase"/>
+        <phase name="OpPhase"/>
+        <phase name="MUPhase"/>
+        <phase name="OperationInFaultPhase"/>
+    </phaseOrder>
+
+    <phaseOrder type="OutFaultFlow">
+        <!-- Handlers related to unified-endpoint component are added to the UEPPhase -->
+        <phase name="UEPPhase" />
+        <!--      user can add his own phases to this area  -->
+        <phase name="RMPhase"/>
+        <!-- Must Understand Header processing phase -->
+        <phase name="MUPhase"/>
+        <phase name="OperationOutFaultPhase"/>
+        <phase name="PolicyDetermination"/>
+        <phase name="MessageOut"/>
+        <phase name="Security"/>
+        <phase name="Transport"/>
+        <!--
+           The MsgOutObservation phase is used to observe messages just before the
+           responses are sent out. In this phase, we could do some things such as SOAP message
+           tracing & keeping track of the time at which a particular response was sent.
+
+           NOTE: This should be the very last phase in this flow
+        -->
+        <phase name="MsgOutObservation"/>
+    </phaseOrder>
+
+</axisconfig>
