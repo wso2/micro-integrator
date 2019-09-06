@@ -84,7 +84,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
             defaultFSRegRoot = defaultFSRegRoot + URL_SEPARATOR;
         }
         //Default registry root : <CARBON_HOME>/registry/
-        defaultFSRegRoot += "org/wso2/micro/integrator/registry" + URL_SEPARATOR;
+        defaultFSRegRoot += "registry" + URL_SEPARATOR;
 
         //create default file system paths for registry
         //Default registry local registry location : <CARBON_HOME>/registry/local
