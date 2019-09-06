@@ -35,6 +35,7 @@
         <module>scheduled-tasks</module>
         <module>ntask-feature</module>
         <module>builtin-mediators</module>
+        <module>inbound-endpoint</module>
     </modules>
 
 </project>

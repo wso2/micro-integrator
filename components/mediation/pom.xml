@@ -36,6 +36,7 @@
         <module>mediators</module>
         <module>startup</module>
         <module>tasks</module>
+        <module>inbound-endpoints</module>
     </modules>
 
 </project>

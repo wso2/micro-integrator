@@ -109,6 +109,16 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.inbound.endpoint.persistence</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.inbound.endpoint.osgi</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.security</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
@@ -378,6 +388,112 @@
                 <artifactId>guava</artifactId>
                 <version>${google.guava.version}</version>
             </dependency>
+
+<!--            Inbound Endpoint Depedencies-->
+            <dependency>
+                <groupId>ca.uhn.hapi.wso2</groupId>
+                <artifactId>hapi</artifactId>
+                <version>${ca.uhn.hapi.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.apache.cxf</groupId>
+                <artifactId>cxf-bundle</artifactId>
+                <version>${cxf.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.orbit.org.eclipse.jetty</groupId>
+                <artifactId>jetty-bundle</artifactId>
+                <version>${jetty.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-common</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-transport</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-handler</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec-http</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-codec</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-buffer</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>org.jacoco.agent</artifactId>
+                <classifier>runtime</classifier>
+                <version>${jacoco.agent.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-core</artifactId>
+                <version>${activemq.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-broker</artifactId>
+                <version>${activemq.broker.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.inbound.endpoint</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.inbound.endpoint.persistence</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.inbound.endpoint.osgi</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.aries.blueprint</groupId>
+                <artifactId>org.apache.aries.blueprint</artifactId>
+                <version>${aries.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.aries.proxy</groupId>
+                <artifactId>org.apache.aries.proxy</artifactId>
+                <version>${aries.proxy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.aries</groupId>
+                <artifactId>org.apache.aries.util</artifactId>
+                <version>${aries.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>stax2-api</artifactId>
+                <version>${stax2.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -510,7 +626,7 @@
         <maven.resources.plugin.version>3.1.0</maven.resources.plugin.version>
         <maven.antrun.plugin.version>1.8</maven.antrun.plugin.version>
         <maven.surefire.plugin.version>2.22.2</maven.surefire.plugin.version>
-        <jacoco.maven.plugin.version>0.8.4</jacoco.maven.plugin.version>
+        <jacoco.maven.plugin.version>0.8.2</jacoco.maven.plugin.version>
         <testng.version>6.11</testng.version>
         <javax.jms-api.version>2.0.1</javax.jms-api.version>
         <maven.dependency.plugin.version>3.1.1</maven.dependency.plugin.version>
@@ -532,6 +648,16 @@
         <orbit.version.snakeyaml>1.16.0.wso2v1</orbit.version.snakeyaml>
         <json.smart.version>2.3</json.smart.version>
         <google.guava.version>27.0-jre</google.guava.version>
+        <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
+        <junit.version>4.8.2</junit.version>
+        <cxf.wso2.version>3.0.9.wso2v1</cxf.wso2.version>
+        <jetty.wso2.version>8.1.17.v20150415.wso2v1</jetty.wso2.version>
+        <netty.version>4.0.39.Final</netty.version><jacoco.agent.version>0.8.2</jacoco.agent.version>
+        <activemq.version>5.2.0</activemq.version>
+        <activemq.broker.version>5.15.2</activemq.broker.version>
+        <aries.version>1.1.0</aries.version>
+        <aries.proxy.version>1.0.1</aries.proxy.version>
+        <stax2.version>3.1.4</stax2.version>
 
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
