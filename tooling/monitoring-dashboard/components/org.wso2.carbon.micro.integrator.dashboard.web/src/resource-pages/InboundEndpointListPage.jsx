@@ -17,9 +17,10 @@
  */
 
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
+import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
@@ -49,7 +50,7 @@ export default class InboundEndpointListPage extends Component {
             this.inboundEndpoints.forEach((element) => {
                 const rowData = [];
                 rowData.push(element.name);
-                rowData.push(element.type);
+                rowData.push(element.protocol);
                 data.push(rowData);
 
             });
@@ -63,7 +64,20 @@ export default class InboundEndpointListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Inbound Endpoint Name", "Type"];
+        const columns = [{
+            name: "Inbound Endpoint Name",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <Link component="button" variant="body2" onClick={() => {
+                            this.props.history.push(`/inbound-endpoint/explore?name=${tableMeta.rowData[0]}`)
+                        }}>
+                            {tableMeta.rowData[0]}
+                        </Link>
+                    );
+                }
+            }
+        }, "Protocol"];
         const options = {
             selectableRows: 'none'
         };
@@ -77,6 +91,7 @@ export default class InboundEndpointListPage extends Component {
             />
         );
     }
+
     render() {
         return (
             <ListViewParent

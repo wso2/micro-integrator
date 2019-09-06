@@ -78,22 +78,7 @@ export default class ProxyServiceListPage extends Component {
                         );
                     }
                 }
-            }, "WSDL1.1", "WSDL2.0",
-            {
-                name: "Action",
-                options: {
-                    customBodyRender: (value, tableMeta, updateValue) => {
-                        return (
-                            <Link component="button" variant="body2" onClick={() => {
-                                this.props.history.push(`/proxy/sourceView?name=${tableMeta.rowData[0]}`)
-                            }}>
-                                Source View
-                            </Link>
-                        );
-                    }
-                }
-
-            }];
+            }, "WSDL1.1", "WSDL2.0"];
         const options = {
             selectableRows: 'none'
         };

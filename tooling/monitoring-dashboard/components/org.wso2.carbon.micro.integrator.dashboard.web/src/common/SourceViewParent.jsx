@@ -18,12 +18,22 @@
 
 import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import {docco} from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import PropTypes from 'prop-types';
 var format = require('xml-formatter');
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { base16AteliersulphurpoolLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+
+const styles = {
+    contentDiv: {
+        margin: '3%',
+    },
+    SourceHeaderDiv:{
+        padding:'1%',
+    }
+};
 
 export default class SourceViewParent extends Component {
 
@@ -31,13 +41,20 @@ export default class SourceViewParent extends Component {
         var formatterConfiguration = format(this.props.config);
         return (
             <Paper>
-                <Typography variant="h6" component="h3">
-                    {this.props.title}
-                </Typography>
+                <div id="sourceHeader" style={styles.SourceHeaderDiv}>
+                    <Typography variant="h5" id="tableTitle">
+                        {this.props.title}
+                    </Typography>
+                </div>
+                <Divider/>
 
-                <SyntaxHighlighter language={this.props.language} style={docco} showLineNumbers={true} wrapLines={true}>
-                    {formatterConfiguration}
-                </SyntaxHighlighter>
+                <div id="content" style={styles.contentDiv}>
+                    <SyntaxHighlighter language={this.props.language} style={this.props.theme} showLineNumbers={true}
+                                       wrapLines={true}>
+                        {formatterConfiguration}
+                    </SyntaxHighlighter>
+                </div>
+
             </Paper>
         );
     }
@@ -56,7 +73,7 @@ SourceViewParent.propTypes = {
 
 SourceViewParent.defaultProps = {
     config: 'no config',
-    theme: docco,
+    theme: base16AteliersulphurpoolLight,
     language: 'xml',
     title: 'Source View',
 };

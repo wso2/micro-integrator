@@ -15,7 +15,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 import React, {Component} from 'react';
 import ResourceExplorerParent from '../common/ResourceExplorerParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
@@ -26,48 +25,42 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
 import SourceViewComponent from '../common/SourceViewComponent';
-
 import Box from '@material-ui/core/Box';
 
-export default class ProxyDetailsPage extends Component {
+export default class TaskDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            config: " ",
-            tableData: [],
-            endpoints: [],
-            response: {}
+            metaData: [],
+            response: {},
         };
     }
 
     /**
-     * Retrieve proxy details from the MI.
+     * Retrieve task details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveProxyInfo(values.name);
+        this.retrieveTaskInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveProxyInfo(name) {
-        const tableData = [];
-        new ResourceAPI().getProxyServiceByName(name).then((response) => {
 
-            tableData.push(this.createData("Service Name", response.data.name));
-            tableData.push(this.createData("Statistics", response.data.stats));
-            tableData.push(this.createData("Tracing", response.data.tracing));
+    retrieveTaskInfo(name) {
+        const metaData = [];
+        new ResourceAPI().getTaskByName(name).then((response) => {
 
-            const endpoints = response.data.eprs || []
-
+            metaData.push(this.createData("Task Name", response.data.name));
+            metaData.push(this.createData("Task Group", response.data.taskGroup));
+            metaData.push(this.createData("Task Implementation", response.data.implementation));
             this.setState(
                 {
-                    tableData: tableData,
-                    endpoints: endpoints,
+                    metaData: metaData,
                     response: response.data,
                 });
 
@@ -76,15 +69,15 @@ export default class ProxyDetailsPage extends Component {
         });
     }
 
-    renderProxyDetails() {
+    renderTaskDetails() {
         return (
             <Box>
                 <Box pb={5}>
-                    <TableHeaderBox title="Proxy Details"/>
+                    <TableHeaderBox title="Scheduled Task Details"/>
                     <Table size="small">
                         <TableBody>
                             {
-                                this.state.tableData.map(row => (
+                                this.state.metaData.map(row => (
                                     <TableRow>
                                         <TableCell>{row.name}</TableCell>
                                         <TableCell>{row.value}</TableCell>
@@ -95,27 +88,65 @@ export default class ProxyDetailsPage extends Component {
                     </Table>
                 </Box>
                 <Box pb={5}>
-                    <TableHeaderBox title="Endpoints"/>
-                    <Table size="small">
-                        <TableBody>
-                            {
-                                this.state.endpoints.map(row => (
-                                    <TableRow>
-                                        <TableCell>{row}</TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
+                    <TableHeaderBox title="Trigger Details"/>
+                    {this.renderTriggerInformation(this.state.response)}
                 </Box>
                 <SourceViewComponent config={this.state.response.configuration}/>
             </Box>
         );
     }
 
-    render() {
+    renderTriggerInformation(task) {
+        if (task.triggerType === "simple") {
+            return this.renderSimpleTriggerDetails(task);
+        } else {
+            return this.renderCronTriggerDetails(task);
+        }
+    }
+
+    renderSimpleTriggerDetails(task) {
+        const details = [];
+        details.push(this.createData("Trigger", task.triggerType));
+        details.push(this.createData("Count", task.triggerCount));
+        details.push(this.createData("Interval (In seconds)", task.triggerInterval));
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderProxyDetails()}/>
+            <Table size="small">
+                <TableBody>
+                    {this.renderRowsFromData(details)}
+                </TableBody>
+            </Table>
+        );
+    }
+
+    renderCronTriggerDetails(task) {
+        const details = [];
+        details.push(this.createData("Trigger", task.triggerType));
+        details.push(this.createData("Cron", task.cronExpression));
+        return (
+            <Table size="small">
+                <TableBody>
+                    {this.renderRowsFromData(details)}
+                </TableBody>
+            </Table>
+        );
+
+    }
+
+    renderRowsFromData(data) {
+        return (
+            data.map(row => (
+                <TableRow>
+                    <TableCell>{row.name}</TableCell>
+                    <TableCell>{row.value}</TableCell>
+                </TableRow>
+            ))
+        );
+    }
+
+    render() {
+        console.log(this.state.config);
+        return (
+            <ResourceExplorerParent title={this.state.response.name+ " Explorer"} content={this.renderTaskDetails()}/>
         );
     }
 }

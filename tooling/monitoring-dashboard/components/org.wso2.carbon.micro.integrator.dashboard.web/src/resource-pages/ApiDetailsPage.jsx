@@ -29,45 +29,40 @@ import SourceViewComponent from '../common/SourceViewComponent';
 
 import Box from '@material-ui/core/Box';
 
-export default class ProxyDetailsPage extends Component {
+export default class ApiDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            config: " ",
-            tableData: [],
-            endpoints: [],
-            response: {}
+            metaData: [],
+            response: {},
         };
     }
 
     /**
-     * Retrieve proxy details from the MI.
+     * Retrieve api details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveProxyInfo(values.name);
+        this.retrieveApiInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveProxyInfo(name) {
-        const tableData = [];
-        new ResourceAPI().getProxyServiceByName(name).then((response) => {
+    retrieveApiInfo(name) {
+        const metaData = [];
+        new ResourceAPI().getApiByName(name).then((response) => {
 
-            tableData.push(this.createData("Service Name", response.data.name));
-            tableData.push(this.createData("Statistics", response.data.stats));
-            tableData.push(this.createData("Tracing", response.data.tracing));
-
-            const endpoints = response.data.eprs || []
-
+            metaData.push(this.createData("API Name", response.data.name));
+            metaData.push(this.createData("Context", response.data.context));
+            metaData.push(this.createData("Host Name", response.data.host));
+            metaData.push(this.createData("Port", response.data.port));
             this.setState(
                 {
-                    tableData: tableData,
-                    endpoints: endpoints,
+                    metaData: metaData,
                     response: response.data,
                 });
 
@@ -76,32 +71,18 @@ export default class ProxyDetailsPage extends Component {
         });
     }
 
-    renderProxyDetails() {
+    renderApiDetails() {
         return (
             <Box>
                 <Box pb={5}>
-                    <TableHeaderBox title="Proxy Details"/>
+                    <TableHeaderBox title="API Details"/>
                     <Table size="small">
                         <TableBody>
                             {
-                                this.state.tableData.map(row => (
+                                this.state.metaData.map(row => (
                                     <TableRow>
                                         <TableCell>{row.name}</TableCell>
                                         <TableCell>{row.value}</TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </Box>
-                <Box pb={5}>
-                    <TableHeaderBox title="Endpoints"/>
-                    <Table size="small">
-                        <TableBody>
-                            {
-                                this.state.endpoints.map(row => (
-                                    <TableRow>
-                                        <TableCell>{row}</TableCell>
                                     </TableRow>
                                 ))
                             }
@@ -114,8 +95,9 @@ export default class ProxyDetailsPage extends Component {
     }
 
     render() {
+        console.log(this.state.config);
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderProxyDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderApiDetails()}/>
         );
     }
 }

@@ -18,10 +18,10 @@
 import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
-
+import Link from '@material-ui/core/Link';
 import MUIDataTable from "mui-datatables";
 
-export default class TaskListPage extends Component{
+export default class TaskListPage extends Component {
     constructor(props) {
         super(props);
         this.tasks = null;
@@ -57,7 +57,20 @@ export default class TaskListPage extends Component{
 
     renderResourceList() {
 
-        const columns = ["Task Name"];
+        const columns = [{
+            name: "Task Name",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => {
+                    return (
+                        <Link component="button" variant="body2" onClick={() => {
+                            this.props.history.push(`/task/explore?name=${tableMeta.rowData[0]}`)
+                        }}>
+                            {tableMeta.rowData[0]}
+                        </Link>
+                    );
+                }
+            }
+        }];
         const options = {
             selectableRows: 'none'
         };
@@ -71,6 +84,7 @@ export default class TaskListPage extends Component{
             />
         );
     }
+
     render() {
         return (
             <ListViewParent

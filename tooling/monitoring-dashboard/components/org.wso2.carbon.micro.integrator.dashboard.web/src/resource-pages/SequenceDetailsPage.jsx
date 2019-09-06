@@ -26,49 +26,42 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
 import SourceViewComponent from '../common/SourceViewComponent';
-
 import Box from '@material-ui/core/Box';
 
-export default class ProxyDetailsPage extends Component {
+export default class SequenceDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            config: " ",
-            tableData: [],
-            endpoints: [],
-            response: {}
+            response: {},
+            metaData: [],
         };
     }
 
     /**
-     * Retrieve proxy details from the MI.
+     * Retrieve sequence details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveProxyInfo(values.name);
+        this.retrieveSequenceInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveProxyInfo(name) {
-        const tableData = [];
-        new ResourceAPI().getProxyServiceByName(name).then((response) => {
+    retrieveSequenceInfo(name) {
+        const metaData = [];
+        new ResourceAPI().getSequenceByName(name).then((response) => {
 
-            tableData.push(this.createData("Service Name", response.data.name));
-            tableData.push(this.createData("Statistics", response.data.stats));
-            tableData.push(this.createData("Tracing", response.data.tracing));
-
-            const endpoints = response.data.eprs || []
-
+            metaData.push(this.createData("Sequence Name", response.data.name));
+            metaData.push(this.createData("Tracing", response.data.tracing));
+            metaData.push(this.createData("Statistics", response.data.stats));
             this.setState(
                 {
-                    tableData: tableData,
-                    endpoints: endpoints,
                     response: response.data,
+                    metaData: metaData,
                 });
 
         }).catch((error) => {
@@ -76,15 +69,15 @@ export default class ProxyDetailsPage extends Component {
         });
     }
 
-    renderProxyDetails() {
+    renderMessageProcessorDetails() {
         return (
             <Box>
                 <Box pb={5}>
-                    <TableHeaderBox title="Proxy Details"/>
+                    <TableHeaderBox title="Processor Details"/>
                     <Table size="small">
                         <TableBody>
                             {
-                                this.state.tableData.map(row => (
+                                this.state.metaData.map(row => (
                                     <TableRow>
                                         <TableCell>{row.name}</TableCell>
                                         <TableCell>{row.value}</TableCell>
@@ -94,20 +87,7 @@ export default class ProxyDetailsPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
-                <Box pb={5}>
-                    <TableHeaderBox title="Endpoints"/>
-                    <Table size="small">
-                        <TableBody>
-                            {
-                                this.state.endpoints.map(row => (
-                                    <TableRow>
-                                        <TableCell>{row}</TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
-                </Box>
+
                 <SourceViewComponent config={this.state.response.configuration}/>
             </Box>
         );
@@ -115,7 +95,8 @@ export default class ProxyDetailsPage extends Component {
 
     render() {
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderProxyDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
+                                    content={this.renderMessageProcessorDetails()}/>
         );
     }
 }

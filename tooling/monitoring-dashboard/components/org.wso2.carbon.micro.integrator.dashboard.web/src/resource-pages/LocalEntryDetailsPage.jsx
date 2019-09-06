@@ -25,49 +25,43 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
-import SourceViewComponent from '../common/SourceViewComponent';
 
 import Box from '@material-ui/core/Box';
 
-export default class ProxyDetailsPage extends Component {
+export default class LocalEntryDetailsPage extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            config: " ",
-            tableData: [],
-            endpoints: [],
-            response: {}
+            metaData: [],
+            value: "",
+            response: {},
         };
     }
 
     /**
-     * Retrieve proxy details from the MI.
+     * Retrieve local entry details from the MI.
      */
     componentDidMount() {
         let url = this.props.location.search;
         const values = queryString.parse(url) || {};
-        this.retrieveProxyInfo(values.name);
+        this.retrieveLocalEntryInfo(values.name);
     }
 
     createData(name, value) {
         return {name, value};
     }
 
-    retrieveProxyInfo(name) {
-        const tableData = [];
-        new ResourceAPI().getProxyServiceByName(name).then((response) => {
+    retrieveLocalEntryInfo(name) {
+        const metaData = [];
+        new ResourceAPI().getLocalEntryByName(name).then((response) => {
 
-            tableData.push(this.createData("Service Name", response.data.name));
-            tableData.push(this.createData("Statistics", response.data.stats));
-            tableData.push(this.createData("Tracing", response.data.tracing));
-
-            const endpoints = response.data.eprs || []
-
+            metaData.push(this.createData("Local Entry Name", response.data.name));
+            metaData.push(this.createData("Type", response.data.type));
             this.setState(
                 {
-                    tableData: tableData,
-                    endpoints: endpoints,
+                    metaData: metaData,
+                    value: response.data.value,
                     response: response.data,
                 });
 
@@ -76,15 +70,15 @@ export default class ProxyDetailsPage extends Component {
         });
     }
 
-    renderProxyDetails() {
+    renderLocalEntryDetails() {
         return (
-            <Box>
+            <div>
                 <Box pb={5}>
-                    <TableHeaderBox title="Proxy Details"/>
+                    <TableHeaderBox title="Entry Details"/>
                     <Table size="small">
                         <TableBody>
                             {
-                                this.state.tableData.map(row => (
+                                this.state.metaData.map(row => (
                                     <TableRow>
                                         <TableCell>{row.name}</TableCell>
                                         <TableCell>{row.value}</TableCell>
@@ -94,28 +88,21 @@ export default class ProxyDetailsPage extends Component {
                         </TableBody>
                     </Table>
                 </Box>
+
                 <Box pb={5}>
-                    <TableHeaderBox title="Endpoints"/>
-                    <Table size="small">
-                        <TableBody>
-                            {
-                                this.state.endpoints.map(row => (
-                                    <TableRow>
-                                        <TableCell>{row}</TableCell>
-                                    </TableRow>
-                                ))
-                            }
-                        </TableBody>
-                    </Table>
+                    <TableHeaderBox title="Value"/>
+                    <Box boxShadow={1} minHeight={100} color="text.secondary">
+                        {this.state.value}
+                    </Box>
                 </Box>
-                <SourceViewComponent config={this.state.response.configuration}/>
-            </Box>
+            </div>
         );
     }
 
     render() {
+        console.log(this.state.config);
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderProxyDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderLocalEntryDetails()}/>
         );
     }
 }

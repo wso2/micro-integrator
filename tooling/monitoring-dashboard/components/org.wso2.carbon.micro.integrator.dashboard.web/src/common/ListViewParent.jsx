@@ -24,13 +24,15 @@ import Header from './Header';
 import SideDrawer from './SideDrawer';
 import {MuiThemeProvider} from 'material-ui/styles';
 import Paper from '@material-ui/core/Paper';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
 
 /**
  * Style constants.
  */
 const styles = {
     contentPaper: {
-        height: '100vh',
+        height: "100%",
         width: 'calc(100% - 240px)',
         float: 'right',
         paddingTop: '40px',
@@ -53,12 +55,11 @@ export default class ListViewParent extends Component {
                 />
                 <SideDrawer/>
                 <Paper style={styles.contentPaper}>
+                    <CssBaseline/>
                     <div>
                         {this.props.data}
                     </div>
-
                 </Paper>
-
             </MuiThemeProvider>
         );
     }

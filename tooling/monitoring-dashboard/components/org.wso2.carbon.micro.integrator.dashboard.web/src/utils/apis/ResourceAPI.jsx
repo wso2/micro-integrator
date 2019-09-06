@@ -61,4 +61,23 @@ export default class ResourceAPI {
         return this.getHTTPClient().get(`/message-processors?name=${name}`);
     }
 
+    getLocalEntryByName(name){
+        return this.getHTTPClient().get(`/local-entries?name=${name}`);
+    }
+
+    getEndpointByName(name){
+        return this.getHTTPClient().get(`/endpoints?endpointName=${name}`);
+    }
+
+    getInboundEndpointByName(name){
+        return this.getHTTPClient().get(`/inbound-endpoints?inboundEndpointName=${name}`);
+    }
+
+    getSequenceByName(name){
+        return this.getHTTPClient().get(`/sequences?sequenceName=${name}`);
+    }
+
+    getTaskByName(name) {
+        return this.getHTTPClient().get(`/tasks?taskName=${name}`);
+    }
 }

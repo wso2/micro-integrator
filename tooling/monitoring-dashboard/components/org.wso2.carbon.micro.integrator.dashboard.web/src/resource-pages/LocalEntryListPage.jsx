@@ -17,9 +17,10 @@
  */
 
 
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
+import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
@@ -63,7 +64,21 @@ export default class LocalEntryListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Entry Name", "Type"];
+        const columns = [
+            {
+                name: "Local Entry Name",
+                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link component="button" variant="body2" onClick={() => {
+                                this.props.history.push(`/local-entry/explore?name=${tableMeta.rowData[0]}`)
+                            }}>
+                                {tableMeta.rowData[0]}
+                            </Link>
+                        );
+                    }
+                }
+            }, "Type"];
         const options = {
             selectableRows: 'none'
         };
@@ -77,6 +92,7 @@ export default class LocalEntryListPage extends Component {
             />
         );
     }
+
     render() {
         return (
             <ListViewParent
