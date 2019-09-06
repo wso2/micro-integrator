@@ -32,6 +32,9 @@
     <packaging>pom</packaging>
     <name>WSO2 Micro Integrator - Integration Tests</name>
     <url>http://wso2.org</url>
+    <modules>
+        <module>cli-tests</module>
+    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -729,9 +732,15 @@
                 <version>${synapse.version}</version>
             </dependency>
             <dependency>
+<<<<<<< HEAD
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-model</artifactId>
                 <version>${maven.model.version}</version>
+=======
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+>>>>>>> 3345cbc48153533d73dbd1093d3162856f65130e
             </dependency>
         </dependencies>
     </dependencyManagement>
