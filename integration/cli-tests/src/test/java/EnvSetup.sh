@@ -48,7 +48,7 @@ function getPomVersion(){
 #Setting up the CLI environment
 
 #Check if the cli build is available in the location
-DIR="../../../../../cmd/build"
+DIR="../../../cmd/build"
 if [ -d "$DIR" ]; then
     echo "CLI build exists. Hence skipping the environment setup phase"
 else
