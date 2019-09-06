@@ -105,9 +105,9 @@
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.ei:org.wso2.micro.integrator.task.server.feature:${project.version}-->
 <!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.relay.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.mediation:org.wso2.carbon.relay.server.feature:${carbon.mediation.version}
+                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.smooks.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -329,10 +329,10 @@
 <!--                                    <id>org.wso2.micro.integrator.task.server.feature.group</id>-->
 <!--                                    <version>${project.version}</version>-->
 <!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.relay.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.relay.server.feature.group</id>
+                                    <version>${carbon.mediation.version}</version>
+                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.mediator.smooks.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
