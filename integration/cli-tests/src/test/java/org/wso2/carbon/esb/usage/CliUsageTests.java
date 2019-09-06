@@ -54,6 +54,8 @@ public class CliUsageTests {
         System.out.println("Working Directory = " +
                 System.getProperty("user.dir"));
 
+        Process process1 = new ProcessBuilder("pwd").start();
+
         Process process = new ProcessBuilder("../src/test/java/EnvSetup.sh").start();
 
         try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
@@ -87,7 +89,7 @@ public class CliUsageTests {
 
         } catch (IOException e) {
             System.out.println("Exception = " + e.getMessage());
-        }finally {
+        } finally {
             reader.close();
         }
     }
@@ -193,7 +195,7 @@ public class CliUsageTests {
 
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
-        }finally {
+        } finally {
             reader.close();
         }
     }
@@ -219,7 +221,7 @@ public class CliUsageTests {
 
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
-        }finally {
+        } finally {
             reader.close();
         }
     }
@@ -247,7 +249,7 @@ public class CliUsageTests {
 
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
-        }finally {
+        } finally {
             reader.close();
         }
     }
@@ -273,7 +275,7 @@ public class CliUsageTests {
 
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
-        }finally {
+        } finally {
             reader.close();
         }
     }

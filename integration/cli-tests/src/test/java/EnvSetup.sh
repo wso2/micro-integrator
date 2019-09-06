@@ -18,6 +18,8 @@
 
 set -o xtrace
 
+echo "Executing env script"
+
 #Extract the compressed archive based on the platform and the bitype
 function extractCompressArchive() {
     platform=$(uname -s)
