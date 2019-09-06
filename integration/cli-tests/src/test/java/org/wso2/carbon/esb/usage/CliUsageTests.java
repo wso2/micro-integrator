@@ -32,6 +32,7 @@ import Util.*;
 public class CliUsageTests {
     protected Log log = LogFactory.getLog(CliUsageTests.class);
     public static String pomVersion;
+    BufferedReader reader = null;
     String line = null;
     String cliTestApi = "cliTesApi";
     String cliTestMediatorApi = "cliTestIterateMediatorApi";
@@ -41,7 +42,6 @@ public class CliUsageTests {
     String cliTestBmProxy = "cliTestBMProxy";
     String cliTestHelloCar = "hello-worldCompositeApplication";
     String cliTestEsbCar = "esb-artifacts-car";
-
     /**
      * setup the environment to run the tests
      */
@@ -64,13 +64,12 @@ public class CliUsageTests {
      * Get information about all the API's
      */
     @Test
-    public void miShowAllApiTest() {
-
+    public void miShowAllApiTest() throws IOException {
         try {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api", "show");
             Process process = builder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
@@ -80,10 +79,11 @@ public class CliUsageTests {
             log.info(cliTestApi + " API Found");
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestMediatorApi)),cliTestMediatorApi+" API not found");
             log.info(cliTestMediatorApi + " API Found");
-            reader.close();
 
         } catch (IOException e) {
             System.out.println("Exception = " + e.getMessage());
+        }finally {
+            reader.close();
         }
     }
 
@@ -91,10 +91,9 @@ public class CliUsageTests {
      * Get information about single API's
      */
     @Test
-    public void miShowApiTest() {
+    public void miShowApiTest() throws IOException {
 
         try {
-
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api" , "show", cliTestApi);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -106,10 +105,10 @@ public class CliUsageTests {
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestApi)),cliTestApi +" API not found");
             log.info(cliTestApi + " API Found");
 
-            reader.close();
-
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
+        } finally {
+            reader.close();
         }
     }
 
@@ -117,9 +116,9 @@ public class CliUsageTests {
      * Get information about all the Endpoints
      */
     @Test
-    public void miShowEndpointAllTest() {
-        try{
+    public void miShowEndpointAllTest() throws IOException {
 
+        try{
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint");
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -133,10 +132,10 @@ public class CliUsageTests {
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestHtmlEp)),cliTestHtmlEp + "Endpoint not found");
             log.info(cliTestHtmlEp + " Endpoint Found");
 
-            reader.close();
-
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
+        } finally {
+            reader.close();
         }
     }
 
@@ -145,10 +144,9 @@ public class CliUsageTests {
      */
 
     @Test
-    public void miShowEndpointTest() {
+    public void miShowEndpointTest() throws IOException {
 
         try{
-
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint", cliTestEp);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -160,10 +158,10 @@ public class CliUsageTests {
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestEp)),cliTestEp +" Endpoint not found");
             log.info(cliTestEp + " Endpoint Found");
 
-            reader.close();
-
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
+        } finally {
+            reader.close();
         }
     }
 
@@ -172,9 +170,9 @@ public class CliUsageTests {
      */
 
     @Test
-    public void miShowProxyAllTest() {
-        try{
+    public void miShowProxyAllTest() throws IOException {
 
+        try{
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice");
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -188,10 +186,10 @@ public class CliUsageTests {
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestProxy)),cliTestProxy + " Proxy service not found");
             log.info(cliTestProxy + " Proxy service Found");
 
-            reader.close();
-
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
+        }finally {
+            reader.close();
         }
     }
 
@@ -200,9 +198,9 @@ public class CliUsageTests {
      */
 
     @Test
-    public void miShowProxyTest() {
-        try{
+    public void miShowProxyTest() throws IOException {
 
+        try{
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice" , cliTestProxy);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -213,10 +211,11 @@ public class CliUsageTests {
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestProxy)),cliTestProxy + " Proxy service not found");
             log.info(cliTestProxy + " Proxy service Found");
-            reader.close();
 
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
+        }finally {
+            reader.close();
         }
     }
 
@@ -225,9 +224,9 @@ public class CliUsageTests {
      */
 
     @Test
-    public void miShowCarbonappAllTest() {
-        try{
+    public void miShowCarbonappAllTest() throws IOException {
 
+        try{
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "carbonapp");
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -240,10 +239,11 @@ public class CliUsageTests {
             log.info(cliTestHelloCar + " Carbon application Found");
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestEsbCar)),cliTestEsbCar + " Carbon application not found");
             log.info(cliTestEsbCar + " Carbon application Found");
-            reader.close();
 
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
+        }finally {
+            reader.close();
         }
     }
 
@@ -252,9 +252,9 @@ public class CliUsageTests {
      */
 
     @Test
-    public void miShowCarbonappTest() {
-        try {
+    public void miShowCarbonappTest() throws IOException {
 
+        try {
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show", "carbonapp" , cliTestHelloCar);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -266,10 +266,10 @@ public class CliUsageTests {
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestHelloCar)), cliTestHelloCar+ " Carbon application not found");
             log.info(cliTestHelloCar + " Carbon application Found");
 
-            reader.close();
-
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
+        } finally {
+            reader.close();
         }
     }
 }
