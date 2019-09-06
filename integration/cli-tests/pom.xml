@@ -64,15 +64,11 @@
                     <systemProperties>
                         <property>
                             <name>framework.resource.location</name>
-                            <value>
-                                ${basedir}/src/test/resources/
-                            </value>
+                            <value>${basedir}/src/test/resources/</value>
                         </property>
                         <property>
                             <name>server.list</name>
-                            <value>
-                                ESB
-                            </value>
+                            <value>ESB</value>
                         </property>
                         <property>
                             <name>usedefaultlisteners</name>
@@ -228,21 +224,9 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
     <dependencies>
-        <dependency>
-            <groupId>org.wso2.ei</groupId>
-            <artifactId>admin-clients</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.wso2.carbon.mediation</groupId>
-                    <artifactId>org.wso2.carbon.rest.api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>integration-test-utils</artifactId>
@@ -274,6 +258,5 @@
             <artifactId>maven-model</artifactId>
         </dependency>
     </dependencies>
-
 
 </project>

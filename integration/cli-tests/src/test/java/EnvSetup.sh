@@ -1,4 +1,4 @@
-# Copyright (c) 2005-2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+# Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 #
 # WSO2 Inc. licenses this file to you under the Apache License,
 # Version 2.0 (the "License"); you may not use this file except
@@ -18,6 +18,7 @@
 
 set -o xtrace
 
+#Extract the compressed archive based on the platform and the bitype
 function extractCompressArchive() {
     platform=$(uname -s)
     bitType=$(arch)
@@ -38,7 +39,7 @@ function extractCompressArchive() {
         tar -zxvf wso2mi-cli-$VERSION-windows-x64.tar.gz
     fi
 }
-
+#get the product version from the pom file
 function getPomVersion(){
     VERSION=$(cat pom.xml | grep "^    <version>.*</version>$" | awk -F'[><]' '{print $3}');
     echo $VERSION
@@ -75,5 +76,4 @@ else
     mi
 
     echo "ClI setup Complete"
-
 fi

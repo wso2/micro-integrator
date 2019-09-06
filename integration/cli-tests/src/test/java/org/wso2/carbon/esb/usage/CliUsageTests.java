@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.wso2.carbon.esb.usage;
 
 import org.apache.commons.logging.LogFactory;
@@ -29,7 +30,7 @@ import java.util.List;
 import Util.*;
 
 public class CliUsageTests {
-    protected Log log = LogFactory.getLog(getClass());
+    protected Log log = LogFactory.getLog(CliUsageTests.class);
     public static String pomVersion;
     String line = null;
     String cliTestApi = "cliTesApi";
@@ -40,7 +41,6 @@ public class CliUsageTests {
     String cliTestBmProxy = "cliTestBMProxy";
     String cliTestHelloCar = "hello-worldCompositeApplication";
     String cliTestEsbCar = "esb-artifacts-car";
-
 
     /**
      * setup the environment to run the tests
@@ -53,15 +53,11 @@ public class CliUsageTests {
 
         Process process = new ProcessBuilder("../src/test/java/EnvSetup.sh").start();
 
-        try (BufferedReader bufferedreader = new BufferedReader(
-                new InputStreamReader(process.getInputStream()))) {
-            String line;
-
+        try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             while ((line = bufferedreader.readLine()) != null) {
                 System.out.println(line);
             }
         }
-
     }
 
     /**
@@ -72,16 +68,14 @@ public class CliUsageTests {
 
         try {
 
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-1.1.0-"+pomVersion+"/bin/mi", "api", "show");
+            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api", "show");
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
             }
-
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestApi)),cliTestApi+" API not found");
             log.info(cliTestApi + " API Found");
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestMediatorApi)),cliTestMediatorApi+" API not found");
@@ -103,13 +97,11 @@ public class CliUsageTests {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api" , "show", cliTestApi);
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
-
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestApi)),cliTestApi +" API not found");
             log.info(cliTestApi + " API Found");
@@ -130,13 +122,11 @@ public class CliUsageTests {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint");
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
-
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestEp)),cliTestEp +" Endpoint not found");
             log.info(cliTestEp + " Endpoint Found");
@@ -148,7 +138,6 @@ public class CliUsageTests {
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
         }
-
     }
 
     /**
@@ -162,13 +151,11 @@ public class CliUsageTests {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint", cliTestEp);
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
-
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestEp)),cliTestEp +" Endpoint not found");
             log.info(cliTestEp + " Endpoint Found");
@@ -178,7 +165,6 @@ public class CliUsageTests {
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
         }
-
     }
 
     /**
@@ -191,13 +177,11 @@ public class CliUsageTests {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice");
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
-
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestBmProxy)),cliTestBmProxy + " Proxy service not found");
             log.info(cliTestBmProxy + " Proxy service Found");
@@ -209,7 +193,6 @@ public class CliUsageTests {
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
         }
-
     }
 
     /**
@@ -222,13 +205,11 @@ public class CliUsageTests {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice" , cliTestProxy);
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
-
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestProxy)),cliTestProxy + " Proxy service not found");
             log.info(cliTestProxy + " Proxy service Found");
@@ -249,13 +230,11 @@ public class CliUsageTests {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "carbonapp");
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
-
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestHelloCar)),cliTestHelloCar +" Carbon application not found");
             log.info(cliTestHelloCar + " Carbon application Found");
@@ -266,7 +245,6 @@ public class CliUsageTests {
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
         }
-
     }
 
     /**
@@ -279,13 +257,11 @@ public class CliUsageTests {
 
             ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show", "carbonapp" , cliTestHelloCar);
             Process process = builder.start();
-
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             List<String> lines = new ArrayList();
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
-
             }
             Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestHelloCar)), cliTestHelloCar+ " Carbon application not found");
             log.info(cliTestHelloCar + " Carbon application Found");
@@ -296,6 +272,4 @@ public class CliUsageTests {
             log.info("Exception = " + e.getMessage());
         }
     }
-
 }
-
