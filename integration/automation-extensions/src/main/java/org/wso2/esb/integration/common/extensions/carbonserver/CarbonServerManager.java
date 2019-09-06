@@ -143,7 +143,7 @@ public class CarbonServerManager {
                 }
             }));
 
-            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 100, TimeUnit.SECONDS);
+            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 60, TimeUnit.SECONDS);
 
             if (!inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE)) {
                 throw new RuntimeException("Server initialization failed");

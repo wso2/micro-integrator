@@ -67,7 +67,7 @@ public class CliUsageTests {
     public void miShowAllApiTest() throws IOException {
         try {
 
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api", "show");
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api", "show");
             Process process = builder.start();
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -94,7 +94,7 @@ public class CliUsageTests {
     public void miShowApiTest() throws IOException {
 
         try {
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api" , "show", cliTestApi);
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "api" , "show", cliTestApi);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -119,7 +119,7 @@ public class CliUsageTests {
     public void miShowEndpointAllTest() throws IOException {
 
         try{
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint");
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint");
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -147,7 +147,7 @@ public class CliUsageTests {
     public void miShowEndpointTest() throws IOException {
 
         try{
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint", cliTestEp);
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "endpoint", cliTestEp);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -173,7 +173,7 @@ public class CliUsageTests {
     public void miShowProxyAllTest() throws IOException {
 
         try{
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice");
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice");
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -201,7 +201,7 @@ public class CliUsageTests {
     public void miShowProxyTest() throws IOException {
 
         try{
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice" , cliTestProxy);
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "proxyservice" , cliTestProxy);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -227,7 +227,7 @@ public class CliUsageTests {
     public void miShowCarbonappAllTest() throws IOException {
 
         try{
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "carbonapp");
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show" , "carbonapp");
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
@@ -255,7 +255,7 @@ public class CliUsageTests {
     public void miShowCarbonappTest() throws IOException {
 
         try {
-            ProcessBuilder builder = new ProcessBuilder("../../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show", "carbonapp" , cliTestHelloCar);
+            ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "show", "carbonapp" , cliTestHelloCar);
             Process process = builder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
