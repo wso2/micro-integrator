@@ -46,9 +46,6 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
-import org.osgi.service.component.annotations.Reference;
-import org.osgi.service.component.annotations.ReferenceCardinality;
-import org.osgi.service.component.annotations.ReferencePolicy;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
@@ -58,7 +55,6 @@ import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.Feature;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
-import org.wso2.micro.application.deployer.service.ApplicationManagerService;
 import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.CarbonConfigurationContextFactory;
 import org.wso2.micro.core.CarbonThreadCleanup;
@@ -131,7 +127,6 @@ public class ServiceComponent {
     private Timer timer = new Timer();
     private org.wso2.micro.core.multitenancy.GenericArtifactUnloader genericArtifactUnloader = new GenericArtifactUnloader();
     private String carbonHome;
-    private CarbonServerConfigurationService serverConfig;
     private Thread shutdownHook;
     private ConfigurationContext serverConfigContext;
     private ConfigurationContext clientConfigContext;
@@ -165,7 +160,10 @@ public class ServiceComponent {
             ctxt.getBundleContext()
                     .registerService(ServerStartupObserver.class.getName(), new DeploymentServerStartupObserver(),
                                      null);
+            // org.wso2.micro.integrator.core.internal.Activator updates ServerConfigurationService inCarbonCoreDataHolder
+            serverConfigurationService = CarbonCoreDataHolder.getInstance().getServerConfigurationService();
             bundleContext = ctxt.getBundleContext();
+
             ApplicationManager applicationManager = ApplicationManager.getInstance();
             applicationManager.init(); // this will allow application manager to register deployment handlers
 
@@ -187,20 +185,7 @@ public class ServiceComponent {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-        try {
-        } catch (Throwable e) {
-            log.error("Failed clean up Carbon core", e);
-        }
-
-        try {
-            if ("false".equals(serverConfigurationService.getFirstProperty("RequireCarbonServlet"))) {
-                return;
-            }
-        } catch (Exception e) {
-            log.debug("Error while retrieving serverConfiguration instance", e);
-        }
-
-        log.debug("Carbon Core bundle is deactivated ");
+        log.debug("Micro Integrator Core ServiceComponent is deactivated ");
     }
 
     private void initializeCarbon() {
@@ -236,7 +221,6 @@ public class ServiceComponent {
                 isEmbedEnv = false;
             }
 
-            serverConfig = getServerConfigurationService();
             //Checking Carbon home
             carbonHome = System.getProperty(MicroIntegratorBaseConstants.CARBON_HOME);
             if (carbonHome == null) {
@@ -253,12 +237,12 @@ public class ServiceComponent {
             /* we create the serverconfiguration in the carbon base. There we don't know the local.ip property.
             hence we are setting it manually here */
             //TODO: proper fix would be to move the networkUtil class to carbon.base level
-            String serverURL = serverConfig.getFirstProperty(CarbonConstants.SERVER_URL);
+            String serverURL = serverConfigurationService.getFirstProperty(CarbonConstants.SERVER_URL);
             serverURL = Utils.replaceSystemProperty(serverURL);
-            serverConfig.overrideConfigurationProperty(CarbonConstants.SERVER_URL, serverURL);
-            serverName = serverConfig.getFirstProperty("Name");
+            serverConfigurationService.overrideConfigurationProperty(CarbonConstants.SERVER_URL, serverURL);
+            serverName = serverConfigurationService.getFirstProperty("Name");
 
-            String hostName = serverConfig.getFirstProperty("ClusteringHostName");
+            String hostName = serverConfigurationService.getFirstProperty("ClusteringHostName");
             if (System.getProperty(ClusteringConstants.LOCAL_IP_ADDRESS) == null && hostName != null
                     && hostName.trim().length() != 0) {
                 System.setProperty(ClusteringConstants.LOCAL_IP_ADDRESS, hostName);
@@ -272,7 +256,7 @@ public class ServiceComponent {
                         NetworkUtils.getLocalHostname());
             }
 
-            serverWorkDir = new File(serverConfig.getFirstProperty("WorkDirectory")).getAbsolutePath();
+            serverWorkDir = new File(serverConfigurationService.getFirstProperty("WorkDirectory")).getAbsolutePath();
             System.setProperty("axis2.work.dir", serverWorkDir);
 
             setAxis2RepoLocation();
@@ -282,7 +266,7 @@ public class ServiceComponent {
             configItemHolder.setDeployerBundles(configItemListener.getDeployerBundles());
             configItemHolder.setModuleBundles(configItemListener.getModuleBundles());
 
-            String carbonContextRoot = serverConfig.getFirstProperty("WebContextRoot");
+            String carbonContextRoot = serverConfigurationService.getFirstProperty("WebContextRoot");
 
             CarbonAxisConfigurator carbonAxisConfigurator = new CarbonAxisConfigurator();
             carbonAxisConfigurator.setAxis2ConfigItemHolder(configItemHolder);
@@ -340,10 +324,9 @@ public class ServiceComponent {
 
             //TODO As a tempory solution this part is added here. But when ui bundle are seperated from the core bundles
             //TODO this should be fixed.
-            CarbonServerConfigurationService config = getServerConfigurationService();
-            String type = config.getFirstProperty("Security.TrustStore.Type");
-            String password = config.getFirstProperty("Security.TrustStore.Password");
-            String storeFile = new File(config.getFirstProperty("Security.TrustStore.Location")).getAbsolutePath();
+            String type = serverConfigurationService.getFirstProperty("Security.TrustStore.Type");
+            String password = serverConfigurationService.getFirstProperty("Security.TrustStore.Password");
+            String storeFile = new File(serverConfigurationService.getFirstProperty("Security.TrustStore.Location")).getAbsolutePath();
 
             System.setProperty("javax.net.ssl.trustStore", storeFile);
             System.setProperty("javax.net.ssl.trustStoreType", type);
@@ -374,7 +357,7 @@ public class ServiceComponent {
 
             //Exposing metering.enabled system property. This is needed by the
             //tomcat.patch bundle to decide whether or not to publish bandwidth stat data
-            String isMeteringEnabledStr = serverConfig.getFirstProperty("EnableMetering");
+            String isMeteringEnabledStr = serverConfigurationService.getFirstProperty("EnableMetering");
             if (isMeteringEnabledStr != null) {
                 System.setProperty("metering.enabled", isMeteringEnabledStr);
             } else {
@@ -385,9 +368,12 @@ public class ServiceComponent {
             if (log.isDebugEnabled()) {
                 log.debug("Registering Axis2ConfigurationContextService...");
             }
+            Axis2ConfigurationContextService axis2ConfigurationContextService =
+                    new Axis2ConfigurationContextService(serverConfigContext, clientConfigContext);
+            //Register Axis2ConfigurationContextService
             bundleContext.registerService(Axis2ConfigurationContextService.class.getName(),
-                                          new Axis2ConfigurationContextService(serverConfigContext,
-                                                                               clientConfigContext), null);
+                    axis2ConfigurationContextService, null);
+            CarbonCoreDataHolder.getInstance().setAxis2ConfigurationContextService(axis2ConfigurationContextService);
 
         } catch (Throwable e) {
             log.fatal("WSO2 Carbon initialization Failed", e);
@@ -479,8 +465,8 @@ public class ServiceComponent {
     }
 
     private ConfigurationContext getClientConfigurationContext() throws AxisFault {
-        String clientRepositoryLocation = serverConfig.getFirstProperty(CLIENT_REPOSITORY_LOCATION);
-        String clientAxis2XmlLocationn = serverConfig.getFirstProperty(CLIENT_AXIS2_XML_LOCATION);
+        String clientRepositoryLocation = serverConfigurationService.getFirstProperty(CLIENT_REPOSITORY_LOCATION);
+        String clientAxis2XmlLocationn = serverConfigurationService.getFirstProperty(CLIENT_AXIS2_XML_LOCATION);
         ConfigurationContext clientConfigContextToReturn = ConfigurationContextFactory
                 .createConfigurationContextFromFileSystem(clientRepositoryLocation, clientAxis2XmlLocationn);
         MultiThreadedHttpConnectionManager httpConnectionManager = new MultiThreadedHttpConnectionManager();
@@ -516,9 +502,9 @@ public class ServiceComponent {
     }
 
     private void registerHouseKeepingTask(ConfigurationContext configurationContext) {
-        if (Boolean.valueOf(serverConfig.getFirstProperty("HouseKeeping.AutoStart"))) {
+        if (Boolean.valueOf(serverConfigurationService.getFirstProperty("HouseKeeping.AutoStart"))) {
             Timer houseKeepingTimer = new Timer();
-            long houseKeepingInterval = Long.parseLong(serverConfig.
+            long houseKeepingInterval = Long.parseLong(serverConfigurationService.
                     getFirstProperty("HouseKeeping.Interval")) * 60 * 1000;
             Object property = configurationContext.getProperty(MicroIntegratorBaseConstants.FILE_RESOURCE_MAP);
             if (property == null) {
@@ -533,7 +519,7 @@ public class ServiceComponent {
 
     private void runInitializers() throws ServerException {
 
-        String[] initializers = serverConfig.getProperties("ServerInitializers.Initializer");
+        String[] initializers = serverConfigurationService.getProperties("ServerInitializers.Initializer");
         for (String clazzName : initializers) {
             try {
                 Class clazz = bundleContext.getBundle().loadClass(clazzName);
@@ -559,13 +545,13 @@ public class ServiceComponent {
                     axis2RepoLocation = MicroIntegratorBaseUtils.getCarbonHome();
                 }
             }
-            serverConfig.setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation);
+            serverConfigurationService.setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation);
         } else {
-            axis2RepoLocation = serverConfig.getFirstProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION);
+            axis2RepoLocation = serverConfigurationService.getFirstProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION);
         }
 
         if (!axis2RepoLocation.endsWith("/")) {
-            serverConfig
+            serverConfigurationService
                     .setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation + "/");
             axis2RepoLocation = axis2RepoLocation + "/";
         }
@@ -573,7 +559,7 @@ public class ServiceComponent {
 
     private void registerCarbonServlet(HttpService httpService, HttpContext defaultHttpContext)
             throws ServletException, NamespaceException, InvalidSyntaxException {
-        if (!"false".equals(serverConfig.getFirstProperty("RequireCarbonServlet"))) {
+        if (!"false".equals(serverConfigurationService.getFirstProperty("RequireCarbonServlet"))) {
             org.wso2.micro.core.transports.CarbonServlet carbonServlet = new CarbonServlet(serverConfigContext);
             String servicePath = "/services";
             String path = serverConfigContext.getServicePath();
@@ -612,8 +598,8 @@ public class ServiceComponent {
     }
 
     private void initNetworkUtils(AxisConfiguration axisConfiguration) throws AxisFault, SocketException {
-        String hostName = serverConfig.getFirstProperty("HostName");
-        String mgtHostName = serverConfig.getFirstProperty("MgtHostName");
+        String hostName = serverConfigurationService.getFirstProperty("HostName");
+        String mgtHostName = serverConfigurationService.getFirstProperty("MgtHostName");
         if (hostName != null) {
             Parameter param = axisConfiguration.getParameter(HOST_ADDRESS);
             if (param != null) {
@@ -633,14 +619,14 @@ public class ServiceComponent {
         NetworkUtils.init(hostName, mgtHostName);
     }
 
-    @Reference(name = "org.wso2.micro.integrator.core.services.CarbonServerConfigurationService", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
+    /*@Reference(name = "org.wso2.micro.integrator.core.services.CarbonServerConfigurationService", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
     protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         ServiceComponent.serverConfigurationService = serverConfigurationService;
         CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
-    }
+    }*/
 
-    protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
+    /*protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         ServiceComponent.serverConfigurationService = null;
-    }
+    }*/
 
 }

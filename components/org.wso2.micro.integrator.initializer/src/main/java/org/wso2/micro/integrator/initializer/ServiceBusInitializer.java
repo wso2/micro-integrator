@@ -369,7 +369,12 @@ public class ServiceBusInitializer {
         this.configCtxSvc = null;
     }
 
-    @Reference(name = "org.wso2.micro.integrator.core.services.CarbonServerConfigurationService", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
+    @Reference(
+            name = "org.wso2.micro.integrator.core.services.CarbonServerConfigurationService",
+            service = CarbonServerConfigurationService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetServerConfigurationService")
     protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         ConfigurationHolder.getInstance().setCarbonServerConfigurationService(serverConfigurationService);
     }
