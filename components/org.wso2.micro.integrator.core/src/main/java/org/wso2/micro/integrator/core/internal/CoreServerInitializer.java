@@ -41,11 +41,6 @@ import org.osgi.framework.BundleContext;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceReference;
-import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.http.HttpContext;
 import org.osgi.service.http.HttpService;
 import org.osgi.service.http.NamespaceException;
@@ -87,7 +82,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import javax.servlet.Filter;
@@ -99,11 +93,9 @@ import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
 
 //import org.wso2.carbon.core.CarbonAxisConfigurator;
 
-@Component(name = "org.wso2.micro.integrator.core.internal.ServiceComponent", immediate = true)
-public class ServiceComponent {
+public class CoreServerInitializer {
 
-
-    private static Log log = LogFactory.getLog(ServiceComponent.class);
+    private static Log log = LogFactory.getLog(CoreServerInitializer.class);
 
     private static final String CLIENT_REPOSITORY_LOCATION = "Axis2Config.ClientRepositoryLocation";
     private static final String CLIENT_AXIS2_XML_LOCATION = "Axis2Config.clientAxis2XmlLocation";
@@ -112,24 +104,21 @@ public class ServiceComponent {
     private static final String HOST_NAME = "host-name";
     private static final ScheduledExecutorService artifactsCleanupExec = Executors
             .newScheduledThreadPool(1, new CarbonThreadFactory(new ThreadGroup("ArtifactCleanupThread")));
-    protected static CarbonServerConfigurationService serverConfigurationService;
-    protected static HttpService httpService;
-    private static BundleContext bundleContext;
-    private static ServiceRegistration appManagerRegistration;
+
+    protected CarbonServerConfigurationService serverConfigurationService;
+    private BundleContext bundleContext;
     //  private static ApplicationManagerService applicationManager;
     private static Map<String, List<Feature>> requiredFeatures;
-    private final Map<String, String> pendingItemMap = new ConcurrentHashMap<String, String>();
-    public boolean isEmbedEnv = false;
-    public String serverWorkDir;
-    public String axis2RepoLocation;
-    protected String serverName;
+
+    private boolean isEmbedEnv = false;
+    private String serverWorkDir;
+    private String axis2RepoLocation;
+    private String serverName;
     private org.wso2.micro.core.init.PreAxis2ConfigItemListener configItemListener;
     private Timer timer = new Timer();
     private org.wso2.micro.core.multitenancy.GenericArtifactUnloader genericArtifactUnloader = new GenericArtifactUnloader();
-    private String carbonHome;
     private Thread shutdownHook;
     private ConfigurationContext serverConfigContext;
-    private ConfigurationContext clientConfigContext;
     private List<AppDeploymentHandler> appHandlers = new ArrayList<AppDeploymentHandler>();
     private List<String> requiredServices = new ArrayList<String>();
     /**
@@ -137,7 +126,13 @@ public class ServiceComponent {
      */
     private volatile boolean isShutdownTriggeredByShutdownHook = false;
 
-    public static BundleContext getBundleContext() {
+    public CoreServerInitializer(CarbonServerConfigurationService serverConfigurationService, BundleContext bundleContext) {
+
+        this.serverConfigurationService = serverConfigurationService;
+        this.bundleContext = bundleContext;
+    }
+
+    public BundleContext getBundleContext() {
         return bundleContext;
     }
 
@@ -145,24 +140,15 @@ public class ServiceComponent {
         return requiredFeatures;
     }
 
-    public static CarbonServerConfigurationService getServerConfigurationService() {
-        return serverConfigurationService;
-    }
 
-    public static HttpService getHttpService() {
-        return httpService;
-    }
-
-    @Activate
-    protected void activate(ComponentContext ctxt) {
+    protected void initMIServer() {
+        if (log.isDebugEnabled()) {
+            log.debug(CoreServerInitializer.class.getName() + "#initMIServer() BEGIN - " + System.currentTimeMillis());
+        }
         try {
             // for new caching, every thread should has its own populated CC. During the deployment time we assume super tenant
-            ctxt.getBundleContext()
-                    .registerService(ServerStartupObserver.class.getName(), new DeploymentServerStartupObserver(),
+            bundleContext.registerService(ServerStartupObserver.class.getName(), new DeploymentServerStartupObserver(),
                                      null);
-            // org.wso2.micro.integrator.core.internal.Activator updates ServerConfigurationService inCarbonCoreDataHolder
-            serverConfigurationService = CarbonCoreDataHolder.getInstance().getServerConfigurationService();
-            bundleContext = ctxt.getBundleContext();
 
             ApplicationManager applicationManager = ApplicationManager.getInstance();
             applicationManager.init(); // this will allow application manager to register deployment handlers
@@ -181,11 +167,9 @@ public class ServiceComponent {
         } catch (Throwable e) {
             log.error("Failed to activate Carbon Core bundle ", e);
         }
-    }
-
-    @Deactivate
-    protected void deactivate(ComponentContext ctxt) {
-        log.debug("Micro Integrator Core ServiceComponent is deactivated ");
+        if (log.isDebugEnabled()) {
+            log.debug(CoreServerInitializer.class.getName() + "#initMIServer() COMPLETED - " + System.currentTimeMillis());
+        }
     }
 
     private void initializeCarbon() {
@@ -222,7 +206,7 @@ public class ServiceComponent {
             }
 
             //Checking Carbon home
-            carbonHome = System.getProperty(MicroIntegratorBaseConstants.CARBON_HOME);
+            String carbonHome = System.getProperty(MicroIntegratorBaseConstants.CARBON_HOME);
             if (carbonHome == null) {
                 String msg = MicroIntegratorBaseConstants.CARBON_HOME + "System property has not been set.";
                 log.fatal(msg);
@@ -336,7 +320,7 @@ public class ServiceComponent {
             //            registerHouseKeepingTask(serverConfigContext);
 
             // Creating the Client side configuration context
-            clientConfigContext = getClientConfigurationContext();
+            ConfigurationContext clientConfigContext = getClientConfigurationContext();
 
             //TOa house keeping taskDO add this map to a house keeping task
             //Adding FILE_RESOURCE_MAP
@@ -618,15 +602,4 @@ public class ServiceComponent {
         }
         NetworkUtils.init(hostName, mgtHostName);
     }
-
-    /*@Reference(name = "org.wso2.micro.integrator.core.services.CarbonServerConfigurationService", service = CarbonServerConfigurationService.class, cardinality = ReferenceCardinality.MANDATORY, policy = ReferencePolicy.DYNAMIC, unbind = "unsetServerConfigurationService")
-    protected void setServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
-        ServiceComponent.serverConfigurationService = serverConfigurationService;
-        CarbonCoreDataHolder.getInstance().setServerConfigurationService(serverConfigurationService);
-    }*/
-
-    /*protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
-        ServiceComponent.serverConfigurationService = null;
-    }*/
-
 }

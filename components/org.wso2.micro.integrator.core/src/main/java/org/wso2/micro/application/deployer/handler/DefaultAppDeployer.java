@@ -28,7 +28,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.micro.integrator.core.internal.ServiceComponent;
+import org.wso2.micro.integrator.core.internal.CoreServerInitializer;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
@@ -212,7 +212,7 @@ public class DefaultAppDeployer implements AppDeploymentHandler {
      */
     private boolean isAccepted(String serviceType) {
         if (acceptanceList == null) {
-            acceptanceList = org.wso2.micro.application.deployer.AppDeployerUtils.buildAcceptanceList(ServiceComponent
+            acceptanceList = org.wso2.micro.application.deployer.AppDeployerUtils.buildAcceptanceList(CoreServerInitializer
                     .getRequiredFeatures());
         }
         Boolean acceptance = acceptanceList.get(serviceType);

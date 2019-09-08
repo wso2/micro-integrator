@@ -547,7 +547,7 @@
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
         <synapse.version>2.1.7-wso2v118</synapse.version>
-        <carbon.mediation.version>4.7.11</carbon.mediation.version>
+        <carbon.mediation.version>4.7.10</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
         <carbon.data.version>4.5.2</carbon.data.version>
         <securevault.version>1.1.2</securevault.version>

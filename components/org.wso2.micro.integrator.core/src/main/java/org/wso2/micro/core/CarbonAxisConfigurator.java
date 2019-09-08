@@ -446,7 +446,7 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
         scheduler = Executors
                 .newScheduledThreadPool(1, new CarbonThreadFactory(new ThreadGroup("CarbonDeploymentSchedulerThread")));
         String deploymentInterval =
-                ServiceComponent.
+                CoreServerInitializer.
                         getServerConfigurationService().getFirstProperty("Axis2Config.DeploymentUpdateInterval");
         int deploymentIntervalInt = 15;
         if(deploymentInterval != null) {
