@@ -65,7 +65,7 @@ public class StartupFinalizer {
      * Cleanup registered services
      */
     public void cleanup() {
-        listerManagerServiceRegistration.unregister();
+        /*listerManagerServiceRegistration.unregister();*/
     }
 
     private void completeInitialization() {
@@ -78,8 +78,8 @@ public class StartupFinalizer {
         // Init and start axis2 transports
         listenerManager.startSystem(configCtx);
 
-        listerManagerServiceRegistration =
-                bundleContext.registerService(ListenerManager.class.getName(), listenerManager, null);
+        /*listerManagerServiceRegistration =
+                bundleContext.registerService(ListenerManager.class.getName(), listenerManager, null);*/
 
         setServerStartTimeParam();
         printInfo();

@@ -45,6 +45,9 @@ public class Activator implements BundleActivator {
 
     @Override
     public void start(BundleContext bundleContext) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug(Activator.class.getName() + "#start() BEGIN - " + System.currentTimeMillis());
+        }
         try {
             // Need permissions in order to activate Carbon Core
 
@@ -71,8 +74,16 @@ public class Activator implements BundleActivator {
 
             initializeCarbonServerConfigurationService(bundleContext);
 
+            // Initialize MI Server
+            CoreServerInitializer coreServerInitializer =
+                    new CoreServerInitializer(CarbonCoreDataHolder.getInstance().getServerConfigurationService(),
+                            bundleContext);
+            coreServerInitializer.initMIServer();
         } catch (Throwable e) {
             throw new Exception(e);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug(Activator.class.getName() + "#start() COMPLETED - " + System.currentTimeMillis());
         }
     }
 
@@ -95,6 +106,7 @@ public class Activator implements BundleActivator {
         registration = bundleContext.registerService(CarbonServerConfigurationService.class.getName(),
                                                      carbonServerConfiguration,
                                                      null);
+        CarbonCoreDataHolder.getInstance().setServerConfigurationService(carbonServerConfiguration);
         CarbonCoreDataHolder.getInstance().setBundleContext(bundleContext);
     }
 
