@@ -399,18 +399,6 @@
         </file>
 
         <file>
-            <source>src/conf/context.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/MATA-INF</outputDirectory>
-            <destName>context.xml</destName>
-        </file>
-
-        <file>
-            <source>src/conf/web.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/WEB-INF</outputDirectory>
-            <destName>web.xml</destName>
-        </file>
-
-        <file>
             <source>src/conf/axis2_blocking_client.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
             <destName>axis2_blocking_client.xml</destName>
