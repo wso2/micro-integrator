@@ -33,7 +33,7 @@ function extractCompressArchive() {
     if [[ "${platform}" == "Linux" && "${bitType}" == "i586" ]]; then
         tar -zxvf wso2mi-cli-$VERSION-linux-i586.tar.gz
 
-    elif [[ "${platform}" == "Linux" && "${bitType}" == "x64" ]]; then
+    elif [[ "${platform}" == "Linux" && "${bitType}" == "x86_64" ]]; then
         tar -zxvf wso2mi-cli-$VERSION-linux-x64.tar.gz
 
     elif [[ "${platform}" == "Darwin" && "${bitType}" == "x64"  ]]; then
