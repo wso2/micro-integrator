@@ -50,8 +50,6 @@ public class NtaskService {
 
     private static Axis2ConfigurationContextService ccServiceInstance;
 
-    private static Axis2ConfigurationContextService configContextService = null;
-
     @Activate
     protected void activate(ComponentContext context) {
 
@@ -100,7 +98,6 @@ public class NtaskService {
             unbind = "unsetConfigurationContextService")
     protected void setConfigurationContextService(Axis2ConfigurationContextService contextService) {
 
-        configContextService = contextService;
         if (logger.isDebugEnabled()) {
             logger.debug("Setting Configuration Context Service [" + contextService + "]");
         }
