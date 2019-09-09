@@ -161,13 +161,6 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.ntask.core.feature:${project.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.ndatasource.datasources.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
-
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.transaction.manager.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
 
 <!--                                &lt;!&ndash;10 Carbon-rules&ndash;&gt;-->
 <!--                                <featureArtifactDef>-->
@@ -370,15 +363,6 @@
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.das.messageflow.data.publisher.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.ndatasource.datasources.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.transaction.manager.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
 <!--                                </feature>-->
 
 <!--                                &lt;!&ndash;10 Carbon rule&ndash;&gt;-->
