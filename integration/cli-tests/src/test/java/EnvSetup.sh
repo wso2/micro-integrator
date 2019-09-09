@@ -18,7 +18,7 @@
 
 set -o xtrace
 
-echo "Executing env script"
+echo "Executing Environment Setup script"
 platform=$(uname -s)
 bitType=$(arch)
 
@@ -27,8 +27,7 @@ echo "Bittype : $bitType"
 
 #Extract the compressed archive based on the platform and the bitype
 extractCompressArchive() {
-    platform=$(uname -s)
-    bitType=$(arch)
+    echo "Extracting the archive files"
 
     if [[ "${platform}" == "Linux" && "${bitType}" == "i586" ]]; then
         tar -zxvf wso2mi-cli-$VERSION-linux-i586.tar.gz
@@ -54,12 +53,8 @@ getPomVersion(){
 
 setup(){
 #Setting up the CLI environment
-echo "Working Directory "
-echo pwd
 #Check if the cli build is available in the location
 DIR="../../../cmd/build"
-pwd
-
 if [ -d "$DIR" ]; then
     echo "CLI build exists. Hence skipping the environment setup phase"
 else
@@ -79,7 +74,10 @@ else
     ./build.sh -t mi.go -v ${VERSION} -f
 
     #Extract the compressed archive generated
-    cd ../cmd/build
+    echo "Extract the CLI archive "
+    pwd
+    cd build
+    ls
     extractCompressArchive
 
     #start the application
