@@ -19,6 +19,11 @@
 set -o xtrace
 
 echo "Executing env script"
+platform=$(uname -s)
+bitType=$(arch)
+
+echo "Platform : $platform"
+echo "Bittype : $bitType"
 
 #Extract the compressed archive based on the platform and the bitype
 function extractCompressArchive() {
@@ -44,19 +49,22 @@ function extractCompressArchive() {
 #get the product version from the pom file
 function getPomVersion(){
     VERSION=$(cat pom.xml | grep "^    <version>.*</version>$" | awk -F'[><]' '{print $3}');
-    echo $VERSION
+    echo "Version : $VERSION"
 }
 
 #Setting up the CLI environment
-
+echo "Working Directory "
+echo pwd
 #Check if the cli build is available in the location
 DIR="../../../cmd/build"
+pwd
+
 if [ -d "$DIR" ]; then
     echo "CLI build exists. Hence skipping the environment setup phase"
 else
     echo "CLI build does not exists. Setting up the environment..."
     #download all the dependencies
-    cd ../../cmd
+    cd ../../../cmd
     go mod vendor
     sleep 10
 
