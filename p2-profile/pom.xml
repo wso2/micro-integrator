@@ -165,10 +165,6 @@
 <!--                                    org.wso2.carbon.commons:org.wso2.carbon.ndatasource.datasources.feature:${carbon.commons.version}-->
 <!--                                </featureArtifactDef>-->
 
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.transaction.manager.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
-
 <!--                                &lt;!&ndash;10 Carbon-rules&ndash;&gt;-->
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.rules:org.wso2.carbon.rule.mediation.server.feature:${carbon.rule.version}-->
@@ -373,11 +369,6 @@
 <!--                                </feature>-->
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.ndatasource.datasources.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.transaction.manager.feature.group</id>-->
 <!--                                    <version>${carbon.commons.version}</version>-->
 <!--                                </feature>-->
 
