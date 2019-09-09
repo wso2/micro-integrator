@@ -56,8 +56,6 @@ public class TasksDSComponent {
 
     private static Scheduler scheduler;
 
-    private static Axis2ConfigurationContextService configCtxService;
-
     private static SecretCallbackHandlerService secretCallbackHandlerService;
 
     private static TaskService taskService;
@@ -126,26 +124,6 @@ public class TasksDSComponent {
     public static Scheduler getScheduler() {
 
         return scheduler;
-    }
-
-    @Reference(name = "config.context.service",
-            service = Axis2ConfigurationContextService.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetConfigurationContextService")
-    protected void setConfigurationContextService(Axis2ConfigurationContextService configCtxService) {
-
-        TasksDSComponent.configCtxService = configCtxService;
-    }
-
-    protected void unsetConfigurationContextService(Axis2ConfigurationContextService configCtxService) {
-
-        TasksDSComponent.configCtxService = null;
-    }
-
-    public static Axis2ConfigurationContextService getConfigurationContextService() {
-
-        return TasksDSComponent.configCtxService;
     }
 
     public static SecretCallbackHandlerService getSecretCallbackHandlerService() {
