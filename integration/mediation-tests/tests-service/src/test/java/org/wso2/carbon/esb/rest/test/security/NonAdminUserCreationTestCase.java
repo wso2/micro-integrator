@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.esb.rest.test.security;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;

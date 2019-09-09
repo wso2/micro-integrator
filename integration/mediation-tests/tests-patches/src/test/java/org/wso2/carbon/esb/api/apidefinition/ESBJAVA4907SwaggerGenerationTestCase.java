@@ -16,7 +16,7 @@
  */
 package org.wso2.carbon.esb.api.apidefinition;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.HttpResponse;
 import org.testng.annotations.AfterClass;

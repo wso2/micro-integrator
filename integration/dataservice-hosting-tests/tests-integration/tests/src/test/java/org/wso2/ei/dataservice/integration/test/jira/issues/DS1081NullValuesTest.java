@@ -18,7 +18,7 @@
 
 package org.wso2.ei.dataservice.integration.test.jira.issues;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.ei.dataservice.integration.test.DSSIntegrationTest;

@@ -17,7 +17,7 @@
  */
 package org.wso2.carbon.esb.mediator.test.spring;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
