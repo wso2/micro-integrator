@@ -38,6 +38,7 @@ import org.wso2.micro.integrator.initializer.deployment.artifact.deployer.Artifa
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 //import org.wso2.carbon.dataservices.core.DBDeployer;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
+import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 
 @Component(name = "org.wso2.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
@@ -51,7 +52,13 @@ public class AppDeployerServiceComponent {
     @Activate
     protected void activate(ComponentContext ctxt) {
 
-        log.debug("Activating AppDeployerServiceComponent");
+        if (log.isDebugEnabled()) {
+            log.debug(AppDeployerServiceComponent.class.getName() + "#activate() BEGIN - " + System.currentTimeMillis());
+            log.debug("Activating AppDeployerServiceComponent");
+        }
+
+        // ConfigurationHolder is updated by org.wso2.micro.integrator.initializer.ServiceBusInitializer
+        configCtx = ConfigurationHolder.getInstance().getAxis2ConfigurationContextService().getServerConfigContext();
 
         // Initialize deployers
         ArtifactDeploymentManager artifactDeploymentManager = new ArtifactDeploymentManager(configCtx.getAxisConfiguration());
@@ -72,37 +79,17 @@ public class AppDeployerServiceComponent {
         // Finalize server startup
         startupFinalizer = new StartupFinalizer(configCtx, ctxt.getBundleContext());
         startupFinalizer.finalizeStartup();
+
+        if (log.isDebugEnabled()) {
+            log.debug(AppDeployerServiceComponent.class.getName() + "#activate() COMPLETE - " + System.currentTimeMillis());
+        }
+
     }
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
         log.debug("Deactivating AppDeployerServiceComponent");
         startupFinalizer.cleanup();
-    }
-
-    /**
-     * Receive an event about creation of ConfigurationContext.
-     *
-     * @param configCtx Instance of Axis2ConfigurationContextService which wraps server configuration context
-     */
-    @Reference(
-            name = "org.wso2.micro.integrator.axis2ConfigurationContextService",
-            service = org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetConfigurationContext")
-    protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
-        this.configCtx = configCtx.getServerConfigContext();
-        DataHolder.getInstance().setConfigContext(this.configCtx);
-    }
-
-    /**
-     * Receive an event about destroying ConfigurationContext
-     *
-     * @param configCtx
-     */
-    protected void unsetConfigurationContext(Axis2ConfigurationContextService configCtx) {
-        this.configCtx = null;
     }
 
     // TODO :- uncomment when satisfied
