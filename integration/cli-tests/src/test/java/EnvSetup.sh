@@ -26,7 +26,7 @@ echo "Platform : $platform"
 echo "Bittype : $bitType"
 
 #Extract the compressed archive based on the platform and the bitype
-function extractCompressArchive() {
+extractCompressArchive() {
     platform=$(uname -s)
     bitType=$(arch)
 
@@ -47,11 +47,12 @@ function extractCompressArchive() {
     fi
 }
 #get the product version from the pom file
-function getPomVersion(){
+getPomVersion(){
     VERSION=$(cat pom.xml | grep "^    <version>.*</version>$" | awk -F'[><]' '{print $3}');
     echo "Version : $VERSION"
 }
 
+setup(){
 #Setting up the CLI environment
 echo "Working Directory "
 echo pwd
@@ -87,3 +88,7 @@ else
 
     echo "ClI setup Complete"
 fi
+
+}
+
+setup
