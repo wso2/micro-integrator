@@ -23,7 +23,11 @@ package org.wso2.micro.integrator.initializer.utils;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
+import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
+import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsService;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -33,6 +37,10 @@ public class ConfigurationHolder {
 
     private BundleContext bundleContext;
     private CarbonServerConfigurationService carbonServerConfigurationService;
+    private Axis2ConfigurationContextService axis2ConfigurationContextService;
+    private SynapseConfigurationService synapseConfigurationService;
+    private SynapseEnvironmentService synapseEnvironmentService;
+    private SynapseRegistrationsService synapseRegistrationsService;
 
     private Map<Integer, ServiceRegistration> synapseRegistrations =
             new HashMap<Integer, ServiceRegistration>(); 
@@ -66,5 +74,37 @@ public class ConfigurationHolder {
 
     public void setCarbonServerConfigurationService(CarbonServerConfigurationService carbonServerConfigurationService) {
         this.carbonServerConfigurationService = carbonServerConfigurationService;
+    }
+
+    public Axis2ConfigurationContextService getAxis2ConfigurationContextService() {
+        return this.axis2ConfigurationContextService;
+    }
+
+    public void setAxis2ConfigurationContextService(Axis2ConfigurationContextService axis2ConfigurationContextService) {
+        this.axis2ConfigurationContextService = axis2ConfigurationContextService;
+    }
+
+    public SynapseConfigurationService getSynapseConfigurationService() {
+        return synapseConfigurationService;
+    }
+
+    public void setSynapseConfigurationService(SynapseConfigurationService synapseConfigurationService) {
+        this.synapseConfigurationService = synapseConfigurationService;
+    }
+
+    public SynapseEnvironmentService getSynapseEnvironmentService() {
+        return synapseEnvironmentService;
+    }
+
+    public void setSynapseEnvironmentService(SynapseEnvironmentService synapseEnvironmentService) {
+        this.synapseEnvironmentService = synapseEnvironmentService;
+    }
+
+    public SynapseRegistrationsService getSynapseRegistrationsService() {
+        return synapseRegistrationsService;
+    }
+
+    public void setSynapseRegistrationsService(SynapseRegistrationsService synapseRegistrationsService) {
+        this.synapseRegistrationsService = synapseRegistrationsService;
     }
 }

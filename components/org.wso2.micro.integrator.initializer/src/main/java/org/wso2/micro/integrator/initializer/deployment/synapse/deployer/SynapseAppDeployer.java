@@ -62,6 +62,7 @@ import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.carbon.mediation.library.util.LocalEntryUtil;
 import org.wso2.micro.integrator.initializer.deployment.DataHolder;
+import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -1106,7 +1107,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
      * @param deployer deployer implementation
      */
     private void addSynapseDeployer(String type, Deployer deployer) {
-        ConfigurationContext configContext = DataHolder.getInstance().getConfigContext();
+        ConfigurationContext configContext =
+                ConfigurationHolder.getInstance().getAxis2ConfigurationContextService().getServerConfigContext();
         if (deployer == null) {
             log.error("Failed to add Deployer : deployer is null");
             return;

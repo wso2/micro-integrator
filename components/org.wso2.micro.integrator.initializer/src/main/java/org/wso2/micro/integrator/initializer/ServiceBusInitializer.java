@@ -112,6 +112,9 @@ public class ServiceBusInitializer {
     @Activate
     protected void activate(ComponentContext ctxt) {
 
+        if (log.isDebugEnabled()) {
+            log.debug(ServiceBusInitializer.class.getName() + "#activate() BEGIN - " + System.currentTimeMillis());
+        }
         log.info("Activating Micro Integrator...");
 
         if (taskService != null && !taskService.isServerInit()) {
@@ -151,8 +154,11 @@ public class ServiceBusInitializer {
                 SynapseConfigurationService synCfgSvc = new SynapseConfigurationServiceImpl(contextInfo
                         .getSynapseConfiguration(), MultitenantConstants.SUPER_TENANT_ID, configCtxSvc
                         .getServerConfigContext());
+                // Update ConfigurationHolder before registering the service
+                ConfigurationHolder.getInstance().setSynapseConfigurationService(synCfgSvc);
                 synCfgRegistration = bndCtx.registerService(SynapseConfigurationService.class.getName(), synCfgSvc,
                         null);
+
                 bndCtx.registerService(ServerShutdownHandler.class.getName(), new MPMShutdownHandler(synCfgSvc
                         .getSynapseConfiguration().getAxisConfiguration()), null);
                 initPersistence(synCfgSvc, "default");
@@ -167,7 +173,10 @@ public class ServiceBusInitializer {
                 // Properties props = new Properties();
                 SynapseEnvironmentService synEnvSvc = new SynapseEnvironmentServiceImpl(synapseEnvironment,
                         MultitenantConstants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
+                // Update ConfigurationHolder before registering the service
+                ConfigurationHolder.getInstance().setSynapseEnvironmentService(synEnvSvc);
                 synEnvRegistration = bndCtx.registerService(SynapseEnvironmentService.class.getName(), synEnvSvc, null);
+
                 synapseEnvironment.registerSynapseHandler(new SynapseExternalPropertyConfigurator());
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
                 if (log.isDebugEnabled()) {
@@ -179,6 +188,8 @@ public class ServiceBusInitializer {
             // Properties props = new Properties();
             SynapseRegistrationsService synRegistrationsSvc = new SynapseRegistrationsServiceImpl(synCfgRegistration,
                     synEnvRegistration, MultitenantConstants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
+            // Update ConfigurationHolder before registering the service
+            ConfigurationHolder.getInstance().setSynapseRegistrationsService(synRegistrationsSvc);
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
             /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
                     configurationManager);*/
@@ -191,6 +202,9 @@ public class ServiceBusInitializer {
             handleFatal("Couldn't initialize the ESB...", e);
         } catch (Throwable t) {
             log.fatal("Failed to initialize ESB due to a fatal error", t);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug(ServiceBusInitializer.class.getName() + "#activate() COMPLETED - " + System.currentTimeMillis());
         }
     }
 
@@ -359,6 +373,7 @@ public class ServiceBusInitializer {
             log.debug("configurationContextService : " + configurationContextService);
         }
         this.configCtxSvc = configurationContextService;
+        ConfigurationHolder.getInstance().setAxis2ConfigurationContextService(configurationContextService);
     }
 
     protected void unsetConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
