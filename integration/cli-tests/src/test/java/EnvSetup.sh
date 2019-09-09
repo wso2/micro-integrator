@@ -14,7 +14,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-#!/bin/bash
+#!/bin/dash
 
 set -o xtrace
 
@@ -29,20 +29,20 @@ echo "Bittype : $bitType"
 extractCompressArchive() {
     echo "Extracting the files"
 
-    if [[ "${platform}" == "Linux" && "${bitType}" == "i586" ]]; then
+    if [[ ( "${platform}" == "Linux" ) && ( "${bitType}" == "i586" ) ]]; then
         tar -xvzf wso2mi-cli-$VERSION-linux-i586.tar.gz
 
-    elif [[ "${platform}" == "Linux" && "${bitType}" == "x86_64" ]]; then
+    elif [[ ( "${platform}" == "Linux" ) &&  ( "${bitType}" == "x86_64" ) ]]; then
         echo "Extracting the linux compressed archive "
         tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 
-    elif [[ "${platform}" == "Darwin" && "${bitType}" == "x64"  ]]; then
+    elif [[ ( "${platform}" == "Darwin" )  && ( "${bitType}" == "x64" )  ]]; then
         tar -xvzf wso2mi-cli-$VERSION-macosx-x64.tar.gz
 
-    elif [[ "${platform}" == "windows" && "${bitType}" == "i586" ]]; then
+    elif [[ ( "${platform}" == "windows" ) && ( "${bitType}" == "i586" ) ]]; then
         tar -xvzf wso2mi-cli-$VERSION-windows-i586.tar.gz
 
-    elif [[ "${platform}" == "windows" && "${bitType}" == "x64" ]]; then
+    elif [[ ( "${platform}" == "windows" ) && ( "${bitType}" == "x64" ) ]]; then
         tar -xvzf wso2mi-cli-$VERSION-windows-x64.tar.gz
     fi
 }
