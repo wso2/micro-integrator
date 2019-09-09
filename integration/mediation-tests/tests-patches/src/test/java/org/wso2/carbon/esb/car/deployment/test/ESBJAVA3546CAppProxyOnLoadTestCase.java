@@ -15,7 +15,7 @@
  */
 package org.wso2.carbon.esb.car.deployment.test;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;

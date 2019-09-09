@@ -490,7 +490,7 @@
                            class="org.apache.axis2.json.gson.JSONMessageHandler" />
               </handler>
                  <handler name="CarbonContextConfigurator"
-                       class="org.wso2.carbon.mediation.initializer.handler.CarbonContextConfigurator"/> -->
+                       class="org.wso2.micro.integrator.initializer.handler.CarbonContextConfigurator"/> -->
             <handler name="RelaySecuirtyMessageBuilderDispatchandler"
                      class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"/>
             <handler name="SOAPActionBasedDispatcher"

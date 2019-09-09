@@ -17,7 +17,6 @@
  */
 package org.wso2.esb.integration.common.clients.proxy.admin;
 
-import junit.framework.Assert;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -29,6 +28,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.xml.XMLConfigConstants;
 import org.apache.synapse.core.axis2.ProxyService;
+import org.testng.Assert;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminStub;
 import org.wso2.carbon.proxyadmin.stub.types.carbon.Entry;
