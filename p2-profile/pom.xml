@@ -164,12 +164,7 @@
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.commons:org.wso2.carbon.ndatasource.datasources.feature:${carbon.commons.version}-->
 <!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.event.server.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.event.common.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
+
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.commons:org.wso2.carbon.transaction.manager.feature:${carbon.commons.version}-->
 <!--                                </featureArtifactDef>-->
@@ -386,16 +381,6 @@
 <!--                                </feature>-->
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.ndatasource.datasources.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                &lt;!&ndash;TODO fix this later&ndash;&gt;-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.event.server.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.event.common.feature.group</id>-->
 <!--                                    <version>${carbon.commons.version}</version>-->
 <!--                                </feature>-->
 
