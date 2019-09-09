@@ -14,7 +14,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-#!/bin/dash
+#!/bin/bash
 
 set -o xtrace
 
