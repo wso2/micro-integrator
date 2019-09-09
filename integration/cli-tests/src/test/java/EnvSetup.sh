@@ -27,22 +27,23 @@ echo "Bittype : $bitType"
 
 #Extract the compressed archive based on the platform and the bitype
 extractCompressArchive() {
-    echo "Extracting the archive files"
+    echo "Extracting the files"
 
     if [[ "${platform}" == "Linux" && "${bitType}" == "i586" ]]; then
-        tar -zxvf wso2mi-cli-$VERSION-linux-i586.tar.gz
+        tar -xvzf wso2mi-cli-$VERSION-linux-i586.tar.gz
 
     elif [[ "${platform}" == "Linux" && "${bitType}" == "x86_64" ]]; then
-        tar -zxvf wso2mi-cli-$VERSION-linux-x64.tar.gz
+        echo "Extracting the linux compressed archive "
+        tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 
     elif [[ "${platform}" == "Darwin" && "${bitType}" == "x64"  ]]; then
-        tar -zxvf wso2mi-cli-$VERSION-macosx-x64.tar.gz
+        tar -xvzf wso2mi-cli-$VERSION-macosx-x64.tar.gz
 
     elif [[ "${platform}" == "windows" && "${bitType}" == "i586" ]]; then
-        tar -zxvf wso2mi-cli-$VERSION-windows-i586.tar.gz
+        tar -xvzf wso2mi-cli-$VERSION-windows-i586.tar.gz
 
     elif [[ "${platform}" == "windows" && "${bitType}" == "x64" ]]; then
-        tar -zxvf wso2mi-cli-$VERSION-windows-x64.tar.gz
+        tar -xvzf wso2mi-cli-$VERSION-windows-x64.tar.gz
     fi
 }
 #get the product version from the pom file
@@ -79,9 +80,13 @@ else
     cd build
     ls
     extractCompressArchive
+    echo "Extract completed"
+    ls
 
     #start the application
+    echo "Check build exist"
     cd wso2mi-cli-$VERSION/bin
+    ls
     mi
     echo "ClI setup Complete"
 fi
