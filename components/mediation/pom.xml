@@ -39,6 +39,7 @@
         <module>tasks</module>
         <module>inbound-endpoints</module>
         <module>transports</module>
+        <module>data-publishers</module>
     </modules>
 
 </project>

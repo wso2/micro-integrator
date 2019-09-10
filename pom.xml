@@ -500,6 +500,11 @@
                 <version>${stax2.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>jsr311-api</artifactId>
+                <version>${javax.jsr311.api.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.bsf.wso2</groupId>
                 <artifactId>bsf-all</artifactId>
                 <version>${org.apache.bsf.wso2.version}</version>
@@ -680,6 +685,7 @@
         <aries.version>1.1.0</aries.version>
         <aries.proxy.version>1.0.1</aries.proxy.version>
         <stax2.version>3.1.4</stax2.version>
+        <javax.jsr311.api.version>1.1.1</javax.jsr311.api.version>
 
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
