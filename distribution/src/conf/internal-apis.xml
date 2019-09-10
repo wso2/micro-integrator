@@ -19,8 +19,8 @@
 -->
 <internalApis>
     <apis>
-        <api name="PrometheusApi" protocol="http" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>
-        <api class="org.wso2.micro.integrator.management.apis.ManagementInternalApi" name="ManagementApi"
+<!--        <api name="PrometheusApi" protocol="http" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>-->
+        <!--<api class="org.wso2.micro.integrator.management.apis.ManagementInternalApi" name="ManagementApi"
              protocol="https">
             <handlers>
                 <handler class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"
@@ -35,7 +35,7 @@
                     </UserStore>
                 </handler>
             </handlers>
-        </api>
+        </api>-->
     </apis>
     <sslConfig>
         <parameter name="keystore">
