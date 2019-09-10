@@ -29,11 +29,20 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.util.XMLUtils;
 import org.apache.commons.httpclient.Header;
-import org.wso2.carbon.CarbonConstants;
+
+import org.apache.xerces.util.SecurityManager;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.utils.ServerConstants;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -47,8 +56,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import static java.lang.Boolean.TRUE;
 
@@ -58,8 +77,10 @@ public class MicroIntegratorBaseUtils {
     private static boolean isServerConfigInitialized;
     private static OMElement axis2Config;
     private static final String TRUE = "true";
+    private static final int ENTITY_EXPANSION_LIMIT = 0;
 
     public static String getServerXml() {
+
         String carbonXML = System.getProperty(MicroIntegratorBaseConstants.CARBON_CONFIG_DIR_PATH);
         /*
          * if user set the system property telling where is the configuration
@@ -72,6 +93,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getCarbonConfigDirPath() {
+
         String carbonConfigDirPath = System.getProperty(MicroIntegratorBaseConstants.CARBON_CONFIG_DIR_PATH);
         if (carbonConfigDirPath == null) {
             carbonConfigDirPath = System.getenv(MicroIntegratorBaseConstants.CARBON_CONFIG_DIR_PATH_ENV);
@@ -83,6 +105,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getCarbonHome() {
+
         String carbonHome = System.getProperty(MicroIntegratorBaseConstants.CARBON_HOME);
         if (carbonHome == null) {
             carbonHome = System.getenv(MicroIntegratorBaseConstants.CARBON_HOME_ENV);
@@ -96,7 +119,8 @@ public class MicroIntegratorBaseUtils {
      * method.
      */
     public static void checkSecurity() {
-        SecurityManager secMan = System.getSecurityManager();
+
+        java.lang.SecurityManager secMan = System.getSecurityManager();
         if (secMan != null) {
             secMan.checkPermission(new ManagementPermission("control"));
         }
@@ -110,6 +134,7 @@ public class MicroIntegratorBaseUtils {
      * @return Copy of the provided array
      */
     public static <T> T[] arrayCopyOf(T[] original) {
+
         if (original == null) {
             return null;
         }
@@ -128,6 +153,7 @@ public class MicroIntegratorBaseUtils {
      * @return true if this is an instance started by Java exec
      */
     public static boolean isChildNode() {
+
         return TRUE.equals(System.getProperty("instance"));
     }
 
@@ -138,6 +164,7 @@ public class MicroIntegratorBaseUtils {
      * @return true - if <code>location</code> is a URL, false - otherwise
      */
     public static boolean isURL(String location) {
+
         try {
             new URL(location);
             return true;
@@ -147,6 +174,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getAxis2Xml() {
+
         String axis2XML = CarbonServerConfigurationService.getInstance().
                 getFirstProperty("Axis2Config.ConfigurationFile");
         if (axis2XML == null) {
@@ -161,13 +189,15 @@ public class MicroIntegratorBaseUtils {
      * @return true if the server started with -n argument
      */
     public static boolean isMultipleInstanceCase() {
+
         return System.getProperty("instances.value") != null;
     }
 
     public static String getComponentsRepo() {
+
         String componentsRepo = System.getProperty(ServerConstants.COMPONENT_REP0);
         if (componentsRepo == null) {
-            componentsRepo = System.getenv(CarbonConstants.COMPONENT_REP0_ENV);
+            componentsRepo = System.getenv(MicroIntegratorBaseConstants.COMPONENT_REP0_ENV);
             if (componentsRepo == null) {
                 return getCarbonHome() + File.separator + REPOSITORY + File.separator + "components" + File.separator
                         + "plugins";
@@ -184,6 +214,7 @@ public class MicroIntegratorBaseUtils {
      * @return - services dir name
      */
     public static String getAxis2ServicesDir(AxisConfiguration axisConfig) {
+
         String servicesDir = "axis2services";
         String serviceDirPara = (String) axisConfig.getParameterValue(DeploymentConstants.SERVICE_DIR_PATH);
         if (serviceDirPara != null) {
@@ -193,20 +224,23 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getAxis2Repo() {
+
         String axis2Repo = System.getProperty(ServerConstants.AXIS2_REPO);
         if (axis2Repo == null) {
-            axis2Repo = System.getenv(CarbonConstants.AXIS2_REPO_ENV);
+            axis2Repo = System.getenv(MicroIntegratorBaseConstants.AXIS2_REPO_ENV);
         }
         return axis2Repo;
     }
 
     public static String getCarbonRepository() {
+
         CarbonServerConfigurationService serverConfig = getServerConfiguration();
         return serverConfig
                 .getFirstProperty("Axis2Config.RepositoryLocation"); //TODO: Change to Carbon.Repository in carbon.xml
     }
 
     public static CarbonServerConfigurationService getServerConfiguration() {
+
         CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
         if (!isServerConfigInitialized) {
             String serverXml = MicroIntegratorBaseUtils.getServerXml();
@@ -231,8 +265,8 @@ public class MicroIntegratorBaseUtils {
         return serverConfig;
     }
 
-
     public static boolean isDataService(org.apache.axis2.context.MessageContext messageContext) throws AxisFault {
+
         AxisService axisService = messageContext.getAxisService();
         if (axisService != null) {
             URL file = axisService.getFileName();
@@ -245,6 +279,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getPassThroughJsonBuilder() throws IOException, XMLStreamException {
+
         String psJsonBuilder = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.PASSTHRU_JSON_BUILDER);
         if (psJsonBuilder == null) {
             return "org.apache.synapse.commons.json.JsonStreamBuilder";
@@ -254,6 +289,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getPassThroughJsonFormatter() throws IOException, XMLStreamException {
+
         String psJsonFormatter = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.PASSTHRU_JSON_FORMATTER);
         if (psJsonFormatter == null) {
             return "org.apache.synapse.commons.json.JsonStreamFormatter";
@@ -263,6 +299,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getDSSJsonBuilder() throws IOException, XMLStreamException {
+
         String dssJsonBuilder = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.DATASERVICE_JSON_BUILDER);
         if (dssJsonBuilder == null) {
             return "org.apache.axis2.json.gson.JsonBuilder";
@@ -272,6 +309,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     public static String getDSSJsonFormatter() throws IOException, XMLStreamException {
+
         String dssJsonFormatter = getPropertyFromAxisConf(org.wso2.micro.integrator.core.Constants.DATASERVICE_JSON_FORMATTER);
         if (dssJsonFormatter == null) {
             return "org.apache.axis2.json.gson.JsonFormatter";
@@ -281,9 +319,10 @@ public class MicroIntegratorBaseUtils {
     }
 
     private static String getPropertyFromAxisConf(String parameter) throws IOException, XMLStreamException {
+
         try (InputStream file = new FileInputStream(Paths.get(getCarbonConfigDirPath(), "axis2",
                 "axis2.xml").toString())) {
-            if(axis2Config == null) {
+            if (axis2Config == null) {
                 OMElement element = (OMElement) XMLUtils.toOM(file);
                 element.build();
                 axis2Config = element;
@@ -300,6 +339,7 @@ public class MicroIntegratorBaseUtils {
             throw e;
         }
     }
+
 
     /**
      * This is a utility method which can be used to set security headers in a service client. This method
@@ -330,5 +370,126 @@ public class MicroIntegratorBaseUtils {
         }
 
         serviceClient.getOptions().setProperty(HTTPConstants.HTTP_HEADERS, headers);
+    }
+
+    private static DocumentBuilderFactory getSecuredDocumentBuilder() {
+
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        dbf.setNamespaceAware(true);
+        dbf.setXIncludeAware(false);
+        dbf.setExpandEntityReferences(false);
+        try {
+            dbf.setFeature(org.apache.xerces.impl.Constants.SAX_FEATURE_PREFIX +
+                    org.apache.xerces.impl.Constants.EXTERNAL_GENERAL_ENTITIES_FEATURE, false);
+            dbf.setFeature(org.apache.xerces.impl.Constants.SAX_FEATURE_PREFIX +
+                    org.apache.xerces.impl.Constants.EXTERNAL_PARAMETER_ENTITIES_FEATURE, false);
+            dbf.setFeature(org.apache.xerces.impl.Constants.XERCES_FEATURE_PREFIX +
+                    org.apache.xerces.impl.Constants.LOAD_EXTERNAL_DTD_FEATURE, false);
+            dbf.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        } catch (ParserConfigurationException e) {
+
+        }
+
+        SecurityManager securityManager = new SecurityManager();
+        securityManager.setEntityExpansionLimit(ENTITY_EXPANSION_LIMIT);
+        dbf.setAttribute(org.apache.xerces.impl.Constants.XERCES_PROPERTY_PREFIX +
+                org.apache.xerces.impl.Constants.SECURITY_MANAGER_PROPERTY, securityManager);
+        return dbf;
+    }
+
+    /**
+     * @param xmlConfiguration InputStream that carries xml configuration
+     * @return returns a InputStream that has evaluated system variables in input
+     * @throws CarbonException
+     */
+    public static InputStream replaceSystemVariablesInXml(InputStream xmlConfiguration) throws CarbonException {
+
+        DocumentBuilderFactory documentBuilderFactory = getSecuredDocumentBuilder();
+        DocumentBuilder documentBuilder;
+        Document doc;
+        try {
+            documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            documentBuilder.setEntityResolver(new CarbonEntityResolver());
+            doc = documentBuilder.parse(xmlConfiguration);
+        } catch (Exception e) {
+            throw new CarbonException("Error in building Document", e);
+        }
+        NodeList nodeList = null;
+        if (doc != null) {
+            nodeList = doc.getElementsByTagName("*");
+        }
+        if (nodeList != null) {
+            for (int i = 0; i < nodeList.getLength(); i++) {
+                resolveLeafNodeValue(nodeList.item(i));
+            }
+        }
+        return toInputStream(doc);
+    }
+
+    public static void resolveLeafNodeValue(Node node) {
+
+        if (node != null) {
+            Element element = (Element) node;
+            NodeList childNodeList = element.getChildNodes();
+            for (int j = 0; j < childNodeList.getLength(); j++) {
+                Node chileNode = childNodeList.item(j);
+                if (!chileNode.hasChildNodes()) {
+                    String nodeValue = resolveSystemProperty(chileNode.getTextContent());
+                    childNodeList.item(j).setTextContent(nodeValue);
+                } else {
+                    resolveLeafNodeValue(chileNode);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param doc the DOM.Document to be converted to InputStream.
+     * @return Returns InputStream.
+     * @throws CarbonException
+     */
+    public static InputStream toInputStream(Document doc) throws CarbonException {
+
+        InputStream in;
+        try {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Source xmlSource = new DOMSource(doc);
+            Result result = new StreamResult(outputStream);
+            TransformerFactory.newInstance().newTransformer().transform(xmlSource, result);
+            in = new ByteArrayInputStream(outputStream.toByteArray());
+        } catch (TransformerException e) {
+            throw new CarbonException("Error in transforming DOM to InputStream", e);
+        }
+        return in;
+    }
+
+    public static String resolveSystemProperty(String text) {
+
+        int indexOfStartingChars = -1;
+        int indexOfClosingBrace;
+
+        // The following condition deals with properties.
+        // Properties are specified as ${system.property},
+        // and are assumed to be System properties
+        while (indexOfStartingChars < text.indexOf("${")
+                && (indexOfStartingChars = text.indexOf("${")) != -1
+                && (indexOfClosingBrace = text.indexOf('}')) != -1) { // Is a
+            // property
+            // used?
+            String sysProp = text.substring(indexOfStartingChars + 2,
+                    indexOfClosingBrace);
+            String propValue = System.getProperty(sysProp);
+            if (propValue != null) {
+                text = text.substring(0, indexOfStartingChars) + propValue
+                        + text.substring(indexOfClosingBrace + 1);
+            }
+            if (sysProp.equals("carbon.home") && propValue != null
+                    && propValue.equals(".")) {
+
+                text = new File(".").getAbsolutePath() + File.separator + text;
+
+            }
+        }
+        return text;
     }
 }

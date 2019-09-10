@@ -23,8 +23,8 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
@@ -96,7 +96,7 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
      */
     private OMElement getUsersElem() {
 
-        File mgtApiUserConfig = new File(CarbonUtils.getCarbonConfigDirPath(), "internal-apis.xml");
+        File mgtApiUserConfig = new File(MicroIntegratorBaseUtils.getCarbonConfigDirPath(), "internal-apis.xml");
         try (InputStream fileInputStream = new FileInputStream(mgtApiUserConfig)) {
             OMElement documentElement = getOMElementFromFile(fileInputStream);
             setSecretResolver(documentElement);
@@ -127,6 +127,7 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
         } catch (XMLStreamException exception) {
             LOG.error("Error when building configuration from file " + mgtApiUserConfig.getAbsolutePath(), exception);
         }
+
         return null;
     }
 
@@ -138,7 +139,7 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
      */
     private OMElement getOMElementFromFile(InputStream fileInputStream) throws CarbonException, XMLStreamException {
 
-        InputStream inputStream = CarbonUtils.replaceSystemVariablesInXml(fileInputStream);
+        InputStream inputStream = MicroIntegratorBaseUtils.replaceSystemVariablesInXml(fileInputStream);
         StAXOMBuilder builder = new StAXOMBuilder(inputStream);
         return builder.getDocumentElement();
     }

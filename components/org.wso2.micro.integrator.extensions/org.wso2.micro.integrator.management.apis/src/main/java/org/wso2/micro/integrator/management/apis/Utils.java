@@ -30,6 +30,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.wso2.micro.service.mgt.ServiceAdmin;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -91,5 +92,19 @@ public class Utils {
         InputStream jsonStream = JsonUtil.getJsonPayload(axis2MessageContext);
         String jsonString = IOUtils.toString(jsonStream);
         return new JsonParser().parse(jsonString).getAsJsonObject();
+    }
+
+    /**
+     * Returns the ServiceAdmin based on a given message context
+     *
+     * @param messageContext Synapse message context
+     */
+    public static ServiceAdmin getServiceAdmin(MessageContext messageContext) {
+
+        ServiceAdmin serviceAdmin = ServiceAdmin.getInstance();
+        if (!serviceAdmin.isInitailized()) {
+            serviceAdmin.init(messageContext.getConfiguration().getAxisConfiguration());
+        }
+        return serviceAdmin;
     }
 }
