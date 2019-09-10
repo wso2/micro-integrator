@@ -466,6 +466,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.websocket.transport</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.inbound.endpoint.persistence</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
