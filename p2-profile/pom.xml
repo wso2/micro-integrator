@@ -303,7 +303,7 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.transports.sap.feature.group</id>
-                                    <version>${carbon.mediation.version}</version>--&gt;
+                                    <version>${carbon.mediation.version}</version>
                                 </feature>
 
                                 <feature>
