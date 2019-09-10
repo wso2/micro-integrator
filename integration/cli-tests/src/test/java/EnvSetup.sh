@@ -28,24 +28,27 @@ echo "Bittype : $bitType"
 #Extract the compressed archive based on the platform and the bitype
 extractCompressArchive() {
     echo "Extracting the files"
+#    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
+    tar -xvzf wso2mi-cli-$VERSION-macosx-x64.tar.gz
 
-    if [[ ( "${platform}" == "Linux" ) && ( "${bitType}" == "i586" ) ]]; then
-        tar -xvzf wso2mi-cli-$VERSION-linux-i586.tar.gz
-
-    elif [[ ( "${platform}" == "Linux" ) &&  ( "${bitType}" == "x86_64" ) ]]; then
-        echo "Extracting the linux compressed archive "
-        tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
-
-    elif [[ ( "${platform}" == "Darwin" )  && ( "${bitType}" == "x64" )  ]]; then
-        tar -xvzf wso2mi-cli-$VERSION-macosx-x64.tar.gz
-
-    elif [[ ( "${platform}" == "windows" ) && ( "${bitType}" == "i586" ) ]]; then
-        tar -xvzf wso2mi-cli-$VERSION-windows-i586.tar.gz
-
-    elif [[ ( "${platform}" == "windows" ) && ( "${bitType}" == "x64" ) ]]; then
-        tar -xvzf wso2mi-cli-$VERSION-windows-x64.tar.gz
-    fi
+#    if [[ "${platform}" == "Linux" && "${bitType}" == "i586" ]]; then
+#        tar -xvzf wso2mi-cli-$VERSION-linux-i586.tar.gz
+#
+#    elif [[ "${platform}" == "Linux" && "${bitType}" == "x86_64" ]]; then
+#        echo "Extracting the linux compressed archive "
+#        tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
+#
+#    elif [[ "${platform}" == "Darwin" && "${bitType}" == "i386" ]]; then
+#        tar -xvzf wso2mi-cli-$VERSION-macosx-x64.tar.gz
+#
+#    elif [[ "${platform}" == "windows" && "${bitType}" == "i586" ]]; then
+#        tar -xvzf wso2mi-cli-$VERSION-windows-i586.tar.gz
+#
+#    elif [[ "${platform}" == "windows" && "${bitType}" == "x64" ]]; then
+#        tar -xvzf wso2mi-cli-$VERSION-windows-x64.tar.gz
+#    fi
 }
+
 #get the product version from the pom file
 getPomVersion(){
     VERSION=$(cat pom.xml | grep "^    <version>.*</version>$" | awk -F'[><]' '{print $3}');

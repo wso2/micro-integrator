@@ -46,20 +46,22 @@ public class CliUsageTests {
      * setup the environment to run the tests
      */
     @BeforeClass
-    public void setupEnv() throws IOException, XmlPullParserException {
+    public void setupEnv() throws IOException, XmlPullParserException, InterruptedException {
 
         TestUtils testUtils = new TestUtils();
         pomVersion = testUtils.getPomVerion();
+        Process process;
 
         System.out.println("Working Directory = " + System.getProperty("user.dir"));
 
-        Process process1 = new ProcessBuilder("pwd").start();
-
-        Process process = new ProcessBuilder("../src/test/java/EnvSetup.sh").start();
+        String[] setup = { "sh", "../src/test/java/EnvSetup.sh"};
+        process = Runtime.getRuntime().exec(setup);
+        process.waitFor();
+//        Process process = new ProcessBuilder("../src/test/java/EnvSetup.sh").start();
 
         try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             while ((line = bufferedreader.readLine()) != null) {
-                System.out.println(line);
+                log.info(line);
             }
         }
     }
@@ -86,7 +88,7 @@ public class CliUsageTests {
             log.info(cliTestMediatorApi + " API Found");
 
         } catch (IOException e) {
-            System.out.println("Exception = " + e.getMessage());
+            log.info("Exception = " + e.getMessage());
         } finally {
             reader.close();
         }
