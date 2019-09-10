@@ -195,9 +195,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.websocket.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.websocket.feature:${project.version}
+                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.server.feature:${product.mi.version}
@@ -304,6 +304,11 @@
                                 <feature>
                                     <id>org.wso2.carbon.transports.sap.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.micro.integrator.websocket.feature.group</id>
+                                    <version>${project.version}</version>
                                 </feature>
 
                                 <feature>
