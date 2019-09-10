@@ -484,6 +484,16 @@
                 <artifactId>stax2-api</artifactId>
                 <version>${stax2.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
+                <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
+                <version>${carbon.identity.oauth.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+                <artifactId>axiom</artifactId>
+                <version>${orbit.version.axiom}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -551,6 +561,8 @@
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
         <carbon.data.version>4.5.2</carbon.data.version>
         <securevault.version>1.1.2</securevault.version>
+        <carbon.identity.oauth.version>6.1.0</carbon.identity.oauth.version>
+        <carbon.identity.oauth.imp.pkg.version>[6.1.0, 7.0.0)</carbon.identity.oauth.imp.pkg.version>
 
         <cipher.tool.version>1.1.1</cipher.tool.version>
         <axis2.transport.version>2.0.0-wso2v35</axis2.transport.version>
