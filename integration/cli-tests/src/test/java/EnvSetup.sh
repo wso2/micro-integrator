@@ -28,8 +28,7 @@ echo "Bittype : $bitType"
 #Extract the compressed archive based on the platform and the bitype
 extractCompressArchive() {
     echo "Extracting the files"
-#    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
-    tar -xvzf wso2mi-cli-$VERSION-macosx-x64.tar.gz
+    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 
 #    if [[ "${platform}" == "Linux" && "${bitType}" == "i586" ]]; then
 #        tar -xvzf wso2mi-cli-$VERSION-linux-i586.tar.gz
