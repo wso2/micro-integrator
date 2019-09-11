@@ -34,5 +34,6 @@
     <modules>
         <module>cache-mediator/org.wso2.carbon.mediator.cache</module>
         <module>oauth-mediator/org.wso2.micro.integrator.mediator.oauth</module>
+        <module>entitlement-mediator/org.wso2.micro.integrator.identity.entitlement.mediator</module>
     </modules>
 </project>

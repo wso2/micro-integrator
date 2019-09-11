@@ -197,9 +197,9 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.server.feature:${product.mi.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.identity.xacml.mediator.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.identity.xacml.mediator.feature:${project.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -314,10 +314,10 @@
                                     <id>org.wso2.carbon.mediation.configadmin.server.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
                                 </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.identity.xacml.mediator.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.identity.xacml.mediator.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.event.sink.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
