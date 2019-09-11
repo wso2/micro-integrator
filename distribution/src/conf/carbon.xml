@@ -545,22 +545,23 @@
        org.wso2.carbon.transport.HttpGetRequestProcessor
     -->
     <HttpGetRequestProcessors>
-       <!-- <Processor>
+        <!--Uncomment following info processor if need information page -->
+        <!--<Processor>
             <Item>info</Item>
-            <Class>org.wso2.carbon.core.transports.util.InfoProcessor</Class>
-        </Processor>
+            <Class>org.wso2.micro.core.transports.util.InfoProcessor</Class>
+        </Processor>-->
         <Processor>
             <Item>wsdl</Item>
-            <Class>org.wso2.carbon.core.transports.util.Wsdl11Processor</Class>
+            <Class>org.wso2.micro.core.transports.util.Wsdl11Processor</Class>
         </Processor>
         <Processor>
             <Item>wsdl2</Item>
-            <Class>org.wso2.carbon.core.transports.util.Wsdl20Processor</Class>
+            <Class>org.wso2.micro.core.transports.util.Wsdl20Processor</Class>
         </Processor>
         <Processor>
             <Item>xsd</Item>
-            <Class>org.wso2.carbon.core.transports.util.XsdProcessor</Class>
-        </Processor>-->
+            <Class>org.wso2.micro.core.transports.util.XsdProcessor</Class>
+        </Processor>
     </HttpGetRequestProcessors>
 
     <!-- Deployment Synchronizer is not supported in Micro Integrator -->

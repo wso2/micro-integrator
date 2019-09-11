@@ -54,6 +54,7 @@
                             org.apache.commons.logging; version="${import.package.version.commons.logging}",
                             org.apache.axis2.*; version="${axis2.osgi.version.range}",
                             org.yaml.snakeyaml.*; version="${orbit.snakeyaml.import.version.range}",
+                            org.wso2.micro.core.*;version="${project.version}",
                             *;resolution:=optional
                         </Import-Package>
                         <Fragment-Host>synapse-nhttp-transport</Fragment-Host>
