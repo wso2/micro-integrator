@@ -15,7 +15,7 @@
 * specific language governing permissions and limitations
 * under the License.
 */
-package org.wso2.micro.integrator.core.internal;
+package org.wso2.micro.core;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

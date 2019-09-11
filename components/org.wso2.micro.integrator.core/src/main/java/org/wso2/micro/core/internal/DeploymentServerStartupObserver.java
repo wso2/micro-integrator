@@ -22,7 +22,7 @@ import org.apache.commons.logging.LogFactory;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.ServerStartupObserver;
-import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
+import org.wso2.micro.core.PrivilegedCarbonContext;
 import org.wso2.carbon.utils.ConfigurationContextService;
 
 /**

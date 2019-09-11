@@ -20,7 +20,7 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
+import org.wso2.micro.core.PrivilegedCarbonContext;
 import org.wso2.carbon.utils.AbstractAxis2ConfigurationContextObserver;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 

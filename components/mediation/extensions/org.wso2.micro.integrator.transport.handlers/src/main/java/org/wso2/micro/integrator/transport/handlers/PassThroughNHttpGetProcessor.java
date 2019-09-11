@@ -46,16 +46,12 @@ import org.apache.synapse.transport.passthru.SourceContext;
 import org.apache.synapse.transport.passthru.SourceHandler;
 import org.jaxen.SimpleNamespaceContext;
 import org.jaxen.XPath;
-import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
-import org.wso2.carbon.core.transports.CarbonHttpRequest;
-import org.wso2.carbon.core.transports.CarbonHttpResponse;
-import org.wso2.micro.integrator.transport.handlers.utils.RequestProcessorDispatcherUtil;
-import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.transports.CarbonHttpRequest;
+import org.wso2.micro.core.transports.CarbonHttpResponse;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.transport.handlers.utils.RequestProcessorDispatcherUtil;
 
-import javax.servlet.ServletException;
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Enumeration;
@@ -66,6 +62,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
+import javax.servlet.ServletException;
+import javax.xml.namespace.QName;
 
 /**
  * Get Processor implementation for PassThrough Transport.
@@ -73,13 +71,12 @@ import java.util.StringTokenizer;
 public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
 
 	
-    private Map<String, org.wso2.carbon.core.transports.HttpGetRequestProcessor> getRequestProcessors =
-            new LinkedHashMap<String, org.wso2.carbon.core.transports.HttpGetRequestProcessor>();
+    private Map<String, org.wso2.micro.core.transports.HttpGetRequestProcessor> getRequestProcessors = new LinkedHashMap<>();
 
     private ConfigurationContext cfgCtx;
     private SourceHandler sourceHandler;
-    private static final QName ITEM_QN = new QName(ServerConstants.CARBON_SERVER_XML_NAMESPACE, "Item");
-    private static final QName CLASS_QN = new QName(ServerConstants.CARBON_SERVER_XML_NAMESPACE, "Class");
+    private static final QName ITEM_QN = new QName(Constants.CARBON_SERVER_XML_NAMESPACE, "Item");
+    private static final QName CLASS_QN = new QName(Constants.CARBON_SERVER_XML_NAMESPACE, "Class");
 
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String TEXT_HTML = "text/html";
@@ -91,7 +88,7 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
             OMElement docEle = XMLUtils.toOM(CarbonServerConfigurationService.getInstance().getDocumentElement());
             if (docEle != null) {
                 SimpleNamespaceContext nsCtx = new SimpleNamespaceContext();
-                nsCtx.addNamespace("wsas", ServerConstants.CARBON_SERVER_XML_NAMESPACE);
+                nsCtx.addNamespace("wsas", Constants.CARBON_SERVER_XML_NAMESPACE);
                 XPath xp = new AXIOMXPath("//wsas:HttpGetRequestProcessors/wsas:Processor");
                 xp.setNamespaceContext(nsCtx);
                 List nodeList = xp.selectNodes(docEle);
@@ -102,12 +99,12 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
                         throw new ServletException("Required element, 'Item' not found!");
                     }
                     OMElement classEle = processorEle.getFirstChildWithName(CLASS_QN);
-                    org.wso2.carbon.core.transports.HttpGetRequestProcessor processor;
+                    org.wso2.micro.core.transports.HttpGetRequestProcessor processor;
                     if (classEle == null) {
                         throw new ServletException("Required element, 'Class' not found!");
                     } else {
                         processor =
-                                (org.wso2.carbon.core.transports.HttpGetRequestProcessor)
+                                (org.wso2.micro.core.transports.HttpGetRequestProcessor)
                                         Class.forName(classEle.getText().trim()).newInstance();
                     }
                     getRequestProcessors.put(itemEle.getText().trim(), processor);
@@ -154,15 +151,7 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
             CarbonHttpResponse carbonHttpResponse = new CarbonHttpResponse(
                     temporaryData.getOutputStream());
 
-            try {
-                PrivilegedCarbonContext.startTenantFlow();
-                PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(TenantAxisUtils.
-                        getTenantDomain(requestUrl), true);
-                (getRequestProcessors.get(item)).process(carbonHttpRequest,
-                        carbonHttpResponse, cfgCtx);
-            } finally {
-                PrivilegedCarbonContext.endTenantFlow();
-            }
+            (getRequestProcessors.get(item)).process(carbonHttpRequest, carbonHttpResponse, cfgCtx);
             
              // adding headers
             Map<String, String> responseHeaderMap = carbonHttpResponse.getHeaders();
@@ -218,7 +207,7 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
     	this.cfgCtx  =  configurationContext;
     	this.sourceHandler =  sourceHandler;
         if (cfgCtx.getProperty("GETRequestProcessorMap") != null) {
-            getRequestProcessors = (Map<String, org.wso2.carbon.core.transports.HttpGetRequestProcessor>)
+            getRequestProcessors = (Map<String, org.wso2.micro.core.transports.HttpGetRequestProcessor>)
                     cfgCtx.getProperty("GETRequestProcessorMap");
         } else {
             populateGetRequestProcessors();
@@ -313,21 +302,7 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
                 	}
 
                     if (axisService == null && !loadBalancer && serviceName != null) {
-                    	// Try to see whether the service is available in a tenant
-                    	try {
-                            //Removing the below code segment due to empty stack exception coming from kernel
-                            //Current context does not need to be destroyed at this level.
-                            //PrivilegedCarbonContext.destroyCurrentContext();
-                            String tenantDomain = TenantAxisUtils.getTenantDomain(uri);
-                            PrivilegedCarbonContext.startTenantFlow();
-                            PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
-                    	    axisService = TenantAxisUtils.getAxisService(serviceName, cfgCtx);
-                    	} catch (AxisFault axisFault) {
-                    	    log.error("Error while retrieving Axis Service for Service name: "+serviceName,
-                    	    axisFault);
-                    	} finally {
-                            PrivilegedCarbonContext.endTenantFlow();
-                        }
+                    	log.error("Unable to find axis service for service name : " + serviceName);
                     }
                 }
 
@@ -337,18 +312,10 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
                                 (queryString.equals(item) ||
                                         queryString.indexOf("&") == item.length() ||
                                         queryString.indexOf("=") == item.length())) {
-                            if (axisService == null) {
-                                try {
-                                    String tenantDomain = TenantAxisUtils.getTenantDomain(uri);
-                                    PrivilegedCarbonContext.startTenantFlow();
-                                    PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantDomain(tenantDomain, true);
-                                    //check for APIs since no axis2 service found
-                                    if (!RequestProcessorDispatcherUtil.isDispatchToApiGetProcessor(requestUri, cfgCtx)) {
-                                        continue;
-                                    }
-                                } finally {
-                                    PrivilegedCarbonContext.endTenantFlow();
-                                }
+                            //check for APIs since no axis2 service found
+                            if (axisService == null &&
+                                    !RequestProcessorDispatcherUtil.isDispatchToApiGetProcessor(requestUri, cfgCtx)) {
+                                continue;
                             }
 
                             try {

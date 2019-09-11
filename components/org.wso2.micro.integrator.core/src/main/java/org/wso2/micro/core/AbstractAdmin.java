@@ -24,7 +24,6 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.CarbonContext;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
