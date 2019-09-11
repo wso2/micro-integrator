@@ -54,6 +54,7 @@ import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.inbound.endpoint.EndpointListenerLoader;
 //import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
@@ -193,11 +194,9 @@ public class ServiceBusInitializer {
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
             /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
                     configurationManager);*/
-            // Start Inbound Endpoint Listeners
-            // tOdO need to fix inbound endpoints
-//            EndpointListenerLoader.loadListeners();
-//            registerInboundDeployer(configCtxSvc.getServerConfigContext().getAxisConfiguration(), contextInfo
-//                    .getSynapseEnvironment());
+
+            EndpointListenerLoader.loadListeners();
+
         } catch (Exception e) {
             handleFatal("Couldn't initialize the ESB...", e);
         } catch (Throwable t) {

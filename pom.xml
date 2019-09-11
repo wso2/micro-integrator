@@ -78,6 +78,16 @@
                 <version>${axis2.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-transport-base</artifactId>
+                <version>${axis2.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.ws.commons.schema</groupId>
+                <artifactId>XmlSchema</artifactId>
+                <version>${commons-xmlschema.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.server</artifactId>
                 <version>${product.mi.version}</version>
@@ -456,6 +466,11 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.websocket.transport</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.inbound.endpoint.persistence</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
@@ -483,6 +498,11 @@
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
                 <version>${stax2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.ws.rs</groupId>
+                <artifactId>jsr311-api</artifactId>
+                <version>${javax.jsr311.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.bsf.wso2</groupId>
@@ -561,8 +581,8 @@
         <carbon.kernel.version>4.5.0-alpha</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.4.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <synapse.version>2.1.7-wso2v118</synapse.version>
-        <carbon.mediation.version>4.7.10</carbon.mediation.version>
+        <synapse.version>2.1.7-wso2v120</synapse.version>
+        <carbon.mediation.version>4.7.11</carbon.mediation.version>
         <carbon.crypto.version>1.0.3</carbon.crypto.version>
         <carbon.data.version>4.5.2</carbon.data.version>
         <securevault.version>1.1.2</securevault.version>
@@ -608,6 +628,7 @@
         <version.woden>1.0.0.M9-wso2v1</version.woden>
         <orbit.version.wsdl4j>1.6.2.wso2v4</orbit.version.wsdl4j>
         <version.XmlSchema>1.4.7.wso2v6</version.XmlSchema>
+        <commons-xmlschema.version>1.4.7</commons-xmlschema.version>
         <version.commons.codec>1.12</version.commons.codec>
         <version.annogen>0.1.0.wso2v1</version.annogen>
         <version.backport.util.concurrent>3.1.0.wso2v1</version.backport.util.concurrent>
@@ -664,6 +685,7 @@
         <aries.version>1.1.0</aries.version>
         <aries.proxy.version>1.0.1</aries.proxy.version>
         <stax2.version>3.1.4</stax2.version>
+        <javax.jsr311.api.version>1.1.1</javax.jsr311.api.version>
 
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>

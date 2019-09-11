@@ -19,7 +19,7 @@
 -->
 <internalApis>
     <apis>
-<!--        <api name="PrometheusApi" protocol="http" class="org.wso2.carbon.prometheus.publisher.service.MetricAPI"/>-->
+        <api name="PrometheusApi" protocol="http" class="org.wso2.micro.integrator.prometheus.publisher.service.MetricAPI"/>
         <!--<api class="org.wso2.micro.integrator.management.apis.ManagementInternalApi" name="ManagementApi"
              protocol="https">
             <handlers>
