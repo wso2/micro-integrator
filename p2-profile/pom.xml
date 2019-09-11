@@ -125,9 +125,11 @@
                                <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediation.ntask.feature:${project.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.admin.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <!--TODO This feature packs whole set of admin services , checked few bundles and seems not
+                                needed. Let's verify once integration tests are done and remove this.
+                                <featureArtifactDef>
+                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.admin.feature:${carbon.mediation.version}
+                                </featureArtifactDef>-->
                                 <!-- This feature is used for synapse admin service. Hence, commented out as it seems to be unnecessary.
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.application.mgt.synapse.server.feature:${carbon.mediation.version}>
@@ -138,9 +140,9 @@
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.publishevent.server.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.prometheus.publisher.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.prometheus.publisher.feature:${project.version}
+                                </featureArtifactDef>
 
                                 <!--2 Carbon-Kernel-->
                                 <featureArtifactDef>
@@ -159,23 +161,6 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.ntask.core.feature:${project.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.ndatasource.datasources.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.event.server.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.event.common.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.commons:org.wso2.carbon.transaction.manager.feature:${carbon.commons.version}-->
-<!--                                </featureArtifactDef>-->
-
-<!--                                &lt;!&ndash;10 Carbon-rules&ndash;&gt;-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.rules:org.wso2.carbon.rule.mediation.server.feature:${carbon.rule.version}-->
-<!--                                </featureArtifactDef>-->
 
                                 <!--11 Axis2 Transports-->
                                 <featureArtifactDef>
@@ -202,25 +187,12 @@
                                 <featureArtifactDef>
                                     org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher.tool.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.websocket.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
-
-
-<!--                                &lt;!&ndash; Data Services Features &ndash;&gt;-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.data:org.wso2.carbon.dataservices.server.feature:${carbon.data.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.data:org.wso2.carbon.dataservices.task.server.feature:${carbon.data.version}-->
-<!--                                </featureArtifactDef>-->
-
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.integrator.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${carbon.mediation.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.websocket.feature:${project.version}
+                                </featureArtifactDef>
 
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.server.feature:${product.mi.version}
@@ -320,6 +292,16 @@
                                 </feature>
 
                                 <feature>
+                                    <id>org.wso2.carbon.transports.sap.feature.group</id>
+                                    <version>${carbon.mediation.version}</version>
+                                </feature>
+
+                                <feature>
+                                    <id>org.wso2.micro.integrator.websocket.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+
+                                <feature>
                                     <id>org.wso2.micro.integrator.inbound.endpoints.server.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
@@ -333,10 +315,6 @@
                                     <version>${carbon.mediation.version}</version>
                                 </feature>-->
 <!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.mediation.admin.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.identity.xacml.mediator.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
@@ -348,10 +326,10 @@
 <!--                                    <id>org.wso2.carbon.mediator.publishevent.server.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
 <!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.prometheus.publisher.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.prometheus.publisher.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
 
                                 <!-- 2 Carbon-Kernel -->
                                 <feature>
@@ -372,31 +350,6 @@
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.das.messageflow.data.publisher.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.ndatasource.datasources.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                &lt;!&ndash;TODO fix this later&ndash;&gt;-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.event.server.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.event.common.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.transaction.manager.feature.group</id>-->
-<!--                                    <version>${carbon.commons.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                &lt;!&ndash;10 Carbon rule&ndash;&gt;-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.rule.mediation.server.feature.group</id>-->
-<!--                                    <version>${carbon.rule.version}</version>-->
 <!--                                </feature>-->
 
                                 <!--11 Axis2 Transports-->
@@ -434,22 +387,6 @@
                                     <id>org.wso2.ciphertool.feature.group</id>
                                     <version>${cipher.tool.version}</version>
                                 </feature>
-
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.dataservices.server.feature.group</id>-->
-<!--                                    <version>${carbon.data.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.dataservices.task.server.feature.group</id>-->
-<!--                                    <version>${carbon.data.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.integrator.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-
                                 <feature>
                                     <id>org.wso2.micro.integrator.server.feature.group</id>
                                     <version>${product.mi.version}</version>

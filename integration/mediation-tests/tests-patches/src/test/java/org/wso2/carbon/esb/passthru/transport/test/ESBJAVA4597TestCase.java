@@ -16,7 +16,7 @@
 
 package org.wso2.carbon.esb.passthru.transport.test;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.axiom.om.OMElement;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

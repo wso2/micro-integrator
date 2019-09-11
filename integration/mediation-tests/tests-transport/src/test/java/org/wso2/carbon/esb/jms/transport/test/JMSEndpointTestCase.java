@@ -1,6 +1,6 @@
 package org.wso2.carbon.esb.jms.transport.test;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.awaitility.Awaitility;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

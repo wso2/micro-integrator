@@ -24,7 +24,6 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.carbon.context.CarbonContext;
 //import org.wso2.carbon.context.PrivilegedCarbonContext;
-import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -67,17 +66,7 @@ public abstract class AbstractAdmin {
         if (msgContext != null) {
             ConfigurationContext mainConfigContext = msgContext.getConfigurationContext();
 
-            // If a tenant has been set, then try to get the ConfigurationContext of that tenant
-            PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-
-            if (carbonContext.getTenantId() == MultitenantConstants.SUPER_TENANT_ID) {
-                return mainConfigContext;
-            } else {
-                throw new UnsupportedOperationException("Tenant domain unidentified. " +
-                        "Upstream code needs to identify & set the tenant domain & tenant ID. " +
-                        " The TenantDomain SOAP header could be set by the clients or " +
-                        "tenant authentication should be carried out.");
-            }
+            return mainConfigContext;
         } else {
             return CarbonConfigurationContextFactory.getConfigurationContext();
         }

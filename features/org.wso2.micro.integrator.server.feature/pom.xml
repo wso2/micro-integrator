@@ -123,8 +123,8 @@
                                 <bundleDef>
                                     org.wso2.orbit.org.apache.tomcat:tomcat-jsp-api:${orbit.version.tomcat.jsp.api}
                                 </bundleDef>
-<!--                                <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat-el-api:${orbit.version.tomcat.el.api}-->
-<!--                                </bundleDef>-->
+                                <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat-el-api:${orbit.version.tomcat.el.api}
+                                </bundleDef>
 
 <!--                                for javax.servelt pkg-->
                                 <bundleDef>
@@ -221,11 +221,11 @@
                                 </bundleDef>
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.core.common:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
-<!--                                <bundleDef>org.wso2.orbit.commons-text:commons-text:${commons-text.orbit.version}-->
-<!--                                </bundleDef>-->
-<!--                                <bundleDef>-->
-<!--                                    org.wso2.orbit.org.apache.commons:commons-lang3:${commons-lang3.orbit.version}-->
-<!--                                </bundleDef>-->
+                                <bundleDef>org.wso2.orbit.commons-text:commons-text:${commons-text.orbit.version}
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.orbit.org.apache.commons:commons-lang3:${commons-lang3.orbit.version}
+                                </bundleDef>
 <!--                                <bundleDef>-->
 <!--                                    org.wso2.carbon:org.wso2.carbon.server.admin.common:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->

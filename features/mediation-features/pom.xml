@@ -36,6 +36,8 @@
         <module>ntask-feature</module>
         <module>builtin-mediators</module>
         <module>inbound-endpoint</module>
+        <module>transport-features</module>
+        <module>data-publisher-features</module>
     </modules>
 
 </project>

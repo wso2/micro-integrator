@@ -41,16 +41,22 @@ import org.apache.synapse.config.xml.SynapseImportSerializer;
 import org.apache.synapse.config.xml.XMLConfigConstants;
 import org.apache.synapse.deployers.APIDeployer;
 import org.apache.synapse.deployers.AbstractSynapseArtifactDeployer;
+import org.apache.synapse.deployers.EndpointDeployer;
 import org.apache.synapse.deployers.InboundEndpointDeployer;
 import org.apache.synapse.deployers.LibraryArtifactDeployer;
+import org.apache.synapse.deployers.LocalEntryDeployer;
 import org.apache.synapse.deployers.MessageProcessorDeployer;
 import org.apache.synapse.deployers.MessageStoreDeployer;
+import org.apache.synapse.deployers.ProxyServiceDeployer;
+import org.apache.synapse.deployers.SequenceDeployer;
 import org.apache.synapse.deployers.SynapseArtifactDeploymentStore;
+import org.apache.synapse.deployers.TaskDeployer;
 import org.apache.synapse.deployers.TemplateDeployer;
 import org.apache.synapse.libraries.imports.SynapseImport;
 import org.apache.synapse.libraries.model.Library;
 import org.apache.synapse.libraries.util.LibDeployerUtils;
 import org.apache.synapse.transport.customlogsetter.CustomLogSetter;
+import org.wso2.carbon.mediation.library.util.LocalEntryUtil;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
@@ -60,8 +66,7 @@ import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
-import org.wso2.carbon.mediation.library.util.LocalEntryUtil;
-import org.wso2.micro.integrator.initializer.deployment.DataHolder;
+import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -1074,19 +1079,16 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
      * Function to initialize deployers with default deployers. Need to invoke this before adding custom implementations
      */
     private void initializeDefaultSynapseDeployers() {
-        // TODO :- uncomment after having these.
-        //  addSynapseDeployer(SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE, new LocalEntryDeployer());
-        //   addSynapseDeployer(SynapseAppDeployerConstants.ENDPOINT_TYPE, new EndpointDeployer());
-        // addSynapseDeployer(SynapseAppDeployerConstants.SEQUENCE_TYPE, new SequenceDeploymentInterceptor());
+        addSynapseDeployer(SynapseAppDeployerConstants.LOCAL_ENTRY_TYPE, new LocalEntryDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.ENDPOINT_TYPE, new EndpointDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.SEQUENCE_TYPE, new SequenceDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.TEMPLATE_TYPE, new TemplateDeployer());
-        // TODO Caused by: java.lang.ClassNotFoundException: org.wso2.carbon.mediation.initializer.ServiceBusUtils
-        //  cannot be found by org.wso2.carbon.mediation.startup_4.7.10
-        //  addSynapseDeployer(SynapseAppDeployerConstants.TASK_TYPE, new StartupTaskDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.TASK_TYPE, new TaskDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_STORE_TYPE, new MessageStoreDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.MESSAGE_PROCESSOR_TYPE, new MessageProcessorDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.INBOUND_ENDPOINT_TYPE, new InboundEndpointDeployer());
         addSynapseDeployer(SynapseAppDeployerConstants.API_TYPE, new APIDeployer());
-        //        addSynapseDeployer(SynapseAppDeployerConstants.PROXY_SERVICE_TYPE, new ProxyServiceDeployer());
+        addSynapseDeployer(SynapseAppDeployerConstants.PROXY_SERVICE_TYPE, new ProxyServiceDeployer());
     }
 
     /**
@@ -1106,7 +1108,8 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
      * @param deployer deployer implementation
      */
     private void addSynapseDeployer(String type, Deployer deployer) {
-        ConfigurationContext configContext = DataHolder.getInstance().getConfigContext();
+        ConfigurationContext configContext =
+                ConfigurationHolder.getInstance().getAxis2ConfigurationContextService().getServerConfigContext();
         if (deployer == null) {
             log.error("Failed to add Deployer : deployer is null");
             return;

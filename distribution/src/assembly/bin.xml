@@ -375,14 +375,6 @@
 <!--            <fileMode>644</fileMode>-->
 <!--        </file>-->
 
-<!--        <file>-->
-<!--            <source>-->
-<!--                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/rule-engine-config.xml-->
-<!--            </source>-->
-<!--            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>-->
-<!--            <fileMode>644</fileMode>-->
-<!--        </file>-->
-
         <file>
             <source>src/conf/axis2.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
@@ -396,18 +388,6 @@
             <destName>user-mgt.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
-        </file>
-
-        <file>
-            <source>src/conf/context.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/MATA-INF</outputDirectory>
-            <destName>context.xml</destName>
-        </file>
-
-        <file>
-            <source>src/conf/web.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/WEB-INF</outputDirectory>
-            <destName>web.xml</destName>
         </file>
 
         <file>

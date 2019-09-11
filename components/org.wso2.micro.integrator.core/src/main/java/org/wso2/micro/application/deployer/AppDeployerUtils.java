@@ -31,11 +31,11 @@ import org.eclipse.equinox.p2.metadata.IInstallableUnit;
 import org.eclipse.equinox.p2.query.IQuery;
 import org.eclipse.equinox.p2.query.QueryUtil;
 import org.osgi.framework.Bundle;
+import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.config.RegistryConfig;
-import org.wso2.micro.integrator.core.internal.PrivilegedCarbonContext;
 import org.wso2.carbon.feature.mgt.core.util.ProvisioningUtils;
 import org.wso2.micro.integrator.core.internal.ApplicationManager;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
@@ -665,8 +665,7 @@ public final class AppDeployerUtils {
 
     @Deprecated
     public static String getTenantIdString(AxisConfiguration axisConfig) {
-        PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        return String.valueOf(carbonContext.getTenantId());
+        return String.valueOf(Constants.SUPER_TENANT_ID);
     }
 
     public static String getTenantIdString() {

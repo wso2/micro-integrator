@@ -124,15 +124,10 @@ public final class ApplicationManager implements ApplicationManagerService {
             //if we have cApps waiting to be deployed, deploy those as well
             for (PendingApplication application : pendingCarbonApps) {
                 try {
-                    PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-                    cc.setTenantDomain(application.getTenantDomain());
-                    cc.setTenantId(application.getTenantId());
+
                     this.deployCarbonApp(application.getPath(), application.getAxisConfig());
                 } catch (Exception e) {
                     log.error("Error while deploying stored cApp : " + application, e);
-                } finally {
-                    PrivilegedCarbonContext.endTenantFlow();
                 }
             }
             pendingCarbonApps.clear();

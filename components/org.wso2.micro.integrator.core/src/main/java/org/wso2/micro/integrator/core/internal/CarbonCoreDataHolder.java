@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.http.HttpService;
 import org.wso2.micro.application.deployer.service.ApplicationManagerService;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 /**
@@ -36,6 +37,7 @@ public class CarbonCoreDataHolder {
     private HttpService httpService;
     private ConfigurationContext mainServerConfigContext;
     private CarbonServerConfigurationService serverConfigurationService;
+    private Axis2ConfigurationContextService axis2ConfigurationContextService;
 
 
     public  static CarbonCoreDataHolder getInstance() {
@@ -95,5 +97,13 @@ public class CarbonCoreDataHolder {
 
     public ApplicationManagerService getApplicationManager() {
         return applicationManager;
+    }
+
+    public Axis2ConfigurationContextService getAxis2ConfigurationContextService() {
+        return axis2ConfigurationContextService;
+    }
+
+    public void setAxis2ConfigurationContextService(Axis2ConfigurationContextService axis2ConfigurationContextService) {
+        this.axis2ConfigurationContextService = axis2ConfigurationContextService;
     }
 }

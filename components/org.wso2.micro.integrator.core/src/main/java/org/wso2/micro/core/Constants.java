@@ -22,4 +22,7 @@ public class Constants {
     public static final String SUPER_TENANT_DOMAIN_NAME = "carbon.super";
     public static final int SUPER_TENANT_ID = -1234;
     public static final int INVALID_TENANT_ID = -1;
+
+    public static final String CARBON_SERVER_XML_NAMESPACE = "http://wso2.org/projects/carbon/carbon.xml";
+
 }

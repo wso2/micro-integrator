@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.esb.endpoint.test;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;

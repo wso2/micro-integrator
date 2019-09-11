@@ -123,12 +123,14 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.http.management,
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.http.multitenancy,
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.generic,
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.hl7,
-                            org.wso2.micro.integrator.inbound.endpoint.internal.http.api,
-                            org.wso2.micro.integrator.inbound.endpoint
+                            org.wso2.micro.integrator.inbound.endpoint.protocol.http.management ;
+                            version="${project.version}",
+                            org.wso2.micro.integrator.inbound.endpoint.protocol.http.multitenancy ;
+                            version="${project.version}",
+                            org.wso2.micro.integrator.inbound.endpoint.protocol.generic ; version="${project.version}",
+                            org.wso2.micro.integrator.inbound.endpoint.protocol.hl7 ; version="${project.version}",
+                            org.wso2.micro.integrator.inbound.endpoint.internal.http.api ; version="${project.version}",
+                            org.wso2.micro.integrator.inbound.endpoint ; version="${project.version}"
                         </Export-Package>
                         <Import-Package>
                             org.wso2.micro.integrator.inbound.endpoint.persistence,
