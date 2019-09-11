@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.wso2.micro.core.PrivilegedCarbonContext;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
@@ -125,15 +124,10 @@ public final class ApplicationManager implements ApplicationManagerService {
             //if we have cApps waiting to be deployed, deploy those as well
             for (PendingApplication application : pendingCarbonApps) {
                 try {
-                    PrivilegedCarbonContext.startTenantFlow();
-                    PrivilegedCarbonContext cc = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-                    cc.setTenantDomain(application.getTenantDomain());
-                    cc.setTenantId(application.getTenantId());
+
                     this.deployCarbonApp(application.getPath(), application.getAxisConfig());
                 } catch (Exception e) {
                     log.error("Error while deploying stored cApp : " + application, e);
-                } finally {
-                    PrivilegedCarbonContext.endTenantFlow();
                 }
             }
             pendingCarbonApps.clear();
