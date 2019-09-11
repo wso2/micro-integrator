@@ -162,11 +162,6 @@
                                     org.wso2.ei:org.wso2.micro.integrator.ntask.core.feature:${project.version}
                                 </featureArtifactDef>
 
-<!--                                &lt;!&ndash;10 Carbon-rules&ndash;&gt;-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.rules:org.wso2.carbon.rule.mediation.server.feature:${carbon.rule.version}-->
-<!--                                </featureArtifactDef>-->
-
                                 <!--11 Axis2 Transports-->
                                 <featureArtifactDef>
                                     org.apache.axis2.transport:org.apache.axis2.transport.jms.feature:${axis2.transport.version}
@@ -364,12 +359,6 @@
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.das.messageflow.data.publisher.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-
-<!--                                &lt;!&ndash;10 Carbon rule&ndash;&gt;-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.rule.mediation.server.feature.group</id>-->
-<!--                                    <version>${carbon.rule.version}</version>-->
 <!--                                </feature>-->
 
                                 <!--11 Axis2 Transports-->
