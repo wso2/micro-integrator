@@ -56,10 +56,8 @@ import org.wso2.micro.core.CarbonThreadCleanup;
 import org.wso2.micro.core.CarbonThreadFactory;
 import org.wso2.micro.core.ServerInitializer;
 import org.wso2.micro.core.ServerManagement;
-import org.wso2.micro.core.ServerStartupObserver;
 import org.wso2.micro.core.ServerStatus;
 import org.wso2.micro.core.init.PreAxis2ConfigItemListener;
-import org.wso2.micro.core.internal.DeploymentServerStartupObserver;
 import org.wso2.micro.core.internal.HTTPGetProcessorListener;
 import org.wso2.micro.core.multitenancy.GenericArtifactUnloader;
 import org.wso2.micro.core.transports.CarbonServlet;
@@ -147,8 +145,8 @@ public class CoreServerInitializer {
         }
         try {
             // for new caching, every thread should has its own populated CC. During the deployment time we assume super tenant
-            bundleContext.registerService(ServerStartupObserver.class.getName(), new DeploymentServerStartupObserver(),
-                                     null);
+//            bundleContext.registerService(ServerStartupObserver.class.getName(), new DeploymentServerStartupObserver(),
+//                                     null);
 
             ApplicationManager applicationManager = ApplicationManager.getInstance();
             applicationManager.init(); // this will allow application manager to register deployment handlers
