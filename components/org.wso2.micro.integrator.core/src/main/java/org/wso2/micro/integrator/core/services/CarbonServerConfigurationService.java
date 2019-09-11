@@ -100,6 +100,7 @@ public class CarbonServerConfigurationService {
 	private boolean isLoadedConfigurationPreserved = false;
 	private String documentXML;
 	private SecretResolver secretResolver;
+	private OMElement carbonXmlElement;
 
 	/**
 	 * Stores the singleton server configuration instance.
@@ -141,20 +142,22 @@ public class CarbonServerConfigurationService {
 			configuration.clear();
 		}
 
-		OMElement documentElement;
 		try {
-			documentElement = new StAXOMBuilder(xmlInputStream)
+			carbonXmlElement = new StAXOMBuilder(xmlInputStream)
 					.getDocumentElement();
 			SecretManagerInitializer secretManagerInitializer = new SecretManagerInitializer();
 			secretManagerInitializer.init();
-			secretResolver = SecretResolverFactory.create(documentElement, true);
+			secretResolver = SecretResolverFactory.create(carbonXmlElement, true);
 			Stack<String> nameStack = new Stack<String>();
-			readChildElements(documentElement, nameStack);
+			readChildElements(carbonXmlElement, nameStack);
 			isInitialized = true;
 			isLoadedConfigurationPreserved = false;
-			documentXML = documentElement.toStringWithConsume();
+			documentXML = carbonXmlElement.toStringWithConsume();
 		} catch (XMLStreamException e) {
 			log.fatal("Problem in parsing the configuration file ", e);
+			throw new MicroIntegratorConfigurationException(e);
+		} catch (Exception e) {
+			log.fatal("Problem in parsing the carbon.xml to DOM ", e);
 			throw new MicroIntegratorConfigurationException(e);
 		}
 	}
@@ -459,11 +462,15 @@ public class CarbonServerConfigurationService {
 	 */
 	public Element getDocumentElement() {
 		try {
-			return toDOM(getDocumentElementInternal());
+			return toDOM(documentXML);
 		} catch (Exception e) {
 			log.error("Cannot get ServerConfiguration document element", e);
 			return null;
 		}
+	}
+
+	public OMElement getDocumentOMElement() {
+		return carbonXmlElement;
 	}
 
 	private OMElement getDocumentElementInternal() {
@@ -496,6 +503,22 @@ public class CarbonServerConfigurationService {
 		factory.setNamespaceAware(true);
 		return factory.newDocumentBuilder().parse(inputStream)
 				.getDocumentElement();
+	}
+
+	/**
+	 * Converts a given OMElement to a DOM Element.
+	 *
+	 * @param elementStr the OM element to be converted to DOM.
+	 *
+	 * @return Returns Element.
+	 * @throws Exception
+	 *             if the operation failed.
+	 */
+	private static Element toDOM(String elementStr) throws Exception {
+		ByteArrayInputStream inputStream = new ByteArrayInputStream(elementStr.getBytes());
+		DocumentBuilderFactory factory = getSecuredDocumentBuilder();
+		factory.setNamespaceAware(true);
+		return factory.newDocumentBuilder().parse(inputStream).getDocumentElement();
 	}
 
 	private static DocumentBuilderFactory getSecuredDocumentBuilder() {

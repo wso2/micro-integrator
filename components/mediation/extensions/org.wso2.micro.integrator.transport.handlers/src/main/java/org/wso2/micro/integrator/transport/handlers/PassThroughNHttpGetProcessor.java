@@ -75,6 +75,7 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
 
     private ConfigurationContext cfgCtx;
     private SourceHandler sourceHandler;
+    private static final QName GETPROC_QN = new QName(Constants.CARBON_SERVER_XML_NAMESPACE, "HttpGetRequestProcessors");
     private static final QName ITEM_QN = new QName(Constants.CARBON_SERVER_XML_NAMESPACE, "Item");
     private static final QName CLASS_QN = new QName(Constants.CARBON_SERVER_XML_NAMESPACE, "Class");
 
@@ -85,15 +86,12 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
 
     private void populateGetRequestProcessors() throws AxisFault {
         try {
-            OMElement docEle = XMLUtils.toOM(CarbonServerConfigurationService.getInstance().getDocumentElement());
+            OMElement docEle = CarbonServerConfigurationService.getInstance().getDocumentOMElement();
             if (docEle != null) {
-                SimpleNamespaceContext nsCtx = new SimpleNamespaceContext();
-                nsCtx.addNamespace("wsas", Constants.CARBON_SERVER_XML_NAMESPACE);
-                XPath xp = new AXIOMXPath("//wsas:HttpGetRequestProcessors/wsas:Processor");
-                xp.setNamespaceContext(nsCtx);
-                List nodeList = xp.selectNodes(docEle);
-                for (Object aNodeList : nodeList) {
-                    OMElement processorEle = (OMElement) aNodeList;
+                OMElement httpGetRequestProcessors = docEle.getFirstChildWithName(GETPROC_QN);
+                Iterator processorIterator = httpGetRequestProcessors.getChildElements();
+                while (processorIterator.hasNext()) {
+                    OMElement processorEle = (OMElement) processorIterator.next();
                     OMElement itemEle = processorEle.getFirstChildWithName(ITEM_QN);
                     if (itemEle == null) {
                         throw new ServletException("Required element, 'Item' not found!");
