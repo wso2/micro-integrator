@@ -703,7 +703,7 @@
         <commons-text.orbit.version>1.6.wso2v1</commons-text.orbit.version>
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
         <joda-time.version>2.9.4.wso2v1</joda-time.version>
-        <libthrift.version>0.9.2.wso2v1</libthrift.version>
+        <libthrift.version>0.8.0.wso2v1</libthrift.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
 
         <!--PAX Logging related dependency versions-->

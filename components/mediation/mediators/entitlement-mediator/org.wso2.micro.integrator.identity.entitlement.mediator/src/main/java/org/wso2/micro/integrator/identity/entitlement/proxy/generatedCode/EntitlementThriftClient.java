@@ -36,8 +36,7 @@ public class EntitlementThriftClient {
 
     public interface Iface {
 
-        String getDecision(String request, String sessionId)
-                throws EntitlementException, org.apache.thrift.TException;
+        String getDecision(String request, String sessionId) throws EntitlementException, org.apache.thrift.TException;
 
     }
 

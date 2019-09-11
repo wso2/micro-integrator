@@ -64,7 +64,6 @@
         <dependency>
             <groupId>libthrift.wso2</groupId>
             <artifactId>libthrift</artifactId>
-            <version>0.8.0.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>slf4j.wso2</groupId>
