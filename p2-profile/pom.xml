@@ -197,11 +197,6 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.server.feature:${product.mi.version}
                                 </featureArtifactDef>
-
-<!--                                &lt;!&ndash;Identity&ndash;&gt;-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.identity.oauth.mediator.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.identity.xacml.mediator.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -319,10 +314,6 @@
                                     <id>org.wso2.carbon.mediation.configadmin.server.feature.group</id>
                                     <version>${carbon.mediation.version}</version>
                                 </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.identity.oauth.mediator.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.identity.xacml.mediator.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->

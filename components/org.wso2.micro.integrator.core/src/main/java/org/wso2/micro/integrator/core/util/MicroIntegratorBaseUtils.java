@@ -19,12 +19,16 @@
 package org.wso2.micro.integrator.core.util;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.util.base64.Base64Utils;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
+import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.deployment.DeploymentConstants;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.util.XMLUtils;
+import org.apache.commons.httpclient.Header;
 import org.wso2.carbon.CarbonConstants;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
@@ -39,7 +43,9 @@ import java.lang.reflect.Array;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -51,6 +57,7 @@ public class MicroIntegratorBaseUtils {
     private static final String REPOSITORY = "repository";
     private static boolean isServerConfigInitialized;
     private static OMElement axis2Config;
+    private static final String TRUE = "true";
 
     public static String getServerXml() {
         String carbonXML = System.getProperty(MicroIntegratorBaseConstants.CARBON_CONFIG_DIR_PATH);
@@ -292,5 +299,36 @@ public class MicroIntegratorBaseUtils {
         } catch (IOException | XMLStreamException e) {
             throw e;
         }
+    }
+
+    /**
+     * This is a utility method which can be used to set security headers in a service client. This method
+     * will create authorization header according to basic security protocol. i.e. encodeBase64(username:password)
+     * and put it in a HTTP header with name "Authorization".
+     *
+     * @param userName      User calling the service.
+     * @param password      Password of the user.
+     * @param rememberMe    <code>true</code> if UI asks to persist remember me cookie.
+     * @param serviceClient The service client used in the communication.
+     */
+    public static void setBasicAccessSecurityHeaders(String userName, String password, boolean rememberMe,
+                                                     ServiceClient serviceClient) {
+
+        String userNamePassword = userName + ":" + password;
+        String encodedString = Base64Utils.encode(userNamePassword.getBytes());
+
+        String authorizationHeader = "Basic " + encodedString;
+
+        List<Header> headers = new ArrayList<Header>();
+
+        Header authHeader = new Header("Authorization", authorizationHeader);
+        headers.add(authHeader);
+
+        if (rememberMe) {
+            Header rememberMeHeader = new Header("RememberMe", TRUE);
+            headers.add(rememberMeHeader);
+        }
+
+        serviceClient.getOptions().setProperty(HTTPConstants.HTTP_HEADERS, headers);
     }
 }
