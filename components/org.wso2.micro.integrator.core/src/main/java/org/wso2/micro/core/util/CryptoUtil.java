@@ -23,7 +23,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.base.MultitenantConstants;
 import org.wso2.carbon.core.RegistryResources.SecurityManagement;
 
-import org.wso2.carbon.core.util.CipherHolder;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.registry.core.service.RegistryService;
