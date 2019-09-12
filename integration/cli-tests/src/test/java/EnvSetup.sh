@@ -21,31 +21,12 @@ set -o xtrace
 echo "Executing Environment Setup script"
 platform=$(uname -s)
 bitType=$(arch)
+BASEDIR=$(dirname "$0")
 
-echo "Platform : $platform"
-echo "Bittype : $bitType"
 
 #Extract the compressed archive based on the platform and the bitype
 extractCompressArchive() {
-    echo "Extracting the files"
     tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
-
-#    if [[ "${platform}" == "Linux" && "${bitType}" == "i586" ]]; then
-#        tar -xvzf wso2mi-cli-$VERSION-linux-i586.tar.gz
-#
-#    elif [[ "${platform}" == "Linux" && "${bitType}" == "x86_64" ]]; then
-#        echo "Extracting the linux compressed archive "
-#        tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
-#
-#    elif [[ "${platform}" == "Darwin" && "${bitType}" == "i386" ]]; then
-#        tar -xvzf wso2mi-cli-$VERSION-macosx-x64.tar.gz
-#
-#    elif [[ "${platform}" == "windows" && "${bitType}" == "i586" ]]; then
-#        tar -xvzf wso2mi-cli-$VERSION-windows-i586.tar.gz
-#
-#    elif [[ "${platform}" == "windows" && "${bitType}" == "x64" ]]; then
-#        tar -xvzf wso2mi-cli-$VERSION-windows-x64.tar.gz
-#    fi
 }
 
 #get the product version from the pom file
@@ -54,16 +35,21 @@ getPomVersion(){
     echo "Version : $VERSION"
 }
 
-setup(){
 #Setting up the CLI environment
 #Check if the cli build is available in the location
-DIR="../../../cmd/build"
+setup(){
+
+cd $BASEDIR
+
+DIR="../../../../../cmd/build"
+
 if [ -d "$DIR" ]; then
     echo "CLI build exists. Hence skipping the environment setup phase"
 else
     echo "CLI build does not exists. Setting up the environment..."
     #download all the dependencies
-    cd ../../../cmd
+    pwd
+    cd ../../../../../cmd
     go mod vendor
     sleep 10
 
@@ -76,20 +62,14 @@ else
     cd cmd
     ./build.sh -t mi.go -v ${VERSION} -f
 
+
     #Extract the compressed archive generated
     echo "Extract the CLI archive "
-    pwd
     cd build
-    ls
     extractCompressArchive
-    echo "Extract completed"
-    ls
 
     #start the application
-    echo "Check build exist"
     cd wso2mi-cli-$VERSION/bin
-    ls
-    mi
     echo "ClI setup Complete"
 fi
 }

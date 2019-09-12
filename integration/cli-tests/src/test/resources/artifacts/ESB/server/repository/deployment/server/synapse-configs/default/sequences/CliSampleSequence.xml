@@ -16,7 +16,14 @@
   ~ under the License.
   ~
   -->
-
-<endpoint xmlns="http://ws.apache.org/ns/synapse" name="cliTestEndpoint">
-    <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
-</endpoint>
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="CliSampleSequence">
+       <log level="custom">
+          <property name="MSG" value="SEQUENCE INVOKED"/>
+       </log>
+       <property name="OUT_ONLY" value="true"/>
+       <send>
+          <endpoint>
+             <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+          </endpoint>
+       </send>
+    </sequence>

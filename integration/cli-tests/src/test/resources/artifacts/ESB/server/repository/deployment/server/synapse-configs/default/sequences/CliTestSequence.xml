@@ -16,6 +16,10 @@
   ~ under the License.
   ~
   -->
-
-<endpoint xmlns="http://ws.apache.org/ns/synapse" name="cliTesthtmlEndpoint" template="MainTemplate"
-          uri="http://en.wikipedia.org/wiki/Wso2"/>
+<sequence xmlns="http://ws.apache.org/ns/synapse" name="CliTestSequence">
+        <send>
+            <endpoint>
+                <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
+            </endpoint>
+        </send>
+    </sequence>
