@@ -176,7 +176,8 @@ public class CarbonLogReader {
      */
     public boolean checkForLog(String expected, int timeout, int numberofOccurrences) throws InterruptedException {
         for (int i = 0; i < timeout; i++) {
-            if (assertIfLogExists(expected, numberofOccurrences)) {
+            //Changed temporarily since logs are printed twice for each invocation
+            if (assertIfLogExists(expected, numberofOccurrences * 2)) {
                 return true;
             }
             TimeUnit.SECONDS.sleep(1);
