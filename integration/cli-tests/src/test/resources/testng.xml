@@ -30,7 +30,12 @@
 
     <test name="CLI-Usage-Tests" preserve-order="true" verbose="2">
         <classes>
-            <class name="org.wso2.carbon.esb.usage.CliUsageTests"></class>
+            <class name="org.wso2.carbon.esb.cli.CliEndpointTestCase"></class>
+            <class name="org.wso2.carbon.esb.cli.CliAPITestCase"></class>
+            <class name="org.wso2.carbon.esb.cli.CliCompositeappTestCase"></class>
+            <class name="org.wso2.carbon.esb.cli.CliSequenceTestCase"></class>
+            <class name="org.wso2.carbon.esb.cli.CliProxyserviceTestCase"></class>
+            <class name="org.wso2.carbon.esb.cli.CliRemoteTestCase"></class>
         </classes>
     </test>
 

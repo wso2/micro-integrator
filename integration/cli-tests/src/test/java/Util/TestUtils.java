@@ -20,8 +20,13 @@ package Util;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
+
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestUtils {
 
@@ -31,5 +36,24 @@ public class TestUtils {
         Model model = reader.read(new FileReader("../pom.xml"));
         String pomVersion = model.getParent().getVersion();
         return pomVersion;
+    }
+
+    public void showRemoteServer() throws IOException, XmlPullParserException {
+
+        String pomVersion;
+        String line = null;
+        pomVersion = getPomVerion();
+        System.out.println("POMM-->  " + pomVersion);
+        ProcessBuilder builder = new ProcessBuilder("../../cmd/build/wso2mi-cli-"+pomVersion+"/bin/mi", "remote" , "show");
+        Process process = builder.start();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+
+        List<String> lines = new ArrayList();
+        while ((line = reader.readLine()) != null) {
+            lines.add(line);
+            System.out.println(line);
+        }
+
+        return;
     }
 }
