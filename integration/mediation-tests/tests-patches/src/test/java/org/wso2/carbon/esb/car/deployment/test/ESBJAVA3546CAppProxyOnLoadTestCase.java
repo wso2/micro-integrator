@@ -41,7 +41,7 @@ public class ESBJAVA3546CAppProxyOnLoadTestCase extends ESBIntegrationTest {
         } catch (AxisFault axisFault) {
             log.error("Service Invocation Failed > " + axisFault.getMessage());
         } finally {
-            Assert.assertTrue("startOnLoad=true proxy invocation test failed", trueResponseReceived);
+            Assert.assertTrue(trueResponseReceived, "startOnLoad=true proxy invocation test failed");
         }
     }
 

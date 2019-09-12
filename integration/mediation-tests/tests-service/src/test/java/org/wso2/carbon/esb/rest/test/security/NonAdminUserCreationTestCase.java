@@ -66,7 +66,7 @@ public class NonAdminUserCreationTestCase {
     }
 
     protected static User getUser() {
-        Assert.assertNotNull("User is not created. Please create the user first", nonAdminUser);
+        Assert.assertNotNull(nonAdminUser, "User is not created. Please create the user first");
         return nonAdminUser;
     }
 

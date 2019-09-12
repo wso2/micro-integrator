@@ -67,7 +67,7 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         thriftServer.waitToReceiveEvents(20000, 3); //waiting for esb to send artifact config data to the thriftserver
 
         //Checking whether all the artifact configuration events are received
-        Assert.assertEquals("Three configuration events are required", 3, thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 3, "Three configuration events are required");
     }
 
     @Test(groups = { "wso2.esb" }, description = "API statistics message count check.")
@@ -82,8 +82,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
 
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics
         // events to the backend
-        Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 100, "Hundred statistics events are required, but different "
+                                                             + "number is found");
     }
 
     @Test(groups = { "wso2.esb" }, description = "API statistics message count check for post requests")
@@ -96,8 +96,8 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics
         // events to the backend
-        Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 100, "Hundred statistics events are required, but different "
+                                                             + "number is found");
     }
 
     @Test(groups = { "wso2.esb" }, description = "API statistics statistics event data check")
@@ -107,7 +107,7 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         SimpleHttpClient httpClient = new SimpleHttpClient();
         httpClient.doGet(url, null);
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
-        Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 1, "Statistics event is received");
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
                 .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
@@ -141,10 +141,10 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         mediatorList.add("StockQuoteAPI@8:SendMediator");
 
         //Checking whether all the mediators are present in the event
-        Assert.assertEquals("Nine configuration events are required", 9, eventList.size());
+        Assert.assertEquals(eventList.size(), 9, "Nine configuration events are required");
 
         for (String mediatorId : mediatorList) {
-            Assert.assertTrue("Mediator not found", allMediatorEventIds.contains(mediatorId));
+            Assert.assertTrue(allMediatorEventIds.contains(mediatorId), "Mediator not found");
         }
 
     }
@@ -158,7 +158,7 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         httpClient.doPost(postUrl, null, payload, contentType);
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
         // to the backend
-        Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 1, "Statistics event is received");
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
                 .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
@@ -188,10 +188,10 @@ public class ApiStatisticsTest extends ESBIntegrationTest {
         mediatorList.add("StockQuoteAPI@14:AnonymousEndpoint");
 
         //Checking whether all the mediators are present in the event
-        Assert.assertEquals("Four configuration events are required", 7, eventList.size());
+        Assert.assertEquals(eventList.size(), 7, "Four configuration events are required");
 
         for (String mediatorId : mediatorList) {
-            Assert.assertTrue("Mediator not found", allMediatorEventIds.contains(mediatorId));
+            Assert.assertTrue(allMediatorEventIds.contains(mediatorId), "Mediator not found");
         }
 
     }

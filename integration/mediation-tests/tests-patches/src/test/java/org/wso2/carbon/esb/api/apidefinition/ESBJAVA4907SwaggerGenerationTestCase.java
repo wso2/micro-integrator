@@ -45,8 +45,8 @@ public class ESBJAVA4907SwaggerGenerationTestCase extends ESBIntegrationTest {
         response.getEntity().writeTo(baos);
 
         log.info("Swagger Definition Response : " + baos.toString());
-        Assert.assertTrue("Swagger definition did not contained in the response",
-                baos.toString().contains("API Definition of swaggerGenerationTestApi"));
+        Assert.assertTrue(baos.toString().contains("API Definition of swaggerGenerationTestApi"),
+                          "Swagger definition did not contained in the response");
     }
 
     @AfterClass(alwaysRun = true)
