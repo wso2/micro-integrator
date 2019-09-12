@@ -73,7 +73,7 @@ public class Sample651TestCase extends ESBSampleIntegrationTest {
             }
         }
 
-        Assert.assertTrue("Simple observer not working", isRequestLogFound);
+        Assert.assertTrue(isRequestLogFound, "Simple observer not working");
 
     }
 

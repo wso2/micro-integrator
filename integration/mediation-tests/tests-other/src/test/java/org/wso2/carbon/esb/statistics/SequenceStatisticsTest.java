@@ -65,8 +65,8 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events to the
         // backend
-        Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 100, "Hundred statistics events are required, but different "
+                                                             + "number is found");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Sequence statistics message count check.")
@@ -79,8 +79,8 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events to the
         // backend
-        Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 100, "Hundred statistics events are required, but different "
+                                                            + "number is found");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Nested Sequence statistics statistics event data check")
@@ -91,7 +91,7 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
         axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ReferencingProxyStatisticDisableProxy"), null, "WSO2");
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
-        Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 1, "Statistics event is received");
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
                 .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
@@ -121,10 +121,10 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
         mediatorList.add("StatisticBackendSequence@7:RespondMediator");
 
         //Checking whether all the mediators are present in the event
-        Assert.assertEquals("Eight configuration events are required", 8, eventList.size());
+        Assert.assertEquals(eventList.size(), 8, "Eight configuration events are required");
 
         for (String mediatorId : mediatorList) {
-            Assert.assertTrue("Mediator not found", allMediatorEventIds.contains(mediatorId));
+            Assert.assertTrue(allMediatorEventIds.contains(mediatorId), "Mediator not found");
         }
     }
 
@@ -135,7 +135,7 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
 
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("SequenceReferenceProxy"), null, "WSO2");
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
-        Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 1, "Statistics event is received");
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
                 .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
@@ -168,10 +168,10 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
         mediatorList.add("StatisticBackendSequence@7:RespondMediator");
 
         //Checking whether all the mediators are present in the event
-        Assert.assertEquals("Nine configuration events are required", 9, eventList.size());
+        Assert.assertEquals(eventList.size(), 9, "Nine configuration events are required");
 
         for (String mediatorId : mediatorList) {
-            Assert.assertTrue("Mediator not found", allMediatorEventIds.contains(mediatorId));
+            Assert.assertTrue(allMediatorEventIds.contains(mediatorId), "Mediator not found");
         }
 
     }
