@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.MessageStoreSerializer;
 import org.apache.synapse.message.store.MessageStore;
 import org.apache.synapse.message.store.impl.jdbc.JDBCMessageStore;
 import org.apache.synapse.message.store.impl.jms.JmsStore;
@@ -169,6 +170,7 @@ public class MessageStoreResource implements MiApiResource {
         jsonObject.put(PRODUCER_ATTRIBUTE, messageStore.getProducer());
         jsonObject.put(PROPERTIES_ATTRIBUTE, messageStore.getParameters());
         jsonObject.put(STORE_SIZE_ATTRIBUTE, messageStore.size());
+        jsonObject.put(Constants.SYNAPSE_CONFIGURATION, MessageStoreSerializer.serializeMessageStore(null, messageStore));
 
         return jsonObject;
     }

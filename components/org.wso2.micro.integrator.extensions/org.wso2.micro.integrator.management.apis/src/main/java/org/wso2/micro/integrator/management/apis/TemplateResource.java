@@ -22,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.TemplateMediatorSerializer;
+import org.apache.synapse.config.xml.endpoints.TemplateSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.endpoints.Template;
 import org.apache.synapse.mediators.template.TemplateMediator;
@@ -185,6 +187,8 @@ public class TemplateResource extends APIResource {
         JSONObject endpointTemplateJSONObject = new JSONObject();
         endpointTemplateJSONObject.put(Constants.NAME, endpointTemplate.getName());
         endpointTemplateJSONObject.put(PARAMETERS, endpointTemplate.getParameters());
+        endpointTemplateJSONObject.put(Constants.SYNAPSE_CONFIGURATION, new TemplateSerializer().
+                serializeEndpointTemplate(endpointTemplate, null));
 
         return endpointTemplateJSONObject;
     }
@@ -198,6 +202,8 @@ public class TemplateResource extends APIResource {
         JSONObject sequenceTemplateJSONObject = new JSONObject();
         sequenceTemplateJSONObject.put(Constants.NAME, sequenceTemplate.getName());
         sequenceTemplateJSONObject.put(PARAMETERS, sequenceTemplate.getParameters());
+        sequenceTemplateJSONObject.put(Constants.SYNAPSE_CONFIGURATION, new TemplateMediatorSerializer().
+                serializeMediator(null, sequenceTemplate));
 
         return sequenceTemplateJSONObject;
     }
