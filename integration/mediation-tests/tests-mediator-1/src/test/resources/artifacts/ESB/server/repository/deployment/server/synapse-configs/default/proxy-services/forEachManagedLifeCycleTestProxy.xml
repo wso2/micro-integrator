@@ -29,7 +29,10 @@
                     <dbreport>
                         <connection>
                             <pool>
-                                <dsName>jdbc/WSO2TestDB1</dsName>
+                                <driver>org.h2.Driver</driver>
+                                <url>jdbc:h2:../testdb_dblookup;AUTO_SERVER=TRUE</url>
+                                <user>wso2carbon</user>
+                                <password>wso2carbon</password>
                             </pool>
                         </connection>
                         <statement>
