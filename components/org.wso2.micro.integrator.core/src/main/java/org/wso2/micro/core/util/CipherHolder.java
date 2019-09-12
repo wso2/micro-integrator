@@ -22,65 +22,65 @@ import com.google.gson.Gson;
 import org.apache.axiom.om.util.Base64;
 
 /**
- * Holds ciphertext with related metadata.
+ * Holds cipherText with related metadata.
  */
 public class CipherHolder {
 
-    // Base64 encoded ciphertext.
-    private String c;
+    // Base64 encoded cipherText.
+    private String cipherText;
 
     // Transformation used for encryption, default is "RSA".
-    private String t = "RSA";
+    private String transformation = "RSA";
 
     // Thumbprint of the certificate.
-    private String tp;
+    private String thumpPrint;
 
     // Digest used to generate certificate thumbprint.
-    private String tpd;
+    private String thumpPrintDigest;
 
     public String getTransformation() {
-        return t;
+        return transformation;
     }
 
     public void setTransformation(String transformation) {
-        this.t = transformation;
+        this.transformation = transformation;
     }
 
     public String getCipherText() {
-        return c;
+        return cipherText;
     }
 
     public byte[] getCipherBase64Decoded() {
-        return Base64.decode(c);
+        return Base64.decode(cipherText);
     }
 
     public void setCipherText(String cipher) {
-        this.c = cipher;
+        this.cipherText = cipher;
     }
 
     public String getThumbPrint() {
-        return tp;
+        return thumpPrint;
     }
 
-    public void setThumbPrint(String tp) {
-        this.tp = tp;
+    public void setThumbPrint(String thumbPrint) {
+        this.thumpPrint = thumbPrint;
     }
 
     public String getThumbprintDigest() {
-        return tpd;
+        return thumpPrintDigest;
     }
 
     public void setThumbprintDigest(String digest) {
-        this.tpd = digest;
+        this.thumpPrintDigest = digest;
     }
 
     /**
-     * Function to base64 encode ciphertext and set ciphertext
+     * Function to base64 encode cipherText and set cipherText
      *
      * @param cipher
      */
     public void setCipherBase64Encoded(byte[] cipher) {
-        this.c = Base64.encode(cipher);
+        this.cipherText = Base64.encode(cipher);
     }
 
     /**
@@ -90,8 +90,8 @@ public class CipherHolder {
      * @param digest digest (hash algorithm) used for to create thumb print
      */
     public void setThumbPrint(String tp, String digest) {
-        this.tp = tp;
-        this.tpd = digest;
+        this.thumpPrint = tp;
+        this.thumpPrintDigest = digest;
     }
 
     @Override
