@@ -16,7 +16,6 @@
  * under the License.
  */
 
-
 package org.wso2.micro.integrator.management.apis;
 
 import com.google.gson.JsonObject;
@@ -32,8 +31,8 @@ import org.apache.synapse.config.xml.ProxyServiceSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.json.JSONObject;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
-import org.wso2.carbon.service.mgt.ServiceAdmin;
+import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.service.mgt.ServiceAdmin;
 import org.wso2.micro.service.mgt.ServiceMetaData;
 
 import java.io.IOException;
@@ -53,12 +52,16 @@ public class ProxyServiceResource extends APIResource {
 
     private static Log LOG = LogFactory.getLog(ProxyServiceResource.class);
 
-    public ProxyServiceResource(String urlTemplate){
+    private static ServiceAdmin serviceAdmin = null;
+
+    public ProxyServiceResource(String urlTemplate) {
+
         super(urlTemplate);
     }
 
     @Override
     public Set<String> getMethods() {
+
         Set<String> methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
         methods.add(Constants.HTTP_POST);
@@ -72,6 +75,10 @@ public class ProxyServiceResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
+        if (serviceAdmin == null) {
+            serviceAdmin = Utils.getServiceAdmin(messageContext);
+        }
+
         if (messageContext.isDoingGET()) {
             String param = Utils.getQueryParameter(messageContext, "proxyServiceName");
             if (Objects.nonNull(param)) {
@@ -84,7 +91,7 @@ public class ProxyServiceResource extends APIResource {
             try {
                 if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
                     Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject("JSON payload is missing"));
-                    return  true;
+                    return true;
                 }
                 JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
                 if (payload.has(NAME) && payload.has(STATUS)) {
@@ -116,11 +123,12 @@ public class ProxyServiceResource extends APIResource {
             JSONObject proxyObject = new JSONObject();
 
             try {
-                ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
+
+                ServiceMetaData data = serviceAdmin.getServiceData(proxyService.getName());
 
                 proxyObject.put(Constants.NAME, proxyService.getName());
 
-                String []wsdlUrls = data.getWsdlURLs();
+                String[] wsdlUrls = data.getWsdlURLs();
                 proxyObject.put("wsdl1_1", wsdlUrls[0]);
                 proxyObject.put("wsdl2_0", wsdlUrls[1]);
 
@@ -132,7 +140,6 @@ public class ProxyServiceResource extends APIResource {
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
     }
-
 
     private void populateProxyServiceData(MessageContext messageContext, String proxyServiceName) {
 
@@ -166,9 +173,10 @@ public class ProxyServiceResource extends APIResource {
         proxyObject.put(Constants.NAME, proxyService.getName());
 
         try {
-            ServiceMetaData data = new ServiceAdmin().getServiceData(proxyService.getName());
 
-            String []wsdlUrls = data.getWsdlURLs();
+            ServiceMetaData data = serviceAdmin.getServiceData(proxyService.getName());
+
+            String[] wsdlUrls = data.getWsdlURLs();
 
             proxyObject.put("wsdl1_1", wsdlUrls[0]);
             proxyObject.put("wsdl2_0", wsdlUrls[1]);
@@ -237,5 +245,4 @@ public class ProxyServiceResource extends APIResource {
         return (ServerConfigurationInformation) synapseConfiguration.getAxisConfiguration().
                 getParameter(SynapseConstants.SYNAPSE_SERVER_CONFIG_INFO).getValue();
     }
-
 }

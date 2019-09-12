@@ -17,7 +17,6 @@
 package org.wso2.micro.integrator.management.apis;
 
 import com.google.gson.Gson;
-import org.apache.axis2.AxisFault;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
@@ -30,13 +29,15 @@ import org.wso2.carbon.dataservices.common.DBConstants;
 import org.wso2.carbon.dataservices.core.DBUtils;
 import org.wso2.carbon.dataservices.core.description.query.Query;
 import org.wso2.carbon.dataservices.core.engine.DataService;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceInfo;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceSummary;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServicesList;
 import org.wso2.micro.integrator.management.apis.models.dataServices.QuerySummary;
-import org.wso2.carbon.service.mgt.ServiceAdmin;
+import org.wso2.micro.service.mgt.ServiceAdmin;
 import org.wso2.micro.service.mgt.ServiceMetaData;
+
+
 
 import java.util.HashSet;
 import java.util.Map;
@@ -45,6 +46,8 @@ import java.util.Set;
 public class DataServiceResource extends APIResource {
 
     private static final Log log = LogFactory.getLog(DataServiceResource.class);
+
+    private static ServiceAdmin serviceAdmin = null;
 
     public DataServiceResource(String urlTemplate) {
         super(urlTemplate);
@@ -60,6 +63,9 @@ public class DataServiceResource extends APIResource {
     @Override
     public boolean invoke(MessageContext msgCtx) {
         buildMessage(msgCtx);
+        if (serviceAdmin == null) {
+            serviceAdmin = Utils.getServiceAdmin(msgCtx);
+        }
         String param = Utils.getQueryParameter(msgCtx, "dataServiceName");
 
         try {
@@ -70,8 +76,8 @@ public class DataServiceResource extends APIResource {
                 // list of all data-services
                 populateDataServiceList(msgCtx);
             }
-        } catch (AxisFault axisFault) {
-            log.error("Error while populating service: ", axisFault);
+        } catch (Exception exception) {
+            log.error("Error while populating service: ", exception);
             msgCtx.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         }
 
@@ -82,7 +88,7 @@ public class DataServiceResource extends APIResource {
         return true;
     }
 
-    private void populateDataServiceList(MessageContext msgCtx) throws AxisFault {
+    private void populateDataServiceList(MessageContext msgCtx) throws Exception {
         SynapseConfiguration configuration = msgCtx.getConfiguration();
         AxisConfiguration axisConfiguration = configuration.getAxisConfiguration();
         String[] dataServicesNames = DBUtils.getAvailableDS(axisConfiguration);
@@ -109,7 +115,7 @@ public class DataServiceResource extends APIResource {
         Utils.setJsonPayLoad(axis2MessageContext, new JSONObject(stringPayload));
     }
 
-    private void populateDataServiceByName(MessageContext msgCtx, String serviceName) throws AxisFault {
+    private void populateDataServiceByName(MessageContext msgCtx, String serviceName) throws Exception {
         DataService dataService = getDataServiceByName(msgCtx, serviceName);
 
         org.apache.axis2.context.MessageContext axis2MessageContext = ((Axis2MessageContext) msgCtx)
@@ -150,9 +156,9 @@ public class DataServiceResource extends APIResource {
         return dataService;
     }
 
-    private ServiceMetaData getServiceMetaData(DataService dataService) throws AxisFault {
+    private ServiceMetaData getServiceMetaData(DataService dataService) throws Exception {
         if (dataService != null) {
-            return new ServiceAdmin().getServiceData(dataService.getName());
+            return serviceAdmin.getServiceData(dataService.getName());
         } else {
             return null;
         }

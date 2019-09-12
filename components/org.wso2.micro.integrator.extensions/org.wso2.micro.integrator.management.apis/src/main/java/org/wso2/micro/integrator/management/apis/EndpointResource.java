@@ -28,7 +28,7 @@ import org.apache.synapse.endpoints.AbstractEndpoint;
 import org.apache.synapse.endpoints.Endpoint;
 import org.apache.synapse.endpoints.EndpointDefinition;
 import org.json.JSONObject;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.Collection;
 import java.util.HashSet;

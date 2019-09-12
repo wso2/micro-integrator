@@ -71,6 +71,7 @@ import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
 //import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
+import org.wso2.micro.integrator.inbound.endpoint.EndpointListenerLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -195,8 +196,8 @@ public class ServiceBusInitializer {
             /*configCtxSvc.getServerConfigContext().setProperty(ConfigurationManager.CONFIGURATION_MANAGER,
                     configurationManager);*/
 
+            // Start Inbound Endpoint Listeners
             EndpointListenerLoader.loadListeners();
-
         } catch (Exception e) {
             handleFatal("Couldn't initialize the ESB...", e);
         } catch (Throwable t) {

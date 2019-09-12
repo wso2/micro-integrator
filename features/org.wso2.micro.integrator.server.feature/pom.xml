@@ -105,9 +105,9 @@
                                 </bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.org.apache.poi:poi-ooxml:${orbit.version.poi.ooxml}-->
 <!--                                </bundleDef>-->
-<!--                                <bundleDef>-->
-<!--                                    org.json.wso2:json:${org.wso2.json.version}-->
-<!--                                </bundleDef>-->
+                                <bundleDef>
+                                    org.json.wso2:json:${org.wso2.json.version}
+                                </bundleDef>
 
                                 <bundleDef>
                                     org.wso2.orbit.sun.xml.ws:jaxws-ri:${org.wso2.orbit.sun.xml.ws.version}
@@ -248,10 +248,10 @@
                                 </bundleDef>
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.addressing:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
-<!--                                &lt;!&ndash;Management API&ndash;&gt;-->
-<!--                                <bundleDef>-->
-<!--                                    org.wso2.ei:org.wso2.micro.integrator.management.apis:${product.mi.version}-->
-<!--                                </bundleDef>-->
+                                <!--Management API-->
+                                <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.management.apis:${product.mi.version}
+                                </bundleDef>
                             </bundles>
 
                             <importFeatures>

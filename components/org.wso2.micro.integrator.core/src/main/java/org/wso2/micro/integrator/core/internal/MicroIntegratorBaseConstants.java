@@ -43,6 +43,9 @@ public class MicroIntegratorBaseConstants {
     public static final String CARBON_INSTANCE = "local_WSO2_WSAS";
     public static final String LOCAL_IP_ADDRESS = "carbon.local.ip";
 
+    public static final String COMPONENT_REP0_ENV = "COMPONENTS_REPO";
+    public static final String AXIS2_REPO_ENV = "AXIS2_REPO";
+
     /**
      * Remove default constructor and make it not available to initialize.
      */

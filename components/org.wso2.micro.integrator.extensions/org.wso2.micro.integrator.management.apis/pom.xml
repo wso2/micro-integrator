@@ -16,27 +16,26 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.inbound.endpoint</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.application.deployer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.application.mgt.synapse</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.micro.integrator.core</artifactId>
+            <artifactId>org.wso2.micro.integrator.inbound.endpoint</artifactId>
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.security</artifactId>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.initializer</artifactId>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -52,6 +51,9 @@
                         <Export-Package>
                             org.wso2.micro.integrator.management.apis.*;version="${project.version}"
                         </Export-Package>
+                        <Import-Package>
+                            *;resolution:=optional
+                        </Import-Package>
                     </instructions>
                 </configuration>
             </plugin>

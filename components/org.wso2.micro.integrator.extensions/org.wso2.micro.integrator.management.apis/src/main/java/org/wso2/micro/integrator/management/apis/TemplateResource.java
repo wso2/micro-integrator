@@ -27,7 +27,7 @@ import org.apache.synapse.endpoints.Template;
 import org.apache.synapse.mediators.template.TemplateMediator;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.HashSet;
 import java.util.Map;

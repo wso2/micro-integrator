@@ -33,7 +33,7 @@ import org.apache.synapse.message.processor.impl.forwarder.ScheduledMessageForwa
 import org.apache.synapse.message.processor.impl.sampler.SamplingProcessor;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 
 import java.io.IOException;
 import java.io.InputStream;
