@@ -32,6 +32,8 @@ import org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.util.EventServic
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import static org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGrpcConstants.DEFAULT_INBOUND_ENDPOINT_GRPC_PORT;
+
 public class InboundGrpcListener implements InboundRequestProcessor {
     private int port;
     private GRPCInjectHandler injectHandler;
@@ -44,9 +46,11 @@ public class InboundGrpcListener implements InboundRequestProcessor {
         SynapseEnvironment synapseEnvironment = params.getSynapseEnvironment();
         String portParam = params.getProperties().getProperty(InboundGrpcConstants.INBOUND_ENDPOINT_PARAMETER_GRPC_PORT);
         try {
+            log.warn("Exception occurred when getting " + InboundGrpcConstants.INBOUND_ENDPOINT_PARAMETER_GRPC_PORT +
+                    " property. Setting the port as " + DEFAULT_INBOUND_ENDPOINT_GRPC_PORT);
             port = Integer.parseInt(portParam);
         } catch (NumberFormatException e) {
-            port = 8888;
+            port = DEFAULT_INBOUND_ENDPOINT_GRPC_PORT;
         }
         injectHandler = new GRPCInjectHandler(injectingSeq, onErrorSeq, false, synapseEnvironment);
     }

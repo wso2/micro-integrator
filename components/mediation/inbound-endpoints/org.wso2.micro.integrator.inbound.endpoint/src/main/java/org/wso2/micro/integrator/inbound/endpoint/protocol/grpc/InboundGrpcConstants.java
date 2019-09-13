@@ -27,4 +27,5 @@ public class InboundGrpcConstants {
     public static final String CONTENT_TYPE_TEXT_MIME_TYPE = "text/plain";
     public static final String HEADER_MAP_SEQUENCE_PARAMETER_NAME = "sequence";
     public static final String HEADER_MAP_CONTENT_TYPE_PARAMETER_NAME = "Content-Type";
+    public static final int DEFAULT_INBOUND_ENDPOINT_GRPC_PORT = 8888;
 }
