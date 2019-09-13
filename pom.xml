@@ -559,6 +559,28 @@
                 <artifactId>velocity</artifactId>
                 <version>${org.apache.velocity.version}</version>
             </dependency>
+            <!-- GRPC inbound endpoint and mediator dependencies start -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.grpc.response.mediator</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <!-- GRPC inbound endpoint and mediator dependencies end -->
         </dependencies>
     </dependencyManagement>
 
@@ -744,6 +766,8 @@
         <org.apache.bsf.wso2.version>3.0.0.wso2v5</org.apache.bsf.wso2.version>
         <rhino.wso2.js.version>1.7.0.R4.wso2v1</rhino.wso2.js.version>
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
+
+        <grpc.version>1.21.0</grpc.version>
     </properties>
 
     <repositories>

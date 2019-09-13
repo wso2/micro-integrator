@@ -39,6 +39,10 @@
             <artifactId>org.wso2.carbon.mediator.cache</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.grpc.response.mediator</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.velocity</groupId>
             <artifactId>velocity</artifactId>
         </dependency>
@@ -82,6 +86,9 @@
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.oauth.stub:${carbon.identity.oauth.version}
+                                </bundleDef>
+                                <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.grpc.response.mediator:${product.mi.version}
                                 </bundleDef>
                             </bundles>
                             <importBundles>
