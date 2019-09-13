@@ -19,7 +19,6 @@
 package org.wso2.micro.integrator.transport.handlers;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.xpath.AXIOMXPath;
 import org.apache.axiom.util.blob.OverflowBlob;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
@@ -28,7 +27,6 @@ import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.util.JavaUtils;
-import org.apache.axis2.util.XMLUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpInetConnection;
@@ -44,8 +42,6 @@ import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.ProtocolState;
 import org.apache.synapse.transport.passthru.SourceContext;
 import org.apache.synapse.transport.passthru.SourceHandler;
-import org.jaxen.SimpleNamespaceContext;
-import org.jaxen.XPath;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
@@ -58,7 +54,6 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -204,6 +199,8 @@ public class PassThroughNHttpGetProcessor implements HttpGetRequestProcessor {
         //super.init(configurationContext, sourceHandler);
     	this.cfgCtx  =  configurationContext;
     	this.sourceHandler =  sourceHandler;
+    	DataHolder.getInstance().setAxisConfigurationContext(configurationContext);
+
         if (cfgCtx.getProperty("GETRequestProcessorMap") != null) {
             getRequestProcessors = (Map<String, org.wso2.micro.core.transports.HttpGetRequestProcessor>)
                     cfgCtx.getProperty("GETRequestProcessorMap");
