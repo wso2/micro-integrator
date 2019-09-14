@@ -85,7 +85,7 @@ public class ESBJAVA3770DropLargePayloadsPreventESBFromOOMTestCase extends ESBIn
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "passthru" + File.separator + "transport" + File.separator
-                        + "ESBJAVA3770" + File.separator + "passthru-http.properties"));
+                        + "ESBJAVA3770" + File.separator + "deployment.toml"));
     }
 
     @Test(groups = "wso2.esb", description = "test whether messages are getting dropped when message size "

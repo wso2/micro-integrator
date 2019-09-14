@@ -1,7 +1,5 @@
 {
   "time": {
-    "server.default_cache_timeout": "m",
-
     "synapse_properties.'synapse.global_timeout_interval'": "ms",
     "synapse_properties.'statistics.clean.interval'": "ms",
 
