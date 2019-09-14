@@ -134,6 +134,7 @@
                 <exclude>**/repository/components/plugins/axis2-transport-mail_1.1.1.wso2v2.jar
                 </exclude>
                 <exclude>**/repository/components/plugins/jsch_0.1.49.wso2v1.jar</exclude>
+                <exclude>**/repository/resources/conf/**</exclude>
             </excludes>
         </fileSet>
 
@@ -162,9 +163,17 @@
                 <exclude>**/lib/endorsed/xalan*.jar</exclude>
                 <exclude>**/tomcat/**</exclude>
                 <exclude>**/launch.ini</exclude>
+                <exclude>**/deployment.toml</exclude>
             </excludes>
         </fileSet>
 
+        <fileSet>
+            <directory>./src/resources/config-tool</directory>
+            <outputDirectory>wso2mi-${pom.version}/repository/resources/conf</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/bin</directory>
             <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
@@ -530,6 +539,13 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/conf/deployment.toml</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>deployment.toml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 
     <dependencySets>
@@ -537,6 +553,7 @@
             <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
             <includes>
+                <include>org.wso2.config.mapper:config-mapper:jar</include>
                 <include>org.wso2.ei:org.wso2.micro.integrator.server:jar</include>
                 <include>net.sf.saxon:Saxon-HE:jar</include>
                 <include>xerces.wso2:xercesImpl</include>

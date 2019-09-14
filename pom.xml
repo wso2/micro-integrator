@@ -586,7 +586,11 @@
                 <artifactId>velocity</artifactId>
                 <version>${org.apache.velocity.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.wso2.config.mapper</groupId>
+                <artifactId>config-mapper</artifactId>
+                <version>${config.mapper.version}</version>
+            </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.analytics-common</groupId>
                 <artifactId>org.wso2.carbon.databridge.agent</artifactId>
@@ -874,6 +878,7 @@
         <version.woodstox.core.asl>4.4.1</version.woodstox.core.asl>
         <javax.jsr311.api.version>1.1.1</javax.jsr311.api.version>
 
+        <config.mapper.version>1.0.2</config.mapper.version>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>
