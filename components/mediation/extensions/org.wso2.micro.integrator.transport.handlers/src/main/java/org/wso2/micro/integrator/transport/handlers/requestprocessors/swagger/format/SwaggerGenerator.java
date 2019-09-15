@@ -18,18 +18,22 @@
 package org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format;
 
 import org.apache.axiom.ext.io.StreamCopyException;
+import org.apache.axiom.om.OMNode;
+import org.apache.axiom.om.OMText;
 import org.apache.axiom.util.blob.BlobOutputStream;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
 import org.apache.synapse.config.SynapseConfigUtils;
+import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.registry.Registry;
 import org.apache.synapse.rest.API;
-import org.wso2.carbon.core.transports.CarbonHttpRequest;
-import org.wso2.carbon.core.transports.CarbonHttpResponse;
-import org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.SwaggerConstants;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
-import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
+import org.apache.synapse.rest.version.DefaultStrategy;
+import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.transports.CarbonHttpRequest;
+import org.wso2.micro.core.transports.CarbonHttpResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -39,6 +43,10 @@ import java.io.UnsupportedEncodingException;
  */
 public class SwaggerGenerator {
     private static final Log log = LogFactory.getLog(SwaggerGenerator.class);
+    /**
+     * Registry path prefixes
+     */
+    static final String CONFIG_REG_PREFIX = "conf:";
 
     /**
      * Update the response with provided response string.
@@ -70,11 +78,8 @@ public class SwaggerGenerator {
      * @return API instance with respect to the request
      */
     protected API getAPIFromSynapseConfig(CarbonHttpRequest request) {
-        String tenantDomain = MultitenantUtils.getTenantDomainFromRequestURL(request.getRequestURI());
         String apiName = getApiNameFromRequestUri(request.getRequestURI());
-
-        return SynapseConfigUtils.getSynapseConfiguration((tenantDomain != null) ? tenantDomain
-                : MultitenantConstants.SUPER_TENANT_DOMAIN_NAME).getAPI(apiName);
+        return SynapseConfigUtils.getSynapseConfiguration(Constants.SUPER_TENANT_DOMAIN_NAME).getAPI(apiName);
     }
 
     /**
@@ -84,30 +89,45 @@ public class SwaggerGenerator {
      * @return API Name extracted from the URI provided
      */
     protected String getApiNameFromRequestUri(String requestUri) {
-        String tenantDomain = MultitenantConstants.SUPER_TENANT_DOMAIN_NAME;
-        String pathSeparator = "/";
-        String apiName = null;
+        return requestUri.substring(1);
+    }
 
-        if (requestUri.contains(pathSeparator + MultitenantConstants.TENANT_AWARE_URL_PREFIX + pathSeparator)) {
-            String[] paths = requestUri.split(pathSeparator);
-            boolean foundTenantDelimiter = false;
-            boolean foundNewTenant = false;
+    /**
+     * Function to extract swagger definition from the registry
+     *
+     * @param api API object
+     * @param request CarbonHttpRequest which contains the request URI info
+     * @return null if registry content unavailable or empty, otherwise relevant content
+     */
+    protected String retrieveFromRegistry(API api, CarbonHttpRequest request) {
 
-            for (String pathString : paths) {
-                if (!foundTenantDelimiter && MultitenantConstants.TENANT_AWARE_URL_PREFIX.equals(pathString)) {
-                    foundTenantDelimiter = true;
-                } else if (foundTenantDelimiter && MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)) {
-                    tenantDomain = pathString;
-                    foundNewTenant = true;
-                } else if (foundNewTenant) {
-                    apiName = pathString;
-                    break;
-                }
+        String defString = null;
+        String resourcePath = api.getSwaggerResourcePath();
+
+        if (resourcePath == null) {
+            //Create resource path in registry
+            StringBuilder resourcePathBuilder = new StringBuilder();
+            resourcePathBuilder.append(CONFIG_REG_PREFIX)
+                    .append(SwaggerConstants.DEFAULT_SWAGGER_REGISTRY_PATH).append(api.getAPIName());
+            if (!(api.getVersionStrategy() instanceof DefaultStrategy)) {
+                resourcePathBuilder.append(":v").append(api.getVersion());
             }
-        } else {
-            apiName = requestUri.substring(1);
+            resourcePathBuilder.append("/swagger.json");
+            resourcePath = resourcePathBuilder.toString();
+
         }
-        return apiName;
+
+        // Retrieve from registry
+        SynapseConfiguration synapseConfig =
+                SynapseConfigUtils.getSynapseConfiguration(Constants.SUPER_TENANT_DOMAIN_NAME);
+        Registry registry = synapseConfig.getRegistry();
+        OMNode regContent = registry.lookup(resourcePath);
+
+        if (regContent instanceof OMText) {
+            defString = ((OMText) regContent).getText();
+        }
+
+        return defString;
     }
 
     /**
