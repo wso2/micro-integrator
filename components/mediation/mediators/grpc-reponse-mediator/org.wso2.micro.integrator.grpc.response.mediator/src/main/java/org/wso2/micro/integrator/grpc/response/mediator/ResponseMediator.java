@@ -43,14 +43,18 @@ import static org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGr
 public class ResponseMediator extends AbstractMediator {
     private static final Log log = LogFactory.getLog(ResponseMediator.class);
     public boolean mediate(MessageContext messageContext) {
-        log.debug("gRPC response mediator initiated.");
+        if (log.isDebugEnabled()) {
+            log.debug("gRPC response mediator initiated.");
+        }
         GRPCResponseObserverWrapper responseObserver =
                 (GRPCResponseObserverWrapper) messageContext.getProperty(InboundGrpcConstants.GRPC_RESPONSE_OBSERVER);
         if (responseObserver != null) {
             org.apache.axis2.context.MessageContext msgContext = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
             String content;
             String contentType = msgContext.getProperty(MESSAGE_TYPE).toString();
-            log.debug("Message content type retrieved in the message is: " + contentType);
+            if (log.isDebugEnabled()) {
+                log.debug("Message content type retrieved in the message is: " + contentType);
+            }
             if (contentType.equalsIgnoreCase(CONTENT_TYPE_JSON_MIME_TYPE)) {
                 BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(JsonUtil.getJsonPayload(msgContext)));
                 StringBuilder stringBuilder = new StringBuilder();
@@ -73,7 +77,9 @@ public class ResponseMediator extends AbstractMediator {
                 log.error(msg);
                 throw new SynapseException(msg);
             }
-            log.debug("Extracted content: " + content);
+            if (log.isDebugEnabled()) {
+                log.debug("Extracted content: " + content);
+            }
             responseObserver.sendResponse(content);
         } else {
             String msg = "Message context doesn't contain gRPC Response Observer. " +

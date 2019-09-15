@@ -46,10 +46,10 @@ public class InboundGrpcListener implements InboundRequestProcessor {
         SynapseEnvironment synapseEnvironment = params.getSynapseEnvironment();
         String portParam = params.getProperties().getProperty(InboundGrpcConstants.INBOUND_ENDPOINT_PARAMETER_GRPC_PORT);
         try {
-            log.warn("Exception occurred when getting " + InboundGrpcConstants.INBOUND_ENDPOINT_PARAMETER_GRPC_PORT +
-                    " property. Setting the port as " + DEFAULT_INBOUND_ENDPOINT_GRPC_PORT);
             port = Integer.parseInt(portParam);
         } catch (NumberFormatException e) {
+            log.warn("Exception occurred when getting " + InboundGrpcConstants.INBOUND_ENDPOINT_PARAMETER_GRPC_PORT +
+                    " property. Setting the port as " + DEFAULT_INBOUND_ENDPOINT_GRPC_PORT);
             port = DEFAULT_INBOUND_ENDPOINT_GRPC_PORT;
         }
         injectHandler = new GRPCInjectHandler(injectingSeq, onErrorSeq, false, synapseEnvironment);
@@ -78,13 +78,17 @@ public class InboundGrpcListener implements InboundRequestProcessor {
         server = ServerBuilder.forPort(port).addService(new EventServiceGrpc.EventServiceImplBase() {
             @Override
             public void process(Event request, StreamObserver<Event> responseObserver) {
-                log.debug("Event received for gRPC Listener process method");
+                if (log.isDebugEnabled()) {
+                    log.debug("Event received for gRPC Listener process method");
+                }
                 injectHandler.invokeProcess(request, responseObserver);
             }
 
             @Override
             public void consume(Event request, StreamObserver<Empty> responseObserver) {
-                log.debug("Event received for gRPC Listener consume method");
+                if (log.isDebugEnabled()) {
+                    log.debug("Event received for gRPC Listener consume method");
+                }
                 injectHandler.invokeConsume(request, responseObserver);
                 responseObserver.onNext(Empty.getDefaultInstance());
                 responseObserver.onCompleted();

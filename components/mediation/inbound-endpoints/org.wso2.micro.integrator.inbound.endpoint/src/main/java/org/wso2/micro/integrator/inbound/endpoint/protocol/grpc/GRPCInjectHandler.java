@@ -115,17 +115,20 @@ public class GRPCInjectHandler {
                                                   org.apache.synapse.MessageContext msgCtx) throws AxisFault {
         String msgPayload = receivedEvent.getPayload();
         String sequenceName = receivedEvent.getHeadersMap().get(HEADER_MAP_SEQUENCE_PARAMETER_NAME);
-        log.debug(receivedEvent.getHeadersMap().toString());
         SequenceMediator seq;
         if (sequenceName != null) {
-            log.debug(sequenceName + " sequence, received via gRPC headers.");
+            if (log.isDebugEnabled()) {
+                log.debug(sequenceName + " sequence, received via gRPC headers.");
+            }
             seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration().getSequence(sequenceName);
         } else {
             if (injectingSeq == null || injectingSeq.isEmpty()) {
                 log.error("Sequence name is not specified in inbound endpoint or empty.");
                 return;
             }
-            log.debug(injectingSeq + " sequence, received via the inbound endpoint.");
+            if (log.isDebugEnabled()) {
+                log.debug(injectingSeq + " sequence, received via the inbound endpoint.");
+            }
             seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration().getSequence(injectingSeq);
         }
         msgCtx.setProperty(SynapseConstants.IS_INBOUND, true);
@@ -135,7 +138,9 @@ public class GRPCInjectHandler {
                 seq.init(synapseEnvironment);
             }
             seq.setErrorHandler(onErrorSeq);
-            log.debug("injecting received gRPC message to sequence : " + injectingSeq);
+            if (log.isDebugEnabled()) {
+                log.debug("injecting received gRPC message to sequence : " + injectingSeq);
+            }
             if (!synapseEnvironment.injectInbound(msgCtx, seq, this.sequential)) {
                 return;
             }
@@ -148,7 +153,9 @@ public class GRPCInjectHandler {
         axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS
                 , receivedEvent.getHeadersMap());
         String contentType = receivedEvent.getHeadersMap().get(InboundGrpcConstants.HEADER_MAP_CONTENT_TYPE_PARAMETER_NAME);
-        log.debug(contentType + " Content-Type, received via the gRPC headers.");
+        if (log.isDebugEnabled()) {
+            log.debug(contentType + " Content-Type, received via the gRPC headers.");
+        }
         // Determine the message builder to use
         if (contentType != null) {
             if (InboundGrpcConstants.CONTENT_TYPE_JSON.equalsIgnoreCase(contentType)) {
