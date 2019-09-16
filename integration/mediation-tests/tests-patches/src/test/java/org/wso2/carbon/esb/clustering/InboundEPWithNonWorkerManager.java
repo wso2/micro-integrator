@@ -17,7 +17,7 @@
 
 package org.wso2.carbon.esb.clustering;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -78,8 +78,9 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test Inbound EP in clustered environment "
             + "when the clustering pattern is nonWorkerManager")
     public void testInboundEPWithNonWorkerManager() throws Exception {
-        Assert.assertFalse("Check whether the node is considered as manager or not when the clustering pattern"
-                + " is nonWorkerManager", this.stringExistsInLog(INBOUND_EP_MESSAGE_FOR_MANAGER));
+        Assert.assertFalse(this.stringExistsInLog(INBOUND_EP_MESSAGE_FOR_MANAGER),
+                           "Check whether the node is considered as manager or not when the clustering pattern is "
+                           + "nonWorkerManager");
     }
 
     @AfterClass(alwaysRun = true)

@@ -16,7 +16,7 @@
  */
 package org.wso2.carbon.esb.api.apidefinition;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.http.HttpResponse;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -43,8 +43,8 @@ public class ESBJAVA4936SwaggerGenerationJsonYamlTestCase extends ESBIntegration
         String payload = httpClient.getResponsePayload(response);
 
         log.info("JSON Definition Response : " + payload);
-        Assert.assertTrue("Swagger JSON definition did not contained in the response",
-                payload.contains("API Definition of swaggerGenerationTestApi"));
+        Assert.assertTrue(payload.contains("API Definition of swaggerGenerationTestApi"),
+                          "Swagger JSON definition did not contained in the response");
     }
 
     @Test(groups = "wso2.esb", description = "Test API definition for Yaml is generated correctly")
@@ -55,8 +55,8 @@ public class ESBJAVA4936SwaggerGenerationJsonYamlTestCase extends ESBIntegration
         String payload = httpClient.getResponsePayload(response);
 
         log.info("Yaml Definition Response : " + payload);
-        Assert.assertTrue("Swagger Yaml definition did not contained in the response",
-                payload.contains("API Definition of swaggerGenerationTestApi"));
+        Assert.assertTrue(payload.contains("API Definition of swaggerGenerationTestApi"),
+                          "Swagger Yaml definition did not contained in the response");
     }
 
     @AfterClass(alwaysRun = true)

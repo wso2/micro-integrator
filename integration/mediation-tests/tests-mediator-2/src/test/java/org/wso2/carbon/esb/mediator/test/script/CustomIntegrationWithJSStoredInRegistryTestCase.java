@@ -18,10 +18,8 @@
 package org.wso2.carbon.esb.mediator.test.script;
 
 import org.apache.axiom.om.OMElement;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.esb.integration.common.clients.logging.LoggingAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import javax.xml.namespace.QName;
@@ -34,7 +32,6 @@ public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrat
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        enableDebugLogging();
     }
 
     @Test(groups = "wso2.esb", description = "custom mediator with JS and store it in registry and invoke it with the given 'key'")
@@ -42,7 +39,7 @@ public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrat
 
         OMElement response = axis2Client
                 .sendCustomQuoteRequest(getProxyServiceURLHttp("scriptMediatorJSStoredInRegistryTestProxy"), null,
-                        "WSO2");
+                                        "WSO2");
 
         assertNotNull(response, "Fault response message null");
 
@@ -54,12 +51,8 @@ public class CustomIntegrationWithJSStoredInRegistryTestCase extends ESBIntegrat
         assertEquals(response.getFirstElement().getText(), "WSO2", "Fault value mismatched");
 
         assertNotNull(response.getFirstChildWithName(new QName("http://services.samples/xsd", "Price")),
-                "Fault response null localpart");
+                      "Fault response null localpart");
 
     }
 
-    private void enableDebugLogging() throws Exception {
-        LoggingAdminClient logAdminClient = new LoggingAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
-        logAdminClient.updateLoggerData("org.apache.synapse", "DEBUG", true, false);
-    }
 }

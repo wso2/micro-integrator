@@ -104,7 +104,7 @@ fi
 
 # update classpath
 CARBON_CLASSPATH=""
-for f in "$CARBON_HOME"/wso2/components/plugins/org.wso2.carbon.micro.integrator.security*.jar
+for f in "$CARBON_HOME"/wso2/components/plugins/org.wso2.micro.integrator.security*.jar
 do
   CARBON_CLASSPATH=$CARBON_CLASSPATH:$f
 done
@@ -120,4 +120,4 @@ fi
 
 # ----- Execute The Requested Command -----------------------------------------
 
-$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -classpath "$CARBON_CLASSPATH" org.wso2.carbon.micro.integrator.security.vault.VaultTool $*
+$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -classpath "$CARBON_CLASSPATH" org.wso2.micro.integrator.security.vault.VaultTool $*

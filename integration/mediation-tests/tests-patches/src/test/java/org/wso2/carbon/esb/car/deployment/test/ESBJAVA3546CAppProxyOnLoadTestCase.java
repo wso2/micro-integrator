@@ -15,7 +15,7 @@
  */
 package org.wso2.carbon.esb.car.deployment.test;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
@@ -41,7 +41,7 @@ public class ESBJAVA3546CAppProxyOnLoadTestCase extends ESBIntegrationTest {
         } catch (AxisFault axisFault) {
             log.error("Service Invocation Failed > " + axisFault.getMessage());
         } finally {
-            Assert.assertTrue("startOnLoad=true proxy invocation test failed", trueResponseReceived);
+            Assert.assertTrue(trueResponseReceived, "startOnLoad=true proxy invocation test failed");
         }
     }
 

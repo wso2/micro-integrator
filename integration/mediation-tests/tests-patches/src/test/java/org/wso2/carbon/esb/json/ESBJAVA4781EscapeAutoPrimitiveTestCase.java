@@ -17,7 +17,7 @@
 
 package org.wso2.carbon.esb.json;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
@@ -44,9 +44,9 @@ public class ESBJAVA4781EscapeAutoPrimitiveTestCase extends ESBIntegrationTest {
                         + "\"boolean_false\":false,\"string\":\"string\",\"integer_escaped\":\"1989\",\"float_escaped\":\"1989.9\",\"null_escaped\":\"null\","
                         + "\"boolean_true_escaped\":\"true\",\"boolean_false_escaped\":\"false\",\"string_escaped\":\"string\"}}";
 
-        Assert.assertTrue("JSON field value auto primitive has not not been escaped from formatter"
-                        + " when if field value starting region is matched with replace regex.",
-                expected.equals(response.getData()));
+        Assert.assertTrue(expected.equals(response.getData()),
+                          "JSON field value auto primitive has not not been escaped from formatter"
+                        + " when if field value starting region is matched with replace regex.");
 
     }
 }

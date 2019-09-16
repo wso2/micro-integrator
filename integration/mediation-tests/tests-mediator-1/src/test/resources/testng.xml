@@ -310,23 +310,12 @@
         </packages>
     </test>
 
-    <test name="Router-mediator-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.mediator.test.router"/>
-        </packages>
-    </test>
-
     <test name="Foreach-mediator-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.foreach"/>
         </packages>
     </test>
 
-    <test name="Rule-mediator-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.mediator.test.rule"/>
-        </packages>
-    </test>
     <test name="Send-mediator-Test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.mediator.test.send.MTOMEnableDisableSendMediatorTestCase"/>

@@ -17,7 +17,7 @@
  */
 package org.wso2.carbon.esb.mediator.test.send;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.http.HttpResponse;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;

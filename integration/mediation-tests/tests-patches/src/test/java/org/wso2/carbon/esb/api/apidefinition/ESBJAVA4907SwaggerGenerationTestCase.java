@@ -16,7 +16,7 @@
  */
 package org.wso2.carbon.esb.api.apidefinition;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.http.HttpResponse;
 import org.testng.annotations.AfterClass;
@@ -45,8 +45,8 @@ public class ESBJAVA4907SwaggerGenerationTestCase extends ESBIntegrationTest {
         response.getEntity().writeTo(baos);
 
         log.info("Swagger Definition Response : " + baos.toString());
-        Assert.assertTrue("Swagger definition did not contained in the response",
-                baos.toString().contains("API Definition of swaggerGenerationTestApi"));
+        Assert.assertTrue(baos.toString().contains("API Definition of swaggerGenerationTestApi"),
+                          "Swagger definition did not contained in the response");
     }
 
     @AfterClass(alwaysRun = true)

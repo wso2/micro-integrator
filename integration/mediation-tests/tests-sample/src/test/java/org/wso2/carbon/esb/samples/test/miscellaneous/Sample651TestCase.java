@@ -1,6 +1,6 @@
 package org.wso2.carbon.esb.samples.test.miscellaneous;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -73,7 +73,7 @@ public class Sample651TestCase extends ESBSampleIntegrationTest {
             }
         }
 
-        Assert.assertTrue("Simple observer not working", isRequestLogFound);
+        Assert.assertTrue(isRequestLogFound, "Simple observer not working");
 
     }
 

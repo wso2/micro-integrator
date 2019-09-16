@@ -18,7 +18,7 @@ package org.wso2.carbon.esb.vfs.transport.test;
  * under the License.
  */
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.IOUtils;

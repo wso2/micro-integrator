@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.esb.nhttp.transport.json.test;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -37,29 +37,29 @@ public class ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport extends ESBIntegrati
     public void testJSONEmptyArrayMissingNHTTPTransport() throws Exception {
         HttpResponse response = HttpRequestUtil
                 .sendGetRequest(getApiInvocationURL("testJsonEmptyArray/testapi1"), null);
-        Assert.assertTrue(
-                "Backend JSON payload is missing [] in Json empty array units after flowing through NHTTP transport"
-                        + "in response path back to client",
-                response.getData().contains("\"zeroElementArrayField\": []"));
+        Assert.assertTrue(response.getData().contains("\"zeroElementArrayField\": []"),
+                          "Backend JSON payload is missing [] in Json empty array units after flowing through NHTTP "
+                          + "transportin response path back to client");
 
         response = HttpRequestUtil.sendGetRequest(getApiInvocationURL("testJsonEmptyArray/testapi2"), null);
-        Assert.assertTrue(
-                "All number fields are not treated equally by Auto primitive function after flowing through NHTTP transport"
-                        + "in response path back to client", response.getData().replaceAll("\\s", "").contains(
-                        "[{\"numField1\":\"1\"},{\"numField2\":\"2\"},{\"numField3\":\"3\"},{\"numField4\":\"4\"}]"));
+        Assert.assertTrue(response.getData().replaceAll("\\s", "").contains(
+                "[{\"numField1\":\"1\"},{\"numField2\":\"2\"},{\"numField3\":\"3\"},{\"numField4\":\"4\"}]"),
+                          "All number fields are not treated equally by Auto primitive function after flowing through"
+                          + " NHTTP transportin response path back to client");
 
         response = HttpRequestUtil.sendGetRequest(getApiInvocationURL("testJsonEmptyArray/testapi3"), null);
-        Assert.assertTrue(
-                "Backend JSON payload is missing [] in Json single element array units after flowing through NHTTP transport"
-                        + "in response path back to client", response.getData().replaceAll("\\s", "")
-                        .contains("\"singleElementArrayField\":[{\"numField1\":\"1\"}]"));
+        Assert.assertTrue(response.getData().replaceAll("\\s", "")
+                                  .contains("\"singleElementArrayField\":[{\"numField1\":\"1\"}]"),
+                          "Backend JSON payload is missing [] in Json single element array units after flowing "
+                          + "through NHTTP transport"
+                          + "in response path back to client");
 
         response = HttpRequestUtil.sendGetRequest(getApiInvocationURL("testJsonEmptyArray/testapi4"), null);
-        Assert.assertTrue(
-                "Backend JSON payload is missing [] in Json multiple element array units after flowing through NHTTP transport"
-                        + "in response path back to client", response.getData().replaceAll("\\s", "").contains(
-                        "\"multipleElementArrayField\":[{\"numField1\":\"1\"},{\"numField2\":\"2\"},"
-                                + "{\"numField3\":\"3\"}]"));
+        Assert.assertTrue(response.getData().replaceAll("\\s", "").contains(
+                "\"multipleElementArrayField\":[{\"numField1\":\"1\"},{\"numField2\":\"2\"},"
+                + "{\"numField3\":\"3\"}]"),
+                          "Backend JSON payload is missing [] in Json multiple element array units after flowing "
+                          + "through NHTTP transport in response path back to client");
 
     }
 

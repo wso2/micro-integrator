@@ -461,7 +461,7 @@
 
         <phase name="Validation"/>
         <phase name="Transport">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.carbon.integrator.core.handler.IntegratorStatefulHandler">
+            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
                 <order phase="Transport"/>
                 <order phase="Transport"/>
             </handler>

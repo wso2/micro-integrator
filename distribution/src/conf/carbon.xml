@@ -222,49 +222,6 @@
     <MaxThreadExecutionTime>600</MaxThreadExecutionTime>
 
     <!--
-        A flag to enable or disable Ghost Deployer. By default this is set to false. That is
-        because the Ghost Deployer works only with the HTTP/S transports. If you are using
-        other transports, don't enable Ghost Deployer.
-    -->
-    <GhostDeployment>
-        <Enabled>false</Enabled>
-    </GhostDeployment>
-
-
-    <!--
-        Eager loading or lazy loading is a design pattern commonly used in computer programming which
-        will initialize an object upon creation or load on-demand. In carbon, lazy loading is used to
-        load tenant when a request is received only. Similarly Eager loading is used to enable load
-        existing tenants after carbon server starts up. Using this feature, you will be able to include
-        or exclude tenants which are to be loaded when server startup.
-
-        We can enable only one LoadingPolicy at a given time.
-
-        1. Tenant Lazy Loading
-           This is the default behaviour and enabled by default. With this policy, tenants are not loaded at
-           server startup, but loaded based on-demand (i.e when a request is received for a tenant).
-           The default tenant idle time is 30 minutes.
-
-        2. Tenant Eager Loading
-           This is by default not enabled. It can be be enabled by un-commenting the <EagerLoading> section.
-           The eager loading configurations supported are as below. These configurations can be given as the
-           value for <Include> element with eager loading.
-                (i)Load all tenants when server startup             -   *
-                (ii)Load all tenants except foo.com & bar.com       -   *,!foo.com,!bar.com
-                (iii)Load only foo.com &  bar.com to be included    -   foo.com,bar.com
-    -->
-    <Tenant>
-        <LoadingPolicy>
-            <LazyLoading>
-                <IdleTime>30</IdleTime>
-            </LazyLoading>
-            <!-- <EagerLoading>
-                   <Include>*,!foo.com,!bar.com</Include>
-            </EagerLoading>-->
-        </LoadingPolicy>
-    </Tenant>
-
-    <!--
      Caching related configurations
     -->
     <Cache>
@@ -588,22 +545,32 @@
        org.wso2.carbon.transport.HttpGetRequestProcessor
     -->
     <HttpGetRequestProcessors>
-        <Processor>
+        <!--Uncomment following info processor if need information page -->
+        <!--<Processor>
             <Item>info</Item>
-            <Class>org.wso2.carbon.core.transports.util.InfoProcessor</Class>
-        </Processor>
+            <Class>org.wso2.micro.core.transports.util.InfoProcessor</Class>
+        </Processor>-->
         <Processor>
             <Item>wsdl</Item>
-            <Class>org.wso2.carbon.core.transports.util.Wsdl11Processor</Class>
+            <Class>org.wso2.micro.core.transports.util.Wsdl11Processor</Class>
         </Processor>
         <Processor>
             <Item>wsdl2</Item>
-            <Class>org.wso2.carbon.core.transports.util.Wsdl20Processor</Class>
+            <Class>org.wso2.micro.core.transports.util.Wsdl20Processor</Class>
         </Processor>
         <Processor>
             <Item>xsd</Item>
-            <Class>org.wso2.carbon.core.transports.util.XsdProcessor</Class>
+            <Class>org.wso2.micro.core.transports.util.XsdProcessor</Class>
         </Processor>
+        <!--Uncomment following to enable swagger support for APIs-->
+        <!--Processor>
+            <Item>swagger.json</Item>
+            <Class>org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerJsonProcessor</Class>
+        </Processor>
+        <Processor>
+            <Item>swagger.yaml</Item>
+            <Class>org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor</Class>
+        </Processor-->
     </HttpGetRequestProcessors>
 
     <!-- Deployment Synchronizer is not supported in Micro Integrator -->
