@@ -46,7 +46,7 @@
                             org.wso2.micro.integrator.websocket.transport.*,
                         </Export-Package>
                         <Import-Package>
-                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            org.apache.axis2.*; version="${imp.pkg.version.axis2}",
                             org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             org.osgi.framework,
                             *;resolution:=optional

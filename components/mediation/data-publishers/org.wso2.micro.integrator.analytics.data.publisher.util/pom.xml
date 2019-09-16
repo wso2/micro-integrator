@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
+
 <!--
   ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
@@ -16,51 +17,39 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
+
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>tasks</artifactId>
         <groupId>org.wso2.ei</groupId>
+        <artifactId>data-publishers</artifactId>
         <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>org.wso2.micro.integrator.task</artifactId>
+    <artifactId>org.wso2.micro.integrator.analytics.data.publisher.util</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 Carbon - Task BE</name>
-    <description>This is a core module of the project.</description>
+    <name>WSO2 Micro Integrator - Analytics Data Publisher Util</name>
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.task.services</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-tasks</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.synapse</groupId>
-            <artifactId>synapse-commons</artifactId>
+            <groupId>org.ops4j.pax.logging</groupId>
+            <artifactId>pax-logging-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.scr.ds-annotations</artifactId>
             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.micro.integrator.core</artifactId>
         </dependency>
     </dependencies>
 
@@ -74,29 +63,11 @@
                     <instructions>
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
-                        <SYNAPSE_DEPLOYER-RequiredServices>
-                            org.wso2.micro.integrator.task.service.TaskDeployerService
-                        </SYNAPSE_DEPLOYER-RequiredServices>
-                        <Private-Package>org.wso2.micro.integrator.task.internal</Private-Package>
                         <Export-Package>
-                            !org.wso2.micro.integrator.task.services.*,
-                            org.wso2.micro.integrator.task.*
+                            org.wso2.micro.integrator.analytics.data.publisher.util.*
                         </Export-Package>
                         <Import-Package>
-                            org.wso2.carbon.task.services.*,
-                            javax.servlet;version="${imp.pkg.version.javax.servlet}",
-                            javax.servlet.http;version="${imp.pkg.version.javax.servlet}",
-                            javax.servlet.resources;version="${imp.pkg.version.javax.servlet}",
-                            org.apache.commons.io.*,
-                            org.quartz.*,
-                            javax.transaction.*,
-                            org.apache.axis2.*; version="${imp.pkg.version.axis2}",
-                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
                             org.apache.commons.logging.*; version="${import.package.version.commons.logging}",
-                            org.apache.log4j.*,
-                            org.apache.commons.collections.*,
-                            org.apache.synapse.commons.*,
-                            org.apache.synapse.task.*,
                             *;resolution:=optional
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
@@ -105,4 +76,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

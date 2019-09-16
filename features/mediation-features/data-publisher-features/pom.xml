@@ -34,6 +34,7 @@
 
     <modules>
         <module>org.wso2.micro.integrator.prometheus.publisher.feature</module>
+        <module>org.wso2.micro.integrator.analytics.messageflow.data.publisher.feature</module>
     </modules>
 
 </project>
