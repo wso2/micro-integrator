@@ -52,12 +52,6 @@
         </packages>
     </test>
 
-    <test name="XQuery-mediator-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.mediator.test.xquery"/>
-        </packages>
-    </test>
-
     <test name="XSLT-mediator-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.xslt"/>
