@@ -722,6 +722,11 @@
                 <artifactId>synapse-commons</artifactId>
                 <version>${synapse.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-model</artifactId>
+                <version>${maven.model.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -769,6 +774,7 @@
         <mysql-connector-java.version>5.1.6</mysql-connector-java.version>
         <opensaml.version>2.2.3</opensaml.version>
         <org.wso2.json.version>3.0.0.wso2v1</org.wso2.json.version>
+        <maven.model.version>3.3.9</maven.model.version>
         <testng.suiteXml.location>src/test/resources/testng.xml</testng.suiteXml.location>
 
         <!-- TODO Remove after fixing the test cases, kept for compilation purposes.-->
@@ -804,6 +810,17 @@
 <!--                <module>dataservice-hosting-tests/samples</module>-->
 <!--                <module>dataservice-hosting-tests/tests-common</module>-->
 <!--                <module>dataservice-hosting-tests/tests-integration/tests</module>-->
+            </modules>
+        </profile>
+        <profile>
+            <id>full</id>
+            <modules>
+                <module>samples/product</module>
+                <module>automation-extensions</module>
+                <module>tests-common</module>
+                <module>mediation-tests</module>
+                <module>cli-tests</module>
+<!--                <module>dataservice-hosting-tests</module>-->
             </modules>
         </profile>
     </profiles>
