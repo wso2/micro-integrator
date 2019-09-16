@@ -41,9 +41,8 @@ import java.io.InputStream;
 
 import static org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGrpcConstants.HEADER_MAP_SEQUENCE_PARAMETER_NAME;
 
-
 /**
- * Inject gRPC message into the sequence
+ * Inject gRPC message into the sequence.
  */
 public class GRPCInjectHandler {
     private static final Log log = LogFactory.getLog(GRPCInjectHandler.class);
