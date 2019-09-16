@@ -274,11 +274,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.carbon.mediation</groupId>
-                <artifactId>org.wso2.carbon.mediator.router.impl</artifactId>
-                <version>${carbon.mediation.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon.mediation</groupId>
                 <artifactId>org.wso2.carbon.inbound.endpoint</artifactId>
                 <version>${carbon.mediation.version}</version>
                 <scope>compile</scope>
@@ -306,6 +301,11 @@
             <dependency>
                 <groupId>org.wso2.carbon.mediation</groupId>
                 <artifactId>org.wso2.carbon.application.mgt.synapse</artifactId>
+                <version>${carbon.mediation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.mediation</groupId>
+                <artifactId>org.wso2.carbon.mediator.fastXSLT</artifactId>
                 <version>${carbon.mediation.version}</version>
             </dependency>
             <dependency>
@@ -564,6 +564,11 @@
                 <artifactId>velocity</artifactId>
                 <version>${org.apache.velocity.version}</version>
             </dependency>
+            <dependency>
+                <groupId>net.sf.saxon</groupId>
+                <artifactId>Saxon-HE</artifactId>
+                <version>${saxon.wso2.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -749,6 +754,7 @@
         <org.apache.bsf.wso2.version>3.0.0.wso2v5</org.apache.bsf.wso2.version>
         <rhino.wso2.js.version>1.7.0.R4.wso2v1</rhino.wso2.js.version>
         <org.apache.velocity.version>1.7</org.apache.velocity.version>
+        <saxon.wso2.version>9.5.1-8</saxon.wso2.version>
     </properties>
 
     <repositories>

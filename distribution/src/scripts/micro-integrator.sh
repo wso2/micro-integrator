@@ -276,6 +276,13 @@ if [ $java_version_formatted -ge 1100 ]; then
     JAVA_VER_BASED_OPTS="--add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED"
 fi
 
+for f in "$CARBON_HOME"/wso2/lib/endorsed/*.jar
+do
+    if [ "$f" != "$CARBON_HOME/wso2/lib/endorsed/*.jar" ];then
+        CARBON_CLASSPATH="$CARBON_CLASSPATH":$f
+    fi
+done
+
 while [ "$status" = "$START_EXIT_STATUS" ]
 do
     $JAVACMD \
