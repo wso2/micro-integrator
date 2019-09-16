@@ -150,9 +150,9 @@
                                 </featureArtifactDef>
 
                                 <!--Analytics-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.datapublisher.feature:${carbon.analytics.common.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.datapublisher.feature:${carbon.analytics.common.version}
+                                </featureArtifactDef>
 <!--                                <featureArtifactDef>-->
 <!--                                    org.wso2.carbon.mediation:org.wso2.carbon.das.messageflow.data.publisher.feature:${carbon.mediation.version}-->
 <!--                                </featureArtifactDef>-->
@@ -343,10 +343,10 @@
                                     <id>org.wso2.micro.integrator.ntask.core.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>-->
-<!--                                    <version>${carbon.analytics.common.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
+                                    <version>${carbon.analytics.common.version}</version>
+                                </feature>
 <!--                                <feature>-->
 <!--                                    <id>org.wso2.carbon.das.messageflow.data.publisher.feature.group</id>-->
 <!--                                    <version>${carbon.mediation.version}</version>-->
