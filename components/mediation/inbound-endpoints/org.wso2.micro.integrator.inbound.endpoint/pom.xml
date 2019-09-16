@@ -142,7 +142,7 @@
                             org.wso2.micro.integrator.inbound.endpoint.protocol.generic ; version="${project.version}",
                             org.wso2.micro.integrator.inbound.endpoint.protocol.hl7 ; version="${project.version}",
                             org.wso2.micro.integrator.inbound.endpoint.internal.http.api ; version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint ; version="${project.version}"
+                            org.wso2.micro.integrator.inbound.endpoint ; version="${project.version}",
                             org.wso2.micro.integrator.inbound.endpoint.protocol.grpc ; version="${project.version}"
                         </Export-Package>
                         <Import-Package>

@@ -53,7 +53,9 @@
                         <Export-Package>
                             org.wso2.micro.integrator.grpc.response.mediator.*,
                         </Export-Package>
-                        <Import-Package/>
+                        <Import-Package>
+                            org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.*; version="${project.version}"
+                        </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Fragment-Host>synapse-core</Fragment-Host>
                     </instructions>
