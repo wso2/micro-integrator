@@ -40,15 +40,14 @@ public class CliAPITestCase {
     String cliTestApi = "cliTesApi";
     String cliTestMediatorApi = "cliTestXmltoJsonAPI";
     File file;
-    String filePath = new File(this.getClass().getSimpleName()).getAbsolutePath();
 
     {
         try {
             TestUtils testUtils = new TestUtils();
-            file = new File(filePath+".."+ File.separator+".."+ File.separator+".."+ File.separator +".."+ File.separator +".."
-                    + File.separator +"cmd"+ File.separator+"build"+ File.separator+"wso2mi-cli-"+testUtils.getPomVerion()
+
+            file = new File(".."+ File.separator+".."+ File.separator+".."+ File.separator
+                    +"cmd"+ File.separator+"build"+ File.separator+"wso2mi-cli-"+testUtils.getPomVerion()
                     + File.separator +"bin"+ File.separator+"mi");
-            System.out.println("File path----->" + filePath);
 
         } catch (IOException e) {
             log.info("Exception = " + e.getMessage());
@@ -80,7 +79,6 @@ public class CliAPITestCase {
     @Test
     public void miShowAllApiTest() throws IOException {
         try {
-            System.out.println("getCanonicalPath------------->>>" + file.getCanonicalPath());
             ProcessBuilder builder = new ProcessBuilder( file.getCanonicalPath(), "api" ,"show");
             Process process = builder.start();
 
@@ -133,7 +131,7 @@ public class CliAPITestCase {
     public void miShowApiNotFoundTest() throws IOException {
 
         try {
-            ProcessBuilder builder = new ProcessBuilder( file.getCanonicalPath(), "api" ,"show" , "api");
+            ProcessBuilder builder = new ProcessBuilder( file.getCanonicalPath(), "api" ,"show" , "TestAPI");
             Process process = builder.start();
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
