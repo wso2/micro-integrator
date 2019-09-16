@@ -794,16 +794,10 @@
             <modules>
                 <module>samples/product</module>
                 <module>automation-extensions</module>
-<<<<<<< HEAD
-<!--                <module>tests-common</module>-->
-<!--                <module>mediation-tests</module>-->
-<!--                <module>dataservice-hosting-tests</module>-->
-                <module>cli-tests</module>
-=======
                 <module>tests-common</module>
                 <module>mediation-tests</module>
-<!--                <module>dataservice-hosting-tests</module>-->
->>>>>>> e609c05244fdd90d45b6456e583da42de9c0f94a
+                <!--                <module>dataservice-hosting-tests</module>-->
+                <module>cli-tests</module>
             </modules>
         </profile>
         <profile>
