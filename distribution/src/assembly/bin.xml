@@ -430,6 +430,14 @@
         </file>
 
         <file>
+            <source>src/conf/carbon.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf</outputDirectory>
+            <destName>carbon.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/jndi.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>jndi.properties</destName>
