@@ -563,6 +563,7 @@
             <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
             <includes>
                 <include>org.wso2.ei:org.wso2.micro.integrator.server:jar</include>
+                <include>net.sf.saxon:Saxon-HE:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
