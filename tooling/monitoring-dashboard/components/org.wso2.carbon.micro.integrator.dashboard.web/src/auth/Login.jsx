@@ -17,7 +17,7 @@
  */
 
 
-import {Checkbox, RaisedButton, Snackbar, TextField} from 'material-ui';
+import {RaisedButton, Snackbar, TextField} from 'material-ui';
 import {MuiThemeProvider} from 'material-ui/styles';
 import React, {Component} from 'react';
 import {FormattedMessage} from 'react-intl';
@@ -44,7 +44,7 @@ const styles = {
     },
     contentDiv: {
         backgroundColor: 'black',
-        height: '100vh'
+        height: '100vh',
     },
 };
 
@@ -80,17 +80,19 @@ export default class Login extends Component {
      * Check if the user has already signed in and remember me is set
      */
     initAuthenticationFlow(){
-        if (AuthManager.isRememberMeSet() && !AuthManager.isLoggedIn()){
+        if (!AuthManager.isLoggedIn()){
             //Refresh token
         }
     }
 
     authenticate(e) {
-        const {username, password, rememberMe} = this.state;
+
+        const {username, password, host, port, rememberMe} = this.state;
         e.preventDefault();
-        AuthManager.authenticate(username, password, rememberMe)
+        AuthManager.authenticate(host, port, username, password, rememberMe)
             .then(() => this.setState({authenticated: true}))
             .catch((error) => {
+                window.alert("error " + error);
                 this.setState({
                     username: '',
                     password: '',
@@ -167,17 +169,6 @@ export default class Login extends Component {
                                     password: e.target.value,
                                 });
                             }}
-                        />
-                        <br/>
-                        <Checkbox
-                            label={<FormattedMessage id="login.rememberMe" defaultMessage="Remember Me"/>}
-                            checked={this.state.rememberMe}
-                            onCheck={(e, checked) => {
-                                this.setState({
-                                    rememberMe: checked,
-                                });
-                            }}
-                            style={{margin: '30px 0'}}
                         />
                         <br/>
                         <RaisedButton

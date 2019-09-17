@@ -76,7 +76,7 @@ export default class EndpointDetailsPage extends Component {
                     <TableHeaderBox title="Endpoint Details"/>
                     {this.renderData(this.state.response)}
                 </Box>
-                <SourceViewComponent config={this.state.response.config}/>
+                <SourceViewComponent config={this.state.response.configuration}/>
             </Box>
         );
     }
@@ -85,13 +85,13 @@ export default class EndpointDetailsPage extends Component {
         const type = endpoint.type;
         if (type === "HTTP Endpoint") {
             return this.renderHttpEPOptions(endpoint);
-        } else if (type === "Addressing Endpoint") {
+        } else if (type === "Address Endpoint") {
             return this.renderAddressingEPOptions(endpoint);
         } else if (type === "WSDL Endpoint") {
             return this.renderWsdlEPOptions(endpoint);
         } else if (type === "Template Endpoint") {
             return this.renderTemplateEPOptions(endpoint);
-        } else if (type === "RecipientListEndpoint") {
+        } else if (type === "Recipient List Endpoint") {
             return this.renderListEPOptions(endpoint);
         } else if (type === "Load Balance Endpoint") {
             return this.renderLBEPOptions(endpoint);
@@ -99,6 +99,8 @@ export default class EndpointDetailsPage extends Component {
             return this.renderFailoverEPOptions(endpoint);
         } else if (type === "Default Endpoint") {
             return this.renderDefaultEPOptions(endpoint);
+        } else if (type === "Indirect Endpoint") {
+           return this.renderIndirectEndpoint(endpoint);
         }
     }
 
@@ -226,6 +228,19 @@ export default class EndpointDetailsPage extends Component {
             </Table>);
     }
 
+    renderIndirectEndpoint(endpoint) {
+        const options = [];
+        options.push(this.createData("Name", endpoint.name));
+        options.push(this.createData("Type", endpoint.type));
+        options.push(this.createData("Key", endpoint.key));
+        return (
+            <Table size="small">
+                <TableBody>
+                    {this.renderRowsFromData(options)}
+                </TableBody>
+            </Table>);
+    }
+
     renderRowsFromData(data) {
         return (
             data.map(row => (
@@ -257,7 +272,6 @@ export default class EndpointDetailsPage extends Component {
     }
 
     render() {
-        console.log(this.state.config);
         return (
             <ResourceExplorerParent title={this.state.response.name + " Explorer"}
                                     content={this.renderEndpointDetails()}/>

@@ -22,6 +22,7 @@ import { BrowserRouter} from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
 import Login from './auth/Login';
+import Logout from './auth/Logout';
 
 import APIListPage from './resource-pages/ApiListPage';
 import ApiSourceViewPage from './resource-pages/APISourceViewPage';
@@ -45,6 +46,7 @@ import InboundEndpointDetailPage from './resource-pages/InboundEndpointDetailsPa
 import EndpointDetailsPage from './resource-pages/EndpointDetailsPage';
 import SequenceDetailsPage from './resource-pages/SequenceDetailsPage';
 import TaskDetailsPage from './resource-pages/TaskDetailsPage';
+import HomePage from './resource-pages/HomePage';
 
 import '../public/css/dashboard.css';
 
@@ -60,6 +62,10 @@ class App extends Component {
                 <Switch>
                     {/* Authentication */}
                     <Route exact path='/login' component={Login} />
+                    <Route exact path='/logout' component={Logout} />
+                    {/* Secured routes */}
+
+
                     <Route exact path='/proxy' component={ProxyServiceListPage} />
                     <Route exact path='/endpoint' component={EndpointListPage} />
                     <Route path='/endpoint/explore' component={EndpointDetailsPage} />
@@ -83,6 +89,7 @@ class App extends Component {
                     <Route exact path='/task' component={TaskListPage} />
                     <Route path='/task/explore' component={TaskDetailsPage} />
 
+                    <Route exact path='/home' component={HomePage} />
                     {/* Secured routes */}
                     {/*<Route component={SecuredRouter} />*/}
                     <Route component={AnonPage}/>

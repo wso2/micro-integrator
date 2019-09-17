@@ -16,6 +16,9 @@
  * under the License.
  */
 
+import AuthenticationAPI from '../../utils/apis/AuthenticationAPI';
+import {Constants} from '../Constants';
+
 export default class AuthManager {
 
     /**
@@ -26,10 +29,28 @@ export default class AuthManager {
      * @param {boolean} rememberMe Remember me flag
      * @returns {Promise} Promise
      */
-    static authenticate(username, password, rememberMe) {
+    static authenticate(host, port, username, password, rememberMe) {
         return new Promise((resolve, reject) => {
+            AuthenticationAPI.login(host, port, username, password, rememberMe)
+                .then((response) => {
+                    const { authUser, authToken, validityPeriod } = response.data;
+                    window.localStorage.setItem('host', host);
+                    window.localStorage.setItem('port', port);
 
-            });
+                    // Set user in a cookie
+                    AuthManager.setUser({
+                        username: authUser,
+                        validity: validityPeriod,
+                        expires: AuthManager.calculateExpiryTime(validityPeriod),
+                    });
+                    AuthManager.setCookie(Constants.JWT_TOKEN_COOKIE, authToken, null, window.contextPath);
+                    console.log(response);
+                    resolve();
+                })
+                .catch(error => {
+                    reject(error);
+                });
+        });
     }
 
     /**
@@ -67,6 +88,91 @@ export default class AuthManager {
      */
     static setUser(user) {
         AuthManager.setCookie(Constants.SESSION_USER_COOKIE, JSON.stringify(user), null, window.contextPath);
+    }
+
+    /**
+     * Discard active user session.
+     */
+    static discardSession() {
+        AuthManager.deleteCookie(Constants.SESSION_USER_COOKIE);
+        AuthManager.deleteCookie(Constants.JWT_TOKEN_COOKIE);
+        window.localStorage.clear();
+    }
+
+    /**
+     * Delete a browser cookie given its name
+     * @param {String} name : Name of the cookie which need to be deleted
+     */
+    static deleteCookie(name) {
+        document.cookie = name + '=; path=' + window.contextPath + '; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+    }
+
+    /**
+     * Calculate expiry time.
+     *
+     * @param validityPeriod
+     * @returns {Date}
+     */
+    static calculateExpiryTime(validityPeriod) {
+        let expires = new Date();
+        expires.setSeconds(expires.getSeconds() + validityPeriod);
+        return expires;
+    }
+
+    /**
+     * Logout user by revoking tokens and clearing the session.
+     *
+     * @returns {Promise} Promise
+     */
+    static logout() {
+        return new Promise((resolve, reject) => {
+            AuthenticationAPI
+                .logout(AuthManager.getUser().SDID)
+                .then(() => {
+                    AuthManager.discardSession();
+                    resolve();
+                })
+                .catch(error => reject(error));
+        });
+    }
+
+    /**
+     * Set a cookie with given name and value assigned to it.
+     * @param {String} name : Name of the cookie which need to be set
+     * @param {String} value : Value of the cookie, expect it to be URLEncoded
+     * @param {number} validityPeriod :  (Optional) Validity period of the cookie in seconds
+     * @param {String} path : Path which needs to set the given cookie
+     * @param {boolean} secured : secured parameter is set
+     */
+    static setCookie(name, value, validityPeriod, path = "/", secured = true) {
+        let expires = '';
+        const securedDirective = secured ? "; Secure" : "";
+        if (validityPeriod) {
+            const date = new Date();
+            date.setTime(date.getTime() + validityPeriod * 1000);
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + value + expires + "; path=" + path + securedDirective;
+    }
+
+    /**
+     * Get JavaScript accessible cookies saved in browser, by giving the cooke name.
+     * @param {String} name : Name of the cookie which need to be retrived
+     * @returns {String|null} : If found a cookie with given name , return its value,Else null value is returned
+     */
+    static getCookie(name) {
+        name = `${name}=`;
+        const arr = document.cookie.split(';');
+        for (let i = 0; i < arr.length; i++) {
+            let c = arr[i];
+            while (c.charAt(0) === ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) === 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return '';
     }
 
 

@@ -24,7 +24,10 @@ import Header from './Header';
 import SideDrawer from './SideDrawer';
 import {MuiThemeProvider} from 'material-ui/styles';
 import Paper from '@material-ui/core/Paper';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import Typography from '@material-ui/core/Typography';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
+
 
 
 /**
@@ -32,13 +35,25 @@ import CssBaseline from '@material-ui/core/CssBaseline';
  */
 const styles = {
     contentPaper: {
-        height: "100%",
+        height: "calc(100% - 50px)",
         width: 'calc(100% - 240px)',
         float: 'right',
         paddingTop: '40px',
+        marginLeft: '240px',
+        position: 'fixed',
+        overflowY:'auto'
     },
     footer:{
-
+        padding: 5,
+        position: "absolute",
+        textAlign: "center",
+        left: 0,
+        bottom: 0,
+        right: 0,
+        backgroundColor: "#263238",
+        height: '50px',
+        marginTop: '25px',
+        color: '#ffffff'
     },
 };
 
@@ -50,16 +65,22 @@ export default class ListViewParent extends Component {
     renderParentView() {
         return (
             <MuiThemeProvider muiTheme={this.props.theme}>
-                <Header
-                    title={this.props.title} theme={this.props.theme}
-                />
+                <Header title={this.props.title} theme={this.props.theme}/>
                 <SideDrawer/>
-                <Paper style={styles.contentPaper}>
-                    <CssBaseline/>
-                    <div>
-                        {this.props.data}
-                    </div>
-                </Paper>
+                <Box display="flex" flexDirection="row" id={"content-box"}>
+                    <Box>
+                        <Paper style={styles.contentPaper} id={"data-box"} square={true}>
+                            {this.props.data}
+                        </Paper>
+                    </Box>
+                    <Box id={"footer-box"}>
+                        <Paper style={styles.footer} square={true}>
+                            <Typography>
+                                ©2019 WSO2
+                            </Typography>
+                        </Paper>
+                    </Box>
+                </Box>
             </MuiThemeProvider>
         );
     }
