@@ -25,7 +25,6 @@ import org.apache.ws.commons.schema.XmlSchema;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
-//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;

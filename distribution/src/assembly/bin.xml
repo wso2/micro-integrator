@@ -406,6 +406,14 @@
         </file>
 
         <file>
+            <source>src/conf/datasources/master-datasources.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/conf/datasources</outputDirectory>
+            <destName>master-datasources.xml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/nhttp.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>nhttp.properties</destName>

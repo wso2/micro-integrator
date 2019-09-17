@@ -39,7 +39,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.core.axis2.SynapseDispatcher;
 import org.apache.synapse.transport.passthru.util.RelayUtils;
-//import org.wso2.carbon.webapp.mgt.WebApplication;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
 import java.io.IOException;

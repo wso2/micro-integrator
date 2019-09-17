@@ -162,10 +162,13 @@
                             org.wso2.micro.core.*;version="${project.version}",
                             org.wso2.micro.base;version="${project.version}",
                             org.wso2.micro.application.deployer.*;version="${project.version}",
-                            org.wso2.micro.service.mgt.*;version="${project.version}"
+                            org.wso2.micro.service.mgt.*;version="${project.version}",
+                            org.wso2.micro.tomcat.jndi.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
 <!--                            org.wso2.carbon.utils;version="${carbon.kernel.imp.pkg.version}"-->
+                            javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",
+                            org.apache.naming.*;version="[9.0.0,10.0.0)",
                             javax.activation.*;version="[0.0.0, 1.0.0)",
                             *;resolution:=optional,
                             org.apache.axis2.*; version="${imp.pkg.version.axis2}",

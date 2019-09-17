@@ -41,11 +41,16 @@
     </licenses>
 
     <modules>
+        <module>org.wso2.micro.integrator.ndatasource.common</module>
+        <module>org.wso2.micro.integrator.ndatasource.core</module>
+        <module>org.wso2.micro.integrator.ndatasource.rdbms</module>
+        <module>org.wso2.micro.integrator.ndatasource.capp.deployer</module>
         <module>org.wso2.micro.integrator.core</module>
         <module>org.wso2.micro.integrator.server</module>
         <module>org.wso2.micro.integrator.initializer</module>
         <module>mediation</module>
         <module>org.wso2.micro.integrator.security</module>
         <module>org.wso2.micro.integrator.extensions</module>
+        <module>data</module>
     </modules>
 </project>

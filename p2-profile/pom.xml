@@ -200,6 +200,11 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.identity.xacml.mediator.feature:${project.version}
                                 </featureArtifactDef>
+
+                                <!-- DSS -->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.dataservices.server.feature:${product.mi.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -399,6 +404,11 @@
 <!--                                    <id>org.wso2.carbon.crypto.feature.group</id>-->
 <!--                                    <version>${carbon.crypto.version}</version>-->
 <!--                                </feature>-->
+                                <!-- DSS -->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.dataservices.server.feature.group</id>
+                                    <version>${product.mi.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
@@ -437,9 +447,6 @@
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
     </build>
-
 </project>
-

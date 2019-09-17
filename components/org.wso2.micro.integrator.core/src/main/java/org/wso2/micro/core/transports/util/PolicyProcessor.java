@@ -30,7 +30,6 @@ import org.wso2.micro.core.util.NetworkUtils;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
 import org.wso2.micro.core.transports.HttpGetRequestProcessor;
-//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
 
 import java.io.OutputStream;
 import java.util.ArrayList;

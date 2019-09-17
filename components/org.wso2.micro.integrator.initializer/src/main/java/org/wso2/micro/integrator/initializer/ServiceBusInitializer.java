@@ -55,7 +55,6 @@ import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.inbound.endpoint.EndpointListenerLoader;
-//import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
@@ -67,11 +66,8 @@ import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServic
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServiceImpl;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
-//import org.wso2.carbon.mediation.ntask.internal.NtaskService;
-//import org.wso2.carbon.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
-import org.wso2.micro.integrator.inbound.endpoint.EndpointListenerLoader;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -81,10 +77,6 @@ import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
-
-//import org.wso2.carbon.inbound.endpoint.persistence.service.InboundEndpointPersistenceService;
-//import org.wso2.carbon.mediation.ntask.internal.NtaskService;
-//import org.wso2.carbon.ntask.core.service.TaskService;
 
 @SuppressWarnings({"JavaDoc", "UnusedDeclaration"})
 @Component(name = "org.wso2.micro.integrator.initializer.ServiceBusInitializer", immediate = true)
