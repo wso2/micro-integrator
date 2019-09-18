@@ -21,8 +21,10 @@ package org.wso2.micro.integrator.management.apis;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.rest.cors.CORSConfiguration;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPI;
+import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPICORSConfiguration;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class ManagementInternalApi implements InternalAPI {
     private static Log LOG = LogFactory.getLog(ManagementInternalApi.class);
     private APIResource[] resources;
     private List<InternalAPIHandler> handlerList = null;
+    private CORSConfiguration apiCORSConfiguration = null;
 
     public ManagementInternalApi() {
 
@@ -99,6 +102,16 @@ public class ManagementInternalApi implements InternalAPI {
     @Override
     public List<InternalAPIHandler> getHandlers() {
         return this.handlerList;
+    }
+
+    @Override
+    public void setCORSConfiguration(CORSConfiguration corsConfiguration) {
+        apiCORSConfiguration = corsConfiguration;
+    }
+
+    @Override
+    public CORSConfiguration getCORSConfiguration() {
+        return apiCORSConfiguration;
     }
 
 }

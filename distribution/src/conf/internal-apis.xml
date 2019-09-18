@@ -35,6 +35,11 @@
                     </UserStore>
                 </handler>
             </handlers>
+            <cors>
+                <enabled>true</enabled>
+                <allowedOrigins>*</allowedOrigins>
+                <allowedHeaders></allowedHeaders>
+            </cors>
         </api>
     </apis>
     <sslConfig>

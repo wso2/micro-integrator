@@ -24,6 +24,7 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.apache.synapse.rest.RESTUtils;
+import org.apache.synapse.rest.cors.CORSHelper;
 import org.apache.synapse.rest.dispatch.DispatcherHelper;
 import org.apache.synapse.rest.dispatch.URITemplateHelper;
 
@@ -53,6 +54,7 @@ public class InternalAPIDispatcher {
      */
     public boolean dispatch(MessageContext synCtx) {
         InternalAPI internalApi = findAPI(synCtx);
+        CORSHelper.handleCORSHeaders(internalApi.getCORSConfiguration(), synCtx, getSupportedMethodsForInternalApis(), true);
         if (internalApi == null) {
             log.warn("No Internal API found to dispatch the message");
             return false;
@@ -116,5 +118,9 @@ public class InternalAPIDispatcher {
             }
         }
         return null;
+    }
+
+    private String getSupportedMethodsForInternalApis() {
+        return "GET, POST, PUT, DELETE";
     }
 }

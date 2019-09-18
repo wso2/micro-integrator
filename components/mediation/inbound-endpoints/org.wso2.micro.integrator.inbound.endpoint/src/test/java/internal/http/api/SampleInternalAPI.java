@@ -17,6 +17,7 @@
  */
 package internal.http.api;
 
+import org.apache.synapse.rest.cors.CORSConfiguration;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPI;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIHandler;
@@ -27,6 +28,7 @@ public class SampleInternalAPI implements InternalAPI {
 
     private String name;
     private List<InternalAPIHandler> handlerList = null;
+    private CORSConfiguration corsConfiguration = null;
 
     @Override
     public APIResource[] getResources() {
@@ -58,5 +60,16 @@ public class SampleInternalAPI implements InternalAPI {
     @Override
     public List<InternalAPIHandler> getHandlers() {
         return this.handlerList;
+    }
+
+    @Override
+    public void setCORSConfiguration(CORSConfiguration corsConfiguration) {
+        this.corsConfiguration = corsConfiguration;
+    }
+
+    @Override
+    public CORSConfiguration getCORSConfiguration() {
+
+        return corsConfiguration;
     }
 }
