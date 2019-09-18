@@ -18,8 +18,8 @@
 
 package org.wso2.micro.integrator.security.callback;
 
-import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.core.UserStoreException;
+import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
+import org.wso2.micro.integrator.security.user.core.UserStoreException;
 
 /**
  * This is the default implementation of the AbstractPasswordCallbackHandler which loads the realm configuration from

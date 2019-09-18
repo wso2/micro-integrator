@@ -23,8 +23,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ws.security.WSPasswordCallback;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.internal.DataHolder;
-import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
+import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
