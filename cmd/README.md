@@ -220,7 +220,83 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To get details about a specific task
             mi dataservice show SampleDataService
 ```
-* #### version
+   * #### connectors
+ ```bash
+         Usage:
+             mi connector [command]
+ 
+         Available Commands:
+             show             Get information about the connectors
+ 
+         Examples:
+             # To List all the connectors
+             mi connector show
+ ```
+   * #### templates
+ ```bash
+         Usage:
+             mi template [command] [template-type] [template-name]
+ 
+         Available Commands:
+             show  [template-type]                  Get information about the given template type
+             show  [template-type] [template-name]  Get information about the specific template
+ 
+         Examples:
+             # To List all the templates
+             mi template show
+
+             # To List all the templates of given template type
+             mi template show endpoint
+
+             # To get details about a specific template
+             mi template show endpoint sampleTemplate
+ ```
+   * #### message-processor
+ ```bash
+         Usage:
+             mi message-processor [command] [message-processor-name]
+ 
+         Available Commands:
+             show  [message-processor-name]  Get information about one or more Message Processor
+ 
+         Examples:
+             # To List all the message processor
+             mi message-processor show
+
+             # To get details about a specific message processor
+             mi message-processor show  sampleMessageProcessor
+ ```
+   * #### message-store
+ ```bash
+         Usage:
+             mi message-store [command] [message-store-name]
+ 
+         Available Commands:
+             show  [message-store-name]  Get information about one or more Message Store
+ 
+         Examples:
+             # To List all the message store
+             mi message-store show
+
+             # To get details about a specific message store
+             mi message-store show  sampleMessageStore
+ ```
+   * #### local-entry
+ ```bash
+         Usage:
+             mi local-entry [command] [local-entry-name]
+ 
+         Available Commands:
+             show  [local-entry-name]  Get information about one or more Local Entries
+ 
+         Examples:
+             # To List all the local entries
+             mi local-entry show
+
+             # To get details about a specific local entry
+             mi local-entry show  sampleLocalEntry
+ ```
+   * #### version
 ```bash
         mi version 
 ```
