@@ -25,7 +25,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
-//import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.crypto.api.ExternalCryptoProvider;
+import org.wso2.micro.core.encryption.KeyStoreBasedExternalCryptoProvider;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
@@ -106,6 +107,10 @@ public class Activator implements BundleActivator {
         registration = bundleContext.registerService(CarbonServerConfigurationService.class.getName(),
                                                      carbonServerConfiguration,
                                                      null);
+
+        // Register the external crypto provider which is based on Carbon keystore management service.
+        bundleContext.registerService(ExternalCryptoProvider.class, new KeyStoreBasedExternalCryptoProvider(), null);
+
         CarbonCoreDataHolder.getInstance().setServerConfigurationService(carbonServerConfiguration);
         CarbonCoreDataHolder.getInstance().setBundleContext(bundleContext);
     }
