@@ -318,6 +318,11 @@
                 <version>${rampart.wso2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.rampart.wso2</groupId>
+                <artifactId>rampart-trust</artifactId>
+                <version>${rampart.wso2.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.rampart</groupId>
                 <artifactId>rampart</artifactId>
                 <type>mar</type>

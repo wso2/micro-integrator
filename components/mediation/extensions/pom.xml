@@ -31,6 +31,7 @@
 
     <modules>
         <module>org.wso2.micro.integrator.transport.handlers</module>
+        <module>org.wso2.micro.integrator.security.pox</module>
     </modules>
 
 </project>
