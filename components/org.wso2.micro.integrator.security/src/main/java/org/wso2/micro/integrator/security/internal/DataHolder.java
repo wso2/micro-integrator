@@ -18,8 +18,8 @@
 
 package org.wso2.micro.integrator.security.internal;
 
-import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.api.UserStoreManager;
+import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
+import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 /**
  * Store the realm configuration and user store manager for the micro integrator security scenarios

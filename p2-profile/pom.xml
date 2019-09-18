@@ -197,6 +197,10 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediator.publishevent.server.feature:${project.version}
                                 </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.security.server.feature:${product.mi.version}
+                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -386,6 +390,10 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.micro.integrator.initializer.feature.group</id>
+                                    <version>${product.mi.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.micro.integrator.security.server.feature.group</id>
                                     <version>${product.mi.version}</version>
                                 </feature>
 <!--                                <feature>-->

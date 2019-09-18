@@ -26,17 +26,15 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.CarbonException;
-import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.util.UserCoreUtil;
-import org.wso2.carbon.utils.CarbonUtils;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
+import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
+import org.wso2.micro.integrator.security.user.core.UserStoreException;
+import org.wso2.micro.integrator.security.user.core.util.UserCoreUtil;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -47,6 +45,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.regex.Pattern;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This class is responsible for loading the realm configuration from the user-mgt.xml file
@@ -149,7 +149,7 @@ public class RealmConfigXMLProcessor {
     }
 
     private OMElement preProcessRealmConfig(InputStream inStream) throws CarbonException, XMLStreamException {
-        inStream = CarbonUtils.replaceSystemVariablesInXml(inStream);
+        inStream = MicroIntegratorBaseUtils.replaceSystemVariablesInXml(inStream);
         StAXOMBuilder builder = new StAXOMBuilder(inStream);
         OMElement documentElement = builder.getDocumentElement();
         OMElement realmElement = documentElement.getFirstChildWithName(new QName("Realm"));
@@ -299,7 +299,7 @@ public class RealmConfigXMLProcessor {
                 log.warn("Required property DomainName missing in secondary user store. Skip adding the user store.");
             } else {
                 userStoreProperties.put("StaticUserStore", "true");
-                realmConfig.setEveryOneRoleName("Internal" + CarbonConstants.DOMAIN_SEPARATOR + everyOneRoleName);
+                realmConfig.setEveryOneRoleName("Internal" + UserCoreConstants.DOMAIN_SEPARATOR + everyOneRoleName);
                 realmConfig.setAdminRoleName(adminRoleName);
                 realmConfig.setAdminUserName(adminUserName);
                 realmConfig.setUserStoreProperties(userStoreProperties);
@@ -333,8 +333,8 @@ public class RealmConfigXMLProcessor {
             }
 
             if (primaryDomainName != null && primaryDomainName.trim().length() > 0) {
-                if (adminUserName.indexOf(CarbonConstants.DOMAIN_SEPARATOR) > 0) {
-                    adminRoleDomain = adminUserName.substring(0, adminUserName.indexOf(CarbonConstants.DOMAIN_SEPARATOR));
+                if (adminUserName.indexOf(UserCoreConstants.DOMAIN_SEPARATOR) > 0) {
+                    adminRoleDomain = adminUserName.substring(0, adminUserName.indexOf(UserCoreConstants.DOMAIN_SEPARATOR));
                     if (!primaryDomainName.equalsIgnoreCase(adminRoleDomain)) {
                         throw new UserStoreException("Admin User domain does not match primary user store domain.");
                     }
@@ -342,8 +342,8 @@ public class RealmConfigXMLProcessor {
                     primaryConfig.setAdminUserName(UserCoreUtil.addDomainToName(adminUserName, primaryDomainName));
                 }
 
-                if (adminRoleName.indexOf(CarbonConstants.DOMAIN_SEPARATOR) > 0) {
-                    adminRoleDomain = adminRoleName.substring(0, adminRoleName.indexOf(CarbonConstants.DOMAIN_SEPARATOR));
+                if (adminRoleName.indexOf(UserCoreConstants.DOMAIN_SEPARATOR) > 0) {
+                    adminRoleDomain = adminRoleName.substring(0, adminRoleName.indexOf(UserCoreConstants.DOMAIN_SEPARATOR));
                     if (!primaryDomainName.equalsIgnoreCase(adminRoleDomain) || isReadOnly && !primaryDomainName.equalsIgnoreCase("Internal")) {
                         throw new UserStoreException("Admin Role domain does not match primary user store domain.");
                     }
@@ -358,7 +358,7 @@ public class RealmConfigXMLProcessor {
 
     private String constructDatabaseURL(String url) {
         if (url != null && url.contains("${carbon.home}")) {
-            File carbonHomeDir = new File(CarbonUtils.getCarbonHome());
+            File carbonHomeDir = new File(MicroIntegratorBaseUtils.getCarbonHome());
             String path = carbonHomeDir.getPath();
             path = path.replaceAll(Pattern.quote("\\"), "/");
             if (carbonHomeDir.exists() && carbonHomeDir.isDirectory()) {
@@ -423,14 +423,14 @@ public class RealmConfigXMLProcessor {
     }
 
     private OMElement getRealmElement() throws XMLStreamException, IOException, UserStoreException {
-        String carbonHome = CarbonUtils.getCarbonHome();
+        String carbonHome = MicroIntegratorBaseUtils.getCarbonHome();
         StAXOMBuilder builder = null;
         if (carbonHome != null) {
-            File profileConfigXml = new File(CarbonUtils.getCarbonConfigDirPath(), REALM_CONFIG_FILE);
+            File profileConfigXml = new File(MicroIntegratorBaseUtils.getCarbonConfigDirPath(), REALM_CONFIG_FILE);
             if (profileConfigXml.exists()) {
                 this.inStream = new FileInputStream(profileConfigXml);
             } else {
-                throw new FileNotFoundException(REALM_CONFIG_FILE + " not found at " + CarbonUtils.getCarbonConfigDirPath());
+                throw new FileNotFoundException(REALM_CONFIG_FILE + " not found at " + MicroIntegratorBaseUtils.getCarbonConfigDirPath());
             }
         } else {
             log.error("Carbon Home not defined");
@@ -445,7 +445,7 @@ public class RealmConfigXMLProcessor {
             throw new FileNotFoundException(message);
         } else {
             try {
-                this.inStream = CarbonUtils.replaceSystemVariablesInXml(this.inStream);
+                this.inStream = MicroIntegratorBaseUtils.replaceSystemVariablesInXml(this.inStream);
             } catch (CarbonException var6) {
                 throw new UserStoreException(var6.getMessage(), var6);
             }

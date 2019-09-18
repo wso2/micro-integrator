@@ -20,10 +20,10 @@ package org.wso2.micro.integrator.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.user.api.RealmConfiguration;
-import org.wso2.carbon.user.api.UserStoreException;
-import org.wso2.carbon.user.core.claim.ClaimManager;
-import org.wso2.carbon.user.core.profile.ProfileConfigurationManager;
+import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
+import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 
 import java.lang.reflect.Constructor;
 
