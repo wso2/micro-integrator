@@ -27,7 +27,7 @@ import org.wso2.carbon.databridge.commons.StreamDefinition;
 import org.wso2.carbon.databridge.commons.exception.MalformedStreamDefinitionException;
 import org.wso2.carbon.databridge.commons.utils.DataBridgeCommonsUtils;
 import org.wso2.micro.integrator.event.sink.EventSink;
-import org.wso2.micro.integrator.event.sink.internal.EventSinkServiceImpl;
+import org.wso2.micro.integrator.event.sink.internal.EventSinkStore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -40,9 +40,6 @@ import java.util.Map;
  */
 public class PublishEventMediator extends AbstractMediator {
 
-    private static final String TASK_EXECUTING_TENANT_ID = "CURRENT_TASK_EXECUTING_TENANT_IDENTIFIER";
-
-    private EventSinkServiceImpl eventSinkServiceImpl = null;
     private String streamName;
     private String streamVersion;
     private List<Property> metaProperties = new ArrayList<Property>();
@@ -168,9 +165,8 @@ public class PublishEventMediator extends AbstractMediator {
      */
     private EventSink loadEventSink() throws SynapseException {
 
-        eventSinkServiceImpl = new EventSinkServiceImpl();
+        EventSink eventSink = EventSinkStore.getInstance().getEventSink(getEventSinkName());
 
-        EventSink eventSink = eventSinkServiceImpl.getEventSink(getEventSinkName());
         if (eventSink == null) {
             throw new SynapseException("Event sink \"" + getEventSinkName() + "\" not found");
         }

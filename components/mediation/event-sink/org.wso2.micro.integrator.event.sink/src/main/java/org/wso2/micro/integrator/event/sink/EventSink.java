@@ -41,63 +41,37 @@ public class EventSink {
     private String password;
     private DataPublisher dataPublisher;
 
-    public EventSink() {
-    }
-
-    public EventSink(String name, String username, String password, String receiverUrlSet, String authenticationUrlSet) {
-        this.setName(name);
-        this.setUsername(username);
-        this.setPassword(password);
-        this.setReceiverUrlSet(receiverUrlSet);
-        this.setAuthenticationUrlSet(authenticationUrlSet);
+    public EventSink(String name, String username, String password, String receiverUrlSet, String authenticationUrlSet, DataPublisher dataPublisher) {
+        this.name = name;
+        this.username = username;
+        this.password = password;
+        this.receiverUrlSet = receiverUrlSet;
+        this.authenticationUrlSet = authenticationUrlSet;
+        this.dataPublisher = dataPublisher;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getReceiverUrlSet() {
         return receiverUrlSet;
-    }
-
-    public void setReceiverUrlSet(String urlSet) {
-        this.receiverUrlSet = urlSet;
     }
 
     public String getAuthenticationUrlSet() {
         return authenticationUrlSet;
     }
 
-    public void setAuthenticationUrlSet(String urlSet) {
-        this.authenticationUrlSet = urlSet;
-    }
-
     public DataPublisher getDataPublisher() {
         return dataPublisher;
-    }
-
-    public void setDataPublisher(DataPublisher loadBalancingDataPublisher) {
-        this.dataPublisher = loadBalancingDataPublisher;
     }
 
     /**
@@ -110,18 +84,16 @@ public class EventSink {
      */
     public static EventSink createEventSink(OMElement eventSinkElement, String name) throws EventSinkException {
 
-        EventSink eventSink = new EventSink();
-
         OMElement receiverUrl = eventSinkElement.getFirstChildWithName(EventSinkConstants.RECEIVER_URL_Q);
         if (receiverUrl == null || "".equals(receiverUrl.getText())) {
             throw new EventSinkException(
                     EventSinkConstants.RECEIVER_URL_Q.getLocalPart() + " is missing in thrift endpoint config");
         }
-        eventSink.setReceiverUrlSet(receiverUrl.getText());
 
         OMElement authenticatorUrl = eventSinkElement.getFirstChildWithName(EventSinkConstants.AUTHENTICATOR_URL_Q);
-        if (authenticatorUrl != null) {
-            eventSink.setAuthenticationUrlSet(authenticatorUrl.getText());
+        if (authenticatorUrl == null || "".equals(authenticatorUrl.getText())) {
+            throw new EventSinkException(
+                    EventSinkConstants.AUTHENTICATOR_URL_Q.getLocalPart() + " is missing in thrift endpoint config");
         }
 
         OMElement userName = eventSinkElement.getFirstChildWithName(EventSinkConstants.USERNAME_Q);
@@ -129,7 +101,6 @@ public class EventSink {
             throw new EventSinkException(
                     EventSinkConstants.USERNAME_Q.getLocalPart() + " is missing in thrift endpoint config");
         }
-        eventSink.setUsername(userName.getText());
 
         OMElement password = eventSinkElement.getFirstChildWithName(EventSinkConstants.PASSWORD_Q);
         if (password == null || "".equals(password.getText())) {
@@ -137,28 +108,25 @@ public class EventSink {
                     EventSinkConstants.PASSWORD_Q.getLocalPart() + " attribute missing in thrift endpoint config");
         }
 
+        String decryptedPassword;
         try {
-            eventSink.setPassword(
-                    new String(CryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(password.getText()),
-                            Charset.forName("UTF-8")));
+            decryptedPassword = new String(CryptoUtil.getDefaultCryptoUtil().base64DecodeAndDecrypt(password.getText()),
+                    Charset.forName("UTF-8"));
         } catch (CryptoException e) {
             throw new EventSinkException("Failed to decrypt password", e);
         }
-        eventSink.setName(name);
 
-        String authenticationUrlSet = null;
-        if (eventSink.getAuthenticationUrlSet().trim().length() > 0) {
-            authenticationUrlSet = eventSink.getAuthenticationUrlSet();
-        }
+        DataPublisher dataPublisher;
         try {
-            eventSink.setDataPublisher(
-                    new DataPublisher(DataEndpointConstants.THRIFT_DATA_AGENT_TYPE, eventSink.getReceiverUrlSet(),
-                            authenticationUrlSet, eventSink.getUsername(),
-                            eventSink.getPassword()));
+            dataPublisher = new DataPublisher(DataEndpointConstants.THRIFT_DATA_AGENT_TYPE, receiverUrl.getText(),
+                    authenticatorUrl.getText(), userName.getText(), decryptedPassword);
         } catch (DataEndpointAgentConfigurationException | DataEndpointException | DataEndpointConfigurationException
                 | DataEndpointAuthenticationException | TransportException e) {
             throw new EventSinkException("Error creating DataPublisher for the event sink ", e);
         }
+
+        EventSink eventSink = new EventSink(name, userName.getText(), decryptedPassword, receiverUrl.getText(),
+                authenticatorUrl.getText(), dataPublisher);
         return eventSink;
     }
 

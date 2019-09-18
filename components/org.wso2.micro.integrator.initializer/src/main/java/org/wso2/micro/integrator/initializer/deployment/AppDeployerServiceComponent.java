@@ -70,21 +70,7 @@ public class AppDeployerServiceComponent {
         initializeDeployers(artifactDeploymentManager, cAppDeploymentManager);
 
         // Register eventSink deployer
-        try {
-            String carbonRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
-            String eventSinkPath = carbonRepoPath + File.separator + "event-sinks";
-            Class deployerClass = Class.forName("org.wso2.micro.integrator.event.sink.EventSinkDeployer");
-            Deployer deployer = (Deployer) deployerClass.newInstance();
-            artifactDeploymentManager.registerDeployer(eventSinkPath, deployer);
-        } catch (ClassNotFoundException e) {
-            log.error("Can not find class EventSinkDeployer", e);
-        } catch (InstantiationException e) {
-            log.error("Error instantiating EventSinkDeployer class", e);
-        } catch (DeploymentException e) {
-            log.error("Error registering eventSink deployer", e);
-        } catch (IllegalAccessException e) {
-            log.error("Error instantiating EventSinkDeployer class", e);
-        }
+        registerEventSinkDeployer(artifactDeploymentManager);
 
         // Deploy artifacts
         artifactDeploymentManager.deploy();
@@ -198,5 +184,31 @@ public class AppDeployerServiceComponent {
         cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
 
+    }
+
+    /**
+     * Function to register eventSink deployer.
+     *
+     * @param artifactDeploymentManager artifactDeploymentManager which manages and performs artifact deployment
+     */
+    public void registerEventSinkDeployer(ArtifactDeploymentManager artifactDeploymentManager) {
+        try {
+            String carbonRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
+            String eventSinkPath = carbonRepoPath + File.separator + "event-sinks";
+            Class deployerClass = Class.forName("org.wso2.micro.integrator.event.sink.EventSinkDeployer");
+            Deployer deployer = (Deployer) deployerClass.newInstance();
+            artifactDeploymentManager.registerDeployer(eventSinkPath, deployer);
+            if (log.isDebugEnabled()) {
+                log.debug("Successfully registered eventSink deployer");
+            }
+        } catch (ClassNotFoundException e) {
+            log.error("Can not find class EventSinkDeployer", e);
+        } catch (InstantiationException e) {
+            log.error("Error instantiating EventSinkDeployer class", e);
+        } catch (DeploymentException e) {
+            log.error("Error registering eventSink deployer", e);
+        } catch (IllegalAccessException e) {
+            log.error("Error instantiating EventSinkDeployer class", e);
+        }
     }
 }

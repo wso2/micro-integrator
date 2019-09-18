@@ -134,12 +134,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.application.mgt.synapse.server.feature:${carbon.mediation.version}>
                                 </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.event.sink.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.publishevent.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.prometheus.publisher.feature:${project.version}
                                 </featureArtifactDef>
@@ -325,14 +319,6 @@
                                     <id>org.wso2.micro.integrator.identity.xacml.mediator.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.event.sink.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.mediator.publishevent.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
                                 <feature>
                                     <id>org.wso2.micro.integrator.prometheus.publisher.feature.group</id>
                                     <version>${project.version}</version>
