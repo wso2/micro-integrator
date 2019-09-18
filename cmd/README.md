@@ -251,50 +251,50 @@ Command Line tool for managing the WSO2 Micro Integrator
              # To get details about a specific template
              mi template show endpoint sampleTemplate
  ```
-   * #### message-processor
+   * #### messageprocessor
  ```bash
          Usage:
-             mi message-processor [command] [message-processor-name]
+             mi messageprocessor [command] [messageprocessor-name]
  
          Available Commands:
-             show  [message-processor-name]  Get information about one or more Message Processor
+             show  [messageprocessor-name]  Get information about one or more Message Processor
  
          Examples:
              # To List all the message processor
-             mi message-processor show
+             mi messageprocessor show
 
              # To get details about a specific message processor
-             mi message-processor show  sampleMessageProcessor
+             mi messageprocessor show  sampleMessageProcessor
  ```
-   * #### message-store
+   * #### messagestore
  ```bash
          Usage:
-             mi message-store [command] [message-store-name]
+             mi messagestore [command] [messagestore-name]
  
          Available Commands:
-             show  [message-store-name]  Get information about one or more Message Store
+             show  [messagestore-name]  Get information about one or more Message Store
  
          Examples:
              # To List all the message store
-             mi message-store show
+             mi messagestore show
 
              # To get details about a specific message store
-             mi message-store show  sampleMessageStore
+             mi messagestore show  sampleMessageStore
  ```
-   * #### local-entry
+   * #### localentry
  ```bash
          Usage:
-             mi local-entry [command] [local-entry-name]
+             mi localentry [command] [localentry-name]
  
          Available Commands:
-             show  [local-entry-name]  Get information about one or more Local Entries
+             show  [localentry-name]  Get information about one or more Local Entries
  
          Examples:
              # To List all the local entries
-             mi local-entry show
+             mi localentry show
 
              # To get details about a specific local entry
-             mi local-entry show  sampleLocalEntry
+             mi localentry show  sampleLocalEntry
  ```
    * #### version
 ```bash

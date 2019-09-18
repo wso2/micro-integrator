@@ -212,6 +212,83 @@ NOTE: The default hostname is localhost and the port is 9164.
             # To get details about a specific task
             mi dataservice show SampleDataService
 ```
+
+   * #### connectors
+ ```bash
+         Usage:
+             mi connector [command]
+ 
+         Available Commands:
+             show             Get information about the connectors
+ 
+         Examples:
+             # To List all the connectors
+             mi connector show
+ ```
+   * #### templates
+ ```bash
+         Usage:
+             mi template [command] [template-type] [template-name]
+ 
+         Available Commands:
+             show  [template-type]                  Get information about the given template type
+             show  [template-type] [template-name]  Get information about the specific template
+ 
+         Examples:
+             # To List all the templates
+             mi template show
+
+             # To List all the templates of given template type
+             mi template show endpoint
+
+             # To get details about a specific template
+             mi template show endpoint sampleTemplate
+ ```
+   * #### messageprocessor
+ ```bash
+         Usage:
+             mi messageprocessor [command] [messageprocessor-name]
+ 
+         Available Commands:
+             show  [messageprocessor-name]  Get information about one or more Message Processor
+ 
+         Examples:
+             # To List all the message processor
+             mi messageprocessor show
+
+             # To get details about a specific message processor
+             mi messageprocessor show  sampleMessageProcessor
+ ```
+   * #### messagestore
+ ```bash
+         Usage:
+             mi messagestore [command] [messagestore-name]
+ 
+         Available Commands:
+             show  [messagestore-name]  Get information about one or more Message Store
+ 
+         Examples:
+             # To List all the message store
+             mi messagestore show
+
+             # To get details about a specific message store
+             mi messagestore show  sampleMessageStore
+ ```
+   * #### localentry
+ ```bash
+         Usage:
+             mi localentry [command] [localentry-name]
+ 
+         Available Commands:
+             show  [localentry-name]  Get information about one or more Local Entries
+ 
+         Examples:
+             # To List all the local entries
+             mi localentry show
+
+             # To get details about a specific local entry
+             mi localentry show  sampleLocalEntry
+ ```
 * ##### version
 ```bash
         mi version 
