@@ -1,7 +1,5 @@
 [server]
 hostname = "localhost"
-node_ip = "127.0.0.1"
-base_path = "https://localhost:9443"
 
 [[server.get_request_processor]]    # hidden property
 item = "swagger.json"
@@ -10,12 +8,6 @@ class = "org.wso2.appcloud.api.swagger.processors.json.SwaggerJsonProcessor"
 [[server.get_request_processor]]    # hidden property
 item = "swagger.yaml"
 class = "org.wso2.appcloud.api.swagger.processors.yaml.SwaggerYamlProcessor"
-
-
-[super_admin]
-username = "admin"
-password = "admin"
-create_admin_account = true
 
 [transport.passthru.http.listener]
 port=8280

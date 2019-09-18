@@ -20,6 +20,8 @@ package org.wso2.micro.integrator.server;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.config.mapper.ConfigParser;
+import org.wso2.config.mapper.ConfigParserException;
 import org.wso2.micro.integrator.server.extensions.DefaultBundleCreator;
 import org.wso2.micro.integrator.server.extensions.DropinsBundleDeployer;
 import org.wso2.micro.integrator.server.extensions.EclipseIniRewriter;
@@ -27,9 +29,6 @@ import org.wso2.micro.integrator.server.extensions.LibraryFragmentBundleCreator;
 import org.wso2.micro.integrator.server.extensions.PatchInstaller;
 import org.wso2.micro.integrator.server.extensions.SystemBundleExtensionCreator;
 import org.wso2.micro.integrator.server.util.Utils;
-
-import org.wso2.config.mapper.ConfigParser;
-import org.wso2.config.mapper.ConfigParserException;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,7 +62,6 @@ public class Main {
     protected static final String P2_DATA_AREA = "eclipse.p2.data.area";
     protected static final String ENABLE_EXTENSIONS = "wso2.enableExtensions";
     protected static final String DEPLOYMENT_CONFIG_FILE_PATH = "deployment.config.file.path";
-    protected static final String CARBON_NEW_CONFIG_DIR_PATH = "carbon.new.config.dir.path";
 
     static File platformDirectory;
     private static Log logger = LogFactory.getLog(Main.class);
@@ -105,7 +103,7 @@ public class Main {
         }
         writePID(System.getProperty(LauncherConstants.CARBON_HOME));
         processCmdLineArgs(args);
-        handleConfiguration();
+        handleConfiguration();          // handle config mapper configurations
         invokeExtensions();
         startEquinox();
     }
@@ -352,19 +350,20 @@ public class Main {
 
     private static void handleConfiguration() {
 
-        String resourcesDir = System.getProperty(CARBON_NEW_CONFIG_DIR_PATH);
+        String resourcesDir = Paths.get(System.getProperty(LauncherConstants.CARBON_HOME),
+                                        "repository", "resources", "conf").toString();
 
         String configFilePath = System.getProperty(DEPLOYMENT_CONFIG_FILE_PATH);
         if (StringUtils.isEmpty(configFilePath)) {
-            configFilePath = System.getProperty(LauncherConstants.CARBON_CONFIG_DIR_PATH) + File.separator +
-                             ConfigParser.UX_FILE_PATH;
+            configFilePath = Paths.get(System.getProperty(LauncherConstants.CARBON_CONFIG_DIR_PATH),
+                                       ConfigParser.UX_FILE_PATH).toString();
         }
 
         String outputDir = System.getProperty(LauncherConstants.CARBON_HOME);
         try {
             ConfigParser.parse(configFilePath, resourcesDir, outputDir);
         } catch (ConfigParserException e) {
-            logger.info("Error while performing configuration changes", e);
+            logger.fatal("Error while performing configuration changes", e);
             System.exit(1);
         }
     }

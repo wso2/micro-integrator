@@ -23,10 +23,6 @@
     <!--                  Parameters                       -->
     <!-- ================================================= -->
 
-    <!-- Change this to true if you want to enable hot deployment of services -->
-    <parameter name="hotdeployment" locked="false">true</parameter>
-    <!-- Change this to true if you want to enable hot update of services -->
-    <parameter name="hotupdate" locked="false">true</parameter>
 
     <!-- Change this to true if you want to enable MTOM -->
     <parameter name="enableMTOM" locked="false">{{server.enableMTOM}}</parameter>
@@ -77,13 +73,13 @@
     <parameter name="DrillDownToRootCauseForFaultReason" locked="false">false</parameter>
 
     <!-- Set the flag to true if you want to enable transport level session management -->
-    <parameter name="manageTransportSession" locked="false">true</parameter>
+    <parameter name="manageTransportSession" locked="false">false</parameter>
 
     <!-- This will give out the timout of the configuration contexts, in milliseconds -->
     <parameter name="ConfigContextTimeoutInterval" locked="false">30000</parameter>
 
     <!-- Synapse Configuration file location relative to CARBON_HOME -->
-    <parameter name="SynapseConfig.ConfigurationFile" locked="false">{{server.synapse_config_file}}</parameter>
+    <parameter name="SynapseConfig.ConfigurationFile" locked="false">{{server.synapse_config_file_path}}</parameter>
     <!-- Synapse Home parameter -->
     <parameter name="SynapseConfig.HomeDirectory" locked="false">.</parameter>
     <!-- Resolve root used to resolve synapse references like schemas inside a WSDL -->
@@ -466,14 +462,14 @@
     </transportReceiver>
     {% endif %}
     {% if transport.ws.sender.enable == true %}
-    <transportSender name="ws" class="org.wso2.carbon.websocket.transport.WebsocketTransportSender">
+    <transportSender name="ws" class="org.wso2.micro.integrator.websocket.transport.WebsocketTransportSender">
         {% for name,value in transport.ws.sender.parameter.items() %}
         <parameter name="{{name}}" locked="false">{{value}}</parameter>
         {% endfor %}
     </transportSender>
     {% endif %}
     {% if transport.wss.sender.enable == true %}
-    <transportSender name="wss" class="org.wso2.carbon.websocket.transport.WebsocketTransportSender">
+    <transportSender name="wss" class="org.wso2.micro.integrator.websocket.transport.WebsocketTransportSender">
         {% for name,value in transport.wss.sender.parameter.items() %}
         <parameter name="{{name}}" locked="false">{{value}}</parameter>
         {% endfor %}

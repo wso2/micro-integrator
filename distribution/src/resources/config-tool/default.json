@@ -3,7 +3,11 @@
   "server.enableSwA": false,
   "server.userAgent": "WSO2 Micro Integrator 1.0.0",
   "server.serverDetails": "WSO2 Micro Integrator 1.0.0",
-  "server.synapse_config_file": "repository/deployment/server/synapse-configs",
+  "server.synapse_config_file_path": "repository/deployment/server/synapse-configs",
+  "server.hide_admin_service_wsdl": true,
+
+  "encryption.internal_crypto_provider": "org.wso2.micro.integrator.crypto.provider.KeyStoreBasedInternalCryptoProvider",
+  "encryption.key": "SECRET_KEY",
 
   "synapse_properties.'synapse.threads.core'": "20",
   "synapse_properties.'synapse.threads.max'": "100",
