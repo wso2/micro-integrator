@@ -647,11 +647,6 @@
                 <artifactId>commons-logging</artifactId>
                 <version>${commons-logging.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.carbon</groupId>
-                <artifactId>org.wso2.carbon.server</artifactId>
-                <version>${carbon.kernel.version}</version>
-            </dependency>
 
             <!--For org.wso2.micro.integrator.security.user.core-->
             <dependency>

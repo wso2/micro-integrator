@@ -548,7 +548,6 @@
                 <include>net.sf.saxon:Saxon-HE:jar</include>
                 <include>xerces.wso2:xercesImpl</include>
                 <include>commons-logging:commons-logging</include>
-                <include>org.wso2.carbon:org.wso2.carbon.server</include>
             </includes>
         </dependencySet>
         <dependencySet>
