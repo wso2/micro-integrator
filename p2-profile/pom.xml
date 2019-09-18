@@ -80,9 +80,9 @@
                                 <featureArtifactDef>
                                     org.apache.synapse:org.apache.synapse.wso2.feature:${synapse.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.crypto:org.wso2.carbon.crypto.feature:${carbon.crypto.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.crypto.feature:${project.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.apache.synapse:org.apache.synapse.transport.fix.feature:${synapse.version}
                                 </featureArtifactDef>
@@ -396,10 +396,10 @@
                                     <id>org.wso2.micro.integrator.security.server.feature.group</id>
                                     <version>${product.mi.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.crypto.feature.group</id>-->
-<!--                                    <version>${carbon.crypto.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.crypto.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
                             </features>
                         </configuration>
                     </execution>
