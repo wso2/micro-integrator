@@ -28,7 +28,6 @@ import org.wso2.micro.core.ServerStartupHandler;
 import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.impl.LocalTaskActionListener;
-import org.wso2.carbon.ntask.core.impl.clustered.ClusteredTaskManager;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.mediation.ntask.internal.NtaskService;
 
@@ -695,9 +694,7 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
 
     @Override
     public void sendClusterMessage(Callable<Void> callable) {
-        if (taskManager instanceof ClusteredTaskManager) {
-           throw new RuntimeException("Clustering is not supported .");
-        }
+        //do nothing since we do not support clustering
     }
 
     /**

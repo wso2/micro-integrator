@@ -49,6 +49,7 @@ public class Constants {
     public static final String CIPHER_STANDALONE_CONFIG_PROPERTY_FILE = "cipher-standalone-config.properties";
     public static final String SECRET_PROPERTY_FILE_PROPERTY = "secret.conf.properties.file";
     public static final String CIPHER_TRANSFORMATION_SYSTEM_PROPERTY = "org.wso2.CipherTransformation";
+    public static final String SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY = "org.wso2.SecureVaultPasswordRegEx";
 
     public static final class PrimaryKeyStore {
         public static final String PRIMARY_KEY_LOCATION_XPATH = "//Server/Security/KeyStore/Location";
