@@ -615,11 +615,17 @@
                 <artifactId>org.wso2.micro.integrator.analytics.data.publisher.util</artifactId>
                 <version>${project.version}</version>
             </dependency>
-
             <dependency>
                 <groupId>net.sf.saxon</groupId>
                 <artifactId>Saxon-HE</artifactId>
                 <version>${saxon.wso2.version}</version>
+            </dependency>
+
+            <!--For org.wso2.micro.integrator.security.user.core-->
+            <dependency>
+                <groupId>commons-lang.wso2</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${orbit.version.commons.lang}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
