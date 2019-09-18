@@ -33,6 +33,7 @@
 
     <modules>
         <module>extensions</module>
+        <module>event-sink</module>
         <module>mediators</module>
         <module>startup</module>
         <module>registry</module>

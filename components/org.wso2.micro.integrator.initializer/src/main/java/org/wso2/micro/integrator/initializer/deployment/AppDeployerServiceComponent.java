@@ -18,7 +18,9 @@
 package org.wso2.micro.integrator.initializer.deployment;
 
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
+import org.apache.axis2.deployment.DeploymentException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -39,6 +41,8 @@ import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.Synapse
 //import org.wso2.carbon.dataservices.core.DBDeployer;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
+
+import java.io.File;
 
 @Component(name = "org.wso2.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
@@ -64,6 +68,9 @@ public class AppDeployerServiceComponent {
         ArtifactDeploymentManager artifactDeploymentManager = new ArtifactDeploymentManager(configCtx.getAxisConfiguration());
         CAppDeploymentManager cAppDeploymentManager = new CAppDeploymentManager(configCtx.getAxisConfiguration());
         initializeDeployers(artifactDeploymentManager, cAppDeploymentManager);
+
+        // Register eventSink deployer
+        registerEventSinkDeployer(artifactDeploymentManager);
 
         // Deploy artifacts
         artifactDeploymentManager.deploy();
@@ -177,5 +184,31 @@ public class AppDeployerServiceComponent {
         cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
 
+    }
+
+    /**
+     * Function to register eventSink deployer.
+     *
+     * @param artifactDeploymentManager artifactDeploymentManager which manages and performs artifact deployment
+     */
+    public void registerEventSinkDeployer(ArtifactDeploymentManager artifactDeploymentManager) {
+        try {
+            String carbonRepoPath = configCtx.getAxisConfiguration().getRepository().getPath();
+            String eventSinkPath = carbonRepoPath + File.separator + "event-sinks";
+            Class deployerClass = Class.forName("org.wso2.micro.integrator.event.sink.EventSinkDeployer");
+            Deployer deployer = (Deployer) deployerClass.newInstance();
+            artifactDeploymentManager.registerDeployer(eventSinkPath, deployer);
+            if (log.isDebugEnabled()) {
+                log.debug("Successfully registered eventSink deployer");
+            }
+        } catch (ClassNotFoundException e) {
+            log.error("Can not find class EventSinkDeployer", e);
+        } catch (InstantiationException e) {
+            log.error("Error instantiating EventSinkDeployer class", e);
+        } catch (DeploymentException e) {
+            log.error("Error registering eventSink deployer", e);
+        } catch (IllegalAccessException e) {
+            log.error("Error instantiating EventSinkDeployer class", e);
+        }
     }
 }
