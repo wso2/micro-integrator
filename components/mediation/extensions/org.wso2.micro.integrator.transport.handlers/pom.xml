@@ -52,7 +52,7 @@
                             javax.servlet;version="${imp.pkg.version.javax.servlet}",
                             javax.servlet.http;version="${imp.pkg.version.javax.servlet}",
                             org.apache.commons.logging; version="${import.package.version.commons.logging}",
-                            org.apache.axis2.*; version="${axis2.osgi.version.range}",
+                            org.apache.axis2.*; version="${imp.pkg.version.axis2}",
                             org.yaml.snakeyaml.*; version="${orbit.snakeyaml.import.version.range}",
                             org.wso2.micro.core.*;version="${project.version}",
                             *;resolution:=optional
