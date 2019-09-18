@@ -62,7 +62,7 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
         File srcFile = new File(nhttpFile);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         httpLogDir = carbonHome + File.separator + "repository" + File.separator + "logs" + File.separator + "httpLogs";
-        File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j.properties");
+        File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
 
         String propertyName = "nhttp.log.directory";
         createNewDir(httpLogDir);
@@ -141,7 +141,7 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
             fos.flush();
             serverConfigurationManager.applyMIConfiguration(destinationFile);
         } catch (Exception e) {
-            Assert.assertTrue(false, "Exception occured with the message: " + e.getMessage());
+            Assert.fail("Exception occured. ", e);
         } finally {
             if (fis != null) {
                 fis.close();

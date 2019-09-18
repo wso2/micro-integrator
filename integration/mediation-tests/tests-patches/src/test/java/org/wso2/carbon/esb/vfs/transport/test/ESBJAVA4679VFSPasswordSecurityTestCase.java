@@ -101,10 +101,6 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         // replace the axis2.xml enabled vfs transfer and restart the ESB server
         // gracefully
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyMIConfiguration(new File(getClass().getResource(
-                FORWARD_SLASH + "artifacts" + FORWARD_SLASH + "ESB" + FORWARD_SLASH + "synapseconfig" + FORWARD_SLASH
-                        + "vfsTransport" + FORWARD_SLASH + "axis2.xml").getPath()));
-        super.init();
         carbonLogReader = new CarbonLogReader();
 
     }
@@ -117,7 +113,6 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
             Thread.sleep(3000);
             ftpServerManager.stop();
             log.info("FTP Server stopped successfully");
-            serverConfigurationManager.restoreToLastMIConfiguration();
 
         }
 

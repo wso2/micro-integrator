@@ -82,10 +82,6 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyMIConfiguration(
-                new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
-        super.init();
-
         carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
 
         setupSftpFolders(carbonHome);
@@ -148,7 +144,6 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();
-        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
     /**
