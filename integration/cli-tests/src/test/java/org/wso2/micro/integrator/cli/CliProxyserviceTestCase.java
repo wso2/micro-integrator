@@ -34,7 +34,7 @@ public class CliProxyserviceTestCase {
     @Test
     public void miShowProxyAllTest() {
 
-        List<String> lines =  TestUtils.runCLICommand("proxyservice" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("proxyservice" , "show");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_PROXY)), CLI_TEST_PROXY + " Proxy service not found");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_ADDRESS_PROXY)), CLI_ADDRESS_PROXY + " Proxy service not found");
     }
@@ -45,7 +45,7 @@ public class CliProxyserviceTestCase {
     @Test
     public void miShowProxyTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("proxyservice" ,"show", CLI_TEST_PROXY);
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("proxyservice" , "show", CLI_TEST_PROXY);
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_PROXY)), CLI_TEST_PROXY + " Proxy service not found");
     }
 
@@ -55,7 +55,7 @@ public class CliProxyserviceTestCase {
     @Test
     public void miShowProxyNotFoundTest() {
 
-        List<String> lines = TestUtils.runCLICommandWithArtifactName("proxyservice", "show", "CliTestProxy");
+        List<String> lines = TestUtils.getOutputForCLICommandArtifactName("proxyservice", "show", "CliTestProxy");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("ProxyService 404 Not Found")), "ProxyService 404 Not Found");
     }
 }

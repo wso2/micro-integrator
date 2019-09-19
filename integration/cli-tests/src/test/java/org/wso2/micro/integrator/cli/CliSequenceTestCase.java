@@ -34,7 +34,7 @@ public class CliSequenceTestCase {
     @Test
     public void miShowEndpointAllTest() {
 
-        List<String> lines =  TestUtils.runCLICommand("sequence" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("sequence" , "show");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestSeq)),cliTestSeq +" Sequence not found");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliSampleSeq)),cliSampleSeq + "Sequence not found");
     }
@@ -45,7 +45,7 @@ public class CliSequenceTestCase {
     @Test
     public void miShowSequenceTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("sequence" ,"show", cliTestSeq);
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("sequence" , "show", cliTestSeq);
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestSeq)),cliTestSeq +" Sequence not found");
     }
 
@@ -55,7 +55,7 @@ public class CliSequenceTestCase {
     @Test
     public void miShowSequenceNotFoundTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("sequence" ,"show", "CLITestSequence");
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("sequence" , "show", "CLITestSequence");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("Sequence 404 Not Found")),"Sequence 404 Not Found");
     }
 }

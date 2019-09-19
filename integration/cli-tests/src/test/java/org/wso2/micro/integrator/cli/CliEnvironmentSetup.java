@@ -30,9 +30,9 @@ import java.io.InputStreamReader;
  * Setup the environment to run the tests
  */
 
-public class CliEnviornmentSetup {
+public class CliEnvironmentSetup {
 
-    private static final Log log = LogFactory.getLog(CliEnviornmentSetup.class);
+    private static final Log log = LogFactory.getLog(CliEnvironmentSetup.class);
 
     @BeforeSuite
     public void setupEnv() throws IOException {

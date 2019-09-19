@@ -19,21 +19,23 @@
 package org.wso2.micro.integrator.cli;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 import java.util.List;
 import util.TestUtils;
 
 public class CliAPITestCase {
 
-    private static final String CLI_SAMPLE_API_1 = "cliSampleApi_1";
+    private static final String CLI_SAMPLE_API_1 = "cliSampleApi_1 not found";
     private static final String CLI_SAMPLE_API_2 = "cliSampleApi_2";
 
     /**
      * Get information about all the API's
      */
     @Test
-    public void miShowAllApiTest() {
+    public void miShowAllApiTest() throws Exception {
 
-        List<String> lines =  TestUtils.runCLICommand("api" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand(Constants.API , Constants.SHOW);
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_SAMPLE_API_1)),CLI_SAMPLE_API_1+" API not found");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_SAMPLE_API_2)),CLI_SAMPLE_API_2+" API not found");
     }
@@ -44,7 +46,7 @@ public class CliAPITestCase {
     @Test
     public void miShowApiTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("api" ,"show", CLI_SAMPLE_API_1);
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName(Constants.API , Constants.SHOW, CLI_SAMPLE_API_1);
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_SAMPLE_API_1)), CLI_SAMPLE_API_1 +" API not found");
     }
 
@@ -54,7 +56,7 @@ public class CliAPITestCase {
     @Test
     public void miShowApiNotFoundTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("api" ,"show", "TestAPI");
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName(Constants.API , Constants.SHOW, "TestAPI");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("API 404 Not Found")),"API 404 Not Found");
     }
 }

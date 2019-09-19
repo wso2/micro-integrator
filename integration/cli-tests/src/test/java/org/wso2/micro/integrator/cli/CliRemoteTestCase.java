@@ -45,7 +45,7 @@ public class CliRemoteTestCase {
         builder = new ProcessBuilder(TestUtils.getMIBuildPath(), "remote" , "add", CLI_TEST_REMOTE_SERVER, REMOTE_HOST, REMOTE_PORT);
         builder.start();
 
-        List<String> lines =  TestUtils.runCLICommand("remote" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("remote" , "show");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_REMOTE_SERVER))," - Fail to add remote server - "+ CLI_TEST_REMOTE_SERVER);
     }
 
@@ -58,7 +58,7 @@ public class CliRemoteTestCase {
         builder = new ProcessBuilder(TestUtils.getMIBuildPath(), "remote" , "update", CLI_TEST_REMOTE_SERVER, GET_REMOTE_HOST_UPDATE, REMOTE_PORT);
         builder.start();
 
-        List<String> lines =  TestUtils.runCLICommand("remote" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("remote" , "show");
 
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(GET_REMOTE_HOST_UPDATE)),"Fail to Update host of the remote server of "+ CLI_TEST_REMOTE_SERVER);
         log.info("Successfully update host of the remote server of " + CLI_TEST_REMOTE_SERVER);
@@ -73,7 +73,7 @@ public class CliRemoteTestCase {
         builder = new ProcessBuilder(TestUtils.getMIBuildPath(), "remote" , "select", CLI_TEST_REMOTE_SERVER);
         builder.start();
 
-        List<String> lines =  TestUtils.runCLICommand("remote" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("remote" , "show");
 
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("current_server: "+ CLI_TEST_REMOTE_SERVER)),"Fail to select "+ CLI_TEST_REMOTE_SERVER +" as current remote server");
         log.info("Successfully select "+ CLI_TEST_REMOTE_SERVER +" as current remote server");
@@ -88,7 +88,7 @@ public class CliRemoteTestCase {
         builder = new ProcessBuilder(TestUtils.getMIBuildPath(), "remote" , "remove", CLI_TEST_REMOTE_SERVER);
         builder.start();
 
-        List<String> lines =  TestUtils.runCLICommand("remote" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("remote" , "show");
         Assert.assertNotEquals(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_REMOTE_SERVER)),"Fail to remove "+ CLI_TEST_REMOTE_SERVER);
         log.info("Successfully remove "+ CLI_TEST_REMOTE_SERVER);
     }

@@ -29,7 +29,7 @@
 
     <test name="CLI-Usage-Tests" preserve-order="true" verbose="2">
         <classes>
-            <class name="org.wso2.micro.integrator.cli.CliEnviornmentSetup"></class>
+            <class name="org.wso2.micro.integrator.cli.CliEnvironmentSetup"></class>
             <class name="org.wso2.micro.integrator.cli.CliEndpointTestCase"></class>
             <class name="org.wso2.micro.integrator.cli.CliAPITestCase"></class>
             <class name="org.wso2.micro.integrator.cli.CliCompositeappTestCase"></class>

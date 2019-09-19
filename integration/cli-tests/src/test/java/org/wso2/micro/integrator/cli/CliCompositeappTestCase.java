@@ -35,7 +35,7 @@ public class CliCompositeappTestCase {
     @Test
     public void miShowCarbonappAllTest() {
 
-        List<String> lines =  TestUtils.runCLICommand("compositeapp" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("compositeapp" , "show");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_HELLO_CAR)), CLI_TEST_HELLO_CAR +" Carbon application not found");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_MEDIATOR_CAR)), CLI_TEST_MEDIATOR_CAR + " Carbon application not found");
     }
@@ -47,7 +47,7 @@ public class CliCompositeappTestCase {
     @Test
     public void miShowCarbonappTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("compositeapp" ,"show", CLI_TEST_HELLO_CAR);
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("compositeapp" , "show", CLI_TEST_HELLO_CAR);
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_HELLO_CAR)), CLI_TEST_HELLO_CAR +" Carbon application not Found");
     }
 
@@ -57,7 +57,7 @@ public class CliCompositeappTestCase {
     @Test
     public void miShowCappNotFoundTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("compositeapp" ,"show", "TestCapp");
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("compositeapp" , "show", "TestCapp");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("Carbon App 404 Not Found")),"Carbon App 404 Not Found");
     }
 }

@@ -34,7 +34,7 @@ public class CliEndpointTestCase {
     @Test
     public void miShowEndpointAllTest() {
 
-        List<String> lines =  TestUtils.runCLICommand("endpoint" ,"show");
+        List<String> lines =  TestUtils.getOutputForCLICommand("endpoint" , "show");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_EP)), CLI_TEST_EP +" Endpoint not found");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_STOCK_EP)), CLI_STOCK_EP + "Endpoint not found");
     }
@@ -46,7 +46,7 @@ public class CliEndpointTestCase {
     @Test
     public void miShowEndpointTest() {
 
-        List<String> lines =  TestUtils.runCLICommandWithArtifactName("endpoint" ,"show", CLI_TEST_EP);
+        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("endpoint" , "show", CLI_TEST_EP);
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_EP)), CLI_TEST_EP +" Endpoint not found");
     }
 
@@ -56,7 +56,7 @@ public class CliEndpointTestCase {
     @Test
     public void miShowEndpointNotFoundTest() {
 
-        List<String> lines = TestUtils.runCLICommandWithArtifactName("endpoint", "show", "CLITestEP");
+        List<String> lines = TestUtils.getOutputForCLICommandArtifactName("endpoint", "show", "CLITestEP");
         Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("Endpoint 404 Not Found")), "Endpoint 404 Not Found");
     }
 
