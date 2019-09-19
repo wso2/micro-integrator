@@ -22,6 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.commons.util.MiscellaneousUtil;
+import org.apache.synapse.rest.cors.CORSConfiguration;
 import org.apache.synapse.transport.passthru.core.ssl.SSLConfiguration;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.inbound.endpoint.persistence.PersistenceUtils;
@@ -122,6 +123,7 @@ public class ConfigurationLoader {
                                 InternalAPI internalApi = createApi(className);
                                 internalApi.setName(name);
                                 populateHandlers(apiElement, internalApi);
+                                internalApi.setCORSConfiguration(getCORSConfiguration(apiElement));
                                 if (apiElement.getAttribute(PROTOCOL_Q) != null) {
 
                                     String protocols = apiElement.getAttributeValue(PROTOCOL_Q);
@@ -202,6 +204,21 @@ public class ConfigurationLoader {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new SynapseException("Error creating Internal InternalAPIHandler for class name : " + classFQName, e);
         }
+    }
+
+    private static CORSConfiguration getCORSConfiguration(OMElement apiElement) {
+        InternalAPICORSConfiguration config = new InternalAPICORSConfiguration();
+        OMElement corsElement = apiElement.getFirstChildWithName(new QName("cors"));
+        if (corsElement != null) {
+            String enabled = corsElement.getFirstChildWithName(new QName("enabled")).getText();
+            String origins = corsElement.getFirstChildWithName(new QName("allowedOrigins")).getText();
+            String headers = corsElement.getFirstChildWithName(new QName("allowedHeaders")).getText();
+
+            config.setEnabled(Boolean.valueOf(enabled));
+            config.setAllowedOrigins(origins);
+            config.setAllowedHeaders(headers);
+        }
+        return config;
     }
 
     private static InternalAPI createApi(String classFQName) {
