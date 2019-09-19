@@ -1,4 +1,3 @@
-
 <?xml version="1.0" encoding="UTF-8"?>
 <api xmlns="http://ws.apache.org/ns/synapse" name="ESBJAVA4572TestAPI" context="/ESBJAVA4572abc">
     <resource methods="POST GET" url-mapping="/dd">
