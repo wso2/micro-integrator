@@ -212,23 +212,6 @@
         <!--</packages>-->
     <!--</test>-->
 
-    <test name="nhttp-Transport-Test" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.NhttpBaseTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.DefaultRequestContentTypeTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.ResponseAfterNhttpEnabledTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.NhttpMaximumOpenConnections"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.ConfiguringNhttpAccessLogLocationTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.ContentTypeCharsetTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.MessageWithoutContentTypeTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.OCSPCertificateValidationTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.RetrieveBackendWsdlTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.SetHostHttpHeaderTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.MultipartFormdataMIMEBoundaryTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.test.ESBJAVA3689AccessMIMEMessageContentTestCase"/>
-        </classes>
-    </test>
-
     <!-- Tests should not be added beyond this point since all those will run with the nhttp transport enabled
     unlike the default axis2.xml-->
 </suite>
