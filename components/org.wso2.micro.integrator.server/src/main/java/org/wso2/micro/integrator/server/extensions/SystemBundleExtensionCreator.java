@@ -17,8 +17,8 @@
  */
 package org.wso2.micro.integrator.server.extensions;
 
-import org.wso2.micro.integrator.server.CarbonLaunchExtension;
 import org.wso2.micro.integrator.server.LauncherConstants;
+import org.wso2.micro.integrator.server.MicroIntegratorLaunchExtension;
 import org.wso2.micro.integrator.server.util.Utils;
 
 import java.io.File;
@@ -33,7 +33,7 @@ import java.util.jar.Manifest;
  * User need to drop the classic jars that needed to be extended in ${carbon.home}/extensions
  * folder.
  */
-public class SystemBundleExtensionCreator implements CarbonLaunchExtension {
+public class SystemBundleExtensionCreator implements MicroIntegratorLaunchExtension {
 
     private static final String EXTENSIONS_DIR;
 
@@ -54,7 +54,7 @@ public class SystemBundleExtensionCreator implements CarbonLaunchExtension {
         }
     }
 
-    private static final String EXTENSION_PREFIX = "org.wso2.carbon.framework.extension.";
+    private static final String EXTENSION_PREFIX = "org.wso2.micro.integrator.framework.extension.";
 
     public void perform() {
         String dropinsPath = System.getProperty(LauncherConstants.CARBON_DROPINS_DIR_PATH);

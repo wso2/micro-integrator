@@ -17,8 +17,8 @@
  */
 package org.wso2.micro.integrator.server.extensions;
 
-import org.wso2.micro.integrator.server.CarbonLaunchExtension;
 import org.wso2.micro.integrator.server.LauncherConstants;
+import org.wso2.micro.integrator.server.MicroIntegratorLaunchExtension;
 import org.wso2.micro.integrator.server.util.BundleInfoLine;
 import org.wso2.micro.integrator.server.util.FileUtils;
 import org.wso2.micro.integrator.server.util.Utils;
@@ -45,7 +45,7 @@ import java.util.logging.Logger;
  * 2) Read their manifest.mf file and extract symbolic names and the bundle-versions.
  * 3) Add the entry to the bundles.info file.
  */
-public class DropinsBundleDeployer implements CarbonLaunchExtension {
+public class DropinsBundleDeployer implements MicroIntegratorLaunchExtension {
     private static final Logger logger = Logger.getLogger(DropinsBundleDeployer.class.getName());
 
     private static String dropinsDirPath;

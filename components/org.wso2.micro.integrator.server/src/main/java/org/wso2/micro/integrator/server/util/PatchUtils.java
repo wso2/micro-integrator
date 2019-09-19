@@ -637,7 +637,7 @@ public class PatchUtils {
     }
 
     public static File getPatchesLogsFile() {
-        return new File(org.wso2.carbon.server.util.Utils.getCarbonRepoPath() + File.separator + "logs" + File.separator
+        return new File(Utils.getCarbonRepoPath() + File.separator + "logs" + File.separator
                                 + LauncherConstants.PATCH_LOG_FILE);
     }
 

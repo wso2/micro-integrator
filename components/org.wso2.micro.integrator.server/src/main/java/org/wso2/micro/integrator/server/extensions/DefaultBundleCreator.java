@@ -17,8 +17,8 @@
  */
 package org.wso2.micro.integrator.server.extensions;
 
-import org.wso2.micro.integrator.server.CarbonLaunchExtension;
 import org.wso2.micro.integrator.server.LauncherConstants;
+import org.wso2.micro.integrator.server.MicroIntegratorLaunchExtension;
 import org.wso2.micro.integrator.server.util.Utils;
 
 import java.io.File;
@@ -30,7 +30,7 @@ import java.util.jar.Manifest;
 /**
  * Creates regular OSGi bundles out of regular jar files
  */
-public class DefaultBundleCreator implements CarbonLaunchExtension {
+public class DefaultBundleCreator implements MicroIntegratorLaunchExtension {
     private static final String JARS_DIR;
 
     static {
