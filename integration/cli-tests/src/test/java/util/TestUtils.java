@@ -22,20 +22,21 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
-import org.wso2.carbon.esb.cli.CliAPITestCase;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestUtils {
-    protected Log log = LogFactory.getLog(CliAPITestCase.class);
-    File miBuildFilePath;
-    String miPath;
 
+    private static final Log log = LogFactory.getLog(TestUtils.class);
+    static File miBuildFilePath;
+    static String miPath;
 
-//     get pom version from the pom file
-    public String getPomVerion() throws IOException, XmlPullParserException {
+    /**
+     * Get pom version from the pom file.
+     */
+    public static String getPomVerion() throws IOException, XmlPullParserException {
 
         MavenXpp3Reader reader = new MavenXpp3Reader();
         Model model = reader.read(new FileReader("../pom.xml"));
@@ -43,8 +44,10 @@ public class TestUtils {
         return pomVersion;
     }
 
-//    get the mi build path to run mi commands
-    public String getMIBuildPath() {
+    /**
+     * Get the mi build path to run mi commands.
+     */
+    public static  String getMIBuildPath() throws IOException {
         try {
             TestUtils testUtils = new TestUtils();
             miBuildFilePath = new File(".." + File.separator + ".." + File.separator + ".." + File.separator
@@ -60,25 +63,66 @@ public class TestUtils {
         return miPath;
     }
 
+   public static List<String> runCLICommand(String artifactType , String command ) {
+
+        List<String> lines = new ArrayList();
+        String  line;
+
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(TestUtils.runMiCommand(
+                TestUtils.getMIBuildPath(),artifactType ,command ).getInputStream()))) {
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            log.info("Exception occurred while running the command :  " + command + " for artifact : " + artifactType  + " . Exception : "  + e.getMessage());
+        }
+        return lines;
+    }
+
+    public static List<String> runCLICommandWithArtifactName(String artifactType, String command, String artifactName) {
+
+        List<String> lines = new ArrayList();
+        String  line;
+
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(TestUtils.runMiCommandWithArtifact(
+                TestUtils.getMIBuildPath(), artifactType,command , artifactName).getInputStream()))) {
+            while ((line = reader.readLine()) != null) {
+                lines.add(line);
+            }
+        } catch (IOException e) {
+            log.info("Exception occurred while running the command :  " + command + " for artifact : " + artifactType + " . Exception : "  + e.getMessage());
+        }
+        return lines;
+    }
+
     /**
-     * run the mi commands
+     * Run the mi commands.
+     *
      * ex: mi sequence show
+     * @param path mi binary file build path
+     * @param artifactType artifact type of the mi commands
+     * @param command mi command
      */
-    public Process runMiCommand(String path, String artifact, String command) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(path, artifact, command);
+    public static Process runMiCommand(String path, String artifactType, String command) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(path, artifactType, command);
         Process process = builder.start();
         return process;
     }
 
     /**
-     * run the mi commands with the artifact name
+     * Run the mi commands with the artifact name.
+     *
      * ex: mi sequence show sampleSequence
+     *  @param path mi binary file build path
+     *  @param artifactType artifact type of the mi commands
+     *  @param artifactName name of the artifact which want to get the information
      */
-    public Process runMiCommandWithArtifact(String path, String artifact, String command, String name) throws IOException {
-        ProcessBuilder builder = new ProcessBuilder(path, artifact, command, name);
+    public static  Process runMiCommandWithArtifact(String path, String artifactType, String command, String artifactName) throws IOException {
+        ProcessBuilder builder = new ProcessBuilder(path, artifactType, command, artifactName);
         Process process = builder.start();
         return process;
     }
+
 
 }
 
