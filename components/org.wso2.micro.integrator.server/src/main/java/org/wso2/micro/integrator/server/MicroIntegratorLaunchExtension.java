@@ -21,10 +21,10 @@ package org.wso2.micro.integrator.server;
  * This interface allows people to write custom extension which should be executed just before launching the Carbon
  * Server.
  *
- * @see org.wso2.carbon.server.extensions.DefaultBundleCreator
- * @see org.wso2.carbon.server.extensions.SystemBundleExtensionCreator
+ * @see org.wso2.micro.integrator.server.extensions.DefaultBundleCreator
+ * @see org.wso2.micro.integrator.server.extensions.SystemBundleExtensionCreator
  */
-public interface CarbonLaunchExtension {
+public interface MicroIntegratorLaunchExtension {
 
     void perform();
 

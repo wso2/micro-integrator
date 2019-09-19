@@ -17,8 +17,8 @@
  */
 package org.wso2.micro.integrator.server.extensions;
 
-import org.wso2.micro.integrator.server.CarbonLaunchExtension;
 import org.wso2.micro.integrator.server.LauncherConstants;
+import org.wso2.micro.integrator.server.MicroIntegratorLaunchExtension;
 import org.wso2.micro.integrator.server.util.FileUtils;
 import org.wso2.micro.integrator.server.util.Utils;
 
@@ -30,7 +30,7 @@ import java.util.jar.Manifest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class FragmentBundleCreator implements CarbonLaunchExtension {
+public abstract class FragmentBundleCreator implements MicroIntegratorLaunchExtension {
     private static final Logger logger = Logger.getLogger(FragmentBundleCreator.class.getName());
 
     private static String FRAGMENT_BUNDLE_VERSION = "1.0.0";
