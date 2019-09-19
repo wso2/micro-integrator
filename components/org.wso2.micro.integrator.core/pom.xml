@@ -37,6 +37,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.wso2.carbon.crypto</groupId>
+            <artifactId>org.wso2.carbon.crypto.api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-core</artifactId>
         </dependency>

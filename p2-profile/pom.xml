@@ -80,9 +80,9 @@
                                 <featureArtifactDef>
                                     org.apache.synapse:org.apache.synapse.wso2.feature:${synapse.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.crypto:org.wso2.carbon.crypto.feature:${carbon.crypto.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.crypto.feature:${project.version}
+                                </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.apache.synapse:org.apache.synapse.transport.fix.feature:${synapse.version}
                                 </featureArtifactDef>
@@ -134,12 +134,6 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.application.mgt.synapse.server.feature:${carbon.mediation.version}>
                                 </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.event.sink.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.mediator.publishevent.server.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.prometheus.publisher.feature:${project.version}
                                 </featureArtifactDef>
@@ -153,9 +147,9 @@
                                 <featureArtifactDef>
                                     org.wso2.carbon.analytics-common:org.wso2.carbon.databridge.datapublisher.feature:${carbon.analytics.common.version}
                                 </featureArtifactDef>
-<!--                                <featureArtifactDef>-->
-<!--                                    org.wso2.carbon.mediation:org.wso2.carbon.das.messageflow.data.publisher.feature:${carbon.mediation.version}-->
-<!--                                </featureArtifactDef>-->
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.analytics.messageflow.data.publisher.feature:${project.version}
+                                </featureArtifactDef>
 
 
                                 <featureArtifactDef>
@@ -199,6 +193,13 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.identity.xacml.mediator.feature:${project.version}
+                                </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.publishevent.server.feature:${project.version}
+                                </featureArtifactDef>
+
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.security.server.feature:${product.mi.version}
                                 </featureArtifactDef>
 
                                 <!-- DSS -->
@@ -258,6 +259,10 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <feature>
+                                    <id>org.wso2.micro.integrator.mediator.publishevent.server.feature.group</id>
+                                    <version>${product.mi.version}</version>
+                                </feature>
                                 <feature>
                                     <id>org.apache.synapse.wso2.feature.group</id>
                                     <version>${synapse.version}</version>
@@ -323,14 +328,6 @@
                                     <id>org.wso2.micro.integrator.identity.xacml.mediator.feature.group</id>
                                     <version>${project.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.event.sink.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.mediator.publishevent.server.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
                                 <feature>
                                     <id>org.wso2.micro.integrator.prometheus.publisher.feature.group</id>
                                     <version>${project.version}</version>
@@ -352,10 +349,10 @@
                                     <id>org.wso2.carbon.databridge.datapublisher.feature.group</id>
                                     <version>${carbon.analytics.common.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.das.messageflow.data.publisher.feature.group</id>-->
-<!--                                    <version>${carbon.mediation.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.analytics.messageflow.data.publisher.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
 
                                 <!--11 Axis2 Transports-->
                                 <feature>
@@ -400,10 +397,15 @@
                                     <id>org.wso2.micro.integrator.initializer.feature.group</id>
                                     <version>${product.mi.version}</version>
                                 </feature>
-<!--                                <feature>-->
-<!--                                    <id>org.wso2.carbon.crypto.feature.group</id>-->
-<!--                                    <version>${carbon.crypto.version}</version>-->
-<!--                                </feature>-->
+                                <feature>
+                                    <id>org.wso2.micro.integrator.security.server.feature.group</id>
+                                    <version>${product.mi.version}</version>
+                                </feature>
+                                <feature>
+                                    <id>org.wso2.micro.integrator.crypto.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+
                                 <!-- DSS -->
                                 <feature>
                                     <id>org.wso2.micro.integrator.dataservices.server.feature.group</id>

@@ -120,4 +120,4 @@ fi
 
 # ----- Execute The Requested Command -----------------------------------------
 
-$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -classpath "$CARBON_CLASSPATH" org.wso2.micro.integrator.security.vault.VaultTool $*
+$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -Dconf.location="$CARBON_HOME/conf" -classpath "$CARBON_CLASSPATH" org.wso2.micro.integrator.security.vault.VaultTool $*

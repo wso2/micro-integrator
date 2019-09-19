@@ -38,6 +38,7 @@
         <module>mediation-features</module>
         <module>data-features</module>
         <module>org.wso2.micro.integrator.ntask.core.feature</module>
+        <module>crypto-feature/org.wso2.micro.integrator.crypto.feature</module>
     </modules>
 
 </project>

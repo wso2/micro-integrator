@@ -83,6 +83,7 @@
                                 <bundleDef>
                                     org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.oauth.stub:${carbon.identity.oauth.version}
                                 </bundleDef>
+                                <bundleDef>org.wso2.carbon.mediation:org.wso2.carbon.mediator.fastXSLT</bundleDef>
                             </bundles>
                             <importBundles>
                                 <importBundleDef>rhino.wso2:js</importBundleDef>

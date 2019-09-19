@@ -29,17 +29,16 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.util.XMLUtils;
 import org.apache.commons.httpclient.Header;
-
 import org.apache.xerces.util.SecurityManager;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.wso2.micro.core.util.CarbonException;
-import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
-import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
-import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
+import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -55,7 +54,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
@@ -68,8 +66,6 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
-import static java.lang.Boolean.TRUE;
 
 public class MicroIntegratorBaseUtils {
 
@@ -112,6 +108,19 @@ public class MicroIntegratorBaseUtils {
             System.setProperty(MicroIntegratorBaseConstants.CARBON_HOME, carbonHome);
         }
         return carbonHome;
+    }
+
+    public static String getUserMgtXMLPath() {
+        String carbonHome = getCarbonHome();
+        String configPath = null;
+        if (carbonHome != null) {
+            if (System.getProperty(ServerConstants.USER_MGT_XML_PATH) == null) {
+                configPath = getCarbonConfigDirPath() + File.separator + "user-mgt.xml";
+            } else {
+                configPath = System.getProperty(ServerConstants.USER_MGT_XML_PATH);
+            }
+        }
+        return configPath;
     }
 
     /**
@@ -491,5 +500,41 @@ public class MicroIntegratorBaseUtils {
             }
         }
         return text;
+    }
+
+    /**
+     * This is to read the port values defined in other config files, which are overridden
+     * from those in carbon.xml.
+     * @param property
+     * @return
+     */
+    public static int getPortFromServerConfig(String property) {
+        String port;
+        int portNumber = -1;
+        int indexOfStartingChars = -1;
+        int indexOfClosingBrace;
+
+        CarbonServerConfigurationService serverConfig = getServerConfiguration();
+        // The following condition deals with ports specified to be read from carbon.xml.
+        // Ports are specified as templates: eg ${Ports.EmbeddedLDAP.LDAPServerPort},
+        if (indexOfStartingChars < property.indexOf("${") &&
+                (indexOfStartingChars = property.indexOf("${")) != -1 &&
+                (indexOfClosingBrace = property.indexOf('}')) != -1) { // Is this template used?
+
+            String portTemplate = property.substring(indexOfStartingChars + 2,
+                    indexOfClosingBrace);
+
+            port = serverConfig.getFirstProperty(portTemplate);
+
+            if (port != null) {
+                portNumber = Integer.parseInt(port);
+            }
+
+        }
+        String portOffset = System.getProperty("portOffset", serverConfig.getFirstProperty("Ports.Offset"));
+        //setting up port offset properties as system global property which allows this
+        //to available at the other context as required (fix 2011-11-30)
+        System.setProperty("portOffset", portOffset);
+        return portOffset == null? portNumber : portNumber + Integer.parseInt(portOffset);
     }
 }

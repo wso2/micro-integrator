@@ -17,6 +17,7 @@
  */
 package org.wso2.micro.integrator.prometheus.publisher.service;
 
+import org.apache.synapse.rest.cors.CORSConfiguration;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPI;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIHandler;
@@ -30,6 +31,7 @@ public class MetricAPI implements InternalAPI {
 
     private String name;
     private List<InternalAPIHandler> handlerList = null;
+    private CORSConfiguration apiCORSConfiguration = null;
 
     @Override
     public APIResource[] getResources() {
@@ -65,5 +67,15 @@ public class MetricAPI implements InternalAPI {
     @Override
     public List<InternalAPIHandler> getHandlers() {
         return this.handlerList;
+    }
+
+    @Override
+    public void setCORSConfiguration(CORSConfiguration corsConfiguration) {
+        apiCORSConfiguration = corsConfiguration;
+    }
+
+    @Override
+    public CORSConfiguration getCORSConfiguration() {
+        return  apiCORSConfiguration;
     }
 }

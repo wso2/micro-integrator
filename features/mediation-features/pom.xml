@@ -32,6 +32,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>security-features</module>
         <module>scheduled-tasks</module>
         <module>ntask-feature</module>
         <module>builtin-mediators</module>
@@ -39,6 +40,7 @@
         <module>transport-features</module>
         <module>data-publisher-features</module>
         <module>entitlement-mediator-feature/org.wso2.micro.integrator.identity.xacml.mediator</module>
+        <module>publishEvent-feature</module>
     </modules>
 
 </project>

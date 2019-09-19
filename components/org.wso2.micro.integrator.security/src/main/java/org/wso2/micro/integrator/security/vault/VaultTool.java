@@ -22,7 +22,14 @@ import org.wso2.micro.integrator.security.vault.utils.KeyStoreUtil;
 import org.wso2.micro.integrator.security.vault.utils.Utils;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.util.Objects;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Pattern;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -36,6 +43,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 public class VaultTool {
 
     private static boolean storeKeyInFile = true;
+    private static final String CARBON_PROPERTIES = "carbon.properties";
+    private static final String CONF_DIRECTORY_PATH = "conf.location";
 
     /**
      * This is the main method invoked by the micro integrator secure vault script
@@ -116,13 +125,27 @@ public class VaultTool {
      * @param cipher cipher
      */
     private static String encryptedValue(Cipher cipher) {
+        addSystemProperties();
         String firstPassword;
         String secondPassword;
+
+        String passwordRegex = System.getProperty(Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY);
+        if (Objects.isNull(passwordRegex)) {
+            System.out.println(Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY +
+                    " property cannot be found in the carbon.properties file. Hence setting the default value as "
+                    + Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY + "=^[\\\\S]{5,30}$\n");
+        }
+
         while (true) {
             firstPassword = Utils.getValueFromConsole("Enter Plain Text Value : ", true);
             secondPassword = Utils.getValueFromConsole("Please Enter Value Again : ", true);
             if (!firstPassword.isEmpty() && firstPassword.equals(secondPassword)) {
-                if (firstPassword.length() < 5 || firstPassword.length() > 30) {
+                if (passwordRegex != null && !Pattern.matches(passwordRegex, firstPassword)) {
+                    System.out.println("Password does not match the given regular expression - "
+                            + Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY + "=" + passwordRegex +
+                            " Please Re-enter password\n\n");
+                    continue;
+                } else if (passwordRegex == null && (firstPassword.length() < 5 || firstPassword.length() > 30)) {
                     System.out.println("Password must contain 5 to 30 characters," +
                             " Please Re-enter password\n\n");
                     continue;
@@ -194,5 +217,23 @@ public class VaultTool {
         }
         System.out.println("\nEncryption is done Successfully\n");
         return encodedValue;
+    }
+
+    private static void addSystemProperties() {
+        Properties properties = new Properties();
+        String filePath = System.getProperty(CONF_DIRECTORY_PATH) + File.separator + CARBON_PROPERTIES;
+        File file = new File(filePath);
+
+        if (file.exists()) {
+            try ( InputStream inputStream = new FileInputStream(file)) {
+                properties.load(inputStream);
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.exit(1);
+            }
+        }
+
+        String secureVaultRegex = properties.getProperty(Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY);
+        System.setProperty(Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY, secureVaultRegex);
     }
 }

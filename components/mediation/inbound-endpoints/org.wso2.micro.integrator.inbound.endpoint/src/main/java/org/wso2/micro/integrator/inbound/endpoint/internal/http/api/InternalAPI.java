@@ -17,6 +17,8 @@
  */
 package org.wso2.micro.integrator.inbound.endpoint.internal.http.api;
 
+import org.apache.synapse.rest.cors.CORSConfiguration;
+
 import java.util.List;
 
 /**
@@ -63,4 +65,14 @@ public interface InternalAPI {
      * Gets the handlers associated with the API
      */
     List<InternalAPIHandler> getHandlers();
+
+    /**
+     * Sets the CORS Configuration for the internal API
+     */
+    void setCORSConfiguration(CORSConfiguration corsConfiguration);
+
+    /**
+     * Gets the CORS Configuration of the API
+     */
+    CORSConfiguration getCORSConfiguration();
 }

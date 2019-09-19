@@ -19,16 +19,13 @@ package org.wso2.micro.integrator.server;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.server.ChildFirstURLClassLoader;
-import org.wso2.carbon.server.LauncherConstants;
-import org.wso2.carbon.server.extensions.DefaultBundleCreator;
-import org.wso2.carbon.server.extensions.DropinsBundleDeployer;
-import org.wso2.carbon.server.extensions.EclipseIniRewriter;
-import org.wso2.carbon.server.extensions.LibraryFragmentBundleCreator;
-import org.wso2.carbon.server.extensions.Log4jPropFileFragmentBundleCreator;
-import org.wso2.carbon.server.extensions.PatchInstaller;
-import org.wso2.carbon.server.extensions.SystemBundleExtensionCreator;
-import org.wso2.carbon.server.util.Utils;
+import org.wso2.micro.integrator.server.extensions.DefaultBundleCreator;
+import org.wso2.micro.integrator.server.extensions.DropinsBundleDeployer;
+import org.wso2.micro.integrator.server.extensions.EclipseIniRewriter;
+import org.wso2.micro.integrator.server.extensions.LibraryFragmentBundleCreator;
+import org.wso2.micro.integrator.server.extensions.PatchInstaller;
+import org.wso2.micro.integrator.server.extensions.SystemBundleExtensionCreator;
+import org.wso2.micro.integrator.server.util.Utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -122,7 +119,6 @@ public class Main {
             new PatchInstaller().perform();
             new LibraryFragmentBundleCreator().perform();
         }
-        new Log4jPropFileFragmentBundleCreator().perform();
 
         //Add bundles in the dropins directory to the bundles.info file.
         new DropinsBundleDeployer().perform();
