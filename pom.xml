@@ -671,6 +671,21 @@
                 <artifactId>org.wso2.micro.integrator.crypto.provider</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.bootstrap</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>wrapper</groupId>
+                <artifactId>wrapper</artifactId>
+                <version>${wrapper.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -868,6 +883,8 @@
         <commons-logging.version>1.2</commons-logging.version>
         <!-- publishEvent mediator versions -->
         <javax.xml.namespace.version>0.0.0</javax.xml.namespace.version>
+        <mockito.version>2.23.4</mockito.version>
+        <wrapper.version>3.2.3</wrapper.version>
     </properties>
 
     <repositories>

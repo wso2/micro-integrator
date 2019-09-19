@@ -311,7 +311,6 @@ do
     -Dcom.atomikos.icatch.hide_init_file_path=true \
     -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false \
     -Dorg.apache.jasper.runtime.BodyContentImpl.LIMIT_BUFFER=true \
-    -Dserver.main.class=org.wso2.micro.integrator.server.Main \
     -Dcom.sun.jndi.ldap.connect.pool.authentication=simple  \
     -Dcom.sun.jndi.ldap.connect.pool.timeout=3000  \
     -Dorg.terracotta.quartz.skipUpdateCheck=true \
@@ -326,6 +325,6 @@ do
     -Dorg.apache.cxf.io.CachedOutputStream.Threshold=104857600 \
     -Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl \
     $NODE_PARAMS \
-    org.wso2.carbon.bootstrap.Bootstrap $*
+    org.wso2.micro.integrator.bootstrap.Bootstrap $*
     status=$?
 done
