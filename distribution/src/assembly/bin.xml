@@ -271,25 +271,6 @@
         </fileSet>
 
         <fileSet>
-            <directory>target/wso2carbon-core-${carbon.kernel.version}/lib</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
-            <excludes>
-                <exclude>**/*.sh</exclude>
-                <exclude>**/log4j.properties</exclude>
-                <exclude>**/version.txt</exclude>
-                <exclude>**/wso2carbon-version.txt</exclude>
-                <exclude>**/wso2server.bat</exclude>
-                <exclude>**/README.txt</exclude>
-                <exclude>**/LICENSE.txt</exclude>
-                <exclude>**/release-notes.html</exclude>
-                <exclude>**/carbon.xml</exclude>
-                <exclude>**/endorsed/xalan*.jar</exclude>
-                <exclude>**/endorsed/geronimo-jms_1.1_spec*.jar</exclude>
-            </excludes>
-        </fileSet>
-
-
-        <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/components/dropins
             </directory>
             <outputDirectory>wso2mi-${pom.version}/dropins</outputDirectory>
@@ -297,13 +278,6 @@
             </excludes>
         </fileSet>
 
-        <fileSet>
-            <directory>src/resources</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib/</outputDirectory>
-            <includes>
-                <include>esapi-2.0.1.jar</include>
-            </includes>
-        </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/components/lib
             </directory>
@@ -572,6 +546,8 @@
             <includes>
                 <include>org.wso2.ei:org.wso2.micro.integrator.server:jar</include>
                 <include>net.sf.saxon:Saxon-HE:jar</include>
+                <include>xerces.wso2:xercesImpl</include>
+                <include>commons-logging:commons-logging</include>
             </includes>
         </dependencySet>
         <dependencySet>
@@ -582,11 +558,6 @@
                 <include>org.apache.axis2:addressing:mar</include>
             </includes>
         </dependencySet>
-        <dependencySet>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
-            <includes>
-                <include>javax.jms:javax.jms-api:jar</include>
-            </includes>
-        </dependencySet>
+
     </dependencySets>
 </assembly>
