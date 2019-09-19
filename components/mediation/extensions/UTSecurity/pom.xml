@@ -1,12 +1,11 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Licensed to the Apache Software Foundation (ASF) under one
-  ~ or more contributor license agreements. See the NOTICE file
-  ~ distributed with this work for additional information
-  ~ regarding copyright ownership. The ASF licenses this file
-  ~ to you under the Apache License, Version 2.0 (the
-  ~ "License"); you may not use this file except in compliance
-  ~ with the License. You may obtain a copy of the License at
+  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
   ~
   ~ http://www.apache.org/licenses/LICENSE-2.0
   ~
@@ -17,21 +16,21 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>mediation</artifactId>
         <groupId>org.wso2.ei</groupId>
+        <artifactId>extensions</artifactId>
         <version>1.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
     <artifactId>UTSecurity</artifactId>
     <packaging>mar</packaging>
-    <version>1.0.0</version>
+
     <dependencies>
         <dependency>
             <groupId>org.ops4j.pax.logging</groupId>
@@ -49,35 +48,19 @@
             <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-core</artifactId>
         </dependency>
-<!--        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>javax.cache.wso2</artifactId>
-            <version>4.4.35</version>
-        </dependency>-->
         <dependency>
             <groupId>org.apache.ws.commons.axiom.wso2</groupId>
             <artifactId>axiom</artifactId>
-            <version>1.2.11.wso2v10</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
         </dependency>
-
     </dependencies>
-
 
     <build>
         <sourceDirectory>src</sourceDirectory>
-        <testSourceDirectory>test</testSourceDirectory>
         <resources>
-            <resource>
-                <directory>conf</directory>
-                <excludes>
-                    <exclude>**/*.properties</exclude>
-                </excludes>
-                <filtering>false</filtering>
-            </resource>
             <resource>
                 <directory>src</directory>
                 <excludes>
@@ -85,15 +68,6 @@
                 </excludes>
             </resource>
         </resources>
-        <testResources>
-            <testResource>
-                <targetPath>../test-resources</targetPath>
-                <directory>test-resources</directory>
-                <includes>
-                    <include>**/**</include>
-                </includes>
-            </testResource>
-        </testResources>
         <plugins>
             <plugin>
                 <artifactId>maven-remote-resources-plugin</artifactId>

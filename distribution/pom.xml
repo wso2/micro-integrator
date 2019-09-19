@@ -38,6 +38,11 @@
             <artifactId>org.wso2.micro.integrator.server</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>UTSecurity</artifactId>
+            <type>mar</type>
+        </dependency>
+        <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
             <type>mar</type>
@@ -47,10 +52,6 @@
             <artifactId>addressing</artifactId>
             <type>mar</type>
         </dependency>
-<!--        <dependency>
-            <groupId>org.wso2.pox</groupId>
-            <artifactId>UTsecurity</artifactId>
-        </dependency>-->
         <dependency>
             <groupId>javax.jms</groupId>
             <artifactId>javax.jms-api</artifactId>

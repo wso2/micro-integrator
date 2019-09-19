@@ -132,6 +132,12 @@
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>UTSecurity</artifactId>
+                <type>mar</type>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.server</artifactId>
                 <version>${carbon.kernel.version}</version>

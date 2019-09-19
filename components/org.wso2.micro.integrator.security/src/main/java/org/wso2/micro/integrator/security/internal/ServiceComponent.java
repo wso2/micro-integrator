@@ -31,6 +31,7 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
@@ -44,6 +45,8 @@ import org.wso2.micro.integrator.security.callback.DefaultPasswordCallback;
 )
 public class ServiceComponent {
 
+    private static String POX_SECURITY_MODULE = "POXSecurityModule";
+
     private static Log log = LogFactory.getLog(ServiceComponent.class);
 
     private ConfigurationContext configCtx;
@@ -52,8 +55,31 @@ public class ServiceComponent {
     protected void activate(ComponentContext ctxt) {
         try {
             setSecurityParams();
+            engagePoxSecurity();
         } catch (Throwable e) {
             log.error("Failed to activate Micro Integrator security bundle ", e);
+        }
+    }
+
+    private void engagePoxSecurity() {
+        try {
+            String enablePoxSecurity = CarbonServerConfigurationService.getInstance()
+                    .getFirstProperty("EnablePoxSecurity");
+            if (enablePoxSecurity == null || "true".equals(enablePoxSecurity)) {
+                AxisConfiguration mainAxisConfig = configCtx.getAxisConfiguration();
+                // Check for the module availability
+                if (mainAxisConfig.getModules().toString().contains(POX_SECURITY_MODULE)){
+                    mainAxisConfig.engageModule(POX_SECURITY_MODULE);
+                    log.info("UT Security is activated");
+                }
+                else {
+                    log.info("UT Security is not activated UTsecurity.mar is not available");
+                }
+            } else {
+                log.info("POX Security Disabled");
+            }
+        } catch (Throwable e) {
+            log.error("Failed to activate Micro Integrator UT security module ", e);
         }
     }
 

@@ -1,4 +1,4 @@
-package org.wso2.micro.integrator.security.utils;
+package org.wso2.micro.integrator.security.extensions;
 
 import org.apache.rahas.SimpleTokenStore;
 

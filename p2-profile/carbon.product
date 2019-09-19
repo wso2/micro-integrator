@@ -26,6 +26,10 @@ version="4.5.0" useFeatures="true" includeLaunchers="true">
       <plugin id="org.wso2.carbon.pax-logging-log4j2-plugins" autoStart="true" startLevel="3" />
       <plugin id="org.eclipse.equinox.p2.reconciler.dropins" autoStart="true" startLevel="4" />
       <plugin id="org.eclipse.equinox.simpleconfigurator" autoStart="true" startLevel="1" />
+      <!-- Reduce the starting level. rampart core and the policy bundles should activate before building the policy files in oder to
+            register the Builders in activator classes in both bundles -->
+      <plugin id="rampart-core" autoStart="true" startLevel="3" />
+      <plugin id="rampart-policy" autoStart="true" startLevel="3" />
 
       <!-- Disable update manager. It seems as if this could be achieved by the first line, but in
            fact the second line sets reconcile to false (see org.eclipse.equinox.p2.publisher.eclipse.ConfigCUsAction#publishBundleCUs) -->

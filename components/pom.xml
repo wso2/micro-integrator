@@ -48,7 +48,6 @@
         <module>org.wso2.micro.integrator.core</module>
         <module>org.wso2.micro.integrator.server</module>
         <module>org.wso2.micro.integrator.initializer</module>
-        <module>org.wso2.micro.integrator.pox.security</module>
         <module>mediation</module>
         <module>org.wso2.micro.integrator.security</module>
         <module>org.wso2.micro.integrator.extensions</module>

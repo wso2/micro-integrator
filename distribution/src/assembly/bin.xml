@@ -604,6 +604,7 @@
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
                 <include>org.apache.axis2:addressing:mar</include>
+                <include>org.wso2.ei:UTSecurity:mar</include>
             </includes>
         </dependencySet>
         <dependencySet>

@@ -133,16 +133,6 @@ public class POXSecurityHandler implements Handler {
             isBasicAuth  = Boolean.parseBoolean(serviceParameter.getValue().toString());
         }
 
-/*        String isPox = null;
-        Cache<String, String> cache = this.getPOXCache();
-        if (cache != null && cache.get(service.getName()) != null) {
-            isPox = cache.get(service.getName());
-        }
-
-        if (isPox != null && JavaUtils.isFalseExplicitly(isPox)) {
-            return InvocationResponse.CONTINUE;
-        }*/
-
         if (msgCtx.isFault() && Integer.valueOf(MessageContext.OUT_FAULT_FLOW).equals(msgCtx.getFLOW()) && isBasicAuth) {
             // we only need to execute this block in Unauthorized situations when basicAuth used
             // otherwise it should continue the message flow by throwing the incoming fault message since
@@ -157,7 +147,6 @@ public class POXSecurityHandler implements Handler {
                 if(service.getPolicySubject().getAttachedPolicyComponent("UTOverTransport")!=null){
                     scenarioID = SecurityConstants.USERNAME_TOKEN_SCENARIO_ID;
                 }
-//                String scenarioID = getScenarioId(msgCtx, service);
                 if (scenarioID != null && scenarioID.equals(SecurityConstants.USERNAME_TOKEN_SCENARIO_ID)) {
 
                     boolean authenticationError = false;
@@ -242,15 +231,10 @@ public class POXSecurityHandler implements Handler {
         try {
 
             if (service.getPolicySubject().getAttachedPolicyComponent("UTOverTransport")!=null){
-//                String scenarioID = getScenarioId(msgCtx, service);
-//            if (scenarioID != null && scenarioID.equals(SecurityConstants.USERNAME_TOKEN_SCENARIO_ID)) {
                 if (log.isDebugEnabled()) {
                     log.debug("Processing POX security");
                 }
             } else {
-/*                if (cache != null) {
-                    cache.put(service.getName(), "false");
-                }*/
                 return InvocationResponse.CONTINUE;
             }
             String username = null;
@@ -365,59 +349,6 @@ public class POXSecurityHandler implements Handler {
 
     }
 
-    /*private String getScenarioId(MessageContext msgCtx, AxisService service) throws SecurityConfigException {
-        String scenarioID = null;
-        boolean scenarioIDSet = false;
-        Parameter parameter;
-        parameter = service.getParameter(SecurityConstants.SCENARIO_ID_SET_PARAM_NAME);
-        if (parameter != null) {
-            scenarioIDSet = (Boolean) parameter.getValue();
-        }
-
-        if (scenarioIDSet) {
-            parameter = service.getParameter(SecurityConstants.SCENARIO_ID_PARAM_NAME);
-            if (parameter != null) {
-                scenarioID = (String) parameter.getValue();
-            }
-        } else {
-            SecurityConfigAdmin securityAdmin = new SecurityConfigAdmin(msgCtx.getConfigurationContext()
-                    .getAxisConfiguration());
-            SecurityScenarioData data = securityAdmin.getCurrentScenario(service.getName());
-            synchronized (this) {
-                if (!scenarioIDSet) {
-                    if (data != null) {
-                        scenarioID = data.getScenarioId();
-                        try {
-                            Parameter param = new Parameter();
-                            param.setName(SecurityConstants.SCENARIO_ID_PARAM_NAME);
-                            param.setValue(scenarioID);
-                            service.addParameter(param);
-                            if (log.isDebugEnabled()) {
-                                log.debug(SecurityConstants.SCENARIO_ID_PARAM_NAME + " parameter is added to axis " +
-                                        "service: " + service.getName());
-                            }
-                        } catch (AxisFault axisFault) {
-                            log.error("Error while adding Scenario ID parameter", axisFault);
-                        }
-                    }
-                    try {
-                        Parameter scenarioIDSetParam = new Parameter(SecurityConstants.SCENARIO_ID_SET_PARAM_NAME,
-                                true);
-                        service.addParameter(scenarioIDSetParam);
-                        if (log.isDebugEnabled()) {
-                            log.debug(SecurityConstants.SCENARIO_ID_SET_PARAM_NAME + " parameter is added to axis " +
-                                    "service: " + service.getName());
-                        }
-                    } catch (AxisFault axisFault) {
-                        log.error("Error while adding Scenario ID Set parameter", axisFault);
-                    }
-                }
-            }
-        }
-
-        return scenarioID;
-    }*/
-
     /**
      * @param msgCtx message going through the handler chain
      * @return true if its a soap message without a security header
@@ -512,10 +443,4 @@ public class POXSecurityHandler implements Handler {
     /**
      * Returns the default "POX_ENABLED" cache
      */
-    // TODO: 9/11/19  need to evaluate this method whether it is nessary or not
-/*    private Cache<String, String> getPOXCache() {
-        CacheManager manager = Caching.getCacheManagerFactory().getCacheManager(POXSecurityHandler.POX_CACHE_MANAGER);
-        Cache<String, String> cache = manager.getCache(POXSecurityHandler.POX_ENABLED);
-        return cache;
-    }*/
 }
