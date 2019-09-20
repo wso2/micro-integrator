@@ -1,0 +1,28 @@
+[server]
+hostname = "localhost"
+
+[transport.passthru.http.listener]
+port=8280
+
+[transport.passthru.https.listener]
+port=8243
+
+[user_store]
+type = "database"
+
+
+[keystore.tls]
+file_name = "wso2carbon.jks"
+password = "wso2carbon"
+alias = "wso2carbon"
+key_password = "wso2carbon"
+
+[truststore]
+file_name = "client-truststore.jks"
+password = "wso2carbon"
+alias = "symmetric.key.value"
+algorithm = "AES"
+
+[mediation]
+synapse.preserve_namespace_on_xml_to_json = false
+synapse.disable_auto_primitive_regex = "^-?(0|[1-9][0-9]*)(\\.[0-9]+)?([eE][+-]?[0-9]+)?$"

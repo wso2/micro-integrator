@@ -55,8 +55,9 @@ public class ValidPathAxis2XmlTestCase extends ESBIntegrationTest {
 
     }
 
+    //disabling this test case since it passes even with an invalid axsi2.xml path
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb")
+    @Test(groups = "wso2.esb", enabled = false)
     public void TestPath() throws AxisFault {
 
         OMElement response = axis2Client

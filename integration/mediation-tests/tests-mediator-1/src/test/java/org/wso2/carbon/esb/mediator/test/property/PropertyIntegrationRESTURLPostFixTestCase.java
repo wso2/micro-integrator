@@ -17,16 +17,14 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.annotations.BeforeClass;
+import org.apache.http.HttpResponse;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
+import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -37,30 +35,20 @@ import static org.testng.Assert.assertNotNull;
 
 public class PropertyIntegrationRESTURLPostFixTestCase extends ESBIntegrationTest {
 
-    private OMElement response;
-    private HttpClientUtil client;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        OMElement config = esbUtils.loadResource("/artifacts/ESB/mediatorconfig/property/REST_URL_postfix.xml");
-        config = AXIOMUtil
-                .stringToOM(config.toString().replace("http://localhost:8280/services/", getProxyServiceURLHttp("")));
-        updateESBConfiguration(config);
-        client = new HttpClientUtil();
-    }
-
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Test-REST URL Postfix")
     public void testRESTUrlPostFix() throws Exception {
-        response = client
-                .getWithContentType(getProxyServiceURLHttp("REST_URL_POSTFIX_TestProxy") + "/echoString", "in=WSO2",
-                        MediaType.APPLICATION_FORM_URLENCODED);
-        assertNotNull(response, "Response is null");
-        assertEquals(response.getQName().getLocalPart(), "echoStringResponse", "Tag does not match");
-        assertEquals(response.getFirstElement().getLocalName(), "return", "Tag does not match");
-        assertEquals(response.getFirstElement().getText(), "charitha", "Text does not match");
-        //TODO: Checking the following log message in ESB log."rest-url-value = /echoString?s=wso2"
+
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "text/plain");
+        String endpoint = "http://localhost:8480/services/REST_URL_POSTFIX_TestProxy";
+
+        HttpResponse response = client.doGet(endpoint, headers);
+        String responsePayload = client.getResponsePayload(response);
+
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Metric retrieval failed");
+        assertNotNull(responsePayload, "Response is null");
+        assertEquals(responsePayload, "IBM", "Text does not match");
 
     }
 }

@@ -18,7 +18,7 @@
 
 package org.wso2.carbon.esb.rest.test.security;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.BeforeTest;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
@@ -66,7 +66,7 @@ public class NonAdminUserCreationTestCase {
     }
 
     protected static User getUser() {
-        Assert.assertNotNull("User is not created. Please create the user first", nonAdminUser);
+        Assert.assertNotNull(nonAdminUser, "User is not created. Please create the user first");
         return nonAdminUser;
     }
 

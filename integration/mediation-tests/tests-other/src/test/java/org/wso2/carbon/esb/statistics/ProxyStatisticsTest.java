@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Map;
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -50,7 +50,7 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "StatisticTestResources" + File.separator
-                        + "synapse.properties"));
+                        + "deployment.toml"));
 
         super.init();
         thriftServer.waitToReceiveEvents(20000); //waiting for esb to send artifact config data to the thriftserver
@@ -66,8 +66,8 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events to the
         // backend
-        Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                            thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 100,
+                            "Hundred statistics events are required, but different number is found");
 
     }
 
@@ -78,7 +78,7 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
 
         axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "WSO2");
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events
-        Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 1, "Statistics event is received");
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
                 .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
@@ -100,10 +100,10 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
         mediatorList.add("StockQuoteProxy@3:SendMediator");
 
         //Checking whether all the mediators are present in the event
-        Assert.assertEquals("Four configuration events are required", 4, eventList.size());
+        Assert.assertEquals(eventList.size(), 4, "Four configuration events are required");
 
         for (String mediatorId : mediatorList) {
-            Assert.assertTrue("Mediator not found", allMediatorEventIds.contains(mediatorId));
+            Assert.assertTrue(allMediatorEventIds.contains(mediatorId), "Mediator not found");
         }
     }
 
@@ -116,8 +116,8 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteProxy"), null, "WSO2");
         }
         thriftServer.waitToReceiveEvents(20000, 100); //wait to esb for asynchronously send statistics events
-        Assert.assertEquals("Hundred statistics events are required, but different number is found", 100,
-                            thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 100,
+                            "Hundred statistics events are required, but different number is found");
     }
 
     @Test(groups = {"wso2.esb"}, description = "Proxy SpiltAggregate statistics event data check")
@@ -127,7 +127,7 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
 
         axis2Client.sendMultipleQuoteRequest(getProxyServiceURLHttp("SplitAggregateProxy"), null, "WSO2", 4);
         thriftServer.waitToReceiveEvents(20000, 1);//wait to esb for asynchronously send statistics events to the
-        Assert.assertEquals("Statistics event is received", 1, thriftServer.getMsgCount());
+        Assert.assertEquals(thriftServer.getMsgCount(), 1, "Statistics event is received");
         Map<String, Object> aggregatedEvent = ESBTestCaseUtils
                 .decompress((String) thriftServer.getPreservedEventList().get(0).getPayloadData()[1]);
         ArrayList eventList = (ArrayList) aggregatedEvent.get("events");
@@ -158,10 +158,10 @@ public class ProxyStatisticsTest extends ESBIntegrationTest {
         mediatorList.add("SplitAggregateProxy@7:SendMediator");
 
         //Checking whether all the mediators are present in the event
-        Assert.assertEquals("Twenty Five configuration events are required", 25, eventList.size());
+        Assert.assertEquals(eventList.size(), 25, "Twenty Five configuration events are required");
 
         for (String mediatorId : mediatorList) {
-            Assert.assertTrue("Mediator not found", allMediatorEventIds.contains(mediatorId));
+            Assert.assertTrue(allMediatorEventIds.contains(mediatorId), "Mediator not found");
         }
     }
 

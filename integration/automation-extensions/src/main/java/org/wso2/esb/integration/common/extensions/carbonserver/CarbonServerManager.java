@@ -126,6 +126,7 @@ public class CarbonServerManager {
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
                 tempProcess = Runtime.getRuntime().exec(cmdArray, null, commandDir);
+                process = tempProcess;
             }
 
             errorStreamHandler = new ServerLogReader("errorStream", tempProcess.getErrorStream());
@@ -154,7 +155,6 @@ public class CarbonServerManager {
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException("Unable to start server", e);
         }
-        process = tempProcess;
     }
 
     private String[] mergePropertiesToCommandArray(String[] parameters, String[] cmdArray) {
@@ -223,9 +223,13 @@ public class CarbonServerManager {
         String srcDirectory =
                 (System.getProperty("basedir", ".")) + File.separator + "target" + File.separator + "samples"
                         + File.separator;
-        log.info("Copying resources from " + srcDirectory);
-        FileUtils.copyDirectoryToDirectory(new File(srcDirectory), new File(carbonHome));
-        log.info("Completed copying resources");
+        File srcFile = new File(srcDirectory);
+
+        if ( srcFile.exists() ) {
+            log.info("Copying resources from " + srcDirectory);
+            FileUtils.copyDirectoryToDirectory( srcFile , new File(carbonHome));
+            log.info("Completed copying resources");
+        }
     }
 
     public synchronized void serverShutdown(int portOffset, boolean isRestart) throws AutomationFrameworkException {
@@ -262,6 +266,9 @@ public class CarbonServerManager {
             if (portOffset == 0) {
                 System.clearProperty(ExtensionConstants.CARBON_HOME);
             }
+        }
+        else {
+            log.warn("Trying to shut down a server that hasn't completed startup. Hence aborting shutdown.");
         }
     }
 

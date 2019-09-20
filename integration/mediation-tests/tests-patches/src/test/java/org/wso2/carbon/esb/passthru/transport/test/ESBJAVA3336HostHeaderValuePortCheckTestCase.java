@@ -49,7 +49,7 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         serverConfigurationManager = new ServerConfigurationManager(context);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j.properties");
+        File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
         applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.wire", "DEBUG");
         serverConfigurationManager.restartMicroIntegrator();
         init();

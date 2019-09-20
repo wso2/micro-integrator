@@ -1,0 +1,13 @@
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="entityBodyProxy" startOnLoad="true" statistics="disable" trace="disable" transports="http,https">
+    <target>
+        <inSequence>
+            <property name="HTTP_SC" value="200" scope="axis2"/>
+            <payloadFactory media-type="text">
+                <format>IBM</format>
+                <args/>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+    </target>
+    <description/>
+</proxy>

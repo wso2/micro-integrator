@@ -79,7 +79,6 @@
                 <exclude>**/lib/endorsed/xalan*.jar</exclude>
                 <exclude>**/conf/tomcat/catalina-server.xml</exclude>
                 <exclude>**/conf/tomcat/webapp-classloading-environments.xml</exclude>
-                <exclude>**/conf/registry.xml</exclude>
                 <exclude>**/conf/tomcat/web.xml</exclude>
                 <exclude>**/webapp-mode/WEB-INF/web.xml</exclude>
                 <exclude>**/conf/tomcat/carbon/WEB-INF/web.xml</exclude>
@@ -88,7 +87,7 @@
                 <exclude>**/wso2/components/plugins/axis2-transport-sms_1.1.1.wso2v2.jar</exclude>
                 <exclude>**/wso2/components/plugins/axis2-transport-mail_1.1.1.wso2v2.jar</exclude>
                 <exclude>**/wso2/components/plugins/jsch_0.1.49.wso2v1.jar</exclude>
-		        <exclude>**/features/**</exclude>
+                <exclude>**/features/**</exclude>
             </excludes>
         </fileSet>
 
@@ -96,6 +95,8 @@
             <directory>target/wso2carbon-core-${carbon.kernel.version}</directory>
             <outputDirectory>wso2mi-${pom.version}</outputDirectory>
             <excludes>
+<!--                TODO add version and echo services-->
+                <exclude>**/*.aar</exclude>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/wso2</exclude>
                 <exclude>**/repository/conf/**</exclude>
@@ -133,6 +134,7 @@
                 <exclude>**/repository/components/plugins/axis2-transport-mail_1.1.1.wso2v2.jar
                 </exclude>
                 <exclude>**/repository/components/plugins/jsch_0.1.49.wso2v1.jar</exclude>
+                <exclude>**/repository/resources/conf/**</exclude>
             </excludes>
         </fileSet>
 
@@ -145,7 +147,7 @@
                 <exclude>**/axis2/axis2.xml</exclude>
                 <exclude>**/axis2/tenant-axis2.xml</exclude>
                 <exclude>**/synapse.xml</exclude>
-                <exclude>**/log4j.properties</exclude>
+                <exclude>**/log4j2.properties</exclude>
                 <exclude>**/services/sample01.aar</exclude>
                 <exclude>**/repository/services/version/**</exclude>
                 <exclude>**/version.txt</exclude>
@@ -159,19 +161,26 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/lib/endorsed/xalan*.jar</exclude>
-                <exclude>**/tomcat/carbon/WEB-INF/web.xml</exclude>
-                <exclude>**/tomcat/carbon/META-INF/context.xml</exclude>
-                <exclude>**//tomcat/catalina-server.xml</exclude>
+                <exclude>**/tomcat/**</exclude>
                 <exclude>**/launch.ini</exclude>
+                <exclude>**/deployment.toml</exclude>
             </excludes>
         </fileSet>
 
+        <fileSet>
+            <directory>./src/resources/config-tool</directory>
+            <outputDirectory>wso2mi-${pom.version}/repository/resources/conf</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/bin</directory>
             <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/*.bat</exclude>
+                <exclude>**/**bootstrap**</exclude>
                 <exclude>**/wrapper.conf</exclude>
                 <exclude>build.xml</exclude>
                 <exclude>version.txt</exclude>
@@ -270,25 +279,6 @@
         </fileSet>
 
         <fileSet>
-            <directory>target/wso2carbon-core-${carbon.kernel.version}/lib</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
-            <excludes>
-                <exclude>**/*.sh</exclude>
-                <exclude>**/log4j.properties</exclude>
-                <exclude>**/version.txt</exclude>
-                <exclude>**/wso2carbon-version.txt</exclude>
-                <exclude>**/wso2server.bat</exclude>
-                <exclude>**/README.txt</exclude>
-                <exclude>**/LICENSE.txt</exclude>
-                <exclude>**/release-notes.html</exclude>
-                <exclude>**/carbon.xml</exclude>
-                <exclude>**/endorsed/xalan*.jar</exclude>
-                <exclude>**/endorsed/geronimo-jms_1.1_spec*.jar</exclude>
-            </excludes>
-        </fileSet>
-
-
-        <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/components/dropins
             </directory>
             <outputDirectory>wso2mi-${pom.version}/dropins</outputDirectory>
@@ -296,20 +286,6 @@
             </excludes>
         </fileSet>
 
-        <fileSet>
-            <directory>src/resources</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
-            <includes>
-                <include>**/saxon9he.jar</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/resources</directory>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib/</outputDirectory>
-            <includes>
-                <include>esapi-2.0.1.jar</include>
-            </includes>
-        </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/repository/components/lib
             </directory>
@@ -358,9 +334,9 @@
         </file>
 
         <file>
-            <source>src/conf/log4j.properties</source>
+            <source>src/conf/log4j2.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>log4j.properties</destName>
+            <destName>log4j2.properties</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -372,32 +348,19 @@
             <fileMode>644</fileMode>
         </file>
 
-        <file>
-            <source>src/conf/tasks-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/
-            </outputDirectory>
-        </file>
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-broker.xml
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
+<!--        <file>-->
+<!--            <source>-->
+<!--                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/event-broker.xml-->
+<!--            </source>-->
+<!--            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>-->
+<!--            <fileMode>644</fileMode>-->
+<!--        </file>-->
 
         <file>
             <source>
                 ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/data-bridge/data-agent-config.xml
             </source>
             <outputDirectory>wso2mi-${pom.version}/conf/data-bridge</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-
-        <file>
-            <source>
-                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/wso2/conf/rule-engine-config.xml
-            </source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
@@ -417,18 +380,6 @@
         </file>
 
         <file>
-            <source>src/conf/context.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/MATA-INF</outputDirectory>
-            <destName>context.xml</destName>
-        </file>
-
-        <file>
-            <source>src/conf/web.xml</source>
-            <outputDirectory>wso2mi-${pom.version}/conf/tomcat/carbon/WEB-INF</outputDirectory>
-            <destName>web.xml</destName>
-        </file>
-
-        <file>
             <source>src/conf/axis2_blocking_client.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf/axis2</outputDirectory>
             <destName>axis2_blocking_client.xml</destName>
@@ -439,6 +390,14 @@
             <source>src/conf/datasources.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>datasources.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
+            <source>src/conf/datasources/master-datasources.xml</source>
+            <outputDirectory>wso2mi-${pom.version}/conf/datasources</outputDirectory>
+            <destName>master-datasources.xml</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
@@ -468,6 +427,14 @@
         </file>
 
         <file>
+            <source>src/conf/carbon.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf</outputDirectory>
+            <destName>carbon.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+
+        <file>
             <source>src/conf/jndi.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>jndi.properties</destName>
@@ -476,8 +443,9 @@
         </file>
 
         <file>
-            <source>src/conf/etc/logging-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
+            <source>src/conf/etc/pax-logging.properties</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/
+            </outputDirectory>
             <fileMode>644</fileMode>
         </file>
 
@@ -508,14 +476,14 @@
             <fileMode>644</fileMode>
         </file>
 
-        <!--File based Synapse registry for Micro EI-->
+        <!-- Cipher Tool Files -->
         <file>
-            <source>src/conf/registry.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/synapse-configs/default
-            </outputDirectory>
-            <filtered>true</filtered>
+            <source>
+                ../p2-profile/target/wso2carbon-core-${carbon.kernel.version}/lib/org.wso2.ciphertool-${cipher.tool.version}.jar
+            </source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/wso2/lib</outputDirectory>
+            <fileMode>644</fileMode>
         </file>
-
         <file>
             <source>src/conf/synapse-handlers.xml</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
@@ -586,6 +554,13 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/conf/deployment.toml</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>deployment.toml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
     </files>
 
     <dependencySets>
@@ -593,7 +568,34 @@
             <useProjectArtifact>false</useProjectArtifact>
             <outputDirectory>wso2mi-${pom.version}/wso2/lib</outputDirectory>
             <includes>
-                <include>org.wso2.ei:org.wso2.carbon.micro.integrator.server:jar</include>
+                <include>org.wso2.ei:org.wso2.micro.integrator.server:jar</include>
+                <include>net.sf.saxon:Saxon-HE:jar</include>
+                <include>xerces.wso2:xercesImpl</include>
+                <include>commons-logging:commons-logging</include>
+                <!--
+                    woodstox should be in class path to xml builder (need javax.xml.stream.XMLInputFactory
+                        implementation to axis2)
+                -->
+                <include>org.codehaus.woodstox:woodstox-core-asl:jar</include>
+                <include>net.consensys.cava:cava-toml:jar</include>
+                <include>org.antlr:antlr4-runtime:jar</include>
+                <include>com.google.code.gson:gson:jar</include>
+                <include>com.google.guava:guava:jar</include>
+                <include>org.jsoup:jsoup:jar</include>
+                <include>com.google.re2j:re2j:jar</include>
+                <include>com.fasterxml.jackson.core:jackson-core:jar</include>
+                <include>com.fasterxml.jackson.core:jackson-databind:jar</include>
+                <include>com.fasterxml.jackson.core:jackson-annotations:jar</include>
+                <include>commons-codec:commons-codec:jar</include>
+                <include>com.hubspot.jinjava:jinjava:jar</include>
+                <include>org.slf4j:slf4j-api:jar</include>
+                <include>commons-lang.wso2:commons-lang:jar</include>
+                <include>org.apache.commons:commons-lang3:jar</include>
+                <include>org.wso2.config.mapper:config-mapper:jar</include>
+                <include>org.apache.logging.log4j:log4j-api:jar</include>
+                <include>org.apache.logging.log4j:log4j-core:jar</include>
+                <include>org.apache.logging.log4j:log4j-jcl:jar</include>
+                <include>org.slf4j:slf4j-simple:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
@@ -605,10 +607,11 @@
             </includes>
         </dependencySet>
         <dependencySet>
-            <outputDirectory>wso2mi-${pom.version}/wso2/lib/endorsed</outputDirectory>
+            <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <includes>
-                <include>javax.jms:javax.jms-api:jar</include>
+                <include>org.wso2.ei:org.wso2.micro.integrator.bootstrap:jar</include>
             </includes>
         </dependencySet>
+
     </dependencySets>
 </assembly>

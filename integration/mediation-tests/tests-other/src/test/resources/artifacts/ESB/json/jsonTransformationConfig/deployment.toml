@@ -1,0 +1,15 @@
+[server]
+hostname = "localhost"
+
+[transport.passthru.http.listener]
+port=8280
+
+[transport.passthru.https.listener]
+port=8243
+
+[mediation]
+synapse.enable_namespace_declaration = true
+synapse.build_valid_nc_name = true
+synapse.enable_auto_primitive = false
+synapse.json_out_auto_array = false
+synapse.preserve_namespace_on_xml_to_json=true

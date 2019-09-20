@@ -1,0 +1,15 @@
+[server]
+hostname = "localhost"
+
+[transport.passthru.http.listener]
+port=8280
+
+[transport.passthru.https.listener]
+port=8243
+
+[user_store]
+type = "database"
+
+[transport.http]
+force_xml_validation=true
+force_json_validation=true

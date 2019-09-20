@@ -17,17 +17,14 @@
  */
 package org.wso2.carbon.esb.mediator.test.property;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.OMException;
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.annotations.BeforeClass;
+import org.apache.http.HttpResponse;
+import org.testng.Assert;
 import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.test.utils.http.client.HttpClientUtil;
+import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import javax.ws.rs.core.MediaType;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -38,32 +35,40 @@ import static org.testng.Assert.assertNotNull;
 
 public class PropertyIntegrationNO_ENTITY_BODY_PropertyTest extends ESBIntegrationTest {
 
-    private OMElement response;
-    private HttpClientUtil client;
+    private SimpleHttpClient client;
+    private HttpResponse response;
 
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        OMElement config = esbUtils.loadResource("/artifacts/ESB/mediatorconfig/property/NO_ENTITY_BODY.xml");
-        config = AXIOMUtil
-                .stringToOM(config.toString().replace("http://localhost:8280/services/", getProxyServiceURLHttp("")));
-        updateESBConfiguration(config);
-        client = new HttpClientUtil();
+    public HttpResponse sendGet(String endpoint, Map<String, String> headers) throws Exception {
+
+        client = new SimpleHttpClient();
+        response = client.doGet(endpoint, headers);
+        return response;
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Test-Without No_ENTITY_BODY Property")
     public void testWithoutNoEntityBodyPropertTest() throws Exception {
-        response = client.getWithContentType(getProxyServiceURLHttp("Axis2ProxyService1") + "/echoString?in=IBM", "",
-                MediaType.APPLICATION_FORM_URLENCODED);
-        assertNotNull(response, "Response is null");
-        assertEquals(response.getFirstElement().getText(), "IBM", "Text does not match");
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "text/plain");
+        String endpoint = "http://localhost:8480/services/Axis2ProxyService1";
+        response = sendGet(endpoint, headers);
+        String responsePayload = client.getResponsePayload(response);
+
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Response code not 200");
+        assertNotNull(responsePayload, "Response is null");
+        assertEquals(responsePayload, "IBM", "Text does not match");
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", expectedExceptions = OMException.class, description = "Test-With NO_ENTITY_BODY")
+    @Test(groups = "wso2.esb", description = "Test-With NO_ENTITY_BODY")
     public void testWithNoEntityBodyPropertTest() throws Exception {
-        client.getWithContentType(getProxyServiceURLHttp("Axis2ProxyService2") + "/echoString", "in=IBM",
-                MediaType.APPLICATION_FORM_URLENCODED);
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "text/plain");
+        String endpoint = "http://localhost:8480/services/Axis2ProxyService2";
+        response = sendGet(endpoint, headers);
+        String responsePayload = client.getResponsePayload(response);
+
+        Assert.assertEquals(response.getStatusLine().getStatusCode(), 200, "Response code not 200");
+        Assert.assertTrue(responsePayload.isEmpty(), "Expected empty response but found " + responsePayload);
     }
 }

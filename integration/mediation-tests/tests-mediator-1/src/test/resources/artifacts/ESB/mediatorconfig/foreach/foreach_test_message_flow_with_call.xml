@@ -3,7 +3,7 @@
     <registry provider="org.wso2.carbon.mediation.registry.WSO2Registry">
         <parameter name="cachableDuration">15000</parameter>
     </registry>
-    <taskManager provider="org.wso2.carbon.mediation.ntask.NTaskTaskManager"/>
+    <taskManager provider="org.wso2.micro.integrator.mediation.ntask.NTaskTaskManager"/>
     <proxy name="acceptProxy" startOnLoad="true" transports="https http">
         <description/>
         <target>

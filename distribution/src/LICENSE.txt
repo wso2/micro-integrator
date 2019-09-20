@@ -254,10 +254,10 @@ org.wso2.carbon.mediator.service_4.6.150.jar                                    
 org.wso2.carbon.mediator.smooks_4.6.150.jar                                     bundle         apache2   19527     
 org.wso2.carbon.message.processor_4.6.150.jar                                   bundle         apache2   19569     
 org.wso2.carbon.message.store_4.6.150.jar                                       bundle         apache2   19571     
-org.wso2.carbon.micro.integrator.core_1.0.0.jar                                 bundle         apache2   19518     
-org.wso2.carbon.micro.integrator.management.apis_1.0.0.jar                      bundle         apache2   19525     
-org.wso2.carbon.micro.integrator.security_1.0.0.jar                             bundle         apache2   19568     
-org.wso2.carbon.micro.integrator.server-1.0.0.jar                               bundle         apache2   19603     
+org.wso2.micro.integrator.core_1.0.0.jar                                 bundle         apache2   19518
+org.wso2.micro.integrator.management.apis_1.0.0.jar                      bundle         apache2   19525
+org.wso2.micro.integrator.security_1.0.0.jar                             bundle         apache2   19568
+org.wso2.micro.integrator.server-1.0.0.jar                               bundle         apache2   19603
 org.wso2.carbon.ndatasource.capp.deployer_4.6.65.jar                            bundle         apache2   19176     
 org.wso2.carbon.ndatasource.common_4.4.40.jar                                   bundle         apache2   19083     
 org.wso2.carbon.ndatasource.core_4.4.40.jar                                     bundle         apache2   19063     

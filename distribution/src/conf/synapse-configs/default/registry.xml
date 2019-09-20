@@ -1,6 +1,6 @@
-<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml version="1.0" encoding="windows-1252"?>
 <!--
-  ~ Copyright (c) 2016, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
   ~
   ~ WSO2 Inc. licenses this file to you under the Apache License,
   ~ Version 2.0 (the "License"); you may not use this file except
@@ -16,10 +16,17 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-
-<!-- Registry declaration of the WSO2 EI -->
-<registry xmlns="http://ws.apache.org/ns/synapse" provider="org.wso2.carbon.mediation.registry.WSO2Registry">
-    <!--all resources loaded from the URL registry would be
-    cached for this number of milliseconds -->
+<!-- Registry declaration of the WSO2 micro-integrator -->
+<registry xmlns="http://ws.apache.org/ns/synapse" provider="org.wso2.micro.integrator.registry.MicroIntegratorRegistry">
     <parameter name="cachableDuration">15000</parameter>
+    <!--
+        Uncomment below parameters (ConfigRegRoot, GovRegRoot, LocalRegRoot) to configure registry root paths
+        Default : <EI_HOME>/wso2/micro-integrator/registry/{governance | config | local}
+        Example : <parameter name="GovRegRoot">file:///Users/JohnDoe/registry/governance</parameter>
+    -->
+    <!--
+    <parameter name="ConfigRegRoot">{Root directory path for configuration Registry}</parameter>
+    <parameter name="GovRegRoot">{Root directory path for governance Registry}</parameter>
+    <parameter name="LocalRegRoot">{Root directory path for local Registry}</parameter>
+    -->
 </registry>

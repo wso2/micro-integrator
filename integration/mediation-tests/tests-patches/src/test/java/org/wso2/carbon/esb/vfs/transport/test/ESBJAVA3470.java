@@ -18,7 +18,7 @@ package org.wso2.carbon.esb.vfs.transport.test;
  * under the License.
  */
 
-import junit.framework.Assert;
+import org.testng.Assert;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.IOUtils;
@@ -82,10 +82,6 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyMIConfiguration(
-                new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
-        super.init();
-
         carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
 
         setupSftpFolders(carbonHome);
@@ -148,7 +144,6 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();
-        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 
     /**

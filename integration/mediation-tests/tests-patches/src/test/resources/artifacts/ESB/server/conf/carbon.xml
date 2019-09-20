@@ -126,7 +126,7 @@
          the define value + Offset.
          e.g. Offset=2 and HTTPS port=9443 will set the effective HTTPS port to 9445
          -->
-        <Offset>0</Offset>
+        <Offset>10</Offset>
 
         <!-- The JMX Ports -->
         <JMX>
@@ -220,49 +220,6 @@
 
     <!-- The Max time a thread should take for execution in seconds -->
     <MaxThreadExecutionTime>600</MaxThreadExecutionTime>
-
-    <!--
-        A flag to enable or disable Ghost Deployer. By default this is set to false. That is
-        because the Ghost Deployer works only with the HTTP/S transports. If you are using
-        other transports, don't enable Ghost Deployer.
-    -->
-    <GhostDeployment>
-        <Enabled>false</Enabled>
-    </GhostDeployment>
-
-
-    <!--
-        Eager loading or lazy loading is a design pattern commonly used in computer programming which
-        will initialize an object upon creation or load on-demand. In carbon, lazy loading is used to
-        load tenant when a request is received only. Similarly Eager loading is used to enable load
-        existing tenants after carbon server starts up. Using this feature, you will be able to include
-        or exclude tenants which are to be loaded when server startup.
-
-        We can enable only one LoadingPolicy at a given time.
-
-        1. Tenant Lazy Loading
-           This is the default behaviour and enabled by default. With this policy, tenants are not loaded at
-           server startup, but loaded based on-demand (i.e when a request is received for a tenant).
-           The default tenant idle time is 30 minutes.
-
-        2. Tenant Eager Loading
-           This is by default not enabled. It can be be enabled by un-commenting the <EagerLoading> section.
-           The eager loading configurations supported are as below. These configurations can be given as the
-           value for <Include> element with eager loading.
-                (i)Load all tenants when server startup             -   *
-                (ii)Load all tenants except foo.com & bar.com       -   *,!foo.com,!bar.com
-                (iii)Load only foo.com &  bar.com to be included    -   foo.com,bar.com
-    -->
-    <Tenant>
-        <LoadingPolicy>
-            <LazyLoading>
-                <IdleTime>30</IdleTime>
-            </LazyLoading>
-            <!-- <EagerLoading>
-                   <Include>*,!foo.com,!bar.com</Include>
-            </EagerLoading>-->
-        </LoadingPolicy>
-    </Tenant>
 
     <!--
      Caching related configurations
@@ -590,26 +547,32 @@
     <HttpGetRequestProcessors>
         <Processor>
             <Item>info</Item>
-            <Class>org.wso2.carbon.core.transports.util.InfoProcessor</Class>
+            <Class>org.wso2.micro.core.transports.util.InfoProcessor</Class>
         </Processor>
         <Processor>
             <Item>wsdl</Item>
-            <Class>org.wso2.carbon.core.transports.util.Wsdl11Processor</Class>
+            <Class>org.wso2.micro.core.transports.util.Wsdl11Processor</Class>
         </Processor>
         <Processor>
             <Item>wsdl2</Item>
-            <Class>org.wso2.carbon.core.transports.util.Wsdl20Processor</Class>
+            <Class>org.wso2.micro.core.transports.util.Wsdl20Processor</Class>
         </Processor>
         <Processor>
             <Item>xsd</Item>
-            <Class>org.wso2.carbon.core.transports.util.XsdProcessor</Class>
+            <Class>org.wso2.micro.core.transports.util.XsdProcessor</Class>
         </Processor>
+        <!--Uncomment following to enable swagger support for APIs-->
+        <!--Processor>
+            <Item>swagger.json</Item>
+            <Class>org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerJsonProcessor</Class>
+        </Processor>
+        <Processor>
+            <Item>swagger.yaml</Item>
+            <Class>org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor</Class>
+        </Processor-->
     </HttpGetRequestProcessors>
 
-    <!-- Deployment Synchronizer Configuration. Enable value to true when running with "svn based" dep sync.
-	In master nodes you need to set both AutoCommit and AutoCheckout to true
-	and in  worker nodes set only AutoCheckout to true.
-    -->
+    <!-- Deployment Synchronizer is not supported in Micro Integrator -->
     <DeploymentSynchronizer>
         <Enabled>false</Enabled>
         <AutoCommit>false</AutoCommit>
@@ -621,18 +584,8 @@
         <SvnUrlAppendTenantId>true</SvnUrlAppendTenantId>
     </DeploymentSynchronizer>
 
-    <!-- Deployment Synchronizer Configuration. Uncomment the following section when running with "registry based" dep sync.
-        In master nodes you need to set both AutoCommit and AutoCheckout to true
-        and in  worker nodes set only AutoCheckout to true.
-    -->
-    <!--<DeploymentSynchronizer>
-        <Enabled>true</Enabled>
-        <AutoCommit>false</AutoCommit>
-        <AutoCheckout>true</AutoCheckout>
-    </DeploymentSynchronizer>-->
-
     <!-- Mediation persistence configurations. Only valid if mediation features are available i.e. ESB -->
-    <MediationConfig>
+   <MediationConfig>
         <LoadFromRegistry>false</LoadFromRegistry>
         <SaveToFile>false</SaveToFile>
         <Persistence>enabled</Persistence>
@@ -653,43 +606,7 @@
     -->
     <RequireCarbonServlet>${require.carbon.servlet}</RequireCarbonServlet>
 
-    <!--
-    Carbon H2 OSGI Configuration
-    By default non of the servers start.
-        name="web" - Start the web server with the H2 Console
-        name="webPort" - The port (default: 8082)
-        name="webAllowOthers" - Allow other computers to connect
-        name="webSSL" - Use encrypted (HTTPS) connections
-        name="tcp" - Start the TCP server
-        name="tcpPort" - The port (default: 9092)
-        name="tcpAllowOthers" - Allow other computers to connect
-        name="tcpSSL" - Use encrypted (SSL) connections
-        name="pg" - Start the PG server
-        name="pgPort"  - The port (default: 5435)
-        name="pgAllowOthers"  - Allow other computers to connect
-        name="trace" - Print additional trace information; for all servers
-        name="baseDir" - The base directory for H2 databases; for all servers  
-    -->
-    <!--H2DatabaseConfiguration>
-        <property name="web" />
-        <property name="webPort">8082</property>
-        <property name="webAllowOthers" />
-        <property name="webSSL" />
-        <property name="tcp" />
-        <property name="tcpPort">9092</property>
-        <property name="tcpAllowOthers" />
-        <property name="tcpSSL" />
-        <property name="pg" />
-        <property name="pgPort">5435</property>
-        <property name="pgAllowOthers" />
-        <property name="trace" />
-        <property name="baseDir">${carbon.home}</property>
-    </H2DatabaseConfiguration-->
-    <!--Disabling statistics reporter by default-->
     <StatisticsReporterDisabled>true</StatisticsReporterDisabled>
-
-    <!-- Enable accessing Admin Console via HTTP -->
-    <!-- EnableHTTPAdminConsole>true</EnableHTTPAdminConsole -->
 
     <!--
        Default Feature Repository of WSO2 Carbon.
@@ -699,26 +616,26 @@
 	    <RepositoryURL>http://product-dist.wso2.com/p2/carbon/releases/wilkes/</RepositoryURL>
     </FeatureRepository>
 
-    <!--
-	Configure API Management
-   -->
-   <APIManagement>
-	
-	<!--Uses the embedded API Manager by default. If you want to use an external 
-	API Manager instance to manage APIs, configure below  externalAPIManager-->
-	
-	<Enabled>true</Enabled>
-	
-	<!--Uncomment and configure API Gateway and 
-	Publisher URLs to use external API Manager instance-->
-	
-	<!--ExternalAPIManager>
+   <!--
+    Configuring EI analytics server details.
+    mediation.flow.statistics.enable has to be set to true in synapse.properties
+    file in addition to these configs
+    -->
+   <Analytics>
+        <!--
+            Server URL of the analytics server. Events are published to this URL
+            This url is in the format <protocol>://<hostname or ip>:<port>.
+            For the HA mode use a comma seperated list of urls of the nalytics nodes to
+            enable publishing events to the servers in a round robin manner.
+            e.g.; tcp://analytics-server-1:7612,tcp://analytics-server-2:7612
+         -->
+        <ServerURL>tcp://localhost:7612</ServerURL>
+        <AuthServerURL>ssl://localhost:7712</AuthServerURL>
+        <!--
+            Credentails of the admin user of the analytics server.
+        -->
+        <Username>admin</Username>
+        <Password>admin</Password>
+   </Analytics>
 
-		<APIGatewayURL>http://localhost:8281</APIGatewayURL>
-		<APIPublisherURL>http://localhost:8281/publisher</APIPublisherURL>
-
-	</ExternalAPIManager-->
-	
-	<LoadAPIContextsInServerStartup>true</LoadAPIContextsInServerStartup>
-   </APIManagement>
 </Server>

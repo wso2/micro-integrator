@@ -72,7 +72,7 @@ rem loop through the libs and add them to the class path
 cd "%CARBON_HOME%"
 
 set CARBON_CLASSPATH=.\conf
-FOR %%c in ("%CARBON_HOME%\wso2\components\plugins\org.wso2.carbon.micro.integrator.security*.jar") DO set
+FOR %%c in ("%CARBON_HOME%\wso2\components\plugins\org.wso2.micro.integrator.security*.jar") DO set
 CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\wso2\components\plugins\%%~nc%%~xc"
 
 rem ----- Execute The Requested Command ---------------------------------------
@@ -80,6 +80,6 @@ echo Using CARBON_HOME:   %CARBON_HOME%
 echo Using JAVA_HOME:    %JAVA_HOME%
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 
-%_RUNJAVA% %JAVA_OPTS% -Dcarbon.home="%CARBON_HOME%" -cp "%CARBON_CLASSPATH%" org.wso2.carbon.micro.integrator.security.vault.VaultTool %*
+%_RUNJAVA% %JAVA_OPTS% -Dcarbon.home="%CARBON_HOME%" -Dconf.location="%CARBON_HOME%/conf" -cp "%CARBON_CLASSPATH%" org.wso2.micro.integrator.security.vault.VaultTool %*
 endlocal
 :end
