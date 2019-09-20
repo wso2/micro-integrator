@@ -41,6 +41,10 @@
     </licenses>
 
     <modules>
+        <module>org.wso2.micro.integrator.ndatasource.common</module>
+        <module>org.wso2.micro.integrator.ndatasource.core</module>
+        <module>org.wso2.micro.integrator.ndatasource.rdbms</module>
+        <module>org.wso2.micro.integrator.ndatasource.capp.deployer</module>
         <module>org.wso2.micro.integrator.core</module>
         <module>org.wso2.micro.integrator.server</module>
         <module>org.wso2.micro.integrator.initializer</module>
@@ -49,5 +53,6 @@
         <module>org.wso2.micro.integrator.extensions</module>
         <module>crypto-service</module>
         <module>org.wso2.micro.integrator.bootstrap</module>
+        <module>data</module>
     </modules>
 </project>

@@ -23,12 +23,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.NetworkUtils;
 import org.wso2.micro.core.transports.http.HttpTransportListener;
-//import org.wso2.carbon.core.util.NetworkUtils;
 
 import java.io.File;
 import java.net.SocketException;
 
-//import org.wso2.carbon.core.multitenancy.transports.DummyTransportListener;
 
 /**
  *

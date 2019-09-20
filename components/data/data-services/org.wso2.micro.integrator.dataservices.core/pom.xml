@@ -1,0 +1,432 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~
+  ~ WSO2 Inc. licenses this file to you under the Apache License,
+  ~ Version 2.0 (the "License"); you may not use this file except
+  ~ in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied. See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <parent>
+        <groupId>org.wso2.ei</groupId>
+        <artifactId>data-services</artifactId>
+        <version>1.1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>org.wso2.micro.integrator.dataservices.core</artifactId>
+    <packaging>bundle</packaging>
+    <name>WSO2 Carbon - Data Services Core</name>
+    <url>http://wso2.org</url>
+    <description>WSO2 Data Services Core Bundle</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.wso2.orbit.org.jongo.wso2</groupId>
+            <artifactId>jongo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.commons</groupId>
+            <artifactId>org.wso2.carbon.event.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.olingo</groupId>
+            <artifactId>odata-server</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.ndatasource.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.ndatasource.rdbms</artifactId>
+        </dependency>
+        <!--<dependency>--><!--todo test and remove later - rajith-->
+        <!--<groupId>au.com.bytecode.opencsv</groupId>-->
+        <!--<artifactId>opencsv</artifactId>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>au.com.bytecode.opencsv.wso2</groupId>
+            <artifactId>opencsv</artifactId>
+        </dependency>
+        <!-- H2 jdbc driver for tests -->
+        <dependency>
+            <groupId>org.wso2.orbit.com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- MySQL jdbc driver -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.equinox</groupId>
+            <artifactId>javax.servlet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.derby.wso2</groupId>
+            <artifactId>derby</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.hp.hpl.jena.wso2</groupId>
+            <artifactId>arq</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata.wso2</groupId>
+            <artifactId>gdata-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.gdata.wso2</groupId>
+            <artifactId>gdata-spreadsheet</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.dataservices.common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.dataservices.sql.driver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.webharvest</groupId>
+            <artifactId>webharvest-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sf.saxon.wso2</groupId>
+            <artifactId>saxon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-httpclient.wso2</groupId>
+            <artifactId>commons-httpclient</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.htmlcleaner.wso2</groupId>
+            <artifactId>htmlcleaner</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.spec.javax.transaction</groupId>
+            <artifactId>jboss-transaction-api_1.1_spec</artifactId>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>ojdbc</groupId>-->
+        <!--<artifactId>ojdbc6</artifactId>-->
+        <!--<scope>test</scope>-->
+        <!--<systemPath>${basedir}/src/test/resources/lib/ojdbc6.jar</systemPath>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+        <!--<groupId>org.apache.poi.wso2</groupId>-->
+        <!--<artifactId>poi-scratchpad</artifactId>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.datastax.cassandra</groupId>
+            <artifactId>cassandra-driver-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.securevault</groupId>
+            <artifactId>org.wso2.securevault</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.schema.wso2</groupId>
+            <artifactId>XmlSchema</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.neethi.wso2</groupId>
+            <artifactId>neethi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.wso2</groupId>
+            <artifactId>jdbc-pool</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+        <!--<dependency>-->
+        <!--<groupId>com.google.api-client</groupId>-->
+        <!--<artifactId>google-api-client</artifactId>-->
+        <!--&lt;!&ndash;<version>1.18.0-rc</version>&ndash;&gt;-->
+        <!--<version>1.20.0</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>org.wso2.orbit.com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.json.wso2</groupId>
+            <artifactId>json</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.atomikos.wso2</groupId>
+            <artifactId>atomikos</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- <plugin>
+                 <groupId>org.apache.felix</groupId>
+                 <artifactId>maven-scr-plugin</artifactId>
+             </plugin> -->
+
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <!--<version>2.2</version>-->
+                <inherited>true</inherited>
+                <configuration>
+                    <forkMode>pertest</forkMode>
+                    <argLine>@{argLine} -enableassertions</argLine>
+                    <testFailureIgnore>false</testFailureIgnore>
+                    <skip>true</skip>
+                    <includes>
+                        <include>**/*TestSuite.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/MySQLTestSuite.java</exclude>
+                        <exclude>**/OracleTestSuite.java</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <instructions>
+                        <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
+                        <Bundle-Name>${project.artifactId}</Bundle-Name>
+                        <Private-Package>org.wso2.micro.integrator.dataservices.core.internal</Private-Package>
+                        <Export-Package>
+                            !org.wso2.micro.integrator.dataservices.core.internal;version="${project.version}",
+                            org.wso2.micro.integrator.dataservices.core.*;version="${project.version}"
+                        </Export-Package>
+                        <Import-Package>
+                            !org.wso2.micro.integrator.dataservices.core.*,
+                            javax.servlet.http;version="${javax.servlet.imp.pkg.version}",
+                            com.google.gdata.client;version="${gdata-core.orbit.imp.pkg.version}",
+                            com.google.gdata.data;version="${gdata-core.orbit.imp.pkg.version}",
+                            com.google.gdata.client.spreadsheet;version="${gdata-spreadsheet.orbit.imp.pkg.version}",
+                            com.google.gdata.data.spreadsheet;version="${gdata-spreadsheet.orbit.imp.pkg.version}",
+                            com.google.gdata.util;version="${gdata-core.orbit.imp.pkg.version}",
+                            org.apache.axiom.om;version="${axiom.orbit.imp.pkg.version}",
+                            org.jaxen;version="${axiom.orbit.imp.pkg.version}",
+                            org.apache.axiom.om.util;version="${axiom.orbit.imp.pkg.version}",
+                            org.apache.axiom.soap;version="${axiom.orbit.imp.pkg.version}",
+                            org.apache.axiom.om.impl.llom;version="${axiom.orbit.imp.pkg.version}",
+                            org.apache.axiom.om.impl.jaxp;version="${axiom.orbit.imp.pkg.version}",
+                            org.apache.axiom.om.impl.builder;version="${axiom.orbit.imp.pkg.version}",
+                            org.apache.axis2;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.i18n;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.receivers;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.context;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.description;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.schema;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.util;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.description.java2wsdl;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.engine;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.wsdl;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.databinding.utils;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.databinding.types;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.deployment;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.deployment.repository.util;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.deployment.util;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.axis2.transport.http;version="${apache.axis2.orbit.imp.pkg.version}",
+                            org.apache.commons.logging;version="${carbon.commons.logging.imp.pkg.version}",
+                            org.wso2.micro.integrator.dataservices.common;version="${project.version}",
+                            org.wso2.micro.integrator.dataservices.common.conf;version="${project.version}",
+                            org.apache.commons.io;version="${commons-io.orbit.imp.pkg.version}",
+                            org.apache.commons.io.output;version="${commons-io.orbit.imp.pkg.version}",
+                            org.wso2.micro.integrator.ndatasource.common;version="${project.version}",
+                            org.wso2.micro.integrator.ndatasource.common.spi;version="${project.version}",
+                            org.wso2.micro.integrator.ndatasource.core;version="${project.version}",
+                            org.wso2.micro.integrator.ndatasource.core.utils;version="${project.version}",
+                            org.wso2.micro.integrator.ndatasource.rdbms;version="${project.version}",
+                            com.hp.hpl.jena.query;version="${jena-arq.orbit.imp.pkg.version}",
+                            com.hp.hpl.jena.rdf.model;version="${jena-arq.orbit.imp.pkg.version}",
+                            com.hp.hpl.jena.datatypes.xsd;version="${jena-arq.orbit.imp.pkg.version}",
+                            com.hp.hpl.jena.sparql.lib.org.json;version="${jena-arq.orbit.imp.pkg.version}",
+                            com.datastax.driver.core;version="${cassandra-driver-core.orbit.imp.pkg.version}",
+                            com.datastax.driver.core.policies;version="${cassandra-driver-core.orbit.imp.pkg.version}",
+                            au.com.bytecode.opencsv;version="${opencsv.orbit.imp.pkg.version}",
+                            org.apache.poi.hssf.usermodel;version="${poi.orbit.imp.pkg.version}",
+                            org.apache.poi.openxml4j.exceptions;version="${poi-ooxml.orbit.imp.pkg.version}",
+                            org.apache.poi.ss.usermodel;version="${poi.orbit.imp.pkg.version}",
+                            org.apache.commons.collections4;version="${commons-collections4.orbit.imp.pkg.version}",
+<!--                            org.wso2.carbon.registry.core;version="${carbon.registry.imp.pkg.version}",-->
+<!--                            org.wso2.carbon.registry.core.service;version="${carbon.registry.imp.pkg.version}",-->
+<!--                            org.wso2.carbon.registry.core.exceptions;version="${carbon.registry.imp.pkg.version}",-->
+                            com.mongodb;version="${mongo-java-driver.orbit.imp.pkg.version}",
+                            com.mongodb.util;version="${mongo-java-driver.orbit.imp.pkg.version}",
+                            org.jongo;version="${jongo.orbit.imp.pkg.version}",
+                            org.wso2.micro.integrator.dataservices.sql.driver;version="${project.version}",
+                            org.wso2.micro.integrator.dataservices.sql.driver.parser;version="${project.version}",
+                            org.wso2.micro.integrator.dataservices.sql.driver.util;version="${project.version}",
+                            org.wso2.micro.integrator.dataservices.sql.driver.processor.reader;version="${project.version}",
+                            org.wso2.micro.integrator.dataservices.sql.driver.query;version="${project.version}",
+                            org.json;version="${json.orbit.imp.pkg.version}",
+                            org.webharvest.definition;version="${webharvest-core.orbit.imp.pkg.version}",
+                            org.webharvest.runtime;version="${webharvest-core.orbit.imp.pkg.version}",
+                            org.webharvest.runtime.variables;version="${webharvest-core.orbit.imp.pkg.version}",
+<!--                            org.wso2.carbon.event.core;version="${carbon-commons.imp.pkg.version}",-->
+<!--                            org.wso2.carbon.event.core.exception;version="${carbon-commons.imp.pkg.version}",-->
+<!--                            org.wso2.carbon.event.core.subscription;version="${carbon-commons.imp.pkg.version}",-->
+                            org.apache.commons.codec.binary;version="${commons-codec.orbit.imp.pkg.version}",
+                            org.wso2.securevault;version="${wso2.securevault.imp.pkg.version}",
+                            org.osgi.framework;version="${osgi.framework.imp.pkg.version}",
+                            <!--org.osgi.framework,--><!-- todo use this once osgi bundles were used to export correct versions -rajith -->
+                            org.osgi.service.component;version="${osgi.service.imp.pkg.version}",
+                            <!--org.osgi.service.component,-->
+                            org.wso2.carbon.securevault;version="${carbon.kernel.imp.pkg.version}",
+<!--                            org.wso2.carbon.transaction.manager;version="${carbon-commons.trnsaction.mgt.imp.pkg.version}", &lt;!&ndash; todo change this to use {carbon-commons.imp.pkg.version} once export packages are corrected - rajith &ndash;&gt;-->
+<!--                            org.wso2.carbon.user.api;version="${carbon.user.api.imp.pkg.version}",-->
+<!--                            org.wso2.carbon.user.core;version="${carbon.kernel.imp.pkg.version}",-->
+<!--                            org.wso2.carbon.user.core.service;version="${carbon.kernel.imp.pkg.version}",-->
+                            org.apache.ws.commons.schema;version="${xmlschema.orbit.imp.pkg.version}",
+                            org.apache.ws.commons.schema.utils;version="${xmlschema.orbit.imp.pkg.version}",
+                            org.apache.ws.commons.schema.constants;version="${xmlschema.orbit.imp.pkg.version}",
+                            org.apache.neethi;version="${neethi.orbit.imp.pkg.version}",
+<!--                            org.wso2.carbon.base;version="${carbon.base.imp.pkg.version}",-->
+                            org.apache.tomcat.jdbc.pool;version="${jdbc-pool.orbit.imp.pkg.version}",
+                            com.google.api.client.googleapis.auth.oauth2;version="${google-api-client.orbit.imp.pkg.version}",
+                            com.google.api.client.http;version="${google-http-client.orbit.imp.pkg.version}",
+                            com.google.api.client.http.javanet;version="${google-http-client.orbit.imp.pkg.version}",
+                            com.google.api.client.json.jackson2;version="${google-http-client.orbit.imp.pkg.version}",
+                            org.apache.olingo.commons.api;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.commons.api.edm;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.commons.api.edm.provider;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.commons.api.data;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.commons.api.http;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.server.api;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.server.core;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.server.core.requests;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.server.core.responses;version="${olingo.orbit.imp.pkg.version}",
+                            org.apache.olingo.server.core.uri.parser;version="${olingo.orbit.imp.pkg.version}"
+                            <!--javax.transaction todo need to check this and add if needed. this needs jboss transactions, but for now it's not included in the server-->
+                            <!--org.apache.axis2.*; version="${apache.axis2.orbit.imp.pkg.version}"-->
+                        </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
+                        <Axis2Deployer>DataServicesDeployer</Axis2Deployer>
+                        <Axis2RequiredServices>
+                            DSDummyService
+                        </Axis2RequiredServices>
+                    </instructions>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-scr-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-test-repository</id>
+                        <phase>generate-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <echo>######################################</echo>
+                                <echo>Creating Repository for Data Services</echo>
+                                <echo>######################################</echo>
+                                <mkdir dir="${basedir}/target/repository" />
+                                <mkdir dir="${basedir}/target/repository/dataservices" />
+                                <mkdir dir="${basedir}/target/repository/services" />
+                                <mkdir dir="${basedir}/target/repository/modules" />
+                                <mkdir dir="${basedir}/target/repository/database" />
+                                <property name="test_dbs_files_dir" value="${basedir}/src/test/resources/test-dbs" />
+                                <copy todir="${basedir}/target/repository/dataservices">
+                                    <fileset dir="${test_dbs_files_dir}">
+                                        <include name="**/*.dbs" />
+                                    </fileset>
+                                </copy>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>generate-carbon-home</id>
+                        <phase>generate-test-resources</phase>
+                        <configuration>
+                            <tasks>
+                                <echo>######################################</echo>
+                                <echo>Coping carbon.xml</echo>
+                                <echo>######################################</echo>
+                                <mkdir dir="${basedir}/target/carbonHome" />
+                                <mkdir dir="${basedir}/target/carbonHome/repository" />
+                                <mkdir dir="${basedir}/target/carbonHome/repository/conf" />
+                                <copy file="${basedir}/src/test/resources/carbon.xml" tofile="${basedir}/target/carbonHome/repository/conf/carbon.xml" />
+                                <copy file="${basedir}/src/test/resources/dataServices.xml" tofile="${basedir}/target/carbonHome/repository/conf/dataServices.xml" />
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
+

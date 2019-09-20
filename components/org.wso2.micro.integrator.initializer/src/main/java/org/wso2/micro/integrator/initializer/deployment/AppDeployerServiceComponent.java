@@ -30,6 +30,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.micro.integrator.dataservices.core.DBDeployer;
+import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
@@ -38,8 +40,6 @@ import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
 import org.wso2.micro.integrator.initializer.deployment.artifact.deployer.ArtifactDeploymentManager;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
-//import org.wso2.carbon.dataservices.core.DBDeployer;
-import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 
 import java.io.File;
@@ -157,30 +157,29 @@ public class AppDeployerServiceComponent {
 
         // TODO :- unComment after installing DSS
         // Create data services deployer
-//        DBDeployer dbDeployer = new DBDeployer();
-//        dbDeployer.setDirectory(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME);
-//        dbDeployer.setExtension(DeploymentConstants.DSS_TYPE_EXTENSION);
+        DBDeployer dbDeployer = new DBDeployer();
+        dbDeployer.setDirectory(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME);
+        dbDeployer.setExtension(DeploymentConstants.DSS_TYPE_EXTENSION);
 
         // Register artifact deployers in ArtifactDeploymentManager
-//        try {
-//            artifactDeploymentManager.registerDeployer(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME, dbDeployer);
-//        } catch (DeploymentException e) {
-//            log.error("Error occurred while registering data services deployer");
-//        }
+        try {
+            artifactDeploymentManager.registerDeployer(artifactRepoPath + DeploymentConstants.DSS_DIR_NAME, dbDeployer);
+        } catch (DeploymentException e) {
+            log.error("Error occurred while registering data services deployer");
+        }
 
         // Initialize micro integrator carbon application deployer
         log.debug("Initializing carbon application deployment manager");
 
         // Register deployers in DeploymentEngine (required for CApp deployment)
         DeploymentEngine deploymentEngine = (DeploymentEngine) configCtx.getAxisConfiguration().getConfigurator();
-      // TODO :- Uncomment after having DSS
-        //  deploymentEngine.addDeployer(dbDeployer, DeploymentConstants.DSS_DIR_NAME, DeploymentConstants.DSS_TYPE_DBS);
+        deploymentEngine.addDeployer(dbDeployer, DeploymentConstants.DSS_DIR_NAME, DeploymentConstants.DSS_TYPE_DBS);
 
         // Register application deployment handlers
         //TODO
        cAppDeploymentManager.registerDeploymentHandler(new FileRegistryResourceDeployer(
                 synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
-
+        cAppDeploymentManager.registerDeploymentHandler(new DataSourceCappDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
 

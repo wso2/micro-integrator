@@ -128,17 +128,18 @@
                                 </bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat-el-api:${orbit.version.tomcat.el.api}
                                 </bundleDef>
+<!--                                <bundleDef>org.wso2.tomcat:tomcat:${orbit.version.tomcat}</bundleDef>-->
 
 <!--                                for javax.servelt pkg-->
                                 <bundleDef>
                                     org.wso2.orbit.org.apache.tomcat:tomcat-servlet-api:${orbit.version.tomcat.servlet.api}
                                 </bundleDef>
 <!--                                <bundleDef>antlr.wso2:antlr:${antlr.wso2.version}</bundleDef>-->
-<!--                                <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat:${orbit.version.tomcat}</bundleDef>-->
+                                <bundleDef>org.wso2.orbit.org.apache.tomcat:tomcat:${orbit.version.tomcat}</bundleDef>
 <!--                                <bundleDef>-->
 <!--                                    org.wso2.orbit.org.apache.tomcat:tomcat-catalina-ha:${orbit.version.tomcat.ha}-->
 <!--                                </bundleDef>-->
-<!--                                <bundleDef>au.com.bytecode.opencsv.wso2:opencsv:${version.opencsv}</bundleDef>-->
+                                <bundleDef>au.com.bytecode.opencsv.wso2:opencsv:${version.opencsv}</bundleDef>
                                 <bundleDef>org.wso2.securevault:org.wso2.securevault:${securevault.version}</bundleDef>
 <!--                                <bundleDef>org.wso2.orbit.com.h2database:h2:${version.h2.engine}</bundleDef>-->
                                 <bundleDef>org.apache.axis2.wso2:axis2-json:${axis2.wso2.version}</bundleDef>
@@ -185,9 +186,9 @@
 <!--                                </bundleDef>-->
 <!--                                <bundleDef>org.slf4j:slf4j-api:${slf4j.version}</bundleDef>-->
 <!--                                <bundleDef>org.slf4j:slf4j-log4j12:${slf4j.version}</bundleDef>-->
-<!--                                <bundleDef>com.sun.xml.bind.wso2:jaxb:${version.jaxb}</bundleDef>-->
+                                <bundleDef>com.sun.xml.bind.wso2:jaxb:${version.jaxb}</bundleDef>
 <!--                                <bundleDef>com.jezhumble.wso2:javasysmon:${javasysmon.version}</bundleDef>-->
-<!--                                <bundleDef>org.wso2.orbit.org.apache.tomcat:jdbc-pool:${jdbc-pool.version}</bundleDef>-->
+                                <bundleDef>org.wso2.orbit.org.apache.tomcat:jdbc-pool:${jdbc-pool.version}</bundleDef>
                                 <bundleDef>org.eclipse.jdt.core.compiler:ecj:${version.eclipse.ecj}</bundleDef>
                                 <bundleDef>com.google.code.gson:gson:${version.com.google.code.gson}</bundleDef>
 
@@ -216,9 +217,9 @@
                                 <bundleDef>
                                     org.wso2.orbit.javax.transaction:jta:${version.org.wso2.orbit.javax.jta}
                                 </bundleDef>
-<!--                                <bundleDef>-->
-<!--                                    org.wso2.orbit.javax.xml.bind:jaxb-api:${version.org.wso2.orbit.javax.xml.bind.jaxb-api}-->
-<!--                                </bundleDef>-->
+                                <bundleDef>
+                                    org.wso2.orbit.javax.xml.bind:jaxb-api:${version.org.wso2.orbit.javax.xml.bind.jaxb-api}
+                                </bundleDef>
 
                                 <bundleDef>org.wso2.carbon:org.wso2.carbon.securevault:${carbon.kernel.version}
                                 </bundleDef>
@@ -228,6 +229,8 @@
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.orbit.org.apache.commons:commons-lang3:${commons-lang3.orbit.version}
+                                </bundleDef>
+                                <bundleDef>org.wso2.orbit.commons-text:commons-text:${commons-text.orbit.version}
                                 </bundleDef>
 <!--                                <bundleDef>-->
 <!--                                    org.wso2.carbon:org.wso2.carbon.server.admin.common:${carbon.kernel.version}-->
