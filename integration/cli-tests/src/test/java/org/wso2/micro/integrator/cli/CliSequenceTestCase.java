@@ -21,41 +21,46 @@ package org.wso2.micro.integrator.cli;
 import util.TestUtils;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+
+import java.io.IOException;
 import java.util.List;
 
 public class CliSequenceTestCase {
 
-    private static final String cliTestSeq = "CliTestSequence";
-    private static final String cliSampleSeq = "CliSampleSequence";
+    private static final String CLI_TEST_SEQUENCE = "CliTestSequence";
+    private static final String CLI_SAMPLE_SEQUENCE = "CliSampleSequence";
 
     /**
      * Get information about all Sequence
      */
     @Test
-    public void miShowEndpointAllTest() {
+    public void miShowSequenceAllTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommand("sequence" , "show");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestSeq)),cliTestSeq +" Sequence not found");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliSampleSeq)),cliSampleSeq + "Sequence not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.SEQUENCE, Constants.SHOW);
+        String artifactName_seq_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
+        String artifactName_seq_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
+
+        Assert.assertEquals(artifactName_seq_1[0], CLI_TEST_SEQUENCE);
+        Assert.assertEquals(artifactName_seq_2[0], CLI_SAMPLE_SEQUENCE);
     }
 
     /**
      * Get information about single Sequence
      */
     @Test
-    public void miShowSequenceTest() {
+    public void miShowSequenceTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("sequence" , "show", cliTestSeq);
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(cliTestSeq)),cliTestSeq +" Sequence not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.SEQUENCE, Constants.SHOW, CLI_TEST_SEQUENCE);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - CliTestSequence");
     }
 
     /**
      * Test un-deployed Sequence
      */
     @Test
-    public void miShowSequenceNotFoundTest() {
+    public void miShowSequenceNotFoundTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("sequence" , "show", "CLITestSequence");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("Sequence 404 Not Found")),"Sequence 404 Not Found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.SEQUENCE, Constants.SHOW, "CLITestSequence");
+        Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of the Sequence 404 Not Found");
     }
 }

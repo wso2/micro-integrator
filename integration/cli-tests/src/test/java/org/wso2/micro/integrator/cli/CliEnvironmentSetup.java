@@ -39,7 +39,7 @@ public class CliEnvironmentSetup {
 
         Process process;
         String line;
-        String[] setup = { "sh", ".."+ File.separator +"src"+ File.separator +"test"+ File.separator +"java"+ File.separator +"EnvSetup.sh"};
+        String[] setup = {"sh", ".." + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator + "EnvSetup.sh"};
         process = Runtime.getRuntime().exec(setup);
 
         try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {

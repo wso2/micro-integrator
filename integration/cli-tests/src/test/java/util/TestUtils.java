@@ -26,29 +26,29 @@ import java.util.List;
 
 public class TestUtils {
 
-    private TestUtils(){
+    private TestUtils() {
 
     }
 
     /**
      * Get the mi build path to run mi commands.
      */
-    public static  String getMIBuildPath() throws IOException {
+    public static String getMIBuildPath() throws IOException {
         File miBuildFilePath = new File(".." + File.separator + ".." + File.separator + ".." + File.separator
-                                        + "cmd" + File.separator + "build" + File.separator + "wso2mi-cli-" + System.getProperty("version")
-                                        + File.separator + "bin" + File.separator + "mi");
+                + "cmd" + File.separator + "build" + File.separator + "wso2mi-cli-" + System.getProperty("version")
+                + File.separator + "bin" + File.separator + "mi");
         return miBuildFilePath.getCanonicalPath();
     }
 
     public static List<String> getOutputForCLICommand(String artifactType, String command) throws IOException {
 
-        String[] arguments = new String[]{getMIBuildPath(),artifactType, command};
+        String[] arguments = new String[]{getMIBuildPath(), artifactType, command};
         return runCommandWithArgs(arguments);
     }
 
     public static List<String> getOutputForCLICommandArtifactName(String artifactType, String command, String artifactName) throws
             IOException {
-        String[] arguments = new String[]{getMIBuildPath(),artifactType, command, artifactName};
+        String[] arguments = new String[]{getMIBuildPath(), artifactType, command, artifactName};
         return runCommandWithArgs(arguments);
     }
 
@@ -61,25 +61,32 @@ public class TestUtils {
         while ((line = reader.readLine()) != null) {
             lines.add(line);
         }
+
         return lines;
     }
 
     /**
+     * CLI arguments should be pass in correct order
      *
-     * @param args
-     * @return
-     * @throws IOException
+     * @param args list of arguments of the cli
      */
     private static Process runMiCommand(String... args) throws IOException {
         ProcessBuilder builder = new ProcessBuilder(args);
         return builder.start();
     }
 
+    /**
+     * @param outputForCLICommand output from the cli command
+     * @return name of the artifact
+     */
 
+    public static ArrayList<String> getArtifactList(List<String> outputForCLICommand) {
+
+        ArrayList<String> artifactName = new ArrayList<String>();
+
+        artifactName.add(outputForCLICommand.get(1).replace(outputForCLICommand.get(1).split(" ")[0], "").trim());
+        artifactName.add(outputForCLICommand.get(2).replace(outputForCLICommand.get(1).split(" ")[0], "").trim());
+
+        return artifactName;
+    }
 }
-
-
-
-
-
-

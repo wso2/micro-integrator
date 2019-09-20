@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.cli;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import java.io.IOException;
 import java.util.List;
 import util.TestUtils;
 
@@ -31,33 +32,35 @@ public class CliCompositeappTestCase {
     /**
      * Get information about all the carbon applications
      */
-
     @Test
-    public void miShowCarbonappAllTest() {
+    public void miShowCarbonappAllTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommand("compositeapp" , "show");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_HELLO_CAR)), CLI_TEST_HELLO_CAR +" Carbon application not found");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_MEDIATOR_CAR)), CLI_TEST_MEDIATOR_CAR + " Carbon application not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.COMPOSITAPP, Constants.SHOW);
+        String artifactName_capp_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
+        String artifactName_capp_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
+
+        Assert.assertEquals(artifactName_capp_1[0], CLI_TEST_MEDIATOR_CAR);
+        Assert.assertEquals(artifactName_capp_2[0], CLI_TEST_HELLO_CAR);
+
     }
 
     /**
      * Get information about single carbon applications
      */
-
     @Test
-    public void miShowCarbonappTest() {
+    public void miShowCarbonappTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("compositeapp" , "show", CLI_TEST_HELLO_CAR);
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_HELLO_CAR)), CLI_TEST_HELLO_CAR +" Carbon application not Found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.COMPOSITAPP, Constants.SHOW, CLI_TEST_HELLO_CAR);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - hello-worldCompositeApplication");
     }
 
     /**
      * Test un-deployed Carbon application
      */
     @Test
-    public void miShowCappNotFoundTest() {
+    public void miShowCappNotFoundTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("compositeapp" , "show", "TestCapp");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("Carbon App 404 Not Found")),"Carbon App 404 Not Found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.COMPOSITAPP, Constants.SHOW, "TestCapp");
+        Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of the Carbon App 404 Not Found");
     }
 }

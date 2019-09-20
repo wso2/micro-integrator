@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.cli;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import java.io.IOException;
 import java.util.List;
 import util.TestUtils;
 
@@ -32,30 +33,33 @@ public class CliProxyserviceTestCase {
      * Get information about all the Proxy services
      */
     @Test
-    public void miShowProxyAllTest() {
+    public void miShowProxyAllTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommand("proxyservice" , "show");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_PROXY)), CLI_TEST_PROXY + " Proxy service not found");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_ADDRESS_PROXY)), CLI_ADDRESS_PROXY + " Proxy service not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.PROXYSERVICE, Constants.PROXYSERVICE);
+        String artifactName_proxy_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
+        String artifactName_proxy_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
+
+        Assert.assertEquals(artifactName_proxy_1[0], CLI_ADDRESS_PROXY);
+        Assert.assertEquals(artifactName_proxy_2[0], CLI_TEST_PROXY);
     }
 
     /**
      * Get information about single proxy service
      */
     @Test
-    public void miShowProxyTest() {
+    public void miShowProxyTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("proxyservice" , "show", CLI_TEST_PROXY);
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_PROXY)), CLI_TEST_PROXY + " Proxy service not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.PROXYSERVICE, Constants.SHOW, CLI_TEST_PROXY);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - cliAddressProxy");
     }
 
     /**
      * Test un-deployed proxy service
      */
     @Test
-    public void miShowProxyNotFoundTest() {
+    public void miShowProxyNotFoundTest() throws IOException {
 
-        List<String> lines = TestUtils.getOutputForCLICommandArtifactName("proxyservice", "show", "CliTestProxy");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("ProxyService 404 Not Found")), "ProxyService 404 Not Found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.PROXYSERVICE, Constants.SHOW, "CliTestProxy");
+        Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of ProxyService 404 Not Found");
     }
 }

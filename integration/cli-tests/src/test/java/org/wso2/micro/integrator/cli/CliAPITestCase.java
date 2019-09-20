@@ -17,16 +17,16 @@
  */
 
 package org.wso2.micro.integrator.cli;
+
 import org.testng.Assert;
 import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.util.List;
 import util.TestUtils;
 
 public class CliAPITestCase {
 
-    private static final String CLI_SAMPLE_API_1 = "cliSampleApi_1 not found";
+    private static final String CLI_SAMPLE_API_1 = "cliSampleApi_1";
     private static final String CLI_SAMPLE_API_2 = "cliSampleApi_2";
 
     /**
@@ -35,28 +35,32 @@ public class CliAPITestCase {
     @Test
     public void miShowAllApiTest() throws Exception {
 
-        List<String> lines =  TestUtils.getOutputForCLICommand(Constants.API , Constants.SHOW);
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_SAMPLE_API_1)),CLI_SAMPLE_API_1+" API not found");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_SAMPLE_API_2)),CLI_SAMPLE_API_2+" API not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.API, Constants.SHOW);
+        String artifactName_api_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
+        String artifactName_api_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
+
+        Assert.assertEquals(artifactName_api_1[0], CLI_SAMPLE_API_1);
+        Assert.assertEquals(artifactName_api_2[0], CLI_SAMPLE_API_2);
+
     }
 
     /**
      * Get information about single API's
      */
     @Test
-    public void miShowApiTest() {
+    public void miShowApiTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName(Constants.API , Constants.SHOW, CLI_SAMPLE_API_1);
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_SAMPLE_API_1)), CLI_SAMPLE_API_1 +" API not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.API, Constants.SHOW, CLI_SAMPLE_API_1);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - cliSampleApi_1");
     }
 
     /**
      * Test Un-deployed API
      */
     @Test
-    public void miShowApiNotFoundTest() {
+    public void miShowApiNotFoundTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName(Constants.API , Constants.SHOW, "TestAPI");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("API 404 Not Found")),"API 404 Not Found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.API, Constants.SHOW, "TestAPI");
+        Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of the API 404 Not Found");
     }
 }

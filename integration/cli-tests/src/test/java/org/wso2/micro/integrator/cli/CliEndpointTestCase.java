@@ -20,6 +20,7 @@ package org.wso2.micro.integrator.cli;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import java.io.IOException;
 import java.util.List;
 import util.TestUtils;
 
@@ -32,32 +33,37 @@ public class CliEndpointTestCase {
      * Get information about all the Endpoints
      */
     @Test
-    public void miShowEndpointAllTest() {
+    public void miShowEndpointAllTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommand("endpoint" , "show");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_EP)), CLI_TEST_EP +" Endpoint not found");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_STOCK_EP)), CLI_STOCK_EP + "Endpoint not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.ENDPOINT, Constants.SHOW);
+        String artifactName_ep_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
+        String artifactName_ep_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
+
+        Assert.assertEquals(artifactName_ep_1[0], CLI_TEST_EP);
+        Assert.assertEquals(artifactName_ep_2[0], CLI_STOCK_EP);
+
     }
+
 
     /**
      * Get information about single Endpoint
      */
 
     @Test
-    public void miShowEndpointTest() {
+    public void miShowEndpointTest() throws IOException {
 
-        List<String> lines =  TestUtils.getOutputForCLICommandArtifactName("endpoint" , "show", CLI_TEST_EP);
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains(CLI_TEST_EP)), CLI_TEST_EP +" Endpoint not found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.ENDPOINT, Constants.SHOW, CLI_TEST_EP);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - SimpleEP");
     }
 
     /**
      * Test un-deployed Endpoint
      */
     @Test
-    public void miShowEndpointNotFoundTest() {
+    public void miShowEndpointNotFoundTest() throws IOException {
 
-        List<String> lines = TestUtils.getOutputForCLICommandArtifactName("endpoint", "show", "CLITestEP");
-        Assert.assertTrue(lines.stream().anyMatch(str -> str.trim().contains("Endpoint 404 Not Found")), "Endpoint 404 Not Found");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.ENDPOINT, Constants.SHOW, "CLITestEP");
+        Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of Endpoint 404 Not Found");
     }
 
 }
