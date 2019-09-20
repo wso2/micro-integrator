@@ -1,0 +1,21 @@
+[server]
+hostname = "localhost"
+
+[transport.passthru.http.listener]
+port=8280
+
+[transport.passthru.https.listener]
+port=8243
+
+[user_store]
+type = "database"
+
+[transport.vfs] # enable by default
+
+listener.enable = true
+listener.keystore.file_name = "repository/resources/security/vfsKeystore.jks"
+listener.keystore.type = "JKS"
+listener.keystore.password = "edcrfv"
+listener.keystore.key_password = "qazwsx"
+listener.keystore.alias = "vfs"
+sender.enable = true

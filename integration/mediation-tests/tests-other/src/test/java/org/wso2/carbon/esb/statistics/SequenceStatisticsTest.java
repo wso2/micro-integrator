@@ -50,7 +50,7 @@ public class SequenceStatisticsTest extends ESBIntegrationTest {
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
         serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation() + File.separator + "StatisticTestResources" + File.separator
-                        + "synapse.properties"));
+                        + "deployment.toml"));
         super.init();
         thriftServer.waitToReceiveEvents(20000); //waiting for esb to send artifact config data to the thriftserver
     }
