@@ -160,9 +160,7 @@
                 <exclude>**/release-notes.html</exclude>
                 <exclude>**/carbon.xml</exclude>
                 <exclude>**/lib/endorsed/xalan*.jar</exclude>
-                <exclude>**/tomcat/carbon/WEB-INF/web.xml</exclude>
-                <exclude>**/tomcat/carbon/META-INF/context.xml</exclude>
-                <exclude>**//tomcat/catalina-server.xml</exclude>
+                <exclude>**/tomcat/**</exclude>
                 <exclude>**/launch.ini</exclude>
             </excludes>
         </fileSet>
@@ -173,6 +171,7 @@
             <excludes>
                 <exclude>**/*.sh</exclude>
                 <exclude>**/*.bat</exclude>
+                <exclude>**/**bootstrap**</exclude>
                 <exclude>**/wrapper.conf</exclude>
                 <exclude>build.xml</exclude>
                 <exclude>version.txt</exclude>
@@ -428,12 +427,6 @@
         </file>
 
         <file>
-            <source>src/conf/etc/logging-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
-
-        <file>
             <source>src/conf/etc/pax-logging.properties</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/conf/etc/
             </outputDirectory>
@@ -564,6 +557,12 @@
             <includes>
                 <include>org.apache.rampart:rampart:mar</include>
                 <include>org.apache.axis2:addressing:mar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
+            <includes>
+                <include>org.wso2.ei:org.wso2.micro.integrator.bootstrap:jar</include>
             </includes>
         </dependencySet>
 

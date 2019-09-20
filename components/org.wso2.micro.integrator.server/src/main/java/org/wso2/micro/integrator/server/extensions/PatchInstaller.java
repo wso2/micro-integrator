@@ -17,8 +17,8 @@
  */
 package org.wso2.micro.integrator.server.extensions;
 
-import org.wso2.micro.integrator.server.CarbonLaunchExtension;
 import org.wso2.micro.integrator.server.LauncherConstants;
+import org.wso2.micro.integrator.server.MicroIntegratorLaunchExtension;
 import org.wso2.micro.integrator.server.util.JarInfo;
 import org.wso2.micro.integrator.server.util.PatchInfo;
 import org.wso2.micro.integrator.server.util.PatchUtils;
@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 /**
  * Copy all the patches found in the patches directory to the plugins directory in a recursive manner.
  */
-public class PatchInstaller implements CarbonLaunchExtension {
+public class PatchInstaller implements MicroIntegratorLaunchExtension {
     private static final Logger log = Logger.getLogger(PatchInstaller.class.getName());
 
     public void perform() {

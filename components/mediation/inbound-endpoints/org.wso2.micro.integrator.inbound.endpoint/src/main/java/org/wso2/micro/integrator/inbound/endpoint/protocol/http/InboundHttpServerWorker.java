@@ -319,11 +319,6 @@ public class InboundHttpServerWorker extends ServerWorker {
         String reqUri = request.getUri();
         String servicePath = getSourceConfiguration().getConfigurationContext().getServicePath();
 
-        //for tenants, service path will be appended by tenant name
-        if (!reqUri.equalsIgnoreCase(SUPER_TENANT_DOMAIN_NAME)) {
-            servicePath = servicePath + "/t/" + SUPER_TENANT_DOMAIN_NAME;
-        }
-
         //Get the operation part from the request URL
         // e.g. '/services/TestProxy/' > TestProxy when service path is '/service/' > result 'TestProxy/'
         String serviceOpPart = Utils.getServiceAndOperationPart(reqUri, servicePath);

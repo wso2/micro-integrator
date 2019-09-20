@@ -142,7 +142,7 @@
                           class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
         <!--JSON Message Formatters-->
         <messageFormatter contentType="application/json"
-                          class="org.wso2.carbon.integrator.core.json.JsonStreamFormatter"/>
+                            class="org.wso2.micro.integrator.core.json.JsonStreamFormatter"/>
         <!--messageFormatter contentType="application/x-www-form-urlencoded"
                         class="org.wso2.carbon.relay.ExpandingMessageFormatter"/-->
         <!--messageFormatter contentType="multipart/form-data"
@@ -183,7 +183,7 @@
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
         <!--JSON Message Builders-->
         <messageBuilder contentType="application/json"
-                        class="org.wso2.carbon.integrator.core.json.JsonStreamBuilder"/>
+                          class="org.wso2.micro.integrator.core.json.JsonStreamBuilder"/>
         <!--messageBuilder contentType="application/xml"
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/-->
         <!--messageBuilder contentType="application/x-www-form-urlencoded"
@@ -215,7 +215,7 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
-        <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.mediation.transport.handlers.PassThroughNHttpGetProcessor</parameter>
+          <parameter name="httpGetProcessor" locked="false">org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor</parameter>
         <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
     </transportReceiver>
 
@@ -225,7 +225,7 @@
         <parameter name="HttpsProtocols">TLSv1,TLSv1.1,TLSv1.2</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
-        <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.mediation.transport.handlers.PassThroughNHttpGetProcessor</parameter>
+          <parameter name="httpGetProcessor" locked="false">org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor</parameter>
         <parameter name="keystore" locked="false">
             <KeyStore>
                 <Location>repository/resources/security/wso2carbon.jks</Location>
@@ -245,7 +245,7 @@
             supports optional|require or defaults to none -->
     </transportReceiver>
 
-    <transportReceiver name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportReceiver"/>
+    <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
 
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener"/>
 
@@ -255,26 +255,26 @@
     <!--</transportReceiver>-->
 
     <!--Uncomment this and configure as appropriate for JMS transport support, after setting up your JMS environment (e.g. ActiveMQ) -->
-    <transportReceiver class="org.apache.axis2.transport.jms.JMSListener" name="jms">
-        <parameter locked="false" name="myTopicConnectionFactory">
-            <parameter locked="false" name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
-            <parameter locked="false" name="java.naming.provider.url">tcp://localhost:61616</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryJNDIName">TopicConnectionFactory</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryType">topic</parameter>
+    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
+        <parameter name="myTopicConnectionFactory" locked="false">
+        	<parameter name="java.naming.factory.initial" locked="false">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
+        	<parameter name="java.naming.provider.url" locked="false">tcp://localhost:61616</parameter>
+        	<parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">TopicConnectionFactory</parameter>
+		    <parameter name="transport.jms.ConnectionFactoryType" locked="false">topic</parameter>
         </parameter>
 
-        <parameter locked="false" name="myQueueConnectionFactory">
-            <parameter locked="false" name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
-            <parameter locked="false" name="java.naming.provider.url">tcp://localhost:61616</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryJNDIName">QueueConnectionFactory</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryType">queue</parameter>
+        <parameter name="myQueueConnectionFactory" locked="false">
+        	<parameter name="java.naming.factory.initial" locked="false">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
+        	<parameter name="java.naming.provider.url" locked="false">tcp://localhost:61616</parameter>
+        	<parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
+		    <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
         </parameter>
 
-        <parameter locked="false" name="default">
-            <parameter locked="false" name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
-            <parameter locked="false" name="java.naming.provider.url">tcp://localhost:61616</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryJNDIName">QueueConnectionFactory</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryType">queue</parameter>
+        <parameter name="default" locked="false">
+        	<parameter name="java.naming.factory.initial" locked="false">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
+        	<parameter name="java.naming.provider.url" locked="false">tcp://localhost:61616</parameter>
+        	<parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
+		    <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
         </parameter>
     </transportReceiver>
 
@@ -391,20 +391,21 @@
         <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
     </transportSender>
 
-    <transportSender name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportSender"/>
+    <transportSender name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender"/>
 
     <!--Uncomment this local transport to use local transport in mediation flow-->
     <!--<transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>-->
 
     <!-- uncomment this and configure to use connection pools for sending messages> -->
-     <transportSender class="org.apache.axis2.transport.jms.JMSSender" name="jms">
-        <parameter locked="false" name="myQueueConnectionFactory">
-            <parameter locked="false" name="java.naming.factory.initial">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
-            <parameter locked="false" name="java.naming.provider.url">tcp://localhost:61616</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryJNDIName">QueueConnectionFactory</parameter>
-            <parameter locked="false" name="transport.jms.ConnectionFactoryType">queue</parameter>
-            <parameter locked="false" name="transport.jms.UserName">system</parameter>
-            <parameter locked="false" name="transport.jms.Password" svns:secretAlias="Jms.Sender.Password">password</parameter>
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
+        <parameter name="myQueueConnectionFactory2" locked="false">
+            <parameter name="java.naming.factory.initial" locked="false">org.apache.activemq.jndi.ActiveMQInitialContextFactory</parameter>
+            <parameter name="java.naming.provider.url" locked="false">tcp://localhost:61616</parameter>
+            <parameter name="transport.jms.ConnectionFactoryJNDIName" locked="false">QueueConnectionFactory</parameter>
+            <parameter name="transport.jms.ConnectionFactoryType" locked="false">queue</parameter>
+            <parameter name="transport.jms.Destination" locked="false">dynamicQueues/StaleConnectionTest</parameter>
+            <parameter name="transport.jms.DestinationType" locked="false">queue</parameter>
+            <parameter name="transport.jms.CacheLevel" locked="false">connection</parameter>
         </parameter>
     </transportSender>
 
@@ -497,8 +498,6 @@
                 <handler name="JSONMessageHandler"
                          class="org.apache.axis2.json.gson.JSONMessageHandler" />
             </handler>
-            <handler name="CarbonContextConfigurator"
-                     class="org.wso2.carbon.mediation.initializer.handler.CarbonContextConfigurator"/>
             <handler name="RelaySecuirtyMessageBuilderDispatchandler"
                      class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"/>
             <handler name="SOAPActionBasedDispatcher"

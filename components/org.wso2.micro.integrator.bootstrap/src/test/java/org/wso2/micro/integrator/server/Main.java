@@ -18,14 +18,19 @@
 package org.wso2.micro.integrator.server;
 
 /**
- * This interface allows people to write custom extension which should be executed just before launching the Carbon
- * Server.
- *
- * @see org.wso2.carbon.server.extensions.DefaultBundleCreator
- * @see org.wso2.carbon.server.extensions.SystemBundleExtensionCreator
+ * Test org.wso2.carbon.server.Main class for testing Bootstrap class.
+ * <p>
+ * This is used to avoid the cyclic dependency created when adding the
+ * dependency to org.wso2.carbon.server module
  */
-public interface CarbonLaunchExtension {
+public class Main {
 
-    void perform();
-
+    /**
+     * Sets a system property to indicate the launch of the Carbon server.
+     *
+     * @param args command line arguments.
+     */
+    public static void main(String[] args) {
+        System.setProperty("carbon.server.status", "up");
+    }
 }

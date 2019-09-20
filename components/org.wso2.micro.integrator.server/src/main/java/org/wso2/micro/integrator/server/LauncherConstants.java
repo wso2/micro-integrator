@@ -28,7 +28,6 @@ public final class LauncherConstants {
 
     public static final String ENABLE_OSGI_CONSOLE = "osgiConsole";
     public static final String ENABLE_OSGI_DEBUG = "osgiDebugOptions";
-    public static final String BUNDLE_CREATORS = "bundleCreators";
 
     public static final String BUNDLE_BACKUP_DIR = "patch0000";
     public static final String PARENT_PATCHES_DIR = "patches";
@@ -46,14 +45,10 @@ public final class LauncherConstants {
     public static final String CARBON_EXTERNAL_LIB_DIR_PATH = "carbon.external.lib.dir.path"; // components/lib
     public static final String CARBON_EXTENSIONS_DRI_PATH = "carbon.extensions.dir.path";
     public static final String CARBON_PATCHES_DIR_PATH = "carbon.patches.dir.path";
-    public static final String CARBON_INTERNAL_LIB_DIR_PATH = "carbon.internal.lib.dir.path"; //lib normally internal tomcat
-
     public static final String LAUNCH_INI = "launch.ini";
 
     public static final String CARBON_HOME = "carbon.home";
     public static final String CARBON_CONFIG_DIR_PATH = "carbon.config.dir.path";
-    public static final String CARBON_NEW_CONFIG_DIR_PATH = "carbon.new.config.dir.path";
-    public static final String DEPLOYMENT_CONFIG_FILE_PATH = "deployment.config.file.path";
     public static final String AXIS2_HOME = "axis2.home";
 
     //Bundle manifest constants
@@ -64,16 +59,11 @@ public final class LauncherConstants {
     public static final String BUNDLE_VERSION = "Bundle-Version";
     public static final String FRAGMENT_HOST = "Fragment-Host";
     public static final String EXPORT_PACKAGE = "Export-Package";
-    public static final String CONFIG_EXTENDED_FRAMEWORK_EXPORTS = "extendedFrameworkExports";
     public static final String PROFILE_ID = "profile";
-    //    public static final String DEFAULT_CARBON_PROFILE = "WSO2CarbonProfile";
     public static final String BUNDLE_CLASSPATH = "Bundle-ClassPath";
     public static final String DYNAMIC_IMPORT_PACKAGE = "DynamicImport-Package";
     public static final String PROFILE = "profile";
     public static final String DEFAULT_CARBON_PROFILE = "default";
-    public static final String WORKER_NODE = "workerNode";
-    public static final String WORKER_PROFILE = "worker";
-    public static final String CIPHER_TRANSFORMATION_SYSTEM_PROPERTY = "org.wso2.CipherTransformation";
 
     //Constants relevant to pax logging
     public static final String PAX_LOGGING_PROPERTY_FILE_KEY = "org.ops4j.pax.logging.property.file";

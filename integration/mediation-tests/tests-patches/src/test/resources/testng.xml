@@ -101,17 +101,6 @@
         </classes>
     </test>
 
-    <test name="NHTTP-Transport-Tests" preserve-order="true" verbose="2">
-        <classes>
-            <class name="org.wso2.carbon.esb.nhttp.transport.NhttpBaseTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.json.test.ESBJAVA4940CharacterEncodingRemovalTestCase"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.json.test.ESBJAVA4331MissingJSONEmptyArrayNHTTPTransport"/>
-            <class name="org.wso2.carbon.esb.nhttp.transport.mtom.test.ESBJAVA4909MultipartRelatedTestCase"/>
-            <!-- If there are any test cases which need server restarts with new configurations, they should not be added
-             here but in a separate test block-->
-        </classes>
-    </test>
-
     <!--test name="Cache mediator with REQUESTHASHGenerator test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.mediators.cache.APIMANAGER1838RequestHashGeneratorTestCase"/>
