@@ -47,7 +47,7 @@
         <module>features</module>
         <module>p2-profile</module>
         <module>distribution</module>
-        <module>integration</module>
+        <!--<module>integration</module>-->
     </modules>
 
     <dependencyManagement>
