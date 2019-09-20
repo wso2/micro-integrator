@@ -3,7 +3,9 @@
         <target>
             <inSequence>
                 <send>
-                    <endpoint key="echoEP"/>
+                    <endpoint>
+                        <address uri="http://localhost:8480/services/entityBodyProxy"/>
+                    </endpoint>
                 </send>
             </inSequence>
             <outSequence>
