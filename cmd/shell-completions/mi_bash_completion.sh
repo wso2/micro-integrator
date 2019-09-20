@@ -333,6 +333,51 @@ _mi_compositeapp()
     noun_aliases=()
 }
 
+_mi_connector_show()
+{
+    last_command="mi_connector_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_connector()
+{
+    last_command="mi_connector"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("show")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
 _mi_dataservice_show()
 {
     last_command="mi_dataservice_show"
@@ -468,6 +513,51 @@ _mi_inboundendpoint()
     noun_aliases=()
 }
 
+_mi_localentry_show()
+{
+    last_command="mi_localentry_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_localentry()
+{
+    last_command="mi_localentry"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("show")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
 _mi_log-level_show()
 {
     last_command="mi_log-level_show"
@@ -521,6 +611,96 @@ _mi_log-level()
     commands=()
     commands+=("show")
     commands+=("update")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_messageprocessor_show()
+{
+    last_command="mi_messageprocessor_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_messageprocessor()
+{
+    last_command="mi_messageprocessor"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("show")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_messagestore_show()
+{
+    last_command="mi_messagestore_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_messagestore()
+{
+    last_command="mi_messagestore"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("show")
 
     flags=()
     two_word_flags=()
@@ -813,6 +993,51 @@ _mi_task()
     noun_aliases=()
 }
 
+_mi_template_show()
+{
+    last_command="mi_template_show"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_template()
+{
+    last_command="mi_template"
+
+    command_aliases=()
+
+    commands=()
+    commands+=("show")
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
 _mi_version()
 {
     last_command="mi_version"
@@ -844,14 +1069,19 @@ _mi_root_command()
     commands=()
     commands+=("api")
     commands+=("compositeapp")
+    commands+=("connector")
     commands+=("dataservice")
     commands+=("endpoint")
     commands+=("inboundendpoint")
+    commands+=("localentry")
     commands+=("log-level")
+    commands+=("messageprocessor")
+    commands+=("messagestore")
     commands+=("proxyservice")
     commands+=("remote")
     commands+=("sequence")
     commands+=("task")
+    commands+=("template")
     commands+=("version")
 
     flags=()
