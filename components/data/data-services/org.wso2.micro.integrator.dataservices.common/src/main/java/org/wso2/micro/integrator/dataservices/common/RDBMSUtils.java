@@ -63,30 +63,6 @@ public class RDBMSUtils {
             }
         }
         return DBConstants.RDBMSEngines.GENERIC;
-
-
-//		if (JDBCDriverPrefixes.MYSQL.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.MYSQL;
-//		} else if (JDBCDriverPrefixes.DERBY.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.DERBY;
-//		} else if (JDBCDriverPrefixes.MSSQL.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.MSSQL;
-//		} else if (JDBCDriverPrefixes.ORACLE.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.ORACLE;
-//		} else if (JDBCDriverPrefixes.DB2.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.DB2;
-//		} else if (JDBCDriverPrefixes.HSQLDB.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.HSQLDB;
-//		} else if (JDBCDriverPrefixes.POSTGRESQL.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.POSTGRESQL;
-//		} else if (JDBCDriverPrefixes.SYBASE.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.SYBASE;
-//		} else if (JDBCDriverPrefixes.H2.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.H2;
-//		} else if (JDBCDriverPrefixes.INFORMIX.indexOf(jdbcUrl) > -1) {
-//			return DBConstants.RDBMSEngines.INFORMIX_SQLI;
-//		}
-//		return DBConstants.RDBMSEngines.GENERIC;
 	}
 
 	public static int toIntTransactionIsolation(String isolation) {

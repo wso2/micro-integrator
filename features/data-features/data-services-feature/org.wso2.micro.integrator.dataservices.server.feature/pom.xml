@@ -29,7 +29,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
-    <name>WSO2 Carbon - All Mediators Server Feature</name>
+    <name>WSO2 Carbon - Dataservices Server Feature</name>
     <url>http://wso2.org</url>
     <description>This feature contains the bundles required for All mediator Back-ends</description>
 

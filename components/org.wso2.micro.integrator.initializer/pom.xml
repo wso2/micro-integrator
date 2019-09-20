@@ -51,11 +51,6 @@
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.registry</artifactId>
         </dependency>
-        <!--TODO use ndatasource-->
-        <!--<dependency>-->
-            <!--<groupId>org.wso2.carbon</groupId>-->
-            <!--<artifactId>org.wso2.carbon.datasource</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.carbon.mediation</groupId>
             <artifactId>org.wso2.carbon.task.services</artifactId>
@@ -108,20 +103,15 @@
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.ndatasource.capp.deployer</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.dataservices.core</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
-            
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>

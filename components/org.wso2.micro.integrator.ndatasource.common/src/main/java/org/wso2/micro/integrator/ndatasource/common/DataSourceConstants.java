@@ -22,7 +22,7 @@ package org.wso2.micro.integrator.ndatasource.common;
  */
 public class DataSourceConstants {
 
-	public static final String DATASOURCES_REPOSITORY_BASE_PATH = "/repository/components/org.wso2.carbon.ndatasource";
+	public static final String DATASOURCES_REPOSITORY_BASE_PATH = "/repository/components/org.wso2.micro.integrator.ndatasource";
 
 	public static final String SECURE_VAULT_NS = "http://org.wso2.securevault/configuration";
 

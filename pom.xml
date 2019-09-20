@@ -724,72 +724,6 @@
                 <artifactId>google-http-client</artifactId>
                 <version>${google-http-client.orbit.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.wso2.carbon</groupId>-->
-<!--                <artifactId>org.wso2.carbon.core</artifactId>-->
-<!--                <version>${carbon.kernel.version}</version>-->
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.tomcat.wso2</groupId>-->
-<!--                        <artifactId>jdbc-pool</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon.commons</groupId>-->
-<!--                        <artifactId>org.wso2.carbon.event.core</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>commons-io</groupId>-->
-<!--                        <artifactId>commons-io</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>commons-io.wso2</groupId>-->
-<!--                        <artifactId>commons-io</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.poi.wso2</groupId>-->
-<!--                        <artifactId>poi-scratchpad</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.geronimo.specs</groupId>-->
-<!--                        <artifactId>geronimo-jta_1.1_spec</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>commons-codec</groupId>-->
-<!--                        <artifactId>commons-codec</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.securevault</groupId>-->
-<!--                        <artifactId>org.wso2.securevault</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.ws.commons.schema.wso2</groupId>-->
-<!--                        <artifactId>XmlSchema</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.neethi.wso2</groupId>-->
-<!--                        <artifactId>neethi</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.wso2.carbon</groupId>-->
-<!--                <artifactId>org.wso2.carbon.core.services</artifactId>-->
-<!--                <version>${carbon.kernel.version}</version>-->
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon</groupId>-->
-<!--                        <artifactId>org.wso2.carbon.authenticator.proxy</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.ws.commons.schema.wso2</groupId>-->
-<!--                        <artifactId>XmlSchema</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.neethi.wso2</groupId>-->
-<!--                        <artifactId>neethi</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.eclipse.equinox</groupId>
                 <artifactId>javax.servlet</artifactId>
@@ -798,8 +732,7 @@
             <dependency>
                 <groupId>javax.servlet</groupId>
                 <artifactId>servlet-api</artifactId>
-                <version>2.5</version>
-                <scope>provided</scope>
+                <version>${javax.servlet.api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.olingo</groupId>
@@ -903,53 +836,16 @@
                 <artifactId>metrics-core</artifactId>
                 <version>${metrics.core.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>io.netty</groupId>-->
-<!--                <artifactId>netty-handler</artifactId>-->
-<!--                <version>${netty.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.netty</groupId>-->
-<!--                <artifactId>netty-buffer</artifactId>-->
-<!--                <version>${netty.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.netty</groupId>-->
-<!--                <artifactId>netty-common</artifactId>-->
-<!--                <version>${netty.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.netty</groupId>-->
-<!--                <artifactId>netty-transport</artifactId>-->
-<!--                <version>${netty.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>io.netty</groupId>-->
-<!--                <artifactId>netty-codec</artifactId>-->
-<!--                <version>${netty.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.wso2.orbit.org.antlr</groupId>
                 <artifactId>antlr4-runtime</artifactId>
-                <version>4.5.1.wso2v1</version>
+                <version>${antlr4.runtime.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang3.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.wso2.carbon.commons</groupId>-->
-<!--                <artifactId>org.wso2.carbon.event.server.feature</artifactId>-->
-<!--                <type>zip</type>-->
-<!--                <version>${carbon-commons.version}</version>-->
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>commons-codec</groupId>-->
-<!--                        <artifactId>commons-codec</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.deployment</groupId>
                 <artifactId>org.wso2.carbon.service.mgt.feature</artifactId>
@@ -984,70 +880,6 @@
                 <type>zip</type>
                 <version>${carbon-commons.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.apache.ws.commons.axiom.wso2</groupId>-->
-<!--                <artifactId>axiom</artifactId>-->
-<!--                <version>${axiom.wso2.version}</version>-->
-<!--            </dependency>-->
-<!--            <dependency>-->
-<!--                <groupId>org.wso2.carbon.commons</groupId>-->
-<!--                <artifactId>org.wso2.carbon.event.core</artifactId>-->
-<!--                <version>${carbon-commons.version}</version>-->
-<!--                <exclusions>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.geronimo.specs.wso2</groupId>-->
-<!--                        <artifactId>geronimo-jms_1.1_spec</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.ws.commons.axiom.wso2</groupId>-->
-<!--                        <artifactId>axiom</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon</groupId>-->
-<!--                        <artifactId>org.wso2.carbon.ui</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.securevault</groupId>-->
-<!--                        <artifactId>org.wso2.securevault</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon.commons</groupId>-->
-<!--                        <artifactId>org.wso2.carbon.qpid.stub</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>commons-io</groupId>-->
-<!--                        <artifactId>commons-io</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>commons-codec</groupId>-->
-<!--                        <artifactId>commons-codec</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>commons-codec</groupId>-->
-<!--                        <artifactId>commons-codec</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon.commons</groupId>-->
-<!--                        <artifactId>org.wso2.carbon.um.ws.api.stub</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon.commons</groupId>-->
-<!--                        <artifactId>org.wso2.carbon.event.stub</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon.identity.framework</groupId> &lt;!&ndash; todo need to check this as well - rajith &ndash;&gt;-->
-<!--                        <artifactId>org.wso2.carbon.user.mgt.ui</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.wso2.carbon.commons</groupId>-->
-<!--                        <artifactId>org.wso2.carbon.event.client.stub</artifactId>-->
-<!--                    </exclusion>-->
-<!--                    <exclusion>-->
-<!--                        <groupId>org.apache.ws.commons.schema.wso2</groupId>-->
-<!--                        <artifactId>XmlSchema</artifactId>-->
-<!--                    </exclusion>-->
-<!--                </exclusions>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.wso2.carbon.commons</groupId>
                 <artifactId>org.wso2.carbon.transaction.manager</artifactId>
@@ -1126,11 +958,6 @@
                 <artifactId>commons-logging</artifactId>
                 <version>${commons-logging.version}</version>
             </dependency>
-<!--            <dependency>-->
-<!--                <groupId>org.wso2.carbon</groupId>-->
-<!--                <artifactId>org.wso2.carbon.securevault</artifactId>-->
-<!--                <version>${carbon.kernel.version}</version>-->
-<!--            </dependency>-->
             <dependency>
                 <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
                 <artifactId>jdbc-pool</artifactId>
@@ -1408,6 +1235,7 @@
         <wrapper.version>3.2.3</wrapper.version>
 
         <javax.servlet.version>3.0.0.v201112011016</javax.servlet.version>
+        <javax.servlet.api.version>2.5</javax.servlet.api.version>
         <javax.servlet.imp.pkg.version>[2.6,3)</javax.servlet.imp.pkg.version>
 
         <gdata-core.orbit.version>1.47.0.wso2v1</gdata-core.orbit.version>
@@ -1564,6 +1392,7 @@
         <jdbc-pool.orbit.imp.pkg.version>[1.7.0,2.0.0)</jdbc-pool.orbit.imp.pkg.version>
 
         <xerces.version>2.11.0</xerces.version>
+        <antlr4.runtime.version>4.5.1.wso2v1</antlr4.runtime.version>
 
         <atomikos.version>3.8.0.wso2v1</atomikos.version>
     </properties>

@@ -24,7 +24,7 @@ import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
 
 /**
- * @scr.component name="org.wso2.carbon.ndatasource.capp.deployer" immediate="true"
+ * @scr.component name="org.wso2.micro.integrator.ndatasource.capp.deployer" immediate="true"
  */
 public class DataSourceCappDeployerServiceComponent {
 

@@ -39,7 +39,7 @@ import org.wso2.micro.core.util.Axis2ConfigurationContextObserver;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.core.util.ConfigurationContextService;
 
-@Component(name="org.wso2.carbon.ndatasource", immediate = true)
+@Component(name="org.wso2.micro.integrator.ndatasource", immediate = true)
 public class DataSourceServiceComponent {
 
 	private static final Log log = LogFactory.getLog(DataSourceServiceComponent.class);
