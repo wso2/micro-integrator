@@ -70,13 +70,12 @@ public class ServiceComponent {
                 // Check for the module availability
                 if (mainAxisConfig.getModules().toString().contains(POX_SECURITY_MODULE)){
                     mainAxisConfig.engageModule(POX_SECURITY_MODULE);
-                    log.info("UT Security is activated");
-                }
-                else {
-                    log.info("UT Security is not activated UTsecurity.mar is not available");
+                    log.debug("UT Security is activated");
+                } else {
+                    log.error("UT Security is not activated UTsecurity.mar is not available");
                 }
             } else {
-                log.info("POX Security Disabled");
+                log.debug("POX Security Disabled");
             }
         } catch (Throwable e) {
             log.error("Failed to activate Micro Integrator UT security module ", e);

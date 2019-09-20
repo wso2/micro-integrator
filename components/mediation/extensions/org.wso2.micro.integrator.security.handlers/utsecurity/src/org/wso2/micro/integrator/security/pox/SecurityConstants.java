@@ -16,9 +16,8 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.security.extensions;
+package org.wso2.micro.integrator.security.pox;
 
-import org.apache.rahas.SimpleTokenStore;
-
-public class SecurityTokenStore extends SimpleTokenStore {
+public class SecurityConstants {
+    public static final String USERNAME_TOKEN_SCENARIO_ID = "scenario1";
 }

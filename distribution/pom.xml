@@ -39,7 +39,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
-            <artifactId>UTSecurity</artifactId>
+            <artifactId>utsecurity</artifactId>
             <type>mar</type>
         </dependency>
         <dependency>
