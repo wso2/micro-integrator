@@ -1,19 +1,20 @@
-<proxy xmlns="http://ws.apache.org/ns/synapse" name="REST_URL_POSTFIX_TestProxy" transports="https http" startOnLoad="true" trace="disable">
-        <description/>
-        <target>
-            <inSequence>
-                <log>
-                    <property name="rest-url-value" expression="get-property('axis2','REST_URL_POSTFIX')"/>
-                </log>
-                <property name="REST_URL_POSTFIX" value="/echoString?in=charitha" scope="axis2"/>
-                <send>
-                    <endpoint>
-                        <address uri="http://localhost:8480/services/echo"/>
-                    </endpoint>
-                </send>
-            </inSequence>
-            <outSequence>
-                <send/>
-            </outSequence>
-        </target>
-    </proxy>
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="REST_URL_POSTFIX_TestProxy" transports="https http"
+       startOnLoad="true" trace="disable">
+    <description/>
+    <target>
+        <inSequence>
+            <log>
+                <property name="REST_URL_POSTFIX" value="/testcontext" scope="axis2" type="STRING"/>
+            </log>
+            <property name="REST_URL_POSTFIX" value="/testcontext" scope="axis2" type="STRING"/>
+            <send>
+                <endpoint>
+                    <address uri="http://localhost:8480/postfixapi"/>
+                </endpoint>
+            </send>
+        </inSequence>
+        <outSequence>
+            <send/>
+        </outSequence>
+    </target>
+</proxy>

@@ -1,0 +1,12 @@
+<api xmlns="http://ws.apache.org/ns/synapse" name="testUrlPostFix" context="/postfixapi">
+    <resource methods="GET" uri-template="/testcontext">
+        <inSequence>
+            <property name="HTTP_SC" value="200" scope="axis2"/>
+            <payloadFactory media-type="text">
+                <format>IBM</format>
+                <args/>
+            </payloadFactory>
+            <respond/>
+        </inSequence>
+    </resource>
+</api>

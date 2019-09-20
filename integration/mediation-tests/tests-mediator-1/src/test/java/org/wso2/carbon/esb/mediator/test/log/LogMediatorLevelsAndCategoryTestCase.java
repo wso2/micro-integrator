@@ -23,19 +23,35 @@ import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Properties;
 
 /**
  * THis test case verifies different levels and categories in log mediator
  */
 public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
 
+    private ServerConfigurationManager serverConfigurationManager;
     private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
+        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
+        serverConfigurationManager = new ServerConfigurationManager(context);
+        serverConfigurationManager.applyMIConfiguration(new File(getESBResourceLocation() + "/other/" + "log4j2.properties"));
+        serverConfigurationManager.restartMicroIntegrator();
+        init();
         carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
         //allow time for log reader to start
@@ -121,5 +137,6 @@ public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         carbonLogReader.stop();
+        serverConfigurationManager.restoreToLastMIConfiguration();
     }
 }
