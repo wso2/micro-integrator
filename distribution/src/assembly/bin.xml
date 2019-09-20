@@ -541,6 +541,11 @@
                 <include>net.sf.saxon:Saxon-HE:jar</include>
                 <include>xerces.wso2:xercesImpl</include>
                 <include>commons-logging:commons-logging</include>
+                <!--
+                    woodstox should be in class path to xml builder (need javax.xml.stream.XMLInputFactory
+                        implementation to axis2)
+                -->
+                <include>org.codehaus.woodstox:woodstox-core-asl:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>

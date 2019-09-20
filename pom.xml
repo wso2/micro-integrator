@@ -552,6 +552,11 @@
                 <version>${stax2.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.codehaus.woodstox</groupId>
+                <artifactId>woodstox-core-asl</artifactId>
+                <version>${version.woodstox.core.asl}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon.identity.inbound.auth.oauth2</groupId>
                 <artifactId>org.wso2.carbon.identity.oauth.stub</artifactId>
                 <version>${carbon.identity.oauth.version}</version>
@@ -866,6 +871,7 @@
         <aries.version>1.1.0</aries.version>
         <aries.proxy.version>1.0.1</aries.proxy.version>
         <stax2.version>3.1.4</stax2.version>
+        <version.woodstox.core.asl>4.4.1</version.woodstox.core.asl>
         <javax.jsr311.api.version>1.1.1</javax.jsr311.api.version>
 
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
