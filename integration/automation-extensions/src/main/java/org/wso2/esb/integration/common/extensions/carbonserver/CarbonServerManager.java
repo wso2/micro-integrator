@@ -126,6 +126,7 @@ public class CarbonServerManager {
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
                 tempProcess = Runtime.getRuntime().exec(cmdArray, null, commandDir);
+                process = tempProcess;
             }
 
             errorStreamHandler = new ServerLogReader("errorStream", tempProcess.getErrorStream());
@@ -154,7 +155,6 @@ public class CarbonServerManager {
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException("Unable to start server", e);
         }
-        process = tempProcess;
     }
 
     private String[] mergePropertiesToCommandArray(String[] parameters, String[] cmdArray) {
@@ -262,6 +262,9 @@ public class CarbonServerManager {
             if (portOffset == 0) {
                 System.clearProperty(ExtensionConstants.CARBON_HOME);
             }
+        }
+        else {
+            log.warn("Trying to shut down a server that hasn't completed startup. Hence aborting shutdown.");
         }
     }
 
