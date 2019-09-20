@@ -44,8 +44,6 @@
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -73,9 +71,6 @@
                             org.apache.axis2.deployment;version="${axis2.orbit.imp.pkg.version}",
                             org.apache.axis2.engine;version="${axis2.orbit.imp.pkg.version}",
                             org.apache.commons.logging;version="${commons-logging.imp.pkg.version}",
-<!--                            org.wso2.carbon.application.deployer;version="${carbon.kernel.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.application.deployer.config;version="${carbon.kernel.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.application.deployer.handler;version="${carbon.kernel.imp.pkg.version}",-->
                             org.wso2.micro.integrator.ndatasource.common;version="${project.version}",
                             org.wso2.micro.integrator.ndatasource.core;version="${product.mi.version}",
                             org.wso2.micro.integrator.ndatasource.core.utils;version="${product.mi.version}",

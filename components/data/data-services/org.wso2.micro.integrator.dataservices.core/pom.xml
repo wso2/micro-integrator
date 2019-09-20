@@ -230,7 +230,7 @@
                     <forkMode>pertest</forkMode>
                     <argLine>@{argLine} -enableassertions</argLine>
                     <testFailureIgnore>false</testFailureIgnore>
-                    <skip>false</skip>
+                    <skip>true</skip>
                     <includes>
                         <include>**/*TestSuite.java</include>
                     </includes>
