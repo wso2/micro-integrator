@@ -37,8 +37,8 @@ public abstract class DataServiceBaseTestCase extends TestCase {
 //               PrivilegedCarbonContext.getThreadLocalCarbonContext().setTenantId(MultitenantConstants.SUPER_TENANT_ID, true);
        }
 
-//       protected void endTenantFlow() {
-//               PrivilegedCarbonContext.endTenantFlow();
-//       }
+       protected void endTenantFlow() {
+               //PrivilegedCarbonContext.endTenantFlow();
+       }
 
 }
