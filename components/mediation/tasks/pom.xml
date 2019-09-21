@@ -31,7 +31,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>org.wso2.micro.integrator.task</module>
         <module>org.wso2.micro.integrator.mediation.ntask</module>
         <module>org.wso2.micro.integrator.ntask.core</module>
     </modules>

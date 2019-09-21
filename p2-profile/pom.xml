@@ -99,11 +99,6 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.initializer.feature:${product.mi.version}
                                 </featureArtifactDef>
-                               <!-- TODO This is moved to MI but commented out as it seems to be unnecessary.
-                                Check later and remvoe
-                                <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.task.server.feature:${project.version}
-                                </featureArtifactDef> -->
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.relay.server.feature:${carbon.mediation.version}
                                 </featureArtifactDef>
@@ -125,11 +120,6 @@
                                <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.mediation.ntask.feature:${project.version}
                                 </featureArtifactDef>
-                                <!--TODO This feature packs whole set of admin services , checked few bundles and seems not
-                                needed. Let's verify once integration tests are done and remove this.
-                                <featureArtifactDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.mediation.admin.feature:${carbon.mediation.version}
-                                </featureArtifactDef>-->
                                 <!-- This feature is used for synapse admin service. Hence, commented out as it seems to be unnecessary.
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.application.mgt.synapse.server.feature:${carbon.mediation.version}>
