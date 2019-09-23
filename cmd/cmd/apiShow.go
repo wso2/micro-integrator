@@ -23,6 +23,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 	"os"
 )
 
@@ -82,11 +83,11 @@ func executeGetAPICmd(apiname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixAPIs, "apiName", apiname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.API{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.API{})
 
 	if err == nil {
 		// Printing the details of the API
-		api := resp.(*utils.API)
+		api := resp.(*artifactUtils.API)
 		printAPIInfo(*api)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of the API", err)
@@ -96,7 +97,7 @@ func executeGetAPICmd(apiname string) {
 // Print the details of an API
 // Name, Context, Http Method, URL Style
 // @param app : API object
-func printAPIInfo(api utils.API) {
+func printAPIInfo(api artifactUtils.API) {
 
 	fmt.Println("Name - " + api.Name)
 	fmt.Println("Version - " + api.Version)
@@ -134,34 +135,13 @@ func executeListAPIsCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixAPIs
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.APIList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.APIList{})
 
 	if err == nil {
 		// Printing the list of available APIs
-		list := resp.(*utils.APIList)
-		printApiList(*list)
+		list := resp.(*artifactUtils.APIList)
+		utils.PrintItemList(list, []string{"NAME", "URL"}, "No APIs found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
-	}
-}
-
-func printApiList(apiList utils.APIList) {
-
-	if apiList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "URL"}
-		table.Append(data)
-
-		for _, api := range apiList.Apis {
-			data = []string{api.Name, api.Url}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No APIs found")
 	}
 }
