@@ -192,6 +192,7 @@ public class ProxyServiceResource extends APIResource {
 
         OMElement proxyConfiguration = ProxyServiceSerializer.serializeProxy(null, proxyService);
         proxyObject.put(SYNAPSE_CONFIGURATION, proxyConfiguration.toString());
+        proxyObject.put("eprs", proxyService.getAxisService().getEPRs());
         return proxyObject;
     }
 

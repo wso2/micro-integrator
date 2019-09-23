@@ -22,6 +22,7 @@ package org.wso2.micro.integrator.management.apis;
 import org.apache.synapse.Mediator;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
+import org.apache.synapse.config.xml.SequenceMediatorSerializer;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.mediators.base.SequenceMediator;
 import org.json.JSONObject;
@@ -113,10 +114,10 @@ public class SequenceResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         SequenceMediator sequence = configuration.getDefinedSequences().get(sequenceName);
-        return convertInboundEndpointToJsonObject(sequence);
+        return convertSequenceToJsonObject(sequence);
     }
 
-    private JSONObject convertInboundEndpointToJsonObject(SequenceMediator sequenceMediator) {
+    private JSONObject convertSequenceToJsonObject(SequenceMediator sequenceMediator) {
 
         if (Objects.isNull(sequenceMediator)) {
             return null;
@@ -139,6 +140,8 @@ public class SequenceResource extends APIResource {
             mediatorTypes[i] = mediators.get(i).getType();
         }
         sequenceObject.put("mediators", mediatorTypes);
+        sequenceObject.put(Constants.SYNAPSE_CONFIGURATION,
+                new SequenceMediatorSerializer().serializeAnonymousSequence(null, sequenceMediator));
 
         return sequenceObject;
     }
