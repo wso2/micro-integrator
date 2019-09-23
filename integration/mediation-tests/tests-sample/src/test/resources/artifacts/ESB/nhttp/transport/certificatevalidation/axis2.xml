@@ -336,7 +336,7 @@
                     </parameter>-->
     <!--/transportReceiver-->
 
-    <transportReceiver name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportReceiver"/>
+    <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
 
     <!--<transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener"/>-->
 
@@ -464,7 +464,7 @@
     </transportSender>
 
 
-    <transportSender name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportSender"/>
+    <transportSender name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender"/>
 
     <!--Uncomment this local transport to use local transport in mediation flow-->
     <!--<transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>-->

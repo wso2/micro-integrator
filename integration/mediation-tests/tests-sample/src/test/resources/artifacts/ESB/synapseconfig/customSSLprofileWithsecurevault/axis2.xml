@@ -236,7 +236,7 @@
         <parameter locked="false" name="non-blocking">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
-        <parameter locked="false" name="httpGetProcessor">org.wso2.carbon.mediation.transport.handlers.PassThroughNHttpGetProcessor</parameter>
+        <parameter locked="false" name="httpGetProcessor">org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor</parameter>
         <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
     </transportReceiver>
 
@@ -284,7 +284,7 @@
         <parameter locked="false" name="non-blocking">true</parameter>--&gt;
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
- 	<parameter locked="false" name="httpGetProcessor">org.wso2.carbon.mediation.transport.handlers.PassThroughNHttpGetProcessor</parameter>
+ 	<parameter locked="false" name="httpGetProcessor">org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor</parameter>
         <parameter locked="false" name="keystore">
             <KeyStore>
                 <Location>repository/resources/security/wso2carbon.jks</Location>
@@ -305,7 +305,7 @@
             supports optional|require or defaults to none -->
     </transportReceiver>
 
-    <transportReceiver class="org.wso2.carbon.core.transports.local.CarbonLocalTransportReceiver" name="local"/>
+    <transportReceiver class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver" name="local"/>
 
     <!--<transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener"/>-->
 
@@ -466,7 +466,7 @@
 
     
 
-    <transportSender class="org.wso2.carbon.core.transports.local.CarbonLocalTransportSender" name="local"/>
+    <transportSender class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender" name="local"/>
 
     <!--Uncomment this local transport to use local transport in mediation flow-->
     <!--<transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>-->

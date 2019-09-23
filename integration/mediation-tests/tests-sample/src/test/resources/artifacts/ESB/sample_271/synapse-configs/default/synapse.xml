@@ -22,7 +22,7 @@
 
     <!-- You can add any flat sequences, endpoints, etc.. to this synapse.xml file if you do
     *not* want to keep the artifacts in several files -->
-    <taskManager provider="org.wso2.carbon.mediation.ntask.NTaskTaskManager">
+    <taskManager provider="org.wso2.micro.integrator.mediation.ntask.NTaskTaskManager">
         <parameter name="cachableDuration">15000</parameter>
     </taskManager>
 </definitions>
