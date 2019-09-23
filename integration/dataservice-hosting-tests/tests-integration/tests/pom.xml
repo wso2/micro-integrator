@@ -252,5 +252,9 @@
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.report</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.owasp.esapi</groupId>
+            <artifactId>esapi</artifactId>
+        </dependency>
     </dependencies>
 </project>
