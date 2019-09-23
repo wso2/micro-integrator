@@ -39,9 +39,7 @@
     <test name="DSS-service-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.services.BatchRequestTestCase"/>
-            <!--commenting since data source cannot be added and need to be defined inline
-            https://github.com/wso2/micro-integrator/issues/255
-            <class name="org.wso2.ei.dataservice.integration.test.services.CarbonDataSourceTestCase"/>-->
+            <class name="org.wso2.ei.dataservice.integration.test.services.CarbonDataSourceTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.DataServiceSqlDriverTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.DistributedTransactionTestCase">
                 <methods>
