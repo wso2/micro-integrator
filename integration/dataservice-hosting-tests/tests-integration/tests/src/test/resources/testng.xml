@@ -34,8 +34,7 @@
             <!-- Covered in the framework itself
             <class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerStartupTestCase"/>-->
 
-            <!--Commenting out due to https://github.com/wso2/micro-integrator/issues/255
-            <class name="org.wso2.ei.dataservice.integration.test.datasource.DataSourceInitializationAtStartUpTestCase"/>-->
+            <class name="org.wso2.ei.dataservice.integration.test.datasource.DataSourceInitializationAtStartUpTestCase"/>
             <!--disabled due to test failure-->
             <!--<class name="org.wso2.ei.dataservice.integration.test.server.mgt.DSSServerBundleStatusTestCase"/>-->
         </classes>
@@ -94,9 +93,7 @@
     <test name="DSS-service-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.services.BatchRequestTestCase"/>
-            <!--commenting since data source cannot be added and need to be defined inline
-            https://github.com/wso2/micro-integrator/issues/255
-            <class name="org.wso2.ei.dataservice.integration.test.services.CarbonDataSourceTestCase"/>-->
+            <class name="org.wso2.ei.dataservice.integration.test.services.CarbonDataSourceTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.DataServiceSqlDriverTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.services.DistributedTransactionTestCase">
                 <methods>
@@ -247,9 +244,7 @@
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1031PolicyKeyWithoutPolicyPathTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1090EscapeNonPrintableCharactersTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.ResourcesServiceTestWithSameContextNameTestCase"/>
-            <!--Not applicable to MI since data sources are not facilitated as registry resources.
-            Need to check after fixing https://github.com/wso2/micro-integrator/issues/255
-            <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15379XMLExternalEntityAttacksTestCase"/>-->
+            <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15379XMLExternalEntityAttacksTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1111UserRoleExtensionTestCase"/>
             <!--N/A to MI now , since policies cannot be written to registry https://github.com/wso2/micro-integrator/issues/258
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1186JsonRenderTestCase"/>-->
