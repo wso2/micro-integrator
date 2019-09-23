@@ -596,6 +596,10 @@
                 <include>org.apache.logging.log4j:log4j-core:jar</include>
                 <include>org.apache.logging.log4j:log4j-jcl:jar</include>
                 <include>org.slf4j:slf4j-simple:jar</include>
+                <!--
+                javax jms-api need to be in class path for axis2
+                -->
+                <include>javax.jms:javax.jms-api:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
