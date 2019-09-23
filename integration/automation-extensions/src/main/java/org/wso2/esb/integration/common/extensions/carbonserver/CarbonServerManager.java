@@ -232,7 +232,7 @@ public class CarbonServerManager {
         }
     }
 
-    public synchronized void serverShutdown(int portOffset, boolean isRestart) throws AutomationFrameworkException {
+    public synchronized void serverShutdown(int portOffset, boolean skipRunningCodeCoverage) throws AutomationFrameworkException {
         if (process != null) {
             log.info("Shutting down server ...");
 
@@ -252,7 +252,7 @@ public class CarbonServerManager {
             process.destroy();
             process = null;
 
-            if (!isRestart && isCoverageEnable) {
+            if (!skipRunningCodeCoverage && isCoverageEnable) {
                 try {
                     log.info("Generating Jacoco code coverage...");
                     generateCoverageReport(new File(
