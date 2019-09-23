@@ -1080,6 +1080,11 @@
                 <artifactId>xml-apis</artifactId>
                 <version>${xml.apis.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.owasp.esapi</groupId>
+                <artifactId>esapi</artifactId>
+                <version>${esapi.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1411,6 +1416,8 @@
 
         <commons-text.orbit.version>1.6.wso2v1</commons-text.orbit.version>
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
+
+        <esapi.version>2.0.1</esapi.version>
 
         <!-- Axiom Version -->
         <axiom.wso2.version>1.2.11.wso2v13</axiom.wso2.version>
