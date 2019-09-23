@@ -1,14 +1,4 @@
 {
-  "transport.hl7.listener.enable": {
-    "true": {
-      "transport.hl7.listener.parameter.port": "9292"
-    }
-  },
-  "transport.hl7.sender.enable": {
-    "true": {
-      "transport.hl7.sender.parameter.non-blocking":true
-    }
-  },
   "transport.mail.listener.enable": {
     "true": {
       "transport.mail.listener.name": "mailto"
@@ -48,6 +38,18 @@
       "transport.wss.sender.parameter.outflow_dispatch_fault_sequence": "outflowFaultSeq",
       "transport.wss.sender.truststore_location": "$ref{truststore.file_name}",
       "transport.wss.sender.truststore_password": "$ref{truststore.tls.password}"
+    }
+  },
+  "transport.http.listener.certificate_revocation_verifier_enable": {
+    "true": {
+      "transport.http.listener.certificate_revocation_cache_size": "1024",
+      "transport.http.listener.certificate_revocation_cache_delay": "1000"
+    }
+  },
+  "transport.http.sender.certificate_revocation_verifier_enable": {
+    "true": {
+      "transport.http.sender.certificate_revocation_cache_size": "1024",
+      "transport.http.sender.certificate_revocation_cache_delay": "1000"
     }
   }
 

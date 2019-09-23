@@ -1,0 +1,29 @@
+<datasources-configuration xmlns:svns="http://org.wso2.securevault/configuration">
+
+    <providers>
+        <provider>org.wso2.micro.integrator.ndatasource.rdbms.RDBMSDataSourceReader</provider>
+    </providers>
+    <datasources>
+        {% for data in datasource %}
+        <datasource>
+            <name>{{data.id}}</name>
+            <description>this database is {{data.id}}</description>
+            <jndiConfig>
+                <name>jdbc/{{data.id}}</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>{{data.url}}</url>
+                    <username>{{data.username}}</username>
+                    <password>{{data.password}}</password>
+                    <driverClassName>{{data.driver}}</driverClassName>
+                    {% for property_name,property_value in data.pool_options.items() %}
+                    <{{property_name}}>{{property_value}}
+                    </{{property_name}}>
+                    {% endfor %}
+                </configuration>
+            </definition>
+        </datasource>
+        {% endfor %}
+    </datasources>
+</datasources-configuration>
