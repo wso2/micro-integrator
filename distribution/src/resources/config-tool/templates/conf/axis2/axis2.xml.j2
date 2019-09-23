@@ -73,7 +73,7 @@
     <parameter name="DrillDownToRootCauseForFaultReason" locked="false">false</parameter>
 
     <!-- Set the flag to true if you want to enable transport level session management -->
-    <parameter name="manageTransportSession" locked="false">false</parameter>
+    <parameter name="manageTransportSession" locked="false">true</parameter>
 
     <!-- This will give out the timout of the configuration contexts, in milliseconds -->
     <parameter name="ConfigContextTimeoutInterval" locked="false">30000</parameter>
@@ -88,6 +88,14 @@
     <parameter name="SynapseConfig.ServerName" locked="false">localhost</parameter>
     <!-- Returns 401 for UT secured scenario with incorrect/missing credentials -->
     <parameter name="enableBasicAuth" locked="false">true</parameter>
+
+    {% if transport.default_content_type is defined %}
+    <parameter name="defaultContentType" locked="false">"{{transport.default_content_type}}"</parameter>
+    {% endif %}
+
+    {% for parameter in  transport.parameters %}
+    <parameter name="{{parameter.name}}" locked="false">{{parameter.value}}</parameter>
+    {% endfor %}
 
     <!-- To override repository/services you need to uncomment following parameter and value -->
     <!-- SHOULD be absolute file path. -->
@@ -199,6 +207,7 @@
     </transportReceiver>
     {% endif %}
 
+    {% if transport.http.listener.secured_enable == true %}
     <transportReceiver name="https" class="{{transport.https.listener.class}}">
         {% for parameter_key,parameter_value in transport.https.listener.parameter.items() %}
         <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
@@ -232,7 +241,15 @@
             <fileReadInterval>{{transport.http.listener.ssl_profile.read_interval}}</fileReadInterval>
         </parameter>
         {% endif %}
+        {% if transport.http.listener.certificate_revocation_verifier_enable is defined %}
+        <parameter name="CertificateRevocationVerifier" enable="{{transport.http.listener.certificate_revocation_verifier_enable}}">
+            <CacheSize>{{transport.http.listener.certificate_revocation_cache_size}}</CacheSize>
+            <CacheDelay>{{transport.http.listener.certificate_revocation_cache_delay}}</CacheDelay>
+        </parameter>
+        {% endif %}
     </transportReceiver>
+    {% endif %}
+
     <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
     {% if transport.vfs.listener.enable == true %}
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener">
@@ -260,13 +277,6 @@
     {% endif %}
     {% if transport.fix.listener.enable == true %}
     <transportReceiver name="fix" class="org.apache.synapse.transport.fix.FIXTransportListener"/>
-    {% endif %}
-    {% if transport.hl7.listener.enable == true %}
-    <transportReceiver name="hl7" class="org.wso2.carbon.business.messaging.hl7.transport.HL7TransportListener">
-        {% for parameter_key,parameter_value in transport.hl7.listener.parameter.items() %}
-        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
-        {% endfor %}
-    </transportReceiver>
     {% endif %}
     <!-- SAP Transport Listeners -->
     {% if transport.sap.listener.idoc.enable == true %}
@@ -299,7 +309,7 @@
         {% for parameter_key,parameter_value in transport_item.parameter.items() %}
         <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
         {% endfor %}
-        {% if transport_item.key_store is defined %}
+        {% if transport_item.keystore is defined %}
         <parameter name="keystore" locked="false">
             <KeyStore>
                 <Location>{{transport_item.keystore.file_name}}</Location>
@@ -379,6 +389,7 @@
         {% endif %}
     </transportSender>
     {% endif %}
+    {% if transport.http.sender.secured_enable == true %}
     <transportSender name="https" class="{{transport.https.sender.class}}">
         <parameter name="non-blocking" locked="false">true</parameter>
         {% for parameter_key,parameter_value in transport.https.sender.parameter.items() %}
@@ -409,7 +420,34 @@
             <fileReadInterval>{{transport.http.sender.ssl_profile.read_interval}}</fileReadInterval>
         </parameter>
         {% endif %}
+        {% if transport.http.sender.certificate_revocation_verifier_enable is defined %}
+        <parameter name="CertificateRevocationVerifier" enable="{{transport.http.sender.certificate_revocation_verifier_enable}}">
+            <CacheSize>{{transport.http.sender.certificate_revocation_cache_size}}</CacheSize>
+            <CacheDelay>{{transport.http.sender.certificate_revocation_cache_delay}}</CacheDelay>
+        </parameter>
+        {% endif %}
+        {% if transport.http.secured_proxy_profile is defined %}
+        <parameter name="proxyProfiles">
+            {% for profile in transport.http.secured_proxy_profile %}
+            <profile>
+                <targetHosts>{% for hostitem in profile.target_hosts.toList() %}{{hostitem}}{% if loop.index < profile.target_hosts.toList()|length %},{% endif %}{% endfor %}</targetHosts>
+                <proxyHost>{{profile.proxy_host}}</proxyHost>
+                <proxyPort>{{profile.proxy_port}}</proxyPort>
+                {% if profile.proxy_username is defined %}
+                <proxyUserName>{{profile.proxy_username}}</proxyUserName>
+                {% endif %}
+                {% if profile.proxy_password is defined %}
+                <proxyPassword>{{profile.proxy_password}}</proxyPassword>
+                {% endif %}
+                {% if profile.bypass_hosts is defined %}
+                <bypass>{% for bypassitem in profile.bypass_hosts.toList() %}{{bypassitem}}{% if loop.index < profile.bypass_hosts.toList()|length %},{% endif %}{% endfor %}</bypass>
+                {% endif %}
+            </profile>
+            {% endfor %}
+        </parameter>
+        {% endif %}
     </transportSender>
+    {% endif %}
     {% if transport.jms.sender is defined %}
     <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
         {% for sender in transport.jms.sender %}
@@ -437,13 +475,6 @@
     {% endfor %}
     {% if transport.fix.sender.enable == true %}
     <transportSender name="fix" class="org.apache.synapse.transport.fix.FIXTransportSender"/>
-    {% endif %}
-    {% if transport.hl7.sender.enable == true %}
-    <transportSender name="hl7" class="org.wso2.carbon.business.messaging.hl7.transport.HL7TransportSender">
-        {% for parameter_key,parameter_value in transport.hl7.sender.parameter.items() %}
-        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
-        {% endfor %}
-    </transportSender>
     {% endif %}
     <!-- SAP Transport Senders -->
     {% if transport.sap.sender.idoc.enable == true %}
@@ -484,7 +515,7 @@
         {% for parameter_key,parameter_value in transport_item.parameter.items() %}
         <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
         {% endfor %}
-        {% if transport_item.key_store is defined %}
+        {% if transport_item.keystore is defined %}
         <parameter name="keystore" locked="false">
             <KeyStore>
                 <Location>{{transport_item.keystore.file_name}}</Location>
@@ -528,7 +559,9 @@
     <!-- ================================================= -->
 
     <!-- Comment this out to disable Addressing -->
-    <module ref="addressing"/>
+    {% for module in transport.modules %}
+    <module ref="{{module.ref}}"/>
+    {% endfor %}
 
     <!-- ================================================= -->
     <!--                   Transactions                    -->
@@ -547,171 +580,19 @@
     <!-- ================================================= -->
     <!--                    Phases                         -->
     <!-- ================================================= -->
-
-    <phaseOrder type="InFlow">
-        <!--  System pre defined phases       -->
-        <!--
-           The MsgInObservation phase is used to observe messages as soon as they are
-           received. In this phase, we could do some things such as SOAP message tracing & keeping
-           track of the time at which a particular message was received
-
-           NOTE: This should be the very first phase in this flow
-        -->
-        <phase name="MsgInObservation">
-            <handler name="TraceMessageBuilderDispatchHandler"
-                     class="org.apache.synapse.transport.passthru.util.TraceMessageBuilderDispatchHandler"/>
-        </phase>
-        <phase name="Validation"/>
-        <phase name="Transport">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
-                <order phase="Transport"/>
-                <handler name="JSONMessageHandler"
-                         class="org.apache.axis2.json.gson.JSONMessageHandler" />
+    {% for phaseOrder in transport.phase_order %}
+    <phaseOrder type="{{phaseOrder.phase_type}}">
+        {% for phase in phaseOrder.phases %}
+        <phase name="{{phase.phase_name}}" {% if phase.phase_class is defined %} class="{{phase.phase_class}}"{% endif %}>
+            {% for handler in phase.handlers %}
+            <handler name="{{handler.handler_name}}" class="{{handler.handler_class}}">
+                {% if handler.handler_order_phase is defined %}
+                <order {% if handler.handler_order_phase is defined %} phase = "{{handler.handler_order_phase}}" {% endif %} {% if handler.order_before is defined %} before = "{{handler.order_before}}"{% endif %} {% if handler.order_after is defined %} after = "{{handler.order_after}}"{% endif %} {% if handler.order_phase_first is defined %} phaseFirst = "{{handler.order_phase_first}}"{% endif %} {% if handler.order_phase_last is defined %} phaseLast = "{{handler.order_phase_last}}"{% endif %} />
+                {% endif %}
             </handler>
-            <handler name="RelaySecuirtyMessageBuilderDispatchandler"
-                     class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"/>
-            <handler name="SOAPActionBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
-                <order phase="Transport"/>
-            </handler>
-            <!--handler name="SMTPFaultHandler"
-                     class="org.wso2.carbon.core.transports.smtp.SMTPFaultHandler">
-                <order phase="Transport"/>
-            </handler-->
+            {% endfor %}
         </phase>
-        <phase name="Addressing">
-            <handler name="AddressingBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
-                <order phase="Addressing"/>
-            </handler>
-        </phase>
-        <phase name="Security"/>
-        <phase name="PreDispatch">
-            <!--Uncomment following handler to enable logging in EI log UI-->
-            <!--<handler name="TenantDomainSetter"-->
-            <!--class="org.wso2.carbon.utils.logging.handler.TenantDomainSetter"/>-->
-        </phase>
-        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"/>
-            <handler name="JSONMessageHandler" class="org.apache.axis2.json.gson.JSONMessageHandler" />
-            <handler name="SOAPActionBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
-            <handler name="RequestURIOperationDispatcher"
-                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher"/>
-            <handler name="SOAPMessageBodyBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"/>
-
-            <handler name="HTTPLocationBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
-            <handler name="SynapseDispatcher"
-                     class="org.apache.synapse.core.axis2.SynapseDispatcher"/>
-            <handler name="SynapseMustUnderstandHandler"
-                     class="org.apache.synapse.core.axis2.SynapseMustUnderstandHandler"/>
-        </phase>
-        <!--  System pre defined phases       -->
-        <phase name="RMPhase"/>
-        <phase name="OpPhase"/>
-        <phase name="AuthPhase"/>
-        <phase name="MUPhase"/>
-        <!-- After Postdispatch phase module author or or service author can add any phase he want -->
-        <phase name="OperationInPhase"/>
+        {% endfor %}
     </phaseOrder>
-
-    <phaseOrder type="OutFlow">
-        <!-- Handlers related to unified-endpoint component are added to the UEPPhase -->
-        <phase name="UEPPhase" />
-        <!--      user can add his own phases to this area  -->
-        <phase name="RMPhase"/>
-        <phase name="MUPhase"/>
-        <phase name="OpPhase"/>
-        <phase name="OperationOutPhase"/>
-        <!--system predefined phase-->
-        <!--these phase will run irrespective of the service-->
-        <phase name="PolicyDetermination"/>
-        <phase name="PTSecurityOutPhase">
-            <handler name="RelaySecuirtyMessageBuilderDispatchandler"
-                     class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"/>
-        </phase>
-        <phase name="MessageOut"/>
-        <phase name="Security"/>
-
-        <!--
-           The MsgOutObservation phase is used to observe messages just before the
-           responses are sent out. In this phase, we could do some things such as SOAP message
-           tracing & keeping track of the time at which a particular response was sent.
-
-           NOTE: This should be the very last phase in this flow
-        -->
-        <phase name="MsgOutObservation"/>
-    </phaseOrder>
-
-    <phaseOrder type="InFaultFlow">
-        <!--
-           The MsgInObservation phase is used to observe messages as soon as they are
-           received. In this phase, we could do some things such as SOAP message tracing & keeping
-           track of the time at which a particular message was received
-
-           NOTE: This should be the very first phase in this flow
-        -->
-        <phase name="MsgInObservation"/>
-        <phase name="Validation"/>
-        <phase name="Transport">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler">
-                <order phase="Transport"/>
-                <handler name="JSONMessageHandler"
-                         class="org.apache.axis2.json.gson.JSONMessageHandler" />
-            </handler>
-            <handler name="SOAPActionBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher">
-                <order phase="Transport"/>
-            </handler>
-        </phase>
-        <phase name="Addressing">
-            <handler name="AddressingBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.AddressingBasedDispatcher">
-                <order phase="Addressing"/>
-            </handler>
-        </phase>
-        <phase name="Security"/>
-        <phase name="PreDispatch"/>
-        <phase name="Dispatch" class="org.apache.axis2.engine.DispatchPhase">
-            <handler name="IntegratorStatefulHandler" class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"/>
-            <handler name="SOAPActionBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"/>
-            <handler name="RequestURIOperationDispatcher"
-                     class="org.apache.axis2.dispatchers.RequestURIOperationDispatcher"/>
-            <handler name="SOAPMessageBodyBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.SOAPMessageBodyBasedDispatcher"/>
-
-            <handler name="HTTPLocationBasedDispatcher"
-                     class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
-        </phase>
-        <!--      user can add his own phases to this area  -->
-        <phase name="RMPhase"/>
-        <phase name="OpPhase"/>
-        <phase name="MUPhase"/>
-        <phase name="OperationInFaultPhase"/>
-    </phaseOrder>
-
-    <phaseOrder type="OutFaultFlow">
-        <!-- Handlers related to unified-endpoint component are added to the UEPPhase -->
-        <phase name="UEPPhase" />
-        <!--      user can add his own phases to this area  -->
-        <phase name="RMPhase"/>
-        <!-- Must Understand Header processing phase -->
-        <phase name="MUPhase"/>
-        <phase name="OperationOutFaultPhase"/>
-        <phase name="PolicyDetermination"/>
-        <phase name="MessageOut"/>
-        <phase name="Security"/>
-        <phase name="Transport"/>
-        <!--
-           The MsgOutObservation phase is used to observe messages just before the
-           responses are sent out. In this phase, we could do some things such as SOAP message
-           tracing & keeping track of the time at which a particular response was sent.
-
-           NOTE: This should be the very last phase in this flow
-        -->
-        <phase name="MsgOutObservation"/>
-    </phaseOrder>
+    {% endfor %}
 </axisconfig>
