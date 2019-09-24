@@ -35,6 +35,16 @@
         </dependency>
         <dependency>
             <groupId>org.apache.rampart.wso2</groupId>
+            <artifactId>rampart-trust</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.rampart.wso2</groupId>
             <artifactId>rampart-core</artifactId>
             <exclusions>
                 <exclusion>

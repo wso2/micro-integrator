@@ -132,6 +132,12 @@
                 <version>${product.mi.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>utsecurity</artifactId>
+                <type>mar</type>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.server</artifactId>
                 <version>${carbon.kernel.version}</version>
@@ -315,6 +321,11 @@
             <dependency>
                 <groupId>org.apache.rampart.wso2</groupId>
                 <artifactId>rampart-core</artifactId>
+                <version>${rampart.wso2.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart.wso2</groupId>
+                <artifactId>rampart-trust</artifactId>
                 <version>${rampart.wso2.version}</version>
             </dependency>
             <dependency>
