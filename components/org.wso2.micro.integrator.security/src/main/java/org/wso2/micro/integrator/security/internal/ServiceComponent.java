@@ -19,7 +19,6 @@
 package org.wso2.micro.integrator.security.internal;
 
 import org.apache.axis2.AxisFault;
-import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
@@ -32,6 +31,8 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.security.SecurityConstants;
+import org.wso2.micro.integrator.security.config.RealmConfigXMLProcessor;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
@@ -49,13 +50,17 @@ public class ServiceComponent {
 
     private static Log log = LogFactory.getLog(ServiceComponent.class);
 
-    private ConfigurationContext configCtx;
-
     @Activate
     protected void activate(ComponentContext ctxt) {
         try {
-            setSecurityParams();
             engagePoxSecurity();
+            String lazyInit = System.getProperty(SecurityConstants.MI_SECURITY_USERMGT_LAZY_INIT);
+            if (lazyInit == null || Boolean.valueOf(lazyInit)) {
+                log.debug("Initializing Security parameters lazily");
+            } else {
+                log.debug("Initializing Security parameters eagerly");
+                initSecurityParams();
+            }
         } catch (Throwable e) {
             log.error("Failed to activate Micro Integrator security bundle ", e);
         }
@@ -66,7 +71,7 @@ public class ServiceComponent {
             String enablePoxSecurity = CarbonServerConfigurationService.getInstance()
                     .getFirstProperty("EnablePoxSecurity");
             if (enablePoxSecurity == null || "true".equals(enablePoxSecurity)) {
-                AxisConfiguration mainAxisConfig = configCtx.getAxisConfiguration();
+                AxisConfiguration mainAxisConfig = DataHolder.getInstance().getConfigCtx().getAxisConfiguration();
                 // Check for the module availability
                 if (mainAxisConfig.getModules().toString().contains(POX_SECURITY_MODULE)){
                     mainAxisConfig.engageModule(POX_SECURITY_MODULE);
@@ -82,31 +87,37 @@ public class ServiceComponent {
         }
     }
 
-    private void setSecurityParams() {
-        AxisConfiguration axisConfig = this.configCtx.getAxisConfiguration();
-
-        Parameter passwordCallbackParam = new Parameter();
-        DefaultPasswordCallback passwordCallbackClass = new DefaultPasswordCallback();
-        passwordCallbackParam.setName("passwordCallbackRef");
-        passwordCallbackParam.setValue(passwordCallbackClass);
-
-        try {
-            axisConfig.addParameter(passwordCallbackParam);
-        } catch (AxisFault axisFault) {
-            log.error("Failed to set axis configuration parameter ", axisFault);
-        }
+    /**
+     * This function will initialize security parameters
+     */
+    public static synchronized void initSecurityParams() {
 
         DataHolder dataHolder = DataHolder.getInstance();
+        if (dataHolder.getRealmConfig() == null || dataHolder.getUserStoreManager() == null) {
 
-        RealmConfiguration config = passwordCallbackClass.getRealmConfig();
-        dataHolder.setRealmConfig(config);
+            log.info("Initializing Security parameters");
+            RealmConfiguration config = RealmConfigXMLProcessor.createRealmConfig();
+            dataHolder.setRealmConfig(config);
+            AxisConfiguration axisConfig = dataHolder.getConfigCtx().getAxisConfiguration();
 
-        try {
-            UserStoreManager userStoreManager = (UserStoreManager) MicroIntegratorSecurityUtils.
-                    createObjectWithOptions(config.getUserStoreClass(), config);
-            dataHolder.setUserStoreManager(userStoreManager);
-        } catch (UserStoreException e) {
-            log.error("Error on initializing User Store Manager Class", e);
+            Parameter passwordCallbackParam = new Parameter();
+            DefaultPasswordCallback passwordCallbackClass = new DefaultPasswordCallback(config);
+            passwordCallbackParam.setName("passwordCallbackRef");
+            passwordCallbackParam.setValue(passwordCallbackClass);
+
+            try {
+                axisConfig.addParameter(passwordCallbackParam);
+            } catch (AxisFault axisFault) {
+                log.error("Failed to set axis configuration parameter ", axisFault);
+            }
+
+            try {
+                UserStoreManager userStoreManager = (UserStoreManager) MicroIntegratorSecurityUtils.
+                        createObjectWithOptions(config.getUserStoreClass(), config);
+                dataHolder.setUserStoreManager(userStoreManager);
+            } catch (UserStoreException e) {
+                log.error("Error on initializing User Store Manager Class", e);
+            }
         }
     }
 
@@ -121,10 +132,10 @@ public class ServiceComponent {
             policy = ReferencePolicy.DYNAMIC,
             unbind = "unsetConfigurationContext")
     protected void setConfigurationContext(Axis2ConfigurationContextService configCtx) {
-        this.configCtx = configCtx.getServerConfigContext();
+        DataHolder.getInstance().setConfigCtx(configCtx.getServerConfigContext());
     }
 
     protected void unsetConfigurationContext(Axis2ConfigurationContextService configCtx) {
-        this.configCtx = null;
+        // Nothing to do here yet
     }
 }

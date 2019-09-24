@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.security.callback;
+package org.wso2.micro.integrator.security.config;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
@@ -460,5 +460,18 @@ public class RealmConfigXMLProcessor {
 
     public void setSecretResolver(OMElement rootElement) {
         this.secretResolver = SecretResolverFactory.create(rootElement, true);
+    }
+
+
+    public static RealmConfiguration createRealmConfig() {
+        RealmConfigXMLProcessor processor = new RealmConfigXMLProcessor();
+        RealmConfiguration realmConfig = null;
+        try {
+            realmConfig = processor.buildRealmConfigurationFromFile();
+
+        } catch (org.wso2.micro.integrator.security.user.core.UserStoreException e) {
+            log.error("Error while loading Realm Configuration");
+        }
+        return realmConfig;
     }
 }

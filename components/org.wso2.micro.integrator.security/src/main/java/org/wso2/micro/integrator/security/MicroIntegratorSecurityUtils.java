@@ -20,8 +20,11 @@ package org.wso2.micro.integrator.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.micro.integrator.security.internal.DataHolder;
+import org.wso2.micro.integrator.security.internal.ServiceComponent;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 
@@ -123,5 +126,39 @@ public class MicroIntegratorSecurityUtils {
             sb.append("\t" + element.toString() + "\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * Utility function to retrieve RealmConfiguration of the server
+     *
+     * @return RealmConfiguration
+     */
+    public static RealmConfiguration getRealmConfiguration() {
+        DataHolder dataHolder = DataHolder.getInstance();
+        if (dataHolder.getRealmConfig() == null) {
+            // If lazy loading enabled initialize security parameter
+            if (log.isDebugEnabled()) {
+                log.debug("Lazy loading security parameters");
+            }
+            ServiceComponent.initSecurityParams();
+        }
+        return dataHolder.getRealmConfig();
+    }
+
+    /**
+     * Utility function to retrieve UserStoreManager of the server
+     *
+     * @return RealmConfiguration
+     */
+    public static UserStoreManager getUserStoreManager() {
+        DataHolder dataHolder = DataHolder.getInstance();
+        if (dataHolder.getUserStoreManager() == null) {
+            // If lazy loading enabled initialize security parameter
+            if (log.isDebugEnabled()) {
+                log.debug("Lazy loading security parameters");
+            }
+            ServiceComponent.initSecurityParams();
+        }
+        return dataHolder.getUserStoreManager();
     }
 }

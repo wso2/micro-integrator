@@ -23,13 +23,14 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ws.security.WSPasswordCallback;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.internal.DataHolder;
+import org.wso2.micro.integrator.security.internal.ServiceComponent;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
+import java.io.IOException;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import java.io.IOException;
 
 /**
  * This class handles the authentication of the username token via the defined user store.
@@ -38,7 +39,6 @@ import java.io.IOException;
 public abstract class AbstractPasswordCallback implements CallbackHandler {
 
     protected final Log log = LogFactory.getLog(AbstractPasswordCallback.class);
-    public abstract RealmConfiguration getRealmConfig();
     private UserStoreManager userStoreManager;
     private RealmConfiguration realmConfig;
     private DataHolder dataHolder = DataHolder.getInstance();
@@ -50,7 +50,12 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
             if (realmConfig == null) {
                 realmConfig = dataHolder.getRealmConfig();
                 if (realmConfig == null) {
-                    realmConfig = getRealmConfig();
+                    // If lazy loading enabled initialize security parameter
+                    if (log.isDebugEnabled()) {
+                        log.debug("Lazy loading security parameters");
+                    }
+                    ServiceComponent.initSecurityParams();
+                    realmConfig = dataHolder.getRealmConfig();
                 }
             }
             if (userStoreManager == null) {
@@ -173,4 +178,11 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         }
     }
 
+    public RealmConfiguration getRealmConfig() {
+        return realmConfig;
+    }
+
+    public void setRealmConfig(RealmConfiguration realmConfig) {
+        this.realmConfig = realmConfig;
+    }
 }
