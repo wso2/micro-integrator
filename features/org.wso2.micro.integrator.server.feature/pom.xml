@@ -254,6 +254,7 @@
 <!--                                <bundleDef>org.wso2.carbon:org.wso2.carbon.addressing:${carbon.kernel.version}-->
 <!--                                </bundleDef>-->
                                 <!--Management API-->
+                                <bundleDef>org.wso2.orbit.com.nimbusds:nimbus-jose-jwt:${nimbus-jose.orbit.version}</bundleDef>
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.management.apis:${product.mi.version}
                                 </bundleDef>

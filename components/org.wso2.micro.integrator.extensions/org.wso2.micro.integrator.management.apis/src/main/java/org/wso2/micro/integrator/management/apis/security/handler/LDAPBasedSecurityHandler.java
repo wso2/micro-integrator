@@ -21,9 +21,10 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.security.internal.DataHolder;
 import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.UserStoreManager;
+import org.wso2.micro.integrator.security.internal.DataHolder;
+
 
 /**
  * This class extents SecurityHandlerAdapter to implement the authentication logic for a
@@ -45,8 +46,8 @@ public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String credentials) {
-        String decodedCredentials = new String(new Base64().decode(credentials.getBytes()));
+    protected Boolean authenticate(String authHeaderToken) {
+        String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         // Avoid possible array index out of bound errors
         if (usernamePasswordArray.length != 2) {

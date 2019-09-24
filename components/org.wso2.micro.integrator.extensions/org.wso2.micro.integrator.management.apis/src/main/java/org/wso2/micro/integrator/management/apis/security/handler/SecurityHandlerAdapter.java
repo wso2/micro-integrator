@@ -40,12 +40,20 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
         if (Objects.nonNull(headers)) {
             if (Objects.nonNull(headers.get(HTTPConstants.HEADER_AUTHORIZATION))) {
                 String authHeader = (String) headers.get(HTTPConstants.HEADER_AUTHORIZATION);
-                String credentials = authHeader.substring(6).trim();
-                if (authenticate(credentials)) {
+                String authHeaderToken = authHeader;
+                if(authHeader.startsWith(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE)) {
+                    authHeaderToken = authHeader.substring(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
+                } else if (authHeader.startsWith(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE)){
+                    authHeaderToken = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
+                } else {
+                    // Other auth header types are not supported atm
+                    return false;
+                }
+                if (authenticate(authHeaderToken)) {
                     return true;
                 } else {
                     headers.clear();
-                    SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_FORBIDDEN);
+                    SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
                     return false;
                 }
             } else {
@@ -62,8 +70,9 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
     /**
      * Executes the authentication logic relevant to the handler.
      *
-     * @param credentials encoded authorization token
+     * @param authHeaderToken encoded authorization token
      * @return Boolean authenticated
      */
-    protected abstract Boolean authenticate(String credentials);
+    protected abstract Boolean authenticate(String authHeaderToken);
+
 }
