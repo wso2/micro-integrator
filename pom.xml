@@ -817,16 +817,6 @@
                 <version>${fasterxml.jackson.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.orbit.com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.orbit.com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${fasterxml.jackson.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>de.undercouch</groupId>
                 <artifactId>bson4jackson</artifactId>
                 <version>${bson4jackson.orbit.version}</version>
@@ -1396,7 +1386,6 @@
 <!--        <carbon.kernel.version>4.4.40</carbon.kernel.version>-->
         <olingo.orbit.version>4.4.0.wso2v2</olingo.orbit.version>
 
-        <fasterxml.jackson.version>2.9.8.wso2v1</fasterxml.jackson.version>
         <bson4jackson.orbit.version>2.9.0</bson4jackson.orbit.version>
 
         <saxon.orbit.version>8.9.0.wso2v2</saxon.orbit.version>
