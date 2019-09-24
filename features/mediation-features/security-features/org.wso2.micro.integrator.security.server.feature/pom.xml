@@ -66,6 +66,9 @@
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.security:${product.mi.version}
                                 </bundleDef>
+                                <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.mediation.security:${product.mi.version}
+                                </bundleDef>
                             </bundles>
                         </configuration>
                     </execution>

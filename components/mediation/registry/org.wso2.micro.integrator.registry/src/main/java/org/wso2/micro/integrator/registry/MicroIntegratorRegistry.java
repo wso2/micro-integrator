@@ -93,6 +93,19 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         this.configRegistry = getUri(defaultFSRegRoot, "config");
         //Default registry governance registry location : <CARBON_HOME>/registry/governance
         this.govRegistry = getUri(defaultFSRegRoot, "governance");
+
+        initSecurityRepo();
+    }
+
+    /**
+     * Initializing the repository which requires to store the secure vault
+     * cipher text
+     */
+    private void initSecurityRepo() {
+		 //	Here, the secure vault resource is created, if it does not exist in the registry.
+		if (!isResourceExists(MicroIntegratorRegistryConstants.CONNECTOR_SECURE_VAULT_CONFIG_REPOSITORY)) {
+			newResource(MicroIntegratorRegistryConstants.CONNECTOR_SECURE_VAULT_CONFIG_REPOSITORY, true);
+		}
     }
 
     private String getUri(String defaultFSRegRoot, String subDirectory) {

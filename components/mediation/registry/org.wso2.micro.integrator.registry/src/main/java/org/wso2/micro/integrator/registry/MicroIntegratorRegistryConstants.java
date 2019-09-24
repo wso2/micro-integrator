@@ -51,4 +51,6 @@ public class MicroIntegratorRegistryConstants {
     public static final String PROPERTY_EXTENTION = ".properties";
 
     public static final String DEFAULT_MEDIA_TYPE = "text/plain";
+
+    public static final String CONNECTOR_SECURE_VAULT_CONFIG_REPOSITORY = "conf:/repository/components/secure-vault";
 }
