@@ -49,8 +49,19 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         serverConfigurationManager = new ServerConfigurationManager(context);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
-        applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.wire", "DEBUG");
+
+        File log4j2Properties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
+        String loggers = getProperty(log4j2Properties, "loggers");
+
+        if (loggers == null) {
+            Assert.fail("Loggers property became null");
+        }
+
+        applyProperty(log4j2Properties, "loggers", "" + loggers + ", synapse-transport-http-wire");
+        applyProperty(log4j2Properties, "logger.synapse-transport-http-wire.name",
+                      "org.apache.synapse.transport.http.wire");
+        applyProperty(log4j2Properties, "logger.synapse-transport-http-wire.level", "DEBUG");
+
         serverConfigurationManager.restartMicroIntegrator();
         init();
         carbonLogReader = new CarbonLogReader();
@@ -66,7 +77,8 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
 
         }
         boolean errorLogFound = false;
-        if (carbonLogReader.checkForLog("Host: google.com:80", DEFAULT_TIMEOUT)) {
+        if (carbonLogReader.checkForLog("Host: google.com:80", DEFAULT_TIMEOUT) && !carbonLogReader
+                .checkForLog("Host: google.com", DEFAULT_TIMEOUT)) {
             errorLogFound = true;
         }
         assertFalse(errorLogFound, "Port 80 should not append to the Host header");
@@ -111,5 +123,24 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
                 fos.close();
             }
         }
+    }
+
+    /**
+     * Get the given property
+     *
+     * @param srcFile
+     * @param key
+     * @throws IOException
+     */
+    private String getProperty(File srcFile, String key) throws IOException {
+        String value = null;
+        try (FileInputStream fis = new FileInputStream(srcFile)) {
+            Properties properties = new Properties();
+            properties.load(fis);
+            value = properties.getProperty(key);
+        } catch (Exception e) {
+            Assert.fail("Exception occurred with the message: " + e.getMessage());
+        }
+        return value;
     }
 }
