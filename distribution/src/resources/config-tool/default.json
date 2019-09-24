@@ -127,6 +127,10 @@
   "encryption.alias": "symmetric.key.value",
 
   "database.enable_config": true,
-  "database.enable_gov": true
+  "database.enable_gov": true,
 
+  "system.parameter": {
+    "org.wso2.CipherTransformation": "RSA/ECB/OAEPwithSHA1andMGF1Padding",
+    "org.wso2.SecureVaultPasswordRegEx": "^[\\S]{5,30}$"
+  }
 }
