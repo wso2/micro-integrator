@@ -156,7 +156,7 @@
         <!-- 
              The fully qualified name of the default initial context factory
         -->
-        <DefaultInitialContextFactory>org.wso2.carbon.tomcat.jndi.CarbonJavaURLContextFactory</DefaultInitialContextFactory>
+        <DefaultInitialContextFactory>org.wso2.micro.tomcat.jndi.CarbonJavaURLContextFactory</DefaultInitialContextFactory>
         <!-- 
              The restrictions that are done to various JNDI Contexts in a Multi-tenant environment 
         -->
