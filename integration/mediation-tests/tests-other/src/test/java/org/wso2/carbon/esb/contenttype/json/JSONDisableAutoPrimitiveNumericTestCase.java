@@ -53,7 +53,7 @@ public class JSONDisableAutoPrimitiveNumericTestCase extends ESBIntegrationTest 
         serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
                         + File.separator + "json" + File.separator + "disableAutoPrimitiveNumeric" + File.separator
-                        + "deployment.toml"));
+                        + "synapse.properties"));
         super.init();
     }
 
