@@ -1,13 +1,13 @@
 /*
- * Copyright (c) 2005-2013, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
- * 
+ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
- * 
- * http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.mediation.security.vault.xpath;
+package org.wso2.micro.integrator.mediation.security.vault.xpath;
 
 import java.util.List;
 
@@ -27,8 +27,8 @@ import org.jaxen.Context;
 import org.jaxen.Function;
 import org.jaxen.FunctionCallException;
 import org.jaxen.function.StringFunction;
-import org.wso2.carbon.mediation.security.vault.SecureVaultLookupHandler;
-import org.wso2.carbon.mediation.security.vault.SecureVaultLookupHandlerImpl;
+import org.wso2.micro.integrator.mediation.security.vault.SecureVaultLookupHandler;
+import org.wso2.micro.integrator.mediation.security.vault.SecureVaultLookupHandlerImpl;
 
 /**
  * Implements the XPath extension function synapse:vault-lookup(scope,prop-name)
@@ -38,12 +38,12 @@ public class VaultLookupFunction implements Function {
 	private static final Log log = LogFactory.getLog(VaultLookupFunction.class);
 	private static final Log trace = LogFactory.getLog(SynapseConstants.TRACE_LOGGER);
 
-	public static final String NULL_STRING = "";
+	private static final String NULL_STRING = "";
 
 	/** Synapse Message context */
 	private final org.apache.synapse.MessageContext synCtx;
 
-	public VaultLookupFunction(org.apache.synapse.MessageContext synCtx) {
+	VaultLookupFunction(org.apache.synapse.MessageContext synCtx) {
 		this.synCtx = synCtx;
 	}
 

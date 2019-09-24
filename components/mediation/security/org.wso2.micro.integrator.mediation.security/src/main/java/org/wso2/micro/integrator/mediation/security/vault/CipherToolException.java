@@ -18,17 +18,13 @@
 
 package org.wso2.micro.integrator.mediation.security.vault;
 
-import org.apache.synapse.MessageContext;
+public class CipherToolException extends Exception {
 
-public interface SecureVaultLookupHandler {
+    CipherToolException(String message, Throwable cause){
+        super(message, cause);
+    }
 
-	/**
-	 * Method to evaluate the parameters passed to extract values from
-	 * secure-vault lookup
-	 * 
-	 * @param aliasPasword alias for the password
-	 * @return the string value of the password
-	 */
-	public String evaluate(String aliasPasword, MessageContext synCtx);
-
+    CipherToolException(String message){
+        super(message);
+    }
 }
