@@ -257,15 +257,6 @@
                                 <bundleDef>
                                     org.wso2.ei:org.wso2.micro.integrator.management.apis:${product.mi.version}
                                 </bundleDef>
-                                <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-core:${fasterxml.jackson.version}
-                                </bundleDef>
-                                <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-databind:${fasterxml.jackson.version}
-                                </bundleDef>
-                                <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-annotations:${fasterxml.jackson.version}
-                                </bundleDef>
                                 <bundleDef>org.atomikos.wso2:atomikos:${atomikos.version}</bundleDef>
                             </bundles>
 
