@@ -114,7 +114,7 @@ func executeListProxyServicesCmd() {
 	if err == nil {
 		// Printing the list of available Endpoints
 		list := resp.(*artifactUtils.ProxyServiceList)
-		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No Proxy Services found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Wsdl11, utils.Wsdl20}, "No Proxy Services found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Proxy Services", err)
 	}

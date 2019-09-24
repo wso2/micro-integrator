@@ -109,7 +109,7 @@ func executeListMessageProcessorCmd() {
 	if err == nil {
 		// Printing the list of available Endpoints
 		list := resp.(*artifactUtils.MessageProcessorList)
-		utils.PrintItemList(list, []string{"NAME", "TYPE", "STATUS"}, "No Message Processors Found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Type, utils.Status}, "No Message Processors Found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Message Processors", err)
 	}

@@ -75,7 +75,7 @@ func executeDataServiceListCmd() {
 	if err == nil {
 		// print the list of available data services
 		list := resp.(*artifactUtils.DataServicesList)
-		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No dataservices found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Wsdl11, utils.Wsdl20}, "No dataservices found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Dataservices", err)
 	}

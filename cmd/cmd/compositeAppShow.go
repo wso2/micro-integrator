@@ -127,7 +127,7 @@ func executeListCarbonAppsCmd() {
 	if err == nil {
 		// Printing the list of available Carbon apps
 		list := resp.(*artifactUtils.CompositeAppList)
-		utils.PrintItemList(list, []string{"NAME", "VERSION"}, "No Composite Apps found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Version}, "No Composite Apps found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Carbon apps", err)
 	}

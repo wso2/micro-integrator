@@ -115,7 +115,8 @@ func executeListTasksCmd() {
 	if err == nil {
 		// Printing the list of available Tasks
 		list := resp.(*artifactUtils.TaskList)
-		utils.PrintItemList(list, []string{"NAME", "TRIGGER TYPE", "COUNT", "INTERVAL", "CRON EXPRESSION"}, "No Tasks found")
+		utils.PrintItemList(list, []string{utils.Name, utils.TriggerType, utils.Count, utils.Interval, utils.CronExpression},
+			"No Tasks found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
 	}

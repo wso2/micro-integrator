@@ -129,7 +129,7 @@ func executeListInboundEndpointsCmd() {
 	if err == nil {
 		// Printing the list of available Inbound endpoints
 		list := resp.(*artifactUtils.InboundEndpointList)
-		utils.PrintItemList(list, []string{"NAME", "TYPE"}, "No inbound endpoints found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Type}, "No inbound endpoints found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Inbound Endpoints", err)
 	}

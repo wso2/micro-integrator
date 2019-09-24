@@ -113,7 +113,7 @@ func executeListEndpointsCmd() {
 	if err == nil {
 		// Printing the list of available Endpoints
 		list := resp.(*artifactUtils.EndpointList)
-		utils.PrintItemList(list, []string{"NAME", "TYPE", "METHOD", "URL"}, "No endpoints found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Type, utils.Method, utils.Url}, "No endpoints found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Endpoints", err)
 	}

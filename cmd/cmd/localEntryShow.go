@@ -105,7 +105,7 @@ func executeListLocalEntryCmd() {
 	if err == nil {
 		// Printing the list of available Local Entries
 		list := resp.(*artifactUtils.LocalEntryList)
-		utils.PrintItemList(list, []string{"NAME", "TYPE"}, "No Local Entries found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Type}, "No Local Entries found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Message Stores", err)
 	}

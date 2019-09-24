@@ -20,11 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
 	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
-	"os"
 )
 
 var apiName string
@@ -106,27 +104,24 @@ func printAPIInfo(api artifactUtils.API) {
 	fmt.Println("Tracing - " + api.Tracing)
 	fmt.Println("Resources : ")
 
-	table := tablewriter.NewWriter(os.Stdout)
-	table.SetAlignment(tablewriter.ALIGN_LEFT)
+	table := utils.GetTableWriter()
 
-	data := []string{"URL", "METHOD"}
+	data := []string{utils.Url, utils.Method}
 	table.Append(data)
 
 	for _, resource := range api.Resources {
 
-		var methodSring string
+		var methodString string
 
 		for i, method := range resource.Methods {
 			if i > 0 {
-				methodSring += "/"
+				methodString += "/"
 			}
-			methodSring += method
+			methodString += method
 		}
-		data = []string{resource.Url, methodSring}
+		data = []string{resource.Url, methodString}
 		table.Append(data)
 	}
-	table.SetBorder(false)
-	table.SetColumnSeparator(" ")
 	table.SetAutoMergeCells(true)
 	table.Render()
 }
@@ -140,7 +135,7 @@ func executeListAPIsCmd() {
 	if err == nil {
 		// Printing the list of available APIs
 		list := resp.(*artifactUtils.APIList)
-		utils.PrintItemList(list, []string{"NAME", "URL"}, "No APIs found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Url}, "No APIs found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
 	}

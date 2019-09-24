@@ -124,7 +124,7 @@ func executeListSequencesCmd() {
 	if err == nil {
 		// Printing the list of available Sequences
 		list := resp.(*artifactUtils.SequenceList)
-		utils.PrintItemList(list, []string{"NAME", "STATS", "TRACING"}, "No sequences found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Stats, utils.Tracing}, "No sequences found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Sequences", err)
 	}

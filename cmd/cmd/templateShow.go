@@ -158,7 +158,7 @@ func printTemplateList(templateList artifactUtils.TemplateList) {
 		isTemplateFound = true
 		table := utils.GetTableWriter()
 
-		data := []string{"NAME", "TYPE"}
+		data := []string{utils.Name, utils.Type}
 		table.Append(data)
 
 		for _, template := range allTemplateList {
@@ -176,7 +176,7 @@ func printTemplatesByType(templateList artifactUtils.TemplateListByType) {
 	if templateList.Count > 0 {
 		table := utils.GetTableWriter()
 
-		data := []string{"NAME"}
+		data := []string{utils.Name}
 		table.Append(data)
 
 		for _, template := range templateList.Templates {

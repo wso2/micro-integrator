@@ -110,7 +110,7 @@ func executeListMessageStoreCmd() {
 	if err == nil {
 		// Printing the list of available Message Stores
 		list := resp.(*artifactUtils.MessageStoreList)
-		utils.PrintItemList(list, []string{"NAME", "TYPE", "SIZE"}, "No Message Stores found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Type, utils.Size}, "No Message Stores found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Message Stores", err)
 	}

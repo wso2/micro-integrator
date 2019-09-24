@@ -74,7 +74,8 @@ func executeListConnectorCmd() {
 	if err == nil {
 		// Printing the list of available Connectors
 		list := resp.(*artifactUtils.ConnectorList)
-		utils.PrintItemList(list, []string{"NAME", "STATUS", "PACKAGE", "DESCRIPTION"}, "No Connectors found")
+		utils.PrintItemList(list, []string{utils.Name, utils.Status, utils.Package, utils.Description},
+			"No Connectors found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Connectors", err)
 	}
