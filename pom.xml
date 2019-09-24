@@ -1086,6 +1086,11 @@
                 <artifactId>esapi</artifactId>
                 <version>${esapi.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-jaxws</artifactId>
+                <version>${axis.jaxws.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1418,6 +1423,7 @@
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
 
         <esapi.version>2.0.1</esapi.version>
+        <axis.jaxws.version>1.6.2</axis.jaxws.version>
 
         <!-- Axiom Version -->
         <axiom.wso2.version>1.2.11.wso2v13</axiom.wso2.version>
