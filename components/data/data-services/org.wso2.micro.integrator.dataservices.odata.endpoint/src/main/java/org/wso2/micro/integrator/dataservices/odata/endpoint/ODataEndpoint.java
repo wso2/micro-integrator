@@ -95,11 +95,7 @@ public class ODataEndpoint {
         String odataServiceName;
         String odataServiceUri;
         String configID;
-        if (tenantDomain == null) {
-            odataServices = "odata/";
-        } else {
-            odataServices = "odata/t/" + tenantDomain + "/";
-        }
+        odataServices = "odata/";
         int index = uri.indexOf(odataServices);
         if (-1 != index) {
             int serviceStart = index + odataServices.length();
