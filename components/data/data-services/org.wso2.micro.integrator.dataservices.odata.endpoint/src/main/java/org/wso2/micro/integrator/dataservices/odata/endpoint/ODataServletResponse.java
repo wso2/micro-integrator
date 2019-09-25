@@ -55,57 +55,57 @@ public class ODataServletResponse implements HttpServletResponse {
 
     @Override
     public void addCookie(Cookie cookie) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public boolean containsHeader(String s) {
-        return false;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String encodeURL(String s) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String encodeRedirectURL(String s) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String encodeUrl(String s) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String encodeRedirectUrl(String s) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void sendError(int i, String s) throws IOException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void sendError(int i) throws IOException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void sendRedirect(String s) throws IOException {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setDateHeader(String s, long l) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void addDateHeader(String s, long l) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -134,12 +134,12 @@ public class ODataServletResponse implements HttpServletResponse {
 
     @Override
     public void setIntHeader(String s, int i) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void addIntHeader(String s, int i) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -150,7 +150,7 @@ public class ODataServletResponse implements HttpServletResponse {
 
     @Override
     public void setStatus(int i, String s) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -160,17 +160,17 @@ public class ODataServletResponse implements HttpServletResponse {
 
     @Override
     public String getHeader(String s) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Collection<String> getHeaders(String s) {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Collection<String> getHeaderNames() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -230,8 +230,8 @@ public class ODataServletResponse implements HttpServletResponse {
     }
 
     @Override
-    public PrintWriter getWriter() throws IOException {
-        return null;
+    public PrintWriter getWriter() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -293,11 +293,11 @@ public class ODataServletResponse implements HttpServletResponse {
 
     @Override
     public void setLocale(Locale locale) {
-
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Locale getLocale() {
-        return null;
+        throw new UnsupportedOperationException();
     }
 }
