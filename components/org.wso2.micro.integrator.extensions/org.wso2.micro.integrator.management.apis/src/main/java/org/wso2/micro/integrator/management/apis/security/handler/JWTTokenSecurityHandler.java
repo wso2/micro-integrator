@@ -22,6 +22,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.wso2.micro.integrator.management.apis.Constants;
+import org.wso2.micro.integrator.security.internal.DataHolder;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
 import java.util.Map;
 import java.util.Objects;
@@ -51,14 +53,25 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
 
     @Override
     protected Boolean authenticate(String authHeaderToken) {
-        if(messageContext.getTo().getAddress().contentEquals(Constants.REST_API_CONTEXT + Constants.PREFIX_LOGIN)) {
+        if((Constants.REST_API_CONTEXT + Constants.PREFIX_LOGIN).contentEquals(messageContext.getTo().getAddress())) {
             //Login request is basic auth
-            return processLoginRequest(authHeaderToken);
+            if(AuthConstants.CARBON_USER_STORE.equals(JWTConfig.getInstance().getJwtConfigDto().getUserStoreType())) {
+                //Uses carbon user store
+                try {
+                    return processLoginRequestWithCarbonUserStore(authHeaderToken);
+                } catch (UserStoreException e) {
+                    LOG.error("Error while authenticating with carbon user store", e);
+                }
+            } else {
+                //Uses in memory user store
+                return processLoginRequestInMemoryUserStore(authHeaderToken);
+            }
         } else { //Other resources apart from /login should be authenticated from JWT based auth
             JWTTokenStore tokenStore = JWTInMemoryTokenStore.getInstance();
             tokenStore.removeExpired();
             JWTTokenInfoDTO jwtTokenInfoDTO = tokenStore.getToken(authHeaderToken);
             if (jwtTokenInfoDTO != null && !jwtTokenInfoDTO.isRevoked()) {
+                jwtTokenInfoDTO.setLastAccess(System.currentTimeMillis()); //Record last successful access
                 return true;
             }
         }
@@ -80,22 +93,50 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
      * @param token extracted basic auth token
      * @return
      */
-    private boolean processLoginRequest(String token) {
+    private boolean processLoginRequestInMemoryUserStore(String token) {
         String decodedCredentials = new String(new Base64().decode(token.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         if(userList == null || userList.isEmpty()) {
             populateUserList();
         }
+        if (usernamePasswordArray.length != 2) {
+            return false;
+        }
+        String username = usernamePasswordArray[0];
+        String password = usernamePasswordArray[1];
         if (!userList.isEmpty()) {
             for (String userNameFromStore : userList.keySet()) {
-                if (userNameFromStore.equals(usernamePasswordArray[0])) {
+                if (userNameFromStore.equals(username)) {
                     String passwordFromStore = String.valueOf(userList.get(userNameFromStore));
-                    if (isValid(passwordFromStore) && passwordFromStore.equals(usernamePasswordArray[1])) {
-                        LOG.info("User " + usernamePasswordArray[0] + " logged in successfully");
+                    if (isValid(passwordFromStore) && passwordFromStore.equals(password)) {
+                        LOG.info("User " + username + " logged in successfully");
                         return true;
                     }
                 }
             }
+        }
+        return false;
+    }
+
+    /**
+     * Processes /login request if the JWTToken Security Handler is engaged. Since /login is
+     * basic auth
+     * @param token extracted basic auth token
+     * @return
+     */
+    private boolean processLoginRequestWithCarbonUserStore(String token) throws UserStoreException {
+        String decodedCredentials = new String(new Base64().decode(token.getBytes()));
+        String[] usernamePasswordArray = decodedCredentials.split(":");
+        if (usernamePasswordArray.length != 2) {
+            return false;
+        }
+        String username = usernamePasswordArray[0];
+        String password = usernamePasswordArray[1];
+        boolean isAuthenticated = DataHolder.getInstance().getUserStoreManager().authenticate(username,
+                password);
+        if(isAuthenticated) {
+            LOG.info("User " + username + " logged in successfully");
+            return true;
         }
         return false;
     }

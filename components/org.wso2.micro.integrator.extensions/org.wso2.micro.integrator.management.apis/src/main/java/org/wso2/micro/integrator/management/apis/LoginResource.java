@@ -18,16 +18,21 @@
 package org.wso2.micro.integrator.management.apis;
 
 import com.nimbusds.jose.JOSEException;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONObject;
-import org.wso2.micro.integrator.management.apis.security.handler.*;
+import org.wso2.micro.integrator.management.apis.security.handler.AuthConstants;
+import org.wso2.micro.integrator.management.apis.security.handler.JWTConfig;
+import org.wso2.micro.integrator.management.apis.security.handler.JWTInMemoryTokenStore;
+import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenGenerator;
+import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenInfoDTO;
+import org.wso2.micro.integrator.management.apis.security.handler.JWTTokenStore;
 
 import java.security.NoSuchAlgorithmException;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -54,8 +59,8 @@ public class LoginResource implements MiApiResource {
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
         //Init token store
-        JWTTokenStore tokenStore = JWTInMemoryTokenStore.
-                getInstance(JWTConfig.getInstance().getJwtConfigDto().getTokenStoreSize());
+        JWTTokenStore tokenStore =
+                JWTInMemoryTokenStore.getInstance(JWTConfig.getInstance().getJwtConfigDto().getTokenStoreSize());
 
         //UUID used as unique token
         UUID uuid = UUID.randomUUID();
@@ -65,10 +70,11 @@ public class LoginResource implements MiApiResource {
         newToken.setToken(randomUUIDString);
         newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
         newToken.setIssuer((String) axis2MessageContext.getProperty(SynapseConstants.SERVER_IP));
-        Long time = new Date().getTime();
+        Long time = System.currentTimeMillis();
         String expiryConfig = JWTConfig.getInstance().getJwtConfigDto().getExpiry();
+        newToken.setLastAccess(time); // Assign creation time initially
         Long expiryInMins = AuthConstants.DEFAULT_EXPIRY_DURATION;
-        if(expiryConfig != null && !expiryConfig.isEmpty()) {
+        if(StringUtils.isEmpty(expiryConfig)) {
             expiryInMins = Long.parseLong(expiryConfig);
         }
         newToken.setExpiry(time + (expiryInMins * 60 * 1000));
@@ -86,8 +92,19 @@ public class LoginResource implements MiApiResource {
         }
         newToken.setHash(jwtHash);
         if(!tokenStore.putToken(jwtHash, newToken)) {
-            handleServerError(axis2MessageContext, "Error occurred while adding token to store");
-            return true;
+            //Token store has been exhausted
+            if(JWTConfig.getInstance().getJwtConfigDto().isRemoveOldestElementOnOverflow()) {
+                tokenStore.cleanupStore(); //Try cleaning up the store
+                if(!tokenStore.putToken(jwtHash, newToken)) { //Try once
+                    //Produce error if failed
+                    handleServerError(axis2MessageContext, "Max concurrent access limit exceeded");
+                    return true;
+                }
+            } else {
+                handleServerError(axis2MessageContext, "Max concurrent access limit exceeded");
+                return true;
+            }
+
         }
 
         JSONObject jsonPayload = new JSONObject();

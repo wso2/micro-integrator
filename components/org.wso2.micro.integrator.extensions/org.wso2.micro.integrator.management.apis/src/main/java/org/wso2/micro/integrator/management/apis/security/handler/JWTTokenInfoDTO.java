@@ -35,6 +35,7 @@ public class JWTTokenInfoDTO {
     private String username;
     private KeyPair generatedKeyPair;
     private RSAKey rsaKey;
+    private long lastAccess;
 
     public JWTTokenInfoDTO() {
         this.username = AuthConstants.DEFAULT_ISSUER_NAME;
@@ -114,5 +115,14 @@ public class JWTTokenInfoDTO {
 
     public void setRsaKey(RSAKey rsaKey) {
         this.rsaKey = rsaKey;
+    }
+
+
+    public long getLastAccess() {
+        return lastAccess;
+    }
+
+    public void setLastAccess(long lastAccess) {
+        this.lastAccess = lastAccess;
     }
 }

@@ -21,7 +21,6 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -124,12 +123,35 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
     @Override
     public void removeExpired() {
         LOG.debug("Removing expired tokens from token store");
-        Iterator<String> tokenIterator = tokenStore.keySet().iterator();
+        Iterator<String> tokenIterator = getTokenStore().keySet().iterator();
         while (tokenIterator.hasNext()) {
             String key = tokenIterator.next();
-            if (tokenStore.get(key).getExpiry() < new Date().getTime()) {
-                tokenIterator.remove();
+            if ((getTokenStore().get(key).getExpiry() < System.currentTimeMillis()) || getTokenStore().get(key).isRevoked()) {
+                tokenIterator.remove(); //Remove if token is expired or revoked
             }
         }
+    }
+
+    @Override
+    public void cleanupStore() {
+        // Current cleanup logic is to remove the token with oldest access time
+        LOG.info("Removing oldest accessed token from store");
+        Iterator<String> tokenIterator = getTokenStore().keySet().iterator();
+        long leastAccessTimeStamp = System.currentTimeMillis();
+        String leastAccessedToken = null;
+        while (tokenIterator.hasNext()) {
+            String key = tokenIterator.next();
+            long tokenTimeStamp = getTokenStore().get(key).getLastAccess();
+            if (tokenTimeStamp < leastAccessTimeStamp) {
+                leastAccessTimeStamp = tokenTimeStamp;
+                leastAccessedToken = key;
+            }
+        }
+        getTokenStore().remove(leastAccessedToken);
+    }
+
+    @Override
+    public int getCurrentSize() {
+        return getTokenStore().size();
     }
 }

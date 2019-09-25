@@ -80,9 +80,13 @@ public class JWTConfig {
                         if ("JWTTokenSecurityHandler".equals(handlerOM.getAttributeValue(new QName("name")))) {
                             OMElement tokenStoreConfigOM = handlerOM.getFirstChildWithName(new QName("TokenStoreConfig"));
                             if (Objects.nonNull(tokenStoreConfigOM)) {
-                                OMElement sizeElem = tokenStoreConfigOM.getFirstChildWithName(new QName("size"));
+                                OMElement sizeElem = tokenStoreConfigOM.getFirstChildWithName(new QName("MaxSize"));
                                 if(Objects.nonNull(sizeElem)) {
                                     jwtDTO.setTokenStoreSize(Integer.parseInt(sizeElem.getText()));
+                                }
+                                OMElement removeOldestElem = tokenStoreConfigOM.getFirstChildWithName(new QName("RemoveOldestTokenOnOverflow"));
+                                if(Objects.nonNull(removeOldestElem)) {
+                                    jwtDTO.setRemoveOldestElementOnOverflow(Boolean.parseBoolean(removeOldestElem.getText()));
                                 }
                             } else {
                                 LOG.fatal("Token Store config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using default values");
@@ -101,6 +105,7 @@ public class JWTConfig {
                                 LOG.fatal("Token config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using default values");
                             }
                             OMElement userStoreOM = handlerOM.getFirstChildWithName(new QName("UserStore"));
+                            jwtDTO.setUserStoreType(userStoreOM.getAttributeValue(new QName("type")));
                             if (Objects.nonNull(userStoreOM)) {
                                 jwtDTO.setUsers(populateUserList(userStoreOM.getFirstChildWithName(new QName("users"))));
                             } else {

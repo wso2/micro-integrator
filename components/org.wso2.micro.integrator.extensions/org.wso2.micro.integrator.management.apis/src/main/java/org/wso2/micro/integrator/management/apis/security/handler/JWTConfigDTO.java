@@ -28,6 +28,8 @@ public class JWTConfigDTO {
     private String tokenSize;
     private int tokenStoreSize;
     private HashMap<String, char []> usersList;
+    private boolean removeOldestElementOnOverflow = true;
+    private String userStoreType;
 
     public String getExpiry() {
         return expiry;
@@ -61,6 +63,23 @@ public class JWTConfigDTO {
 
     public void setTokenStoreSize(int tokenStoreSize) {
         this.tokenStoreSize = tokenStoreSize;
+    }
+
+
+    public boolean isRemoveOldestElementOnOverflow() {
+        return removeOldestElementOnOverflow;
+    }
+
+    public void setRemoveOldestElementOnOverflow(boolean removeOldestElementOnOverflow) {
+        this.removeOldestElementOnOverflow = removeOldestElementOnOverflow;
+    }
+
+    public String getUserStoreType() {
+        return userStoreType;
+    }
+
+    public void setUserStoreType(String userStoreType) {
+        this.userStoreType = userStoreType;
     }
 
 }

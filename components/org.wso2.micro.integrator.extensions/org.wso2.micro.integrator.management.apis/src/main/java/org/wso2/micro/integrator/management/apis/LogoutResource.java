@@ -51,7 +51,7 @@ public class LogoutResource implements MiApiResource{
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext, SynapseConfiguration synapseConfiguration) {
         String authHeader = (String)SecurityUtils.getHeaders(axis2MessageContext).get(HTTPConstants.HEADER_AUTHORIZATION);
         String token = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
-        //Revokes token when logging out. Token is removed from the store based on expiry.
+        //Revokes token when logging out.
         if(!JWTInMemoryTokenStore.getInstance().revokeToken(token)) {
             LOG.info("Log out failed");
             handleServerError(axis2MessageContext, "Log out failed due to incorrect credentials");

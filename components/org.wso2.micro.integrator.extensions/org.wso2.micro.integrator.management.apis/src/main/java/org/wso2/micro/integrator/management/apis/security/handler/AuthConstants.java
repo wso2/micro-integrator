@@ -41,4 +41,5 @@ public class AuthConstants {
     public static final String DEFAULT_ISSUER_NAME = "Admin";
     public static final int JWT_TOKEN_DEFAULT_SIZE = 2048;
     public static final long DEFAULT_EXPIRY_DURATION = 60;
+    public static final String CARBON_USER_STORE = "carbonuserstore";
 }

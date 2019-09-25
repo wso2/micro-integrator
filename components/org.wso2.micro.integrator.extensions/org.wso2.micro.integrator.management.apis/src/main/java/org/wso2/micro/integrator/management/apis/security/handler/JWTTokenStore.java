@@ -52,4 +52,15 @@ public abstract class JWTTokenStore {
      */
     public abstract void removeExpired();
 
+    /**
+     * Cleanups the store if the store is exhausted.
+     */
+    public abstract void cleanupStore();
+
+    /**
+     * Returns the current size of the token store
+     * @return int size
+     */
+    public abstract int getCurrentSize();
+
 }
