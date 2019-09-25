@@ -77,7 +77,7 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
 
         }
         boolean errorLogFound = false;
-        if (carbonLogReader.checkForLog("Host: google.com:80", DEFAULT_TIMEOUT) && !carbonLogReader
+        if (carbonLogReader.checkForLog("Host: google.com:80", DEFAULT_TIMEOUT) || !carbonLogReader
                 .checkForLog("Host: google.com", DEFAULT_TIMEOUT)) {
             errorLogFound = true;
         }
