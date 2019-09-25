@@ -23,6 +23,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 	"os"
 )
 
@@ -82,11 +83,11 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixInboundEndpoints, "inboundEndpointName", inboundEndpointname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.InboundEndpoint{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.InboundEndpoint{})
 
 	if err == nil {
 		// Printing the details of the InboundEndpoint
-		inboundEndpoint := resp.(*utils.InboundEndpoint)
+		inboundEndpoint := resp.(*artifactUtils.InboundEndpoint)
 		printInboundEndpoint(*inboundEndpoint)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of InboundEndpoint", err)
@@ -96,7 +97,7 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
 // Print the details of an Inbound endpoint
 // Name, Protocol and a list of parameters
 // @param InboundEndpoint : InboundEndpoint object
-func printInboundEndpoint(inbound utils.InboundEndpoint) {
+func printInboundEndpoint(inbound artifactUtils.InboundEndpoint) {
 
 	fmt.Println("Name - " + inbound.Name)
 	fmt.Println("Type - " + inbound.Type)
@@ -123,34 +124,13 @@ func printInboundEndpoint(inbound utils.InboundEndpoint) {
 func executeListInboundEndpointsCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixInboundEndpoints
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.InboundEndpointList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.InboundEndpointList{})
 
 	if err == nil {
 		// Printing the list of available Inbound endpoints
-		list := resp.(*utils.InboundEndpointList)
-		printInboundList(*list)
+		list := resp.(*artifactUtils.InboundEndpointList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Type}, "No inbound endpoints found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Inbound Endpoints", err)
-	}
-}
-
-func printInboundList(inboundList utils.InboundEndpointList) {
-
-	if inboundList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "TYPE"}
-		table.Append(data)
-
-		for _, api := range inboundList.InboundEndpoints {
-			data = []string{api.Name, api.Type}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Inbound Endpoints found")
 	}
 }
