@@ -161,7 +161,7 @@
                         <Export-Package>
                             !org.wso2.micro.integrator.core.internal,
                             !org.wso2.micro.application.deployer.synapse.*,
-                            org.wso2.micro.integrator.core.*;version="${project.version}",
+                            org.wso2.micro.integrator.*;version="${project.version}",
                             org.wso2.micro.core.*;version="${project.version}",
                             org.wso2.micro.base;version="${project.version}",
                             org.wso2.micro.application.deployer.*;version="${project.version}",
