@@ -81,7 +81,7 @@ func printMessageProcessorHelp() {
 
 func executeGetMessageProcessorCmd(messageProcessorName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixMessageProcessors, "name", messageProcessorName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.MessageProcessorData{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.MessageProcessorData{})
 
 	if err == nil {
 		// Printing the details of the MessageProcessor
@@ -104,7 +104,7 @@ func printMessageProcessor(messageProcessor artifactUtils.MessageProcessorData) 
 
 func executeListMessageProcessorCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixMessageProcessors
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.MessageProcessorList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.MessageProcessorList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints

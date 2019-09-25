@@ -70,11 +70,14 @@ func handleServerUpdateCmdArguments(args []string) {
 }
 
 func executeServerUpdateCmd(args []string) {
-	var result = utils.RemoteConfigData.UpdateRemote(args[0], args[1], args[2])
-	if result != nil {
-		utils.HandleErrorAndExit("Error: ", result)
+	var err = utils.RemoteConfigData.UpdateRemote(args[0], args[1], args[2])
+	if err != nil {
+		utils.HandleErrorAndExit("Error: ", err)
+	} else {
+		utils.Logln(utils.LogPrefixInfo + "Persisting remote " + args[0])
+		utils.RemoteConfigData.Persist(utils.GetServerConfigFilePath())
+		fmt.Println("Remote " + args[0] + " updated successfully!")
 	}
-	utils.RemoteConfigData.Persist(utils.GetServerConfigFilePath())
 }
 
 func printServerUpdateHelp() {

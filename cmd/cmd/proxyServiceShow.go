@@ -82,7 +82,7 @@ func executeGetProxyServiceCmd(proxyServiceName string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixProxyServices, "proxyServiceName", proxyServiceName)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.Proxy{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.Proxy{})
 
 	if err == nil {
 		// Printing the details of the Proxy Service
@@ -109,7 +109,7 @@ func executeListProxyServicesCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixProxyServices
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.ProxyServiceList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.ProxyServiceList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints
