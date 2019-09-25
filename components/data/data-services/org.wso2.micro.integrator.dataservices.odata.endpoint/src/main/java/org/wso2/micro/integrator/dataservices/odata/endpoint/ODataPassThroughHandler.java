@@ -113,31 +113,17 @@ public class ODataPassThroughHandler extends AbstractSynapseHandler {
 
 	@Override
 	public boolean handleRequestOutFlow(MessageContext messageContext) {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean handleResponseInFlow(MessageContext messageContext) {
-		return false;
+		return true;
 	}
 
 	@Override
 	public boolean handleResponseOutFlow(MessageContext messageContext) {
 		return true;
-	}
-
-	/**
-	 * Add the new JSON sourced element as the first child in the payload body
-	 *
-	 * @param messageContext Axis2 Message context
-	 * @param elem          The new payload
-	 */
-	private static void addPayloadBody(MessageContext messageContext, OMElement elem) {
-		SOAPEnvelope envelope = messageContext.getEnvelope();
-		if (envelope != null) {
-			SOAPBody body = envelope.getBody();
-			body.addChild(elem);
-		}
 	}
 
 }
