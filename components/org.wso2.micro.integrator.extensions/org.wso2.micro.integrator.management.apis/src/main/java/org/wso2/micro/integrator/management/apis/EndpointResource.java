@@ -118,7 +118,11 @@ public class EndpointResource extends APIResource {
 
         SynapseConfiguration configuration = messageContext.getConfiguration();
         Endpoint ep = configuration.getEndpoint(endpointName);
-        return getEndpointAsJson(ep);
+        if (Objects.nonNull(ep)) {
+            return getEndpointAsJson(ep);
+        } else {
+            return null;
+        }
     }
 
     /**
