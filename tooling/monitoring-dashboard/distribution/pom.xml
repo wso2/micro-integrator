@@ -149,7 +149,7 @@
         <!-- Monitoring Dashboard -->
         <dependency>
             <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.carbon.micro.integrator.dashboard.web.feature</artifactId>
+            <artifactId>org.wso2.micro.integrator.dashboard.web.feature</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
@@ -286,7 +286,7 @@
 
                                 <!-- Monitoring Dashboard -->
                                 <feature>
-                                    <id>org.wso2.carbon.micro.integrator.dashboard.web.feature</id>
+                                    <id>org.wso2.micro.integrator.dashboard.web.feature</id>
                                     <version>${project.version}</version>
                                 </feature>
                             </features>
@@ -417,7 +417,7 @@
 
                                 <!-- Monitoring Dashboard -->
                                 <feature>
-                                    <id>org.wso2.carbon.micro.integrator.dashboard.web.feature</id>
+                                    <id>org.wso2.micro.integrator.dashboard.web.feature</id>
                                     <version>${project.version}</version>
                                 </feature>
                             </features>

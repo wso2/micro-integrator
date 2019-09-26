@@ -26,13 +26,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>org.wso2.carbon.micro.integrator.dashboard.web.feature</artifactId>
+    <artifactId>org.wso2.micro.integrator.dashboard.web.feature</artifactId>
     <name>MI Monitoring Dashboard - Feature</name>
 
     <dependencies>
         <dependency>
             <groupId>org.wso2.ei</groupId>
-            <artifactId>org.wso2.carbon.micro.integrator.dashboard.web</artifactId>
+            <artifactId>org.wso2.micro.integrator.dashboard.web</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
@@ -54,7 +54,7 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.wso2.ei</groupId>
-                                    <artifactId>org.wso2.carbon.micro.integrator.dashboard.web</artifactId>
+                                    <artifactId>org.wso2.micro.integrator.dashboard.web</artifactId>
                                     <version>${project.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
@@ -63,7 +63,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.wso2.ei</groupId>
-                                    <artifactId>org.wso2.carbon.micro.integrator.dashboard.web</artifactId>
+                                    <artifactId>org.wso2.micro.integrator.dashboard.web</artifactId>
                                     <version>${project.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
@@ -72,7 +72,7 @@
                                 </artifactItem>
                                 <artifactItem>
                                     <groupId>org.wso2.ei</groupId>
-                                    <artifactId>org.wso2.carbon.micro.integrator.dashboard.web</artifactId>
+                                    <artifactId>org.wso2.micro.integrator.dashboard.web</artifactId>
                                     <version>${project.version}</version>
                                     <type>jar</type>
                                     <overWrite>true</overWrite>
