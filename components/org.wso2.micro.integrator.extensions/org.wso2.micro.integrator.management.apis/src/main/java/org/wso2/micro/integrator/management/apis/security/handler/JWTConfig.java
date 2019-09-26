@@ -26,8 +26,6 @@ import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,6 +33,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Objects;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * This class reads through internal-apis.xml and generates JWTConfigDTO
@@ -88,6 +88,10 @@ public class JWTConfig {
                                 if(Objects.nonNull(removeOldestElem)) {
                                     jwtDTO.setRemoveOldestElementOnOverflow(Boolean.parseBoolean(removeOldestElem.getText()));
                                 }
+                                OMElement cleanupIntervalElem = tokenStoreConfigOM.getFirstChildWithName(new QName("TokenCleanupTaskInterval"));
+                                if(Objects.nonNull(cleanupIntervalElem)) {
+                                    jwtDTO.setCleanupThreadInterval(Integer.parseInt(cleanupIntervalElem.getText()));
+                                }
                             } else {
                                 LOG.fatal("Token Store config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using default values");
                             }
@@ -105,11 +109,11 @@ public class JWTConfig {
                                 LOG.fatal("Token config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using default values");
                             }
                             OMElement userStoreOM = handlerOM.getFirstChildWithName(new QName("UserStore"));
-                            jwtDTO.setUserStoreType(userStoreOM.getAttributeValue(new QName("type")));
                             if (Objects.nonNull(userStoreOM)) {
                                 jwtDTO.setUsers(populateUserList(userStoreOM.getFirstChildWithName(new QName("users"))));
                             } else {
-                                LOG.fatal("UserStore has not been defined in file " + mgtApiUserConfig.getAbsolutePath());
+                                jwtDTO.setUseCarbonUserStore(true);
+                                LOG.info("User store config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using carbon user store settings");
                             }
                         }
                     }

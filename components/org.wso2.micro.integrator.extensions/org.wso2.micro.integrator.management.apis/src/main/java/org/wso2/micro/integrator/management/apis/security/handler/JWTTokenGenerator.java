@@ -43,6 +43,7 @@ public class JWTTokenGenerator {
 
     /**
      * Generate JWT Token with JWTTokenInfo object
+     *
      * @param jwtToken JWT Token info object
      * @return Serialized JWT token
      * @throws JOSEException
@@ -51,7 +52,7 @@ public class JWTTokenGenerator {
     public String generateJWTToken(JWTTokenInfoDTO jwtToken) throws JOSEException, NoSuchAlgorithmException {
 
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance(AuthConstants.TOKEN_STORE_KEY_ALGORITHM);
-        keyPairGenerator.initialize(AuthConstants.JWT_TOKEN_DEFAULT_SIZE);
+        keyPairGenerator.initialize(Integer.parseInt(JWTConfig.getInstance().getJwtConfigDto().getTokenSize()));
         RSAKey rsaJWK = generateRSAKey(jwtToken, keyPairGenerator); //Currently uses generated key pair
 
         SignedJWT signedJWT = populateSignedJWTToken(jwtToken, rsaJWK);
@@ -65,11 +66,13 @@ public class JWTTokenGenerator {
 
     /**
      * Builds RSAKey with generated key pair
-     * @param jwtTokenDTO JWT Token info object
+     *
+     * @param jwtTokenDTO      JWT Token info object
      * @param keyPairGenerator keyPairGenerator
      * @return RSAKey built RSA Key which can be used to sign
      */
     private RSAKey generateRSAKey(JWTTokenInfoDTO jwtTokenDTO, KeyPairGenerator keyPairGenerator) {
+
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         jwtTokenDTO.setGeneratedKeyPair(keyPair);
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
@@ -83,12 +86,14 @@ public class JWTTokenGenerator {
 
     /**
      * Builds RSAKey using key store.
-     * @param jwtTokenDTO token info object
+     *
+     * @param jwtTokenDTO      token info object
      * @param keyPairGenerator key pair generator
      * @return RSAKey built RSA Key which can be used to sign
      * @throws Exception
      */
     private RSAKey generateRSAKeyWithKeyStore(JWTTokenInfoDTO jwtTokenDTO, KeyPairGenerator keyPairGenerator) throws Exception {
+
         KeyStore keystore = KeyStoreManager.getInstance(AppDeployerUtils.getTenantId()).getPrimaryKeyStore();
         KeyPair keyPair = keyPairGenerator.generateKeyPair();
         RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
@@ -100,11 +105,13 @@ public class JWTTokenGenerator {
 
     /**
      * Populate JWT Token with defined claim set
+     *
      * @param jwtTokenDTO token info object
-     * @param rsaJWK RSAKey
+     * @param rsaJWK      RSAKey
      * @return Signable JWT object
      */
     private SignedJWT populateSignedJWTToken(JWTTokenInfoDTO jwtTokenDTO, RSAKey rsaJWK) {
+
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(jwtTokenDTO.getUsername())
                 .issuer(jwtTokenDTO.getIssuer())

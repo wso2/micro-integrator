@@ -29,7 +29,10 @@ import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 import java.util.HashSet;
 import java.util.Set;
 
-public class LogoutResource implements MiApiResource{
+/**
+ * Resource for logout. This revokes the issued token.
+ */
+public class LogoutResource implements MiApiResource {
 
     private static final Log LOG = LogFactory.getLog(LoginResource.class);
 
@@ -37,23 +40,25 @@ public class LogoutResource implements MiApiResource{
     Set<String> methods;
 
     public LogoutResource() {
+
         methods = new HashSet<>();
-        methods.add(Constants.HTTP_POST);
         methods.add(Constants.HTTP_GET);
     }
 
     @Override
     public Set<String> getMethods() {
+
         return methods;
     }
 
     @Override
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext, SynapseConfiguration synapseConfiguration) {
-        String authHeader = (String)SecurityUtils.getHeaders(axis2MessageContext).get(HTTPConstants.HEADER_AUTHORIZATION);
+
+        String authHeader = (String) SecurityUtils.getHeaders(axis2MessageContext).get(HTTPConstants.HEADER_AUTHORIZATION);
         String token = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
         //Revokes token when logging out.
-        if(!JWTInMemoryTokenStore.getInstance().revokeToken(token)) {
-            LOG.info("Log out failed");
+        if (!JWTInMemoryTokenStore.getInstance().revokeToken(token)) {
+            LOG.error("Log out failed");
             handleServerError(axis2MessageContext, "Log out failed due to incorrect credentials");
             return true;
         }
@@ -62,10 +67,12 @@ public class LogoutResource implements MiApiResource{
 
     /**
      * Generate and sets error json response
+     *
      * @param axis2MessageContext msg ctx
-     * @param errorDetail Error string
+     * @param errorDetail         Error string
      */
     private void handleServerError(org.apache.axis2.context.MessageContext axis2MessageContext, String errorDetail) {
+
         Utils.setJsonPayLoad(axis2MessageContext, Utils.createJsonErrorObject(errorDetail));
         axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.INTERNAL_SERVER_ERROR);
         axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);

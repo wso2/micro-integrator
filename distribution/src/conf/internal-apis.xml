@@ -37,11 +37,12 @@
                 <handler class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler"
                          name="JWTTokenSecurityHandler">
                     <TokenStoreConfig>
-                       <MaxSize>256</MaxSize>
-                        <RemoveOldestTokenOnOverflow>true</RemoveOldestTokenOnOverflow>
+                        <MaxSize>200</MaxSize>
+                        <TokenCleanupTaskInterval>600000</TokenCleanupTaskInterval>
+                        <RemoveOldestTokenOnOverflow>false</RemoveOldestTokenOnOverflow>
                     </TokenStoreConfig>
                     <TokenConfig>
-                        <expiry>60</expiry> <!-- In minutes -->
+                        <expiry>3600000</expiry>
                         <size>2048</size>
                     </TokenConfig>
                     <UserStore>

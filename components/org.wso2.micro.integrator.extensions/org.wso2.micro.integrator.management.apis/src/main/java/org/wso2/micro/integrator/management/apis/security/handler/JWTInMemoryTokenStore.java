@@ -47,7 +47,7 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
      * @return JWTInMemoryTokenStore singleton instance
      */
     public static JWTInMemoryTokenStore getInstance(int storeSize) {
-        if(JWT_IN_MEMORY_TOKEN_STORE_INSTANCE == null ) {
+        if (JWT_IN_MEMORY_TOKEN_STORE_INSTANCE == null ) {
             JWT_IN_MEMORY_TOKEN_STORE_INSTANCE = new JWTInMemoryTokenStore();
             JWT_IN_MEMORY_TOKEN_STORE_INSTANCE.setStoreSize(storeSize);
             setTokenStore(new ConcurrentHashMap<String, JWTTokenInfoDTO>());
@@ -60,7 +60,7 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
      * @return JWTInMemoryTokenStore singleton instance
      */
     public static JWTInMemoryTokenStore getInstance() {
-        if(JWT_IN_MEMORY_TOKEN_STORE_INSTANCE == null ) {
+        if (JWT_IN_MEMORY_TOKEN_STORE_INSTANCE == null ) {
             //Create store with default size
             return getInstance(AuthConstants.JWT_TOKEN_STORE_DEFAULT_SIZE);
         } else {
@@ -84,12 +84,12 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
 
     @Override
     public boolean putToken(String token, JWTTokenInfoDTO jwtTokenInfoDTO) {
-        if(getTokenStore().size() < storeSize) { //Limit store size to avoid memory growth
+        if (getTokenStore().size() < storeSize) { //Limit store size to avoid memory growth
             LOG.debug("New token added to token store");
             getTokenStore().put(token, jwtTokenInfoDTO);
             return true;
         } else {
-            LOG.info("Token store exhausted. Please increase the token store size");
+            LOG.warn("Token store exhausted. Please increase the token store size");
             return false;
         }
     }
@@ -98,8 +98,8 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
     @Override
     public boolean revokeToken(String token) {
         JWTTokenInfoDTO  jwtToken = getToken(token);
-        if(jwtToken != null) {
-            jwtToken.setRevoked(true);
+        if (jwtToken != null) {
+            removeToken(token);
             return true;
         } else {
             LOG.debug("Token is expired or not available in the token store");
@@ -135,7 +135,7 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
     @Override
     public void cleanupStore() {
         // Current cleanup logic is to remove the token with oldest access time
-        LOG.info("Removing oldest accessed token from store");
+        LOG.debug("Removing oldest accessed token from store");
         Iterator<String> tokenIterator = getTokenStore().keySet().iterator();
         long leastAccessTimeStamp = System.currentTimeMillis();
         String leastAccessedToken = null;

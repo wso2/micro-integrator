@@ -29,7 +29,8 @@ public class JWTConfigDTO {
     private int tokenStoreSize;
     private HashMap<String, char []> usersList;
     private boolean removeOldestElementOnOverflow = true;
-    private String userStoreType;
+    private boolean useCarbonUserStore;
+    private int cleanupThreadInterval;
 
     public String getExpiry() {
         return expiry;
@@ -74,12 +75,25 @@ public class JWTConfigDTO {
         this.removeOldestElementOnOverflow = removeOldestElementOnOverflow;
     }
 
-    public String getUserStoreType() {
-        return userStoreType;
+    public int getCleanupThreadInterval() {
+
+        return cleanupThreadInterval;
     }
 
-    public void setUserStoreType(String userStoreType) {
-        this.userStoreType = userStoreType;
+    public void setCleanupThreadInterval(int cleanupThreadInterval) {
+
+        this.cleanupThreadInterval = cleanupThreadInterval;
+    }
+
+
+    public boolean isUseCarbonUserStore() {
+
+        return useCarbonUserStore;
+    }
+
+    public void setUseCarbonUserStore(boolean useCarbonUserStore) {
+
+        this.useCarbonUserStore = useCarbonUserStore;
     }
 
 }

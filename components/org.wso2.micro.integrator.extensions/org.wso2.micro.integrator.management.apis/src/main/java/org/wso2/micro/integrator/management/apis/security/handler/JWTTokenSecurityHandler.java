@@ -37,25 +37,29 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
+
         this.messageContext = messageContext;
         return super.invoke(messageContext);
     }
 
     @Override
     public String getName() {
+
         return this.name;
     }
 
     @Override
     public void setName(String name) {
+
         this.name = name;
     }
 
     @Override
     protected Boolean authenticate(String authHeaderToken) {
-        if((Constants.REST_API_CONTEXT + Constants.PREFIX_LOGIN).contentEquals(messageContext.getTo().getAddress())) {
+
+        if ((Constants.REST_API_CONTEXT + Constants.PREFIX_LOGIN).contentEquals(messageContext.getTo().getAddress())) {
             //Login request is basic auth
-            if(AuthConstants.CARBON_USER_STORE.equals(JWTConfig.getInstance().getJwtConfigDto().getUserStoreType())) {
+            if (JWTConfig.getInstance().getJwtConfigDto().isUseCarbonUserStore()) {
                 //Uses carbon user store
                 try {
                     return processLoginRequestWithCarbonUserStore(authHeaderToken);
@@ -68,7 +72,6 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
             }
         } else { //Other resources apart from /login should be authenticated from JWT based auth
             JWTTokenStore tokenStore = JWTInMemoryTokenStore.getInstance();
-            tokenStore.removeExpired();
             JWTTokenInfoDTO jwtTokenInfoDTO = tokenStore.getToken(authHeaderToken);
             if (jwtTokenInfoDTO != null && !jwtTokenInfoDTO.isRevoked()) {
                 jwtTokenInfoDTO.setLastAccess(System.currentTimeMillis()); //Record last successful access
@@ -84,19 +87,22 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
      * @param value String value
      */
     private Boolean isValid(String value) {
+
         return (Objects.nonNull(value) && !value.isEmpty());
     }
 
     /**
      * Processes /login request if the JWTToken Security Handler is engaged. Since /login is
      * basic auth
+     *
      * @param token extracted basic auth token
      * @return
      */
     private boolean processLoginRequestInMemoryUserStore(String token) {
+
         String decodedCredentials = new String(new Base64().decode(token.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
-        if(userList == null || userList.isEmpty()) {
+        if (userList == null || userList.isEmpty()) {
             populateUserList();
         }
         if (usernamePasswordArray.length != 2) {
@@ -121,10 +127,12 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
     /**
      * Processes /login request if the JWTToken Security Handler is engaged. Since /login is
      * basic auth
+     *
      * @param token extracted basic auth token
      * @return
      */
     private boolean processLoginRequestWithCarbonUserStore(String token) throws UserStoreException {
+
         String decodedCredentials = new String(new Base64().decode(token.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         if (usernamePasswordArray.length != 2) {
@@ -134,7 +142,7 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
         String password = usernamePasswordArray[1];
         boolean isAuthenticated = DataHolder.getInstance().getUserStoreManager().authenticate(username,
                 password);
-        if(isAuthenticated) {
+        if (isAuthenticated) {
             LOG.info("User " + username + " logged in successfully");
             return true;
         }
@@ -145,6 +153,7 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
      * Populates the userList hashMap with user list obtain through user store
      */
     private void populateUserList() {
+
         JWTConfigDTO jwtConfig = JWTConfig.getInstance().getJwtConfigDto();
         if (jwtConfig != null) {
             userList = jwtConfig.getUsers();
