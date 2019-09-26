@@ -232,8 +232,20 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
 
         if ("file".equals(url.getProtocol())) {
             try {
-                url.openStream();
-            } catch (IOException e) {
+                if (new File(url.toURI()).exists()) {
+                    try {
+                        url.openStream();
+                    } catch (IOException e) {
+                        log.error("Error occurred while accessing registry resource: " + key, e);
+                        return true;
+                    }
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Requested registry resource does not exist : " + key);
+                    }
+                    return true;
+                }
+            } catch (URISyntaxException e) {
                 if (log.isDebugEnabled()) {
                     log.debug("Error occurred while accessing registry resource: " + key, e);
                 }
