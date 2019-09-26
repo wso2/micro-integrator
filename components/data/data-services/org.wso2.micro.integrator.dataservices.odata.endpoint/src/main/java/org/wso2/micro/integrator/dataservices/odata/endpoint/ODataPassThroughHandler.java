@@ -20,6 +20,8 @@ package org.wso2.micro.integrator.dataservices.odata.endpoint;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMText;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
@@ -38,6 +40,7 @@ import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.util.RelayUtils;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.UnsupportedEncodingException;
 import java.util.Map;
@@ -46,6 +49,8 @@ public class ODataPassThroughHandler extends AbstractSynapseHandler {
     private static final Log log = LogFactory.getLog(ODataPassThroughHandler.class);
     public final static String JSON_CONTENT_TYPE = "application/json";
     public final static String XML_CONTENT_TYPE = "application/xml";
+    public final static String TEXT_CONTENT_TYPE = "text/plain";
+    private final static QName TEXT_ELEMENT = new QName("http://ws.apache.org/commons/ns/payload", "text");
 
 
     @Override
@@ -100,7 +105,23 @@ public class ODataPassThroughHandler extends AbstractSynapseHandler {
             SOAPEnvelope envelope = fac.getDefaultEnvelope();
             envelope.getBody().addChild(omXML.getFirstElement());
             axis2MessageContext.setEnvelope(envelope);
+        } else if (response.getContentType() != null && response.getContentType().contains(TEXT_CONTENT_TYPE)) {
+            axis2MessageContext.setProperty(Constants.Configuration.MESSAGE_TYPE, response.getContentType());
+            SOAPFactory fac = OMAbstractFactory.getSOAP11Factory();
+            SOAPEnvelope envelope = fac.getDefaultEnvelope();
+            envelope.getBody().addChild(getTextElement(content));
+            axis2MessageContext.setEnvelope(envelope);
         }
+    }
+
+    private OMElement getTextElement(String content) {
+        OMFactory factory = OMAbstractFactory.getOMFactory();
+        OMElement textElement = factory.createOMElement(TEXT_ELEMENT);
+        if (content == null) {
+            content = "";
+        }
+        textElement.setText(content);
+        return textElement;
     }
 
     private void handleException(String msg, Exception e, MessageContext msgContext) {
