@@ -76,6 +76,7 @@ public class CarbonServerManager {
     public synchronized void startServerUsingCarbonHome(String carbonHome, Map<String, String> commandMap)
             throws AutomationFrameworkException {
         if (process != null) { // An instance of the server is running
+            log.warn("Tried to start a new server when there is one already running");
             return;
         }
         portOffset = getPortOffsetFromCommandMap(commandMap);
