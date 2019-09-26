@@ -79,7 +79,6 @@ public class CarbonServerManager {
             return;
         }
         portOffset = getPortOffsetFromCommandMap(commandMap);
-        Process tempProcess;
 
         try {
             if (!commandMap.isEmpty() && getPortOffsetFromCommandMap(commandMap) == 0) {
@@ -112,7 +111,7 @@ public class CarbonServerManager {
                 }
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
-                tempProcess = Runtime.getRuntime().exec(cmdArray, null, commandDir);
+                process = Runtime.getRuntime().exec(cmdArray, null, commandDir);
 
             } else {
                 if (componentBinPath != null) {
@@ -125,12 +124,11 @@ public class CarbonServerManager {
                 }
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
-                tempProcess = Runtime.getRuntime().exec(cmdArray, null, commandDir);
-                process = tempProcess;
+                process = Runtime.getRuntime().exec(cmdArray, null, commandDir);
             }
 
-            errorStreamHandler = new ServerLogReader("errorStream", tempProcess.getErrorStream());
-            inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
+            errorStreamHandler = new ServerLogReader("errorStream", process.getErrorStream());
+            inputStreamHandler = new ServerLogReader("inputStream", process.getInputStream());
             // start the stream readers
             inputStreamHandler.start();
             errorStreamHandler.start();
