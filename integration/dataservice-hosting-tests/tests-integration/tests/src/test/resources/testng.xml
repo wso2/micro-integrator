@@ -53,8 +53,7 @@
                 <package name="org.wso2.ei.dataservice.integration.test.dbConsole"/>
             </packages>
         </test>-->
-
-    <!--Commented out since ODATA is not supported in MI : https://github.com/wso2/micro-integrator/issues/254 -->
+    
     <test name="OData-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataDataTypeSupportTestCase"/>
