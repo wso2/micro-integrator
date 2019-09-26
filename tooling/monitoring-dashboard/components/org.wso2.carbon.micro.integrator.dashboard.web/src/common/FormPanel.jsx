@@ -35,7 +35,8 @@ export default class FormPanel extends Component {
             margin: '0 auto',
             width: Number(this.props.width),
             paddingTop: this.props.paddingTop,
-            paddingBottom: 15
+            paddingBottom: 15,
+            paddingTop:'100px'
         };
 
         return (

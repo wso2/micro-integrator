@@ -15,29 +15,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-import React, { Component } from 'react';
-import AuthManager from './utils/AuthManager';
-import {Redirect} from 'react-router';
 
-export default class Logout extends Component {
 
-    constructor(props) {
-        super(props);
-        this.state = {
-            redirectUrl : ""
-        }
-    }
+/**
+ * HTTP status codes.
+ */
+const HttpStatus = {
+    UNKNOWN: -1,
+    OK: 200,
+    CREATED: 201,
+    CONFLICT: 409,
+    FORBIDDEN: 403,
+    NOTFOUND: 404,
+    UNAUTHORIZED: 401,
+    SERVE_ERROR: 500,
+};
 
-    componentDidMount() {
-        AuthManager.logout().then(() => {
-        this.setState(
-            {
-                redirectUrl: "/login",
-            });
-         });
-    }
+/**
+ * Media types.
+ */
+const MediaType = {
+    APPLICATION_WWW_FORM_URLENCODED: 'application/x-www-form-urlencoded',
+    APPLICATION_JSON: 'application/json',
+};
 
-    render() {
-        return (<Redirect to={this.state.redirectUrl} />);
-    }
-}
+export { HttpStatus, MediaType };

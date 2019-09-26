@@ -18,62 +18,28 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import { FormattedMessage } from 'react-intl';
 
-import { FlatButton, Menu, MenuItem, Popover } from 'material-ui';
+import { FlatButton } from 'material-ui';
 import { ActionAccountCircle } from 'material-ui/svg-icons';
 
 
 export default class UserMenu extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isMenuOpen: false,
-            anchorElement: null,
-        };
-        this.handleUserIconClick = this.handleUserIconClick.bind(this);
-        this.handleMenuCloseRequest = this.handleMenuCloseRequest.bind(this);
-    }
-
-    handleUserIconClick(event) {
-        event.preventDefault();
-        this.setState({
-            isMenuOpen: !this.state.isMenuOpen,
-            anchorElement: event.currentTarget,
-        });
-    }
-
-    handleMenuCloseRequest() {
-        this.setState({
-            isMenuOpen: false,
-        });
     }
 
     render() {
 
-            return (
-                <span>
+        return (
+            <span>
                     <FlatButton
-                        style={{ marginTop: '6px' }}
-                        label='Sachith'
-                        onClick={this.handleUserIconClick}
-                        icon={<ActionAccountCircle />}
+                        style={{marginTop: '6px'}}
+                        label='Logout'
+                        icon={<ActionAccountCircle/>}
+                        containerElement={<Link to="/logout" />}
+                        linkButton={true}
                     />
-                    <Popover
-                        open={this.state.isMenuOpen}
-                        anchorEl={this.state.anchorElement}
-                        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-                        targetOrigin={{ horizontal: 'right', vertical: 'top' }}
-                        onRequestClose={this.handleMenuCloseRequest}
-                    >
-                        <Menu>
-                            <MenuItem
-                                primaryText={<FormattedMessage id='logout' defaultMessage='Logout' />}
-                                containerElement={<Link to={'/logout'} />}
-                            />
-                        </Menu>
-                    </Popover>
                 </span>
-            );
+        );
     }
 }

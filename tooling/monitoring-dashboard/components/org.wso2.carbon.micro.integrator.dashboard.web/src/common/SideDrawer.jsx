@@ -33,6 +33,7 @@ const useStyles = makeStyles(theme => ({
     },
     drawerPaper: {
         width: drawerWidth,
+        height: 'calc(100% - 50px)'
     },
     toolbar: theme.mixins.toolbar,
 }));

@@ -21,12 +21,23 @@ import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 
+const styles = {
+    titleSection: {
+        paddingLeft: "10px"
+    },
+    box: {
+        width: '100%',
+        color: '#ffffff',
+        backgroundColor: '#273c79'
+    }
+};
+
 export default class TableHeaderBox extends Component {
 
 
     render() {
-        return (<Box bgcolor={this.props.bgColor} color={this.props.color}>
-            <Typography variant="h6" id="tableTitle">
+        return (<Box bgcolor={this.props.bgColor} color={this.props.color} style={styles.box}>
+            <Typography variant="h6" id="tableTitle" style={styles.titleSection}>
                 {this.props.title}
             </Typography>
         </Box>);

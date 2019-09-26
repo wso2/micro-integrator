@@ -57,7 +57,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
     logo: (
-        <Link style={{ height: '17px' }} to={'/'}>
+        <Link style={{ height: '17px' }} to={'/home'}>
             <img
                 height='17'
                 src={`${window.contextPath}/public/app/images/logo.svg`}

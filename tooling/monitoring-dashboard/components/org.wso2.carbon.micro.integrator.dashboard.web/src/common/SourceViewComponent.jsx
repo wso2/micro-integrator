@@ -28,7 +28,18 @@ import TableHeaderBox from '../common/TableHeaderBox';
 
 var format = require('xml-formatter');
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
 
+const styles = {
+    titleSection: {
+        paddingLeft: "10px",
+        color: "#000000",
+        backgroundColor: "#ffffff"
+    },
+    box: {
+        width: '100%'
+    }
+};
 
 export default class SourceViewComponent extends Component {
 
@@ -37,12 +48,18 @@ export default class SourceViewComponent extends Component {
         return (
 
             <Box pb={5}>
-                <TableHeaderBox title="Source View"/>
+
                 <ExpansionPanel>
                     <ExpansionPanelSummary
                         expandIcon={<ExpandMoreIcon/>}
                         aria-controls="panel1a-content"
-                        id="panel1a-header"/>
+                        id="panel1a-header">
+                        <Box style={styles.box}>
+                            <Typography variant="h6" id="tableTitle" style={styles.titleSection}>
+                                Source View
+                            </Typography>
+                        </Box>
+                    </ExpansionPanelSummary>
                     <ExpansionPanelDetails>
                         <Box width="100%">
                             <SyntaxHighlighter language={this.props.language} style={this.props.theme}
@@ -54,8 +71,6 @@ export default class SourceViewComponent extends Component {
                     </ExpansionPanelDetails>
                 </ExpansionPanel>
             </Box>
-
-
         );
     }
 }

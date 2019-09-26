@@ -18,6 +18,7 @@
 import React, {Component} from 'react';
 import AuthManager from './utils/AuthManager';
 import {Route, Redirect, Switch} from 'react-router';
+import Qs from 'qs';
 
 import MessageStoreListPage from "../resource-pages/MessageStoreListPage";
 import ProxySourceViewPage from "../resource-pages/ProxySourceViewPage";
@@ -34,12 +35,29 @@ import TemplateListPage from "../resource-pages/TemplateListPage";
 
 export default class SecuredRouter extends Component {
 
+
+    constructor() {
+        super();
+        this.handleSessionInvalid = this.handleSessionInvalid.bind(this);
+        window.handleSessionInvalid = this.handleSessionInvalid;
+    }
+
+    handleSessionInvalid() {
+        this.forceUpdate();
+    }
+
     render() {
+
         // if the user is not logged in Redirect to login
         if (!AuthManager.isLoggedIn()) {
-
+            let referrer = this.props.location.pathname;
+            const arr = referrer.split('');
+            if (arr[arr.length - 1] !== '/') {
+                referrer += '/';
+            }
+            const params = Qs.stringify({ referrer });
             return (
-                <Redirect to='/login'/>
+                <Redirect to={{ pathname: '/login', search: params }} />
             );
         }
 

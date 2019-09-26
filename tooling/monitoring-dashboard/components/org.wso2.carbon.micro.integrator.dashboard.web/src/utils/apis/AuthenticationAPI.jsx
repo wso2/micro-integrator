@@ -16,4 +16,83 @@
  * under the License.
  */
 
+import Axios from 'axios';
+import {MediaType} from '../Constants';
+import Qs from 'qs';
+
+var baseURL = "";
+
+export default class AuthenticationAPI {
+
+    /**
+     * Get HTTP client.
+     *
+     * @return {AxiosInstance} Axios client
+     */
+    static getHttpClient() {
+        baseURL = `https://${window.localStorage.getItem('host')}:${window.localStorage.getItem('port')}/management`;
+        const client = Axios.create({
+            baseURL: baseURL,
+            timeout: 300000,
+        });
+        client.defaults.headers.post['Content-Type'] = MediaType.APPLICATION_JSON;
+        console.log(baseURL);
+        return client;
+    }
+
+    /**
+     * Get HTTP client based on given host and port.
+     *
+     * @host host i.e: localhost
+     * @port port of the MI i.e 9164
+     * @return {AxiosInstance} Axios client
+     */
+    static getHttpClient(host, port) {
+        baseURL = `https://${host}:${port}/management`;
+        const client = Axios.create({
+            baseURL: baseURL,
+            timeout: 300000,
+        });
+        client.defaults.headers.post['Content-Type'] = MediaType.APPLICATION_JSON;
+        console.log(baseURL);
+        return client;
+    }
+
+    /**
+     * Login user.
+     *
+     * @param {string} username Username
+     * @param {string} password Password
+     * @param {boolean} rememberMe Remember me flag
+     * @param {string} grantType Grant type
+     * @return {AxiosPromise} Axios promise
+     */
+    static login(host, port, username, password, rememberMe = false) {
+        return AuthenticationAPI
+            .getHttpClient(host, port).get(`/login`, {
+                auth: {
+                    username: `${username}`,
+                    password: `${password}`
+                }
+            });
+    }
+
+
+    /**
+     * Logout user.
+     *
+     * @param {string} token Partial access token
+     * @return {AxiosPromise} Axios promise
+     */
+    static logout(token) {
+        return AuthenticationAPI
+            .getHttpClient()
+            .post(`/logout`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+    }
+}
+
 

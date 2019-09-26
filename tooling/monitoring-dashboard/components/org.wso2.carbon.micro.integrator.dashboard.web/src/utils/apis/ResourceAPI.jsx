@@ -18,9 +18,13 @@
 
 
 import Axios from 'axios';
+const https = require('https');
+import AuthManager from '../../auth/utils/AuthManager';
+import {Constants} from '../../auth/Constants';
 
 const baseURL = `https://localhost:9164/management`;
-const https = require('https');
+//const baseURL = `https://${window.localStorage.getItem('host')}:${window.localStorage.getItem('port')}/management`;
+
 
 export default class ResourceAPI {
 
@@ -30,13 +34,18 @@ export default class ResourceAPI {
             timeout: 30000,
             httpsAgent: new https.Agent({
                 rejectUnauthorized: false
-            })
+            }),
+            headers: {"Authorization": "Bearer " + AuthManager.getCookie(Constants.JWT_TOKEN_COOKIE)}
         });
         httpClient.defaults.headers.post['Content-Type'] = 'application/json';
         httpClient.interceptors.response.use(function (response) {
             return response;
         }, function (error) {
-            // handle error
+            if (401 === error.response.status) {
+                AuthManager.discardSession();
+                window.handleSessionInvalid();
+            }
+            return Promise.reject(error);
         });
         return httpClient;
     }
@@ -79,5 +88,9 @@ export default class ResourceAPI {
 
     getTaskByName(name) {
         return this.getHTTPClient().get(`/tasks?taskName=${name}`);
+    }
+
+    getServerMetaData() {
+        return this.getHTTPClient().get(`/metadata`);
     }
 }

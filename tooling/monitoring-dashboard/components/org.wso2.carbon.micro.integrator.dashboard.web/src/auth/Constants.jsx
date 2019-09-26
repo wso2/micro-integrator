@@ -15,29 +15,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 import React, { Component } from 'react';
-import AuthManager from './utils/AuthManager';
-import {Redirect} from 'react-router';
 
-export default class Logout extends Component {
-
-    constructor(props) {
-        super(props);
-        this.state = {
-            redirectUrl : ""
-        }
-    }
-
-    componentDidMount() {
-        AuthManager.logout().then(() => {
-        this.setState(
-            {
-                redirectUrl: "/login",
-            });
-         });
-    }
-
-    render() {
-        return (<Redirect to={this.state.redirectUrl} />);
-    }
-}
+export const Constants = {
+    // Cookies
+    SESSION_USER_COOKIE: 'DASHBOARD_USER',
+    JWT_TOKEN_COOKIE: 'JWT_TOKEN'
+};
