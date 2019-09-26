@@ -113,6 +113,7 @@ public class CarbonServerManager {
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
                 tempProcess = Runtime.getRuntime().exec(cmdArray, null, commandDir);
+                process = tempProcess;
 
             } else {
                 if (componentBinPath != null) {
