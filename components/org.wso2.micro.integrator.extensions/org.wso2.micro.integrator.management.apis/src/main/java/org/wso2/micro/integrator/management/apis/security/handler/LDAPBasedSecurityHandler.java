@@ -54,7 +54,13 @@ public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
         }
         String username = usernamePasswordArray[0];
         String password = usernamePasswordArray[1];
-        UserStoreManager userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+        UserStoreManager userStoreManager;
+        try {
+            userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+        } catch (UserStoreException e) {
+            LOG.error("Error occurred while retrieving User Store Manager", e);
+            return false;
+        }
         try {
             return userStoreManager.authenticate(username, password);
         } catch (UserStoreException e) {

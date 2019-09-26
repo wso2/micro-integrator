@@ -30,15 +30,20 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.SecurityConstants;
+import org.wso2.micro.integrator.security.callback.DefaultPasswordCallback;
 import org.wso2.micro.integrator.security.config.RealmConfigXMLProcessor;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
-import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
-import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
-import org.wso2.micro.integrator.security.callback.DefaultPasswordCallback;
+import org.wso2.micro.integrator.security.user.core.jdbc.JDBCUserStoreManager;
+import org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager;
+
+import java.util.Hashtable;
 
 @Component (
         name = "org.wso2.micro.integrator.security.internal.ServiceComponent",
@@ -47,8 +52,11 @@ import org.wso2.micro.integrator.security.callback.DefaultPasswordCallback;
 public class ServiceComponent {
 
     private static String POX_SECURITY_MODULE = "POXSecurityModule";
+    private static final String DB_CHECK_SQL = "select * from UM_SYSTEM_USER";
 
     private static Log log = LogFactory.getLog(ServiceComponent.class);
+    //to track whether this is the first time initialization of the pack.
+    private static boolean isFirstInitialization = true;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -90,13 +98,15 @@ public class ServiceComponent {
     /**
      * This function will initialize security parameters
      */
-    public static synchronized void initSecurityParams() {
+    public static synchronized void initSecurityParams() throws UserStoreException {
 
         DataHolder dataHolder = DataHolder.getInstance();
         if (dataHolder.getRealmConfig() == null || dataHolder.getUserStoreManager() == null) {
-
             log.info("Initializing Security parameters");
             RealmConfiguration config = RealmConfigXMLProcessor.createRealmConfig();
+            if (config == null) {
+                throw new UserStoreException("Unable to create Realm Configuration");
+            }
             dataHolder.setRealmConfig(config);
             AxisConfiguration axisConfig = dataHolder.getConfigCtx().getAxisConfiguration();
 
@@ -111,13 +121,24 @@ public class ServiceComponent {
                 log.error("Failed to set axis configuration parameter ", axisFault);
             }
 
-            try {
-                UserStoreManager userStoreManager = (UserStoreManager) MicroIntegratorSecurityUtils.
-                        createObjectWithOptions(config.getUserStoreClass(), config);
-                dataHolder.setUserStoreManager(userStoreManager);
-            } catch (UserStoreException e) {
-                log.error("Error on initializing User Store Manager Class", e);
+            UserStoreManager userStoreManager;
+            String userStoreMgtClassStr = config.getUserStoreClass();
+            // In MI there are only two user store managers by default. Hence just check that and create them. If
+            // there is a custom user store manager, we have to perform class loading
+            switch (userStoreMgtClassStr) {
+                case SecurityConstants.DEFAULT_LDAP_USERSTORE_MANAGER:
+                    userStoreManager = new ReadOnlyLDAPUserStoreManager(config, null, null);
+                    break;
+                case SecurityConstants.DEFAULT_JDBC_USERSTORE_MANAGER:
+                    userStoreManager = new JDBCUserStoreManager(config, new Hashtable<>(), null, null, null,
+                            Constants.SUPER_TENANT_ID, true);
+                    break;
+                default:
+                    userStoreManager =
+                            (UserStoreManager) MicroIntegratorSecurityUtils.createObjectWithOptions(userStoreMgtClassStr, config);
+                    break;
             }
+            dataHolder.setUserStoreManager(userStoreManager);
         }
     }
 

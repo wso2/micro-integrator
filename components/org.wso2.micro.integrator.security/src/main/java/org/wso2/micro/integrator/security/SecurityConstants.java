@@ -29,4 +29,9 @@ public class SecurityConstants {
      * Default : true
      */
     public static final String MI_SECURITY_USERMGT_LAZY_INIT = "mi.security.usermgt.lazy.init";
+
+    public static final String DEFAULT_LDAP_USERSTORE_MANAGER =
+            "org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager";
+    public static final String DEFAULT_JDBC_USERSTORE_MANAGER =
+            "org.wso2.micro.integrator.security.user.core.jdbc.JDBCUserStoreManager";
 }

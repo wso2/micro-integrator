@@ -104,7 +104,13 @@ public class RESTBasicAuthHandler implements Handler {
         String decodedCredentials = new String(new Base64().decode(credentials.getBytes()));
         String username = decodedCredentials.split(":")[0];
         String password = decodedCredentials.split(":")[1];
-        UserStoreManager userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+        UserStoreManager userStoreManager;
+        try {
+            userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+        } catch (UserStoreException e) {
+            log.error("Error occurred while retrieving User Store Manager", e);
+            return false;
+        }
         try {
             return userStoreManager.authenticate(username, password);
         } catch (UserStoreException e) {

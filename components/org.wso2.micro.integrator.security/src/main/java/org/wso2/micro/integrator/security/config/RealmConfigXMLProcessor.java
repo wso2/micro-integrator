@@ -136,15 +136,10 @@ public class RealmConfigXMLProcessor {
             if (this.inStream != null) {
                 this.inStream.close();
             }
-
             return realmConfig;
-        } catch (Exception var4) {
+        } catch (Exception e) {
             String message = "Error while reading realm configuration from file";
-            if (log.isDebugEnabled()) {
-                log.debug(message, var4);
-            }
-
-            throw new UserStoreException(message, var4);
+            throw new UserStoreException(message, e);
         }
     }
 
@@ -463,14 +458,15 @@ public class RealmConfigXMLProcessor {
     }
 
 
-    public static RealmConfiguration createRealmConfig() {
+    public static RealmConfiguration createRealmConfig() throws org.wso2.micro.integrator.security.user.api.UserStoreException {
         RealmConfigXMLProcessor processor = new RealmConfigXMLProcessor();
-        RealmConfiguration realmConfig = null;
+        RealmConfiguration realmConfig;
         try {
             realmConfig = processor.buildRealmConfigurationFromFile();
 
         } catch (org.wso2.micro.integrator.security.user.core.UserStoreException e) {
-            log.error("Error while loading Realm Configuration");
+            throw new org.wso2.micro.integrator.security.user.api.UserStoreException(
+                    "Error while loading Realm Configuration from user-mgt.xml", e);
         }
         return realmConfig;
     }
