@@ -19,10 +19,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 // Show connector command related usage info
@@ -70,39 +69,19 @@ func handleConnectorCmdArguments(args []string) {
 
 func executeListConnectorCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixConnectors
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.ConnectorList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.ConnectorList{})
 
 	if err == nil {
 		// Printing the list of available Connectors
-		list := resp.(*utils.ConnectorList)
-		printConnectorList(*list)
+		list := resp.(*artifactUtils.ConnectorList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Status, utils.Package, utils.Description},
+			"No Connectors found")
 	} else {
-		utils.Logln(utils.LogPrefixError + "Getting List of Connectors", err)
+		utils.Logln(utils.LogPrefixError+"Getting List of Connectors", err)
 	}
 }
 
-func printConnectorList(connectorList utils.ConnectorList) {
-
-	if connectorList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "STATUS", "PACKAGE", "DESCRIPTION"}
-		table.Append(data)
-
-		for _, connector := range connectorList.Connectors {
-			data = []string{connector.Name, connector.Status, connector.Package, connector.Description}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Connectors found")
-	}
-}
-
-func printConnectorHelp()  {
+func printConnectorHelp() {
 	fmt.Print(showConnectorsCmdLongDesc + utils.GetCmdUsageForNonArguments(programName, connectorCmdLiteral,
 		utils.ShowCommand) + showConnectorCmdExamples + utils.GetCmdFlags(connectorCmdLiteral))
 }

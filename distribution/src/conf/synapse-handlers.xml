@@ -21,4 +21,6 @@
       Example
     <handler name="IntegratorHandler" class="org.wso2.micro.integrator.example.SynapseHandler"/>
       -->
+    <handler name="IntegratorSynapseHandler"
+             class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"/>
 </handlers>

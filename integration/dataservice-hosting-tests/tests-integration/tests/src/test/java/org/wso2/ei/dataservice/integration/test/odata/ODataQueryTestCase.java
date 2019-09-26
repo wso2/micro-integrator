@@ -43,13 +43,6 @@ public class ODataQueryTestCase extends DSSIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        List<File> sqlFileLis = new ArrayList<>();
-        sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
-        sqlFileLis.add(selectSqlFile("Customers.sql"));
-        sqlFileLis.add(selectSqlFile("FIlesWithFIlesRecords.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "odata" + File.separator
-                        + "ODataBatchRequestSampleService.dbs", sqlFileLis));
         webAppUrl = dssContext.getContextUrls().getWebAppURL();
     }
 
@@ -94,12 +87,12 @@ public class ODataQueryTestCase extends DSSIntegrationTest {
 
     @Test(groups = "wso2.dss", description = "count query test")
     public void validateCountQueryTestCase() throws Exception {
-        String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/FILES/$count";
+        String endpoint = webAppUrl + "/odata/" + serviceName + "/" + configId + "/CUSTOMERS/$count";
         Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         Object[] response = sendGET(endpoint, headers);
         Assert.assertEquals(response[0], ODataTestUtils.OK);
-        Assert.assertTrue(response[1].toString().contains("4"));
+        Assert.assertTrue(response[1].toString().contains("122"));
     }
 
     @Test(groups = "wso2.dss", description = "filter query test")

@@ -23,26 +23,15 @@
         <api class="org.wso2.micro.integrator.management.apis.ManagementInternalApi" name="ManagementApi"
              protocol="https">
             <handlers>
-                <!--handler class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"
-                         name="BasicSecurityHandler">
-                    <UserStore>
-                        <users>
-                            <user>
-                                <username>admin</username>
-                                <password>admin</password>
-                            </user>
-                        </users>
-                    </UserStore>
-                </handler-->
                 <handler class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler"
                          name="JWTTokenSecurityHandler">
                     <TokenStoreConfig>
                         <MaxSize>200</MaxSize>
-                        <TokenCleanupTaskInterval>600000</TokenCleanupTaskInterval>
-                        <RemoveOldestTokenOnOverflow>false</RemoveOldestTokenOnOverflow>
+                        <TokenCleanupTaskInterval>600</TokenCleanupTaskInterval><!--Seconds /-->
+                        <RemoveOldestTokenOnOverflow>true</RemoveOldestTokenOnOverflow>
                     </TokenStoreConfig>
                     <TokenConfig>
-                        <expiry>3600000</expiry>
+                        <expiry>3600</expiry><!--Seconds /-->
                         <size>2048</size>
                     </TokenConfig>
                     <UserStore>
@@ -54,6 +43,17 @@
                         </users>
                     </UserStore>
                 </handler>
+                <!--handler class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"
+                         name="BasicSecurityHandler">
+                    <UserStore>
+                        <users>
+                            <user>
+                                <username>admin</username>
+                                <password>admin</password>
+                            </user>
+                        </users>
+                    </UserStore>
+                </handler-->
             </handlers>
             <cors>
                 <enabled>true</enabled>

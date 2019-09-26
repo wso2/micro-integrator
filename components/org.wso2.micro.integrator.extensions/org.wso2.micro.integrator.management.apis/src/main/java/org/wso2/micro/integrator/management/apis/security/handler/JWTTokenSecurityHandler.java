@@ -22,7 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.wso2.micro.integrator.management.apis.Constants;
-import org.wso2.micro.integrator.security.internal.DataHolder;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
 import java.util.Map;
@@ -96,7 +96,7 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
      * basic auth
      *
      * @param token extracted basic auth token
-     * @return
+     * @return boolean if successfully authenticated
      */
     private boolean processLoginRequestInMemoryUserStore(String token) {
 
@@ -129,7 +129,7 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
      * basic auth
      *
      * @param token extracted basic auth token
-     * @return
+     * @return if successfully authenticated
      */
     private boolean processLoginRequestWithCarbonUserStore(String token) throws UserStoreException {
 
@@ -140,7 +140,7 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
         }
         String username = usernamePasswordArray[0];
         String password = usernamePasswordArray[1];
-        boolean isAuthenticated = DataHolder.getInstance().getUserStoreManager().authenticate(username,
+        boolean isAuthenticated = MicroIntegratorSecurityUtils.getUserStoreManager().authenticate(username,
                 password);
         if (isAuthenticated) {
             LOG.info("User " + username + " logged in successfully");

@@ -25,7 +25,7 @@ public class ExcelTestSuite extends TestCase {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for org.wso2.carbon.dataservices.core.core.test.excel");
+				"Test for org.wso2.micro.integrator.dataservices.core.test.excel");
 		//$JUnit-BEGIN$
 		suite.addTestSuite(ExcelInitTest.class);
 		suite.addTestSuite(ExcelServiceTest.class);

@@ -68,7 +68,7 @@ public class JWTTokenCleanupTask {
         }
 
         executor.scheduleAtFixedRate(new TokenCleanupTask(), cleanupInterval,
-                cleanupInterval, TimeUnit.MILLISECONDS);
+                cleanupInterval, TimeUnit.SECONDS);
     }
 
     /**
@@ -98,8 +98,8 @@ public class JWTTokenCleanupTask {
                 if (log.isDebugEnabled()) {
                     log.debug("Destroying the token cleanup task");
                 }
-                destroy(); //Destroy the thread if the store is empty since its task is done. It will retrigger once a
-                //token is made.
+                destroy(); //Destroy the thread if the store is empty since its cleanup task is done. It will retrigger
+                // once a new token is created.
             }
         }
     }

@@ -234,6 +234,8 @@ public class VaultTool {
         }
 
         String secureVaultRegex = properties.getProperty(Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY);
-        System.setProperty(Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY, secureVaultRegex);
+        if (secureVaultRegex != null) {
+            System.setProperty(Constants.SECURE_VALULT_PASSWORD_REGEX_SYSTEM_PROPERTY, secureVaultRegex);
+        }
     }
 }

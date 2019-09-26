@@ -177,7 +177,7 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
                     OMElement userNameElement = userElement.getFirstChildWithName(new QName("username"));
                     OMElement passwordElement = userElement.getFirstChildWithName(new QName("password"));
                     if (userNameElement != null && passwordElement != null) {
-                        userList.put(userElement.getText(), passwordElement.getText().toCharArray());
+                        userList.put(userNameElement.getText(), passwordElement.getText().toCharArray());
                     }
                 }
             }

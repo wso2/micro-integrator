@@ -41,9 +41,9 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
             if (Objects.nonNull(headers.get(HTTPConstants.HEADER_AUTHORIZATION))) {
                 String authHeader = (String) headers.get(HTTPConstants.HEADER_AUTHORIZATION);
                 String authHeaderToken = authHeader;
-                if(authHeader.startsWith(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE)) {
+                if (authHeader.startsWith(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE)) {
                     authHeaderToken = authHeader.substring(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
-                } else if (authHeader.startsWith(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE)){
+                } else if (authHeader.startsWith(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE)) {
                     authHeaderToken = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
                 } else {
                     // Other auth header types are not supported atm
@@ -52,12 +52,12 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
                 if (authenticate(authHeaderToken)) {
                     return true;
                 } else {
-                    headers.clear();
+                    clearHeaders(headers);
                     SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
                     return false;
                 }
             } else {
-                headers.clear();
+                clearHeaders(headers);
                 headers.put(AuthConstants.WWW_AUTHENTICATE, AuthConstants.WWW_AUTH_METHOD);
                 SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
                 return false;
@@ -74,5 +74,28 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
      * @return Boolean authenticated
      */
     protected abstract Boolean authenticate(String authHeaderToken);
+
+    /**
+     * Clear headers map preserving cors headers
+     * @param headers msg ctx headers map
+     * @return cors headers preserved header map
+     */
+    public Map clearHeaders(Map headers) {
+
+        Object allowOriginCorsHeader = headers.get(AuthConstants.ACCESS_CONTROL_ALLOW_ORIGIN);
+        Object allowMethodsCorsHeader = headers.get(AuthConstants.ACCESS_CONTROL_ALLOW_METHODS);
+        Object allowHeadersCorsHeader = headers.get(AuthConstants.ACCESS_CONTROL_ALLOW_HEADERS);
+        headers.clear();
+        if (allowOriginCorsHeader != null) {
+            headers.put(AuthConstants.ACCESS_CONTROL_ALLOW_ORIGIN, allowOriginCorsHeader);
+        }
+        if (allowMethodsCorsHeader != null) {
+            headers.put(AuthConstants.ACCESS_CONTROL_ALLOW_METHODS, allowMethodsCorsHeader);
+        }
+        if (allowHeadersCorsHeader != null) {
+            headers.put(AuthConstants.ACCESS_CONTROL_ALLOW_HEADERS, allowHeadersCorsHeader);
+        }
+        return headers;
+    }
 
 }

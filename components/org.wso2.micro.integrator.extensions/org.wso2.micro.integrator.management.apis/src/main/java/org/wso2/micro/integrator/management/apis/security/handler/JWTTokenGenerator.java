@@ -60,8 +60,7 @@ public class JWTTokenGenerator {
         JWSSigner signer = new RSASSASigner(rsaJWK);
         signedJWT.sign(signer);
 
-        String JWTString = signedJWT.serialize();
-        return JWTString;
+        return signedJWT.serialize();
     }
 
     /**

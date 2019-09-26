@@ -19,7 +19,6 @@
 package org.wso2.micro.integrator.security.callback;
 
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
-import org.wso2.micro.integrator.security.user.core.UserStoreException;
 
 /**
  * This is the default implementation of the AbstractPasswordCallbackHandler which loads the realm configuration from
@@ -27,16 +26,7 @@ import org.wso2.micro.integrator.security.user.core.UserStoreException;
  */
 public class DefaultPasswordCallback extends AbstractPasswordCallback {
 
-    @Override
-    public RealmConfiguration getRealmConfig() {
-        RealmConfigXMLProcessor processor = new RealmConfigXMLProcessor();
-        RealmConfiguration realmConfig = null;
-        try {
-            realmConfig = processor.buildRealmConfigurationFromFile();
-
-        } catch (UserStoreException e) {
-            log.error("Error while loading Realm Configuration");
-        }
-        return realmConfig;
+    public DefaultPasswordCallback(RealmConfiguration realmConfiguration) {
+        setRealmConfig(realmConfiguration);
     }
 }

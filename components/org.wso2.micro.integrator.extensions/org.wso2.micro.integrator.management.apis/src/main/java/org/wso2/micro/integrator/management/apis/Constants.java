@@ -37,6 +37,7 @@ public class Constants {
     public static final String PREFIX_CONNECTORS = "/connectors";
     public static final String PREFIX_LOGIN = "/login";
     public static final String PREFIX_LOGOUT = "/logout";
+    public static final String PREFIX_SERVER_DATA = "/server";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";

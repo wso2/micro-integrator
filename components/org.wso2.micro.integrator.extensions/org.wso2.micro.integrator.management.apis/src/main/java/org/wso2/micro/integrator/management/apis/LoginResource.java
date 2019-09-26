@@ -75,14 +75,14 @@ public class LoginResource implements MiApiResource {
         newToken.setToken(randomUUIDString);
         newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
         newToken.setIssuer((String) axis2MessageContext.getProperty(NhttpConstants.SERVICE_PREFIX));
-        Long time = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
         String expiryConfig = JWTConfig.getInstance().getJwtConfigDto().getExpiry();
         newToken.setLastAccess(time); // Assign creation time initially
-        Long expiryDuration = AuthConstants.DEFAULT_EXPIRY_DURATION;
+        long expiryDuration = AuthConstants.DEFAULT_EXPIRY_DURATION;
         if (!StringUtils.isEmpty(expiryConfig)) {
             expiryDuration = Long.parseLong(expiryConfig);
         }
-        newToken.setExpiry(time + expiryDuration);
+        newToken.setExpiry(time + (expiryDuration * 1000)); //convert to millis
         String jwtHash = null;
         try {
             jwtHash = populateJWTToken(newToken);

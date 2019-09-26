@@ -21,7 +21,8 @@ package org.wso2.carbon.esb.rabbitmq.store;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
+import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
@@ -32,22 +33,24 @@ import static org.testng.Assert.assertTrue;
  * This test case tests whether messages can be stored and forwarded in a RabbitMQ message store.
  */
 public class RabbitMQStoreTestCase extends ESBIntegrationTest {
-    private static LogViewerClient logViewer;
+    private CarbonLogReader logReader;
     private AxisServiceClient client = new AxisServiceClient();
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
+        logReader = new CarbonLogReader();
         super.init();
         loadESBConfigurationFromClasspath("/artifacts/ESB/store/rabbitmqStoreTest.xml");
-        logViewer = new LogViewerClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
     }
 
     @Test(groups = "wso2.esb", description = "Testing store and forward mechanism using RabbitMQ message store")
     public void testRMQStoreAndForward() throws Exception {
-        logViewer.clearLogs();
+        logReader.start();
         client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("rmqstoreTestProxy"), "getQuote");
-        assertTrue(Utils.checkForLog(logViewer, "RMQ Company", 1000),
-                "Message not dispatched from the store and sent to the backend!");
+        RabbitMQTestUtils.waitForLogToGetUpdated();
+        logReader.stop();
+        assertTrue(logReader.assertIfLogExists("RMQ Company"),
+                   "Message not dispatched from the store and sent to the backend!");
     }
 
     @AfterClass(alwaysRun = true)

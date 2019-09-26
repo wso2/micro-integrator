@@ -20,6 +20,7 @@ package utils
 
 import (
 	"github.com/lithammer/dedent"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -112,8 +113,8 @@ func TestGetArtifactListOK(t *testing.T) {
 	}))
 	defer server.Close()
 
-	resp, err := UnmarshalData(server.URL, nil, &APIList{})
-	list := resp.(*APIList)
+	resp, err := UnmarshalData(server.URL, nil, &artifactUtils.APIList{})
+	list := resp.(*artifactUtils.APIList)
 
 	if list.Count != 2 {
 		t.Errorf("Incorrect count. Exptected %d, got %d\n", 2, list.Count)
@@ -148,14 +149,14 @@ func TestUnmarshalDataApiOK(t *testing.T) {
 
 	params := createParamMap("apiName", "HealthcareAPI")
 
-	resp, err := UnmarshalData(server.URL, params, &API{})
-	api := resp.(*API)
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.API{})
+	api := resp.(*artifactUtils.API)
 
-	expected := API{
+	expected := artifactUtils.API{
 		Tracing: "disabled",
 		Stats:   "disabled",
 		Name:    "HealthcareAPI",
-		Resources: []Resource{
+		Resources: []artifactUtils.Resource{
 			{
 				Methods: []string{"GET"},
 				Url:     "/querydoctor/{category}",
@@ -191,13 +192,13 @@ func TestUnmarshalDataAppOK(t *testing.T) {
 
 	params := createParamMap("carbonAppName", "SampleServicesCompositeApplication")
 
-	resp, err := UnmarshalData(server.URL, params, &CarbonApp{})
-	capp := resp.(*CarbonApp)
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.CompositeApp{})
+	capp := resp.(*artifactUtils.CompositeApp)
 
-	expected := CarbonApp{
+	expected := artifactUtils.CompositeApp{
 		Name:    "SampleServicesCompositeApplication",
 		Version: "1.0.0",
-		Artifacts: []Artifact{
+		Artifacts: []artifactUtils.Artifact{
 			{
 				Name: "HealthcareAPI",
 				Type: "api",
@@ -228,10 +229,10 @@ func TestUnmarshalDataEndpointOK(t *testing.T) {
 
 	params := createParamMap("endpointName", "ClemencyEP")
 
-	resp, err := UnmarshalData(server.URL, params, &Endpoint{})
-	endpoint := resp.(*Endpoint)
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Endpoint{})
+	endpoint := resp.(*artifactUtils.Endpoint)
 
-	expected := Endpoint{
+	expected := artifactUtils.Endpoint{
 		Name:   "ClemencyEP",
 		Type:   "http",
 		Method: "POST",
@@ -267,15 +268,15 @@ func TestUnmarshalDataInboundEndpointOK(t *testing.T) {
 
 	params := createParamMap("inboundEndpointName", "TestInbound")
 
-	resp, err := UnmarshalData(server.URL, params, &InboundEndpoint{})
-	inboundEndpoint := resp.(*InboundEndpoint)
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.InboundEndpoint{})
+	inboundEndpoint := resp.(*artifactUtils.InboundEndpoint)
 
-	expected := InboundEndpoint{
+	expected := artifactUtils.InboundEndpoint{
 		Name:    "TestInbound",
 		Type:    "http",
 		Tracing: "disabled",
 		Stats:   "disabled",
-		Parameters: []Parameter{
+		Parameters: []artifactUtils.Parameter{
 			{
 				Name:  "inbound.http.port",
 				Value: "8000",
@@ -306,15 +307,15 @@ func TestUnmarshalDataProxyOK(t *testing.T) {
 
 	params := createParamMap("proxyServiceName", "TestProxy")
 
-	resp, err := UnmarshalData(server.URL, params, &Proxy{})
-	proxy := resp.(*Proxy)
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Proxy{})
+	proxy := resp.(*artifactUtils.Proxy)
 
-	expected := Proxy{
+	expected := artifactUtils.Proxy{
 		Tracing: "disabled",
 		Stats:   "disabled",
 		Name:    "TestProxy",
-		WSDL1_1: "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl",
-		WSDL2_0: "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl2",
+		Wsdl11:  "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl",
+		Wsdl20:  "http://ThinkPad-X1-Carbon-3rd:8290/services/TestProxy?wsdl2",
 	}
 
 	compareStruct(t, *proxy, expected)
@@ -342,10 +343,10 @@ func TestUnmarshalDataSequenceOK(t *testing.T) {
 
 	params := createParamMap("sequenceName", "InjectXMLSequence")
 
-	resp, err := UnmarshalData(server.URL, params, &Sequence{})
-	sequence := resp.(*Sequence)
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Sequence{})
+	sequence := resp.(*artifactUtils.Sequence)
 
-	expected := Sequence{
+	expected := artifactUtils.Sequence{
 		Container: "[ Deployed From Artifact Container: SampleInboundCompositeApplication ]",
 		Tracing:   "disabled",
 		Mediators: []string{
@@ -377,10 +378,10 @@ func TestUnmarshalDataTaskOK(t *testing.T) {
 
 	params := createParamMap("taskName", "InjectXMLTask")
 
-	resp, err := UnmarshalData(server.URL, params, &Task{})
-	sequence := resp.(*Task)
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Task{})
+	sequence := resp.(*artifactUtils.Task)
 
-	expected := Task{
+	expected := artifactUtils.Task{
 		TriggerInterval: "5000",
 		Name:            "InjectXMLTask",
 		Type:            "simple",
@@ -406,7 +407,7 @@ func TestUnmarshalDataNotFound(t *testing.T) {
 	params := make(map[string]string)
 	params["apiName"] = "ABC"
 
-	resp, err := UnmarshalData(server.URL, params, &API{})
+	resp, err := UnmarshalData(server.URL, params, &artifactUtils.API{})
 
 	if resp != nil {
 		t.Error("Response should be nil")
