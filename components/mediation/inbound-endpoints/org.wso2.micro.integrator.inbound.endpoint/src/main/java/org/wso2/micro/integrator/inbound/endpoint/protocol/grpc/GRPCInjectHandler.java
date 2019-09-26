@@ -84,9 +84,7 @@ public class GRPCInjectHandler {
                         new GRPCResponseSender(responseObserver));
             }
             initiateSequenceAndInjectPayload(responseObserver, receivedEvent, msgCtx);
-        } catch (SynapseException se) {
-            throw se;
-        } catch (Exception e) {
+        } catch (AxisFault e) {
             log.error("Error while processing the gRPC Message", e);
             throw new SynapseException("Error while processing the gRPC Message", e);
         }
@@ -102,9 +100,7 @@ public class GRPCInjectHandler {
     public void invokeConsume(Event receivedEvent, StreamObserver<Empty> responseObserver) {
         try {
             initiateSequenceAndInjectPayload(responseObserver, receivedEvent, createMessageContext());
-        } catch (SynapseException se) {
-            throw se;
-        } catch (Exception e) {
+        } catch (AxisFault e) {
             log.error("Error while consuming the Grpc Message", e);
             throw new SynapseException("Error while consuming the JMS Message", e);
         }
