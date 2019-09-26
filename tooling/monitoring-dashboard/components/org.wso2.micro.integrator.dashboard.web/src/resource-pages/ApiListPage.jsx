@@ -58,7 +58,6 @@ export default class ApiListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.data);
     }
 
     renderResourceList() {
@@ -79,7 +78,9 @@ export default class ApiListPage extends Component {
                 }
             }, "URL"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

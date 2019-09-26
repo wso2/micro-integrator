@@ -29,7 +29,6 @@ import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 
 
-
 /**
  * Style constants.
  */
@@ -41,9 +40,9 @@ const styles = {
         paddingTop: '40px',
         marginLeft: '240px',
         position: 'fixed',
-        overflowY:'auto'
+        overflowY: 'auto'
     },
-    footer:{
+    footer: {
         padding: 5,
         position: "absolute",
         textAlign: "center",
@@ -67,7 +66,7 @@ export default class ListViewParent extends Component {
             <MuiThemeProvider muiTheme={this.props.theme}>
                 <Header title={this.props.title} theme={this.props.theme}/>
                 <SideDrawer/>
-                <Box display="flex" flexDirection="row" id={"content-box"}>
+                <Box flexGrow={1} id={"content-box"}>
                     <Box>
                         <Paper style={styles.contentPaper} id={"data-box"} square={true}>
                             {this.props.data}
@@ -76,7 +75,7 @@ export default class ListViewParent extends Component {
                     <Box id={"footer-box"}>
                         <Paper style={styles.footer} square={true}>
                             <Typography>
-                                ©2019 WSO2
+                                © 2005 - 2019 WSO2 Inc. All Rights Reserved.
                             </Typography>
                         </Paper>
                     </Box>
@@ -99,7 +98,7 @@ ListViewParent.propTypes = {
 };
 
 ListViewParent.defaultProps = {
-    title: 'Micro Integrator',
+    title: 'MICRO INTEGRATOR',
     data: <span/>,
     theme: defaultTheme,
 };

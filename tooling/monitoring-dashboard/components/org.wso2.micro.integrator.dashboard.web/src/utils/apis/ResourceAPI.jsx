@@ -18,12 +18,12 @@
 
 
 import Axios from 'axios';
+
 const https = require('https');
 import AuthManager from '../../auth/utils/AuthManager';
 import {Constants} from '../../auth/Constants';
 
-const baseURL = `https://localhost:9164/management`;
-//const baseURL = `https://${window.localStorage.getItem('host')}:${window.localStorage.getItem('port')}/management`;
+const baseURL = `https://${window.localStorage.getItem('host')}:${window.localStorage.getItem('port')}/management`;
 
 
 export default class ResourceAPI {
@@ -54,35 +54,35 @@ export default class ResourceAPI {
         return this.getHTTPClient().get(resource);
     }
 
-    getProxyServiceByName(name){
+    getProxyServiceByName(name) {
         return this.getHTTPClient().get(`/proxy-services?proxyServiceName=${name}`);
     }
 
-    getMessageStoreServiceByName(name){
+    getMessageStoreServiceByName(name) {
         return this.getHTTPClient().get(`/message-stores?name=${name}`);
     }
 
-    getApiByName(name){
+    getApiByName(name) {
         return this.getHTTPClient().get(`/apis?apiName=${name}`);
     }
 
-    getMessageProcessorByName(name){
+    getMessageProcessorByName(name) {
         return this.getHTTPClient().get(`/message-processors?name=${name}`);
     }
 
-    getLocalEntryByName(name){
+    getLocalEntryByName(name) {
         return this.getHTTPClient().get(`/local-entries?name=${name}`);
     }
 
-    getEndpointByName(name){
+    getEndpointByName(name) {
         return this.getHTTPClient().get(`/endpoints?endpointName=${name}`);
     }
 
-    getInboundEndpointByName(name){
+    getInboundEndpointByName(name) {
         return this.getHTTPClient().get(`/inbound-endpoints?inboundEndpointName=${name}`);
     }
 
-    getSequenceByName(name){
+    getSequenceByName(name) {
         return this.getHTTPClient().get(`/sequences?sequenceName=${name}`);
     }
 
@@ -91,6 +91,6 @@ export default class ResourceAPI {
     }
 
     getServerMetaData() {
-        return this.getHTTPClient().get(`/metadata`);
+        return this.getHTTPClient().get(`/server`);
     }
 }

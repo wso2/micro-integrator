@@ -16,11 +16,11 @@
  * under the License.
  */
 
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { AppBar } from 'material-ui';
+import {AppBar} from 'material-ui';
 
 import defaultTheme from '../utils/Theme';
 
@@ -30,13 +30,13 @@ export default class Header extends Component {
     render() {
         return (
             <AppBar
-                style={{ zIndex: this.props.theme.zIndex.drawer + 100, position:'fixed' }}
+                style={{zIndex: this.props.theme.zIndex.drawer + 100, position: 'fixed'}}
                 title={this.props.title}
                 iconElementRight={this.props.rightElement}
                 iconElementLeft={this.props.logo}
                 onLeftIconButtonClick={this.props.onLogoClick}
-                iconStyleLeft={{ margin: '0 15px 0 0', display: 'flex', alignItems: 'center' }}
-                titleStyle={{ fontSize: 16 }}
+                iconStyleLeft={{margin: '0 15px 0 0', display: 'flex', alignItems: 'center'}}
+                titleStyle={{fontSize: 16}}
                 zDepth={2}
             />
         );
@@ -57,7 +57,7 @@ Header.propTypes = {
 
 Header.defaultProps = {
     logo: (
-        <Link style={{ height: '17px' }} to={'/home'}>
+        <Link style={{height: '17px'}} to={'/home'}>
             <img
                 height='17'
                 src={`${window.contextPath}/public/app/images/logo.svg`}
@@ -66,6 +66,6 @@ Header.defaultProps = {
         </Link>
     ),
     onLogoClick: null,
-    rightElement: <UserMenu />,
+    rightElement: <UserMenu/>,
     theme: defaultTheme,
 };

@@ -45,7 +45,11 @@ export default class ResourceExplorerParent extends Component {
                     <Typography variant="h5" id="tableTitle">
                         {this.props.title}
                     </Typography>
+                    <Box id={"breadcrumbs"} fontWeight="fontWeightLight">
+                        {this.props.breadcrumb}
+                    </Box>
                 </div>
+
                 <Divider/>
 
                 <div id="content" style={styles.contentDiv}>
@@ -66,6 +70,7 @@ ResourceExplorerParent.propTypes = {
     language: PropTypes.string,
     title: PropTypes.string,
     content: PropTypes.element,
+    breadcrumb: PropTypes.element
 };
 
 ResourceExplorerParent.defaultProps = {
@@ -73,6 +78,7 @@ ResourceExplorerParent.defaultProps = {
     theme: docco,
     language: 'xml',
     title: 'Explorer',
-    content: '<span/>'
+    content: '<span/>',
+    breadcrumb: ' '
 
 };

@@ -60,12 +60,11 @@ export default class SequenceListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.data);
     }
 
     renderResourceList() {
 
-        const columns = [            {
+        const columns = [{
             name: "Sequence",
             options: {
                 customBodyRender: (value, tableMeta, updateValue) => {
@@ -80,7 +79,9 @@ export default class SequenceListPage extends Component {
             }
         }, "Tracing", "Statistics"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

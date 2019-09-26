@@ -80,7 +80,9 @@ export default class LocalEntryListPage extends Component {
                 }
             }, "Type"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

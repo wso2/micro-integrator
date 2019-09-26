@@ -60,7 +60,6 @@ export default class ConnectorListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.data);
     }
 
     renderResourceList() {

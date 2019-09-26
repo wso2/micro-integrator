@@ -33,18 +33,15 @@ export default class AuthManager {
         return new Promise((resolve, reject) => {
             AuthenticationAPI.login(host, port, username, password, rememberMe)
                 .then((response) => {
-                    const { authUser, authToken, validityPeriod } = response.data;
+                    const {AccessToken} = response.data;
                     window.localStorage.setItem('host', host);
                     window.localStorage.setItem('port', port);
 
                     // Set user in a cookie
                     AuthManager.setUser({
-                        username: authUser,
-                        validity: validityPeriod,
-                        expires: AuthManager.calculateExpiryTime(validityPeriod),
+                        username: username
                     });
-                    AuthManager.setCookie(Constants.JWT_TOKEN_COOKIE, authToken, null, window.contextPath);
-                    console.log(response);
+                    AuthManager.setCookie(Constants.JWT_TOKEN_COOKIE, AccessToken, null, window.contextPath);
                     resolve();
                 })
                 .catch(error => {
@@ -127,7 +124,7 @@ export default class AuthManager {
     static logout() {
         return new Promise((resolve, reject) => {
             AuthenticationAPI
-                .logout(AuthManager.getUser().SDID)
+                .logout(AuthManager.getCookie(Constants.JWT_TOKEN_COOKIE))
                 .then(() => {
                     AuthManager.discardSession();
                     resolve();

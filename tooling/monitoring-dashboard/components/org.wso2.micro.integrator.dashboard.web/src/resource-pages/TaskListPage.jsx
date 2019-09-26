@@ -52,7 +52,6 @@ export default class TaskListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.data);
     }
 
     renderResourceList() {
@@ -72,7 +71,9 @@ export default class TaskListPage extends Component {
             }
         }];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

@@ -59,7 +59,6 @@ export default class InboundEndpointListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.data);
     }
 
     renderResourceList() {
@@ -79,7 +78,9 @@ export default class InboundEndpointListPage extends Component {
             }
         }, "Protocol"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

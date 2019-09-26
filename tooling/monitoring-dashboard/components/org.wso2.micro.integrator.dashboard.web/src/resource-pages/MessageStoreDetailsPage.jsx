@@ -26,6 +26,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
 import SourceViewComponent from '../common/SourceViewComponent';
+import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import { Link } from "react-router-dom";
 
 import Box from '@material-ui/core/Box';
 
@@ -111,11 +114,21 @@ export default class MessageStoreDetailsPage extends Component {
         );
     }
 
+    renderBreadCrumbs() {
+        return (
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+                <Box color="inherit" component={Link} to="/message-store" fontSize={14}>
+                    Message Stores
+                </Box>
+                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
+            </Breadcrumbs>);
+    }
+
     render() {
         console.log(this.state.config);
         return (
             <ResourceExplorerParent title={this.state.response.name + " Explorer"}
-                                    content={this.renderMessageStoreDetails()}/>
+                                    content={this.renderMessageStoreDetails()} breadcrumb={this.renderBreadCrumbs()}/>
         );
     }
 }

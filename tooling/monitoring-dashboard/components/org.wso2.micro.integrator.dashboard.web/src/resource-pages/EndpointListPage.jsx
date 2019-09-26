@@ -58,7 +58,6 @@ export default class EndpointListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.data);
     }
 
     renderResourceList() {
@@ -78,7 +77,9 @@ export default class EndpointListPage extends Component {
             }
         }, "Type"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

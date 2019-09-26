@@ -1,12 +1,12 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import { Link } from "react-router-dom";
+import {Link} from "react-router-dom";
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 
 import NotesIcon from '@material-ui/icons/Notes';
@@ -43,7 +43,7 @@ export default function SideDrawer() {
 
     return (
         <div className={classes.root}>
-            <CssBaseline />
+            <CssBaseline/>
             <Drawer
                 className={classes.drawer}
                 variant="permanent"
@@ -52,10 +52,10 @@ export default function SideDrawer() {
                 }}
                 anchor="left"
             >
-                <div className={classes.toolbar} />
+                <div className={classes.toolbar}/>
                 <List>
                     <ListItem button component={Link} to="/proxy">
-                        <ListItemIcon><NotesIcon color="error" /></ListItemIcon>
+                        <ListItemIcon><NotesIcon color="error"/></ListItemIcon>
                         <ListItemText primary="Proxy services"/>
                     </ListItem>
                     <ListItem button component={Link} to="/endpoint">
