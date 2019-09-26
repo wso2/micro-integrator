@@ -107,6 +107,7 @@
                     <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>docker-maven-plugin</artifactId>
+                        <version>0.28.0</version>
                         <configuration>
                             <logDate>default</logDate>
                             <autoPull>true</autoPull>
@@ -170,7 +171,7 @@
                                 <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                                 <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                                 <carbon.zip>
-                                    ${basedir}/../../../distribution/target/wso2mi-${product.mi.version}.zip
+                                    ${basedir}/../../../../distribution/target/wso2mi-${product.mi.version}.zip
                                 </carbon.zip>
                                 <instr.file>${basedir}/../../coverage-report/instrumentation.txt</instr.file>
                                 <filters.file>${basedir}/../../coverage-report/filters.txt</filters.file>
@@ -254,6 +255,26 @@
                         <version>2.6</version>
                         <executions>
                             <execution>
+                                <id>copy-axis2-samples</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${basedir}/target/samples</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>
+                                                ${basedir}/../../../samples/
+                                            </directory>
+                                            <includes>
+                                                <include>**</include>
+                                            </includes>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                            <execution>
                                 <id>copy-resources-jks</id>
                                 <phase>compile</phase>
                                 <goals>
@@ -332,27 +353,6 @@
                                             </directory>
                                             <includes>
                                                 <include>**/*.mar</include>
-                                            </includes>
-                                        </resource>
-                                    </resources>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>copy-samples</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>copy-resources</goal>
-                                </goals>
-                                <configuration>
-                                    <outputDirectory>${basedir}/target/ESB/samples/
-                                    </outputDirectory>
-                                    <resources>
-                                        <resource>
-                                            <directory>
-                                                ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/samples/service-bus/
-                                            </directory>
-                                            <includes>
-                                                <include>**/*.xml</include>
                                             </includes>
                                         </resource>
                                     </resources>
