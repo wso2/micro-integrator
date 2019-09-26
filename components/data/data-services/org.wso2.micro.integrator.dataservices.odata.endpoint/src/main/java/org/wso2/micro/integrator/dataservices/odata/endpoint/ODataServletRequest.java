@@ -122,11 +122,11 @@ public class ODataServletRequest implements HttpServletRequest {
 
     @Override
     public String getQueryString() {
-        String queryString = "";
+        String queryString = null;
         String url = getRequestURI();
         int queryStringPosition = url.indexOf('?');
         if (queryStringPosition != -1) {
-            queryString = url.substring(queryStringPosition);
+            queryString = url.substring(queryStringPosition + 1);
         }
         return queryString;
     }
