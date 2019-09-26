@@ -12,36 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-matrix:
-  include:
-    - language: go
-      go:
-        - 1.12.x
 
-      env:
-        - GO111MODULE=on
+language: java
 
-      before_install:
-        - cd cmd/
-        - go mod download
+node_js: "8"
 
-      script:
-        - go test -v ./...
-
-      cache:
-        directories:
-          - $HOME/.cache/go-build
-          - $HOME/gopath/pkg/mod
-
-    - language: java
-
-      services:
+services:
         - docker
 
-      install: true
+install: true
 
-      script: docker run -v "$HOME/.m2":/root/.m2 --rm -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven a5anka/wso2-ei-maven mvn clean install -P smoke-tests -Dsurefire.useSystemClassLoader=false -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+script: docker run -v "$HOME/.m2":/root/.m2 --rm -v "$(pwd)":/usr/src/mymaven -w /usr/src/mymaven a5anka/wso2-ei-maven mvn clean install -P smoke-tests -Dsurefire.useSystemClassLoader=false -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
 
-      cache:
-        directories:
-          - $HOME/.m2
+cache:
+  directories:
+  - $HOME/.m2
