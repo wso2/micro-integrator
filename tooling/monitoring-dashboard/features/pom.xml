@@ -30,6 +30,6 @@
     <packaging>pom</packaging>
     <name>MI Monitoring Dashboard - Feature Aggregator Module</name>
     <modules>
-        <module>org.wso2.carbon.micro.integrator.dashboard.web.feature</module>
+        <module>org.wso2.micro.integrator.dashboard.web.feature</module>
     </modules>
 </project>

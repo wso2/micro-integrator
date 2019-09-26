@@ -31,6 +31,6 @@
     <name>MI Monitoring Dashboard - Component Parent</name>
 
     <modules>
-        <module>org.wso2.carbon.micro.integrator.dashboard.web</module>
+        <module>org.wso2.micro.integrator.dashboard.web</module>
     </modules>
 </project>

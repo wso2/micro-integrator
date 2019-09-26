@@ -26,4 +26,4 @@ org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/d
 org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/);\
 org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/extensions);\
 org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/extensions/widgets);\
-org.wso2.carbon.extensions.touchpoint.copy(source:${installFolder}/../lib/features/org.wso2.carbon.micro.integrator.dashboard.web_${feature.version}/dashboard/,target:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/,overwrite:true);\
+org.wso2.carbon.extensions.touchpoint.copy(source:${installFolder}/../lib/features/org.wso2.micro.integrator.dashboard.web_${feature.version}/dashboard/,target:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/,overwrite:true);\
