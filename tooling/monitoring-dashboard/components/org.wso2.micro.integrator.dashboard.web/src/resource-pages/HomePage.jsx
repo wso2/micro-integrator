@@ -19,7 +19,6 @@
 
 import React, {Component} from 'react';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -29,7 +28,7 @@ import ResourceAPI from '../utils/apis/ResourceAPI';
 
 const styles = {
     gridItem: {
-        border:'ridge'
+        border: 'ridge'
     },
     serverMetaDataItem: {
         paddingBottom: '50px'
@@ -37,7 +36,7 @@ const styles = {
 
 };
 
-export default class HomePage extends Component{
+export default class HomePage extends Component {
 
     constructor(props) {
         super(props);
@@ -67,46 +66,46 @@ export default class HomePage extends Component{
     }
 
     renderHomePageView() {
-        return(
+        return (
             <Grid container spacing={4}>
                 <Grid item xs={12} style={styles.serverMetaDataItem}>
                     {this.createMetaDataTable(this.state.response)}
                 </Grid>
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Proxy Services</Typography>*/}
+                {/*<Typography>Proxy Services</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Endpoints</Typography>*/}
+                {/*<Typography>Endpoints</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Inbound Endpoints</Typography>*/}
+                {/*<Typography>Inbound Endpoints</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Message Processors</Typography>*/}
+                {/*<Typography>Message Processors</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Message Stores</Typography>*/}
+                {/*<Typography>Message Stores</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>API</Typography>*/}
+                {/*<Typography>API</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Templates</Typography>*/}
+                {/*<Typography>Templates</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Sequences</Typography>*/}
+                {/*<Typography>Sequences</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Tasks</Typography>*/}
+                {/*<Typography>Tasks</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Local Entries</Typography>*/}
+                {/*<Typography>Local Entries</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Connectors</Typography>*/}
+                {/*<Typography>Connectors</Typography>*/}
                 {/*</Grid>*/}
                 {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                    {/*<Typography>Carbon Applications</Typography>*/}
+                {/*<Typography>Carbon Applications</Typography>*/}
                 {/*</Grid>*/}
             </Grid>
         );
@@ -140,6 +139,6 @@ export default class HomePage extends Component{
 
 
     render() {
-        return(<ResourceExplorerParent title={"SERVER HOME"} content={this.renderHomePageView()}/>);
+        return (<ResourceExplorerParent title={"SERVER HOME"} content={this.renderHomePageView()}/>);
     }
 }

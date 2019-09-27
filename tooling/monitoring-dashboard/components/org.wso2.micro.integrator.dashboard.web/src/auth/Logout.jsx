@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 import React, { Component } from 'react';
 import AuthManager from './utils/AuthManager';
 import {Redirect} from 'react-router';
@@ -38,6 +39,6 @@ export default class Logout extends Component {
     }
 
     render() {
-        return (<Redirect to={this.state.redirectUrl} />);
+        return (<Redirect to="/login"/>);
     }
 }

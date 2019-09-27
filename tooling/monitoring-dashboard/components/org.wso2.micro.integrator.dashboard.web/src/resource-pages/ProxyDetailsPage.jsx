@@ -26,6 +26,9 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
 import SourceViewComponent from '../common/SourceViewComponent';
+import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import { Link } from "react-router-dom";
 
 import Box from '@material-ui/core/Box';
 
@@ -113,9 +116,19 @@ export default class ProxyDetailsPage extends Component {
         );
     }
 
+    renderBreadCrumbs() {
+        return (
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+                <Box color="inherit" component={Link} to="/proxy" fontSize={14}>
+                    Proxy Services
+                </Box>
+                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
+            </Breadcrumbs>);
+    }
+
     render() {
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderProxyDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderProxyDetails()} breadcrumb={this.renderBreadCrumbs()}/>
         );
     }
 }

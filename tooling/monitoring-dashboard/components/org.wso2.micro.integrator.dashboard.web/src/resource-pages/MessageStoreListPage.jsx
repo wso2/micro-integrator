@@ -79,7 +79,9 @@ export default class MessageStoreListPage extends Component {
             }
         }, "Type", "Messages"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

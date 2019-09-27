@@ -20,15 +20,11 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
 import {base16AteliersulphurpoolLight} from 'react-syntax-highlighter/dist/esm/styles/prism';
-import ExpansionPanel from '@material-ui/core/ExpansionPanel';
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import TableHeaderBox from '../common/TableHeaderBox';
 
 var format = require('xml-formatter');
 import Box from '@material-ui/core/Box';
-import Typography from '@material-ui/core/Typography';
+
 
 const styles = {
     titleSection: {
@@ -48,28 +44,14 @@ export default class SourceViewComponent extends Component {
         return (
 
             <Box pb={5}>
-
-                <ExpansionPanel>
-                    <ExpansionPanelSummary
-                        expandIcon={<ExpandMoreIcon/>}
-                        aria-controls="panel1a-content"
-                        id="panel1a-header">
-                        <Box style={styles.box}>
-                            <Typography variant="h6" id="tableTitle" style={styles.titleSection}>
-                                Source View
-                            </Typography>
-                        </Box>
-                    </ExpansionPanelSummary>
-                    <ExpansionPanelDetails>
-                        <Box width="100%">
-                            <SyntaxHighlighter language={this.props.language} style={this.props.theme}
-                                               showLineNumbers={true}
-                                               wrapLines={true}>
-                                {formatterConfiguration}
-                            </SyntaxHighlighter>
-                        </Box>
-                    </ExpansionPanelDetails>
-                </ExpansionPanel>
+                <TableHeaderBox title="Source View"/>
+                <Box width="100%">
+                    <SyntaxHighlighter language={this.props.language} style={this.props.theme}
+                                       showLineNumbers={true}
+                                       wrapLines={true}>
+                        {formatterConfiguration}
+                    </SyntaxHighlighter>
+                </Box>
             </Box>
         );
     }

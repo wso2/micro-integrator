@@ -32,6 +32,9 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import Box from '@material-ui/core/Box';
+import Typography from '@material-ui/core/Typography';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import { Link } from "react-router-dom";
 
 export default class EndpointDetailsPage extends Component {
 
@@ -271,10 +274,20 @@ export default class EndpointDetailsPage extends Component {
         );
     }
 
+    renderBreadCrumbs() {
+        return (
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+                <Box color="inherit" component={Link} to="/endpoint" fontSize={14}>
+                    Endpoints
+                </Box>
+                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
+            </Breadcrumbs>);
+    }
+
     render() {
         return (
             <ResourceExplorerParent title={this.state.response.name + " Explorer"}
-                                    content={this.renderEndpointDetails()}/>
+                                    content={this.renderEndpointDetails()} breadcrumb={this.renderBreadCrumbs()}/>
         );
     }
 }

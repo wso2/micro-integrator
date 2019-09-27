@@ -27,6 +27,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TableHeaderBox from '../common/TableHeaderBox';
 import SourceViewComponent from '../common/SourceViewComponent';
 import Box from '@material-ui/core/Box';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import {Link} from "react-router-dom";
 
 export default class MessageProcessorDetailPage extends Component {
 
@@ -111,9 +113,21 @@ export default class MessageProcessorDetailPage extends Component {
         );
     }
 
+    renderBreadCrumbs() {
+        return (
+            <Breadcrumbs separator="›" aria-label="breadcrumb">
+                <Box color="inherit" component={Link} to="/message-processor" fontSize={14}>
+                    Message Processors
+                </Box>
+                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
+            </Breadcrumbs>);
+    }
+
     render() {
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderMessageProcessorDetails()}/>
+            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
+                                    content={this.renderMessageProcessorDetails()}
+                                    breadcrumb={this.renderBreadCrumbs()}/>
         );
     }
 }

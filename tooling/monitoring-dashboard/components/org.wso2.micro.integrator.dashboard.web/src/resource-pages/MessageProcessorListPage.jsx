@@ -79,7 +79,9 @@ export default class MessageProcessorListPage extends Component {
             }
         }, "Type", "Status"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

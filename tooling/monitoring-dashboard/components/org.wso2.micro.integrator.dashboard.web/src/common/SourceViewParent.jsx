@@ -19,19 +19,20 @@
 import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import PropTypes from 'prop-types';
+
 var format = require('xml-formatter');
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
-import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
-import { base16AteliersulphurpoolLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
+import {Prism as SyntaxHighlighter} from 'react-syntax-highlighter';
+import {base16AteliersulphurpoolLight} from 'react-syntax-highlighter/dist/esm/styles/prism';
 
 const styles = {
     contentDiv: {
         margin: '3%',
     },
-    SourceHeaderDiv:{
-        padding:'1%',
+    SourceHeaderDiv: {
+        padding: '1%',
     }
 };
 

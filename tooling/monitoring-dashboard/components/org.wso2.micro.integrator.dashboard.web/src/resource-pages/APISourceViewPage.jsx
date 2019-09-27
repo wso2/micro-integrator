@@ -51,7 +51,6 @@ export default class APISourceViewPage extends Component {
 
 
     render() {
-        console.log(this.state.config);
         return (
             <SourceViewParent config={this.state.config}/>
         );

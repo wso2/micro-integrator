@@ -68,14 +68,15 @@ export default class TemplateListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.templateData);
     }
 
     renderResourceList() {
 
         const columns = ["Template Name", "Type"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (

@@ -79,8 +79,8 @@ export default class Login extends Component {
     /**
      * Check if the user has already signed in and remember me is set
      */
-    initAuthenticationFlow(){
-        if (!AuthManager.isLoggedIn()){
+    initAuthenticationFlow() {
+        if (!AuthManager.isLoggedIn()) {
             //Refresh token
         }
     }
@@ -232,11 +232,9 @@ export default class Login extends Component {
         const authenticated = this.state.authenticated;
         if (authenticated) {
             return (
-                <Redirect to='/proxy'/>
+                <Redirect to='/home'/>
             );
         }
         return this.renderDefaultLogin();
     }
 }
-
-

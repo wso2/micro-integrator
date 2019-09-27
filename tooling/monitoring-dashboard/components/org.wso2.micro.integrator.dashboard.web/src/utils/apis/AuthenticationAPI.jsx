@@ -29,14 +29,13 @@ export default class AuthenticationAPI {
      *
      * @return {AxiosInstance} Axios client
      */
-    static getHttpClient() {
+    static getHttpLogoutClient() {
         baseURL = `https://${window.localStorage.getItem('host')}:${window.localStorage.getItem('port')}/management`;
         const client = Axios.create({
             baseURL: baseURL,
             timeout: 300000,
         });
         client.defaults.headers.post['Content-Type'] = MediaType.APPLICATION_JSON;
-        console.log(baseURL);
         return client;
     }
 
@@ -47,14 +46,13 @@ export default class AuthenticationAPI {
      * @port port of the MI i.e 9164
      * @return {AxiosInstance} Axios client
      */
-    static getHttpClient(host, port) {
+    static getHttpLoginClient(host, port) {
         baseURL = `https://${host}:${port}/management`;
         const client = Axios.create({
             baseURL: baseURL,
             timeout: 300000,
         });
         client.defaults.headers.post['Content-Type'] = MediaType.APPLICATION_JSON;
-        console.log(baseURL);
         return client;
     }
 
@@ -69,7 +67,7 @@ export default class AuthenticationAPI {
      */
     static login(host, port, username, password, rememberMe = false) {
         return AuthenticationAPI
-            .getHttpClient(host, port).get(`/login`, {
+            .getHttpLoginClient(host, port).get(`/login`, {
                 auth: {
                     username: `${username}`,
                     password: `${password}`
@@ -86,8 +84,8 @@ export default class AuthenticationAPI {
      */
     static logout(token) {
         return AuthenticationAPI
-            .getHttpClient()
-            .post(`/logout`, null, {
+            .getHttpLogoutClient()
+            .get(`/logout`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

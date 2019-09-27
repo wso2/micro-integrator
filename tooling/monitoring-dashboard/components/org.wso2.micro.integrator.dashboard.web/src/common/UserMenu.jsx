@@ -16,11 +16,11 @@
  * under the License.
  */
 
-import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import React, {Component} from 'react';
+import {Link} from 'react-router-dom';
 
-import { FlatButton } from 'material-ui';
-import { ActionAccountCircle } from 'material-ui/svg-icons';
+import {FlatButton} from 'material-ui';
+import {ActionAccountCircle} from 'material-ui/svg-icons';
 
 
 export default class UserMenu extends Component {
@@ -36,7 +36,7 @@ export default class UserMenu extends Component {
                         style={{marginTop: '6px'}}
                         label='Logout'
                         icon={<ActionAccountCircle/>}
-                        containerElement={<Link to="/logout" />}
+                        containerElement={<Link to={'/logout'}/>}
                         linkButton={true}
                     />
                 </span>

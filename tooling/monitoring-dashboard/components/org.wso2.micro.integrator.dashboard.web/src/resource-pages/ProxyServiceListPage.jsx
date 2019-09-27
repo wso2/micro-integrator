@@ -80,7 +80,9 @@ export default class ProxyServiceListPage extends Component {
                 }
             }, "WSDL1.1", "WSDL2.0"];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (
