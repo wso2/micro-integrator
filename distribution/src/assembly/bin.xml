@@ -403,14 +403,6 @@
         </file>
 
         <file>
-            <source>src/conf/nhttp.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>nhttp.properties</destName>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-
-        <file>
             <source>src/conf/access-log.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>access-log.properties</destName>
