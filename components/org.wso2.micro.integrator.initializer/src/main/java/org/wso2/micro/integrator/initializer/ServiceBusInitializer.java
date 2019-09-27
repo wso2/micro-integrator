@@ -109,10 +109,10 @@ public class ServiceBusInitializer {
         if (log.isDebugEnabled()) {
             log.debug(ServiceBusInitializer.class.getName() + "#activate() BEGIN - " + System.currentTimeMillis());
         }
-        log.info("Activating Micro Integrator...");
+        log.debug("Activating Micro Integrator...");
 
         if (taskService != null && !taskService.isServerInit()) {
-            log.info("Initialize Task Service");
+            log.debug("Initialize Task Service");
             taskService.serverInitialized();
         }
 
@@ -561,7 +561,7 @@ public class ServiceBusInitializer {
             unbind = "unsetTaskService")
     protected void setTaskService(TaskService taskService) {
 
-        log.info("Set Task Service");
+        log.debug("Set Task Service");
         this.taskService = taskService;
     }
 
