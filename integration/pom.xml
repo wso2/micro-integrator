@@ -825,12 +825,12 @@
                     -->
             <id>full</id>
             <modules>
+            <!-- Remove few modules from full profile to test cli build pack issue in jenkins-->
                 <module>samples/product</module>
                 <module>automation-extensions</module>
                 <module>tests-common</module>
-                <module>mediation-tests</module>
+                <module>mediation-tests/service-samples</module>
                 <module>cli-tests</module>
-                <module>dataservice-hosting-tests</module>
             </modules>
         </profile>
     </profiles>
