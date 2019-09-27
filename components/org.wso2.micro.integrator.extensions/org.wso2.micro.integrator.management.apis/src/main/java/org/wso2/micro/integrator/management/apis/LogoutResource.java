@@ -23,6 +23,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.wso2.micro.integrator.management.apis.security.handler.AuthConstants;
+import org.wso2.micro.integrator.management.apis.security.handler.JWTConfig;
 import org.wso2.micro.integrator.management.apis.security.handler.JWTInMemoryTokenStore;
 import org.wso2.micro.integrator.management.apis.security.handler.SecurityUtils;
 
@@ -53,6 +54,12 @@ public class LogoutResource implements MiApiResource {
 
     @Override
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext, SynapseConfiguration synapseConfiguration) {
+
+        if (!JWTConfig.getInstance().getJwtConfigDto().isJwtHandlerEngaged()) {
+            LOG.error("/Logout is accessible only when JWT based auth handler is engaged");
+            handleServerError(axis2MessageContext, "Logout is accessible only when JWT based auth handler is engaged");
+            return true;
+        }
 
         String authHeader = (String) SecurityUtils.getHeaders(axis2MessageContext).get(HTTPConstants.HEADER_AUTHORIZATION);
         String token = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();

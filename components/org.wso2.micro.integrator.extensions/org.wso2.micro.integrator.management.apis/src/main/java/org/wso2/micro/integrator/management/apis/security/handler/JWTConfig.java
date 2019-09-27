@@ -78,6 +78,7 @@ public class JWTConfig {
                     while (handlerOMList.hasNext()) {
                         OMElement handlerOM = (OMElement) handlerOMList.next();
                         if ("JWTTokenSecurityHandler".equals(handlerOM.getAttributeValue(new QName("name")))) {
+                            jwtDTO.setJwtHandlerEngaged(true);
                             OMElement tokenStoreConfigOM = handlerOM.getFirstChildWithName(new QName("TokenStoreConfig"));
                             if (Objects.nonNull(tokenStoreConfigOM)) {
                                 OMElement sizeElem = tokenStoreConfigOM.getFirstChildWithName(new QName("MaxSize"));
