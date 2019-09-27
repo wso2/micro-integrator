@@ -23,11 +23,27 @@ platform=$(uname -s)
 bitType=$(arch)
 BASEDIR=$(dirname "$0")
 
+echo "Platform : $platform"
+echo "BitType : $bitType"
+
 #Extract the compressed archive based on the platform and the bitype
 extractCompressArchive() {
+
+    PATH="../../../../../cmd/build/wso2mi-cli-$VERSION/bin"
     echo "Extract the CLI archive "
     cd build
+    echo "working Path"
+    pwd
+    ls
     tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
+
+    echo "Check Pack exist"
+    if [ -d "$DIR" ]; then
+        echo "Path exist"
+        ls
+     else
+        echo "Path Does not exist"
+    fi
 }
 
 #get the product version from the pom file
