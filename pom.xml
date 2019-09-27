@@ -40,15 +40,6 @@
         </license>
     </licenses>
 
-    <modules>
-        <module>components</module>
-        <!--        <module>samples</module>-->
-        <module>features</module>
-        <module>p2-profile</module>
-        <module>distribution</module>
-        <module>integration</module>
-    </modules>
-
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -1129,6 +1120,30 @@
                     </plugin>
                 </plugins>
             </build>
+        </profile>
+        <profile>
+            <id>full</id>
+            <modules>
+                <module>components</module>
+                <module>features</module>
+                <module>p2-profile</module>
+                <module>distribution</module>
+                <module>integration</module>
+                <module>tooling/monitoring-dashboard</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>components</module>
+                <module>features</module>
+                <module>p2-profile</module>
+                <module>distribution</module>
+                <module>integration</module>
+            </modules>
         </profile>
     </profiles>
 
