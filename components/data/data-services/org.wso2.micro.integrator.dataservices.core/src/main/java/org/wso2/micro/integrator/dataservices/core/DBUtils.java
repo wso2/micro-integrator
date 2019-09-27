@@ -589,7 +589,6 @@ public class DBUtils {
             resolvedValue = (String) regEntry;
         }
         return resolvedValue;
-
     }
 
 
