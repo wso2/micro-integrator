@@ -1,0 +1,62 @@
+{
+  "name": "Monitoring-Dashboard-Web",
+  "version": "1.0.0",
+  "description": "WSO2 Micro Integrator Monitoring Dashboard Web",
+  "main": "main.js",
+  "scripts": {
+    "clean": "rimraf dist",
+    "dev": "NODE_ENV=development webpack --mode development --progress --devtool source-map",
+    "lint": "eslint . --ext .jsx --ext .js",
+    "build": "webpack --mode production"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wso2/micro-integrator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wso2/micro-integrator/issues"
+  },
+  "homepage": "https://github.com/wso2/micro-integrator#readme",
+  "dependencies": {
+    "@material-ui/core": "^4.3.2",
+    "@material-ui/icons": "^4.2.1",
+    "axios": "^0.19.0",
+    "https": "^1.0.0",
+    "material-tabs": "0.0.8",
+    "material-ui": "^0.20.2",
+    "mui-datatables": "^2.8.0",
+    "qs": "^6.9.0",
+    "query-string": "^6.8.2",
+    "react": "^16.4.0",
+    "react-dom": "^16.4.0",
+    "react-grid-layout": "^0.16.6",
+    "react-intl": "^2.9.0",
+    "react-router": "^5.0.1",
+    "react-router-dom": "^5.0.1",
+    "react-syntax-highlighter": "^11.0.2",
+    "react-tree-graph": "^4.0.1",
+    "xml-formatter": "^1.1.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.3.1",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.5",
+    "core-js": "^2.6.3",
+    "css-loader": "^2.1.0",
+    "eslint": "^5.12.1",
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-import": "^2.15.0",
+    "eslint-plugin-react": "^7.12.4",
+    "html-loader": "^0.5.5",
+    "node-sass": "^4.5.3",
+    "rimraf": "^2.6.2",
+    "sass-loader": "^6.0.6",
+    "style-loader": "^0.23.1",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.29.0",
+    "webpack-cli": "^3.2.1",
+    "webpack-dev-server": "^2.6.1"
+  }
+}
