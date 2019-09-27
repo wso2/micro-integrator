@@ -52,21 +52,7 @@ getPomVersion(){
     echo "Version : $VERSION"
 }
 
-#Setting up the CLI environment
-#Check if the cli build is available in the location
-setup(){
-
-cd $BASEDIR
-
-DIR="../../../../../cmd/build"
-
-if [ -d "$DIR" ]; then
-    echo "CLI build exists."
-    cd ../../../../../cmd
-else
-    echo "CLI build does not exists. Setting up the environment..."
-    #download all the dependencies
-    cd ../../../../../cmd
+buildCli(){
     go mod vendor
     sleep 10
 
@@ -78,7 +64,26 @@ else
     getPomVersion
     cd cmd
     ./build.sh -t mi.go -v ${VERSION} -f
+}
 
+#Setting up the CLI environment
+#Check if the cli build is available in the location
+setup(){
+
+cd $BASEDIR
+
+DIR="../../../../../cmd/build"
+
+if [ -d "$DIR" ]; then
+    echo "CLI build exists."
+    cd ../../../../../cmd
+    rm -rf build
+    buildCli
+else
+    echo "CLI build does not exists. Setting up the environment..."
+    #download all the dependencies
+    cd ../../../../../cmd
+    buildCli
 fi
 
 #Extract the compressed archive generated
