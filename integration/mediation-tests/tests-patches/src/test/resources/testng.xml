@@ -92,7 +92,10 @@
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4328RestUrlPostFixValueEncodeTestCase"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4394"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4760ContentLengthHeaderTest"/>
-            <class name="org.wso2.carbon.esb.passthru.transport.test.HttpAccessLogTestCase"/>
+            <!--
+                 Skipping due to https://github.com/wso2/micro-integrator/issues/895
+                 <class name="org.wso2.carbon.esb.passthru.transport.test.HttpAccessLogTestCase"/>
+                 -->
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA4631PreserveHTTPHeadersTest"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA3770DropLargePayloadsPreventESBFromOOMTestCase"/>
             <class name="org.wso2.carbon.esb.passthru.transport.test.ESBJAVA3336HostHeaderValuePortCheckTestCase"/>
