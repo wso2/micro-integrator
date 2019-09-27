@@ -98,18 +98,8 @@ public class LoginResource implements MiApiResource {
         newToken.setHash(jwtHash);
         if (!tokenStore.putToken(jwtHash, newToken)) {
             //Token store has been exhausted
-            if (JWTConfig.getInstance().getJwtConfigDto().isRemoveOldestElementOnOverflow()) {
-                tokenStore.cleanupStore(); //Try cleaning up the store
-                if (!tokenStore.putToken(jwtHash, newToken)) { //Try once
-                    //Produce error if failed
-                    handleServerError(axis2MessageContext, "Max concurrent access limit exceeded");
-                    return true;
-                }
-            } else {
-                handleServerError(axis2MessageContext, "Max concurrent access limit exceeded");
-                return true;
-            }
-
+            handleServerError(axis2MessageContext, "Max concurrent access limit exceeded");
+            return true;
         }
 
         JSONObject jsonPayload = new JSONObject();

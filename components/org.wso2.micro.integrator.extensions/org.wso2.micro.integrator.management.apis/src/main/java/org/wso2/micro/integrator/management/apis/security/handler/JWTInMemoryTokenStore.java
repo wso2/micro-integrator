@@ -89,6 +89,13 @@ public class JWTInMemoryTokenStore extends JWTTokenStore {
             getTokenStore().put(token, jwtTokenInfoDTO);
             return true;
         } else {
+            if (JWTConfig.getInstance().getJwtConfigDto().isRemoveOldestElementOnOverflow()) {
+                LOG.info("Token store exhausted. Retrying after cleaning up the store");
+                cleanupStore();
+                if(putToken(token, jwtTokenInfoDTO)) {
+                    return true;
+                }
+            }
             LOG.warn("Token store exhausted. Please increase the token store size");
             return false;
         }

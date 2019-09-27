@@ -53,11 +53,11 @@ public class JWTTokenCleanupTask {
         executor = Executors.newScheduledThreadPool(1,
                 new ThreadFactory() {
 
-                    public Thread newThread(Runnable r) {
+                    public Thread newThread(Runnable runnableInstance) {
 
-                        Thread t = new Thread(r);
-                        t.setName("JWT Token Cleanup Task");
-                        return t;
+                        Thread cleanupThread = new Thread(runnableInstance);
+                        cleanupThread.setName("JWT Token Cleanup Task");
+                        return cleanupThread;
                     }
                 });
 
