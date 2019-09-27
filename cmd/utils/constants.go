@@ -34,18 +34,8 @@ var ConfigDirPath = filepath.Join(HomeDirectory, ConfigDirName)
 
 var PathSeparator_ = string(os.PathSeparator)
 
-const EnvKeysAllFileName = "env_keys_all.yaml"
-
-var EnvKeysAllFilePath = filepath.Join(ConfigDirPath, EnvKeysAllFileName)
-
 const ServerConfigFileName = "server_config.yaml"
 const SampleMainConfigFileName = "main_config.yaml.sample"
-
-var SampleMainConfigFilePath = filepath.Join(ConfigDirPath, SampleMainConfigFileName)
-
-const ExportDirName = "exported"
-
-var ExportDirPath = filepath.Join(ConfigDirPath, ExportDirName)
 
 const DefaultEnvironmentName = "default"
 
@@ -106,3 +96,20 @@ const PrefixDataServices = "data-services"
 const ShowCommand = "show"
 const HelpCommand = "help"
 
+const Name = "NAME"
+const Type = "TYPE"
+const Url = "URL"
+const Method = "METHOD"
+const Status = "STATUS"
+const Size = "SIZE"
+const Version = "VERSION"
+const Package = "PACKAGE"
+const Description = "DESCRIPTION"
+const Stats = "STATS"
+const Tracing = "TRACING"
+const Wsdl11 = "WSDL 1.1"
+const Wsdl20 = "WSDL 2.0"
+const TriggerType = "TRIGGER TYPE"
+const Count = "COUNT"
+const Interval = "INTERVAL"
+const CronExpression = "CRON EXPRESSION"

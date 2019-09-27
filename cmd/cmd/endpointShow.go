@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 var endpointName string
@@ -82,11 +81,11 @@ func executeGetEndpointCmd(endpointname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixEndpoints, "endpointName", endpointname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Endpoint{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.Endpoint{})
 
 	if err == nil {
 		// Printing the details of the Endpoint
-		endpoint := resp.(*utils.Endpoint)
+		endpoint := resp.(*artifactUtils.Endpoint)
 		printEndpoint(*endpoint)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of Endpoint", err)
@@ -96,7 +95,7 @@ func executeGetEndpointCmd(endpointname string) {
 // Print the details of an Endpoint
 // Name, Type, Method, Url, Stats
 // @param Endpoint : Endpoint object
-func printEndpoint(endpoint utils.Endpoint) {
+func printEndpoint(endpoint artifactUtils.Endpoint) {
 
 	fmt.Println("Name - " + endpoint.Name)
 	fmt.Println("Type - " + endpoint.Type)
@@ -109,34 +108,13 @@ func executeListEndpointsCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixEndpoints
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.EndpointList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.EndpointList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints
-		list := resp.(*utils.EndpointList)
-		printEndpointsist(*list)
+		list := resp.(*artifactUtils.EndpointList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Type, utils.Method, utils.Url}, "No endpoints found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Endpoints", err)
-	}
-}
-
-func printEndpointsist(endpointList utils.EndpointList) {
-
-	if endpointList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "TYPE", "METHOD", "URL"}
-		table.Append(data)
-
-		for _, endpoint := range endpointList.Endpoints {
-			data = []string{endpoint.Name, endpoint.Type, endpoint.Method, endpoint.Url}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Endpoints found")
 	}
 }

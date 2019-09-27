@@ -23,6 +23,7 @@ import (
 	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 	"os"
 )
 
@@ -82,11 +83,11 @@ func executeGetCarbonAppCmd(appname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixCarbonApps, "carbonAppName", appname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.CarbonApp{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.CompositeApp{})
 
 	if err == nil {
 		// Printing the details of the Carbon App
-		app := resp.(*utils.CarbonApp)
+		app := resp.(*artifactUtils.CompositeApp)
 		printCarbonAppInfo(*app)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of the Carbon App", err)
@@ -95,8 +96,8 @@ func executeGetCarbonAppCmd(appname string) {
 
 // Print the details of a Carbon app
 // Name, Version, and summary about it's artifacts
-// @param app : CarbonApp object
-func printCarbonAppInfo(app utils.CarbonApp) {
+// @param app : CompositeApp object
+func printCarbonAppInfo(app artifactUtils.CompositeApp) {
 
 	fmt.Println("Name - " + app.Name)
 	fmt.Println("Version - " + app.Version)
@@ -121,34 +122,13 @@ func executeListCarbonAppsCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixCarbonApps
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.CarbonAppList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.CompositeAppList{})
 
 	if err == nil {
 		// Printing the list of available Carbon apps
-		list := resp.(*utils.CarbonAppList)
-		printAppList(*list)
+		list := resp.(*artifactUtils.CompositeAppList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Version}, "No Composite Apps found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Carbon apps", err)
-	}
-}
-
-func printAppList(appList utils.CarbonAppList) {
-
-	if appList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "VERSION"}
-		table.Append(data)
-
-		for _, app := range appList.CarbonApps {
-			data = []string{app.Name, app.Version}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Carbon Apps found")
 	}
 }

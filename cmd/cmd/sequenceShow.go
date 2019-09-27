@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 var sequenceName string
@@ -82,11 +81,11 @@ func executeGetSequenceCmd(sequencename string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixSequences, "sequenceName", sequencename)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Sequence{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.Sequence{})
 
 	if err == nil {
 		// Printing the details of the Sequence
-		sequence := resp.(*utils.Sequence)
+		sequence := resp.(*artifactUtils.Sequence)
 		printSequenceInfo(*sequence)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of the Sequence", err)
@@ -96,7 +95,7 @@ func executeGetSequenceCmd(sequencename string) {
 // Print the details of a Sequence
 // Name, Conatiner and list of mediators
 // @param task : Sequence object
-func printSequenceInfo(sequence utils.Sequence) {
+func printSequenceInfo(sequence artifactUtils.Sequence) {
 
 	fmt.Println("Name - " + sequence.Name)
 	fmt.Println("Container - " + sequence.Container)
@@ -120,33 +119,13 @@ func executeListSequencesCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixSequences
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.SequenceList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.SequenceList{})
 
 	if err == nil {
 		// Printing the list of available Sequences
-		list := resp.(*utils.SequenceList)
-		printSequenceList(*list)
+		list := resp.(*artifactUtils.SequenceList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Stats, utils.Tracing}, "No sequences found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Sequences", err)
-	}
-}
-
-func printSequenceList(sequenceList utils.SequenceList) {
-	if sequenceList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "STATS", "TRACING"}
-		table.Append(data)
-
-		for _, sequence := range sequenceList.Sequences {
-			data = []string{sequence.Name, sequence.Stats, sequence.Tracing}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Sequences found")
 	}
 }

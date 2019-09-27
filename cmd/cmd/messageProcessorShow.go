@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 var messageProcessorName string
@@ -53,7 +52,7 @@ func init() {
 	messageProcessorCmd.AddCommand(messageProcessorShowCmd)
 	messageProcessorShowCmd.SetHelpTemplate(showMessageProcessorCmdLongDesc +
 		utils.GetCmdUsage(programName, messageProcessorCmdLiteral,
-		utils.ShowCommand, "[messageprocessor-name]") + showMessageProcessorCmdExamples +
+			utils.ShowCommand, "[messageprocessor-name]") + showMessageProcessorCmdExamples +
 		utils.GetCmdFlags(messageProcessorCmdLiteral))
 }
 
@@ -82,18 +81,18 @@ func printMessageProcessorHelp() {
 
 func executeGetMessageProcessorCmd(messageProcessorName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixMessageProcessors, "name", messageProcessorName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.MessageProcessorData{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.MessageProcessorData{})
 
 	if err == nil {
 		// Printing the details of the MessageProcessor
-		messageProcessor := resp.(*utils.MessageProcessorData)
+		messageProcessor := resp.(*artifactUtils.MessageProcessorData)
 		printMessageProcessor(*messageProcessor)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of Endpoint", err)
 	}
 }
 
-func printMessageProcessor(messageProcessor utils.MessageProcessorData) {
+func printMessageProcessor(messageProcessor artifactUtils.MessageProcessorData) {
 	fmt.Println("Name - " + messageProcessor.Name)
 	fmt.Println("Type - " + messageProcessor.Type)
 	fmt.Println("File Name - " + messageProcessor.FileName)
@@ -105,33 +104,13 @@ func printMessageProcessor(messageProcessor utils.MessageProcessorData) {
 
 func executeListMessageProcessorCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixMessageProcessors
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.MessageProcessorList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.MessageProcessorList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints
-		list := resp.(*utils.MessageProcessorList)
-		printMessageProcessorsList(*list)
+		list := resp.(*artifactUtils.MessageProcessorList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Type, utils.Status}, "No Message Processors Found")
 	} else {
-		utils.Logln(utils.LogPrefixError + "Getting List of Message Processors", err)
-	}
-}
-
-func printMessageProcessorsList(messageProcessorList utils.MessageProcessorList) {
-	if messageProcessorList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "TYPE", "STATUS"}
-		table.Append(data)
-
-		for _, messageProcessor := range messageProcessorList.MessageProcessors {
-			data = []string{messageProcessor.Name, messageProcessor.Type, messageProcessor.Status}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Message Processors found")
+		utils.Logln(utils.LogPrefixError+"Getting List of Message Processors", err)
 	}
 }

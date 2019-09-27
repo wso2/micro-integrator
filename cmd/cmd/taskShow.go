@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 var taskName string
@@ -82,11 +81,11 @@ func executeGetTaskCmd(taskname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixTasks, "taskName", taskname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Task{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.Task{})
 
 	if err == nil {
 		// Printing the details of the Task
-		task := resp.(*utils.Task)
+		task := resp.(*artifactUtils.Task)
 		printTask(*task)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of the Task", err)
@@ -96,7 +95,7 @@ func executeGetTaskCmd(taskname string) {
 // Print the details of a Task
 // Name, Class, Group, Type and Trigger details
 // @param task : Task object
-func printTask(task utils.Task) {
+func printTask(task artifactUtils.Task) {
 	fmt.Println("Name - " + task.Name)
 	fmt.Println("Trigger Type - " + task.Type)
 	if task.Type == "cron" {
@@ -111,34 +110,14 @@ func executeListTasksCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixTasks
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.TaskList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.TaskList{})
 
 	if err == nil {
 		// Printing the list of available Tasks
-		list := resp.(*utils.TaskList)
-		printTaskList(*list)
+		list := resp.(*artifactUtils.TaskList)
+		utils.PrintItemList(list, []string{utils.Name, utils.TriggerType, utils.Count, utils.Interval, utils.CronExpression},
+			"No Tasks found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Tasks", err)
-	}
-}
-
-func printTaskList(taskList utils.TaskList) {
-
-	if taskList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "TRIGGER TYPE", "COUNT", "INTERVAL", "CRON EXPRESSION"}
-		table.Append(data)
-
-		for _, task := range taskList.Tasks {
-			data = []string{task.Name, task.Type, task.TriggerCount, task.TriggerInterval, task.TriggerCron}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Tasks found")
 	}
 }

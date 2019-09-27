@@ -38,7 +38,8 @@
             <cors>
                 <enabled>true</enabled>
                 <allowedOrigins>*</allowedOrigins>
-                <allowedHeaders></allowedHeaders>
+                <!-- comma separated values-->
+                <allowedHeaders>Authorization</allowedHeaders>
             </cors>
         </api>
     </apis>

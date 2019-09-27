@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 var templateType string
@@ -90,52 +89,52 @@ func handleTemplateCmdArguments(args []string) {
 	}
 }
 
-func printTemplateHelp()  {
+func printTemplateHelp() {
 	fmt.Print(showTemplateCmdLongDesc + utils.GetCmdUsage(programName, templateCmdLiteral, utils.ShowCommand,
 		"[template-type] [template-name]") + showTemplateCmdExamples + utils.GetCmdFlags(templateCmdLiteral))
 }
 
 func executeListTemplatesCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixTemplates
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.TemplateList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.TemplateList{})
 
 	if err == nil {
 		// Printing the list of available Templates
-		list := resp.(*utils.TemplateList)
+		list := resp.(*artifactUtils.TemplateList)
 		printTemplateList(*list)
 	} else {
-		utils.Logln(utils.LogPrefixError + "Getting List of Templates", err)
+		utils.Logln(utils.LogPrefixError+"Getting List of Templates", err)
 	}
 }
 
 func executeGetTemplateByTypeCmd(templateType string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixTemplates, "type", templateType)
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.TemplateListByType{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.TemplateListByType{})
 
 	if err == nil {
 		// Printing the details of the Templates by type
-		list := resp.(*utils.TemplateListByType)
+		list := resp.(*artifactUtils.TemplateListByType)
 		printTemplatesByType(*list)
 	} else {
-		fmt.Println(utils.LogPrefixError + "Getting Information of Template", err)
+		fmt.Println(utils.LogPrefixError+"Getting Information of Template", err)
 	}
 }
 
 func executeGetTemplateByNameCmd(templateType string, templateName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixTemplates, "type", templateType)
 	params = utils.PutQueryParamsToMap(params, "name", templateName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.TemplateListByName{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.TemplateListByName{})
 
 	if err == nil {
 		// Printing the details of the Template by name
-		list := resp.(*utils.TemplateListByName)
+		list := resp.(*artifactUtils.TemplateListByName)
 		printTemplatesByName(*list)
 	} else {
-		fmt.Println(utils.LogPrefixError + "Getting Information of Template - " + templateName, err)
+		fmt.Println(utils.LogPrefixError+"Getting Information of Template - "+templateName, err)
 	}
 }
 
-func printTemplateList(templateList utils.TemplateList) {
+func printTemplateList(templateList artifactUtils.TemplateList) {
 	var isTemplateFound bool = false
 
 	allTemplateList := [][]string{}
@@ -143,7 +142,7 @@ func printTemplateList(templateList utils.TemplateList) {
 		isTemplateFound = true
 		for _, template := range templateList.SequenceTemplates {
 			data := []string{template.Name, "Sequence"}
-			allTemplateList  = append(allTemplateList, data)
+			allTemplateList = append(allTemplateList, data)
 		}
 	}
 
@@ -155,19 +154,16 @@ func printTemplateList(templateList utils.TemplateList) {
 		}
 	}
 
- 	if len(allTemplateList) > 0 {
+	if len(allTemplateList) > 0 {
 		isTemplateFound = true
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
+		table := utils.GetTableWriter()
 
-		data := []string{"NAME", "TYPE"}
+		data := []string{utils.Name, utils.Type}
 		table.Append(data)
 
 		for _, template := range allTemplateList {
 			table.Append(template)
 		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
 		table.Render()
 	}
 
@@ -176,27 +172,24 @@ func printTemplateList(templateList utils.TemplateList) {
 	}
 }
 
-func printTemplatesByType(templateList utils.TemplateListByType) {
+func printTemplatesByType(templateList artifactUtils.TemplateListByType) {
 	if templateList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
+		table := utils.GetTableWriter()
 
-		data := []string{"NAME"}
+		data := []string{utils.Name}
 		table.Append(data)
 
 		for _, template := range templateList.Templates {
 			data = []string{template.Name}
 			table.Append(data)
 		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
 		table.Render()
 	} else {
 		fmt.Println("No Template found from the given type")
 	}
 }
 
-func printTemplatesByName(templateList utils.TemplateListByName) {
+func printTemplatesByName(templateList artifactUtils.TemplateListByName) {
 	fmt.Println("Name - " + templateList.Name)
 	var parameters string
 	for _, params := range templateList.Parameters {

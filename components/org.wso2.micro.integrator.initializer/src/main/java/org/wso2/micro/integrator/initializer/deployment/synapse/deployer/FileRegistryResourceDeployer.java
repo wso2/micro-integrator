@@ -32,7 +32,13 @@ import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.config.RegistryConfig;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,11 +51,11 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
 
     public static final Log log = LogFactory.getLog(FileRegistryResourceDeployer.class);
 
-    public static final String REGISTRY_RESOURCE_TYPE = "registry/resource";
-    public static final String GOV_REGISTRY_PATH = "/_system/governance";
-    public static final String GOV_REGISTRY_PREFIX = "gov:";
-    public static final String CONFIG_REGISTRY_PATH = "/_system/config";
-    public static final String CONFIG_REGISTRY_PREFIX = "conf:";
+    private static final String REGISTRY_RESOURCE_TYPE = "registry/resource";
+    private static final String GOV_REGISTRY_PATH = "/_system/governance";
+    private static final String GOV_REGISTRY_PREFIX = "gov:";
+    private static final String CONFIG_REGISTRY_PATH = "/_system/config";
+    private static final String CONFIG_REGISTRY_PREFIX = "conf:";
 
     public FileRegistryResourceDeployer(Registry lightweightRegistry) {
         this.lightweightRegistry = lightweightRegistry;
@@ -79,19 +85,17 @@ public class FileRegistryResourceDeployer implements AppDeploymentHandler {
      * Deploys registry artifacts recursively. A Registry artifact can exist as a sub artifact in
      * any type of artifact. Therefore, have to search recursively
      *
-     * @param artifacts - list of artifacts to be deployed
+     * @param artifacts     - list of artifacts to be deployed
      * @param parentAppName - name of the parent cApp
      */
     private void deployRegistryArtifacts(List<Artifact> artifacts, String parentAppName) {
-        artifacts.stream()
-                 .filter(artifact -> REGISTRY_RESOURCE_TYPE.equals(artifact.getType()))
-                 .forEach(artifact -> {
-                     if (log.isDebugEnabled()) {
-                         log.debug("Deploying registry artifact: " + artifact.getName());
-                     }
-                     RegistryConfig regConfig = buildRegistryConfig(artifact, parentAppName);
-                     writeArtifactToRegistry(regConfig);
-                 });
+        artifacts.stream().filter(artifact -> REGISTRY_RESOURCE_TYPE.equals(artifact.getType())).forEach(artifact -> {
+            if (log.isDebugEnabled()) {
+                log.debug("Deploying registry artifact: " + artifact.getName());
+            }
+            RegistryConfig regConfig = buildRegistryConfig(artifact, parentAppName);
+            writeArtifactToRegistry(regConfig);
+        });
     }
 
 

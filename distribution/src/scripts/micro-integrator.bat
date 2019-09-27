@@ -44,7 +44,7 @@ goto end
 rem ----- Only set CARBON_HOME if not already set ----------------------------
 :checkServer
 rem %~sdp0 is expanded pathname of the current script under NT with spaces in the path removed
-set CARBON_HOME=%~sdp0..
+SET CARBON_HOME=%~sdp0..
 SET curDrive=%cd:~0,1%
 SET wsasDrive=%CARBON_HOME:~0,1%
 if not "%curDrive%" == "%wsasDrive%" %wsasDrive%:
@@ -70,7 +70,7 @@ FOR %%C in ("%CARBON_HOME%\bin\*.jar") DO set CARBON_CLASSPATH=!CARBON_CLASSPATH
 
 set CARBON_CLASSPATH="%JAVA_HOME%\lib\tools.jar";%CARBON_CLASSPATH%;
 
-FOR %%D in ("%CARBON_HOME%\wso2\lib\commons-lang*.jar") DO set CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\wso2\lib\%%~nD%%~xD"
+FOR %%D in ("%CARBON_HOME%\wso2\lib\*.jar") DO set CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\wso2\lib\%%~nD%%~xD"
 
 rem ----- Process the input command -------------------------------------------
 
@@ -136,8 +136,10 @@ rem find the version of the jdk
 set CMD=RUN %*
 
 :checkJdk17
-"%JAVA_HOME%\bin\java" -version 2>&1 | findstr /r "1.[7|8]" >NUL
-IF ERRORLEVEL 1 goto unknownJdk
+PATH %PATH%;%JAVA_HOME%\bin\
+for /f tokens^=2-5^ delims^=.-_^" %%j in ('java -fullversion 2^>^&1') do set "JAVA_VERSION=%%j%%k"
+if %JAVA_VERSION% LSS 17 goto unknownJdk
+if %JAVA_VERSION% GTR 110 goto unknownJdk
 goto jdk17
 
 :unknownJdk
@@ -160,11 +162,11 @@ del *.* /s /q > nul
 FOR /d %%G in ("*.*") DO rmdir %%G /s /q
 cd ..
 
-rem ---------- Add jars to classpath ----------------
+rem ---------- Add jars to classpath --c _CLASSPATH%
 
-set CARBON_CLASSPATH=.\wso2\lib;%CARBON_CLASSPATH%
-
-set JAVA_ENDORSED=".\wso2\lib\endorsed";"%JAVA_HOME%\jre\lib\endorsed";"%JAVA_HOME%\lib\endorsed"
+if %JAVA_VERSION% GEQ 110 set CARBON_CLASSPATH=.\wso2\lib\*;%CARBON_CLASSPATH%
+if %JAVA_VERSION% LEQ 18 set JAVA_VER_BASED_OPTS=-Djava.endorsed.dirs=".\lib\endorsed";"%JAVA_HOME%\jre\lib\endorsed";"%JAVA_HOME%\lib\endorsed"
+if %JAVA_VERSION% GEQ 110 set JAVA_VER_BASED_OPTS=--add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens java.rmi/sun.rmi.transport=ALL-UNNAMED
 
 rem ---------------- Setting default profile for Runtime if not parsed --------------
 
