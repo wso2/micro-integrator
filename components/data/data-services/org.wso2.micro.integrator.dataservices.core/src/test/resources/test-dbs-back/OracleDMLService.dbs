@@ -138,7 +138,7 @@
       </param>
       <param name="contactLastName" sqlType="STRING">
          <validateLength maximum="20" />
-        <validateCustom class="org.wso2.carbon.dataservices.core.test.util.OddLengthValidator" /> 
+        <validateCustom class="org.wso2.micro.integrator.dataservices.core.test.util.OddLengthValidator" />
       </param>
       <param name="phone" sqlType="STRING">
          <validatePattern pattern="^\([1-9]\d{2}\)\s?\d{3}\-\d{4}$" />

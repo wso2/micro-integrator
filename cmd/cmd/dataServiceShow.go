@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 var dataServiceNameInput string
@@ -69,12 +70,12 @@ func handleDataServiceCmdArguments(args []string) {
 func executeDataServiceListCmd() {
 	finalURL := utils.GetRESTAPIBase() + utils.PrefixDataServices
 
-	resp, err := utils.UnmarshalData(finalURL, nil, &utils.DataServicesList{})
+	resp, err := utils.UnmarshalData(finalURL, nil, &artifactUtils.DataServicesList{})
 
 	if err == nil {
 		// print the list of available data services
-		list := resp.(*utils.DataServicesList)
-		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No dataservices found")
+		list := resp.(*artifactUtils.DataServicesList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Wsdl11, utils.Wsdl20}, "No dataservices found")
 	} else {
 		utils.Logln(utils.LogPrefixError+"Getting List of Dataservices", err)
 	}
@@ -82,11 +83,11 @@ func executeDataServiceListCmd() {
 
 func executeGetDataServiceCmd(dataServiceName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixDataServices, "dataServiceName", dataServiceName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.DataServiceInfo{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.DataServiceInfo{})
 
 	if err == nil {
 		// printing the details of the Data Service
-		dataService := resp.(*utils.DataServiceInfo)
+		dataService := resp.(*artifactUtils.DataServiceInfo)
 		printDataServiceInfo(*dataService)
 	} else {
 		fmt.Println("Error: " + err.Error())
@@ -99,7 +100,7 @@ func printShowDataServiceHelp() {
 		"[data-service-name]") + showDataServiceCmdExmaples + utils.GetCmdFlags(dataServicesCmdLiteral))
 }
 
-func printDataServiceInfo(dataServiceInfo utils.DataServiceInfo) {
+func printDataServiceInfo(dataServiceInfo artifactUtils.DataServiceInfo) {
 	fmt.Println("Name - " + dataServiceInfo.ServiceName)
 	fmt.Println("Group Name - " + dataServiceInfo.ServiceGroupName)
 	fmt.Println("Description - " + dataServiceInfo.ServiceDescription)

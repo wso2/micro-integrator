@@ -67,6 +67,8 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import static org.wso2.micro.core.util.CarbonUtils.getSecuredTransformerFactory;
+
 public class MicroIntegratorBaseUtils {
 
     private static final String REPOSITORY = "repository";
@@ -464,7 +466,8 @@ public class MicroIntegratorBaseUtils {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             Source xmlSource = new DOMSource(doc);
             Result result = new StreamResult(outputStream);
-            TransformerFactory.newInstance().newTransformer().transform(xmlSource, result);
+            TransformerFactory factory = getSecuredTransformerFactory();
+            factory.newTransformer().transform(xmlSource, result);
             in = new ByteArrayInputStream(outputStream.toByteArray());
         } catch (TransformerException e) {
             throw new CarbonException("Error in transforming DOM to InputStream", e);

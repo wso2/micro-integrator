@@ -61,7 +61,7 @@ else
     tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 
     #start the application
-    cd wso2mi-cli-$VERSION/bin
+    cd wso2mi-cli-1.1.0-SNAPSHOT/bin
     echo "ClI setup Complete"
 fi
 

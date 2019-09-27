@@ -1,0 +1,29 @@
+#
+# Copyright (c) 2017, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+#
+# WSO2 Inc. licenses this file to you under the Apache License,
+# Version 2.0 (the "License"); you may not use this file except
+# in compliance with the License.
+# You may obtain a copy of the License at
+#
+#   http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+
+metaRequirements.0.namespace = org.eclipse.equinox.p2.iu
+metaRequirements.0.name = org.wso2.carbon.extensions.touchpoint
+metaRequirements.0.optional = true
+
+instructions.configure = \
+org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/);\
+org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/web-ui-apps/);\
+org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/);\
+org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/extensions);\
+org.wso2.carbon.extensions.touchpoint.mkdir(path:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/extensions/widgets);\
+org.wso2.carbon.extensions.touchpoint.copy(source:${installFolder}/../lib/features/org.wso2.micro.integrator.dashboard.web_${feature.version}/dashboard/,target:${installFolder}/../{runtime}/deployment/web-ui-apps/dashboard/,overwrite:true);\

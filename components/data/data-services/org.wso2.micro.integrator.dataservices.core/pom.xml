@@ -213,6 +213,10 @@
             <groupId>org.atomikos.wso2</groupId>
             <artifactId>atomikos</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-jaxws</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -224,13 +228,12 @@
 
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <!--<version>2.2</version>-->
                 <inherited>true</inherited>
                 <configuration>
                     <forkMode>pertest</forkMode>
-                    <argLine>@{argLine} -enableassertions</argLine>
+                    <argLine>-Xms512m -Xmx1024m -XX:MaxPermSize=128m</argLine>
                     <testFailureIgnore>false</testFailureIgnore>
-                    <skip>true</skip>
+                    <skip>${dss.test.skip}</skip>
                     <includes>
                         <include>**/*TestSuite.java</include>
                     </includes>
@@ -427,6 +430,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>smoke-tests</id>
+            <properties>
+                <dss.test.skip>true</dss.test.skip>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>
 

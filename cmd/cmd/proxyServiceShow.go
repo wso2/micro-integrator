@@ -20,6 +20,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
@@ -81,11 +82,11 @@ func executeGetProxyServiceCmd(proxyServiceName string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixProxyServices, "proxyServiceName", proxyServiceName)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Proxy{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.Proxy{})
 
 	if err == nil {
 		// Printing the details of the Proxy Service
-		proxyService := resp.(*utils.Proxy)
+		proxyService := resp.(*artifactUtils.Proxy)
 		printProxyServiceInfo(*proxyService)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of ProxyService", err)
@@ -95,11 +96,11 @@ func executeGetProxyServiceCmd(proxyServiceName string) {
 // Print the details of a Proxy service
 // Name, Description, Sequences(In, Out and Fault), Endpoint
 // @param ProxyService : ProxyService object
-func printProxyServiceInfo(proxyService utils.Proxy) {
+func printProxyServiceInfo(proxyService artifactUtils.Proxy) {
 
 	fmt.Println("Name - " + proxyService.Name)
-	fmt.Println("WSDL 1.1 - " + proxyService.WSDL1_1)
-	fmt.Println("WSDL 2.0 - " + proxyService.WSDL2_0)
+	fmt.Println("WSDL 1.1 - " + proxyService.Wsdl11)
+	fmt.Println("WSDL 2.0 - " + proxyService.Wsdl20)
 	fmt.Println("Stats - " + proxyService.Stats)
 	fmt.Println("Tracing - " + proxyService.Tracing)
 }
@@ -108,13 +109,13 @@ func executeListProxyServicesCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixProxyServices
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.ProxyServiceList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.ProxyServiceList{})
 
 	if err == nil {
 		// Printing the list of available Endpoints
-		list := resp.(*utils.ProxyServiceList)
-		utils.PrintItemList(list, []string{"NAME", "WSDL 1.1", "WSDL 2.0"}, "No proxies found")
+		list := resp.(*artifactUtils.ProxyServiceList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Wsdl11, utils.Wsdl20}, "No Proxy Services found")
 	} else {
-		utils.Logln(utils.LogPrefixError+"Getting List of Proxies", err)
+		utils.Logln(utils.LogPrefixError+"Getting List of Proxy Services", err)
 	}
 }

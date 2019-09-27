@@ -20,12 +20,18 @@ package org.wso2.micro.integrator.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.micro.integrator.security.internal.DataHolder;
+import org.wso2.micro.integrator.security.internal.ServiceComponent;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.api.UserStoreManager;
+import org.wso2.micro.integrator.security.user.core.UserRealm;
 import org.wso2.micro.integrator.security.user.core.claim.ClaimManager;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 
 import java.lang.reflect.Constructor;
+import java.util.Hashtable;
+import java.util.Map;
 
 /**
  * This class contains utils required by the micro integrator security component.
@@ -47,9 +53,12 @@ public class MicroIntegratorSecurityUtils {
             Since different User Store managers contain constructors requesting different sets of arguments, this method
             tries to invoke the constructor with different combinations of arguments
          */
+        Class[] initClassOpt0 = new Class[]{RealmConfiguration.class, Map.class, ClaimManager.class,
+                ProfileConfigurationManager.class, UserRealm.class, Integer.class, boolean.class};
+        Object[] initObjOpt0 = new Object[]{realmConfig, new Hashtable<String, Object>(), null, null, null, -1234, true};
         Class[] initClassOpt1 = new Class[]{RealmConfiguration.class, ClaimManager.class, ProfileConfigurationManager.class};
         Object[] initObjOpt1 = new Object[]{realmConfig, null, null};
-        Class[] initClassOpt2 = new Class[]{RealmConfiguration.class, Integer.class};
+        Class[] initClassOpt2 = new Class[]{RealmConfiguration.class, int.class};
         Object[] initObjOpt2 = new Object[]{realmConfig, -1234};
         Class[] initClassOpt3 = new Class[]{RealmConfiguration.class};
         Object[] initObjOpt3 = new Object[]{realmConfig};
@@ -63,6 +72,16 @@ public class MicroIntegratorSecurityUtils {
             }
 
             Constructor constructor;
+            try {
+                constructor = clazz.getConstructor(initClassOpt0);
+                newObject = constructor.newInstance(initObjOpt0);
+                return newObject;
+            } catch (NoSuchMethodException e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Cannont initialize " + className + " trying second option");
+                }
+            }
+
             try {
                 constructor = clazz.getConstructor(initClassOpt1);
                 newObject = constructor.newInstance(initObjOpt1);
@@ -123,5 +142,39 @@ public class MicroIntegratorSecurityUtils {
             sb.append("\t" + element.toString() + "\n");
         }
         return sb.toString();
+    }
+
+    /**
+     * Utility function to retrieve RealmConfiguration of the server
+     *
+     * @return RealmConfiguration
+     */
+    public static RealmConfiguration getRealmConfiguration() throws UserStoreException {
+        DataHolder dataHolder = DataHolder.getInstance();
+        if (dataHolder.getRealmConfig() == null) {
+            // If lazy loading enabled initialize security parameter
+            if (log.isDebugEnabled()) {
+                log.debug("Lazy loading security parameters");
+            }
+            ServiceComponent.initSecurityParams();
+        }
+        return dataHolder.getRealmConfig();
+    }
+
+    /**
+     * Utility function to retrieve UserStoreManager of the server
+     *
+     * @return RealmConfiguration
+     */
+    public static UserStoreManager getUserStoreManager() throws UserStoreException {
+        DataHolder dataHolder = DataHolder.getInstance();
+        if (dataHolder.getUserStoreManager() == null) {
+            // If lazy loading enabled initialize security parameter
+            if (log.isDebugEnabled()) {
+                log.debug("Lazy loading security parameters");
+            }
+            ServiceComponent.initSecurityParams();
+        }
+        return dataHolder.getUserStoreManager();
     }
 }

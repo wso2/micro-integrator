@@ -23,11 +23,6 @@
     <!--                  Parameters                       -->
     <!-- ================================================= -->
 
-    <!-- Change this to true if you want to enable hot deployment of services -->
-    <parameter name="hotdeployment" locked="false">true</parameter>
-    <!-- Change this to true if you want to enable hot update of services -->
-    <parameter name="hotupdate" locked="false">true</parameter>
-
     <!-- Change this to true if you want to enable MTOM -->
     <parameter name="enableMTOM" locked="false">false</parameter>
     <!-- Change this to true if you want to enable SwA -->
@@ -56,14 +51,14 @@
 
     <!--If turned on with use the Accept header of the request to determine the contentType of the
     response-->
-    <parameter name="httpContentNegotiation">false</parameter>
+    <parameter name="httpContentNegotiation">true</parameter>
 
     <!--the directory in which modules are deployed inside axis2 repository-->
     <parameter name="ModulesDirectory">axis2modules</parameter>
 
     <!-- User agent and the server details to be used in the http communication -->
-    <parameter name="userAgent" locked="true">WSO2 ${product.key} ${product.version}</parameter>
-    <parameter name="server" locked="true">WSO2 ${product.key} ${product.version}</parameter>
+    <parameter name="userAgent" locked="true">WSO2 Micro Integrator 1.0.0</parameter>
+    <parameter name="server" locked="true">WSO2 Micro Integrator 1.0.0</parameter>
 
     <!-- During a fault, stacktrace can be sent with the fault message. The following flag -->
     <!-- will control that behaviour -->
@@ -105,32 +100,6 @@
     <!-- use this parameter to override autodetected url -->
     <!--<parameter name="httpFrontendHostUrl" locked="false">https://someotherhost/context</parameter>-->
 
-    <!-- ================================================= -->
-    <!--                  Listeners                        -->
-    <!-- ================================================= -->
-
-    <!-- This deployment interceptor will be called whenever before a module is initialized or -->
-    <!-- service is deployed -->
-    <listener class="org.wso2.carbon.core.deployment.DeploymentInterceptor"/>
-
-    <!-- ================================================= -->
-    <!--                  Deployers                        -->
-    <!-- ================================================= -->
-
-    <!-- Deployer for the dataservice. -->
-    <!--<deployer extension="dbs" directory="dataservices" class="org.wso2.dataservices.core.DBDeployer"/>-->
-
-    <!-- Axis1 deployer for Axis2 -->
-    <!--<deployer extension="wsdd" class="org.wso2.carbon.axis1services.Axis1Deployer" directory="axis1services"/>-->
-
-    <!-- POJO service deployer for Jar -->
-    <!--<deployer extension="jar" class="org.apache.axis2.deployment.POJODeployer" directory="pojoservices"/>-->
-
-    <!-- POJO service deployer for Class -->
-    <!--<deployer extension="class" class="org.apache.axis2.deployment.POJODeployer" directory="pojoservices"/>-->
-
-    <!-- JAXWS service deployer -->
-    <!--<deployer extension=".jar" class="org.apache.axis2.jaxws.framework.JAXWSDeployer" directory="servicejars"/>-->
 
     <!-- ================================================= -->
     <!--                Message Receivers                  -->
@@ -174,7 +143,7 @@
                           class="org.wso2.carbon.relay.ExpandingMessageFormatter"/>
         <!--JSON Message Formatters-->
         <messageFormatter contentType="application/json"
-                          class="org.wso2.carbon.integrator.core.json.JsonStreamFormatter"/>
+                            class="org.wso2.micro.integrator.core.json.JsonStreamFormatter"/>
         <!--messageFormatter contentType="application/x-www-form-urlencoded"
                         class="org.wso2.carbon.relay.ExpandingMessageFormatter"/-->
         <!--messageFormatter contentType="multipart/form-data"
@@ -215,7 +184,7 @@
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/>
         <!--JSON Message Builders-->
         <messageBuilder contentType="application/json"
-                        class="org.wso2.carbon.integrator.core.json.JsonStreamBuilder"/>
+                          class="org.wso2.micro.integrator.core.json.JsonStreamBuilder"/>
         <!--messageBuilder contentType="application/xml"
                         class="org.wso2.carbon.relay.BinaryRelayBuilder"/-->
         <!--messageBuilder contentType="application/x-www-form-urlencoded"
@@ -247,7 +216,7 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
-        <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.mediation.transport.handlers.PassThroughNHttpGetProcessor</parameter>
+          <parameter name="httpGetProcessor" locked="false">org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor</parameter>
         <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
     </transportReceiver>
 
@@ -257,7 +226,7 @@
         <parameter name="HttpsProtocols">TLSv1,TLSv1.1,TLSv1.2</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
-        <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.mediation.transport.handlers.PassThroughNHttpGetProcessor</parameter>
+          <parameter name="httpGetProcessor" locked="false">org.wso2.micro.integrator.transport.handlers.PassThroughNHttpGetProcessor</parameter>
         <parameter name="keystore" locked="false">
             <KeyStore>
                 <Location>repository/resources/security/wso2carbon.jks</Location>
@@ -277,7 +246,7 @@
             supports optional|require or defaults to none -->
     </transportReceiver>
 
-    <transportReceiver name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportReceiver"/>
+    <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
 
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener"/>
 
@@ -423,7 +392,7 @@
         <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
     </transportSender>
 
-    <transportSender name="local" class="org.wso2.carbon.core.transports.local.CarbonLocalTransportSender"/>
+    <transportSender name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender"/>
 
     <!--Uncomment this local transport to use local transport in mediation flow-->
     <!--<transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>-->
@@ -483,137 +452,6 @@
     <module ref="addressing"/>
 
     <!-- ================================================= -->
-    <!--                Clustering                         -->
-    <!-- ================================================= -->
-    <!--
-     To enable clustering for this node, set the value of "enable" attribute of the "clustering"
-     element to "true". The initialization of a node in the cluster is handled by the class
-     corresponding to the "class" attribute of the "clustering" element. It is also responsible for
-     getting this node to join the cluster.
-     -->
-    <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
-                enable="false">
-
-        <!-- Parameter to differentiate clustering mode, Default value will be "nonWorkerManager" in which
-         case the all nodes of the cluster run schedule tasks-->
-        <parameter name="clusteringPattern">nonWorkerManager</parameter>
-
-        <!--
-           This parameter indicates whether the cluster has to be automatically initalized
-           when the AxisConfiguration is built. If set to "true" the initialization will not be
-           done at that stage, and some other party will have to explictly initialize the cluster.
-        -->
-        <parameter name="AvoidInitiation">true</parameter>
-
-        <!--
-           The membership scheme used in this setup. The only values supported at the moment are
-           "multicast" and "wka"
-
-           1. multicast - membership is automatically discovered using multicasting
-           2. wka - Well-Known Address based multicasting. Membership is discovered with the help
-                    of one or more nodes running at a Well-Known Address. New members joining a
-                    cluster will first connect to a well-known node, register with the well-known node
-                    and get the membership list from it. When new members join, one of the well-known
-                    nodes will notify the others in the group. When a member leaves the cluster or
-                    is deemed to have left the cluster, it will be detected by the Group Membership
-                    Service (GMS) using a TCP ping mechanism.
-        -->
-        <parameter name="membershipScheme">wka</parameter>
-        <!--<parameter name="licenseKey">xxx</parameter>-->
-        <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
-
-        <!--
-         The clustering domain/group. Nodes in the same group will belong to the same multicast
-         domain. There will not be interference between nodes in different groups.
-        -->
-        <parameter name="domain">wso2.carbon.domain</parameter>
-
-        <!-- The multicast address to be used -->
-        <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
-
-        <!-- The multicast port to be used -->
-        <parameter name="mcastPort">45564</parameter>
-
-        <parameter name="mcastTTL">100</parameter>
-
-        <parameter name="mcastTimeout">60</parameter>
-
-        <!--
-           The IP address of the network interface to which the multicasting has to be bound to.
-           Multicasting would be done using this interface.
-        -->
-        <!--
-            <parameter name="mcastBindAddress">127.0.0.1</parameter>
-        -->
-        <!-- The host name or IP address of this member -->
-
-        <parameter name="localMemberHost">127.0.0.1</parameter>
-
-        <!--
-            The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
-            is that localMemberHost is the one that is advertised by this member, while localMemberBindAddress
-            is the address to which this member is bound to.
-        -->
-        <!--
-        <parameter name="localMemberBindAddress">127.0.0.1</parameter>
-        -->
-
-        <!--
-        The TCP port used by this member. This is the port through which other nodes will
-        contact this member
-         -->
-        <parameter name="localMemberPort">4100</parameter>
-
-        <!--
-            The bind port of this member. The difference between localMemberPort & localMemberBindPort
-            is that localMemberPort is the one that is advertised by this member, while localMemberBindPort
-            is the port to which this member is bound to.
-        -->
-        <!--
-        <parameter name="localMemberBindPort">4001</parameter>
-        -->
-
-        <!--
-        Properties specific to this member
-        -->
-        <parameter name="properties">
-            <property name="backendServerURL" value="https://${hostName}:${httpsPort}/services/"/>
-            <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
-            <!-- Manger Setup with Port Mapping-->
-            <!--property name="port.mapping.8280" value="9764"/>
-                <property name="port.mapping.8243" value="9444"/>
-                <property name="subDomain" value="mgt"/-->
-
-            <!-- Worker Setup-->
-            <!--property name="subDomain" value="worker"/-->
-        </parameter>
-
-        <!--
-           The list of static or well-known members. These entries will only be valid if the
-           "membershipScheme" above is set to "wka"
-        -->
-        <members>
-            <member>
-                <hostName>127.0.0.1</hostName>
-                <port>4000</port>
-            </member>
-        </members>
-
-        <!--
-        Enable the groupManagement entry if you need to run this node as a cluster manager.
-        Multiple application domains with different GroupManagementAgent implementations
-        can be defined in this section.
-        -->
-        <groupManagement enable="false">
-            <applicationDomain name="wso2.esb.domain"
-                               description="EI group"
-                               agent="org.wso2.carbon.core.clustering.hazelcast.HazelcastGroupManagementAgent"
-                               subDomain="worker"
-                               port="2222"/>
-        </groupManagement>
-    </clustering>
-
-    <!-- ================================================= -->
     <!--                   Transactions                    -->
     <!-- ================================================= -->
 
@@ -651,8 +489,6 @@
                 <handler name="JSONMessageHandler"
                          class="org.apache.axis2.json.gson.JSONMessageHandler" />
             </handler>
-            <handler name="CarbonContextConfigurator"
-                     class="org.wso2.carbon.mediation.initializer.handler.CarbonContextConfigurator"/>
             <handler name="RelaySecuirtyMessageBuilderDispatchandler"
                      class="org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"/>
             <handler name="SOAPActionBasedDispatcher"
@@ -688,8 +524,6 @@
 
             <handler name="HTTPLocationBasedDispatcher"
                      class="org.apache.axis2.dispatchers.HTTPLocationBasedDispatcher"/>
-            <handler name="MultitenantDispatcher"
-                     class="org.wso2.carbon.tenant.dispatcher.MultitenantDispatcher"/>
             <handler name="SynapseDispatcher"
                      class="org.apache.synapse.core.axis2.SynapseDispatcher"/>
             <handler name="SynapseMustUnderstandHandler"

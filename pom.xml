@@ -1086,6 +1086,33 @@
                 <artifactId>esapi</artifactId>
                 <version>${esapi.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.axis2</groupId>
+                <artifactId>axis2-jaxws</artifactId>
+                <version>${axis.jaxws.version}</version>
+            </dependency>
+            <!-- GRPC inbound endpoint and mediator dependencies start -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.grpc.response.mediator</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <!-- GRPC inbound endpoint and mediator dependencies end -->
         </dependencies>
     </dependencyManagement>
 
@@ -1418,6 +1445,7 @@
         <commons-lang3.orbit.version>3.4.0.wso2v1</commons-lang3.orbit.version>
 
         <esapi.version>2.0.1</esapi.version>
+        <axis.jaxws.version>1.6.2</axis.jaxws.version>
 
         <!-- Axiom Version -->
         <axiom.wso2.version>1.2.11.wso2v13</axiom.wso2.version>
@@ -1454,6 +1482,7 @@
         <javax.xml.namespace.version>0.0.0</javax.xml.namespace.version>
         <mockito.version>2.23.4</mockito.version>
         <wrapper.version>3.2.3</wrapper.version>
+        <grpc.version>1.21.0</grpc.version>
     </properties>
 
     <repositories>

@@ -81,6 +81,7 @@
                             javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",
                             *;resolution:=optional
                         </Import-Package>
+                        <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
                 </configuration>
             </plugin>

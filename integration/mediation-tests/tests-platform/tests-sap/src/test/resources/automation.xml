@@ -72,22 +72,6 @@
             <driverClassName>org.h2.Driver</driverClassName>
         </datasource>
     </datasources>
-
-    <!-- Mail Transport credentials-->
-    <emailCredentials>
-        <sender>synapse.demo.1</sender>
-        <senderPassword>mailpassword1</senderPassword>
-        <receiver>test.automation.dummy</receiver>
-        <receiverPassword>automation.test</receiverPassword>
-        <domain>gmail.com</domain>
-    </emailCredentials>
-
-    <!-- RabbitMQ Broker configurations -->
-    <rabbitmq>
-        <host>DOCKER_HOST</host>
-        <port>5672</port>
-    </rabbitmq>
-
     <security>
         <!--
                     KeyStore which will be used for encrypting/decrypting passwords
@@ -231,19 +215,18 @@
     </platform>
 
     <listenerExtensions>
-
-        <!--<className>org.wso2.carbon.automation.extensions.servers.carbonserver.CarbonServerExtension</className>-->
         <platformExecutionManager>
             <extentionClasses>
                 <class>
-                    <name>org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension</name>
-                    <parameter name="-DportOffset" value="200" />
-                    <parameter name="startupScript" value="integrator" />
-                    <parameter name="-DavoidConfigUpdate" value="true"/>
-                    <!--<parameter name="cmdArg" value="debug 5005" />-->
+                    <name>org.wso2.esb.integration.common.extensions.jmsserver.ActiveMQServerExtension</name>
                 </class>
                 <class>
-                    <name>org.wso2.carbon.integration.common.extensions.usermgt.UserPopulateExtension</name>
+                    <name>org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension</name>
+                    <parameter name="-DportOffset" value="200"/>
+                    <parameter name="-DenableManagementApi" value="true"/>
+                    <parameter name="-DavoidConfigUpdate" value="true"/>
+                    <parameter name="startupScript" value="micro-integrator"/>
+                    <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
             </extentionClasses>
         </platformExecutionManager>
@@ -273,6 +256,4 @@
         </PlatformReportManager>
 
     </listenerExtensions>
-
-
 </automation>
