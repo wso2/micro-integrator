@@ -670,11 +670,6 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.analytics.data.publisher.util</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.orbit.com.nimbusds</groupId>
                 <artifactId>nimbus-jose-jwt</artifactId>
                 <version>${nimbus-jose.orbit.version}</version>
@@ -890,11 +885,6 @@
                 <version>${commons-dbcp.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-pool.wso2</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${commons-pool.orbit.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>io.dropwizard.metrics</groupId>
                 <artifactId>metrics-core</artifactId>
                 <version>${metrics.core.version}</version>
@@ -1017,11 +1007,6 @@
                 <version>${json.orbit.version}</version>
             </dependency>
             <dependency>
-                <groupId>commons-logging</groupId>
-                <artifactId>commons-logging</artifactId>
-                <version>${commons-logging.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.orbit.org.apache.tomcat</groupId>
                 <artifactId>jdbc-pool</artifactId>
                 <version>${jdbc-pool.version}</version>
@@ -1069,11 +1054,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.dataservices.odata</artifactId>
-                <version>${product.mi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.dataservices.capp.deployer</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
@@ -1113,12 +1093,6 @@
                 <artifactId>grpc-stub</artifactId>
                 <version>${grpc.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.grpc.response.mediator</artifactId>
-                <version>${product.mi.version}</version>
-            </dependency>
-            <!-- GRPC inbound endpoint and mediator dependencies end -->
         </dependencies>
     </dependencyManagement>
 
