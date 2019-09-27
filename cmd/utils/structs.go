@@ -26,8 +26,9 @@ type RemoteConfig struct {
 type Remotes map[string]Remote
 
 type Remote struct {
-	Url  string `yaml:"server_address"`
-	Port string `yaml:"server_port"`
+	Url         string `yaml:"server_address"`
+	Port        string `yaml:"server_port"`
+	AccessToken string `yaml:"access_token"`
 }
 
 type Logger struct {
@@ -50,18 +51,11 @@ type ServerSummary struct {
 	Location string `json:"location"`
 }
 
-type RegistrationResponse struct {
-	ClientSecretExpiresAt string `xml:"client_secret_expires_at"`
-	ClientID              string `xml:"client_id"`
-	ClientSecret          string `xml:"client_secret"`
-	ClientName            string `xml:"client_name"`
+type LoginResponse struct {
+	AccessToken string `yaml:"AccessToken"`
 }
 
-type TokenResponse struct {
-	AccessToken  string `xml:"access_token"`
-	RefreshToken string `xml:"refresh_token"`
-	TokenType    string `xml:"token_type"`
-	ExpiresIn    int32  `xml:"expires_in"`
+type LogoutResponse struct {
 }
 
 type IterableStringArray interface {

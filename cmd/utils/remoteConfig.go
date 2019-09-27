@@ -48,11 +48,23 @@ func (remoteConfig *RemoteConfig) UpdateRemote(name string, host string, port st
 
 	remotes := &RemoteConfigData.Remotes
 	if _, exists := (*remotes)[name]; !exists {
-		return errors.New("no such remote")
+		return errors.New("no such remote: " + name)
 	}
 
 	remote := Remote{Url: host, Port: port}
 	(*remotes)[name] = remote
+
+	return nil
+}
+
+// update the access token of the current remote
+func (remoteConfig *RemoteConfig) UpdateCurrentRemoteToken(accessToken string) error {
+	currentRemote := RemoteConfigData.Remotes[RemoteConfigData.CurrentServer]
+
+	remotes := &RemoteConfigData.Remotes
+
+	remote := Remote{Url: currentRemote.Url, Port: currentRemote.Port, AccessToken: accessToken}
+	(*remotes)[RemoteConfigData.CurrentServer] = remote
 
 	return nil
 }

@@ -82,7 +82,7 @@ func printMessageStoreHelp() {
 
 func executeGetMessageStoreCmd(messageStoreName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixMessageStores, "name", messageStoreName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.MessageStoreData{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.MessageStoreData{})
 
 	if err == nil {
 		// Printing the details of the MessageStore
@@ -105,7 +105,7 @@ func printMessageStore(messageStore artifactUtils.MessageStoreData) {
 
 func executeListMessageStoreCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixMessageStores
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.MessageStoreList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.MessageStoreList{})
 
 	if err == nil {
 		// Printing the list of available Message Stores

@@ -81,7 +81,7 @@ func printLocalEntryHelp() {
 
 func executeGetLocalEntryCmd(localEntryName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixLocalEntries, "name", localEntryName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.LocalEntryData{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.LocalEntryData{})
 
 	if err == nil {
 		// Printing the details of the LocalEntry
@@ -100,7 +100,7 @@ func printLocalEntry(localEntry artifactUtils.LocalEntryData) {
 
 func executeListLocalEntryCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixLocalEntries
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.LocalEntryList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.LocalEntryList{})
 
 	if err == nil {
 		// Printing the list of available Local Entries

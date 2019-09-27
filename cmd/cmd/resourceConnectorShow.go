@@ -69,7 +69,7 @@ func handleConnectorCmdArguments(args []string) {
 
 func executeListConnectorCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixConnectors
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.ConnectorList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.ConnectorList{})
 
 	if err == nil {
 		// Printing the list of available Connectors

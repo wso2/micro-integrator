@@ -51,7 +51,8 @@ var loggerShowCmd = &cobra.Command{
 
 func init() {
 	logLevelCmd.AddCommand(loggerShowCmd)
-	loggerShowCmd.SetHelpTemplate(showLogLevelCmdLongDesc + showLogLevelCmdUsage + showLogLevelCmdExamples + utils.GetCmdFlags(logLevelCmdLiteral))
+	loggerShowCmd.SetHelpTemplate(showLogLevelCmdLongDesc + showLogLevelCmdUsage + showLogLevelCmdExamples +
+		utils.GetCmdFlags(logLevelCmdLiteral))
 }
 
 func handleShowLoggerCmdArguments(args []string) {
@@ -77,7 +78,7 @@ func executeGetLoggerCmd(loggerName string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixLogging, "loggerName", loggerName)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.Logger{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &utils.Logger{})
 
 	if err == nil {
 		// Printing the details of the Logger

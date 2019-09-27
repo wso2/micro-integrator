@@ -74,6 +74,7 @@ func executeServerSelectCmd(args []string) {
 	if result != nil {
 		utils.HandleErrorAndExit("Error: ", result)
 	}
+	fmt.Println("Selected remote: " + args[0])
 	utils.RemoteConfigData.Persist(utils.GetServerConfigFilePath())
 }
 

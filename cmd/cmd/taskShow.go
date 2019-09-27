@@ -81,7 +81,7 @@ func executeGetTaskCmd(taskname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixTasks, "taskName", taskname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.Task{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.Task{})
 
 	if err == nil {
 		// Printing the details of the Task
@@ -110,7 +110,7 @@ func executeListTasksCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixTasks
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.TaskList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.TaskList{})
 
 	if err == nil {
 		// Printing the list of available Tasks
