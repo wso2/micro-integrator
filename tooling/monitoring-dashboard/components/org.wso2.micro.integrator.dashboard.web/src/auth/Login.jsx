@@ -86,16 +86,23 @@ export default class Login extends Component {
     }
 
     authenticate(e) {
-
+        const { intl } = this.context;
         const {username, password, host, port, rememberMe} = this.state;
         e.preventDefault();
         AuthManager.authenticate(host, port, username, password, rememberMe)
             .then(() => this.setState({authenticated: true}))
             .catch((error) => {
-                window.alert("error " + error);
+                alert(error);
+                console.log(error.response);
+                const errorMessage = error.response && error.response.status === 401
+                    ? 'Invalid username/password!'
+                    : 'Unknown error occurred!'
+                alert(errorMessage);
                 this.setState({
                     username: '',
                     password: '',
+                    error: errorMessage,
+                    showError: true,
                 });
             });
 
