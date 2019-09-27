@@ -23,9 +23,10 @@ platform=$(uname -s)
 bitType=$(arch)
 BASEDIR=$(dirname "$0")
 
-
 #Extract the compressed archive based on the platform and the bitype
 extractCompressArchive() {
+    echo "Extract the CLI archive "
+    cd build
     tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 }
 
@@ -44,11 +45,11 @@ cd $BASEDIR
 DIR="../../../../../cmd/build"
 
 if [ -d "$DIR" ]; then
-    echo "CLI build exists. Hence skipping the environment setup phase"
+    echo "CLI build exists."
+    cd ../../../../../cmd
 else
     echo "CLI build does not exists. Setting up the environment..."
     #download all the dependencies
-    pwd
     cd ../../../../../cmd
     go mod vendor
     sleep 10
@@ -62,16 +63,15 @@ else
     cd cmd
     ./build.sh -t mi.go -v ${VERSION} -f
 
-
-    #Extract the compressed archive generated
-    echo "Extract the CLI archive "
-    cd build
-    extractCompressArchive
-
-    #start the application
-    cd wso2mi-cli-$VERSION/bin
-    echo "ClI setup Complete"
 fi
+
+#Extract the compressed archive generated
+extractCompressArchive
+
+#start the application
+cd wso2mi-cli-$VERSION/bin
+echo "ClI setup Complete"
+
 }
 
 setup

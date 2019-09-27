@@ -21,6 +21,7 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
+import org.apache.synapse.rest.RESTConstants;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
 import java.util.Map;
@@ -82,18 +83,18 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
      */
     public Map clearHeaders(Map headers) {
 
-        Object allowOriginCorsHeader = headers.get(AuthConstants.ACCESS_CONTROL_ALLOW_ORIGIN);
-        Object allowMethodsCorsHeader = headers.get(AuthConstants.ACCESS_CONTROL_ALLOW_METHODS);
-        Object allowHeadersCorsHeader = headers.get(AuthConstants.ACCESS_CONTROL_ALLOW_HEADERS);
+        Object allowOriginCorsHeader = headers.get(RESTConstants.CORS_HEADER_ACCESS_CTL_ALLOW_ORIGIN);
+        Object allowMethodsCorsHeader = headers.get(RESTConstants.CORS_HEADER_ACCESS_CTL_ALLOW_METHODS);
+        Object allowHeadersCorsHeader = headers.get(RESTConstants.CORS_HEADER_ACCESS_CTL_ALLOW_HEADERS);
         headers.clear();
         if (allowOriginCorsHeader != null) {
-            headers.put(AuthConstants.ACCESS_CONTROL_ALLOW_ORIGIN, allowOriginCorsHeader);
+            headers.put(RESTConstants.CORS_HEADER_ACCESS_CTL_ALLOW_ORIGIN, allowOriginCorsHeader);
         }
         if (allowMethodsCorsHeader != null) {
-            headers.put(AuthConstants.ACCESS_CONTROL_ALLOW_METHODS, allowMethodsCorsHeader);
+            headers.put(RESTConstants.CORS_HEADER_ACCESS_CTL_ALLOW_METHODS, allowMethodsCorsHeader);
         }
         if (allowHeadersCorsHeader != null) {
-            headers.put(AuthConstants.ACCESS_CONTROL_ALLOW_HEADERS, allowHeadersCorsHeader);
+            headers.put(RESTConstants.CORS_HEADER_ACCESS_CTL_ALLOW_HEADERS, allowHeadersCorsHeader);
         }
         return headers;
     }

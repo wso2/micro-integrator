@@ -1097,6 +1097,28 @@
                 <artifactId>axis2-jaxws</artifactId>
                 <version>${axis.jaxws.version}</version>
             </dependency>
+            <!-- GRPC inbound endpoint and mediator dependencies start -->
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-netty-shaded</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-protobuf</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.grpc</groupId>
+                <artifactId>grpc-stub</artifactId>
+                <version>${grpc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ei</groupId>
+                <artifactId>org.wso2.micro.integrator.grpc.response.mediator</artifactId>
+                <version>${product.mi.version}</version>
+            </dependency>
+            <!-- GRPC inbound endpoint and mediator dependencies end -->
         </dependencies>
     </dependencyManagement>
 
@@ -1467,6 +1489,7 @@
         <mockito.version>2.23.4</mockito.version>
         <wrapper.version>3.2.3</wrapper.version>
         <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
+        <grpc.version>1.21.0</grpc.version>
     </properties>
 
     <repositories>

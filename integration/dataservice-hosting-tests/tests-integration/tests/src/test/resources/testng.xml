@@ -242,7 +242,6 @@
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1031PolicyKeyWithoutPolicyPathTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1090EscapeNonPrintableCharactersTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.ResourcesServiceTestWithSameContextNameTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.jira.issues.CARBON15379XMLExternalEntityAttacksTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1111UserRoleExtensionTestCase"/>
             <!--N/A to MI now , since policies cannot be written to registry https://github.com/wso2/micro-integrator/issues/258
             <class name="org.wso2.ei.dataservice.integration.test.jira.issues.DS1186JsonRenderTestCase"/>-->

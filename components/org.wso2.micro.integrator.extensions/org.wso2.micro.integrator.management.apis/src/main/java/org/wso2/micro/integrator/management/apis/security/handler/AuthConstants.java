@@ -41,10 +41,5 @@ public class AuthConstants {
     public static final String DEFAULT_ISSUER_NAME = "Admin";
     public static final int JWT_TOKEN_DEFAULT_SIZE = 2048;
     public static final long DEFAULT_EXPIRY_DURATION = 60;
-    public static final String CARBON_USER_STORE = "carbonuserstore";
 
-    //CORS Headers
-    public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
-    public static final String ACCESS_CONTROL_ALLOW_METHODS = "Access-Control-Allow-Methods";
-    public static final String ACCESS_CONTROL_ALLOW_HEADERS = "Access-Control-Allow-Headers";
 }
