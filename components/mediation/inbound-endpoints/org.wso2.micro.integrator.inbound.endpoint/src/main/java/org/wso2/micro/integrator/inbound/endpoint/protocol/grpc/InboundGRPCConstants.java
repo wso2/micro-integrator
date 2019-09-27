@@ -17,13 +17,13 @@
  */
 package org.wso2.micro.integrator.inbound.endpoint.protocol.grpc;
 
-public class InboundGrpcConstants {
+public class InboundGRPCConstants {
     public static final String INBOUND_ENDPOINT_PARAMETER_GRPC_PORT = "inbound.grpc.port";
-    public static final String GRPC_RESPONSE_OBSERVER = "grpc.response.observer";
     public static final String CONTENT_TYPE_JSON = "json";
     public static final String CONTENT_TYPE_JSON_MIME_TYPE = "application/json";
     public static final String CONTENT_TYPE_XML = "xml";
     public static final String CONTENT_TYPE_XML_MIME_TYPE = "text/xml";
+    public static final String CONTENT_TYPE_TEXT = "text";
     public static final String CONTENT_TYPE_TEXT_MIME_TYPE = "text/plain";
     public static final String HEADER_MAP_SEQUENCE_PARAMETER_NAME = "sequence";
     public static final String HEADER_MAP_CONTENT_TYPE_PARAMETER_NAME = "Content-Type";

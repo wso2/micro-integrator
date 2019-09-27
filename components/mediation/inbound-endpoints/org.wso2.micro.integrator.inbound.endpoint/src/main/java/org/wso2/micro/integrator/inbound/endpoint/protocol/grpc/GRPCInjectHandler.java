@@ -38,9 +38,10 @@ import org.apache.synapse.mediators.base.SequenceMediator;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.util.Event;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 
-import static org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGrpcConstants.HEADER_MAP_SEQUENCE_PARAMETER_NAME;
+import static org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGRPCConstants.HEADER_MAP_SEQUENCE_PARAMETER_NAME;
 
 /**
  * Inject gRPC message into the sequence.
@@ -79,10 +80,8 @@ public class GRPCInjectHandler {
     public void invokeProcess(Event receivedEvent, StreamObserver<Event> responseObserver) {
         try {
             org.apache.synapse.MessageContext msgCtx = createMessageContext();
-            if (msgCtx != null) {
-                msgCtx.setProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER,
-                        new GRPCResponseSender(responseObserver));
-            }
+            msgCtx.setProperty(InboundEndpointConstants.INBOUND_ENDPOINT_RESPONSE_WORKER,
+                    new GRPCResponseSender(responseObserver));
             initiateSequenceAndInjectPayload(responseObserver, receivedEvent, msgCtx);
         } catch (AxisFault e) {
             log.error("Error while processing the gRPC Message", e);
@@ -101,7 +100,7 @@ public class GRPCInjectHandler {
         try {
             initiateSequenceAndInjectPayload(responseObserver, receivedEvent, createMessageContext());
         } catch (AxisFault e) {
-            log.error("Error while consuming the Grpc Message", e);
+            log.error("Error while consuming the gRPC Message", e);
             throw new SynapseException("Error while consuming the JMS Message", e);
         }
     }
@@ -146,18 +145,20 @@ public class GRPCInjectHandler {
         MessageContext axis2MsgCtx =
                 ((org.apache.synapse.core.axis2.Axis2MessageContext) msgCtx).getAxis2MessageContext();
         //setting transport headers
-        axis2MsgCtx.setProperty(MessageContext.TRANSPORT_HEADERS
-                , receivedEvent.getHeadersMap());
-        String contentType = receivedEvent.getHeadersMap().get(InboundGrpcConstants.HEADER_MAP_CONTENT_TYPE_PARAMETER_NAME);
+        axis2MsgCtx.setProperty(MessageContext.TRANSPORT_HEADERS, receivedEvent.getHeadersMap());
+        String contentType = receivedEvent.getHeadersMap().
+                get(InboundGRPCConstants.HEADER_MAP_CONTENT_TYPE_PARAMETER_NAME);
         if (log.isDebugEnabled()) {
             log.debug(contentType + " Content-Type, received via the gRPC headers.");
         }
         // Determine the message builder to use
         if (contentType != null) {
-            if (InboundGrpcConstants.CONTENT_TYPE_JSON.equalsIgnoreCase(contentType)) {
-                contentType = InboundGrpcConstants.CONTENT_TYPE_JSON_MIME_TYPE;
-            } else if (InboundGrpcConstants.CONTENT_TYPE_XML.equalsIgnoreCase(contentType)) {
-                contentType = InboundGrpcConstants.CONTENT_TYPE_XML_MIME_TYPE;
+            if (InboundGRPCConstants.CONTENT_TYPE_JSON.equalsIgnoreCase(contentType)) {
+                contentType = InboundGRPCConstants.CONTENT_TYPE_JSON_MIME_TYPE;
+            } else if (InboundGRPCConstants.CONTENT_TYPE_XML.equalsIgnoreCase(contentType)) {
+                contentType = InboundGRPCConstants.CONTENT_TYPE_XML_MIME_TYPE;
+            } else if (InboundGRPCConstants.CONTENT_TYPE_TEXT.equalsIgnoreCase(contentType)) {
+                contentType = InboundGRPCConstants.CONTENT_TYPE_TEXT_MIME_TYPE;
             } else {
                 log.error("Error occurred when processing gRPC message. " + contentType +
                         " type found in gRPC header is not supported");
@@ -176,13 +177,22 @@ public class GRPCInjectHandler {
         Builder builder = BuilderUtil.getBuilderFromSelector(contentType, axis2MsgCtx);
         OMElement documentElement;
         // set the message payload to the message context
+        InputStream in = null;
         try {
-            InputStream in = new AutoCloseInputStream(new ByteArrayInputStream(msgPayload.getBytes()));
+            in = new AutoCloseInputStream(new ByteArrayInputStream(msgPayload.getBytes()));
             documentElement = builder.processDocument(in, contentType, axis2MsgCtx);
-        } catch (Exception ex) {
+        } catch (AxisFault ex) {
             // Handle message building error
             log.error("Error while building the message", ex);
             return;
+        } finally {
+            if (in != null) {
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    log.error("Exception occurred when closing InputStream when reading messagePayload.", e);
+                }
+            }
         }
         // Inject the message to the sequence.
         msgCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));

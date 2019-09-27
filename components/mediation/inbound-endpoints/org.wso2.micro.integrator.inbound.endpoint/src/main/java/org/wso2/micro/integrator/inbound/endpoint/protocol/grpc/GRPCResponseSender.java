@@ -34,7 +34,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 import static org.apache.axis2.Constants.Configuration.MESSAGE_TYPE;
-import static org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGrpcConstants.CONTENT_TYPE_JSON_MIME_TYPE;
+import static org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGRPCConstants.CONTENT_TYPE_JSON_MIME_TYPE;
 
 public class GRPCResponseSender implements InboundResponseSender {
     private StreamObserver<Event> responseObserver;
@@ -65,8 +65,8 @@ public class GRPCResponseSender implements InboundResponseSender {
                     log.error(msg, e);
                     throw new SynapseException(msg, e);
                 }
-            } else if (contentType.equalsIgnoreCase(InboundGrpcConstants.CONTENT_TYPE_XML_MIME_TYPE) ||
-                    contentType.equalsIgnoreCase(InboundGrpcConstants.CONTENT_TYPE_TEXT_MIME_TYPE)) {
+            } else if (contentType.equalsIgnoreCase(InboundGRPCConstants.CONTENT_TYPE_XML_MIME_TYPE) ||
+                    contentType.equalsIgnoreCase(InboundGRPCConstants.CONTENT_TYPE_TEXT_MIME_TYPE)) {
                 content = msgContext.getEnvelope().getBody().toString();
             } else {
                 String msg = "Error occurred when sending response. " + contentType + " type not supported";
