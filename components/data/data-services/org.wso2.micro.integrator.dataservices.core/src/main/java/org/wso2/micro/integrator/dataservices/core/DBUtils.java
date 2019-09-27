@@ -21,11 +21,14 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMDocument;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMText;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.databinding.utils.ConverterUtil;
+import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.AxisServiceGroup;
 import org.apache.axis2.description.Parameter;
@@ -33,8 +36,11 @@ import org.apache.axis2.description.java2wsdl.TypeTable;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.config.SynapseConfiguration;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -529,7 +535,7 @@ public class DBUtils {
      */
     public static InputStream getInputStreamFromPath(String path) throws IOException,
                                                                          DataServiceFault {
-        InputStream ins;
+        InputStream ins = null;
         /*
             Security Comment :
             This path is trustworthy, path is configured in the dbs file.
@@ -538,39 +544,19 @@ public class DBUtils {
             /* This is a url file path */
             URL url = new URL(path);
             ins = url.openStream();
-//        } else if (isRegistryPath(path)) {
-//            try {
-//                RegistryService registryService = DataServicesDSComponent.getRegistryService();
-//                if (registryService == null) {
-//                    throw new DataServiceFault("DBUtils.getInputStreamFromPath(): Registry service is not available");
-//                }
-//                Registry registry = null;
-//                if (path.startsWith(DBConstants.CONF_REGISTRY_PATH_PREFIX)) {
-//                    if (path.length() > DBConstants.CONF_REGISTRY_PATH_PREFIX.length()) {
-//                        path = path.substring(DBConstants.CONF_REGISTRY_PATH_PREFIX.length());
-//                        registry = registryService.getConfigSystemRegistry(getCurrentTenantId());
-//                    } else {
-//                        throw new DataServiceFault("Empty configuration registry path given");
-//                    }
-//                } else {
-//                    if (path.length() > DBConstants.GOV_REGISTRY_PATH_PREFIX.length()) {
-//                        path = path.substring(DBConstants.GOV_REGISTRY_PATH_PREFIX.length());
-//                        registry = registryService.getGovernanceSystemRegistry(getCurrentTenantId());
-//                    } else {
-//                        throw new DataServiceFault("Empty governance registry path given");
-//                    }
-//                }
-//                if (registry.resourceExists(path)) {
-//                    Resource serviceResource = registry.get(path);
-//                    ins = serviceResource.getContentStream();
-//                } else {
-//                    throw new DataServiceFault(
-//                            "The given XSLT resource path at '" + path + "' does not exist");
-//                }
-//            } catch (RegistryException e) {
-//                String msg = "Error in retrieving the resource: " + path;
-//                throw new DataServiceFault(e, msg);
-//            }
+        } else if (isRegistryPath(path)) {
+            ConfigurationContext configCtx = DataHolder.getInstance().getConfigurationContext();
+            if (configCtx != null) {
+                Parameter synCfgParam = configCtx.getAxisConfiguration().getParameter
+                        (SynapseConstants.SYNAPSE_CONFIG);
+                if (synCfgParam == null) {
+                    throw new DeploymentException("SynapseConfiguration not found. " +
+                            "Are you sure that you are running Synapse?");
+                }
+                SynapseConfiguration synapseConfig = (SynapseConfiguration) synCfgParam.getValue();
+                String content = resolveRegistryEntryText(synapseConfig, path);
+                ins = IOUtils.toInputStream(content, "UTF-8");
+            }
         } else {
             File csvFile = new File(path);
             if (path.startsWith("." + File.separator) || path.startsWith(".." + File.separator)) {
@@ -582,6 +568,29 @@ public class DBUtils {
         }
         return ins;
     }
+
+    /**
+     * Resolves the registry key
+     * This method uses SynapseEnvironment to resolve the keys
+     *
+     * @param synapseConfig      SynapseConfiguration
+     * @param regEntryKey registry entry key to be resolved
+     * @return Resolved reg entry
+     */
+    private static String resolveRegistryEntryText(SynapseConfiguration synapseConfig, String regEntryKey) {
+        Object regEntry = synapseConfig.getRegistry().lookup(regEntryKey);
+        String resolvedValue = "";
+        if (regEntry instanceof OMElement) {
+            OMElement e = (OMElement) regEntry;
+            resolvedValue = e.toString();
+        } else if (regEntry instanceof OMText) {
+            resolvedValue = ((OMText) regEntry).getText();
+        } else if (regEntry instanceof String) {
+            resolvedValue = (String) regEntry;
+        }
+        return resolvedValue;
+    }
+
 
     /**
      * create a map which maps the column numbers to column names,
