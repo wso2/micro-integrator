@@ -26,7 +26,7 @@ import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericEventB
 import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericEventBasedListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericInboundListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericProcessor;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGrpcListener;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGRPCListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.InboundHL7Listener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.http.InboundHttpListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.https.InboundHttpsListener;
@@ -76,7 +76,7 @@ public class InboundRequestProcessorFactoryImpl implements InboundRequestProcess
             } else if (Protocols.rabbitmq.toString().equals(protocol)) {
                 inboundRequestProcessor = new RabbitMQListener(params);
             } else if (Protocols.grpc.toString().equals(protocol)) {
-                inboundRequestProcessor = new InboundGrpcListener(params);
+                inboundRequestProcessor = new InboundGRPCListener(params);
             }
         } else if (params.getClassImpl() != null) {
             if (GenericInboundListener.isListeningInboundEndpoint(params)) {
