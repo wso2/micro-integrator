@@ -30,4 +30,16 @@ public class AuthConstants {
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     public static final String WWW_AUTHENTICATE = "WWW_Authenticate";
     public static final String WWW_AUTH_METHOD = "Basic realm=\"WSO2 EI\"";
+
+    //JWT Token constants
+    public static final int JWT_TOKEN_STORE_DEFAULT_SIZE = 256;
+    public static final String TOKEN_STORE_KEY_ALGORITHM = "RSA";
+    public static final String BASIC_AUTH_HEADER_TOKEN_TYPE = "Basic";
+    public static final String BEARER_AUTH_HEADER_TOKEN_TYPE = "Bearer";
+    public static final String RESPONSE_JSON_TOKEN_FIELD = "AccessToken";
+    public static final String JWT_TOKEN_DEFAULT_SCOPE = "Default";
+    public static final String DEFAULT_ISSUER_NAME = "Admin";
+    public static final int JWT_TOKEN_DEFAULT_SIZE = 2048;
+    public static final long DEFAULT_EXPIRY_DURATION = 60;
+
 }

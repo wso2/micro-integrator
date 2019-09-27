@@ -45,8 +45,8 @@ public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String credentials) {
-        String decodedCredentials = new String(new Base64().decode(credentials.getBytes()));
+    protected Boolean authenticate(String authHeaderToken) {
+        String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         // Avoid possible array index out of bound errors
         if (usernamePasswordArray.length != 2) {

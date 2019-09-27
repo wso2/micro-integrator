@@ -28,6 +28,8 @@ import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -36,8 +38,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
 
 /**
  * This class extends the SecurityHandlerAdapter to create a basic security handler with a user store defined in
@@ -62,9 +62,9 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String credentials) {
+    protected Boolean authenticate(String authHeaderToken) {
 
-        String decodedCredentials = new String(new Base64().decode(credentials.getBytes()));
+        String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         // Avoid possible array index out of bound errors
         if (usernamePasswordArray.length != 2) {

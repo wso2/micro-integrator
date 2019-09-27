@@ -675,6 +675,12 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.wso2.orbit.com.nimbusds</groupId>
+                <artifactId>nimbus-jose-jwt</artifactId>
+                <version>${nimbus-jose.orbit.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>net.sf.saxon</groupId>
                 <artifactId>Saxon-HE</artifactId>
                 <version>${saxon.wso2.version}</version>
@@ -1482,6 +1488,7 @@
         <javax.xml.namespace.version>0.0.0</javax.xml.namespace.version>
         <mockito.version>2.23.4</mockito.version>
         <wrapper.version>3.2.3</wrapper.version>
+        <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
         <grpc.version>1.21.0</grpc.version>
     </properties>
 
