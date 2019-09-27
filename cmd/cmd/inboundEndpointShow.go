@@ -83,7 +83,7 @@ func executeGetInboundEndpointCmd(inboundEndpointname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixInboundEndpoints, "inboundEndpointName", inboundEndpointname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.InboundEndpoint{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.InboundEndpoint{})
 
 	if err == nil {
 		// Printing the details of the InboundEndpoint
@@ -124,7 +124,7 @@ func printInboundEndpoint(inbound artifactUtils.InboundEndpoint) {
 func executeListInboundEndpointsCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixInboundEndpoints
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.InboundEndpointList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.InboundEndpointList{})
 
 	if err == nil {
 		// Printing the list of available Inbound endpoints

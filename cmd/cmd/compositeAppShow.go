@@ -83,7 +83,7 @@ func executeGetCarbonAppCmd(appname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixCarbonApps, "carbonAppName", appname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.CompositeApp{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.CompositeApp{})
 
 	if err == nil {
 		// Printing the details of the Carbon App
@@ -122,7 +122,7 @@ func executeListCarbonAppsCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixCarbonApps
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.CompositeAppList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.CompositeAppList{})
 
 	if err == nil {
 		// Printing the list of available Carbon apps

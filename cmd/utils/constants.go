@@ -95,6 +95,8 @@ const PrefixServer = "server"
 const PrefixDataServices = "data-services"
 const ShowCommand = "show"
 const HelpCommand = "help"
+const LoginResource = "login"
+const LogoutResource = "logout"
 
 const Name = "NAME"
 const Type = "TYPE"
