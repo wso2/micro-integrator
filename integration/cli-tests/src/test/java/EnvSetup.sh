@@ -46,6 +46,7 @@ DIR="../../../../../cmd/build"
 
 if [ -d "$DIR" ]; then
     echo "CLI build exists."
+    cd ../../../../../cmd
 else
     echo "CLI build does not exists. Setting up the environment..."
     #download all the dependencies
