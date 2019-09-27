@@ -52,12 +52,6 @@ public class ODataSuperTenantUserTestCase extends DSSIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void serviceDeployment() throws Exception {
         super.init();
-        List<File> sqlFileLis = new ArrayList<>();
-        sqlFileLis.add(selectSqlFile("CreateODataTables.sql"));
-        sqlFileLis.add(selectSqlFile("Customers.sql"));
-        deployService(serviceName, createArtifact(
-                getResourceLocation() + File.separator + "dbs" + File.separator + "odata" + File.separator
-                        + "ODataSampleSuperTenantService.dbs", sqlFileLis));
         webAppUrl = dssContext.getContextUrls().getWebAppURL();
     }
 

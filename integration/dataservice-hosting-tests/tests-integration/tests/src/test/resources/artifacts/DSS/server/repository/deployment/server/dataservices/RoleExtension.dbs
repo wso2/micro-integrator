@@ -21,7 +21,7 @@
    <resource method="GET" path="employees">
       <call-query href="qry1"/>
    </resource>
-   <authorization_provider class="org.wso2.carbon.dataservices.extension.RoleRetriever">
+   <authorization_provider class="org.wso2.micro.integrator.dataservices.extension.RoleRetriever">
       <property name="userName">testname</property>
       <property name="userRole">testRole</property>
    </authorization_provider>

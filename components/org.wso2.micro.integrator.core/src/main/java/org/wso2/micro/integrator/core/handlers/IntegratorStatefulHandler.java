@@ -80,12 +80,8 @@ public class IntegratorStatefulHandler extends AbstractDispatcher {
             //since all the tenant related requests are handling from the odata web app,
             // tenant request needs to be routed to the web app
             //TODO Temporarily commenting out following, need to revisit and fix for odata scenario
-            /*WebApplication webApplication;
-            webApplication = Utils.getStartedWebapp(msgctx.getProperty("TransportInURL").toString());
-            if (webApplication != null) {
-                msgctx.setProperty("IsODataService", true);
-                setSynapseContext(msgctx, msgctx.getAxisService());
-            }*/
+             msgctx.setProperty("IsODataService", true);
+             setSynapseContext(msgctx, msgctx.getAxisService());
         } else if (MicroIntegratorBaseUtils.isDataService(msgctx)) {
             try {
                 // dispatchAndVerify need to call to find out the service and the operation.

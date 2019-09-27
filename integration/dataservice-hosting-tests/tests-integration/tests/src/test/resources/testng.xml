@@ -53,21 +53,19 @@
                 <package name="org.wso2.ei.dataservice.integration.test.dbConsole"/>
             </packages>
         </test>-->
-
-    <!--Commented out since ODATA is not supported in MI : https://github.com/wso2/micro-integrator/issues/254
+    
     <test name="OData-tests" parallel="false" verbose="2">
         <classes>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataDataTypeSupportTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.odata.ODataETagTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataQueryTestCase"/>
+            <class name="org.wso2.ei.dataservice.integration.test.odata.ODataETagTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataReferenceTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataRequestThreadExecutor"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataStringFunctionsTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataSuperTenantUserTestCase"/>
-            <class name="org.wso2.ei.dataservice.integration.test.odata.ODataTenantUserTestCase"/>
             <class name="org.wso2.ei.dataservice.integration.test.odata.ODataViewTestCase"/>
         </classes>
-    </test>-->
+    </test>
 
     <test name="RDF-tests" parallel="false" verbose="2">
         <classes>

@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 )
 
 var localEntryName string
@@ -53,7 +52,7 @@ func init() {
 	localEntryCmd.AddCommand(localEntryShowCmd)
 	localEntryShowCmd.SetHelpTemplate(showLocalEntryCmdLongDesc +
 		utils.GetCmdUsage(programName, localEntryCmdLiteral,
-		utils.ShowCommand, "[localentry-name]") + showLocalEntryCmdExamples +
+			utils.ShowCommand, "[localentry-name]") + showLocalEntryCmdExamples +
 		utils.GetCmdFlags(localEntryCmdLiteral))
 }
 
@@ -82,18 +81,18 @@ func printLocalEntryHelp() {
 
 func executeGetLocalEntryCmd(localEntryName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixLocalEntries, "name", localEntryName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.LocalEntryData{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.LocalEntryData{})
 
 	if err == nil {
 		// Printing the details of the LocalEntry
-		localEntry := resp.(*utils.LocalEntryData)
+		localEntry := resp.(*artifactUtils.LocalEntryData)
 		printLocalEntry(*localEntry)
 	} else {
 		fmt.Println(utils.LogPrefixError+"Getting Information of Local Entry", err)
 	}
 }
 
-func printLocalEntry(localEntry utils.LocalEntryData) {
+func printLocalEntry(localEntry artifactUtils.LocalEntryData) {
 	fmt.Println("Name - " + localEntry.Name)
 	fmt.Println("Type - " + localEntry.Type)
 	fmt.Println("Value - " + localEntry.Value)
@@ -101,33 +100,13 @@ func printLocalEntry(localEntry utils.LocalEntryData) {
 
 func executeListLocalEntryCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixLocalEntries
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.LocalEntryList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.LocalEntryList{})
 
 	if err == nil {
 		// Printing the list of available Local Entries
-		list := resp.(*utils.LocalEntryList)
-		printLocalEntrysList(*list)
+		list := resp.(*artifactUtils.LocalEntryList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Type}, "No Local Entries found")
 	} else {
-		utils.Logln(utils.LogPrefixError + "Getting List of Message Stores", err)
-	}
-}
-
-func printLocalEntrysList(localEntryList utils.LocalEntryList) {
-	if localEntryList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "TYPE"}
-		table.Append(data)
-
-		for _, localEntry := range localEntryList.LocalEntries {
-			data = []string{localEntry.Name, localEntry.Type}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Message Stores found")
+		utils.Logln(utils.LogPrefixError+"Getting List of Message Stores", err)
 	}
 }

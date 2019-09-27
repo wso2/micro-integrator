@@ -20,10 +20,9 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/olekukonko/tablewriter"
 	"github.com/spf13/cobra"
 	"github.com/wso2/micro-integrator/cmd/utils"
-	"os"
+	"github.com/wso2/micro-integrator/cmd/utils/artifactUtils"
 	"strconv"
 )
 
@@ -54,7 +53,7 @@ func init() {
 	messageStoreCmd.AddCommand(messageStoreShowCmd)
 	messageStoreShowCmd.SetHelpTemplate(showMessageStoreCmdLongDesc +
 		utils.GetCmdUsage(programName, messageStoreCmdLiteral,
-		utils.ShowCommand, "[messagestore-name]") + showMessageStoreCmdExamples +
+			utils.ShowCommand, "[messagestore-name]") + showMessageStoreCmdExamples +
 		utils.GetCmdFlags(messageStoreCmdLiteral))
 }
 
@@ -83,18 +82,18 @@ func printMessageStoreHelp() {
 
 func executeGetMessageStoreCmd(messageStoreName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixMessageStores, "name", messageStoreName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &utils.MessageStoreData{})
+	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.MessageStoreData{})
 
 	if err == nil {
 		// Printing the details of the MessageStore
-		messageStore := resp.(*utils.MessageStoreData)
+		messageStore := resp.(*artifactUtils.MessageStoreData)
 		printMessageStore(*messageStore)
 	} else {
-		fmt.Println(utils.LogPrefixError + "Getting Information of Message Store", err)
+		fmt.Println(utils.LogPrefixError+"Getting Information of Message Store", err)
 	}
 }
 
-func printMessageStore(messageStore utils.MessageStoreData) {
+func printMessageStore(messageStore artifactUtils.MessageStoreData) {
 	fmt.Println("Name - " + messageStore.Name)
 	fmt.Println("File Name - " + messageStore.FileName)
 	fmt.Println("Container - " + messageStore.Container)
@@ -106,33 +105,13 @@ func printMessageStore(messageStore utils.MessageStoreData) {
 
 func executeListMessageStoreCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixMessageStores
-	resp, err := utils.UnmarshalData(finalUrl, nil, &utils.MessageStoreList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.MessageStoreList{})
 
 	if err == nil {
 		// Printing the list of available Message Stores
-		list := resp.(*utils.MessageStoreList)
-		printMessageStoresList(*list)
+		list := resp.(*artifactUtils.MessageStoreList)
+		utils.PrintItemList(list, []string{utils.Name, utils.Type, utils.Size}, "No Message Stores found")
 	} else {
-		utils.Logln(utils.LogPrefixError + "Getting List of Message Stores", err)
-	}
-}
-
-func printMessageStoresList(messageStoreList utils.MessageStoreList) {
-	if messageStoreList.Count > 0 {
-		table := tablewriter.NewWriter(os.Stdout)
-		table.SetAlignment(tablewriter.ALIGN_LEFT)
-
-		data := []string{"NAME", "TYPE", "SIZE"}
-		table.Append(data)
-
-		for _, messageStore := range messageStoreList.MessageStores {
-			data = []string{messageStore.Name, messageStore.Type, strconv.Itoa(messageStore.Size)}
-			table.Append(data)
-		}
-		table.SetBorder(false)
-		table.SetColumnSeparator("  ")
-		table.Render()
-	} else {
-		fmt.Println("No Message Stores found")
+		utils.Logln(utils.LogPrefixError+"Getting List of Message Stores", err)
 	}
 }

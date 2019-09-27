@@ -38,6 +38,7 @@ import org.apache.commons.logging.LogFactory;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.wso2.micro.integrator.core.resolvers.ResolverFactory;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.RDBMSEngines;
@@ -927,7 +928,11 @@ public class DBUtils {
             if (propEl.getChildElements().hasNext()) {
                 text = propEl.toString();
             } else {
-                text = propEl.getText();
+                if (propEl.getText() == null) {
+                    text = null;
+                } else {
+                    text = ResolverFactory.getInstance().getResolver(propEl.getText()).resolve();
+                }
             }
             if(text != null && !text.equals("")) {
             	properties.put(propEl.getAttributeValue(new QName(DBSFields.NAME)), text);
