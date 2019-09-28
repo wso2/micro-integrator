@@ -22,6 +22,7 @@ import { Route, Switch } from 'react-router';
 
 import Login from './auth/Login';
 import Logout from './auth/Logout';
+import Login2 from './auth/Login2';
 import SecuredRouter from './auth/SecuredRouter';
 
 import '../public/css/dashboard.css';
@@ -39,18 +40,11 @@ class App extends Component {
                     {/* Authentication */}
                     <Route exact path='/login' component={Login} />
                     <Route exact path='/logout' component={Logout} />
+                    <Route exact path='/login2' component={Login2} />
                     {/* Secured routes */}
                     <Route component={SecuredRouter} />
                 </Switch>
             </BrowserRouter>
-        );
-    }
-};
-
-class AnonPage extends Component {
-    render() {
-        return (
-            <h1>This is anon page.</h1>
         );
     }
 };
