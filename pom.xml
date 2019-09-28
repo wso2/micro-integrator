@@ -28,7 +28,7 @@
     <groupId>org.wso2.ei</groupId>
     <artifactId>wso2-micro-integrator-parent</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-SNAPSHOT</version>
+    <version>1.1.0-beta</version>
     <name>WSO2 Micro Integrator</name>
     <url>http://wso2.com/products/enterprise-integrator/</url>
     <description>WSO2 Micro Integrator</description>
@@ -1091,7 +1091,7 @@
         <url>https://github.com/wso2/micro-integrator.git</url>
         <developerConnection>scm:git:https://github.com/wso2/micro-integrator.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/micro-integrator.git</connection>
-        <tag>HEAD</tag>
+        <tag>v1.1.0-beta</tag>
     </scm>
 
     <profiles>
@@ -1154,7 +1154,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
         <!--Product Version-->
-        <product.mi.version>1.1.0-SNAPSHOT</product.mi.version>
+        <product.mi.version>1.1.0-beta</product.mi.version>
         <carbon.identity.framework.version>5.14.33</carbon.identity.framework.version>
         <carbon.identity.imp.pkg.version>[5.14.0, 6.0.0)</carbon.identity.imp.pkg.version>
 
