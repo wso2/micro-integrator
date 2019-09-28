@@ -104,11 +104,6 @@
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.task</artifactId>
-                <version>${product.mi.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.security</artifactId>
                 <version>${product.mi.version}</version>
             </dependency>
