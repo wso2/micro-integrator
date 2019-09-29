@@ -119,13 +119,13 @@
   "transport.blocking.http.sender.parameter.OmitSOAP12Action": true,
   "transport.blocking.http.sender.parameter.SO_TIMEOUT": "60000",
 
-  "transport.vfs.listener.enable": false,
+  "transport.vfs.listener.enable": true,
   "transport.vfs.listener.keystore.file_name": "repository/resources/security/$ref{keystore.tls.file_name}",
   "transport.vfs.listener.keystore.type": "$ref{keystore.tls.type}",
   "transport.vfs.listener.keystore.password": "$ref{keystore.tls.password}",
   "transport.vfs.listener.keystore.key_password": "$ref{keystore.tls.key_password}",
   "transport.vfs.listener.keystore.alias": "$ref{keystore.tls.alias}",
-  "transport.vfs.sender.enable": false,
+  "transport.vfs.sender.enable": true,
 
   "transport.msmq.listener.parameter.'msmq.receiver.host'": "$ref{server.hostname}",
 
