@@ -59,7 +59,6 @@ export default class HomePage extends Component {
                 {
                     response: response.data,
                 });
-
         }).catch((error) => {
             //Handle errors here
         });
@@ -114,10 +113,16 @@ export default class HomePage extends Component {
     createMetaDataTable(metadata) {
         const options = [];
         options.push(this.createData("Server Name", metadata.productName));
+        options.push(this.createData("Version", metadata.productVersion));
         options.push(this.createData("Carbon Home", metadata.carbonHome));
-        options.push(this.createData("Java Home", metadata.javaHome));
         options.push(this.createData("Work Directory", metadata.workDirectory));
         options.push(this.createData("Repository Location", metadata.repositoryLocation));
+        options.push(this.createData("Java Home", metadata.javaHome));
+        options.push(this.createData("Java Version", metadata.javaVersion));
+        options.push(this.createData("Java Vendor", metadata.javaVendor));
+        options.push(this.createData("OS Name", metadata.osName));
+        options.push(this.createData("OS Version", metadata.osVersion));
+
         return (
             <Table>
                 <TableBody>

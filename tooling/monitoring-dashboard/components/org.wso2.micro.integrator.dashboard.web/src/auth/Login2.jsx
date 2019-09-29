@@ -24,6 +24,9 @@ import {Redirect} from 'react-router';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
+import {Snackbar} from 'material-ui';
+import {MuiThemeProvider} from 'material-ui/styles';
+import Header from '../common/Header';
 
 import {
     MDBContainer,
@@ -31,7 +34,6 @@ import {
     MDBCol,
     MDBCard,
     MDBCardBody,
-    MDBModalFooter,
     MDBIcon,
     MDBCardHeader,
     MDBBtn
@@ -46,6 +48,9 @@ const styles = {
     LoginForm: {
         margin: '0 auto',
         paddingTop: '240px'
+    },
+    formHeader: {
+        backgroundColor:'#ffffff'
     }
 };
 export default class Login2 extends Component {
@@ -77,7 +82,9 @@ export default class Login2 extends Component {
      */
     initAuthenticationFlow() {
         if (!AuthManager.isLoggedIn()) {
-            //Refresh token
+            this.setState({authenticated: false})
+        } else {
+            this.setState({authenticated: true})
         }
     }
 
@@ -88,12 +95,9 @@ export default class Login2 extends Component {
         AuthManager.authenticate(host, port, username, password, rememberMe)
             .then(() => this.setState({authenticated: true}))
             .catch((error) => {
-                alert(error);
-                console.log(error.response);
                 const errorMessage = error.response && error.response.status === 401
                     ? 'Invalid username/password!'
                     : 'Unknown error occurred!'
-                alert(errorMessage);
                 this.setState({
                     username: '',
                     password: '',
@@ -112,14 +116,19 @@ export default class Login2 extends Component {
     renderDefaultLogin() {
         const {username, password, host, port} = this.state;
         return (
+            <MuiThemeProvider muiTheme={defaultTheme}>
+                <Header
+                    title={'MICRO INTEGRATOR'}
+                    rightElement={<span/>}
+                />
             <MDBContainer>
                 <MDBRow>
                     <MDBCol md="6" style={styles.LoginForm}>
                         <MDBCard>
                             <MDBCardBody>
-                                <MDBCardHeader className="form-header warm-flame-gradient rounded">
+                                <MDBCardHeader className="form-header rgba-blue-grey-light rounded">
                                     <h3 className="my-3">
-                                        <MDBIcon icon="lock" /> Micro Integrator Login:
+                                        <MDBIcon icon="lock" /> LOGIN
                                     </h3>
                                 </MDBCardHeader>
                                 <label
@@ -132,6 +141,12 @@ export default class Login2 extends Component {
                                     type="email"
                                     id="defaultFormEmailEx"
                                     className="form-control"
+                                    value={host}
+                                    onChange={(e) => {
+                                        this.setState({
+                                            host: e.target.value,
+                                        });
+                                    }}
                                 />
 
                                 <label
@@ -144,6 +159,12 @@ export default class Login2 extends Component {
                                     type="email"
                                     id="defaultFormEmailEx"
                                     className="form-control"
+                                    value={port}
+                                    onChange={(e) => {
+                                        this.setState({
+                                            port: e.target.value,
+                                        });
+                                    }}
                                 />
 
                                 <label
@@ -156,6 +177,12 @@ export default class Login2 extends Component {
                                     type="email"
                                     id="defaultFormEmailEx"
                                     className="form-control"
+                                    value={username}
+                                    onChange={(e) => {
+                                        this.setState({
+                                            username: e.target.value,
+                                        });
+                                    }}
                                 />
 
                                 <label
@@ -168,10 +195,21 @@ export default class Login2 extends Component {
                                     type="password"
                                     id="defaultFormPasswordEx"
                                     className="form-control"
+                                    value={password}
+                                    onChange={(e) => {
+                                        this.setState({
+                                            password: e.target.value,
+                                        });
+                                    }}
                                 />
 
                                 <div className="text-center mt-4">
-                                    <MDBBtn color="deep-orange" className="mb-3" type="submit" >
+                                    <MDBBtn color="blue-grey"
+                                            className="mb-3"
+                                            type="submit"
+                                            disabled={username === '' || password === '' || host === '' || port === ''}
+                                            onClick={this.authenticate}
+                                    >
                                         Login
                                     </MDBBtn>
                                 </div>
@@ -179,7 +217,14 @@ export default class Login2 extends Component {
                         </MDBCard>
                     </MDBCol>
                 </MDBRow>
+                <Snackbar
+                    message={this.state.error}
+                    open={this.state.showError}
+                    autoHideDuration="4000"
+                    onRequestClose={() => this.setState({error: '', showError: false})}
+                />
             </MDBContainer>
+            </MuiThemeProvider>
         );
     }
 
@@ -190,12 +235,10 @@ export default class Login2 extends Component {
      * @return {XML} HTML content
      */
     render() {
-        // const authenticated = this.state.authenticated;
-        // if (authenticated) {
-        //     return (
-        //         <Redirect to='/home'/>
-        //     );
-        // }
+         const authenticated = this.state.authenticated;
+         if (authenticated) {
+                location.href = '/dashboard/home';
+        }
         return this.renderDefaultLogin();
     }
 }

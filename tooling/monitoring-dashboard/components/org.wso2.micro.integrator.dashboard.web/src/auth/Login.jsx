@@ -81,7 +81,9 @@ export default class Login extends Component {
      */
     initAuthenticationFlow() {
         if (!AuthManager.isLoggedIn()) {
-            //Refresh token
+          this.setState({authenticated: true})
+        } else {
+            this.setState({authenticated: false})
         }
     }
 
@@ -92,12 +94,9 @@ export default class Login extends Component {
         AuthManager.authenticate(host, port, username, password, rememberMe)
             .then(() => this.setState({authenticated: true}))
             .catch((error) => {
-                alert(error);
-                console.log(error.response);
                 const errorMessage = error.response && error.response.status === 401
                     ? 'Invalid username/password!'
                     : 'Unknown error occurred!'
-                alert(errorMessage);
                 this.setState({
                     username: '',
                     password: '',

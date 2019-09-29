@@ -20,9 +20,9 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter} from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
-import Login from './auth/Login';
+import Login from './auth/Login2';
 import Logout from './auth/Logout';
-import Login2 from './auth/Login2';
+// import Login2 from './auth/Login';
 import SecuredRouter from './auth/SecuredRouter';
 
 import '../public/css/dashboard.css';
@@ -40,7 +40,6 @@ class App extends Component {
                     {/* Authentication */}
                     <Route exact path='/login' component={Login} />
                     <Route exact path='/logout' component={Logout} />
-                    <Route exact path='/login2' component={Login2} />
                     {/* Secured routes */}
                     <Route component={SecuredRouter} />
                 </Switch>

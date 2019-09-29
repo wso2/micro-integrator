@@ -16,45 +16,42 @@
  * under the License.
  */
 
+
 import React, {Component} from 'react';
 import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
 import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
-import DisableIcon from '@material-ui/icons/Warning';
-import ActiveIcon from '@material-ui/icons/Done';
 
-export default class MessageProcessorListPage extends Component {
+export default class CappListPage extends Component {
 
     constructor(props) {
         super(props);
-        this.messageProcessors = null;
+        this.capps = null;
         this.state = {
             data: [],
         };
     }
 
     /**
-     * Retrieve message processors from the MI.
+     * Retrieve carbon applications from the MI.
      */
     componentDidMount() {
-        this.retrieveMessageProcessors();
+        this.retrieveCApps();
     }
 
-    retrieveMessageProcessors() {
+    retrieveCApps() {
         const data = [];
 
-        new ResourceAPI().getResourceList(`/message-processors`).then((response) => {
-            this.messageProcessors = response.data.list || [];
+        new ResourceAPI().getResourceList(`/applications`).then((response) => {
+            this.capps = response.data.list || [];
 
-            this.messageProcessors.forEach((element) => {
+            this.capps.forEach((element) => {
                 const rowData = [];
                 rowData.push(element.name);
-                rowData.push(element.type);
-                rowData.push(element.status);
+                rowData.push(element.version);
                 data.push(rowData);
-
             });
             this.setState({data: data});
 
@@ -65,32 +62,7 @@ export default class MessageProcessorListPage extends Component {
 
     renderResourceList() {
 
-        const columns = [{
-            name: "Message Processor Name",
-            options: {
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <Link component="button" variant="body2" onClick={() => {
-                            this.props.history.push(`/message-processor/explore?name=${tableMeta.rowData[0]}`)
-                        }}>
-                            {tableMeta.rowData[0]}
-                        </Link>
-                    );
-                }
-            }
-        }, "Type", {
-            name: "Status",
-            options: {
-                customBodyRender: (value, tableMeta, updateValue) => {
-
-                  if ("active" === tableMeta.rowData[2]) {
-                      return(<span><ActiveIcon style={{color:"green"}}/> Active </span>);
-                  } else {
-                      return(<DisableIcon style={{color:"red"}}/>);
-                  }
-                }
-            }
-        }];
+        const columns = ["Application Name", "Version"];
         const options = {
             selectableRows: 'none',
             print: false,
@@ -99,7 +71,7 @@ export default class MessageProcessorListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Message Processors"}
+                title={"Carbon Applications"}
                 data={this.state.data}
                 columns={columns}
                 options={options}
