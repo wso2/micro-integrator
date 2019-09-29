@@ -55,19 +55,19 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        String nhttpFile =
+        String accessLogFile =
                 FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + separator + "ESB" + separator + "passthru"
-                        + separator + "transport" + separator + "httpaccesslogs" + separator + "nhttp.properties";
+                        + separator + "transport" + separator + "httpaccesslogs" + separator + "access-log.properties";
 
-        File srcFile = new File(nhttpFile);
+        File srcFile = new File(accessLogFile);
         String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
         httpLogDir = carbonHome + File.separator + "repository" + File.separator + "logs" + File.separator + "httpLogs";
         File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
-
         String propertyName = "nhttp.log.directory";
         createNewDir(httpLogDir);
         applyProperty(srcFile, propertyName, httpLogDir);
-        applyProperty(log4jProperties, "log4j.logger.org.apache.synapse.transport.http.access", "DEBUG");
+        String loggers = getProperty(log4jProperties, "loggers");
+        applyLog4j2Properties(loggers, log4jProperties);
         serverConfigurationManager.restartMicroIntegrator();
         super.init();
     }
@@ -151,6 +151,60 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
             }
         }
     }
+
+
+    /**
+     * Apply log4j2 based properties to enable access logs.
+     *
+     * @param srcFile log4j2.properties file
+     * @throws IOException
+     */
+    private void applyLog4j2Properties(String loggers, File srcFile) throws IOException {
+        FileInputStream fis = null;
+        FileOutputStream fos = null;
+        String outFileName = srcFile.getName();
+        try {
+            File destinationFile = new File(outFileName);
+            fis = new FileInputStream(srcFile);
+            fos = new FileOutputStream(destinationFile);
+            Properties properties = new Properties();
+            properties.load(fis);
+            fis.close();
+            properties.setProperty("loggers", "" + loggers + ", synapse-transport-access-logs");
+            properties.setProperty("logger.synapse-transport-access-logs.name", "org.apache.synapse.transport.http.access");
+            properties.setProperty("logger.synapse-transport-access-logs.level", "DEBUG");
+            properties.store(fos, null);
+            fos.flush();
+            serverConfigurationManager.applyMIConfiguration(destinationFile);
+        } catch (Exception e) {
+            Assert.fail("Exception occured. ", e);
+        } finally {
+            if (fis != null) {
+                fis.close();
+            }
+            if (fos != null) {
+                fos.close();
+            }
+        }
+    }
+
+    /**
+     * get Property from a defined properties file
+     * @param propertiesFile properties file
+     * @throws IOException
+     */
+    private String getProperty(File propertiesFile, String property) throws IOException {
+        FileInputStream fis = new FileInputStream(propertiesFile);
+        Properties propertyList = new Properties();
+        propertyList.load(fis);
+        String propertyValue = propertyList.getProperty(property);
+        if (fis != null) {
+            fis.close();
+        }
+        return propertyValue;
+    }
+
+
 
     /**
      * At the wind-up replace nhttp.properties file with previous
