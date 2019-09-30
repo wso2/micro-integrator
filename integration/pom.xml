@@ -828,8 +828,9 @@
                 <module>samples/product</module>
 <!--                <module>automation-extensions</module>-->
 <!--                <module>tests-common</module>-->
-<!--                <module>mediation-tests/service-samples</module>-->
-<!--                <module>cli-tests</module>-->
+<!--                <module>mediation-tests</module>-->
+                <module>cli-tests</module>
+<!--                <module>dataservice-hosting-tests</module>-->
             </modules>
         </profile>
     </profiles>
