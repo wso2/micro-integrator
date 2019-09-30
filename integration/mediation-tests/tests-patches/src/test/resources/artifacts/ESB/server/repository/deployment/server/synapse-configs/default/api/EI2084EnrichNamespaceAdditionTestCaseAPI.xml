@@ -17,7 +17,7 @@
   ~ under the License.
   -->
 
-<api xmlns="http://ws.apache.org/ns/synapse" name="EI2084EnrichNamespaceAdditionTestCaseAPI" context="EI2084">
+<api xmlns="http://ws.apache.org/ns/synapse" name="EI2084EnrichNamespaceAdditionTestCaseAPI" context="/EI2084">
     <resource methods="POST" uri-template="/test_with_pf">\
         <inSequence>
             <enrich>

@@ -656,7 +656,7 @@ truststrore_password = "password_5"
 [[server.get_request_processor]]    # hidden property
 #carbon.xml
 item = "swagger.json"
-class = "org.wso2.appcloud.api.swagger.processors.json.SwaggerJsonProcessor"
+class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor"
 
 [transport.local]       # hidden property
 #axis2.xml
