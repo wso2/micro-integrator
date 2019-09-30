@@ -80,8 +80,6 @@ public class Sample254TestCase extends ESBSampleIntegrationTest {
 
         AutomationContext context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         serverManager = new ServerConfigurationManager(context);
-        serverManager.applyConfiguration(
-                new File(getESBResourceLocation() + File.separator + "sample_254" + File.separator + "axis2.xml"));
 
         super.init();
         synapseConfigAdminClient = new SynapseConfigAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());

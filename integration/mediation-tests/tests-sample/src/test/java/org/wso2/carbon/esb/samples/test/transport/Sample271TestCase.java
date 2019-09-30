@@ -101,7 +101,6 @@ public class Sample271TestCase extends ESBSampleIntegrationTest {
 
         // Copy axis2.xml
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyMIConfiguration(new File(path2ResourceSample271 + "axis2.xml"));
 
         // copy jars
         mysqlJar = new File(path2ResourceSample271 + "lib" + File.separator + "mysql-connector-java-5.1.10-bin.jar");
