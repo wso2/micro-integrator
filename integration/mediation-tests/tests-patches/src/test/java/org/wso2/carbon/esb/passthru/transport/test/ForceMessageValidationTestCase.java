@@ -57,7 +57,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
 
         serverConfigurationManager.applyMIConfigurationWithRestart(new File(
                 getESBResourceLocation().replace("//", "/") + File.separator + "passthru" + File.separator + "transport"
-                        + File.separator + "forceMessageValidation" + File.separator + "passthru-http.properties"));
+                        + File.separator + "forceMessageValidation" + File.separator + "deployment.toml"));
         super.init();
 
         carbonLogReader = new CarbonLogReader();
