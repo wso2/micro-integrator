@@ -86,6 +86,12 @@ Command Line tool for managing the WSO2 Micro Integrator
             # To show available Micro Integrators
             mi remote show
             
+            # Get information about a specific Micro Integrator instance
+            mi remote show default
+            mi remote show TestServer
+            
+
+            
             # login to the current (selected)  Micro Integrator instance
             mi remote login     # will be prompted for username and password
             

@@ -97,6 +97,7 @@ const ShowCommand = "show"
 const HelpCommand = "help"
 const LoginResource = "login"
 const LogoutResource = "logout"
+const ServerResource = "server"
 
 const Name = "NAME"
 const Type = "TYPE"

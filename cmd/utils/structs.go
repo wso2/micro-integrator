@@ -31,6 +31,15 @@ type Remote struct {
 	AccessToken string `yaml:"access_token"`
 }
 
+type RemoteInfo struct {
+	ProductVersion     string `json:"productVersion"`
+	RepositoryLocation string `json:"repositoryLocation"`
+	WorkDirectory      string `json:"workDirectory"`
+	CarbonHome         string `json:"carbonHome"`
+	ProductName        string `json:"productName"`
+	JavaHome           string `json:"javaHome"`
+}
+
 type Logger struct {
 	Name       string `json:"name"`
 	ParentName string `json:"parent"`
