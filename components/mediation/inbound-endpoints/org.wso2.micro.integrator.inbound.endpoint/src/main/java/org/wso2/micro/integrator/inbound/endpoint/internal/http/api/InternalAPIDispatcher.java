@@ -55,6 +55,10 @@ public class InternalAPIDispatcher {
     public boolean dispatch(MessageContext synCtx) {
         InternalAPI internalApi = findAPI(synCtx);
         CORSHelper.handleCORSHeaders(internalApi.getCORSConfiguration(), synCtx, getSupportedMethodsForInternalApis(), true);
+        if (isOptions(synCtx)) {
+            return true;
+        }
+
         if (internalApi == null) {
             log.warn("No Internal API found to dispatch the message");
             return false;
@@ -121,6 +125,15 @@ public class InternalAPIDispatcher {
     }
 
     private String getSupportedMethodsForInternalApis() {
-        return "GET, POST, PUT, DELETE";
+        return "GET, POST, PUT, DELETE, OPTIONS";
+    }
+
+    private Boolean isOptions(MessageContext synCtx) {
+        org.apache.axis2.context.MessageContext axis2Ctx = ((Axis2MessageContext) synCtx).getAxis2MessageContext();
+        String method = (String) axis2Ctx.getProperty(Constants.Configuration.HTTP_METHOD);
+        if (method.contains(RESTConstants.METHOD_OPTIONS)) {
+            return true;
+        }
+        return false;
     }
 }

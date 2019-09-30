@@ -2,6 +2,37 @@
   "server.enable_mtom": "server.enableMTOM",
   "server.enable_swa": "server.enableSwA",
 
+  "user_store.connection_url":"user_store.properties.ConnectionURL",
+  "user_store.connection_name":"user_store.properties.ConnectionName",
+  "user_store.connection_password":"user_store.properties.ConnectionPassword",
+  "user_store.anonymous_bind":"user_store.properties.AnonymousBind",
+  "user_store.user_search_base":"user_store.properties.UserSearchBase",
+  "user_store.user_name_attribute":"user_store.properties.UserNameAttribute",
+  "user_store.user_name_search_filter":"user_store.properties.UserNameSearchFilter",
+  "user_store.user_name_list_filter":"user_store.properties.UserNameListFilter",
+  "user_store.display_name_attribute":"user_store.properties.DisplayNameAttribute",
+  "user_store.read_groups":"user_store.properties.ReadGroups",
+  "user_store.group_search_base":"user_store.properties.GroupSearchBase",
+  "user_store.group_name_attribute":"user_store.properties.GroupNameAttribute",
+  "user_store.group_name_search_filter":"user_store.properties.GroupNameSearchFilter",
+  "user_store.group_name_list_filter":"user_store.properties.GroupNameListFilter",
+  "user_store.membership_attribute":"user_store.properties.MembershipAttribute",
+  "user_store.back_links_enabled":"user_store.properties.BackLinksEnabled",
+  "user_store.scim_enabled":"user_store.properties.SCIMEnabled",
+  "user_store.password_hash_method":"user_store.properties.PasswordHashMethod",
+  "user_store.multi_attribute_separator":"user_store.properties.MultiAttributeSeparator",
+  "user_store.max_user_name_list_length":"user_store.properties.MaxUserNameListLength",
+  "user_store.max_role_name_list_length":"user_store.properties.MaxRoleNameListLength",
+  "user_store.user_roles_cache_enabled":"user_store.properties.UserRolesCacheEnabled",
+  "user_store.connection_pooling_enabled":"user_store.properties.ConnectionPoolingEnabled",
+  "user_store.ldap_connection_timeout":"user_store.properties.LDAPConnectionTimeout",
+  "user_store.read_timeout":"user_store.properties.ReadTimeout",
+  "user_store.retry_attempts":"user_store.properties.RetryAttempts",
+  "user_store.replace_escape_characters_at_user_login":"user_store.properties.ReplaceEscapeCharactersAtUserLogin",
+  "user_store.username_java_regex":"user_store.properties.UsernameJavaRegEx",
+  "user_store.rolename_java_regex":"user_store.properties.RolenameJavaRegEx",
+  "user_store.password_java_regex":"user_store.properties.PasswordJavaRegEx",
+
   "mediation.synapse.core_threads" : "synapse_properties.'synapse.threads.core'",
   "mediation.synapse.max_threads" : "synapse_properties.'synapse.threads.max'",
   "mediation.synapse.threads_queue_length": "synapse_properties.'synapse.threads.qlen'",
@@ -62,14 +93,11 @@
 
   "transport.http.sender.hostname_verifier": "transport.https.sender.parameter.'HostnameVerifier'",
 
-  "transport.http.blocking_sender.enable_client_caching": "transport.http.blocking_sender.parameter.cacheHttpClient",
-  "transport.http.blocking_sender.transfer_encoding": "transport.http.blocking_sender.parameter.Transfer-Encoding",
-  "transport.http.blocking_sender.default_connections_per_host": "transport.http.blocking_sender.parameter.defaultMaxConnectionsPerHost",
-  "transport.http.blocking_sender.omit_soap12_action": "transport.http.blocking_sender.parameter.OmitSOAP12Action",
-  "transport.http.blocking_sender.so_timeout": "transport.http.blocking_sender.parameter.SO_TIMEOUT",
-
-  "transport.hl7.listener.port":"transport.hl7.listener.parameter.port",
-  "transport.hl7.sender.non_blocking":"transport.hl7.sender.parameter.non-blocking",
+  "transport.blocking.http.sender.enable_client_caching": "transport.blocking.http.sender.parameter.cacheHttpClient",
+  "transport.blocking.http.sender.transfer_encoding": "transport.blocking.http.sender.parameter.Transfer-Encoding",
+  "transport.blocking.http.sender.default_connections_per_host": "transport.blocking.http.sender.parameter.defaultMaxConnectionsPerHost",
+  "transport.blocking.http.sender.omit_soap12_action": "transport.blocking.http.sender.parameter.OmitSOAP12Action",
+  "transport.blocking.http.sender.so_timeout": "transport.blocking.http.sender.parameter.SO_TIMEOUT",
 
   "transport.mail.sender:parameter.hostname": "transport.mail.sender:parameter.'mail.smtp.host'",
   "transport.mail.sender:parameter.port": "transport.mail.sender:parameter.'mail.smtp.port'",
@@ -178,6 +206,7 @@
   "transport.rabbitmq.listener.AMQPConnectionFactory.message_content_type": "transport.rabbitmq.listener.AMQPConnectionFactory.parameter.'rabbitmq.message.content.type'",
   "transport.rabbitmq.listener.AMQPConnectionFactory.retry_interval": "transport.rabbitmq.listener.AMQPConnectionFactory.parameter.'rabbitmq.connection.retry.interval'",
   "transport.rabbitmq.listener.AMQPConnectionFactory.retry_count": "transport.rabbitmq.listener.AMQPConnectionFactory.parameter.'rabbitmq.connection.retry.count'",
+  "transport.rabbitmq.listener.AMQPConnectionFactory.connection_pool_size": "transport.rabbitmq.listener.AMQPConnectionFactory.parameter.'rabbitmq.connection.pool.size'",
 
   "transport.rabbitmq.listener.AMQPConnectionFactory.ssl_enable": "transport.rabbitmq.listener.AMQPConnectionFactory.parameter.'rabbitmq.connection.ssl.enabled'",
   "transport.rabbitmq.listener.AMQPConnectionFactory.ssl_version": "transport.rabbitmq.listener.AMQPConnectionFactory.parameter.'rabbitmq.connection.ssl.version'",
@@ -204,6 +233,7 @@
   "transport.rabbitmq.sender.AMQPConnectionFactory.exchange_durable": "transport.rabbitmq.sender.AMQPConnectionFactory.parameter.'rabbitmq.exchange.durable'",
   "transport.rabbitmq.sender.AMQPConnectionFactory.queue_auto_declare": "transport.rabbitmq.sender.AMQPConnectionFactory.parameter.'rabbitmq.queue.autodeclare'",
   "transport.rabbitmq.sender.AMQPConnectionFactory.exchange_auto_declare": "transport.rabbitmq.sender.AMQPConnectionFactory.parameter.'rabbitmq.exchange.autodeclare'",
+  "transport.rabbitmq.sender.AMQPConnectionFactory.connection_pool_size": "transport.rabbitmq.sender.AMQPConnectionFactory.parameter.'rabbitmq.connection.pool.size'",
 
   "transport.ws.sender.parameter.outflow_dispatch_sequence": "transport.ws.sender.parameter.'ws.outflow.dispatch.sequence'",
   "transport.ws.sender.parameter.outflow_dispatch_fault_sequence": "transport.ws.sender.parameter.'ws.outflow.dispatch.fault.sequence'",
@@ -230,5 +260,14 @@
   "transport.mqtt.listener.parameter.temporary_store_directory": "transport.mqtt.listener.parameter.'mqtt.temporary.store.directory'",
   "transport.mqtt.listener.parameter.blocking_sender": "transport.mqtt.listener.parameter.'mqtt.blocking.sender'",
   "transport.mqtt.listener.parameter.connect_type": "transport.mqtt.listener.parameter.'mqtt.content.type'",
-  "transport.mqtt.listener.parameter.message_retained": "transport.mqtt.listener.parameter.'mqtt.message.retained'"
+  "transport.mqtt.listener.parameter.message_retained": "transport.mqtt.listener.parameter.'mqtt.message.retained'",
+
+  "custom_transport.listener:parameter.non_blocking": "custom_transport.listener:parameter.non-blocking",
+  "custom_transport.listener:parameter.bind_address": "custom_transport.listener:parameter.bind-address",
+  "custom_transport.listener:parameter.wsdl_epr_prefix": "custom_transport.listener:parameter.WSDLEPRPrefix",
+
+  "custom_transport.sender:parameter.proxy_host": "custom_transport.sender:parameter.'http.proxyHost'",
+  "custom_transport.sender:parameter.proxy_port": "custom_transport.sender:parameter.'http.proxyPort'",
+  "custom_transport.sender:parameter.non_proxy_host": "custom_transport.sender:parameter.'http.nonProxyHosts'",
+  "custom_transport.sender:parameter.non_blocking": "custom_transport.sender:parameter.non-blocking"
 }

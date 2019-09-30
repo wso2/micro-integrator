@@ -317,6 +317,7 @@ public class DBDeployer extends AbstractDeployer {
 	 */
 	public void init(ConfigurationContext configCtx) {
 		this.configCtx = configCtx;
+		DataHolder.getInstance().setConfigurationContext(configCtx);
 		this.axisConfig = this.configCtx.getAxisConfiguration();
 		/* init is called after the setDirectory is called so setting the
 		 * repoDir and the extension here. */

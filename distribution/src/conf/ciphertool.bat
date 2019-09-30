@@ -74,7 +74,8 @@ rem loop through the libs and add them to the class path
 cd "%CARBON_HOME%"
 
 set CARBON_CLASSPATH=.\conf
-FOR %%c in ("%CARBON_HOME%\..\lib\*.jar") DO set CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\..\lib\%%~nc%%~xc"
+rem Omit Saxon-HE jar from CARBON_HOME/wso2/lib/ since it override required XPathFactory implementation
+FOR %%c in ("%CARBON_HOME%\wso2\lib\*.jar") DO echo .\wso2\lib\%%~nc%%~xc | FINDSTR /C:"Saxon-HE" || (set CARBON_CLASSPATH=!CARBON_CLASSPATH!;".\wso2\lib\%%~nc%%~xc")
 
 rem ----- Execute The Requested Command ---------------------------------------
 echo Using CARBON_HOME:   %CARBON_HOME%

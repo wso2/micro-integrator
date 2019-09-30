@@ -146,12 +146,12 @@ public class Activator implements BundleActivator {
 
     private void logServerInfo() {
 
-        log.info("Starting WSO2 Micro Integrator ...");
-        log.info("Operating System         : " + System.getProperty("os.name") + " " +
+        log.debug("Starting WSO2 Micro Integrator ...");
+        log.debug("Operating System         : " + System.getProperty("os.name") + " " +
                 System.getProperty("os.version") + ", " + System.getProperty("os.arch"));
-        log.info("Java Home                : " + System.getProperty("java.home"));
-        log.info("Java Version             : " + System.getProperty("java.version"));
-        log.info("Java VM                  : " + System.getProperty("java.vm.name") + " "
+        log.debug("Java Home                : " + System.getProperty("java.home"));
+        log.debug("Java Version             : " + System.getProperty("java.version"));
+        log.debug("Java VM                  : " + System.getProperty("java.vm.name") + " "
                 + System.getProperty("java.vm.version") + "," + System.getProperty("java.vendor"));
 
         String carbonHome;
@@ -159,9 +159,9 @@ public class Activator implements BundleActivator {
             carbonHome = new File(".").getAbsolutePath();
         }
 
-        log.info("Micro Integrator Home    : " + carbonHome);
-        log.info("Java Temp Dir            : " + System.getProperty("java.io.tmpdir"));
-        log.info("User                     : " + System.getProperty("user.name") + ", "
+        log.debug("Micro Integrator Home    : " + carbonHome);
+        log.debug("Java Temp Dir            : " + System.getProperty("java.io.tmpdir"));
+        log.debug("User                     : " + System.getProperty("user.name") + ", "
                 + System.getProperty("user.language") + "-" + System.getProperty("user.country")
                 + ", " + System.getProperty("user.timezone"));
 

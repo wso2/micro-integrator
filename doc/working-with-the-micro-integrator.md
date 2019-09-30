@@ -28,7 +28,6 @@ For information on what the Micro Integrator profile brings with this release, s
 |   |     └── master-datasources.xml
 |   |
 │   ├── log4j.properties
-│   ├── nhttp.properties
 │   ├── passthru-http.properties
 │   ├── security
 │   ├── synapse-handlers.xml
@@ -107,7 +106,6 @@ For information on what the Micro Integrator profile brings with this release, s
   - **datasources**
     - **master-datasources.xml** - can be used to edit the data source configs given in [doc](https://docs.wso2.com/display/CONFREF/Configuring+master-datasources.xml)
   - **log4j.properties** - logging configuration file
-  - **nhttp.properties** -  contains tuning parameters related to non-blocking HTTPs
   - **passthru-http.properties** - contains tuning parameters related to the HTTP Pass Through transport. This is the default transport of the micro-integrator
   - **security** - used to keep security related config files. for more detail about individual files please follow the [doc](https://docs.wso2.com/display/CONFREF/Security+Configurations)
   - **synapse-handlers.xml** - used to engage the deployed Synapse handlers

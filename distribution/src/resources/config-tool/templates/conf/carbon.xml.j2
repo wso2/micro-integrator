@@ -322,14 +322,14 @@
             The crypto provider which is used for the crypto needs which come when communicating with external parties.
             e.g. Signing, Decrypting.
         -->
-        <ExternalCryptoProviderClassName>org.wso2.carbon.core.encryption.KeyStoreBasedExternalCryptoProvider</ExternalCryptoProviderClassName>
+        <ExternalCryptoProviderClassName>org.wso2.micro.core.encryption.KeyStoreBasedExternalCryptoProvider</ExternalCryptoProviderClassName>
 
         <!--
             The list of key resolvers which will be used based on the context when handling crypto with external parties.
             e.g. Resolving the public key of an external entity.
         -->
         <KeyResolvers>
-            <KeyResolver className="org.wso2.carbon.crypto.defaultProvider.resolver.ContextIndependentKeyResolver" priority="-1"/>
+            <KeyResolver className="org.wso2.micro.integrator.crypto.provider.ContextIndependentKeyResolver" priority="-1"/>
         </KeyResolvers>
 
         <Secret>{{encryption.key}}</Secret>

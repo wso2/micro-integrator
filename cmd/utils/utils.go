@@ -48,6 +48,7 @@ func InvokePOSTRequest(url string, headers map[string]string, body string) (*res
 func InvokeGETRequest(url string, headers map[string]string, params map[string]string) (*resty.Response, error) {
 
 	AllowInsecureSSLConnection()
+	Logln(LogPrefixInfo + "InvokeGETRequest(): URL: " + url)
 	resp, err := resty.R().SetQueryParams(params).SetHeaders(headers).Get(url)
 
 	return resp, err
@@ -76,7 +77,7 @@ func PromptForUsername() string {
 	fmt.Print("Enter Username: ")
 	username, _ := reader.ReadString('\n')
 
-	return username
+	return strings.TrimSpace(username)
 }
 
 func PromptForPassword() string {
@@ -84,7 +85,7 @@ func PromptForPassword() string {
 	bytePassword, _ := terminal.ReadPassword(0)
 	password := string(bytePassword)
 	fmt.Println()
-	return password
+	return strings.TrimSpace(password)
 }
 
 // return a string containing the file name, function name
@@ -122,32 +123,45 @@ func AllowInsecureSSLConnection() {
 
 // Unmarshal Data from the response to the respective struct
 // @param url: url of rest api
+// @param headers: HTTP headers
 // @param model: struct object
+// @param params: parameters for the HTTP call
 // @return struct object
 // @return error
-func UnmarshalData(url string, params map[string]string, model interface{}) (interface{}, error) {
+func UnmarshalData(url string, headers map[string]string, params map[string]string,
+	model interface{}) (interface{}, error) {
 
-	Logln(LogPrefixInfo+"URL:", url)
+	if headers == nil {
+		headers = make(map[string]string)
+	}
 
-	headers := make(map[string]string)
+	if headers[HeaderAuthorization] == "" {
+		headers[HeaderAuthorization] = HeaderValueAuthPrefixBearer + " " +
+			RemoteConfigData.Remotes[RemoteConfigData.CurrentServer].AccessToken
+	}
 
 	resp, err := InvokeGETRequest(url, headers, params)
 
 	if err != nil {
-		HandleErrorAndExit("Unable to connect to host", nil)
+		HandleErrorAndExit("Unable to connect to "+url, nil)
 	}
 
 	Logln(LogPrefixInfo+"Response:", resp.Status())
 
 	if resp.StatusCode() == http.StatusOK {
 		response := model
-		unmarshalError := json.Unmarshal([]byte(resp.Body()), &response)
+		unmarshalError := json.Unmarshal(resp.Body(), &response)
 
 		if unmarshalError != nil {
 			HandleErrorAndExit(LogPrefixError+"invalid JSON response", unmarshalError)
 		}
 		return response, nil
 	} else {
+		if resp.StatusCode() == http.StatusUnauthorized {
+			// not logged in to MI
+			fmt.Println("User not logged in or session timed out. Please login to the current Micro Integrator instance")
+			fmt.Println("Execute '" + ProjectName + " remote login --help' for more information")
+		}
 		if len(resp.Body()) == 0 {
 			return nil, errors.New(resp.Status())
 		} else {
@@ -172,7 +186,7 @@ func UpdateMILogger(loggerName, loggingLevel string) string {
 		HandleErrorAndExit("Unable to connect to host", nil)
 	}
 
-	Logln(LogPrefixInfo+"Response:", string(resp.Status()))
+	Logln(LogPrefixInfo+"Response:", resp.Status())
 	data := UnmarshalJsonToStringMap(resp.Body())
 	if resp.StatusCode() == http.StatusOK {
 		return data["message"]
@@ -292,5 +306,4 @@ func CreateKeyValuePairs(mapData map[string]string) string {
 	} else {
 		return "{}"
 	}
-
 }

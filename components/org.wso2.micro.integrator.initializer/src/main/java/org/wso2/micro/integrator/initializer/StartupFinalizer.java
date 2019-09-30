@@ -109,7 +109,7 @@ public class StartupFinalizer {
 
     private void printInfo() {
         long startTime = Long.parseLong(System.getProperty(START_TIME));
-        long startupTime = (System.currentTimeMillis() - startTime) ;
+        long startupTime = (System.currentTimeMillis() - startTime) / 1000;
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Server           :  " +
@@ -125,7 +125,7 @@ public class StartupFinalizer {
             String msg = "Cannot set server to running mode";
             log.error(msg, e);
         }
-        log.info("WSO2 Micro Integrator started in " + startupTime + " milli sec");
+        log.info("WSO2 Micro Integrator started in " + startupTime + " seconds");
         setServerStartUpDurationParam(String.valueOf(startupTime));
         System.getProperties().remove("setup"); // Clear the setup System property
     }

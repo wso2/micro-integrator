@@ -170,9 +170,9 @@
         <fileSet>
             <directory>./src/resources/config-tool</directory>
             <outputDirectory>wso2mi-${pom.version}/repository/resources/conf</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
+            <excludes>
+                <exclude>**/carbon.xml.j2</exclude>
+            </excludes>
         </fileSet>
         <fileSet>
             <directory>target/wso2carbon-core-${carbon.kernel.version}/bin</directory>
@@ -403,14 +403,6 @@
         </file>
 
         <file>
-            <source>src/conf/nhttp.properties</source>
-            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
-            <destName>nhttp.properties</destName>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-
-        <file>
             <source>src/conf/access-log.properties</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>access-log.properties</destName>
@@ -558,6 +550,13 @@
             <source>src/conf/deployment.toml</source>
             <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
             <destName>deployment.toml</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>src/resources/config-tool/templates/conf/carbon.xml.j2</source>
+            <outputDirectory>wso2mi-${pom.version}/repository/resources/conf/templates/conf</outputDirectory>
+            <destName>carbon.xml.j2</destName>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
