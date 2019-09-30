@@ -42,6 +42,8 @@ DIR="../../../../../cmd/build"
 if [ -d "$DIR" ]; then
     echo "CLI build exists. Hence skipping the cli environment setup"
     cd ../../../../../cmd/build
+    pwd
+    ls
     tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 else
     cd ../../../../../cmd
@@ -58,6 +60,8 @@ else
     ./build.sh -t mi.go -v ${VERSION} -f
 
     cd build
+    pwd
+    ls
     tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 
     #start the application
