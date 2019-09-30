@@ -42,8 +42,6 @@ public class APIMANAGER1838RequestHashGeneratorTestCase extends ESBIntegrationTe
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        verifyAPIExistence("APIM1838addPerson");
-        verifyAPIExistence("APIM1838getPerson");
         tomcatServerManager = new TomcatServerManager(AppConfig.class.getName(), "jaxrs", 8080);
         tomcatServerManager.startServer();
     }

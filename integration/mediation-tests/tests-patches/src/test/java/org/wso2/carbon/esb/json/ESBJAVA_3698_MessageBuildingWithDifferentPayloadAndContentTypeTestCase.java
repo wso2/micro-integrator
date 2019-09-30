@@ -20,7 +20,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
@@ -31,13 +30,6 @@ import java.io.IOException;
 public class ESBJAVA_3698_MessageBuildingWithDifferentPayloadAndContentTypeTestCase extends ESBIntegrationTest {
     private final DefaultHttpClient httpClient = new DefaultHttpClient();
     private CarbonLogReader carbonLogReader;
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        verifyAPIExistence("ESBJAVA3698JsonStockQuoteAPI");
-        carbonLogReader = new CarbonLogReader();
-    }
 
     @Test(groups = { "wso2.esb" }, description = "Check for Axis Fault when xml payload is sent with application/json"
             + " content type", enabled = true)
