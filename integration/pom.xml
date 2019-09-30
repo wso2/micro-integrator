@@ -829,7 +829,7 @@
 <!--                <module>automation-extensions</module>-->
 <!--                <module>tests-common</module>-->
 <!--                <module>mediation-tests/service-samples</module>-->
-<!--                <module>cli-tests</module>-->
+                <module>cli-tests</module>
             </modules>
         </profile>
     </profiles>
