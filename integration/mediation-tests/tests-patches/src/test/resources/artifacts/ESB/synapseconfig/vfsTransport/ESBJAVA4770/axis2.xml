@@ -246,8 +246,6 @@
             supports optional|require or defaults to none -->
     </transportReceiver>
 
-    <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
-
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener">
         <parameter locked="false" name="keystore.identity.location">repository/resources/security/vfsKeystore.jks</parameter>
         <parameter locked="false" name="keystore.identity.type">JKS</parameter>
@@ -402,8 +400,6 @@
         <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
         <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
     </transportSender>
-
-    <transportSender name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender"/>
 
     <!-- uncomment this and configure to use connection pools for sending messages>
   <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender"/-->

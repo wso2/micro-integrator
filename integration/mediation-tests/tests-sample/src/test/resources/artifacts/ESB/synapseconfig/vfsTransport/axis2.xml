@@ -286,8 +286,6 @@
             supports optional|require or defaults to none -->
     </transportReceiver>
 
-    <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
-
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener"/>
 
     <!--<transportReceiver name="mailto" class="org.apache.axis2.transport.mail.MailTransportListener">-->
@@ -409,8 +407,6 @@
         <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
         <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
     </transportSender>
-
-    <transportSender name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender"/>
 
     <!--Uncomment this local transport to use local transport in mediation flow-->
     <!--<transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>-->
