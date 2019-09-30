@@ -74,7 +74,7 @@ func executeServerAddCmd(args []string) {
 	if result != nil {
 		utils.HandleErrorAndExit("Error: ", result)
 	}
-	utils.RemoteConfigData.Persist(utils.GetServerConfigFilePath())
+	utils.RemoteConfigData.Persist(utils.GetRemoteConfigFilePath())
 }
 
 func printServerAddHelp() {

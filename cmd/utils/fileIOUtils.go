@@ -36,14 +36,14 @@ func IsFileExist(path string) bool {
 	return true
 }
 
-func GetServerConfigFilePath() string {
+func GetRemoteConfigFilePath() string {
 
 	userHomeDir, err := os.UserHomeDir()
 	if err != nil {
 		HandleErrorAndExit("Error getting user home directory: ", err)
 	}
-	serverConfigFilePath := filepath.Join(userHomeDir, ServerConfigFileName)
-	return serverConfigFilePath
+	remoteConfigFilePath := filepath.Join(userHomeDir, RemoteConfigFileName)
+	return remoteConfigFilePath
 }
 
 func GetFileContent(filePath string) string {

@@ -46,25 +46,25 @@ var remoteShowCmd = &cobra.Command{
 	Short: remoteShowCmdShortDesc,
 	Long:  remoteShowCmdLongDesc + remoteShowCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleServerShowCmdArguments(args)
+		handleRemoteShowCmdArguments(args)
 	},
 }
 
-func handleServerShowCmdArguments(args []string) {
+func handleRemoteShowCmdArguments(args []string) {
 	utils.Logln(utils.LogPrefixInfo + remoteCmdLiteral + " " + remoteShowCmdLiteral + " called")
 	if len(args) == 0 {
-		executeServerShowCmd(args)
+		executeRemoteShowCmd(args)
 	} else {
 		fmt.Println("Incorrect number of arguments. See the usage below")
-		printServerShowHelp()
+		printRemoteShowHelp()
 	}
 }
 
-func executeServerShowCmd(args []string) {
-	if utils.IsFileExist(utils.GetServerConfigFilePath()) {
-		fmt.Print(utils.GetFileContent(utils.GetServerConfigFilePath()))
+func executeRemoteShowCmd(args []string) {
+	if utils.IsFileExist(utils.GetRemoteConfigFilePath()) {
+		fmt.Print(utils.GetFileContent(utils.GetRemoteConfigFilePath()))
 	} else {
-		message := `remote_config.yaml file does not exist. Please run "` +
+		message := utils.RemoteConfigFileName + ` file does not exist. Please run "` +
 			programName + ` ` + remoteCmdLiteral + ` ` + remoteAddCmdLiteral +
 			`" to add MI configs.`
 		fmt.Println(message)
@@ -72,7 +72,7 @@ func executeServerShowCmd(args []string) {
 
 }
 
-func printServerShowHelp() {
+func printRemoteShowHelp() {
 	fmt.Print(remoteShowCmdHelpString)
 }
 

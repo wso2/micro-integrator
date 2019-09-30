@@ -19,15 +19,15 @@
 package utils
 
 type RemoteConfig struct {
-	Remotes       Remotes `yaml:"servers"`
-	CurrentServer string  `yaml:"current_server"`
+	Remotes       Remotes `yaml:"remotes"`
+	CurrentRemote string  `yaml:"current_remote"`
 }
 
 type Remotes map[string]Remote
 
 type Remote struct {
-	Url         string `yaml:"server_address"`
-	Port        string `yaml:"server_port"`
+	Url         string `yaml:"remote_address"`
+	Port        string `yaml:"remote_port"`
 	AccessToken string `yaml:"access_token"`
 }
 
@@ -45,7 +45,7 @@ type Service struct {
 	TryItURL    string `json:"tryItUrl"`
 }
 
-type ServerSummary struct {
+type RemoteSummary struct {
 	Name     string `json:"name"`
 	Version  string `json:"version"`
 	Location string `json:"location"`

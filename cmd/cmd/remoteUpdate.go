@@ -75,7 +75,7 @@ func executeServerUpdateCmd(args []string) {
 		utils.HandleErrorAndExit("Error: ", err)
 	} else {
 		utils.Logln(utils.LogPrefixInfo + "Persisting remote " + args[0])
-		utils.RemoteConfigData.Persist(utils.GetServerConfigFilePath())
+		utils.RemoteConfigData.Persist(utils.GetRemoteConfigFilePath())
 		fmt.Println("Remote " + args[0] + " updated successfully!")
 	}
 }
