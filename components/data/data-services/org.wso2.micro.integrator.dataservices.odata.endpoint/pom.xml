@@ -44,7 +44,32 @@
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
-            <version>1.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.synapse</groupId>
+            <artifactId>synapse-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.igniterealtime</groupId>
+                    <artifactId>smack</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.orbit.org.apache.commons</groupId>
+            <artifactId>commons-collections4</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom.wso2</groupId>
+            <artifactId>axiom</artifactId>
         </dependency>
     </dependencies>
 
@@ -67,6 +92,11 @@
                             org.wso2.micro.integrator.dataservices.core.*;version="${project.version}",
                             javax.servlet.http;version="${javax.servlet.imp.pkg.version}",
                             org.apache.commons.logging;version="${carbon.commons.logging.imp.pkg.version}",
+                            org.apache.axis2.*; version="${imp.pkg.version.axis2}",
+                            org.apache.commons.collections4.*,
+                            javax.servlet;version="${imp.pkg.version.javax.servlet}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
+                            org.apache.synapse.*
                         </Import-Package>
                     </instructions>
                 </configuration>

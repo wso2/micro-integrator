@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.security.internal;
 
+import org.apache.axis2.context.ConfigurationContext;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
@@ -28,6 +29,7 @@ public class DataHolder {
 
     private RealmConfiguration realmConfig;
     private UserStoreManager userStoreManager;
+    private ConfigurationContext configCtx;
 
     public final static DataHolder instance = new DataHolder();
 
@@ -39,7 +41,7 @@ public class DataHolder {
         return realmConfig;
     }
 
-    public void setRealmConfig(RealmConfiguration realmConfig) {
+    protected void setRealmConfig(RealmConfiguration realmConfig) {
         this.realmConfig = realmConfig;
     }
 
@@ -49,5 +51,13 @@ public class DataHolder {
 
     public void setUserStoreManager(UserStoreManager userStoreManager) {
         this.userStoreManager = userStoreManager;
+    }
+
+    public ConfigurationContext getConfigCtx() {
+        return configCtx;
+    }
+
+    public void setConfigCtx(ConfigurationContext configCtx) {
+        this.configCtx = configCtx;
     }
 }

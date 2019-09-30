@@ -31,6 +31,20 @@ getPomVersion(){
     echo "Version : $VERSION"
 }
 
+buildCli(){
+    go mod vendor
+    sleep 10
+
+    #build Micro Integrator CLI
+    echo "Build Micro Integrator CLI"
+    cd ../
+
+    #get the version from the pom
+    getPomVersion
+    cd cmd
+    ./build.sh -t mi.go -v ${VERSION} -f
+}
+
 #Setting up the CLI environment
 #Check if the cli build is available in the location
 setup(){

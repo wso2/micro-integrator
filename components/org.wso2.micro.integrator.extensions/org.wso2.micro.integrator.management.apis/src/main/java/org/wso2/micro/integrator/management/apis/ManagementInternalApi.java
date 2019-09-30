@@ -24,7 +24,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.rest.cors.CORSConfiguration;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPI;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPICORSConfiguration;
 import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
 import java.util.ArrayList;
@@ -38,10 +37,13 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_ENDPOIN
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_INBOUND_ENDPOINTS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOCAL_ENTRIES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGGING;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGIN;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGOUT;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SEQUENCES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_DATA;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
@@ -73,6 +75,9 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new MessageProcessorResource(PREFIX_MESSAGE_PROCESSORS));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOCAL_ENTRIES, new LocalEntryResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_CONNECTORS, new ConnectorResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_LOGIN, new LoginResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_LOGOUT, new LogoutResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_SERVER_DATA, new MetaDataResource()));
 
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);

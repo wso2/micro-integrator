@@ -24,8 +24,8 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQServerInstance;
 import org.wso2.carbon.esb.rabbitmq.utils.RabbitMQTestUtils;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
 
@@ -37,17 +37,13 @@ import java.io.File;
  */
 public class RabbitMQInboundTestCase extends ESBIntegrationTest {
 
-    private LogViewerClient logViewer;
     private RabbitMQProducerClient sender;
+    private CarbonLogReader logReader;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
+        logReader = new CarbonLogReader();
         super.init();
-        //The inbound endpoint cannot be pre-deployed because it will cause unnecessary message polling.
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "inbound" + File.separator
-                        + "rabbitmq_inbound_endpoint.xml");
-        logViewer = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     /**
@@ -60,7 +56,7 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
     public void testRabbitMQInboundEndpoint() throws Exception {
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange", "simple_inbound_endpoint_test");
 
-        logViewer.clearLogs();
+        logReader.start();
         int messageCount = 2;
 
         String message = "<ser:placeOrder xmlns:ser=\"http://services.samples\">\n" + "<ser:order>\n"
@@ -71,20 +67,9 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
         }
 
         RabbitMQTestUtils.waitForLogToGetUpdated();
-
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int count = 0;
-
-        for (LogEvent logEvent : logs) {
-            if (logEvent == null) {
-                continue;
-            }
-            String logMessage = logEvent.getMessage();
-            if (logMessage.contains("received by inbound endpoint = true")) {
-                count++;
-            }
-        }
-        Assert.assertEquals(count, messageCount, "All messages are not received from queue");
+        logReader.stop();
+        int messagesConsumed = logReader.getNumberOfOccurencesForLog("received by inbound endpoint = true");
+        Assert.assertEquals(messagesConsumed, messageCount, "All messages are not received from queue");
     }
 
     /**
@@ -97,29 +82,16 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Test ESB RabbitMQ inbound endpoint deployment with incorrect server "
             + "port")
     public void testRabbitMQInboundEndpointDeploymentWithInvalidServerConfigs() throws Exception {
-        logViewer.clearLogs();
-        loadESBConfigurationFromClasspath(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "inbound" + File.separator
-                        + "rabbitmq_inbound_endpoint_invalid.xml");
-
+        logReader.start();
+        CarbonServerExtension.restartServer();
+        Thread.sleep(20000);
         RabbitMQTestUtils.waitForLogToGetUpdated();
-        LogEvent[] logs = logViewer.getAllRemoteSystemLogs();
-        int retryCount = 0;
-        boolean delay = true;
-        for (LogEvent logEvent : logs) {
-            if (logEvent == null) {
-                continue;
-            }
-            String logMessage = logEvent.getMessage();
-            if (logMessage.contains("Attempting to create connection to RabbitMQ Broker")) {
-                retryCount++;
-                if (!logMessage.contains("Attempting to create connection to RabbitMQ Broker in 500 ms")) {
-                    delay = false;
-                }
-            }
-        }
-        Assert.assertTrue(delay, "The connection retry delay is incorrect");
-        Assert.assertEquals(retryCount, 3, "The connection retry count is incorrect");
+        Assert.assertTrue(logReader.checkForLog("Attempting to create connection to RabbitMQ Broker in 500 ms",
+                                                5), "The connection retry delay is incorrect");
+        Assert.assertEquals(
+                logReader.getNumberOfOccurencesForLog("Attempting to create connection to RabbitMQ Broker"),
+                                                      3, "The connection retry count is incorrect");
+        logReader.stop();
     }
 
     @AfterClass(alwaysRun = true)
@@ -127,6 +99,5 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
         super.cleanup();
         sender.disconnect();
         sender = null;
-        logViewer = null;
     }
 }

@@ -783,6 +783,50 @@ _mi_remote_add()
     noun_aliases=()
 }
 
+_mi_remote_login()
+{
+    last_command="mi_remote_login"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
+_mi_remote_logout()
+{
+    last_command="mi_remote_logout"
+
+    command_aliases=()
+
+    commands=()
+
+    flags=()
+    two_word_flags=()
+    local_nonpersistent_flags=()
+    flags_with_completion=()
+    flags_completion=()
+
+    flags+=("--verbose")
+    flags+=("-v")
+
+    must_have_one_flag=()
+    must_have_one_noun=()
+    noun_aliases=()
+}
+
 _mi_remote_remove()
 {
     last_command="mi_remote_remove"
@@ -879,6 +923,8 @@ _mi_remote()
 
     commands=()
     commands+=("add")
+    commands+=("login")
+    commands+=("logout")
     commands+=("remove")
     commands+=("select")
     commands+=("show")

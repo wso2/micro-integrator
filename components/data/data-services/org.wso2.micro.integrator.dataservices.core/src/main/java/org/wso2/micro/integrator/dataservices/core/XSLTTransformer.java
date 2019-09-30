@@ -42,6 +42,8 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
+import static org.wso2.micro.core.util.CarbonUtils.getSecuredTransformerFactory;
+
 /**
  * This class is used in transforming data services result using XSLT.
  */
@@ -58,7 +60,7 @@ public class XSLTTransformer {
     public XSLTTransformer(String xsltPath) throws TransformerConfigurationException,
                                                    DataServiceFault, IOException {
         this.xsltPath = xsltPath;
-        TransformerFactory tFactory = TransformerFactory.newInstance();
+        TransformerFactory tFactory = getSecuredTransformerFactory();
         try {
             getSecuredDocumentBuilder(false).parse(DBUtils.getInputStreamFromPath(this.getXsltPath()));
         } catch (SAXException e) {

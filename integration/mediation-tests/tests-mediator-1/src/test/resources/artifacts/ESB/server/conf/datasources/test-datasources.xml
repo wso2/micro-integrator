@@ -19,7 +19,7 @@
 <datasources-configuration>
 
     <providers>
-        <provider>org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader</provider>
+        <provider>org.wso2.micro.integrator.ndatasource.rdbms.RDBMSDataSourceReader</provider>
     </providers>
 
     <datasources>

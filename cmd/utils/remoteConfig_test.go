@@ -61,9 +61,11 @@ func TestAddServer(t *testing.T) {
   default:
     server_address: localhost
     server_port: "9164"
+    access_token: ""
   testServer1:
     server_address: localhost
     server_port: "1234"
+    access_token: ""
 current_server: default
 `
 	AssertEqual(t, expectedContent, GetFileContent(GetServerConfigFilePath()))
@@ -95,9 +97,11 @@ func TestUpdateServer(t *testing.T) {
   default:
     server_address: localhost
     server_port: "9164"
+    access_token: ""
   testServer1:
     server_address: localhost2
     server_port: "1235"
+    access_token: ""
 current_server: default
 `
 	AssertEqual(t, expectedContent, GetFileContent(GetServerConfigFilePath()))
@@ -134,9 +138,11 @@ func TestRemoveServer(t *testing.T) {
   default:
     server_address: localhost
     server_port: "9164"
+    access_token: ""
   testServer2:
     server_address: localhost22
     server_port: "1236"
+    access_token: ""
 current_server: default
 `
 	AssertEqual(t, expectedContent, GetFileContent(GetServerConfigFilePath()))
@@ -184,12 +190,15 @@ func TestSelectServer(t *testing.T) {
   default:
     server_address: localhost
     server_port: "9164"
+    access_token: ""
   testServer1:
     server_address: localhost
     server_port: "1234"
+    access_token: ""
   testServer2:
     server_address: localhost2
     server_port: "1235"
+    access_token: ""
 current_server: testServer2
 `
 	AssertEqual(t, expectedContent, GetFileContent(GetServerConfigFilePath()))
