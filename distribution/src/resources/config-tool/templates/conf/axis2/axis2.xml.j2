@@ -250,7 +250,6 @@
     </transportReceiver>
     {% endif %}
 
-    <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
     {% if transport.vfs.listener.enable == true %}
     <transportReceiver name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportListener">
         <parameter locked="false" name="keystore.identity.location">{{transport.vfs.listener.keystore.file_name}}</parameter>
@@ -459,7 +458,6 @@
         {% endfor %}
     </transportSender>
     {% endif %}
-    <transportSender name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender"/>
     {% if transport.local.sender.nonblocking.enable == true %}
     <transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>
     {% endif %}
