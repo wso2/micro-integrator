@@ -645,6 +645,12 @@ password = "$ref{keystore.tls.password}"    # inferred
 alias = "$ref{keystore.tls.alias}"          # inferred
 key_password = "$ref{keystore.tls.key_password}"    # inferred
 
+[secrets]
+admin_password = "password_2"
+keystore_password = "password_3"
+key_password = "password_4"
+truststrore_password = "password_5"
+
 ##################################### Hidden properties with no documentations ###################################
 
 [[server.get_request_processor]]    # hidden property
