@@ -600,12 +600,6 @@
     <ServerInitializers>
         <!--<Initializer></Initializer>-->
     </ServerInitializers>
-    
-    <!--
-    Indicates whether the Carbon Servlet is required by the system, and whether it should be
-    registered
-    -->
-    <RequireCarbonServlet>${require.carbon.servlet}</RequireCarbonServlet>
 
     <StatisticsReporterDisabled>true</StatisticsReporterDisabled>
 

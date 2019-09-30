@@ -329,7 +329,6 @@
     </transportReceiver>
 
    <transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>
-    <!--  <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/> -->
 
     <!-- Pass-through HTTP Transport Receivers -->
     <!--<transportReceiver name="passthru-http" class="org.wso2.carbon.transport.passthru.PassThroughHttpListener">
