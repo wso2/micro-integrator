@@ -56,9 +56,9 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         OMElement inboundOMElement = AXIOMUtil.stringToOM(FileUtils.readFileToString(new File(getESBResourceLocation()
                 + File.separator + "mqtt" + File.separator + "inbound" + File.separator + "transport" + File.separator
                 + "MQTT_Test_Inbound_EP.xml")));
+        carbonLogReader.start();
         Utils.deploySynapseConfiguration(inboundOMElement, "MQTT_Test_Inbound_EP", "inbound-endpoints", true);
         super.init();
-        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check if Inbound MQTT Transport receives messages without issue")
@@ -73,7 +73,7 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         byte[] payload = messageToSend.getBytes();
         MQTTTestClient mqttPublisherClient = null;
         Assert.assertTrue(carbonLogReader.checkForLog("MQTT_Test_Inbound_EP connected to the broker",
-                20));
+                                                      20), "MQTT_Test_Inbound_EP could not connect to the broker");
         try {
             mqttPublisherClient = new MQTTTestClient(brokerURL, userName, password, publisherClientId);
             mqttPublisherClient.publishMessage(topic, payload, QualityOfService.LEAST_ONCE.getValue(), false);
