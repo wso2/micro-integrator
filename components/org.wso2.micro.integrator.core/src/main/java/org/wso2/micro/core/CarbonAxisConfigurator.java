@@ -35,23 +35,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
-import org.wso2.carbon.CarbonConstants;
-//import org.wso2.carbon.core.util.Axis2ConfigItemHolder;
-//import org.wso2.carbon.core.services.listners.Axis2ConfigServiceListener;
 import org.wso2.micro.application.deployer.Axis2DeployerProvider;
 import org.wso2.micro.core.services.listners.Axis2ConfigServiceListener;
 import org.wso2.micro.core.util.Axis2ConfigItemHolder;
 import org.wso2.micro.core.util.ServerException;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-//import org.wso2.carbon.utils.ServerException;
-import org.wso2.carbon.utils.component.xml.config.DeployerConfig;
-//import org.wso2.carbon.utils.deployment.Axis2DeployerProvider;
-//import org.wso2.carbon.utils.deployment.Axis2DeployerRegistry;
-//import org.wso2.carbon.utils.deployment.Axis2ModuleRegistry;
-//import org.wso2.carbon.utils.deployment.GhostDeployerUtils;
-//import org.wso2.carbon.utils.deployment.service.listeners.Axis2ConfigServiceListener;
 
-import javax.xml.namespace.QName;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -63,7 +52,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
+import javax.xml.namespace.QName;
 
 /**
  * WSO2 Carbon implementation of AxisConfigurator to load Axis2
@@ -113,14 +102,12 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
      * Load an AxisConfiguration from the repository directory specified
      *
      * @param repoLocation repoLocation
-     * @param weblocation  weblocation
      * @throws ServerException ServerException
      */
-    public void init(String repoLocation, String weblocation) throws ServerException {
+    public void init(String repoLocation) throws ServerException {
         if (repoLocation == null) {
             throw new ServerException("Axis2 repository not specified!");
         }
-        this.webLocation = weblocation;
 
         // Check whether this is a URL
         isUrlRepo = MicroIntegratorBaseUtils.isURL(repoLocation);
@@ -194,38 +181,17 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
 
         //reading deployers for virtual hosts
         ServiceTracker deployerServiceTracker = null;
-        Axis2DeployerProvider[] axis2DeployerProviderList = null;
+
         try {
             deployerServiceTracker = new ServiceTracker(bundleContext,
                     Axis2DeployerProvider.class.getName(), null);
             deployerServiceTracker.open();
-            if (deployerServiceTracker.getServices() == null) {
-                axis2DeployerProviderList = new Axis2DeployerProvider[]{};
-            } else {
-                axis2DeployerProviderList = Arrays.copyOf(deployerServiceTracker.getServices(),
-                        deployerServiceTracker.getServices().length, Axis2DeployerProvider[].class);
-            }
+
         } finally {
             if (deployerServiceTracker != null) {
                 deployerServiceTracker.close();
             }
         }
-        List<DeployerConfig> deployerConfigs = readDeployerConfigs(axis2DeployerProviderList);
-       /* if (GhostDeployerUtils.isGhostOn()) {
-            GhostArtifactRepository ghostArtifactRepository = new GhostArtifactRepository(axisConfig);
-            GhostDeployerUtils.setGhostArtifactRepository(ghostArtifactRepository, axisConfig);
-        }*/
-
-        // Adding deployers from vhosts and deployers which come inside bundles
-  //   TODO
-        /*  new Axis2DeployerRegistry(axisConfig).register(configItemHolder.getDeployerBundles(),
-                deployerConfigs);*/
-
-        //Deploying modules which come inside bundles.
-      // TODO  Axis2ModuleRegistry moduleRegistry = new Axis2ModuleRegistry(axisConfig);
-       /* if (configItemHolder.getModuleBundles() != null) {
-            moduleRegistry.register(configItemHolder.getModuleBundles());
-        }*/
 
         globallyEngagedModules = axisConfig.getEngagedModules();
         if (repoLocation != null && repoLocation.trim().length() != 0) {
@@ -245,18 +211,6 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
             loadFromClassPath();
         }
 
-        /*if (GhostDeployerUtils.isGhostOn()) {
-            // set the service class loader in the axisConfig, this is needed due to ghost deployer
-            // as the service deployer is no longer treated as a special case, we have to do this
-            File axis2ServicesDir = new File(repoLocation,
-                    MicroIntegratorBaseUtils.getAxis2ServicesDir(axisConfig));
-            if (axis2ServicesDir.exists()) {
-                axisConfig.setServiceClassLoader(
-                        Utils.getClassLoader(axisConfig.getSystemClassLoader(), axis2ServicesDir,
-                                axisConfig.isChildFirstClassLoading()));
-            }
-        }*/
-
         for (Object globallyEngagedModule : globallyEngagedModules) {
             AxisModule module = (AxisModule) globallyEngagedModule;
             if (log.isDebugEnabled()) {
@@ -270,13 +224,6 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
         return axisConfig;
     }
 
-    private List<DeployerConfig> readDeployerConfigs(Axis2DeployerProvider[] axis2DeployerProviders) {
-        List<DeployerConfig> allDeployerConfig = new ArrayList<DeployerConfig>();
-        for (Axis2DeployerProvider axis2DeployerProvider : axis2DeployerProviders) {
-            allDeployerConfig.addAll(axis2DeployerProvider.getDeployerConfigs());
-        }
-        return allDeployerConfig;
-    }
 
     public boolean isGlobalyEngaged(AxisModule axisModule) {
         String modName = axisModule.getName();
@@ -472,7 +419,7 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
 
     public void addAxis2ConfigServiceListener() throws Exception {
         bundleContext.addServiceListener(configServiceListener,
-                "(" + CarbonConstants.AXIS2_CONFIG_SERVICE + "=*)");
+                "(" + Constants.AXIS2_CONFIG_SERVICE + "=*)");
     }
 
     public void setAxis2ConfigItemHolder(Axis2ConfigItemHolder configItemHolder) {
@@ -537,18 +484,4 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
         return axis2xmlStream;
     }
 
-    public void deployServices() {
-        setWebLocationString(webLocation);
-        if (repoLocation != null && repoLocation.trim().length() != 0) {
-            if (isUrlRepo) {
-                try {
-                    loadServicesFromUrl(new URL(repoLocation));
-                } catch (MalformedURLException e) {
-                    log.error("Services repository URL " + repoLocation + " is invalid");
-                }
-            } else {
-                super.loadServices();
-            }
-        }
-    }
 }

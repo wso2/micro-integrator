@@ -30,56 +30,6 @@ import java.util.Iterator;
 
 public class ServiceHTMLProcessor {
 
-    /**
-     * Returns the HTML text for the list of services deployed.
-     * This can be delegated to another Class as well
-     * where it will handle more options of GET messages.
-     *
-     * @param configContext The ConfigurationContext
-     * @return The services list as an HTML string
-     */
-    public static String getServicesHTML(ConfigurationContext configContext) {
-        StringBuffer temp = new StringBuffer();
-        Iterator serviceGroupsItr = configContext.getAxisConfiguration().getServiceGroups();
-        boolean status = false;
-        if (serviceGroupsItr.hasNext()) {
-            status = true;
-            temp.append("<h2>" + "Deployed services" + "</h2>");
-            while (serviceGroupsItr.hasNext()) {
-                AxisServiceGroup axisServiceGroup = (AxisServiceGroup) serviceGroupsItr.next();
-                if (!SystemFilter.isFilteredOutService(axisServiceGroup)) {
-                    status = true;
-                    for (Iterator serviceItr = axisServiceGroup.getServices();
-                         serviceItr.hasNext();) {
-                        AxisService axisService = (AxisService) serviceItr.next();
-                        temp.append("<h3><a href=\"").append(axisService.getName()).append("?info\">").
-                                append(axisService.getName()).append("</a></h3>");
-                    }
-                }
-            }
-        }
-        Hashtable erroneousServices =
-                configContext.getAxisConfiguration().getFaultyServices();
-
-        if ((erroneousServices != null) && !erroneousServices.isEmpty()) {
-            temp.append("<hr><h2><font color=\"blue\">Faulty Services</font></h2>");
-            status = true;
-            Enumeration faultyservices = erroneousServices.keys();
-            while (faultyservices.hasMoreElements()) {
-                String faultyserviceName = (String) faultyservices.nextElement();
-                temp.append("<h3><font color=\"blue\">").append(faultyserviceName).
-                        append("</font></h3>");
-            }
-        }
-
-        if (!status) {
-            temp.append("<h2>There are no services deployed</h2>");
-        }
-
-        return "<html><head><title>Axis2: Services</title></head>" + "<body>" + temp
-               + "</body></html>";
-    }
-
     public static String printServiceHTML(String serviceName,
                                           ConfigurationContext configurationContext) {
         StringBuffer temp = new StringBuffer();

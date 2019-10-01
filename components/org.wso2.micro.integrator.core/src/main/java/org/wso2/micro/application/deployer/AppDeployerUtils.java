@@ -28,17 +28,15 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
-import org.wso2.micro.core.Constants;
-import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.config.RegistryConfig;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.internal.ApplicationManager;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
-import javax.xml.namespace.QName;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,6 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import javax.xml.namespace.QName;
 
 public final class AppDeployerUtils {
 	
@@ -523,7 +522,7 @@ public final class AppDeployerUtils {
                                                 String runtimeObjectName,
                                                 int tenantId) {
         if (fileName == null || artifactType == null || 
-        		tenantId == MultitenantConstants.INVALID_TENANT_ID) {
+        		tenantId == Constants.INVALID_TENANT_ID) {
             return;
         }
         ApplicationManager appManager = ApplicationManager.getInstance();

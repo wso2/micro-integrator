@@ -184,56 +184,7 @@ public final class CarbonContextDataHolder {
             authenticator.addAuthenticator(type, pattern, username, password);
         }
     }
-//
-//    /**
-//     * Method to be called when this tenant is unloaded. This will clear all the resources created
-//     * by this tenant on the carbon contexts.
-//     */
-//    public void unloadTenant() {
-//        // The security checks are done at the CarbonContextHolderBase level.
-//        int tenantId = getTenantId();
-//        unloadTenant(tenantId);
-//    }
-//
-//    /**
-//     * This method will always attempt to obtain an instance of the current CarbonContext from the
-//     * thread-local copy.
-//     *
-//     * @return the CarbonContext holder.
-//     */
-//    public static org.wso2.carbon.context.internal.CarbonContextDataHolder getThreadLocalCarbonContextHolder() {
-//        return currentContextHolder.get();
-//    }
-//
-//    /**
-//     * This method will set the current multi-tenant queue manager instance.
-//     *
-//     * @param queueManager the multi-tenant queue manager.
-//     * @throws org.wso2.carbon.queuing.QueuingException
-//     *          if the operation failed.
-//     */
-//    public void setQueueManager(MultitenantCarbonQueueManager queueManager)
-//            throws QueuingException {
-//        CarbonQueueManager manager = CarbonQueueManager.getInstance();
-//        if (manager instanceof InternalCarbonQueueManager) {
-//            ((InternalCarbonQueueManager) manager).setQueueManager(queueManager);
-//        }
-//        log.debug("Successfully set the Queue Manager");
-//    }
-//
-//    /**
-//     * This method will remove the current multi-tenant queue manager instance.
-//     *
-//     * @throws QueuingException if the operation failed.
-//     */
-//    public void removeQueueManager() throws QueuingException {
-//        CarbonQueueManager manager = CarbonQueueManager.getInstance();
-//        if (manager instanceof InternalCarbonQueueManager) {
-//            ((InternalCarbonQueueManager) manager).removeQueueManager();
-//        }
-//        log.debug("Successfully removed the Queue Manager");
-//    }
-//
+
     // Checks whether the given tenant is a sub-tenant or not.
     private static boolean isSubTenant(int tenantId) {
         return (tenantId != Constants.SUPER_TENANT_ID &&

@@ -25,7 +25,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
@@ -33,10 +32,10 @@ import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
 import org.wso2.micro.application.deployer.service.ApplicationManagerService;
-import org.wso2.carbon.context.CarbonContext;
-import org.wso2.carbon.utils.FileManipulator;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.core.util.FileManipulator;
 
-import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -48,6 +47,7 @@ import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Manages all cApp deployment aspects. Carbon App deployment is done in two steps. A cApp is
@@ -154,8 +154,8 @@ public final class ApplicationManager implements ApplicationManagerService {
             axisConfig) throws Exception {
         //if all handlers are not yet registered, we store the cApp to deploy later
         if (initialHandlers != handlerCount) {
-            CarbonContext cc = CarbonContext.getThreadLocalCarbonContext();
-            pendingCarbonApps.add(new PendingApplication(archPath, axisConfig, cc.getTenantDomain(), cc.getTenantId()));
+            pendingCarbonApps.add(new PendingApplication(archPath, axisConfig, Constants.SUPER_TENANT_DOMAIN_NAME,
+                                                         Constants.SUPER_TENANT_ID));
             return;
         }
 
@@ -233,15 +233,6 @@ public final class ApplicationManager implements ApplicationManagerService {
             if (appVersion != null && !("").equals(appVersion)) {
                 currentApp.setAppVersion(appVersion);
             }
-
-//        lock.lock();
-//        try {
-//            installArtifactFeatures(currentApp);
-//        } catch (Exception e) {
-//            handleException("Failed to installed features for cApp : " + appName, e);
-//        } finally {
-//            lock.unlock();
-//        }
 
             // deploy sub artifacts of this cApp
             this.searchArtifacts(currentApp.getExtractedPath(), currentApp);
@@ -597,117 +588,6 @@ public final class ApplicationManager implements ApplicationManagerService {
             }
         }
     }
-
-
-    /**
-     * Installs all artifact features in the given Application. Features are found in the p2-repo
-     * which is inside the Carbon application.
-     * 1. adding the repo
-     * 2. convert feature id list to iu's
-     * 3. review
-     * 4. install
-     *
-     * @param carbonApp - application instance to perform on
-     * @throws org.wso2.carbon.CarbonException - error on feature installation
-     */
-//    private void installArtifactFeatures(CarbonApplication carbonApp) throws Exception {
-//        List<ApplicationConfiguration.Feature> features = carbonApp.
-//                getAppConfig().getFeaturesForCurrentServer();
-//        if (features.size() == 0) {
-//            return;
-//        }
-//        // add the repository
-//        String repoPath = carbonApp.getExtractedPath() + CarbonApplication.P2_REPO;
-//        repoPath = AppDeployerUtils.formatPath(repoPath);
-//
-//        if (repoPath.startsWith("/")) {
-//            // on linux
-//            repoPath = "file://" + repoPath;
-//        } else {
-//            // on windows
-//            repoPath = "file:///" + repoPath;
-//        }
-//        URI repoUrl = new URI(repoPath);
-//        RepositoryUtils.addRepository(repoUrl, carbonApp.getAppName() +
-//                System.currentTimeMillis());
-//
-//        IInstallableUnit[] units = new IInstallableUnit[features.size()];
-//
-//        for (int i = 0 ; i < features.size() ; i++) {
-//            ApplicationConfiguration.Feature f = features.get(i);
-//            InstallableUnitQuery query = new InstallableUnitQuery(f.getId(),
-//                    Version.create(f.getVersion()));
-//
-//            Collector collector = RepositoryUtils.getInstallableUnitsInRepositories(repoUrl,
-//                    query, new Collector(), null);
-//            units[i] = getInstalledFeatureInfo(collector);
-//        }
-//        ProfileModificationAction profModificationAction =
-//                ProfileModificationActionFactory.getProfileModificationAction(
-//                        ProfileModificationActionFactory.INSTALL_ACTION);
-//        profModificationAction.setIusToInstall(units);
-//
-//        ResolutionResult rr = ProvisioningUtils
-//                .reviewProvisioningAction(profModificationAction);
-//        ProvisioningUtils.performProvisioningAction(rr, true);
-//
-//        RepositoryUtils.removeRepository(repoUrl);
-//    }
-
-    /**
-     * Uninstalls the given set of features from the system..
-     *
-     * @param features - features to uninstall
-     * @throws org.wso2.carbon.CarbonException - error on uninstalling features
-     */
-//    private void removeExistingFeatures(List<ApplicationConfiguration.Feature> features)
-//            throws Exception {
-//        List<IInstallableUnit> featuresToRemove = new ArrayList<IInstallableUnit>();
-//        for (ApplicationConfiguration.Feature f : features) {
-//            QueryContext queryContext = new QueryContext();
-//            queryContext.setQueryable(ProvisioningUtils.getProfile());
-//            queryContext.setQuery(new InstallableUnitQuery(f.getId(),
-//                    Version.create(f.getVersion())));
-//            InstalledIUQuery installedIUQuery = new InstalledIUQuery(queryContext);
-//            IInstallableUnit[] installableUnits = ProvisioningUtils.
-//                    performIUQuery(installedIUQuery);
-//            if(installableUnits != null && installableUnits.length > 0){
-//                featuresToRemove.add(installableUnits[0]);
-//            }
-//        }
-//
-//        // if there are no feautures already installed, return
-//        if (featuresToRemove.size() == 0) {
-//            return;
-//        }
-//
-//        IInstallableUnit[] unitsToRemove = new IInstallableUnit[featuresToRemove.size()];
-//        unitsToRemove = featuresToRemove.toArray(unitsToRemove);
-//        ProfileModificationAction profModificationAction =
-//                ProfileModificationActionFactory.getProfileModificationAction(
-//                        ProfileModificationActionFactory.UNINSTALL_ACTION);
-//        profModificationAction.setIusToUninstall(unitsToRemove);
-//        ResolutionResult rr = ProvisioningUtils
-//                .reviewProvisioningAction(profModificationAction);
-//        ProvisioningUtils.performProvisioningAction(rr, true);
-//    }
-
-//    private IInstallableUnit getInstalledFeatureInfo(Collector collector) {
-//        IInstallableUnit iu = null;
-//        try {
-//            IInstallableUnit[] installableUnits = (IInstallableUnit[])collector.
-//                    toArray(IInstallableUnit.class);
-//            if(installableUnits == null || installableUnits.length == 0){
-//                log.error("Error occured while quering feature information");
-//            }
-//            if (installableUnits != null) {
-//                iu = installableUnits[0];
-//            }
-//        } catch (Exception e) {
-//            log.error("Error occured while quering feature information", e);
-//        }
-//        return iu;
-//    }
 
     /**
      * Finds the number of app deployers at the carbon startup

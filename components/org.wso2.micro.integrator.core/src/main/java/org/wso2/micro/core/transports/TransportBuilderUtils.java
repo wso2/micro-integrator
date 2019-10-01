@@ -20,7 +20,6 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.deployment.DeploymentConstants;
@@ -33,18 +32,12 @@ import org.apache.axis2.description.TransportOutDescription;
 import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.transport.TransportListener;
 import org.apache.axis2.transport.TransportSender;
-import org.wso2.carbon.base.CarbonBaseUtils;
 import org.wso2.micro.core.transports.util.TransportParameter;
 
-import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.List;
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 
 /**
  * Utility methods to parse, build and serialize transport configurations
@@ -270,29 +263,4 @@ public class TransportBuilderUtils implements DeploymentConstants {
         return p;
     }
 
-    public static OMElement parseTransportConfiguration(String transport,
-                                                        URL url, boolean listener) throws Exception {
-
-        File configFile = new File(Paths.get(CarbonBaseUtils.getCarbonConfigDirPath(), transport + "-config").toString());
-
-        InputStream configStream;
-
-        if (configFile.exists()) {
-            configStream = new FileInputStream(configFile);
-        } else {
-            configStream = url.openStream();
-        }
-
-        if (configStream != null) {
-            StAXOMBuilder builder = new StAXOMBuilder(configStream);
-            OMElement doc = builder.getDocumentElement();
-            if (listener) {
-                return doc.getFirstChildWithName(new QName(TAG_TRANSPORT_RECEIVER));
-            } else {
-                return doc.getFirstChildWithName(new QName(TAG_TRANSPORT_SENDER));
-            }
-        }
-
-        return null;
-    }
 }

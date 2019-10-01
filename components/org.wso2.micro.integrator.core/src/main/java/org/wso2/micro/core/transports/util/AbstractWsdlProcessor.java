@@ -21,7 +21,7 @@ import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.http.HttpStatus;
 import org.apache.http.protocol.HTTP;
-import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
 import org.wso2.micro.core.transports.HttpGetRequestProcessor;
@@ -40,37 +40,9 @@ public abstract class AbstractWsdlProcessor implements HttpGetRequestProcessor {
                              WSDLPrinter wsdlPrinter) throws IOException {
         AxisConfiguration axisConfig = configurationContext.getAxisConfiguration();
         AxisService axisService = axisConfig.getServiceForActivation(serviceName);
-       /* if (GhostDeployerUtils.isGhostService(axisService) && axisConfig != null) {
-            String serviceGroupName = null;
-            if (axisService != null) {
-                if (axisService.getAxisServiceGroup() != null) {
-                    serviceGroupName = axisService.getAxisServiceGroup().getServiceGroupName();
-                } else {
-                    serviceGroupName = axisService.getName();
-                }
-            }
-            // if the existing service is a ghost service, deploy the actual one
-            axisService = GhostDeployerUtils.deployActualService(axisConfig, axisService);
-            // we have to call the metadata deployer to avoid any qos settings are not
-            // getting applied
-//            GhostDispatcherUtils.deployServiceMetaFile(serviceGroupName, axisConfig);
-
-        }
-*/
-//        String hideAdminServiceWSDLs =
-//                CarbonCoreDataHolder.getInstance().
-//                        getServerConfigurationService().getFirstProperty(CarbonConstants.AXIS2_CONFIG_PARAM +
-//                                                                         "." + CarbonConstants.HIDE_ADMIN_SERVICE_WSDLS);
 
         OutputStream outputStream = response.getOutputStream();
         if (axisService != null) {
-//            if (SystemFilter.isFilteredOutService(axisService) &&
-//                    "true".equals(hideAdminServiceWSDLs)) {
-//                response.setError(HttpStatus.SC_FORBIDDEN,
-//                        "Access to service metadata for service: " + serviceName +
-//                                " has been forbidden");
-//                return;
-//            }
 
             if(!RequestProcessorUtil.canExposeServiceMetadata(axisService)){
                 response.setError(HttpStatus.SC_FORBIDDEN,
@@ -105,7 +77,7 @@ public abstract class AbstractWsdlProcessor implements HttpGetRequestProcessor {
      * @return boolean if annotation is present
      */
     protected boolean checkForAnnotation(org.wso2.micro.core.transports.CarbonHttpRequest request) {
-        String parameter = request.getParameter(ServerConstants.HTTPConstants.ANNOTATION);
+        String parameter = request.getParameter(Constants.ANNOTATION);
         if (parameter != null && parameter.length() != 0) {
             if (parameter.equals("true")) {
                 return true;

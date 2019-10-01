@@ -25,18 +25,15 @@ import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.utils.FileManipulator;
-import org.wso2.carbon.utils.ServerConstants;
 
-import javax.management.MBeanServer;
-import javax.management.ObjectName;
-import javax.management.Query;
-import javax.management.QueryExp;
-import java.io.File;
 import java.lang.management.ManagementPermission;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import javax.management.MBeanServer;
+import javax.management.ObjectName;
+import javax.management.Query;
+import javax.management.QueryExp;
 
 /**
  * Class for handling Server management functionalilty.
@@ -149,30 +146,6 @@ public class ServerManagement {
 
         boolean isDeploymentSchedulerRunning;
         log.info("All deployment tasks have been completed.");
-    }
-
-    /**
-     * Cleaning up the CApp extract directory at
-     * CARBON_HOME/repository/carbonapps/work
-     */
-    private void cleanCAppWorkDir() {
-        String APP_UNZIP_DIR = System.getProperty(ServerConstants.CARBON_HOME) + File.separator + "repository" +
-                File.separator + "carbonapps" + File.separator + "work";
-        File AppExtractDir = new File(APP_UNZIP_DIR);
-        log.debug("Starting CApp Extract location cleanup...");
-
-        if(AppExtractDir == null){
-            return;
-        }
-        File[] children = AppExtractDir.listFiles();
-        if (children != null) {
-            for (int i = 0; i < children.length; i++) {
-                FileManipulator.deleteDir(children[i]);
-            }
-            if(!AppExtractDir.delete()){
-                log.warn("Could not delete file " + AppExtractDir.getAbsolutePath());
-            }
-        }
     }
 
     private boolean isDeploymentSchedulerRunning(ConfigurationContext configurationContext) {
