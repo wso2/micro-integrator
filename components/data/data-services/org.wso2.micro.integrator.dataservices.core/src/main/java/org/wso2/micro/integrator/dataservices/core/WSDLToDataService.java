@@ -62,7 +62,6 @@ import org.wso2.micro.integrator.dataservices.core.engine.StaticOutputElement;
 import org.wso2.micro.integrator.dataservices.core.validation.Validator;
 
 import javax.xml.namespace.QName;
-import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -78,6 +77,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import static org.wso2.micro.core.util.CarbonUtils.getSecuredTransformerFactory;
 
 /**
  * This class is used to create a data service using a given WSDL (create
@@ -301,10 +302,10 @@ public class WSDLToDataService {
 	 */
 	public static void printDOM(Document dom) {
 		try {
-			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			TransformerFactory transformerFactory = getSecuredTransformerFactory();
 			DOMSource domSource = new DOMSource(dom);
 			StreamResult streamResult = new StreamResult(System.out);
-			transformer.transform(domSource, streamResult);
+			transformerFactory.newTransformer().transform(domSource, streamResult);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
