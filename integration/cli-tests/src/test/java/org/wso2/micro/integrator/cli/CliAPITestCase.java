@@ -18,40 +18,52 @@
 
 package org.wso2.micro.integrator.cli;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import util.TestUtils;
 
-public class CliAPITestCase {
+public class CliAPITestCase extends AbstractCliTest {
 
     private static final String CLI_SAMPLE_API_1 = "cliSampleApi_1";
     private static final String CLI_SAMPLE_API_2 = "cliSampleApi_2";
+    private static final String HELLO_WORLD_API = "HelloWorld";
+
+    @BeforeClass
+    public void loginBeforeClass() throws IOException {
+        super.login();
+    }
 
     /**
-     * Get information about all the API's
+     * Get information about all the APIs
      */
     @Test
     public void miShowAllApiTest() throws Exception {
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.API, Constants.SHOW);
-        String artifactName_api_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
-        String artifactName_api_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
 
-        Assert.assertEquals(artifactName_api_1[0], CLI_SAMPLE_API_1);
-        Assert.assertEquals(artifactName_api_2[0], CLI_SAMPLE_API_2);
+        Assert.assertEquals(outputForCLICommand.size(), 4);
+        // 4:  Table Heading, cliSampleApi_1, cliSampleApi_2, HelloWorld (from the CAR file)
 
+        String outputString = TestUtils.getStringOutputOfList(outputForCLICommand);
+
+        Assert.assertTrue(outputString.contains(CLI_SAMPLE_API_1));
+        Assert.assertTrue(outputString.contains(CLI_SAMPLE_API_2));
+        Assert.assertTrue(outputString.contains(HELLO_WORLD_API));
     }
 
     /**
-     * Get information about single API's
+     * Get information about single APIs
      */
     @Test
     public void miShowApiTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.API, Constants.SHOW, CLI_SAMPLE_API_1);
-        Assert.assertEquals(outputForCLICommand.get(0), "Name - cliSampleApi_1");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.API,
+                Constants.SHOW, CLI_SAMPLE_API_1);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - " + CLI_SAMPLE_API_1);
     }
 
     /**
@@ -60,7 +72,13 @@ public class CliAPITestCase {
     @Test
     public void miShowApiNotFoundTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.API, Constants.SHOW, "TestAPI");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.API,
+                Constants.SHOW, "TestAPI");
         Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of the API 404 Not Found");
+    }
+
+    @AfterClass
+    public void logoutAfterClass() throws IOException {
+        super.logout();
     }
 }

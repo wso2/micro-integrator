@@ -18,16 +18,23 @@
 
 package org.wso2.micro.integrator.cli;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
 import util.TestUtils;
 
-public class CliCompositeappTestCase {
+public class CliCompositeappTestCase extends AbstractCliTest {
 
     private static final String CLI_TEST_HELLO_CAR = "hello-worldCompositeApplication";
     private static final String CLI_TEST_MEDIATOR_CAR = "MediatorCApp";
+
+    @BeforeClass
+    public void loginBeforeClass() throws IOException {
+        super.login();
+    }
 
     /**
      * Get information about all the carbon applications
@@ -35,13 +42,15 @@ public class CliCompositeappTestCase {
     @Test
     public void miShowCarbonappAllTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.COMPOSITAPP, Constants.SHOW);
-        String artifactName_capp_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
-        String artifactName_capp_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.COMPOSITEAPP, Constants.SHOW);
 
-        Assert.assertEquals(artifactName_capp_1[0], CLI_TEST_MEDIATOR_CAR);
-        Assert.assertEquals(artifactName_capp_2[0], CLI_TEST_HELLO_CAR);
+        Assert.assertEquals(outputForCLICommand.size(), 3);
+        // 3: 2 CApps, Table Heading
 
+        String outputString = TestUtils.getStringOutputOfList(outputForCLICommand);
+
+        Assert.assertTrue(outputString.contains(CLI_TEST_MEDIATOR_CAR));
+        Assert.assertTrue(outputString.contains(CLI_TEST_HELLO_CAR));
     }
 
     /**
@@ -50,8 +59,9 @@ public class CliCompositeappTestCase {
     @Test
     public void miShowCarbonappTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.COMPOSITAPP, Constants.SHOW, CLI_TEST_HELLO_CAR);
-        Assert.assertEquals(outputForCLICommand.get(0), "Name - hello-worldCompositeApplication");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.COMPOSITEAPP,
+                Constants.SHOW, CLI_TEST_HELLO_CAR);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - " + CLI_TEST_HELLO_CAR);
     }
 
     /**
@@ -60,7 +70,13 @@ public class CliCompositeappTestCase {
     @Test
     public void miShowCappNotFoundTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.COMPOSITAPP, Constants.SHOW, "TestCapp");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.COMPOSITEAPP,
+                Constants.SHOW, "UndefinedCapp");
         Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of the Carbon App 404 Not Found");
+    }
+
+    @AfterClass
+    public void logoutAfterClass() throws IOException {
+        super.logout();
     }
 }

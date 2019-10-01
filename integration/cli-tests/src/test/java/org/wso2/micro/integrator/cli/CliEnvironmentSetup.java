@@ -18,33 +18,34 @@
 
 package org.wso2.micro.integrator.cli;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.testng.annotations.BeforeSuite;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.testng.annotations.BeforeSuite;
 
 /**
  * Setup the environment to run the tests
  */
 
-public class CliEnvironmentSetup {
+public class CliEnvironmentSetup extends AbstractCliTest {
 
-    private static final Log log = LogFactory.getLog(CliEnvironmentSetup.class);
+    private static final Log LOG = LogFactory.getLog(CliEnvironmentSetup.class);
 
     @BeforeSuite
     public void setupEnv() throws IOException {
 
         Process process;
         String line;
-        String[] setup = {"sh", ".." + File.separator + "src" + File.separator + "test" + File.separator + "java" + File.separator + "EnvSetup.sh"};
+        String[] setup = {"sh", ".." + File.separator + "src" + File.separator + "test" +
+                File.separator + "java" + File.separator + "EnvSetup.sh"};
         process = Runtime.getRuntime().exec(setup);
 
         try (BufferedReader bufferedreader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
             while ((line = bufferedreader.readLine()) != null) {
-                log.info(line);
+                LOG.info(line);
             }
         }
     }

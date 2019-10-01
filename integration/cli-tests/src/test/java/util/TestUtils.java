@@ -52,7 +52,7 @@ public class TestUtils {
         return runCommandWithArgs(arguments);
     }
 
-    private static List<String> runCommandWithArgs(String[] arguments) throws IOException {
+    public static List<String> runCommandWithArgs(String[] arguments) throws IOException {
 
         Process process = runMiCommand(arguments);
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
@@ -63,6 +63,15 @@ public class TestUtils {
         }
 
         return lines;
+    }
+
+    public static String getStringOutputOfList(List<String> lines) {
+        String outputString = "";
+        for (String s : lines) {
+            outputString = outputString.concat(s + "\n");
+        }
+
+        return outputString;
     }
 
     /**

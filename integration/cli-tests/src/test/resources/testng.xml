@@ -34,8 +34,9 @@
             <class name="org.wso2.micro.integrator.cli.CliAPITestCase"></class>
             <class name="org.wso2.micro.integrator.cli.CliCompositeappTestCase"></class>
             <class name="org.wso2.micro.integrator.cli.CliSequenceTestCase"></class>
-            <class name="org.wso2.micro.integrator.cli.CliProxyserviceTestCase"></class>
+            <class name="org.wso2.micro.integrator.cli.CliProxyServiceTestCase"></class>
             <class name="org.wso2.micro.integrator.cli.CliRemoteTestCase"></class>
+            <class name="org.wso2.micro.integrator.cli.LoginLogoutTest"></class>
         </classes>
     </test>
 
