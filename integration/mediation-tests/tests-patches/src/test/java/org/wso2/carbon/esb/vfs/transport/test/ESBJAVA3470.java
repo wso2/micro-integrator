@@ -38,7 +38,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
+//import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
@@ -92,7 +92,8 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "VFS absolute path test for sftp")
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     public void test()
-            throws XMLStreamException, ProxyServiceAdminProxyAdminException, IOException, InterruptedException {
+//            throws XMLStreamException, ProxyServiceAdminProxyAdminException, IOException, InterruptedException {
+            throws XMLStreamException, IOException, InterruptedException {
 
         String baseDir;
         ClassLoader classLoader = getClass().getClassLoader();

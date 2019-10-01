@@ -18,19 +18,15 @@
 
 package org.wso2.carbon.esb.datamapper.common;
 
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
-import javax.activation.DataHandler;
-import javax.activation.FileDataSource;
 
 public class DataMapperIntegrationTest extends ESBIntegrationTest {
 
@@ -72,34 +68,4 @@ public class DataMapperIntegrationTest extends ESBIntegrationTest {
         }
         return out;
     }
-
-    protected void uploadResourcesToGovernanceRegistry(String registryRoot, String artifactRoot, String dmConfig,
-            String inSchema, String outSchema) throws Exception {
-        resourceAdminServiceClient.addCollection("/_system/governance/", registryRoot, "", "");
-
-        resourceAdminServiceClient.addResource("/_system/governance/" + registryRoot + dmConfig, "text/plain", "",
-                new DataHandler(
-                        new FileDataSource(new File(getClass().getResource(artifactRoot + dmConfig).getPath()))));
-
-        resourceAdminServiceClient.addResource("/_system/governance/" + registryRoot + inSchema, "", "",
-                new DataHandler(
-                        new FileDataSource(new File(getClass().getResource(artifactRoot + inSchema).getPath()))));
-
-        resourceAdminServiceClient.addResource("/_system/governance/" + registryRoot + outSchema, "", "",
-                new DataHandler(
-                        new FileDataSource(new File(getClass().getResource(artifactRoot + outSchema).getPath()))));
-    }
-
-    @AfterClass(alwaysRun = true)
-    public void close() throws Exception {
-        try {
-            resourceAdminServiceClient.deleteResource("/_system/governance/datamapper");
-        } finally {
-            super.cleanup();
-            Thread.sleep(3000);
-            resourceAdminServiceClient = null;
-        }
-    }
-
 }
-
