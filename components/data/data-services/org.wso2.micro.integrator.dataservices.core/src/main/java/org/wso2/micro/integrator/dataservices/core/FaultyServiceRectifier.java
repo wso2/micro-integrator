@@ -23,7 +23,6 @@ import org.apache.axis2.deployment.util.Utils;
 import org.apache.axis2.description.AxisService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 

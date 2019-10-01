@@ -31,7 +31,6 @@ import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.core.ServerStartupObserver;
-import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ntask.core.TaskStartupHandler;
 import org.wso2.micro.integrator.ntask.core.impl.QuartzCachedThreadPool;

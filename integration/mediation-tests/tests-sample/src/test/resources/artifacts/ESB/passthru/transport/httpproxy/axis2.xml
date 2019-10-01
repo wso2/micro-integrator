@@ -325,8 +325,6 @@
             supports optional|require or defaults to none -->
     </transportReceiver>
 
-    <transportReceiver name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportReceiver"/>
-
     <!-- Pass-through HTTP Transport Receivers -->
     <!--<transportReceiver name="passthru-http" class="org.wso2.carbon.transport.passthru.PassThroughHttpListener">
         <parameter name="port">8281</parameter>
@@ -518,10 +516,6 @@
         <!--<parameter name="HostnameVerifier">DefaultAndLocalhost</parameter>-->
             <!--supports Strict|AllowAll|DefaultAndLocalhost or the default if none specified -->
     <!--/transportSender -->
-
-    
-
-    <transportSender name="local" class="org.wso2.micro.core.transports.local.CarbonLocalTransportSender"/>
 
     <!--Uncomment this local transport to use local transport in mediation flow-->
     <!--<transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>-->
