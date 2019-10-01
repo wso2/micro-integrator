@@ -31,6 +31,7 @@ import org.apache.synapse.rest.dispatch.URITemplateHelper;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 /**
  * {@code InternalAPIDispatcher} takes care of dispatching messages received over the internal inbound endpoint into
@@ -54,14 +55,17 @@ public class InternalAPIDispatcher {
      */
     public boolean dispatch(MessageContext synCtx) {
         InternalAPI internalApi = findAPI(synCtx);
-        CORSHelper.handleCORSHeaders(internalApi.getCORSConfiguration(), synCtx, getSupportedMethodsForInternalApis(), true);
-        if (isOptions(synCtx)) {
-            return true;
-        }
 
         if (internalApi == null) {
             log.warn("No Internal API found to dispatch the message");
             return false;
+        }
+        // check null for internal apis' CORS configuration where CORS configurations are not set
+        if (!Objects.isNull(internalApi.getCORSConfiguration())) {
+            CORSHelper.handleCORSHeaders(internalApi.getCORSConfiguration(), synCtx, getSupportedMethodsForInternalApis(), true);
+        }
+        if (isOptions(synCtx)) {
+            return true;
         }
 
         List<InternalAPIHandler> handlerList = internalApi.getHandlers();
