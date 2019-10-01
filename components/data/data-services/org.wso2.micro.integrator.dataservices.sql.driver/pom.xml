@@ -88,6 +88,24 @@
             <groupId>org.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi.services</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.axis2.wso2</groupId>
+            <artifactId>axis2</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.igniterealtime</groupId>
+                    <artifactId>smack</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>commons-io.wso2</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -129,7 +147,12 @@
                             com.google.api.client.http;version="${google-http-client.orbit.imp.pkg.version}",
                             com.google.api.client.http.javanet;version="${google-http-client.orbit.imp.pkg.version}",
                             com.google.api.client.json.jackson2;version="${google-http-client.orbit.imp.pkg.version}",
-                            com.google.api.client.json;version="${google-http-client.orbit.imp.pkg.version}"
+                            com.google.api.client.json;version="${google-http-client.orbit.imp.pkg.version}",
+                            org.apache.axis2.*; version="${imp.pkg.version.axis2}",
+                            org.wso2.micro.integrator.core.*;version="${project.version}",
+                            org.apache.axiom.*; version="${axiom.osgi.version.range}",
+                            org.apache.commons.io;version="${commons-io.orbit.imp.pkg.version}",
+                            org.apache.synapse.*
                         </Import-Package>
                         <!--<DynamicImport-Package>*</DynamicImport-Package>-->
                     </instructions>

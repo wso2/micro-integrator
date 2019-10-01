@@ -18,51 +18,54 @@
 
 package org.wso2.micro.integrator.dataservices.sql.driver.internal;
 
-//import org.wso2.carbon.registry.core.service.RegistryService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.ComponentContext;
+import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 
-///**
-//* @scr.component name="org.wso2.carbon.dataservices.sql.driver" immediate="true"
-//* @scr.reference name="registry.service" interface="org.wso2.carbon.registry.core.service.RegistryService"
-//* cardinality="1..1" policy="dynamic"  bind="setRegistryService" unbind="unsetRegistryService"
-//*/
+/**
+* @scr.component name="org.wso2.carbon.dataservices.sql.driver" immediate="true"
+* @scr.reference name="configContext.service" interface="org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService"
+* cardinality="1..1" policy="dynamic"  bind="setAxis2ConfigurationContextService" unbind="unsetAxis2ConfigurationContextService"
+*/
 public class SQLDriverDSComponent {
 
-//    private static Log log = LogFactory.getLog(SQLDriverDSComponent.class);
-//
-//    private static RegistryService registryService = null;
-//
-//    public SQLDriverDSComponent() {
-//    }
-//
-//    protected void activate(ComponentContext ctxt) {
-//    try {
-//            BundleContext bundleContext = ctxt.getBundleContext();
-//            log.debug("SQL driver bundle is activated ");
-//        } catch (Throwable e) {
-//            log.error(e.getMessage(), e);
-//            /* don't throw exception */
-//        }
-//    }
-//
-//    protected void deactivate(ComponentContext ctxt) {
-//        log.debug("SQL driver bundle is deactivated ");
-//    }
-//
-//    protected void setRegistryService(RegistryService registryService) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("Setting the Registry Service");
-//        }
-//        SQLDriverDSComponent.registryService = registryService;
-//    }
-//
-//    protected void unsetRegistryService(RegistryService registryService) {
-//        if (log.isDebugEnabled()) {
-//            log.debug("Unsetting the Registry Service");
-//        }
-//        SQLDriverDSComponent.registryService = null;
-//    }
-//
-//    public static RegistryService getRegistryService() {
-//        return registryService;
-//    }
+    private static Log log = LogFactory.getLog(SQLDriverDSComponent.class);
+
+    private static Axis2ConfigurationContextService configurationContextService = null;
+
+    public SQLDriverDSComponent() {
+    }
+
+    protected void activate(ComponentContext ctxt) {
+    try {
+            BundleContext bundleContext = ctxt.getBundleContext();
+            log.debug("SQL driver bundle is activated ");
+        } catch (Throwable e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    protected void deactivate(ComponentContext ctxt) {
+        log.debug("SQL driver bundle is deactivated ");
+    }
+
+    protected void setAxis2ConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Setting the Axis2 Configuration Context Service");
+        }
+        SQLDriverDSComponent.configurationContextService = configurationContextService;
+    }
+
+    protected void unsetAxis2ConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
+        if (log.isDebugEnabled()) {
+            log.debug("Unsetting the Axis2 Configuration Context Service");
+        }
+        SQLDriverDSComponent.configurationContextService = null;
+    }
+
+    public static Axis2ConfigurationContextService getConfigurationContextService() {
+        return configurationContextService;
+    }
 }
