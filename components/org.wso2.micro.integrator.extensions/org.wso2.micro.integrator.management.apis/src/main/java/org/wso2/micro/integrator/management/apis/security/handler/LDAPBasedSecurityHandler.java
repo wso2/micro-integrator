@@ -21,9 +21,9 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.security.internal.DataHolder;
-import org.wso2.carbon.user.core.UserStoreException;
-import org.wso2.carbon.user.core.UserStoreManager;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 /**
  * This class extents SecurityHandlerAdapter to implement the authentication logic for a
@@ -45,8 +45,8 @@ public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String credentials) {
-        String decodedCredentials = new String(new Base64().decode(credentials.getBytes()));
+    protected Boolean authenticate(String authHeaderToken) {
+        String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         // Avoid possible array index out of bound errors
         if (usernamePasswordArray.length != 2) {
@@ -54,7 +54,13 @@ public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
         }
         String username = usernamePasswordArray[0];
         String password = usernamePasswordArray[1];
-        UserStoreManager userStoreManager = (UserStoreManager) DataHolder.getInstance().getUserStoreManager();
+        UserStoreManager userStoreManager;
+        try {
+            userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+        } catch (UserStoreException e) {
+            LOG.error("Error occurred while retrieving User Store Manager", e);
+            return false;
+        }
         try {
             return userStoreManager.authenticate(username, password);
         } catch (UserStoreException e) {

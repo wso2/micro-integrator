@@ -96,7 +96,7 @@ func printTemplateHelp() {
 
 func executeListTemplatesCmd() {
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixTemplates
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.TemplateList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.TemplateList{})
 
 	if err == nil {
 		// Printing the list of available Templates
@@ -109,7 +109,7 @@ func executeListTemplatesCmd() {
 
 func executeGetTemplateByTypeCmd(templateType string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixTemplates, "type", templateType)
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.TemplateListByType{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.TemplateListByType{})
 
 	if err == nil {
 		// Printing the details of the Templates by type
@@ -123,7 +123,7 @@ func executeGetTemplateByTypeCmd(templateType string) {
 func executeGetTemplateByNameCmd(templateType string, templateName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixTemplates, "type", templateType)
 	params = utils.PutQueryParamsToMap(params, "name", templateName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.TemplateListByName{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.TemplateListByName{})
 
 	if err == nil {
 		// Printing the details of the Template by name

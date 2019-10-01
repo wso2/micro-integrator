@@ -110,6 +110,22 @@
             <groupId>org.apache.synapse</groupId>
             <artifactId>synapse-commons</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
@@ -129,8 +145,16 @@
                             org.wso2.micro.integrator.inbound.endpoint.protocol.generic ; version="${project.version}",
                             org.wso2.micro.integrator.inbound.endpoint.protocol.hl7 ; version="${project.version}",
                             org.wso2.micro.integrator.inbound.endpoint.internal.http.api ; version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint ; version="${project.version}"
+                            org.wso2.micro.integrator.inbound.endpoint ; version="${project.version}",
+                            org.wso2.micro.integrator.inbound.endpoint.protocol.grpc ; version="${project.version}"
                         </Export-Package>
+                        <Private-Package>
+                            io.grpc.* ; version="${grpc.version}",
+                            io.grpc.netty.shaded.io.* ; version="${grpc.version}",
+                            io.opencensus.*,
+                            org.wso2.micro.integrator.inbound.endpoint.* ; version="${project.version}",
+                            com.google.* ; version="${google.guava.version}"
+                        </Private-Package>
                         <Import-Package>
                             org.wso2.micro.integrator.inbound.endpoint.persistence,
                             org.wso2.micro.integrator.inbound.endpoint.osgi.service;

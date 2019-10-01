@@ -81,7 +81,7 @@ func executeGetSequenceCmd(sequencename string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixSequences, "sequenceName", sequencename)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.Sequence{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.Sequence{})
 
 	if err == nil {
 		// Printing the details of the Sequence
@@ -119,7 +119,7 @@ func executeListSequencesCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixSequences
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.SequenceList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.SequenceList{})
 
 	if err == nil {
 		// Printing the list of available Sequences

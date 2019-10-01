@@ -268,7 +268,7 @@
                     <parameter name="-DportOffset" value="200"/>
                     <parameter name="-DenablePrometheusApi" value="true"/>
                     <parameter name="-DenableManagementApi" value="true"/>
-                    <parameter name="-DavoidConfigUpdate" value="true"/>
+
                     <parameter name="startupScript" value="micro-integrator"/>
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>

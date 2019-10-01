@@ -70,7 +70,7 @@ func handleDataServiceCmdArguments(args []string) {
 func executeDataServiceListCmd() {
 	finalURL := utils.GetRESTAPIBase() + utils.PrefixDataServices
 
-	resp, err := utils.UnmarshalData(finalURL, nil, &artifactUtils.DataServicesList{})
+	resp, err := utils.UnmarshalData(finalURL, nil, nil, &artifactUtils.DataServicesList{})
 
 	if err == nil {
 		// print the list of available data services
@@ -83,7 +83,7 @@ func executeDataServiceListCmd() {
 
 func executeGetDataServiceCmd(dataServiceName string) {
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixDataServices, "dataServiceName", dataServiceName)
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.DataServiceInfo{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.DataServiceInfo{})
 
 	if err == nil {
 		// printing the details of the Data Service

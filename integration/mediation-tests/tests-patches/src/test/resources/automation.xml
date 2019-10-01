@@ -286,7 +286,7 @@
                     <name>org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension</name>
                     <parameter name="-DportOffset" value="200"/>
                     <parameter name="-DenableManagementApi" value="true"/>
-                    <parameter name="-DavoidConfigUpdate" value="true"/>
+
                     <parameter name="startupScript" value="micro-integrator"/>
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>

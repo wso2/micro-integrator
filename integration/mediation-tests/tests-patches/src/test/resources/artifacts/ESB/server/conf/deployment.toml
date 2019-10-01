@@ -3,11 +3,11 @@ hostname = "localhost"
 
 [[server.get_request_processor]]    # hidden property
 item = "swagger.json"
-class = "org.wso2.appcloud.api.swagger.processors.json.SwaggerJsonProcessor"
+class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor"
 
 [[server.get_request_processor]]    # hidden property
 item = "swagger.yaml"
-class = "org.wso2.appcloud.api.swagger.processors.yaml.SwaggerYamlProcessor"
+class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor"
 
 [transport.passthru.http.listener]
 port=8280

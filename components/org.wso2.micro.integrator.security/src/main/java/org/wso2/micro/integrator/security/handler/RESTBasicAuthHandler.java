@@ -26,9 +26,9 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2Sender;
 import org.apache.synapse.rest.Handler;
-import org.wso2.micro.integrator.security.internal.DataHolder;
-import org.wso2.micro.integrator.security.user.core.UserStoreException;
-import org.wso2.micro.integrator.security.user.core.UserStoreManager ;
+import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
 import java.util.Map;
 
@@ -77,7 +77,7 @@ public class RESTBasicAuthHandler implements Handler {
                 }
             }
         }
-        return true;
+        return false;
     }
 
     @Override
@@ -104,7 +104,13 @@ public class RESTBasicAuthHandler implements Handler {
         String decodedCredentials = new String(new Base64().decode(credentials.getBytes()));
         String username = decodedCredentials.split(":")[0];
         String password = decodedCredentials.split(":")[1];
-        UserStoreManager userStoreManager = (UserStoreManager) DataHolder.getInstance().getUserStoreManager();
+        UserStoreManager userStoreManager;
+        try {
+            userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+        } catch (UserStoreException e) {
+            log.error("Error occurred while retrieving User Store Manager", e);
+            return false;
+        }
         try {
             return userStoreManager.authenticate(username, password);
         } catch (UserStoreException e) {

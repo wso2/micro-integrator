@@ -23,13 +23,15 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.ws.security.WSPasswordCallback;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.internal.DataHolder;
+import org.wso2.micro.integrator.security.internal.ServiceComponent;
 import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
+import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
 
+import java.io.IOException;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.UnsupportedCallbackException;
-import java.io.IOException;
 
 /**
  * This class handles the authentication of the username token via the defined user store.
@@ -38,26 +40,27 @@ import java.io.IOException;
 public abstract class AbstractPasswordCallback implements CallbackHandler {
 
     protected final Log log = LogFactory.getLog(AbstractPasswordCallback.class);
-    public abstract RealmConfiguration getRealmConfig();
     private UserStoreManager userStoreManager;
     private RealmConfiguration realmConfig;
-    private DataHolder dataHolder = DataHolder.getInstance();
 
     @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         try {
             boolean isAuthenticated = false;
             if (realmConfig == null) {
-                realmConfig = dataHolder.getRealmConfig();
-                if (realmConfig == null) {
-                    realmConfig = getRealmConfig();
+                try {
+                    realmConfig = MicroIntegratorSecurityUtils.getRealmConfiguration();
+                } catch (UserStoreException e) {
+                    log.error("Error occurred while retrieving Realm Configuration", e);
                 }
+
             }
             if (userStoreManager == null) {
-                userStoreManager = dataHolder.getUserStoreManager();
-                if (userStoreManager == null) {
-                    userStoreManager = (UserStoreManager) MicroIntegratorSecurityUtils.
-                            createObjectWithOptions(realmConfig.getUserStoreClass(), realmConfig);
+                // At this point dataHolder must contain user store manager
+                try {
+                    userStoreManager = MicroIntegratorSecurityUtils.getUserStoreManager();
+                } catch (UserStoreException e) {
+                    log.error("Error occurred while retrieving User Store Manager", e);
                 }
             }
             for (Callback callback : callbacks) {
@@ -173,4 +176,11 @@ public abstract class AbstractPasswordCallback implements CallbackHandler {
         }
     }
 
+    public RealmConfiguration getRealmConfig() {
+        return realmConfig;
+    }
+
+    public void setRealmConfig(RealmConfiguration realmConfig) {
+        this.realmConfig = realmConfig;
+    }
 }

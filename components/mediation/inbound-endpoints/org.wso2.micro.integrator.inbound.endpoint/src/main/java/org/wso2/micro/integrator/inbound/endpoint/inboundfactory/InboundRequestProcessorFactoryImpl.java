@@ -26,6 +26,7 @@ import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericEventB
 import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericEventBasedListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericInboundListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.generic.GenericProcessor;
+import org.wso2.micro.integrator.inbound.endpoint.protocol.grpc.InboundGRPCListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.hl7.core.InboundHL7Listener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.http.InboundHttpListener;
 import org.wso2.micro.integrator.inbound.endpoint.protocol.https.InboundHttpsListener;
@@ -41,7 +42,7 @@ import org.wso2.micro.integrator.inbound.endpoint.protocol.websocket.InboundWebs
  */
 public class InboundRequestProcessorFactoryImpl implements InboundRequestProcessorFactory {
 
-    public static enum Protocols {jms, file, http, https, hl7, kafka, mqtt, rabbitmq, ws, wss}
+    public static enum Protocols {jms, file, http, https, hl7, kafka, mqtt, rabbitmq, ws, wss, grpc}
 
     /**
      * return underlying Request Processor Implementation according to protocol
@@ -74,6 +75,8 @@ public class InboundRequestProcessorFactoryImpl implements InboundRequestProcess
                 inboundRequestProcessor = new MqttListener(params);
             } else if (Protocols.rabbitmq.toString().equals(protocol)) {
                 inboundRequestProcessor = new RabbitMQListener(params);
+            } else if (Protocols.grpc.toString().equals(protocol)) {
+                inboundRequestProcessor = new InboundGRPCListener(params);
             }
         } else if (params.getClassImpl() != null) {
             if (GenericInboundListener.isListeningInboundEndpoint(params)) {

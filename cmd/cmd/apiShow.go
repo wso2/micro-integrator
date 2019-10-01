@@ -81,7 +81,7 @@ func executeGetAPICmd(apiname string) {
 
 	finalUrl, params := utils.GetUrlAndParams(utils.PrefixAPIs, "apiName", apiname)
 
-	resp, err := utils.UnmarshalData(finalUrl, params, &artifactUtils.API{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, params, &artifactUtils.API{})
 
 	if err == nil {
 		// Printing the details of the API
@@ -130,7 +130,7 @@ func executeListAPIsCmd() {
 
 	finalUrl := utils.GetRESTAPIBase() + utils.PrefixAPIs
 
-	resp, err := utils.UnmarshalData(finalUrl, nil, &artifactUtils.APIList{})
+	resp, err := utils.UnmarshalData(finalUrl, nil, nil, &artifactUtils.APIList{})
 
 	if err == nil {
 		// Printing the list of available APIs

@@ -50,7 +50,6 @@ public class Sample265TestCase extends ESBSampleIntegrationTest {
 
         serverConfigurationManager = new ServerConfigurationManager(
                 new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN));
-        serverConfigurationManager.applyConfiguration(new File(pathToVfsDir + File.separator + "axis2.xml"));
         super.init();
 
         File outFolder = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator);

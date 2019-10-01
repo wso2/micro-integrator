@@ -113,7 +113,7 @@ func TestGetArtifactListOK(t *testing.T) {
 	}))
 	defer server.Close()
 
-	resp, err := UnmarshalData(server.URL, nil, &artifactUtils.APIList{})
+	resp, err := UnmarshalData(server.URL, nil, nil, &artifactUtils.APIList{})
 	list := resp.(*artifactUtils.APIList)
 
 	if list.Count != 2 {
@@ -149,7 +149,7 @@ func TestUnmarshalDataApiOK(t *testing.T) {
 
 	params := createParamMap("apiName", "HealthcareAPI")
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.API{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.API{})
 	api := resp.(*artifactUtils.API)
 
 	expected := artifactUtils.API{
@@ -192,7 +192,7 @@ func TestUnmarshalDataAppOK(t *testing.T) {
 
 	params := createParamMap("carbonAppName", "SampleServicesCompositeApplication")
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.CompositeApp{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.CompositeApp{})
 	capp := resp.(*artifactUtils.CompositeApp)
 
 	expected := artifactUtils.CompositeApp{
@@ -229,7 +229,7 @@ func TestUnmarshalDataEndpointOK(t *testing.T) {
 
 	params := createParamMap("endpointName", "ClemencyEP")
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Endpoint{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.Endpoint{})
 	endpoint := resp.(*artifactUtils.Endpoint)
 
 	expected := artifactUtils.Endpoint{
@@ -268,7 +268,7 @@ func TestUnmarshalDataInboundEndpointOK(t *testing.T) {
 
 	params := createParamMap("inboundEndpointName", "TestInbound")
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.InboundEndpoint{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.InboundEndpoint{})
 	inboundEndpoint := resp.(*artifactUtils.InboundEndpoint)
 
 	expected := artifactUtils.InboundEndpoint{
@@ -307,7 +307,7 @@ func TestUnmarshalDataProxyOK(t *testing.T) {
 
 	params := createParamMap("proxyServiceName", "TestProxy")
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Proxy{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.Proxy{})
 	proxy := resp.(*artifactUtils.Proxy)
 
 	expected := artifactUtils.Proxy{
@@ -343,7 +343,7 @@ func TestUnmarshalDataSequenceOK(t *testing.T) {
 
 	params := createParamMap("sequenceName", "InjectXMLSequence")
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Sequence{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.Sequence{})
 	sequence := resp.(*artifactUtils.Sequence)
 
 	expected := artifactUtils.Sequence{
@@ -378,7 +378,7 @@ func TestUnmarshalDataTaskOK(t *testing.T) {
 
 	params := createParamMap("taskName", "InjectXMLTask")
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.Task{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.Task{})
 	sequence := resp.(*artifactUtils.Task)
 
 	expected := artifactUtils.Task{
@@ -407,7 +407,7 @@ func TestUnmarshalDataNotFound(t *testing.T) {
 	params := make(map[string]string)
 	params["apiName"] = "ABC"
 
-	resp, err := UnmarshalData(server.URL, params, &artifactUtils.API{})
+	resp, err := UnmarshalData(server.URL, nil, params, &artifactUtils.API{})
 
 	if resp != nil {
 		t.Error("Response should be nil")
@@ -432,7 +432,7 @@ func TestUnmarshalDataBadRequest(t *testing.T) {
 	}))
 	defer server.Close()
 
-	resp, err := UnmarshalData(server.URL, nil, &Logger{})
+	resp, err := UnmarshalData(server.URL, nil, nil, &Logger{})
 
 	if resp == nil {
 		t.Error(`Response should be, "Error": "Invalid log level abc"`)

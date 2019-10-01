@@ -23,16 +23,26 @@ platform=$(uname -s)
 bitType=$(arch)
 BASEDIR=$(dirname "$0")
 
+echo "Platform : $platform"
+echo "BitType : $bitType"
 
-#Extract the compressed archive based on the platform and the bitype
-extractCompressArchive() {
-    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
-}
-
-#get the product version from the pom file
 getPomVersion(){
     VERSION=$(cat pom.xml | grep "^    <version>.*</version>$" | awk -F'[><]' '{print $3}');
     echo "Version : $VERSION"
+}
+
+buildCli(){
+    go mod vendor
+    sleep 10
+
+    #build Micro Integrator CLI
+    echo "Build Micro Integrator CLI"
+    cd ../
+
+    #get the version from the pom
+    getPomVersion
+    cd cmd
+    ./build.sh -t mi.go -v ${VERSION} -f
 }
 
 #Setting up the CLI environment
@@ -44,11 +54,12 @@ cd $BASEDIR
 DIR="../../../../../cmd/build"
 
 if [ -d "$DIR" ]; then
-    echo "CLI build exists. Hence skipping the environment setup phase"
-else
-    echo "CLI build does not exists. Setting up the environment..."
-    #download all the dependencies
+    echo "CLI build exists. Hence skipping the cli environment setup"
+    cd ../../../../../cmd/build
     pwd
+    ls
+    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
+else
     cd ../../../../../cmd
     go mod vendor
     sleep 10
@@ -62,16 +73,16 @@ else
     cd cmd
     ./build.sh -t mi.go -v ${VERSION} -f
 
-
-    #Extract the compressed archive generated
-    echo "Extract the CLI archive "
     cd build
-    extractCompressArchive
+    pwd
+    ls
+    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
 
     #start the application
     cd wso2mi-cli-$VERSION/bin
     echo "ClI setup Complete"
 fi
+
 }
 
 setup

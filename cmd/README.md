@@ -62,11 +62,13 @@ Command Line tool for managing the WSO2 Micro Integrator
             mi remote [command] [arguments]
                        
         Available Commands:
-            add [nick-name] [host] [port]        Add a Micro Integrator
-            remove [nick-name]                   Remove a Micro Integrator
-            update [nick-name] [host] [port]     Update a Micro Integrator
-            select [nick-name]                   Select a Micro Integrator on which commands are executed
-            show                                 Show available Micro Integrators
+            add [name] [host] [port]        Add a Micro Integrator
+            remove [name]                   Remove a Micro Integrator
+            update [name] [host] [port]     Update a Micro Integrator
+            select [name]                   Select a Micro Integrator instance on which commands are to be executed
+            show                            Show added Micro Integrator instances
+            login                           Login to the current Micro Integrator instance
+            logout                          Logout of the current Micro Integrator instance
 
         Examples:
             # To add a Micro Integrator
@@ -83,6 +85,12 @@ Command Line tool for managing the WSO2 Micro Integrator
             
             # To show available Micro Integrators
             mi remote show
+            
+            # login to the current (selected)  Micro Integrator instance
+            mi remote login     # will be prompted for username and password
+            
+            # login (with inline username and password)
+            mi remote login username password # or
 ```
    * #### log-level
 ```bash

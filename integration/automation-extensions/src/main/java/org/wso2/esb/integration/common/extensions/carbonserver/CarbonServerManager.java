@@ -68,6 +68,7 @@ public class CarbonServerManager {
     private static int defaultHttpsPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTPS_PORT);
     private String scriptName;
     private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
+    private int managementPort;
 
     public CarbonServerManager(AutomationContext context) {
         this.automationContext = context;
@@ -76,10 +77,10 @@ public class CarbonServerManager {
     public synchronized void startServerUsingCarbonHome(String carbonHome, Map<String, String> commandMap)
             throws AutomationFrameworkException {
         if (process != null) { // An instance of the server is running
+            log.warn("Tried to start a new server when there is one already running");
             return;
         }
         portOffset = getPortOffsetFromCommandMap(commandMap);
-        Process tempProcess;
 
         try {
             if (!commandMap.isEmpty() && getPortOffsetFromCommandMap(commandMap) == 0) {
@@ -112,7 +113,7 @@ public class CarbonServerManager {
                 }
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
-                tempProcess = Runtime.getRuntime().exec(cmdArray, null, commandDir);
+                process = Runtime.getRuntime().exec(cmdArray, null, commandDir);
 
             } else {
                 if (componentBinPath != null) {
@@ -125,12 +126,11 @@ public class CarbonServerManager {
                 }
 
                 cmdArray = mergePropertiesToCommandArray(parameters, cmdArray);
-                tempProcess = Runtime.getRuntime().exec(cmdArray, null, commandDir);
-                process = tempProcess;
+                process = Runtime.getRuntime().exec(cmdArray, null, commandDir);
             }
 
-            errorStreamHandler = new ServerLogReader("errorStream", tempProcess.getErrorStream());
-            inputStreamHandler = new ServerLogReader("inputStream", tempProcess.getInputStream());
+            errorStreamHandler = new ServerLogReader("errorStream", process.getErrorStream());
+            inputStreamHandler = new ServerLogReader("inputStream", process.getInputStream());
             // start the stream readers
             inputStreamHandler.start();
             errorStreamHandler.start();
@@ -144,9 +144,10 @@ public class CarbonServerManager {
                 }
             }));
 
-            waitTill(() -> !inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE), 60, TimeUnit.SECONDS);
+            managementPort = 9154 + portOffset;
+            waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, TimeUnit.SECONDS);
 
-            if (!inputStreamHandler.getOutput().contains(SERVER_STARTUP_MESSAGE)) {
+            if (!isRemotePortInUse("localhost", managementPort)) {
                 throw new RuntimeException("Server initialization failed");
             }
 
@@ -239,7 +240,7 @@ public class CarbonServerManager {
             try {
 
                 startProcess(carbonHome, getStartScriptCommand("stop"));
-                waitTill(() -> isRemotePortInUse("localhost", 8280 + portOffset), 60, TimeUnit.SECONDS);
+                waitTill(() -> isRemotePortInUse("localhost", managementPort), 180, TimeUnit.SECONDS);
 
                 log.info("Server stopped successfully ...");
 
@@ -282,7 +283,8 @@ public class CarbonServerManager {
     private void waitTill(BooleanSupplier predicate, int maxWaitTime, TimeUnit timeUnit) throws InterruptedException {
         long time = System.currentTimeMillis() + timeUnit.toMillis(maxWaitTime);
         while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
-            TimeUnit.MILLISECONDS.sleep(1);
+            log.info("waiting for server startup/shutdown");
+            TimeUnit.SECONDS.sleep(1);
         }
     }
 
