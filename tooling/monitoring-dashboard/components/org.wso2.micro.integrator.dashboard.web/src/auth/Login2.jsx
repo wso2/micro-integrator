@@ -20,11 +20,10 @@
 
 import React, {Component} from 'react';
 import AuthManager from './utils/AuthManager';
-import {Redirect} from 'react-router';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
-import {Snackbar} from 'material-ui';
+import {Snackbar, TextField} from 'material-ui';
 import {MuiThemeProvider} from 'material-ui/styles';
 import Header from '../common/Header';
 
@@ -39,6 +38,7 @@ import {
     MDBBtn
 } from "mdbreact";
 import defaultTheme from "../utils/Theme";
+import lightTheme from "../utils/LightTheme";
 
 /**
  * Login page.
@@ -64,8 +64,8 @@ export default class Login2 extends Component {
         this.state = {
             username: '',
             password: '',
-            host: '',
-            port: '',
+            host: 'localhost',
+            port: '9164',
             authenticated: false,
             rememberMe: false,
         };
@@ -124,23 +124,21 @@ export default class Login2 extends Component {
             <MDBContainer>
                 <MDBRow>
                     <MDBCol md="6" style={styles.LoginForm}>
-                        <MDBCard>
+                        <MDBCard style={{boxShadow:'0 3px 5px 0 rgba(0, 0, 0, 0), 0 2px 5px 0 rgba(3, 0, 0, 0)', border: 'solid', borderWidth: 'thin', borderColor: 'silver'}}>
                             <MDBCardBody>
                                 <MDBCardHeader className="form-header rgba-blue-grey-light rounded">
                                     <h3 className="my-3">
-                                        <MDBIcon icon="lock" /> LOGIN
+                                        SIGN IN
                                     </h3>
                                 </MDBCardHeader>
-                                <label
-                                    htmlFor="defaultFormEmailEx"
-                                    className="grey-text font-weight-light"
-                                >
-                                    Host
-                                </label>
-                                <input
-                                    type="email"
-                                    id="defaultFormEmailEx"
-                                    className="form-control"
+                                <MuiThemeProvider muiTheme={lightTheme}>
+                                <TextField
+                                    autoFocus
+                                    fullWidth
+                                    autoComplete="off"
+                                    margin="normal"
+                                    variant="outlined"
+                                    floatingLabelText={"Host"}
                                     value={host}
                                     onChange={(e) => {
                                         this.setState({
@@ -149,16 +147,14 @@ export default class Login2 extends Component {
                                     }}
                                 />
 
-                                <label
-                                    htmlFor="defaultFormEmailEx"
-                                    className="grey-text font-weight-light"
-                                >
-                                    Port
-                                </label>
-                                <input
+                                <TextField
                                     type="email"
-                                    id="defaultFormEmailEx"
-                                    className="form-control"
+                                    autoFocus
+                                    fullWidth
+                                    autoComplete="off"
+                                    margin="normal"
+                                    variant="outlined"
+                                    floatingLabelText={"Port"}
                                     value={port}
                                     onChange={(e) => {
                                         this.setState({
@@ -167,16 +163,14 @@ export default class Login2 extends Component {
                                     }}
                                 />
 
-                                <label
-                                    htmlFor="defaultFormEmailEx"
-                                    className="grey-text font-weight-light"
-                                >
-                                    User Name
-                                </label>
-                                <input
+                                <TextField
                                     type="email"
-                                    id="defaultFormEmailEx"
-                                    className="form-control"
+                                    autoFocus
+                                    fullWidth
+                                    autoComplete="off"
+                                    margin="normal"
+                                    variant="outlined"
+                                    floatingLabelText={"User"}
                                     value={username}
                                     onChange={(e) => {
                                         this.setState({
@@ -185,16 +179,15 @@ export default class Login2 extends Component {
                                     }}
                                 />
 
-                                <label
-                                    htmlFor="defaultFormPasswordEx"
-                                    className="grey-text font-weight-light"
-                                >
-                                    Password
-                                </label>
-                                <input
+                                <TextField
                                     type="password"
                                     id="defaultFormPasswordEx"
-                                    className="form-control"
+                                    autoFocus
+                                    fullWidth
+                                    autoComplete="off"
+                                    margin="normal"
+                                    variant="outlined"
+                                    floatingLabelText={"Password"}
                                     value={password}
                                     onChange={(e) => {
                                         this.setState({
@@ -203,6 +196,7 @@ export default class Login2 extends Component {
                                     }}
                                 />
 
+                                </MuiThemeProvider>
                                 <div className="text-center mt-4">
                                     <MDBBtn color="blue-grey"
                                             className="mb-3"
@@ -210,7 +204,7 @@ export default class Login2 extends Component {
                                             disabled={username === '' || password === '' || host === '' || port === ''}
                                             onClick={this.authenticate}
                                     >
-                                        Login
+                                        Sign In
                                     </MDBBtn>
                                 </div>
                             </MDBCardBody>

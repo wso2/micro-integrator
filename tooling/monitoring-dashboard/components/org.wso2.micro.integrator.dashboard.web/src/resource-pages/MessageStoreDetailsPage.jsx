@@ -116,19 +116,18 @@ export default class MessageStoreDetailsPage extends Component {
 
     renderBreadCrumbs() {
         return (
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Box color="inherit" component={Link} to="/message-store" fontSize={14}>
-                    Message Stores
-                </Box>
-                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
-            </Breadcrumbs>);
+            <div style={{display:"flex"}}>
+                <Box color="inherit" component={Link} to="/message-store">Message Stores</Box>
+                <Box color="textPrimary">&nbsp;>&nbsp;</Box>
+                <Box color="textPrimary">{this.state.response.name}</Box>
+            </div>
+        );
     }
 
     render() {
         console.log(this.state.config);
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
-                                    content={this.renderMessageStoreDetails()} breadcrumb={this.renderBreadCrumbs()}/>
+            <ResourceExplorerParent title={this.renderBreadCrumbs()} content={this.renderMessageStoreDetails()}/>
         );
     }
 }

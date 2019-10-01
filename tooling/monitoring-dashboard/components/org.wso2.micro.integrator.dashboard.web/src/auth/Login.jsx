@@ -115,7 +115,7 @@ export default class Login extends Component {
     renderDefaultLogin() {
         const {username, password, host, port} = this.state;
         return (
-            <MuiThemeProvider muiTheme={defaultTheme}>
+            <MuiThemeProvider muiTheme={}>
                 <div style={styles.contentDiv}>
                     <Header
                         title={<FormattedMessage id='portal.title' defaultMessage='Micro Integrator'/>}
@@ -130,6 +130,8 @@ export default class Login extends Component {
                             fullWidth
                             autoComplete="off"
                             floatingLabelText={<FormattedMessage id="login.host" defaultMessage="Host"/>}
+                            margin="normal"
+                            variant="outlined"
                             value={host}
                             onChange={(e) => {
                                 this.setState({

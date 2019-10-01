@@ -70,42 +70,6 @@ export default class HomePage extends Component {
                 <Grid item xs={12} style={styles.serverMetaDataItem}>
                     {this.createMetaDataTable(this.state.response)}
                 </Grid>
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Proxy Services</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Endpoints</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Inbound Endpoints</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Message Processors</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Message Stores</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>API</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Templates</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Sequences</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Tasks</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Local Entries</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Connectors</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Carbon Applications</Typography>*/}
-                {/*</Grid>*/}
             </Grid>
         );
     }

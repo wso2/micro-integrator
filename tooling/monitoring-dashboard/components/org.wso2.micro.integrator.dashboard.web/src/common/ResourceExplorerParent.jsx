@@ -45,13 +45,8 @@ export default class ResourceExplorerParent extends Component {
                     <Typography variant="h5" id="tableTitle">
                         {this.props.title}
                     </Typography>
-                    <Box id={"breadcrumbs"} fontWeight="fontWeightLight">
-                        {this.props.breadcrumb}
-                    </Box>
                 </div>
-
                 <Divider/>
-
                 <div id="content" style={styles.contentDiv}>
                     {this.props.content}
                 </div>

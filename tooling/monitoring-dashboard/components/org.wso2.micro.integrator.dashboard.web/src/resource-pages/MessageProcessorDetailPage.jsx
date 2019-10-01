@@ -115,19 +115,17 @@ export default class MessageProcessorDetailPage extends Component {
 
     renderBreadCrumbs() {
         return (
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Box color="inherit" component={Link} to="/message-processor" fontSize={14}>
-                    Message Processors
-                </Box>
-                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
-            </Breadcrumbs>);
+            <div style={{display:"flex"}}>
+                <Box color="inherit" component={Link} to="/message-processor">Message Processors</Box>
+                <Box color="textPrimary">&nbsp;>&nbsp;</Box>
+                <Box color="textPrimary"> {this.state.response.name}</Box>
+            </div>
+        );
     }
 
     render() {
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
-                                    content={this.renderMessageProcessorDetails()}
-                                    breadcrumb={this.renderBreadCrumbs()}/>
+            <ResourceExplorerParent title={this.renderBreadCrumbs()} content={this.renderMessageProcessorDetails()}/>
         );
     }
 }

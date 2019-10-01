@@ -68,6 +68,7 @@ export default class ProxyServiceListPage extends Component {
             {
                 name: "Service",
                 options: {
+                    sortDirection: 'asc',
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
                             <Link component="button" variant="body2" onClick={() => {
@@ -87,7 +88,7 @@ export default class ProxyServiceListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Proxy Services"}
+                title={"PROXY SERVICES"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

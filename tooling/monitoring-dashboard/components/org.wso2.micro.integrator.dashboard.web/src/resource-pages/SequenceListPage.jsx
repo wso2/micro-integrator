@@ -67,6 +67,7 @@ export default class SequenceListPage extends Component {
         const columns = [{
             name: "Sequence",
             options: {
+                sortDirection: 'asc',
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <Link component="button" variant="body2" onClick={() => {
@@ -86,7 +87,7 @@ export default class SequenceListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Sequences"}
+                title={"SEQUENCES"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

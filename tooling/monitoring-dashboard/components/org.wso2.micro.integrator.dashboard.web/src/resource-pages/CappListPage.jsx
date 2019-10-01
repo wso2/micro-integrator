@@ -62,7 +62,12 @@ export default class CappListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Application Name", "Version"];
+        const columns = [{
+            name:"Carbon Application",
+            options: {
+                sortDirection: 'asc'
+            }
+        }, "Version"];
         const options = {
             selectableRows: 'none',
             print: false,
@@ -71,7 +76,7 @@ export default class CappListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Carbon Applications"}
+                title={"CARBON APPLICATIONS"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

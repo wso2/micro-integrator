@@ -97,17 +97,17 @@ export default class ApiDetailsPage extends Component {
 
     renderBreadCrumbs() {
         return (
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Box color="inherit" component={Link} to="/api" fontSize={14}>
-                    API
-                </Box>
-                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
-            </Breadcrumbs>);
+            <div style={{display:"flex"}}>
+                <Box color="inherit" component={Link} to="/api">API</Box>
+                <Box color="textPrimary">&nbsp;>&nbsp;</Box>
+                <Box color="textPrimary"> {this.state.response.name}</Box>
+            </div>
+        );
     }
 
     render() {
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"} content={this.renderApiDetails()} breadcrumb={this.renderBreadCrumbs()}/>
+            <ResourceExplorerParent title={this.renderBreadCrumbs()} content={this.renderApiDetails()}/>
         );
     }
 }

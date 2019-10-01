@@ -57,7 +57,7 @@ export default function SideDrawer() {
                 <List>
                     <ListItem button component={Link} to="/proxy">
                         <ListItemIcon><NotesIcon style={{color:'#065e9b'}}/></ListItemIcon>
-                        <ListItemText primary="Proxy services"/>
+                        <ListItemText primary="Proxy Services"/>
                     </ListItem>
                     <ListItem button component={Link} to="/endpoint">
                         <ListItemIcon><SendIcon style={{color:'#065e9b'}}/></ListItemIcon>

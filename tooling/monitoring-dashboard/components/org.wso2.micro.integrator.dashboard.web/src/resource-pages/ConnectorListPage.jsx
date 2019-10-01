@@ -22,8 +22,8 @@ import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
 
 import MUIDataTable from "mui-datatables";
-import DisableIcon from '@material-ui/icons/Warning';
-import ActiveIcon from '@material-ui/icons/Done';
+import DisableIcon from '@material-ui/icons/Block';
+import ActiveIcon from '@material-ui/icons/CheckBox';
 
 export default class ConnectorListPage extends Component {
 
@@ -86,7 +86,7 @@ export default class ConnectorListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Connectors"}
+                title={"CONNECTORS"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

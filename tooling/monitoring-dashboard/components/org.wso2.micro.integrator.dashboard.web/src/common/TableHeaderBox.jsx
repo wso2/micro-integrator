@@ -28,7 +28,7 @@ const styles = {
     box: {
         width: '100%',
         color: '#ffffff',
-        backgroundColor: '#273c79'
+        backgroundColor: '#40739e'
     }
 };
 

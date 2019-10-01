@@ -59,6 +59,7 @@ export default class TaskListPage extends Component {
         const columns = [{
             name: "Task Name",
             options: {
+                sortDirection: 'asc',
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <Link component="button" variant="body2" onClick={() => {
@@ -78,7 +79,7 @@ export default class TaskListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Scheduled Tasks"}
+                title={"SCHEDULED TASKS"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

@@ -66,6 +66,7 @@ export default class ApiListPage extends Component {
             {
                 name: "API Name",
                 options: {
+                    sortDirection: 'asc',
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
                             <Link component="button" variant="body2" onClick={() => {
@@ -85,7 +86,7 @@ export default class ApiListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"APIs"}
+                title={"API"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

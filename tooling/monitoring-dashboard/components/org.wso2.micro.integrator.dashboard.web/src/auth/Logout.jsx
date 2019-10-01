@@ -25,7 +25,6 @@ export default class Logout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // redirectUrl : ""
             loggedOut: false
         }
     }

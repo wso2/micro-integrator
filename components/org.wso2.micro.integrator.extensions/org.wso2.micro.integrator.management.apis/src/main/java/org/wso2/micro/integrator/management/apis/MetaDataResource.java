@@ -70,6 +70,10 @@ public class MetaDataResource implements MiApiResource {
         CarbonServerConfigurationService serverConfigurationService = MicroIntegratorBaseUtils.getServerConfiguration();
         jsonObject.put("carbonHome", System.getProperty("carbon.home"));
         jsonObject.put("javaHome", System.getProperty("java.home"));
+        jsonObject.put("javaVersion", System.getProperty("java.version"));
+        jsonObject.put("javaVendor", System.getProperty("java.vendor"));
+        jsonObject.put("osName", System.getProperty("os.name"));
+        jsonObject.put("osVersion", System.getProperty("os.version"));
         jsonObject.put("productName", serverConfigurationService.getFirstProperty("Name"));
         jsonObject.put("productVersion", serverConfigurationService.getFirstProperty("Version"));
         jsonObject.put("workDirectory", serverConfigurationService.getFirstProperty("WorkDirectory"));

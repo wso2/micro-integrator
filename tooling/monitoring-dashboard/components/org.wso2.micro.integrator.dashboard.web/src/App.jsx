@@ -22,7 +22,6 @@ import { Route, Switch } from 'react-router';
 
 import Login from './auth/Login2';
 import Logout from './auth/Logout';
-// import Login2 from './auth/Login';
 import SecuredRouter from './auth/SecuredRouter';
 
 import '../public/css/dashboard.css';

@@ -68,6 +68,7 @@ export default class LocalEntryListPage extends Component {
             {
                 name: "Local Entry Name",
                 options: {
+                    sortDirection: 'asc',
                     customBodyRender: (value, tableMeta, updateValue) => {
                         return (
                             <Link component="button" variant="body2" onClick={() => {
@@ -87,7 +88,7 @@ export default class LocalEntryListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Local Registry Entries"}
+                title={"LOCAL ENTRIES"}
                 data={this.state.data}
                 columns={columns}
                 options={options}
