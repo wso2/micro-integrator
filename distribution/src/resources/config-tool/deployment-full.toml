@@ -161,6 +161,7 @@ max_message_size_bytes = 81920
 max_open_connections = -1           # inferred default: -1
 force_xml_validation = false
 force_json_validation = false
+reverse_proxy_mode = false
 
 listener.enable = true                       # inferred default true
 listener.port = 8280    #inferred  default: 8280

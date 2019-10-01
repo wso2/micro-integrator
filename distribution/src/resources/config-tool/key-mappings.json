@@ -77,6 +77,7 @@
   "transport.http.max_open_connections": "passthru_properties.'max_open_connections'",
   "transport.http.force_xml_validation": "passthru_properties.'force.xml.message.validation'",
   "transport.http.force_json_validation": "passthru_properties.'force.json.message.validation'",
+  "transport.http.reverse_proxy_mode": "passthru_properties.'force.json.message.reverseProxyMode'",
 
   "transport.http.listener.port": "transport.http.listener.parameter.port",
   "transport.http.listener.wsdl_epr_prefix":"transport.http.listener.parameter.WSDLEPRPrefix",

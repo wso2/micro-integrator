@@ -80,6 +80,7 @@
   "passthru_properties.'http.server.preserve'": true,
   "passthru_properties.'http.connection.disable.keepalive'": false,
   "passthru_properties.'valid.max.message.size.in.bytes'": "81920",
+  "passthru_properties.'force.json.message.reverseProxyMode'": false,
 
   "transport.http.preserve_http_headers": ["Content-Type"],
   "transport.http.listener.enable": true,
