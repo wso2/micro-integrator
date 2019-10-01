@@ -667,6 +667,9 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileExist(outfile));
 
         Assert.assertTrue(outfile.exists(), "out put file not found");
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS)
+                  .atMost(60, TimeUnit.SECONDS)
+                  .until(doesFileContain(outfile, "WSO2 Company"));
         String vfsOut = FileUtils.readFileToString(outfile);
         Assert.assertTrue(vfsOut.contains("WSO2 Company"), "Invalid Response message. >" + vfsOut);
         //input file should be moved to processed directory after processing the input file
@@ -1137,7 +1140,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
                 + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
-                + "                <parameter name=\"transport.PollInterval\">1.1</parameter>\n"
+                + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <target>\n" + "                        <endpoint>\n"
                 + "                                <address format=\"soap12\" uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n"
                 + "                        </endpoint>\n" + "                        <outSequence>\n"
@@ -1354,6 +1357,15 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
             @Override
             public Boolean call() throws Exception {
                 return !file.exists();
+            }
+        };
+    }
+
+    private Callable<Boolean> doesFileContain(final File file, String message) {
+        return new Callable<Boolean>() {
+            @Override
+            public Boolean call() throws Exception {
+                return FileUtils.readFileToString(file).contains(message);
             }
         };
     }
