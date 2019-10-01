@@ -26,13 +26,13 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
-import org.wso2.micro.application.deployer.config.Artifact;
-import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
+import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 
 import java.io.File;
 import java.util.List;
@@ -149,12 +149,6 @@ public class DefaultAppDeployer implements AppDeploymentHandler {
                 continue;
             }
 
-            /*if (!isAccepted(artifact.getType())) {
-                log.warn("Can't deploy artifact : " + artifact.getName() + " of type : " +
-                        artifact.getType() + ". Required features are not installed in the system");
-                continue;
-            }*/
-
             List<org.wso2.micro.application.deployer.config.CappFile> files = artifact.getFiles();
             if (files.size() != 1) {
                 log.error(artifact.getType() + " type must have a single file to " +
@@ -181,7 +175,7 @@ public class DefaultAppDeployer implements AppDeploymentHandler {
             } else if ((artifact.getType().startsWith("lib/") || BUNDLE_TYPE.
                     equals(artifact.getType()))
                        && org.wso2.micro.application.deployer.AppDeployerUtils.getTenantId() ==
-                          MultitenantConstants.SUPER_TENANT_ID) {
+                          Constants.SUPER_TENANT_ID) {
                 // First copy the file into dropoins
                 /**
                  * if the current artifact is a lib or bundle, we have to manually install it into the
@@ -245,7 +239,7 @@ public class DefaultAppDeployer implements AppDeploymentHandler {
             } else if (artifact.getType() != null && (artifact.getType().startsWith("lib/") ||
                                                       BUNDLE_TYPE.equals(artifact.getType()))
                        && AppDeployerUtils.getTenantId() ==
-                          MultitenantConstants.SUPER_TENANT_ID) {
+                          Constants.SUPER_TENANT_ID) {
                 /**
                  * Removing code that removes jar artifact from dropins. We call uninstallBundle from the extracted
                  * location instead.

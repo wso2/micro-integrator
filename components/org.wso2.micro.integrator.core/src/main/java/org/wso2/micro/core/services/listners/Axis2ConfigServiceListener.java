@@ -25,12 +25,6 @@ import org.osgi.framework.ServiceEvent;
 import org.osgi.framework.ServiceListener;
 import org.osgi.framework.ServiceReference;
 import org.wso2.micro.core.services.processors.ConfigurationServiceProcessor;
-//import org.wso2.carbon.CarbonConstants;
-//import org.wso2.carbon.utils.deployment.service.Axis2ConfigParameterProvider;
-//import org.wso2.carbon.utils.deployment.service.processors.Axis2ConfigParameterProcessor;
-//import org.wso2.carbon.utils.deployment.service.processors.AxisObserverProcessor;
-//import org.wso2.carbon.utils.deployment.service.processors.ConfigurationServiceProcessor;
-//import org.wso2.carbon.utils.deployment.service.processors.DeployerServiceProcessor;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -29,40 +29,24 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.axis2.transport.base.threads.ThreadCleanupContainer;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.commons.collections.BidiMap;
 import org.apache.commons.collections.bidimap.TreeBidiMap;
 import org.apache.commons.httpclient.MultiThreadedHttpConnectionManager;
 import org.apache.commons.httpclient.params.HttpConnectionManagerParams;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.eclipse.core.runtime.adaptor.EclipseStarter;
-import org.eclipse.equinox.http.helper.FilterServletAdaptor;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.InvalidSyntaxException;
-import org.osgi.framework.ServiceEvent;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.http.HttpContext;
-import org.osgi.service.http.HttpService;
-import org.osgi.service.http.NamespaceException;
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.base.CarbonBaseConstants;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.Feature;
-import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.CarbonConfigurationContextFactory;
 import org.wso2.micro.core.CarbonThreadCleanup;
-import org.wso2.micro.core.CarbonThreadFactory;
 import org.wso2.micro.core.ServerInitializer;
 import org.wso2.micro.core.ServerManagement;
 import org.wso2.micro.core.ServerStatus;
 import org.wso2.micro.core.init.PreAxis2ConfigItemListener;
-import org.wso2.micro.core.internal.HTTPGetProcessorListener;
-import org.wso2.micro.core.multitenancy.GenericArtifactUnloader;
-import org.wso2.micro.core.transports.CarbonServlet;
 import org.wso2.micro.core.util.Axis2ConfigItemHolder;
-import org.wso2.micro.core.util.HouseKeepingTask;
 import org.wso2.micro.core.util.NetworkUtils;
 import org.wso2.micro.core.util.ParameterUtil;
 import org.wso2.micro.core.util.ServerException;
@@ -76,20 +60,11 @@ import java.io.InputStream;
 import java.lang.management.ManagementPermission;
 import java.net.SocketException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Timer;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import javax.servlet.Filter;
 import javax.servlet.ServletException;
 
 import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
-
-//import org.wso2.carbon.context.PrivilegedCarbonContext;
-
-//import org.wso2.carbon.core.CarbonAxisConfigurator;
 
 public class CoreServerInitializer {
 
@@ -97,28 +72,20 @@ public class CoreServerInitializer {
 
     private static final String CLIENT_REPOSITORY_LOCATION = "Axis2Config.ClientRepositoryLocation";
     private static final String CLIENT_AXIS2_XML_LOCATION = "Axis2Config.clientAxis2XmlLocation";
-    private static final String SERVICE_PATH = "service-path";
-    private static final String BUNDLE_CONTEXT_ROOT = "bundleContext-root";
-    private static final String HOST_NAME = "host-name";
-    private static final ScheduledExecutorService artifactsCleanupExec = Executors
-            .newScheduledThreadPool(1, new CarbonThreadFactory(new ThreadGroup("ArtifactCleanupThread")));
+    private static final String AXIS2_CONFIG_REPO_LOCATION = "Axis2Config.RepositoryLocation";
 
     protected CarbonServerConfigurationService serverConfigurationService;
     private BundleContext bundleContext;
-    //  private static ApplicationManagerService applicationManager;
     private static Map<String, List<Feature>> requiredFeatures;
 
-    private boolean isEmbedEnv = false;
     private String serverWorkDir;
     private String axis2RepoLocation;
     private String serverName;
     private org.wso2.micro.core.init.PreAxis2ConfigItemListener configItemListener;
-    private Timer timer = new Timer();
-    private org.wso2.micro.core.multitenancy.GenericArtifactUnloader genericArtifactUnloader = new GenericArtifactUnloader();
+
     private Thread shutdownHook;
     private ConfigurationContext serverConfigContext;
-    private List<AppDeploymentHandler> appHandlers = new ArrayList<AppDeploymentHandler>();
-    private List<String> requiredServices = new ArrayList<String>();
+
     /**
      * Indicates whether the shutdown of the server was triggered by the Carbon shutdown hook
      */
@@ -144,9 +111,6 @@ public class CoreServerInitializer {
             log.debug(CoreServerInitializer.class.getName() + "#initMIServer() BEGIN - " + System.currentTimeMillis());
         }
         try {
-            // for new caching, every thread should has its own populated CC. During the deployment time we assume super tenant
-//            bundleContext.registerService(ServerStartupObserver.class.getName(), new DeploymentServerStartupObserver(),
-//                                     null);
 
             ApplicationManager applicationManager = ApplicationManager.getInstance();
             applicationManager.init(); // this will allow application manager to register deployment handlers
@@ -172,10 +136,6 @@ public class CoreServerInitializer {
 
     private void initializeCarbon() {
 
-        //        PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        //        privilegedCarbonContext.setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-        //        privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
-
         // Reset the SAAJ Interfaces
         System.getProperties().remove("javax.xml.soap.MessageFactory");
         System.getProperties().remove("javax.xml.soap.SOAPConnectionFactory");
@@ -186,22 +146,6 @@ public class CoreServerInitializer {
             }
 
             ThreadCleanupContainer.addThreadCleanup(new CarbonThreadCleanup());
-
-            // Location for expanding web content within AAR files
-            String webLocation = System.getProperty(CarbonConstants.WEB_RESOURCE_LOCATION);
-            if (webLocation == null) {
-                webLocation = System.getProperty("carbon.home") + File.separator + "repository" + File.separator
-                        + "deployment" + File.separator + "server" + File.separator + "webapps" + File.separator
-                        + "wservices";
-            }
-
-            String temp = System.getProperty(MicroIntegratorBaseConstants.STANDALONE_MODE);
-            if (temp != null) {
-                temp = temp.trim();
-                isEmbedEnv = temp.equals("true");
-            } else {
-                isEmbedEnv = false;
-            }
 
             //Checking Carbon home
             String carbonHome = System.getProperty(MicroIntegratorBaseConstants.CARBON_HOME);
@@ -219,9 +163,9 @@ public class CoreServerInitializer {
             /* we create the serverconfiguration in the carbon base. There we don't know the local.ip property.
             hence we are setting it manually here */
             //TODO: proper fix would be to move the networkUtil class to carbon.base level
-            String serverURL = serverConfigurationService.getFirstProperty(CarbonConstants.SERVER_URL);
+            String serverURL = serverConfigurationService.getFirstProperty(org.wso2.micro.core.Constants.SERVER_URL);
             serverURL = Utils.replaceSystemProperty(serverURL);
-            serverConfigurationService.overrideConfigurationProperty(CarbonConstants.SERVER_URL, serverURL);
+            serverConfigurationService.overrideConfigurationProperty(org.wso2.micro.core.Constants.SERVER_URL, serverURL);
             serverName = serverConfigurationService.getFirstProperty("Name");
 
             String hostName = serverConfigurationService.getFirstProperty("ClusteringHostName");
@@ -255,7 +199,7 @@ public class CoreServerInitializer {
             carbonAxisConfigurator.setBundleContext(bundleContext);
             carbonAxisConfigurator.setCarbonContextRoot(carbonContextRoot);
             if (!carbonAxisConfigurator.isInitialized()) {
-                carbonAxisConfigurator.init(axis2RepoLocation, webLocation);
+                carbonAxisConfigurator.init(axis2RepoLocation);
             }
 
             //This is the point where we initialize Axis2.
@@ -293,10 +237,6 @@ public class CoreServerInitializer {
             AxisConfiguration axisConfig = serverConfigContext.getAxisConfiguration();
             axisConfig.addParameter(enableHttp);
 
-/*            new TransportPersistenceManager(axisConfig).
-                    updateEnabledTransports(axisConfig.getTransportsIn().values(),
-                            axisConfig.getTransportsOut().values());*/
-
             runInitializers();
 
             serverConfigContext.setProperty(Constants.CONTAINER_MANAGED, "true");
@@ -304,8 +244,6 @@ public class CoreServerInitializer {
             // This is used inside the sever-admin component.
             serverConfigContext.setProperty(MicroIntegratorBaseConstants.CARBON_INSTANCE, this);
 
-            //TODO As a tempory solution this part is added here. But when ui bundle are seperated from the core bundles
-            //TODO this should be fixed.
             String type = serverConfigurationService.getFirstProperty("Security.TrustStore.Type");
             String password = serverConfigurationService.getFirstProperty("Security.TrustStore.Password");
             String storeFile = new File(serverConfigurationService.getFirstProperty("Security.TrustStore.Location")).getAbsolutePath();
@@ -315,7 +253,6 @@ public class CoreServerInitializer {
             System.setProperty("javax.net.ssl.trustStorePassword", password);
 
             addShutdownHook();
-            //            registerHouseKeepingTask(serverConfigContext);
 
             // Creating the Client side configuration context
             ConfigurationContext clientConfigContext = getClientConfigurationContext();
@@ -329,13 +266,6 @@ public class CoreServerInitializer {
             if (log.isDebugEnabled()) {
                 log.debug("Repository       : " + axis2RepoLocation);
             }
-
-            // schedule the services cleanup task
-           /* if (GhostDeployerUtils.isGhostOn()) {
-                artifactsCleanupExec.scheduleAtFixedRate(genericArtifactUnloader,
-                        CarbonConstants.SERVICE_CLEANUP_PERIOD_SECS,
-                        CarbonConstants.SERVICE_CLEANUP_PERIOD_SECS, TimeUnit.SECONDS);
-            }*/
 
             //Exposing metering.enabled system property. This is needed by the
             //tomcat.patch bundle to decide whether or not to publish bandwidth stat data
@@ -366,20 +296,12 @@ public class CoreServerInitializer {
         if (shutdownHook != null) {
             return;
         }
-        shutdownHook = new Thread() {
-            public void run() {
-                // During shutdown we assume it is triggered by super tenant
-                //                PrivilegedCarbonContext privilegedCarbonContext = PrivilegedCarbonContext
-                //                        .getThreadLocalCarbonContext();
-                //                privilegedCarbonContext
-                //                        .setTenantDomain(MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-                //                privilegedCarbonContext.setTenantId(MultitenantConstants.SUPER_TENANT_ID);
+        shutdownHook = new Thread(() -> {
 
-                log.debug("Shutdown hook triggered....");
-                isShutdownTriggeredByShutdownHook = true;
-                shutdownGracefully();
-            }
-        };
+            log.debug("Shutdown hook triggered....");
+            isShutdownTriggeredByShutdownHook = true;
+            shutdownGracefully();
+        });
         Runtime.getRuntime().addShutdownHook(shutdownHook);
     }
 
@@ -404,8 +326,7 @@ public class CoreServerInitializer {
                 String msg = "Cannot set server to shutdown mode";
                 log.error(msg, e);
             }
-            //            CarbonCoreServiceComponent.shutdown();
-            //            stopListenerManager();
+
             log.debug("Shutting down OSGi framework...");
             EclipseStarter.shutdown();
             log.info("Micro Integrator Shutdown complete");
@@ -478,25 +399,9 @@ public class CoreServerInitializer {
         httpConnectionManager.setParams(params);
         clientConfigContextToReturn
                 .setProperty(HTTPConstants.MULTITHREAD_HTTP_CONNECTION_MANAGER, httpConnectionManager);
-        //        registerHouseKeepingTask(clientConfigContextToReturn);
+
         clientConfigContextToReturn.setProperty(MicroIntegratorBaseConstants.WORK_DIR, serverWorkDir);
         return clientConfigContextToReturn;
-    }
-
-    private void registerHouseKeepingTask(ConfigurationContext configurationContext) {
-        if (Boolean.valueOf(serverConfigurationService.getFirstProperty("HouseKeeping.AutoStart"))) {
-            Timer houseKeepingTimer = new Timer();
-            long houseKeepingInterval = Long.parseLong(serverConfigurationService.
-                    getFirstProperty("HouseKeeping.Interval")) * 60 * 1000;
-            Object property = configurationContext.getProperty(MicroIntegratorBaseConstants.FILE_RESOURCE_MAP);
-            if (property == null) {
-                property = new TreeBidiMap();
-                configurationContext.setProperty(MicroIntegratorBaseConstants.FILE_RESOURCE_MAP, property);
-            }
-            houseKeepingTimer.
-                    scheduleAtFixedRate(new HouseKeepingTask(serverWorkDir, (BidiMap) property), houseKeepingInterval,
-                                        houseKeepingInterval);
-        }
     }
 
     private void runInitializers() throws ServerException {
@@ -527,55 +432,15 @@ public class CoreServerInitializer {
                     axis2RepoLocation = MicroIntegratorBaseUtils.getCarbonHome();
                 }
             }
-            serverConfigurationService.setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation);
+            serverConfigurationService.setConfigurationProperty(AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation);
         } else {
-            axis2RepoLocation = serverConfigurationService.getFirstProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION);
+            axis2RepoLocation = serverConfigurationService.getFirstProperty(AXIS2_CONFIG_REPO_LOCATION);
         }
 
         if (!axis2RepoLocation.endsWith("/")) {
             serverConfigurationService
-                    .setConfigurationProperty(CarbonBaseConstants.AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation + "/");
+                    .setConfigurationProperty(AXIS2_CONFIG_REPO_LOCATION, axis2RepoLocation + "/");
             axis2RepoLocation = axis2RepoLocation + "/";
-        }
-    }
-
-    private void registerCarbonServlet(HttpService httpService, HttpContext defaultHttpContext)
-            throws ServletException, NamespaceException, InvalidSyntaxException {
-        if (!"false".equals(serverConfigurationService.getFirstProperty("RequireCarbonServlet"))) {
-            org.wso2.micro.core.transports.CarbonServlet carbonServlet = new CarbonServlet(serverConfigContext);
-            String servicePath = "/services";
-            String path = serverConfigContext.getServicePath();
-            if (path != null) {
-                servicePath = path.trim();
-            }
-            if (!servicePath.startsWith("/")) {
-                servicePath = "/" + servicePath;
-            }
-            ServiceReference filterServiceReference = bundleContext.getServiceReference(Filter.class.getName());
-            if (filterServiceReference != null) {
-                Filter filter = (Filter) bundleContext.getService(filterServiceReference);
-                httpService.registerServlet(servicePath, new FilterServletAdaptor(filter, null, carbonServlet), null,
-                                            defaultHttpContext);
-            } else {
-                httpService.registerServlet(servicePath, carbonServlet, null, defaultHttpContext);
-            }
-            org.wso2.micro.core.internal.HTTPGetProcessorListener getProcessorListener = new HTTPGetProcessorListener(
-                    carbonServlet, bundleContext);
-            // Check whether there are any services that expose HTTPGetRequestProcessors
-            ServiceReference[] getRequestProcessors = bundleContext.getServiceReferences((String) null, "("
-                    + CarbonConstants.HTTP_GET_REQUEST_PROCESSOR_SERVICE + "=*)");
-
-            // If there are any we need to register them explicitly
-            if (getRequestProcessors != null) {
-                for (ServiceReference getRequestProcessor : getRequestProcessors) {
-                    getProcessorListener.addHTTPGetRequestProcessor(getRequestProcessor, ServiceEvent.REGISTERED);
-                }
-            }
-
-            // We also add a service listener to make sure we react to changes in the bundles that
-            // expose HTTPGetRequestProcessors
-            bundleContext.addServiceListener(getProcessorListener,
-                                             "(" + CarbonConstants.HTTP_GET_REQUEST_PROCESSOR_SERVICE + "=*)");
         }
     }
 

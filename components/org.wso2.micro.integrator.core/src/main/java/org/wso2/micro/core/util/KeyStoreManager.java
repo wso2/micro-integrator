@@ -19,18 +19,13 @@ package org.wso2.micro.core.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.core.RegistryResources;
-import org.wso2.carbon.core.util.KeyStoreUtil;
+import org.wso2.micro.core.Constants;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
-import org.wso2.carbon.registry.core.Resource;
-import org.wso2.carbon.registry.core.service.RegistryService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.Key;
 import java.security.KeyStore;
@@ -49,29 +44,13 @@ public class KeyStoreManager {
     private KeyStore primaryKeyStore = null;
     private KeyStore registryKeyStore = null;
     private KeyStore internalKeyStore = null;
-    private static ConcurrentHashMap<String, KeyStoreManager> mtKeyStoreManagers =
-            new ConcurrentHashMap<String, KeyStoreManager>();
+
+    private static ConcurrentHashMap<String, KeyStoreManager> mtKeyStoreManagers = new ConcurrentHashMap<>();
     private static Log log = LogFactory.getLog(KeyStoreManager.class);
 
-    private int tenantId = MultitenantConstants.SUPER_TENANT_ID;
+    private int tenantId;
 
     private CarbonServerConfigurationService serverConfigService;
-
-    private RegistryService registryService;
-
-    /**
-     * Private Constructor of the KeyStoreManager
-     *
-     * @param tenantId
-     * @param serverConfigService
-     * @param registryService
-     */
-    private KeyStoreManager(int tenantId, CarbonServerConfigurationService serverConfigService,
-                            RegistryService registryService) {
-        this.serverConfigService = serverConfigService;
-        this.registryService = registryService;
-        this.tenantId = tenantId;
-    }
 
     private KeyStoreManager(int tenantId, CarbonServerConfigurationService serverConfigService) {
         this.serverConfigService = serverConfigService;
@@ -80,10 +59,6 @@ public class KeyStoreManager {
 
     public CarbonServerConfigurationService getServerConfigService() {
         return serverConfigService;
-    }
-
-    public RegistryService getRegistryService() {
-        return registryService;
     }
 
     /**
@@ -96,18 +71,7 @@ public class KeyStoreManager {
      */
     public static KeyStoreManager getInstance(int tenantId) {
         return getInstance(tenantId, CarbonCoreDataHolder.getInstance().
-                getServerConfigurationService(), CryptoUtil.lookupRegistryService());
-    }
-
-    public static KeyStoreManager getInstance(int tenantId,
-                                              CarbonServerConfigurationService serverConfigService,
-                                              RegistryService registryService) {
-        MicroIntegratorBaseUtils.checkSecurity();
-        String tenantIdStr = Integer.toString(tenantId);
-        if (!mtKeyStoreManagers.containsKey(tenantIdStr)) {
-            mtKeyStoreManagers.put(tenantIdStr, new KeyStoreManager(tenantId, serverConfigService, registryService));
-        }
-        return mtKeyStoreManagers.get(tenantIdStr);
+                getServerConfigurationService());
     }
 
     public static KeyStoreManager getInstance(int tenantId, CarbonServerConfigurationService serverConfigService) {
@@ -148,22 +112,6 @@ public class KeyStoreManager {
     }
 
     /**
-     * Get the key store password of the given key store resource
-     *
-     * @param resource key store resource
-     * @return password of the key store
-     * @throws Exception Error when reading the registry resource of decrypting the password
-     */
-    public String getPassword(Resource resource) throws Exception {
-        CryptoUtil cryptoUtil = CryptoUtil.getDefaultCryptoUtil();
-        String encryptedPassword = resource
-                .getProperty(RegistryResources.SecurityManagement.PROP_PRIVATE_KEY_PASS);
-        return new String(cryptoUtil.base64DecodeAndDecrypt(encryptedPassword));
-
-    }
-
-
-    /**
      * Get the key store password for the given key store name.
      * Note:  Caching has been not implemented for this method
      *
@@ -178,36 +126,6 @@ public class KeyStoreManager {
     }
 
     /**
-     * Update the key store with the given name using the modified key store object provided.
-     *
-     * @param name     key store name
-     * @param keyStore modified key store object
-     * @throws Exception Registry exception or Security Exception
-     */
-    public void updateKeyStore(String name, KeyStore keyStore) throws Exception {
-        CarbonServerConfigurationService config = this.getServerConfigService();
-
-        if (KeyStoreUtil.isPrimaryStore(name)) {
-            String file = new File(
-                    config.getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_FILE))
-                    .getAbsolutePath();
-            FileOutputStream out = null;
-            try {
-                out = new FileOutputStream(file);
-                String password = config
-                        .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_PASSWORD);
-                keyStore.store(out, password.toCharArray());
-            } finally {
-                if (out != null) {
-                    out.close();
-                }
-            }
-            return;
-        }
-
-    }
-
-    /**
      * Load the primary key store, this is allowed only for the super tenant
      *
      * @return primary key store object
@@ -215,19 +133,19 @@ public class KeyStoreManager {
      *                   than tenant 0
      */
     public KeyStore getPrimaryKeyStore() throws Exception {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if (tenantId == Constants.SUPER_TENANT_ID) {
             if (primaryKeyStore == null) {
 
                 CarbonServerConfigurationService config = this.getServerConfigService();
                 String file =
                         new File(config
-                                .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_FILE))
+                                .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_FILE))
                                 .getAbsolutePath();
                 KeyStore store = KeyStore
                         .getInstance(config
-                                .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_TYPE));
+                                .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_TYPE));
                 String password = config
-                        .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_PASSWORD);
+                        .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_PASSWORD);
                 FileInputStream in = null;
                 try {
                     in = new FileInputStream(file);
@@ -255,20 +173,20 @@ public class KeyStoreManager {
      */
     public KeyStore getInternalKeyStore() throws Exception {
 
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if (tenantId == Constants.SUPER_TENANT_ID) {
             if (internalKeyStore == null) {
                 CarbonServerConfigurationService config = this.getServerConfigService();
                 if (config.
-                        getFirstProperty(RegistryResources.SecurityManagement.SERVER_INTERNAL_KEYSTORE_FILE) == null) {
+                        getFirstProperty(Constants.SERVER_INTERNAL_KEYSTORE_FILE) == null) {
                     return null;
                 }
                 String file = new File(config
-                        .getFirstProperty(RegistryResources.SecurityManagement.SERVER_INTERNAL_KEYSTORE_FILE))
+                        .getFirstProperty(Constants.SERVER_INTERNAL_KEYSTORE_FILE))
                         .getAbsolutePath();
                 KeyStore store = KeyStore.getInstance(config
-                        .getFirstProperty(RegistryResources.SecurityManagement.SERVER_INTERNAL_KEYSTORE_TYPE));
+                        .getFirstProperty(Constants.SERVER_INTERNAL_KEYSTORE_TYPE));
                 String password = config
-                        .getFirstProperty(RegistryResources.SecurityManagement.SERVER_INTERNAL_KEYSTORE_PASSWORD);
+                        .getFirstProperty(Constants.SERVER_INTERNAL_KEYSTORE_PASSWORD);
                 try (FileInputStream in = new FileInputStream(file)) {
                     store.load(in, password.toCharArray());
                     internalKeyStore = store;
@@ -292,19 +210,19 @@ public class KeyStoreManager {
      */
     @Deprecated
     public KeyStore getRegistryKeyStore() throws Exception {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if (tenantId == Constants.SUPER_TENANT_ID) {
             if (registryKeyStore == null) {
 
                 CarbonServerConfigurationService config = this.getServerConfigService();
                 String file =
                         new File(config
-                                .getFirstProperty(RegistryResources.SecurityManagement.SERVER_REGISTRY_KEYSTORE_FILE))
+                                .getFirstProperty(Constants.SERVER_REGISTRY_KEYSTORE_FILE))
                                 .getAbsolutePath();
                 KeyStore store = KeyStore
                         .getInstance(config
-                                .getFirstProperty(RegistryResources.SecurityManagement.SERVER_REGISTRY_KEYSTORE_TYPE));
+                                .getFirstProperty(Constants.SERVER_REGISTRY_KEYSTORE_TYPE));
                 String password = config
-                        .getFirstProperty(RegistryResources.SecurityManagement.SERVER_REGISTRY_KEYSTORE_PASSWORD);
+                        .getFirstProperty(Constants.SERVER_REGISTRY_KEYSTORE_PASSWORD);
                 FileInputStream in = null;
                 try {
                     in = new FileInputStream(file);
@@ -330,12 +248,12 @@ public class KeyStoreManager {
      * @throws Exception Carbon Exception for tenants other than tenant 0
      */
     public PrivateKey getDefaultPrivateKey() throws Exception {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if (tenantId == Constants.SUPER_TENANT_ID) {
             CarbonServerConfigurationService config = this.getServerConfigService();
             String password = config
-                    .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_PASSWORD);
+                    .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_PASSWORD);
             String alias = config
-                    .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
+                    .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
             return (PrivateKey) primaryKeyStore.getKey(alias, password.toCharArray());
         }
         throw new CarbonException("Permission denied for accessing primary key store. The primary key store is " +
@@ -349,10 +267,10 @@ public class KeyStoreManager {
      * @throws Exception Exception Carbon Exception for tenants other than tenant 0
      */
     public PublicKey getDefaultPublicKey() throws Exception {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if (tenantId == Constants.SUPER_TENANT_ID) {
             CarbonServerConfigurationService config = this.getServerConfigService();
             String alias = config
-                    .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
+                    .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
             return (PublicKey) primaryKeyStore.getCertificate(alias).getPublicKey();
         }
         throw new CarbonException("Permission denied for accessing primary key store. The primary key store is " +
@@ -366,10 +284,10 @@ public class KeyStoreManager {
      * @throws CarbonException Exception Carbon Exception for tenants other than tenant 0
      */
     public String getPrimaryPrivateKeyPasssword() throws CarbonException {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if (tenantId == Constants.SUPER_TENANT_ID) {
             CarbonServerConfigurationService config = this.getServerConfigService();
             return config
-                    .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_PASSWORD);
+                    .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_PASSWORD);
         }
         throw new CarbonException("Permission denied for accessing primary key store. The primary key store is " +
                 "available only for the super tenant.");
@@ -382,10 +300,10 @@ public class KeyStoreManager {
      * @throws Exception Permission denied for accessing primary key store
      */
     public X509Certificate getDefaultPrimaryCertificate() throws Exception {
-        if (tenantId == MultitenantConstants.SUPER_TENANT_ID) {
+        if (tenantId == Constants.SUPER_TENANT_ID) {
             CarbonServerConfigurationService config = this.getServerConfigService();
             String alias = config
-                    .getFirstProperty(RegistryResources.SecurityManagement.SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
+                    .getFirstProperty(Constants.SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
             return (X509Certificate) getPrimaryKeyStore().getCertificate(alias);
         }
         throw new CarbonException("Permission denied for accessing primary key store. The primary key store is " +

@@ -17,7 +17,7 @@
 */
 package org.wso2.micro.application.deployer;
 
-import org.wso2.carbon.base.MultitenantConstants;
+import org.wso2.micro.core.Constants;
 
 /**
  * All constants related to app deployer
@@ -87,6 +87,6 @@ public class AppDeployerConstants {
     public static final String DEPLOYMENT_STATUS_PENDING = "Pending";
     public static final String DEPLOYMENT_STATUS_FAILED = "Failed";
 
-    public static final String SUPER_TENANT_ID_STR = String.valueOf(MultitenantConstants.SUPER_TENANT_ID);
-    public static final int SUPER_TENANT_ID_INT = MultitenantConstants.SUPER_TENANT_ID;
+    public static final String SUPER_TENANT_ID_STR = String.valueOf(Constants.SUPER_TENANT_ID);
+    public static final int SUPER_TENANT_ID_INT = Constants.SUPER_TENANT_ID;
 }

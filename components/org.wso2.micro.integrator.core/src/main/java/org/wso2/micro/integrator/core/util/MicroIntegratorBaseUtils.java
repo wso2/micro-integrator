@@ -34,7 +34,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
@@ -116,10 +115,10 @@ public class MicroIntegratorBaseUtils {
         String carbonHome = getCarbonHome();
         String configPath = null;
         if (carbonHome != null) {
-            if (System.getProperty(ServerConstants.USER_MGT_XML_PATH) == null) {
+            if (System.getProperty(org.wso2.micro.core.Constants.USER_MGT_XML_PATH) == null) {
                 configPath = getCarbonConfigDirPath() + File.separator + "user-mgt.xml";
             } else {
-                configPath = System.getProperty(ServerConstants.USER_MGT_XML_PATH);
+                configPath = System.getProperty(org.wso2.micro.core.Constants.USER_MGT_XML_PATH);
             }
         }
         return configPath;
@@ -206,7 +205,7 @@ public class MicroIntegratorBaseUtils {
 
     public static String getComponentsRepo() {
 
-        String componentsRepo = System.getProperty(ServerConstants.COMPONENT_REP0);
+        String componentsRepo = System.getProperty(org.wso2.micro.core.Constants.COMPONENT_REP0);
         if (componentsRepo == null) {
             componentsRepo = System.getenv(MicroIntegratorBaseConstants.COMPONENT_REP0_ENV);
             if (componentsRepo == null) {
@@ -236,7 +235,7 @@ public class MicroIntegratorBaseUtils {
 
     public static String getAxis2Repo() {
 
-        String axis2Repo = System.getProperty(ServerConstants.AXIS2_REPO);
+        String axis2Repo = System.getProperty(org.wso2.micro.core.Constants.AXIS2_REPO);
         if (axis2Repo == null) {
             axis2Repo = System.getenv(MicroIntegratorBaseConstants.AXIS2_REPO_ENV);
         }

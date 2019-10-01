@@ -23,9 +23,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.BundleEvent;
 import org.osgi.framework.BundleListener;
-import org.wso2.carbon.CarbonConstants;
 
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,6 +31,7 @@ import java.util.Map;
  * This class keeps track of the required Modules and Deployer which should be deployed before initializing Axis2
  */
 public class PreAxis2ConfigItemListener implements BundleListener {
+
     private static Log log = LogFactory.getLog(PreAxis2ConfigItemListener.class);
 
     private Map<String, Bundle> moduleBundleMap = new HashMap<String, Bundle>();
@@ -94,27 +93,7 @@ public class PreAxis2ConfigItemListener implements BundleListener {
     }
 
     public synchronized void bundleChanged(BundleEvent event) {
-        //checking the event type
-        if(event.getType() != BundleEvent.STARTED) {
-            return;
-        }
-        //TODO: Need to handle the STOPPED event. Bundles should be removed from AxisConfiguration
-        //TODO: Need to handle bundle restarts
-
-        String value;
-        Dictionary headers = event.getBundle().getHeaders();
-
-        //Searching for a Deployer
-        value = (String) headers.get(CarbonConstants.CarbonManifestHeaders.AXIS2_DEPLOYER);
-        if (value != null) {
-//            carbonServerManager.removePendingItem(value);
-        }
-
-        //Searching for a Module
-        value = (String) headers.get(CarbonConstants.CarbonManifestHeaders.AXIS2_MODULE);
-        if (value != null) {
-//            carbonServerManager.removePendingItem(value);
-        }
+        // Do nothing
     }
 
     public Bundle[] getModuleBundles(){

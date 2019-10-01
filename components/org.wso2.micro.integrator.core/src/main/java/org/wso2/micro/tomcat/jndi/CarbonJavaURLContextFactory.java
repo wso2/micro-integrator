@@ -16,15 +16,14 @@
 
 package org.wso2.micro.tomcat.jndi;
 
+import org.apache.naming.ContextBindings;
+import org.apache.naming.NamingContext;
+import org.apache.naming.java.javaURLContextFactory;
+
 import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
-
-import org.apache.naming.ContextBindings;
-import org.apache.naming.NamingContext;
-import org.apache.naming.java.javaURLContextFactory;
-import org.wso2.carbon.tomcat.jndi.CarbonSelectorContext;
 
 public class CarbonJavaURLContextFactory extends javaURLContextFactory {
 
