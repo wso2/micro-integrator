@@ -75,7 +75,7 @@ func handleRemoteShowCmdArguments(args []string) {
 			fmt.Println("Product Name - " + remoteInfo.ProductName)
 			fmt.Println("Java Home - " + remoteInfo.JavaHome)
 		} else {
-			utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+			utils.Logln(utils.LogPrefixError+"Getting information about remote", err)
 		}
 	} else {
 		fmt.Println("Incorrect number of arguments. See the usage below")
