@@ -36,7 +36,8 @@ Usage:
 
 var remoteShowCmdExamples = dedent.Dedent(`
 Example:
-  ` + programName + ` ` + remoteCmdLiteral + ` ` + remoteShowCmdLiteral + `
+  ` + programName + ` ` + remoteCmdLiteral + ` ` + remoteShowCmdLiteral + ` # to see all remotes
+  ` + programName + ` ` + remoteCmdLiteral + ` ` + remoteShowCmdLiteral + ` [Remote Name] # to see info of a specific remote 
 `)
 
 var remoteShowCmdHelpString = remoteShowCmdLongDesc + remoteShowUsage + remoteShowCmdExamples
@@ -46,25 +47,47 @@ var remoteShowCmd = &cobra.Command{
 	Short: remoteShowCmdShortDesc,
 	Long:  remoteShowCmdLongDesc + remoteShowCmdExamples,
 	Run: func(cmd *cobra.Command, args []string) {
-		handleServerShowCmdArguments(args)
+		handleRemoteShowCmdArguments(args)
 	},
 }
 
-func handleServerShowCmdArguments(args []string) {
+func handleRemoteShowCmdArguments(args []string) {
 	utils.Logln(utils.LogPrefixInfo + remoteCmdLiteral + " " + remoteShowCmdLiteral + " called")
 	if len(args) == 0 {
-		executeServerShowCmd(args)
+		utils.Logln(remoteCmdLiteral + " " + showAPICmdLiteral + ":" + "")
+		executeRemoteShowCmd(args)
+	} else if len(args) == 1 {
+		remoteName := args[0]
+		remotes := &utils.RemoteConfigData.Remotes
+		if _, exists := (*remotes)[remoteName]; !exists {
+			utils.HandleErrorAndExit("No such remote: "+remoteName, nil)
+		}
+
+		// call '/server' resource
+		url := utils.GetRESTAPIBase() + utils.ServerResource
+		resp, err := utils.UnmarshalData(url, nil, nil, &utils.RemoteInfo{})
+		if err == nil {
+			remoteInfo := resp.(*utils.RemoteInfo)
+			fmt.Println("Product Version - " + remoteInfo.ProductVersion)
+			fmt.Println("Repository Location - " + remoteInfo.RepositoryLocation)
+			fmt.Println("Work Directory - " + remoteInfo.WorkDirectory)
+			fmt.Println("Carbon Home - " + remoteInfo.CarbonHome)
+			fmt.Println("Product Name - " + remoteInfo.ProductName)
+			fmt.Println("Java Home - " + remoteInfo.JavaHome)
+		} else {
+			utils.Logln(utils.LogPrefixError+"Getting List of APIs", err)
+		}
 	} else {
 		fmt.Println("Incorrect number of arguments. See the usage below")
-		printServerShowHelp()
+		printRemoteShowHelp()
 	}
 }
 
-func executeServerShowCmd(args []string) {
-	if utils.IsFileExist(utils.GetServerConfigFilePath()) {
-		fmt.Print(utils.GetFileContent(utils.GetServerConfigFilePath()))
+func executeRemoteShowCmd(args []string) {
+	if utils.IsFileExist(utils.GetRemoteConfigFilePath()) {
+		fmt.Print(utils.GetFileContent(utils.GetRemoteConfigFilePath()))
 	} else {
-		message := `remote_config.yaml file does not exist. Please run "` +
+		message := utils.RemoteConfigFileName + ` file does not exist. Please run "` +
 			programName + ` ` + remoteCmdLiteral + ` ` + remoteAddCmdLiteral +
 			`" to add MI configs.`
 		fmt.Println(message)
@@ -72,7 +95,7 @@ func executeServerShowCmd(args []string) {
 
 }
 
-func printServerShowHelp() {
+func printRemoteShowHelp() {
 	fmt.Print(remoteShowCmdHelpString)
 }
 

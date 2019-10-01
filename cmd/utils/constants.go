@@ -34,7 +34,7 @@ var ConfigDirPath = filepath.Join(HomeDirectory, ConfigDirName)
 
 var PathSeparator_ = string(os.PathSeparator)
 
-const ServerConfigFileName = "server_config.yaml"
+const RemoteConfigFileName = "mi_cli_remote_config.yaml"
 const SampleMainConfigFileName = "main_config.yaml.sample"
 
 const DefaultEnvironmentName = "default"
@@ -97,6 +97,7 @@ const ShowCommand = "show"
 const HelpCommand = "help"
 const LoginResource = "login"
 const LogoutResource = "logout"
+const ServerResource = "server"
 
 const Name = "NAME"
 const Type = "TYPE"

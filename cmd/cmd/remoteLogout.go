@@ -51,13 +51,13 @@ func executeLogoutCmd() {
 	url := utils.GetRESTAPIBase() + utils.LogoutResource
 	headers := make(map[string]string)
 	headers[utils.HeaderAuthorization] = utils.HeaderValueAuthPrefixBearer + " " +
-		utils.RemoteConfigData.Remotes[utils.RemoteConfigData.CurrentServer].AccessToken
+		utils.RemoteConfigData.Remotes[utils.RemoteConfigData.CurrentRemote].AccessToken
 	resp, err := utils.InvokeGETRequest(url, headers, nil)
 	if err != nil {
 		utils.HandleErrorAndExit("Error logging out of the current remote", err)
 	} else {
 		if resp.StatusCode() == http.StatusOK {
-			fmt.Println("Successfully logged out of the current remote: " + utils.RemoteConfigData.CurrentServer)
+			fmt.Println("Successfully logged out of the current remote: " + utils.RemoteConfigData.CurrentRemote)
 		} else {
 			utils.HandleErrorAndExit("Error logging out of the current remote: "+resp.Status(), nil)
 		}

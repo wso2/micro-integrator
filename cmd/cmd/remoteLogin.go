@@ -87,8 +87,8 @@ func executeLoginCmd(args []string) {
 				utils.HandleErrorAndExit("Error updating credentials", err)
 			} else {
 				utils.Logln(utils.LogPrefixInfo + "Persisting auth credentials for current remote")
-				fmt.Println("Login successful for remote: " + utils.RemoteConfigData.CurrentServer + "!")
-				utils.RemoteConfigData.Persist(utils.GetServerConfigFilePath())
+				fmt.Println("Login successful for remote: " + utils.RemoteConfigData.CurrentRemote + "!")
+				utils.RemoteConfigData.Persist(utils.GetRemoteConfigFilePath())
 			}
 		}
 	} else {

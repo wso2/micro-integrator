@@ -137,7 +137,7 @@ func UnmarshalData(url string, headers map[string]string, params map[string]stri
 
 	if headers[HeaderAuthorization] == "" {
 		headers[HeaderAuthorization] = HeaderValueAuthPrefixBearer + " " +
-			RemoteConfigData.Remotes[RemoteConfigData.CurrentServer].AccessToken
+			RemoteConfigData.Remotes[RemoteConfigData.CurrentRemote].AccessToken
 	}
 
 	resp, err := InvokeGETRequest(url, headers, params)
@@ -230,7 +230,7 @@ func GetCmdUsageForNonArguments(program, cmd, subcmd string) string {
 
 func InitRemoteConfigData() {
 
-	filePath := GetServerConfigFilePath()
+	filePath := GetRemoteConfigFilePath()
 	if IsFileExist(filePath) {
 		RemoteConfigData.Load(filePath)
 	} else {
@@ -246,9 +246,9 @@ func InitRemoteConfigData() {
 func GetRESTAPIBase() string {
 
 	var restAPIBase string
-	if RemoteConfigData.CurrentServer != "" {
-		restAPIBase = HTTPSProtocol + RemoteConfigData.Remotes[RemoteConfigData.CurrentServer].Url + ":" +
-			RemoteConfigData.Remotes[RemoteConfigData.CurrentServer].Port + "/" + Context + "/"
+	if RemoteConfigData.CurrentRemote != "" {
+		restAPIBase = HTTPSProtocol + RemoteConfigData.Remotes[RemoteConfigData.CurrentRemote].Url + ":" +
+			RemoteConfigData.Remotes[RemoteConfigData.CurrentRemote].Port + "/" + Context + "/"
 	} else {
 		// this cannot happen usually
 		errMessage := `micro integrator is not specified. Please run "` + ProjectName + ` remote" command`
