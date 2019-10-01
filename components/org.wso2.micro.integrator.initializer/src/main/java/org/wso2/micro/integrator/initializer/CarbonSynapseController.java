@@ -42,7 +42,7 @@ import org.apache.synapse.config.SynapsePropertiesLoader;
 import org.apache.synapse.core.axis2.ProxyService;
 import org.apache.synapse.deployers.ClassMediatorDeployer;
 import org.apache.synapse.deployers.ExtensionDeployer;
-import org.wso2.carbon.base.ServerConfiguration;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 
 import java.io.File;
 import java.io.IOException;
@@ -203,7 +203,7 @@ public class CarbonSynapseController extends Axis2SynapseController {
             return value;
         }
 
-        ServerConfiguration serverConf = ServerConfiguration.getInstance();
+        CarbonServerConfigurationService serverConf = CarbonServerConfigurationService.getInstance();
         return serverConf.getFirstProperty(name);
     }
     
