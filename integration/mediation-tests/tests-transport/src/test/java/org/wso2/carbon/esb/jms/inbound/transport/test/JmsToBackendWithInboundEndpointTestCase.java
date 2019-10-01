@@ -41,7 +41,7 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
     public void initialize() throws Exception {
         super.init();
 
-        verifySequenceExistence("jmsQueueToHttpWithInboundEPSendInSequence");
+//        verifySequenceExistence("jmsQueueToHttpWithInboundEPSendInSequence");
 
         //Add inbound endpoint configuration
         OMElement inboundEpConfig = esbUtils.loadResource(

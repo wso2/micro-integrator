@@ -37,7 +37,6 @@ import org.wso2.esb.integration.common.utils.Utils;
  */
 public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
-    InboundAdminClient inboundAdminClient1, inboundAdminClient2;
     private final String TENANT1_QUEUE = "tenant1Queue";
     private final String TENANT2_QUEUE = "tenant2Queue";
     private final String TENANT1_SYMBOL = "tenant1Symbol";
@@ -52,12 +51,10 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
 
         OMElement synapse;
         super.init(TENANT1, "user1");
-        inboundAdminClient1 = new InboundAdminClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
         synapse = esbUtils.loadResource("/artifacts/ESB/jms/inbound/transport/jms_http_tenant_transport.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), sessionCookie);
         super.init(TENANT2, "user1");
-        inboundAdminClient2 = new InboundAdminClient(context.getContextUrls().getBackEndUrl(), sessionCookie);
         synapse = esbUtils.loadResource("/artifacts/ESB/jms/inbound/transport/jms_http_tenant_transport.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
 
@@ -81,8 +78,6 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
             sender.disconnect();
         }
         logViewerClient.clearLogs();
-        inboundAdminClient1.addInboundEndpoint(createJMSInboundEndpoint(TENANT1_INBOUND_EP, TENANT1_QUEUE).toString());
-        inboundAdminClient2.addInboundEndpoint(createJMSInboundEndpoint(TENANT2_INBOUND_EP, TENANT2_QUEUE).toString());
         Assert.assertTrue(Utils.checkForLog(logViewerClient, TENANT1_SYMBOL, 10),
                 "Message is not received by tenant: " + TENANT1);
         Assert.assertTrue(Utils.checkForLog(logViewerClient, TENANT2_SYMBOL, 10),
@@ -93,8 +88,6 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
     public void destroy() throws Exception {
         try {
             super.cleanup();
-            inboundAdminClient1.removeInboundEndpoint(TENANT1_INBOUND_EP);
-            inboundAdminClient2.removeInboundEndpoint(TENANT2_INBOUND_EP);
         } finally {
         }
     }

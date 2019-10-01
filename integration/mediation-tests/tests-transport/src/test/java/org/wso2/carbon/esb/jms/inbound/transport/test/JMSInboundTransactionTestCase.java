@@ -43,13 +43,7 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
-
         super.init();
-
-        verifySequenceExistence("jmsInboundEpTransactionRollbackTestInSequence");
-        verifySequenceExistence("jmsInboundEpTransactionRollbackTestFaultSequence");
-        verifySequenceExistence("jmsInboundEndpointTransactionRequestHandlerSequence");
-
         message = String.valueOf(loadResource("message.xml"));
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }

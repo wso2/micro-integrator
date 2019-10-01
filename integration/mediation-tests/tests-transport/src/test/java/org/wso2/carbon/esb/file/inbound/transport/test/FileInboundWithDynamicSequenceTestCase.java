@@ -65,7 +65,6 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
         resourceAdminServiceStub = new ResourceAdminServiceClient(contextUrls.getBackEndUrl(),
                 context.getContextTenant().getContextUser().getUserName(),
                 context.getContextTenant().getContextUser().getPassword());
-        uploadResourcesToGovernanceRegistry();
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
@@ -116,19 +115,6 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
                         + " </parameters>\n" + "</inboundEndpoint>\n");
 
         return synapseConfig;
-    }
-
-    /**
-     * Uploads sequence to governance registry.
-     *
-     * @throws Exception if the URL representing th e resource file is invalid
-     */
-    private void uploadResourcesToGovernanceRegistry() throws Exception {
-        resourceAdminServiceStub
-                .addResource("/_system/governance/fileInboundDynamicSequence", "application/xml", "xml files",
-                        new DataHandler(new URL("file:///" + getClass()
-                                .getResource("/artifacts/ESB/file/inbound/transport/fileInboundDynamicSequence.xml")
-                                .getPath())));
     }
 
 }

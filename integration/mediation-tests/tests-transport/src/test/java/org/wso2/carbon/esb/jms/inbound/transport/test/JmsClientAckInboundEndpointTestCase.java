@@ -43,9 +43,6 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void initialize() throws Exception {
         super.init();
-
-        verifySequenceExistence("jmsClientAckInboundEPSendInSequence");
-
         //Add inbound endpoint configuration
         OMElement inboundEpConfig = esbUtils.loadResource(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "jms" + File.separator

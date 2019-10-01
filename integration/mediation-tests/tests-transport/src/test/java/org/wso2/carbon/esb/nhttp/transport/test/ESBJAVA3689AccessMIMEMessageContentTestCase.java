@@ -51,7 +51,6 @@ public class ESBJAVA3689AccessMIMEMessageContentTestCase extends ESBIntegrationT
                 getESBResourceLocation() + File.separator + "nhttp" + File.separator + "transport" + File.separator
                         + "axis2.xml"));
         super.init();
-        verifyAPIExistence(API_NAME);
         carbonLogReader = new CarbonLogReader();
     }
 

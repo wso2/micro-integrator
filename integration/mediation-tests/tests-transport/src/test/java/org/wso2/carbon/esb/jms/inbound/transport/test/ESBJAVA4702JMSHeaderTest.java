@@ -39,7 +39,6 @@ import javax.xml.stream.XMLStreamException;
  * https://wso2.org/jira/browse/ESBJAVA-4702
  */
 public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
-    private InboundAdminClient inboundAdminClient;
     private LogViewerClient logViewerClient;
 
     /**
@@ -50,11 +49,6 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-
-        verifyProxyServiceExistence("jmsHeaderInboundEpTestProxy");
-        verifySequenceExistence("jmsHeaderInboundEpTestLogSequence");
-
-        inboundAdminClient = new InboundAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         addInboundEndpoint(addEndpoint());
     }
 

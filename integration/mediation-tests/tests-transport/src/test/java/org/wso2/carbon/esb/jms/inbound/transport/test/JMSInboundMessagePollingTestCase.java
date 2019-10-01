@@ -45,7 +45,6 @@ import javax.activation.DataHandler;
 public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
     private ServerConfigurationManager serverConfigurationManager;
-    private InboundAdminClient inboundAdminClient;
 
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
@@ -55,7 +54,6 @@ public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
         OMElement synapse = esbUtils
                 .loadResource("/artifacts/ESB/jms/inbound/transport/jms_transport_proxy_service.xml");
         updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
-        inboundAdminClient = new InboundAdminClient(context.getContextUrls().getBackEndUrl(), getSessionCookie());
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
