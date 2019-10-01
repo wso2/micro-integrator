@@ -806,11 +806,11 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         File parent = new File(parentName);
         if (parent.exists() || parent.mkdirs()) {
             File newEntry = new File(parent, newFolderName);
-            boolean success = newEntry.mkdir();
-            if (!success) {
-                handleException("Couldn't create folder: " + newFolderName);
+            if (!newEntry.exists()) { // create folder if it doesn't exists only.
+                if (!newEntry.mkdir()) {
+                    handleException("Couldn't create folder: " + newFolderName);
+                }
             }
-
         } else {
             handleException("Parent folder: " + parentName + " cannot be created.");
         }
