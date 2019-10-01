@@ -874,8 +874,11 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                 return null;
             }
 
+            String mediaType = DEFAULT_MEDIA_TYPE;
             Properties metadata = getMetadata(url.getPath());
-            String mediaType = metadata.getProperty(METADATA_KEY_MEDIA_TYPE, DEFAULT_MEDIA_TYPE);
+            if (metadata != null) {
+                mediaType = metadata.getProperty(METADATA_KEY_MEDIA_TYPE, DEFAULT_MEDIA_TYPE);
+            }
 
             if (DEFAULT_MEDIA_TYPE.equals(mediaType)) {
                 StringBuilder strBuilder = new StringBuilder();
@@ -1024,6 +1027,12 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
                         + METADATA_FILE_SUFFIX;
         File metadataFile = new File(metadataFilePath);
 
+        if (!metadataFile.exists()) {
+            if (log.isDebugEnabled()) {
+                log.debug("Metadata file does not exist in" + metadataFile.getPath());
+            }
+            return null;
+        }
         try (BufferedReader reader = new BufferedReader(new FileReader(metadataFile))) {
             metadata.load(reader);
         } catch (FileNotFoundException e) {
@@ -1034,4 +1043,26 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
 
         return metadata;
     }
+
+    /**
+     * Returns the registry resource object
+     *
+     * @param key - registry key.
+     * @return
+     */
+    public Resource getResource(String key) {
+
+        String resolvedRegKeyPath = resolveRegistryURI(key);
+        try {
+            // here, a URL object is created in order to remove the protocol from the file path
+            new File(new URL(resolvedRegKeyPath).getFile());
+            return new Resource();
+        } catch (MalformedURLException e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Requested registry resource does not exist " + key, e);
+            }
+            return null;
+        }
+    }
+
 }
