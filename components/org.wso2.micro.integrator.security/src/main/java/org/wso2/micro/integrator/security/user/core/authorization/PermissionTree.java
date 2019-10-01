@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.security.user.core.UserCoreConstants;
-import org.wso2.carbon.registry.api.GhostResource;
+import org.wso2.micro.integrator.security.user.core.common.GhostResource;
 import org.wso2.micro.integrator.security.user.core.UserStoreException;
 import org.wso2.micro.integrator.security.user.core.UserStoreManager;
 import org.wso2.micro.integrator.security.user.core.internal.UserStoreMgtDSComponent;
