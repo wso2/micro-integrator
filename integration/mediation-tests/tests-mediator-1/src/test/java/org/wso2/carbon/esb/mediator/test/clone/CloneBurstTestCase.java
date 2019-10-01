@@ -49,72 +49,74 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
     private Trigger trigger;
     Thread[] threads;
 
-    @BeforeClass(groups = "wso2.esb")
-    public void setEnvironment() throws Exception {
-        init();
-        trigger = new Trigger();
-        esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CloneAndAggregateTestProxy");
-        esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, "cloningMessagesSeq");
-        esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, "aggregateMessagesSeq");
-
-        axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
-        axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
-
-        axis2Server1.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
-        axis2Server1.start();
-        axis2Server2.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
-        axis2Server2.start();
-    }
+//    @BeforeClass(groups = "wso2.esb")
+//    public void setEnvironment() throws Exception {
+//        init();
+//        trigger = new Trigger();
+//        esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), sessionCookie, "CloneAndAggregateTestProxy");
+//        esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, "cloningMessagesSeq");
+//        esbUtils.isSequenceExist(contextUrls.getBackEndUrl(), sessionCookie, "aggregateMessagesSeq");
+//
+//        axis2Server1 = new SampleAxis2Server("test_axis2_server_9001.xml");
+//        axis2Server2 = new SampleAxis2Server("test_axis2_server_9002.xml");
+//
+//        axis2Server1.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
+//        axis2Server1.start();
+//        axis2Server2.deployService(SampleAxis2Server.SIMPLE_STOCK_QUOTE_SERVICE);
+//        axis2Server2.start();
+//    }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = "wso2.esb", description = "Tests message burst", enabled = false)
     public void testBurstMessage() throws Exception {
 
-        MessageSender[] senders = new MessageSender[10];
-        threads = new Thread[10];
-        for (int i = 0; i < senders.length; i++) {
-            senders[i] = new MessageSender("WSO2", trigger);
-            threads[i] = new Thread(senders[i]);
-            threads[i].start();
-        }
+        log.info("This test is removed");
 
-        Long time = System.currentTimeMillis();
-        while (System.currentTimeMillis() <= (time + (timeDuration * 60 * 1000))) {
-            trigger.setTriggered(true);
-            Thread.sleep(burstDuration * 1000);
-            trigger.setTriggered(false);
-            Thread.sleep(delay * 1000);
-        }
-
-        trigger.setStopped(true);
-
-        for (int i = 0; i < threads.length; i++) {
-            threads[i].stop(); // Use of deprected method to make sure all
-            // threds are ended. Tests will still work if we
-            // removed this
-            threads[i].join();
-
-        }
-
-    }
-
-    @AfterClass(groups = "wso2.esb")
-    public void close() throws Exception {
-        axis2Server1.stop();
-        axis2Server2.stop();
-        trigger.setStopped(true);
-
-        for (int i = 0; i < threads.length; i++) {
-            if (threads[i].isAlive()) {
-                threads[i].destroy();
-            }
-        }
-        threads = null;
-        axis2Server1 = null;
-        axis2Server2 = null;
-        super.cleanup();
+//        MessageSender[] senders = new MessageSender[10];
+//        threads = new Thread[10];
+//        for (int i = 0; i < senders.length; i++) {
+//            senders[i] = new MessageSender("WSO2", trigger);
+//            threads[i] = new Thread(senders[i]);
+//            threads[i].start();
+//        }
+//
+//        Long time = System.currentTimeMillis();
+//        while (System.currentTimeMillis() <= (time + (timeDuration * 60 * 1000))) {
+//            trigger.setTriggered(true);
+//            Thread.sleep(burstDuration * 1000);
+//            trigger.setTriggered(false);
+//            Thread.sleep(delay * 1000);
+//        }
+//
+//        trigger.setStopped(true);
+//
+//        for (int i = 0; i < threads.length; i++) {
+//            threads[i].stop(); // Use of deprected method to make sure all
+//            // threds are ended. Tests will still work if we
+//            // removed this
+//            threads[i].join();
+//
+//        }
 
     }
+
+//    @AfterClass(groups = "wso2.esb")
+//    public void close() throws Exception {
+//        axis2Server1.stop();
+//        axis2Server2.stop();
+//        trigger.setStopped(true);
+//
+//        for (int i = 0; i < threads.length; i++) {
+//            if (threads[i].isAlive()) {
+//                threads[i].destroy();
+//            }
+//        }
+//        threads = null;
+//        axis2Server1 = null;
+//        axis2Server2 = null;
+//        super.cleanup();
+//
+//    }
 
 
     /*
