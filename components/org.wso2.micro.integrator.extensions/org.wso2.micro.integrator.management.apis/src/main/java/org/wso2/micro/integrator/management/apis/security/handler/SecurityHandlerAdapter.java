@@ -42,12 +42,16 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
             if (Objects.nonNull(headers.get(HTTPConstants.HEADER_AUTHORIZATION))) {
                 String authHeader = (String) headers.get(HTTPConstants.HEADER_AUTHORIZATION);
                 String authHeaderToken = authHeader;
-                if (authHeader.startsWith(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE)) {
+                if ((authHeader.startsWith(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE)) &&
+                        (authHeader.length() >=  (AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1))){
                     authHeaderToken = authHeader.substring(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
-                } else if (authHeader.startsWith(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE)) {
+                } else if ((authHeader.startsWith(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE)) &&
+                        (authHeader.length() >=  (AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1))) {
                     authHeaderToken = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
                 } else {
                     // Other auth header types are not supported atm
+                    clearHeaders(headers);
+                    SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
                     return false;
                 }
                 if (authenticate(authHeaderToken)) {
