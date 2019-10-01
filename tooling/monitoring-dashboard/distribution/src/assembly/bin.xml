@@ -1,0 +1,143 @@
+<!--
+  ~ /*
+  ~ * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+  ~ *
+  ~ * Licensed under the Apache License, Version 2.0 (the "License");
+  ~ * you may not use this file except in compliance with the License.
+  ~ * You may obtain a copy of the License at
+  ~ *
+  ~ * http://www.apache.org/licenses/LICENSE-2.0
+  ~ *
+  ~ * Unless required by applicable law or agreed to in writing, software
+  ~ * distributed under the License is distributed on an "AS IS" BASIS,
+  ~ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ * See the License for the specific language governing permissions and
+  ~ * limitations under the License.
+  ~ */
+  -->
+<assembly>
+    <includeBaseDirectory>true</includeBaseDirectory>
+    <baseDirectory>wso2mi-monitoring-dashboard-${project.version}</baseDirectory>
+    <id>WSO2 Micro Integration Monitoring Dashboard Distribution</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+
+    <fileSets>
+        <fileSet>
+            <directory>target/wso2carbon-kernel-${carbon.kernel5.version}</directory>
+            <outputDirectory>.</outputDirectory>
+            <excludes>
+                <exclude>README.txt</exclude>
+                <exclude>LICENSE.txt</exclude>
+                <exclude>bin/carbon.sh</exclude>
+                <exclude>release-notes.html</exclude>
+                <exclude>conf/osgi/launch.properties</exclude>
+                <exclude>conf/deployment.yaml</exclude>
+                <exclude>conf/log4j2.xml</exclude>
+                <exclude>conf/transports/netty-transports.yml</exclude>
+                <exclude>**/*.ipr</exclude>
+                <exclude>**/*.iwr</exclude>
+                <exclude>**/*.eclipse</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../..</directory>
+            <outputDirectory>.</outputDirectory>
+            <includes>
+                <include>README.md</include>
+            </includes>
+        </fileSet>
+
+        <fileSet>
+            <directory>carbon-home/conf/server</directory>
+            <outputDirectory>conf/server</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+
+        <fileSet>
+            <directory>carbon-home/conf/transports/server</directory>
+            <outputDirectory>wso2/server/conf/transports</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+
+
+        <fileSet>
+            <directory>carbon-home/conf/osgi</directory>
+            <outputDirectory>conf/osgi</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/resources/security</directory>
+            <outputDirectory>resources/security</outputDirectory>
+            <fileMode>644</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>**/*.sh</include>
+                <include>**/*.bat</include>
+            </includes>
+            <fileMode>755</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>carbon-home/bin</directory>
+            <outputDirectory>bin</outputDirectory>
+            <includes>
+                <include>**/*.txt</include>
+            </includes>
+            <fileMode>444</fileMode>
+        </fileSet>
+    </fileSets>
+    <files>
+        <file>
+            <source>carbon-home/updates/product.txt</source>
+            <outputDirectory>updates/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>444</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-kernel-${carbon.kernel5.version}/bin/kernel-version.txt</source>
+            <outputDirectory>bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>444</fileMode>
+        </file>
+        <file>
+            <source>target/wso2carbon-kernel-${carbon.kernel5.version}/bin/README.txt</source>
+            <outputDirectory>bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>444</fileMode>
+        </file>
+        <file>
+            <source>carbon-home/bin/version.txt</source>
+            <outputDirectory>bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>carbon-home/LICENSE.txt</source>
+            <outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
+            <source>carbon-home/runtime/server/carbon.sh</source>
+            <outputDirectory>wso2/server/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>755</fileMode>
+        </file>
+        <file>
+            <source>carbon-home/runtime/server/carbon.bat</source>
+            <outputDirectory>wso2/server/bin/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>755</fileMode>
+        </file>
+        <file>
+            <source>carbon-home/conf/server/log4j2.xml</source>
+            <outputDirectory>conf/server/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+    </files>
+</assembly>

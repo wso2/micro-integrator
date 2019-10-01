@@ -27,6 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
+import org.wso2.micro.integrator.core.resolvers.ResolverFactory;
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
@@ -180,7 +181,14 @@ public class RDBMSDataSourceUtils {
 	public static PoolConfiguration createPoolConfiguration(RDBMSConfiguration config)
 			throws DataSourceException {
 		PoolProperties props = new PoolProperties();
-		props.setUrl(config.getUrl());
+		String resolvedUrl;
+		if (config.getUrl() == null) {
+			resolvedUrl = null;
+		} else {
+			resolvedUrl = ResolverFactory.getInstance().getResolver(config.getUrl()).resolve();
+		}
+
+		props.setUrl(resolvedUrl);
 		if (config.isDefaultAutoCommit() != null) {
 		    props.setDefaultAutoCommit(config.isDefaultAutoCommit());
 		}
@@ -202,13 +210,31 @@ public class RDBMSDataSourceUtils {
 			}
 		}
 		props.setDefaultCatalog(config.getDefaultCatalog());
-		props.setDriverClassName(config.getDriverClassName());
+		String resolvedDriver;
+		if (config.getDriverClassName() == null) {
+			resolvedDriver = null;
+		} else {
+			resolvedDriver = ResolverFactory.getInstance().getResolver(config.getDriverClassName()).resolve();
+		}
+		props.setDriverClassName(resolvedDriver);
 		String username = config.getUsername();
-		if (null != username && !("").equals(username)) {
-			props.setUsername(username);
+		String resolvedUsername;
+		if (username == null) {
+			resolvedUsername = null;
+		} else {
+			resolvedUsername = ResolverFactory.getInstance().getResolver(username).resolve();
+		}
+		if (null != resolvedUsername && !("").equals(resolvedUsername)) {
+			props.setUsername(resolvedUsername);
 			String password = config.getPassword();
-			if (null != password && !("").equals(password)) {
-				props.setPassword(password);
+			String resolvedPassword;
+			if (password == null) {
+				resolvedPassword = null;
+			} else {
+				resolvedPassword = ResolverFactory.getInstance().getResolver(password).resolve();
+			}
+			if (null != resolvedPassword && !("").equals(resolvedPassword)) {
+				props.setPassword(resolvedPassword);
 			}
 		}
 		if (config.getMaxActive() != null) {

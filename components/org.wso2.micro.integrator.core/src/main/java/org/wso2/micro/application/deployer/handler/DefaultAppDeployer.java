@@ -28,7 +28,6 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleException;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
-import org.wso2.micro.integrator.core.internal.CoreServerInitializer;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
@@ -200,25 +199,6 @@ public class DefaultAppDeployer implements AppDeploymentHandler {
             deployRecursively(artifact.getDependencies(), axisConfig);
         }
     }
-
-    /**
-     * Check whether a particular artifact type can be accepted for deployment. If the type doesn't
-     * exist in the acceptance list, we assume that it doesn't require any special features to be
-     * installed in the system. Therefore, that type is accepted.
-     * If the type exists in the acceptance list, the acceptance value is returned.
-     *
-     * @param serviceType - service type to be checked
-     * @return true if all features are there or entry is null. else false
-     */
-    private boolean isAccepted(String serviceType) {
-        if (acceptanceList == null) {
-            acceptanceList = org.wso2.micro.application.deployer.AppDeployerUtils.buildAcceptanceList(CoreServerInitializer
-                    .getRequiredFeatures());
-        }
-        Boolean acceptance = acceptanceList.get(serviceType);
-        return (acceptance == null || acceptance);
-    }
-
 
     /* Each artifact can have it's dependencies which are also artifacts. This method searches
     * the entire tree of artifacts to undeploy default types..

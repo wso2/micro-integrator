@@ -290,23 +290,6 @@ public class GSpreadFeedProcessor {
     }
 
     /**
-     * Returns the resource associated with the current gspread config user authentication token.
-     * the resource path is :-
-     * "/repository/components/org.wso2.carbon.dataservices.core/services/[service_id]/configs/[config_id]/
-     * user_auth_token"
-     */
-//    private Resource getAuthTokenResource(Registry registry) throws Exception {
-//        if (registry == null) {
-//            return null;
-//        }
-//        String resPath = this.generateAuthTokenResourcePath();
-//        if (!registry.resourceExists(resPath)) {
-//            return null;
-//        }
-//        return registry.get(resPath);
-//    }
-
-    /**
      * Helper method to get current access token resides in the registry.
      *
      * @return accessToken

@@ -28,15 +28,125 @@ internal_crypto_provider = "org.wso2.micro.integrator.crypto.provider.KeyStoreBa
 key = "SECRET_KEY" # inferred
 
 [super_admin]
+#usr-mgt.xml
+username = "admin"              # inferred
+password = "admin"              # inferred
+admin_role = "admin"            # inferred
+create_admin_account = true     # inferred
 
-username = "admin"
-password = "admin"
-create_admin_account = true
+[realm_manager]
+#usr-mgt.xml
+data_source = "WSO2CarbonDB"       # inferred
+properties.isCascadeDeleteEnabled = true    #inferred
+
+[user_store]
+#usr-mgt.xml
+class = "org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager" # inferred
+connection_url = "ldap://localhost:10389"   #inferred
+connection_name = "uid=admin,ou=system"   #inferred
+connection_password = "admin"   #inferred
+anonymous_bind = false   #inferred
+user_search_base = "ou=system"   #inferred
+user_name_attribute = "uid"   #inferred
+user_name_search_filter = "(&amp;(objectClass=person)(uid=?))"   #inferred
+user_name_list_filter = "(objectClass=person)"   #inferred
+display_name_attribute = ''     # empty by default
+read_groups = true   #inferred
+group_search_base = "ou=system"   #inferred
+group_name_attribute = "cn"   #inferred
+group_name_search_filter = "(&amp;(objectClass=groupOfNames)(cn=?))"   #inferred
+group_name_list_filter = "(objectClass=groupOfNames)"   #inferred
+membership_attribute = "member"   #inferred
+back_links_enabled = false   #inferred
+username_java_regex = "[a-zA-Z0-9._\\-|//]{3,30}$"   #inferred
+rolename_java_regex = "[a-zA-Z0-9._\\-|//]{3,30}$"   #inferred
+password_java_regex = "^[\\S]{5,30}$"   #inferred
+scim_enabled = false   #inferred
+password_hash_method = "PLAIN_TEXT"   #inferred
+multi_attribute_separator = ","   #inferred
+max_user_name_list_length = 100   #inferred
+max_role_name_list_length = 100   #inferred
+user_roles_cache_enabled = true   #inferred
+connection_pooling_enabled = true   #inferred
+ldap_connection_timeout = 5000   #inferred          timeout in milliseconds
+read_timeout = '' # empty by default
+retry_attempts = '' # empty by default
+replace_escape_characters_at_user_login = true   #inferred
+
+########################## Massege builders and formatters ###################################
+
+[message_formatters]
+form_urlencoded =  "org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"
+multipart_form_data =  "org.apache.axis2.transport.http.MultipartFormDataFormatter"
+application_xml = "org.apache.axis2.transport.http.ApplicationXMLFormatter"
+text_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
+soap_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
+text_plain = "org.apache.axis2.format.PlainTextFormatter"
+application_json =  "org.wso2.micro.integrator.core.json.JsonStreamFormatter"
+json_badgerfish = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
+text_javascript = "org.apache.axis2.json.JSONMessageFormatter"
+octet_stream = "org.wso2.carbon.relay.ExpandingMessageFormatter"
+application_binary =  "org.apache.axis2.format.BinaryFormatter"
+
+[message_builders]
+application_xml = "org.apache.axis2.builder.ApplicationXMLBuilder"
+form_urlencoded = "org.apache.synapse.commons.builders.XFormURLEncodedBuilder"
+multipart_form_data = "org.apache.axis2.builder.MultipartFormDataBuilder"
+text_plain = "org.apache.axis2.format.PlainTextBuilder"
+application_json = "org.wso2.micro.integrator.core.json.JsonStreamBuilder"
+json_badgerfish = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
+text_javascript = "org.apache.axis2.json.JSONBuilder"
+octet_stream =  "org.wso2.carbon.relay.BinaryRelayBuilder"
+application_binary = "org.apache.axis2.format.BinaryBuilder"
+
+[[custom_message_formatters]]
+content_type = "application/json/badgerfish"
+class = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
+
+[[custom_message_builders]]
+content_type = "application/json/badgerfish"
+class = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
+
+################## Massege builders and formatters for blocking transport #########################
+[message_formatters.blocking]
+form_urlencoded =  "org.apache.synapse.commons.formatters.XFormURLEncodedFormatter"
+multipart_form_data =  "org.apache.axis2.transport.http.MultipartFormDataFormatter"
+application_xml = "org.apache.axis2.transport.http.ApplicationXMLFormatter"
+text_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
+soap_xml = "org.apache.axis2.transport.http.SOAPMessageFormatter"
+text_plain = "org.apache.axis2.format.PlainTextFormatter"
+application_json =  "org.wso2.micro.integrator.core.json.JsonStreamFormatter"
+json_badgerfish = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
+text_javascript = "org.apache.axis2.json.JSONMessageFormatter"
+octet_stream = "org.wso2.carbon.relay.ExpandingMessageFormatter"
+application_binary =  "org.apache.axis2.format.BinaryFormatter"
+
+[message_builders.blocking]
+application_xml = "org.apache.axis2.builder.ApplicationXMLBuilder"
+form_urlencoded = "org.apache.synapse.commons.builders.XFormURLEncodedBuilder"
+multipart_form_data = "org.apache.axis2.builder.MultipartFormDataBuilder"
+text_plain = "org.apache.axis2.format.PlainTextBuilder"
+application_json = "org.wso2.micro.integrator.core.json.JsonStreamBuilder"
+json_badgerfish = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
+text_javascript = "org.apache.axis2.json.JSONBuilder"
+octet_stream =  "org.wso2.carbon.relay.BinaryRelayBuilder"
+application_binary = "org.apache.axis2.format.BinaryBuilder"
+
+[[custom_message_formatters.blocking]]
+content_type = "application/json/badgerfish"
+class = "org.apache.axis2.json.JSONBadgerfishMessageFormatter"
+
+[[custom_message_builders.blocking]]
+content_type = "application/json/badgerfish"
+class = "org.apache.axis2.json.JSONBadgerfishOMBuilder"
+
+[transport]
+default_content_type = "empty/content"
 
 ########################## Passthroug http/https configurations ###################################
 [transport.http] # Optional
 
-socket_timeout = "3m"               # inferred default: 180000    need to template for time unit convertion
+socket_timeout = 180000              # inferred default: 180000    timeout in milliseconds
 core_worker_pool_size = 400         # inferred default: 400
 max_worker_pool_size = 400          # inferred default: 400
 worker_pool_queue_length = -1
@@ -57,15 +167,19 @@ listener.port = 8280    #inferred  default: 8280
 listener.wsdl_epr_prefix ="$ref{server.hostname}:8280/test"
 listener.bind_address = "$ref{server.hostname}"
 
+listener.secured_enable = true              # inferred default true
 listener.secured_port = 8243        # infered  default: 8243
 listener.secured_wsdl_epr_prefix = "$ref{server.hostname}"  # no default
 listener.secured_bind_address = "$ref{server.hostname}"
 listener.secured_protocols = "TLSv1,TLSv1.1,TLSv1.2" # inferred default: TLSv1,TLSv1.1,TLSv1.2
 listener.verify_client = "require"              # inferred disable by default, mutual ssl   optional/required/none
 listener.ssl_profile.file_path = "conf/sslprofiles/listenerprofiles.xml" # type 0
-listener.ssl_profile.read_interval = "1h"       # inferred
+listener.ssl_profile.read_interval = 3600000       # inferred in milliseconds
 # todo need to template for wich tranport ?
 listener.preferred_ciphers = "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
+listener.certificate_revocation_verifier_enable = false # false by default
+listener.certificate_revocation_cache_size = 1024     # inferred
+listener.certificate_revocation_cache_delay = 1000     # inferred
 
 listener.keystore.file_name ="$ref{keystore.tls.file_name}" # inferred
 listener.keystore.type = "$ref{keystore.tls.type}" # inferred
@@ -77,11 +191,15 @@ listener.truststore.password = "$ref{truststore.password}" # inferred
 
 sender.enable = true        # inferred default true
 sender.warn_on_http_500 = "*"       # optional
-sender.proxy_host = "$ref{server.hostname}"         # todo need to template for both blocking/nonblocking axis.xml
+sender.proxy_host = "$ref{server.hostname}"
 sender.proxy_port = 3128
-sender.non_proxy_hosts = ["$ref{server.hostname}"]      # todo ref in array not working
+sender.non_proxy_hosts = ["$ref{server.hostname}"]
 sender.hostname_verifier = "AllowAll"
+sender.certificate_revocation_verifier_enable = false # false by default
+sender.certificate_revocation_cache_size = 1024     # inferred
+sender.certificate_revocation_cache_delay = 1000     # inferred delay in milliseconds
 
+sender.secured_enable = true                # inferred default true
 sender.keystore.file_name ="$ref{keystore.tls.file_name}" # inferred
 sender.keystore.type = "$ref{keystore.tls.type}" # inferred
 sender.keystore.password = "$ref{keystore.tls.password}" # inferred
@@ -91,32 +209,33 @@ sender.truststore.type = "$ref{truststore.type}" # inferred
 sender.truststore.password = "$ref{truststore.password}" # inferred
 
 sender.ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
-sender.ssl_profile.read_interval = "30s"
-
-# common for http/https
-blocking_sender.enable_client_caching = true
-blocking_sender.transfer_encoding = "chunked"
-blocking_sender.default_connections_per_host = 200
-blocking_sender.omit_soap12_action = true
-blocking_sender.so_timeout = "1m"
+sender.ssl_profile.read_interval = 600000   # inferred interval in milliseconds
 
 [[transport.http.proxy_profile]]
-target_hosts = [""]
-proxy_host = ""
-proxy_port = ""
-proxy_username = ""
-proxy_password = ""
-bypass_hosts = [""]
+target_hosts = ["example.com", ".*.sample.com"]
+proxy_host = "localhost"
+proxy_port = "3128"
+proxy_username = "squidUser"
+proxy_password = "password"
+bypass_hosts = ["xxx.sample.com"]
 
-###################################   HL7 transport configurations    ###################################
-# need to test hl7 is support by EI default
-[transport.hl7] # optional
+[[transport.http.secured_proxy_profile]]
+target_hosts = ["example.com", ".*.sample.com"]
+proxy_host = "localhost"
+proxy_port = "3128"
+proxy_username = "squidUser"
+proxy_password = "password"
+bypass_hosts = ["xxx.sample.com"]
 
-listener.enable = false
-listener.port = 9292 # inferred                         need to template
+########################## Passthroug http/https configurations ###################################
 
-sender.enable = false
-sender.non_blocking = true # inferred                   need to template
+[transport.blocking.http] # Optional
+# common for http/https
+sender.enable_client_caching = true
+sender.transfer_encoding = "chunked"
+sender.default_connections_per_host = 200
+sender.omit_soap12_action = true
+sender.so_timeout = 60000 # inferred timeout in milliseconds
 
 ###################################   VFS configurations              ###################################
 [transport.vfs] # enable by default
@@ -142,10 +261,10 @@ sender.enable = false           # false by default
 class="<qualified class name>"
 protocol = "ISO8583"
 parameter.port = 8081
-parameter.hostname = "$ref{server.node_ip}"
-parameter.non-blocking = true
-parameter.bind-address = "$ref{server.hostname}"
-parameter.WSDLEPRPrefix = "$ref{server.hostname}"  # inferred
+parameter.hostname = "$ref{server.hostname}"
+parameter.non_blocking = true
+parameter.bind_address = "$ref{server.hostname}"
+parameter.wsdl_epr_prefix = "$ref{server.hostname}"  # inferred
 
 keystore.file_name = "$ref{keystore.tls.file_name}"
 keystore.type = "$ref{keystore.tls.type}"
@@ -156,14 +275,14 @@ truststore.type = "$ref{truststore.type}"
 truststore.password = "$ref{truststore.password}"
 
 ssl_profile.file_path= "conf/sslprofiles/listenerprofiles.xml"
-ssl_profile.read_interval = "30s"
+ssl_profile.read_interval = 30000       # interval in milliseconds
 
 [[custom_transport.sender]]
 
 class="<qualified class name>"
 protocol = "ISO8583"
-parameter.hostname = ""
-parameter.port = ""
+parameter.proxy_host = ""
+parameter.proxy_port = 9000
 parameter.non_proxy_host = ""
 parameter.non_blocking = true
 
@@ -176,10 +295,14 @@ truststore.type = "$ref{truststore.type}"
 truststore.password = "$ref{truststore.password}"
 
 ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
-ssl_profile.read_interval = "30s"
+ssl_profile.read_interval = 30000       # interval in milliseconds
+
+[transport]
+default_content_type = "empty/content"
+
 
 ###################################     Mail transport configurations   ###################################
-[transport.mail.listener]   # todo single array?
+[transport.mail.listener]
 enable = true
 name = "mailto"         # inferred
 
@@ -224,23 +347,22 @@ parameter.subscription_durable = false
 parameter.durable_subscriber_client_id = ""
 parameter.durable_subscriber_name = ""
 parameter.pub_sub_local = false
-parameter.receive_timeout = "1s"
+parameter.receive_timeout = "1000"              # timeout in milliseconds
 parameter.concurrent_consumer = 1
 parameter.max_concurrent_consumer = 1
 parameter.idle_task_limit = 10
 parameter.max_message_per_task = -1
-parameter.initial_reconnection_duration = "10s"
+parameter.initial_reconnection_duration = "10000"       # duraton in milliseconds
 parameter.reconnect_progress_factor = 2
-parameter.max_reconnect_duration = "1h"
-parameter.reconnect_interval = "1h"
+parameter.max_reconnect_duration = "3600000"            # duration in milliseconds
+parameter.reconnect_interval = "3600000"                # duration in milliseconds
 parameter.max_jsm_connection = 10
 parameter.max_consumer_error_retrieve_before_delay = 20
-parameter.consume_error_delay = "100ms"
+parameter.consume_error_delay = "100"                   # delay in milliseconds
 parameter.consume_error_progression = "2.0"
 
 [[transport.jms.sender]]
 
-enable = true               # todo ? not templated
 name = "myTopicSender"
 parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
 parameter.broker_name = "artemis"
@@ -268,18 +390,18 @@ parameter.subscription_durable = false
 parameter.durable_subscriber_client_id = ""
 parameter.durable_subscriber_name = ""
 parameter.pub_sub_local = false
-parameter.receive_timeout = "1s"
+parameter.receive_timeout = "1000"      # timout in milliseconds
 parameter.concurrent_consumer = 1
 parameter.max_concurrent_consumer = 1
 parameter.idle_task_limit = 10
 parameter.max_message_per_task = -1
-parameter.initial_reconnection_duration = "10s"
+parameter.initial_reconnection_duration = "10000"     # duration in milliseconds
 parameter.reconnect_progress_factor = 2
-parameter.max_reconnect_duration = "1h"
-parameter.reconnect_interval = "1h"
+parameter.max_reconnect_duration = "3600000"          # duration in milliseconds
+parameter.reconnect_interval = "3600000"                # duration in milliseconds
 parameter.max_jsm_connection = 10
 parameter.max_consumer_error_retrieve_before_delay = 20
-parameter.consume_error_delay = "100ms"
+parameter.consume_error_delay = "100"       # delay in milliseconds
 parameter.consume_error_progression = "2.0"
 
 parameter.vender_class_loader = false       # only for IBM MQ       todo tempated only for sender?
@@ -322,8 +444,9 @@ parameter.exchange_durable = ""
 parameter.exchange_auto_delete = ""
 parameter.message_content_type = ""
 
-parameter.retry_interval = "10s"        #in case of network failure
+parameter.retry_interval = "10000"        #in case of network failure interval in milliseconds
 parameter.retry_count = 5               #in case of network failure
+parameter.connection_pool_size = 25
 
 parameter.ssl_enable = true
 parameter.ssl_version = "SSL"
@@ -353,6 +476,7 @@ parameter.queue_auto_delete = false
 parameter.exchange_durable = ""
 parameter.queue_auto_declare = ""
 parameter.exchange_auto_declare = ""
+parameter.connection_pool_size = 10
 
 ################################### Websocket transport configuration ###################################
 [transport.ws]
@@ -436,11 +560,12 @@ sender.enable = false
 ###################################     Synapse configurations      ###################################
 
 [mediation]
+# synapse.properties
 synapse.core_threads = 20
 synapse.max_threads = 100
 synapse.threads_queue_length = 10
 
-synapse.global_timeout_interval = "120000ms"
+synapse.global_timeout_interval = "120000"  # interval in milliseconds
 
 # Uncomment following to support fallback XPATH 2.0 support with DOM and Saxon
 synapse.enable_xpath_dom_failover=true
@@ -467,7 +592,7 @@ flow.statistics.capture_all=false
 
 #In memory statistics cleaning state
 statistics.enable_clean=true
-statistics.clean_interval = "1000ms"
+statistics.clean_interval = 1000    # interval in milliseconds
 
 flow.statistics.tracer.collect_payloads=false
 flow.statistics.tracer.collect_properties=false
@@ -475,16 +600,16 @@ flow.statistics.tracer.collect_properties=false
 inbound.core_threads = 20
 inbound.max_threads = 100
 
-###################################     Clustering configurations   ###################################
-[clustering]
-members = ["10.100.5.86:4000","10.100.5.86:4001"]
-local_member_port = 4000
-local_member_host = "10.100.5.86"
-membership_scheme =  'wka'      # type 0
-domain = "wso2.carbon.domain"   # inferred
-
-[user_store]
-type = "database"
+###################################   Database configurations   ###################################
+[[datasource]]
+id = "WSO2_CARBON_DB"
+url= "jdbc:h2:./repository/database/WSO2CARBON_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000"
+username="username"
+password="password"
+driver="org.h2.Driver"
+pool_options.maxActive=50
+pool_options.maxWait = 60000 # wait in milliseconds
+pool_options.testOnBorrow = true
 
 ###################################   Schedule task configurations   ###################################
 [tasks]
@@ -497,21 +622,6 @@ server_password = "admin"               # inferred
 
 resolver_type = "RoundRobin" # inferred         RoundRobin/Random/RuleBased
 rules = ["HIVE_TASK,HTTP_SCRIPT.*,192.168.1.*", "HIVE_TASK,.*,192.168.2.*"]     # only applied for RuleBased type
-
-
-###################################     Database configurations     ###################################
-[database.shared_db]
-type = "h2"             # inferred
-url="jdbc:h2:./repository/database/WSO2SHARED_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000" # inferred based on database.shared_db.type
-username = "wso2carbon"     # inferred
-password = "wso2carbon"     # inferred
-
-[database.shared_db.pool_options]
-max_active = "50"
-max_wait = "60000"
-test_on_borrow = true
-validation_interval = "30000"
-default_auto_commit = true
 
 ###################################     Keystore configurations     ###################################
 [keystore.tls]
@@ -535,11 +645,50 @@ password = "$ref{keystore.tls.password}"    # inferred
 alias = "$ref{keystore.tls.alias}"          # inferred
 key_password = "$ref{keystore.tls.key_password}"    # inferred
 
-##################################### Hidden properties only for Testing ###################################
+[secrets]
+admin_password = "password_2"
+keystore_password = "password_3"
+key_password = "password_4"
+truststrore_password = "password_5"
+
+##################################### Hidden properties with no documentations ###################################
 
 [[server.get_request_processor]]    # hidden property
+#carbon.xml
 item = "swagger.json"
-class = "org.wso2.appcloud.api.swagger.processors.json.SwaggerJsonProcessor"
+class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.SwaggerYamlProcessor"
 
-[transport.local]
+[transport.local]       # hidden property
+#axis2.xml
 sender.nonblocking.enable = false
+
+[[transport.parameters]]    # custom parameters for axis2 transport
+name="ok"
+value="abcd"
+
+[[transport.modules]]   # all modules should be defined here including defaults
+ref="addressing"
+ref="another"
+
+[[transport.phase_order]]
+phase_type= "InFlow"
+
+[[transport.phase_order.phases]]
+phase_name="MsgInObservation"
+
+[[transport.phase_orders.phases.handlers]]
+handler_name="TraceMessageBuilderDispatchHandler"
+handler_class="org.apache.synapse.transport.passthru.util.TraceMessageBuilderDispatchHandler"
+
+[[transport.phase_order.phases]]
+phase_name="Transport"
+phase_class="phase class"
+
+[[transport.phase_order.phases.handlers]]
+handler_name="IntegratorStatefulHandler"
+handler_class="org.wso2.micro.integrator.core.handlers.IntegratorStatefulHandler"
+handler_order_phase="Transport"
+order_before="before"
+order_after="after"
+order_phase_first="phasefirst"
+order_phase_last="phaselast"

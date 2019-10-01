@@ -48,11 +48,23 @@ func (remoteConfig *RemoteConfig) UpdateRemote(name string, host string, port st
 
 	remotes := &RemoteConfigData.Remotes
 	if _, exists := (*remotes)[name]; !exists {
-		return errors.New("no such remote")
+		return errors.New("no such remote: " + name)
 	}
 
 	remote := Remote{Url: host, Port: port}
 	(*remotes)[name] = remote
+
+	return nil
+}
+
+// update the access token of the current remote
+func (remoteConfig *RemoteConfig) UpdateCurrentRemoteToken(accessToken string) error {
+	currentRemote := RemoteConfigData.Remotes[RemoteConfigData.CurrentRemote]
+
+	remotes := &RemoteConfigData.Remotes
+
+	remote := Remote{Url: currentRemote.Url, Port: currentRemote.Port, AccessToken: accessToken}
+	(*remotes)[RemoteConfigData.CurrentRemote] = remote
 
 	return nil
 }
@@ -69,8 +81,8 @@ func (remoteConfig *RemoteConfig) RemoveRemote(name string) error {
 
 	delete(*remotes, name)
 
-	if remoteConfig.CurrentServer == name {
-		remoteConfig.CurrentServer = DefaultRemoteName
+	if remoteConfig.CurrentRemote == name {
+		remoteConfig.CurrentRemote = DefaultRemoteName
 	}
 
 	return nil
@@ -83,7 +95,7 @@ func (remoteConfig *RemoteConfig) SelectRemote(name string) error {
 		return errors.New("no such remote")
 	}
 
-	remoteConfig.CurrentServer = name
+	remoteConfig.CurrentRemote = name
 
 	return nil
 }
@@ -123,5 +135,5 @@ func (remoteConfig *RemoteConfig) Persist(filePath string) {
 func (remoteConfig *RemoteConfig) Reset() {
 	RemoteConfigData = RemoteConfig{}
 	RemoteConfigData.Remotes = make(map[string]Remote)
-	RemoteConfigData.CurrentServer = ""
+	RemoteConfigData.CurrentRemote = ""
 }

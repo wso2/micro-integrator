@@ -57,14 +57,13 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
         String databaseName =
                 System.getProperty("basedir") + File.separator + "target" + File.separator + "testdb_store"
                         + new Random().nextInt();
-        JDBC_URL = JDBC_URL + databaseName + ";AUTO_SERVER=TRUE";
+        JDBC_URL = JDBC_URL + databaseName + ";DB_CLOSE_ON_EXIT=FALSE;AUTO_SERVER=TRUE";
         h2DatabaseManager = new H2DataBaseManager(JDBC_URL, dbUser, dbPassword);
         h2DatabaseManager.executeUpdate(
                 "CREATE TABLE IF NOT EXISTS JDBC_MESSAGE_STORE(\n" + "indexId BIGINT(20) NOT NULL AUTO_INCREMENT,\n"
                         + "msg_id VARCHAR(200) NOT NULL ,\n" + "message BLOB NOT NULL,\n" + "PRIMARY KEY ( indexId )\n"
                         + ")");
         carbonLogReader = new CarbonLogReader();
-        super.init();
     }
 
     @Test

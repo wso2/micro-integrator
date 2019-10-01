@@ -58,8 +58,6 @@ public class Sample654TestCase extends ESBSampleIntegrationTest {
                 context.getContextTenant().getContextUser().getUserName(),
                 context.getContextTenant().getContextUser().getPassword());
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(new File(getClass().
-                getResource(COMMON_FILE_LOCATION + "axis2.xml").getPath()));
 
         super.init();
         updateESBRegistry(File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"

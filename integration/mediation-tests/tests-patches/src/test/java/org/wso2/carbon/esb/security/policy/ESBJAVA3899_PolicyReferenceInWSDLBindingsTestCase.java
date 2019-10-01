@@ -24,7 +24,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
-import org.wso2.esb.integration.common.clients.registry.ResourceAdminServiceClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.File;
@@ -40,7 +39,6 @@ public class ESBJAVA3899_PolicyReferenceInWSDLBindingsTestCase extends ESBIntegr
     @BeforeClass
     protected void init() throws Exception {
         super.init();
-        uploadResourcesToConfigRegistry();
 
         String cappPath = Paths.get(getESBResourceLocation(), "car", carFileName).toString();
         uploadCapp(carFileName, new DataHandler(new FileDataSource(new File(cappPath))));
@@ -60,18 +58,6 @@ public class ESBJAVA3899_PolicyReferenceInWSDLBindingsTestCase extends ESBIntegr
 
         CharSequence expectedTag = "PolicyReference";
         Assert.assertTrue(wsdlResponse.contains(expectedTag));
-    }
-
-    private void uploadResourcesToConfigRegistry() throws Exception {
-        ResourceAdminServiceClient resourceAdminServiceStub = new ResourceAdminServiceClient(
-                contextUrls.getBackEndUrl(), getSessionCookie());
-
-        String resourcePath = Paths.get(getESBResourceLocation(), "security", "ESBJAVA3899", "server-policy.xml")
-                .toString();
-        resourceAdminServiceStub
-                .addResource("/_system/config/repository/server-policy.xml", "application/xml", "policy file",
-                        new DataHandler(new FileDataSource(new File(resourcePath))));
-        Thread.sleep(4000);
     }
 
     @AfterClass(alwaysRun = true)

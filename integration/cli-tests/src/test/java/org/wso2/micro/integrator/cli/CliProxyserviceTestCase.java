@@ -35,7 +35,7 @@ public class CliProxyserviceTestCase {
     @Test
     public void miShowProxyAllTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.PROXYSERVICE, Constants.PROXYSERVICE);
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.PROXYSERVICE, Constants.SHOW);
         String artifactName_proxy_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
         String artifactName_proxy_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
 
@@ -50,7 +50,7 @@ public class CliProxyserviceTestCase {
     public void miShowProxyTest() throws IOException {
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.PROXYSERVICE, Constants.SHOW, CLI_TEST_PROXY);
-        Assert.assertEquals(outputForCLICommand.get(0), "Name - cliAddressProxy");
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - cliTestProxy");
     }
 
     /**

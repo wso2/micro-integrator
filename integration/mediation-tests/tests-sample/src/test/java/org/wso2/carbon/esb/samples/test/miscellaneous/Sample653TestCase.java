@@ -44,9 +44,6 @@ public class Sample653TestCase extends ESBSampleIntegrationTest {
         super.init();
         serverManager = new ServerConfigurationManager(context);
         //setting <parameter name="priorityConfigFile" locked="false">samples/service-bus/resources/priority/priority-configuration.xml</parameter>
-        serverManager.applyConfiguration(new File(
-                TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
-                        + File.separator + "priority" + File.separator + "axis2.xml"));
 
         super.init();
         loadSampleESBConfiguration(150);

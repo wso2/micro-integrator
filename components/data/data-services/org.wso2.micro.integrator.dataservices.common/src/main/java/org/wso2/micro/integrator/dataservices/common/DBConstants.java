@@ -81,7 +81,6 @@ public final class DBConstants {
     public static final String SECUREVAULT_NAMESPACE = "http://org.wso2.securevault/configuration";
     public static final String DATA_SERVICE_RESPONSE_WRAPPER_ELEMENT = "DATA_SERVICE_RESPONSE";
     public static final String DATA_SERVICE_REQUEST_BOX_RESPONSE_WRAPPER_ELEMENT = "DATA_SERVICE_REQUEST_BOX_RESPONSE";
-    public static final String SQL_DRIVER_CLASS_NAME = "org.wso2.carbon.dataservices.sql.driver.TDriver";
     public static final String SECURITY_MODULE_NAME = "rampart";
     public static final String TENANT_IN_ONLY_MESSAGE = "TENANT_IN_ONLY_MESSAGE";
         

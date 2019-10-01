@@ -31,8 +31,8 @@ import org.apache.synapse.libraries.model.Library;
 import org.apache.synapse.libraries.model.SynapseLibrary;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.carbon.mediation.initializer.ServiceBusUtils;
-import org.wso2.carbon.mediation.initializer.persistence.MediationPersistenceManager;
+import org.wso2.micro.integrator.initializer.ServiceBusUtils;
+import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
 
 import java.io.IOException;

@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediators.payloadFactory;
 
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
@@ -40,12 +39,6 @@ import static org.testng.Assert.assertTrue;
  * Earlier this gets identified as non xml, but since this is actually a xml, it needs to be identified as an xml.
  */
 public class ESBJAVA5030PayloadFormatArgumentWithTrailingSpaceTestCase extends ESBIntegrationTest {
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        verifyAPIExistence("trailingSpaceAPI");
-    }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {

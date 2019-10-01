@@ -23,7 +23,7 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.authenticator.stub.LoginAuthenticationExceptionException;
-import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
+//import org.wso2.carbon.endpoint.stub.types.EndpointAdminEndpointAdminException;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.LoadbalanceFailoverClient;
 import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
@@ -52,8 +52,8 @@ public class ESBJAVA4231EmptyPayloadInFailoverLoadBalanceEndpoint extends ESBInt
 
     @Test(groups = "wso2.esb", description = "Test sending request to LoadBalancing Endpoint")
     public void testSendingToLoaBalancingEndpoint()
-            throws IOException, EndpointAdminEndpointAdminException, LoginAuthenticationExceptionException,
-            XMLStreamException {
+            throws IOException, LoginAuthenticationExceptionException,
+                XMLStreamException {
         String response = lbClient.sendLoadBalanceRequest(getProxyServiceURLHttp("loadbalanceproxy"), null);
         Assert.assertNotNull(response);
         Assert.assertTrue(response.toString().contains("Response from server: Server_2"));

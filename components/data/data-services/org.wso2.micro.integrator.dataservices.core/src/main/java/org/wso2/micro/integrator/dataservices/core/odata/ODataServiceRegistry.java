@@ -21,8 +21,6 @@ package org.wso2.micro.integrator.dataservices.core.odata;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-//import org.wso2.carbon.base.MultitenantConstants;
-//import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.micro.integrator.dataservices.core.internal.DataServicesDSComponent;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.util.ConfigurationContextService;

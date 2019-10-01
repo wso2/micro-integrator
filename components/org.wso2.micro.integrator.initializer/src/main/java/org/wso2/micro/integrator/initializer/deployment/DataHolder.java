@@ -19,22 +19,9 @@
 package org.wso2.micro.integrator.initializer.deployment;
 
 import org.apache.axis2.context.ConfigurationContext;
-import org.apache.axis2.deployment.Deployer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.synapse.deployers.APIDeployer;
-import org.apache.synapse.deployers.InboundEndpointDeployer;
-import org.apache.synapse.deployers.MessageProcessorDeployer;
-import org.apache.synapse.deployers.MessageStoreDeployer;
-import org.apache.synapse.deployers.TemplateDeployer;
-//import org.wso2.carbon.endpoint.EndpointDeployer;
-import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployerConstants;
-//import org.wso2.carbon.localentry.LocalEntryDeployer;
-//import org.wso2.carbon.mediation.startup.StartupTaskDeployer;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
-import org.wso2.carbon.proxyadmin.ProxyServiceDeployer;
-
-import java.util.HashMap;
 
 /**
  * This holds data shared across internals of micro integrator

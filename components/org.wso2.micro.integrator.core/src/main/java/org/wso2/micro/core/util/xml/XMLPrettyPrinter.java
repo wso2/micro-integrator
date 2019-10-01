@@ -19,7 +19,7 @@ import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.utils.xml.StringUtils;
+import org.wso2.micro.core.util.StringUtils;
 /*
  * 
  */
@@ -32,7 +32,7 @@ public class XMLPrettyPrinter {
     private boolean done = false;
     private String encoding = "UTF-8";
 
-    private static Log log = LogFactory.getLog(org.wso2.carbon.utils.xml.XMLPrettyPrinter.class);
+    private static Log log = LogFactory.getLog(org.wso2.micro.core.util.xml.XMLPrettyPrinter.class);
 
     public XMLPrettyPrinter(InputStream in, boolean format, boolean numeric, String encoding) {
         this.in = in;

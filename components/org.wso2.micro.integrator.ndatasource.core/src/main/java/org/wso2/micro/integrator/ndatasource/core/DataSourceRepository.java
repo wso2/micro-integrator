@@ -15,6 +15,19 @@
  */
 package org.wso2.micro.integrator.ndatasource.core;
 
+import org.apache.axis2.clustering.ClusteringAgent;
+import org.apache.axis2.clustering.ClusteringFault;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.w3c.dom.Element;
+import org.wso2.micro.core.util.ConfigurationContextService;
+import org.wso2.micro.integrator.ndatasource.common.DataSourceConstants.DataSourceStatusModes;
+import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
+import org.wso2.micro.integrator.ndatasource.common.spi.DataSourceReader;
+import org.wso2.micro.integrator.ndatasource.core.internal.DataSourceServiceComponent;
+import org.wso2.micro.integrator.ndatasource.core.utils.DataSourceUtils;
+
 import java.util.HashMap;
 import java.util.Map;
 import javax.naming.Context;
@@ -25,20 +38,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
-import org.apache.axis2.clustering.ClusteringAgent;
-import org.apache.axis2.clustering.ClusteringFault;
-import org.apache.axis2.context.ConfigurationContext;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.w3c.dom.Element;
-import org.wso2.micro.integrator.ndatasource.common.DataSourceConstants.DataSourceStatusModes;
-import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
-import org.wso2.micro.integrator.ndatasource.common.spi.DataSourceReader;
-import org.wso2.micro.integrator.ndatasource.core.utils.DataSourceUtils;
-import org.wso2.micro.integrator.ndatasource.core.internal.DataSourceServiceComponent;
-import org.wso2.carbon.registry.core.Registry;
-import org.wso2.micro.core.util.ConfigurationContextService;
-
 /**
  * This class represents the repository which is used to hold the data sources.
  */
@@ -47,8 +46,6 @@ public class DataSourceRepository {
 	private static Log log = LogFactory.getLog(DataSourceRepository.class);
 	
 	private int tenantId;
-	
-	private Registry registry;
 	
 	private Map<String, CarbonDataSource> dataSources;
 

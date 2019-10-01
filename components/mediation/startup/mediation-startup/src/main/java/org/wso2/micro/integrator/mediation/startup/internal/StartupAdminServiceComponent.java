@@ -34,8 +34,8 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.carbon.mediation.initializer.ServiceBusConstants;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsService;
@@ -64,13 +64,10 @@ public class StartupAdminServiceComponent {
         try {
             initialized = true;
             SynapseEnvironmentService synEnvService = synapseEnvironmentServices
-                    .get(MultitenantConstants.SUPER_TENANT_ID);
+                    .get(Constants.SUPER_TENANT_ID);
             if (synEnvService != null) {
                 context.getBundleContext()
                         .registerService(TaskManagementService.class.getName(), new StartupAdminService(), null);
-                // TODO:- check whether we need this we bring in the tasks
-//                context.getBundleContext().registerService(JobMetaDataProviderService.class.getName(),
-//                                                           new StartupJobMetaDataProviderService(), null);
                 registerDeployer(synEnvService.getConfigurationContext().getAxisConfiguration(),
                                  synEnvService.getSynapseEnvironment());
             } else {

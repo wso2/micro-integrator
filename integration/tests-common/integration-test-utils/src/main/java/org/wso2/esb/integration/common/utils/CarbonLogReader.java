@@ -184,6 +184,17 @@ public class CarbonLogReader {
         return false;
     }
 
+    /**
+     * Check for the existence of the given log message occurrences. The polling will happen in one second intervals.
+     *
+     * @param expected            expected log message
+     * @return true if the expected number of log occurrences are found within the given timeout, false otherwise
+     * @throws InterruptedException if interrupted while sleeping
+     */
+    public int getNumberOfOccurencesForLog(String expected) throws InterruptedException {
+        return StringUtils.countMatches(this.getLogs(), expected);
+    }
+
     private Callable<Boolean> hasThreadStarted(final Thread thread) {
         return new Callable<Boolean>() {
             @Override
