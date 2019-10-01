@@ -56,7 +56,6 @@ import org.apache.synapse.libraries.imports.SynapseImport;
 import org.apache.synapse.libraries.model.Library;
 import org.apache.synapse.libraries.util.LibDeployerUtils;
 import org.apache.synapse.transport.customlogsetter.CustomLogSetter;
-import org.wso2.carbon.mediation.library.util.LocalEntryUtil;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
@@ -67,6 +66,7 @@ import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
+import org.wso2.micro.integrator.initializer.utils.LocalEntryUtil;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
