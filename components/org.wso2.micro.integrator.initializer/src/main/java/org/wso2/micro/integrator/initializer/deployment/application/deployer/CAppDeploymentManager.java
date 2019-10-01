@@ -22,6 +22,7 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.application.deployer.AppDeployerConstants;
@@ -31,13 +32,15 @@ import org.wso2.micro.application.deployer.config.ApplicationConfiguration;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
 import org.wso2.micro.core.util.CarbonException;
-import org.wso2.carbon.utils.FileManipulator;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -130,7 +133,8 @@ public class CAppDeploymentManager {
                                     currentApp.getAppNameWithVersion() +
                                     "Check whether all dependent artifacts are included in cApp file: " +
                                     targetCAppPath);
-                            FileManipulator.deleteDir(currentApp.getExtractedPath());
+
+                            deleteExtractedCApp(currentApp.getExtractedPath());
                             return;
                         }
 
@@ -145,6 +149,19 @@ public class CAppDeploymentManager {
                     }
                 }
             }
+        }
+    }
+
+    /**
+     * Deletes a directory given it's path.
+     *
+     * @param path the path of the directory to be deleted
+     */
+    private void deleteExtractedCApp(String path) {
+        try {
+            FileUtils.deleteDirectory(new File(path));
+        } catch (IOException e) {
+            log.warn("Unable to locate: " + path);
         }
     }
 
@@ -213,7 +230,7 @@ public class CAppDeploymentManager {
      *
      * @param rootDirPath - root dir of the extracted artifact
      * @param parentApp - capp instance
-     * @throws org.wso2.carbon.CarbonException - on error
+     * @throws org.wso2.micro.core.util.CarbonException - on error
      */
     private void searchArtifacts(String rootDirPath, CarbonApplication parentApp) throws CarbonException {
         File extractedDir = new File(rootDirPath);

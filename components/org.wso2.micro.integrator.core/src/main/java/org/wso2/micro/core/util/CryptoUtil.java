@@ -20,15 +20,11 @@ import com.google.gson.JsonSyntaxException;
 import org.apache.axiom.om.util.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.carbon.core.RegistryResources.SecurityManagement;
-
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.encryption.SymmetricEncryption;
 import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
-import org.wso2.carbon.registry.core.service.RegistryService;
-import org.wso2.micro.core.encryption.SymmetricEncryption;
 
-import javax.crypto.Cipher;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
 import java.security.MessageDigest;
@@ -36,6 +32,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
+import javax.crypto.Cipher;
 
 /**
  * The utility class to encrypt/decrypt passwords to be stored in the
@@ -50,7 +47,6 @@ public class CryptoUtil {
     private String primaryKeyStoreKeyPass;
     private String internalKeyStoreKeyPass;
     private CarbonServerConfigurationService serverConfigService;
-    private RegistryService registryService;
     private Gson gson = new Gson();
     private static CryptoUtil instance = null;
     private static final char[] HEX_CHARACTERS = new char[]{'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B',
@@ -65,10 +61,6 @@ public class CryptoUtil {
      */
     public static CryptoUtil getDefaultCryptoUtil() {
         return getDefaultCryptoUtil(CarbonCoreDataHolder.getInstance().getServerConfigurationService());
-    }
-
-    public static RegistryService lookupRegistryService() {
-        return null;
     }
 
     /**
@@ -89,23 +81,18 @@ public class CryptoUtil {
 
     private CryptoUtil(CarbonServerConfigurationService serverConfigService) {
         this.serverConfigService = serverConfigService;
-        this.registryService = registryService;
-        this.primaryKeyStoreAlias = this.serverConfigService.getFirstProperty(SecurityManagement.
-                SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
-        this.internalKeyStoreAlias = this.serverConfigService.getFirstProperty(SecurityManagement.
-                SERVER_INTERNAL_KEYSTORE_KEY_ALIAS);
-        this.primaryKeyStoreKeyPass = this.serverConfigService.getFirstProperty(SecurityManagement.
-                SERVER_PRIVATE_KEY_PASSWORD);
-        this.internalKeyStoreKeyPass = this.serverConfigService.getFirstProperty(SecurityManagement.
-                SERVER_INTERNAL_PRIVATE_KEY_PASSWORD);
+        this.primaryKeyStoreAlias = this.serverConfigService.getFirstProperty(Constants.
+                                                                                      SERVER_PRIMARY_KEYSTORE_KEY_ALIAS);
+        this.internalKeyStoreAlias = this.serverConfigService.getFirstProperty(Constants.
+                                                                                       SERVER_INTERNAL_KEYSTORE_KEY_ALIAS);
+        this.primaryKeyStoreKeyPass = this.serverConfigService.getFirstProperty(Constants.
+                                                                                        SERVER_PRIVATE_KEY_PASSWORD);
+        this.internalKeyStoreKeyPass = this.serverConfigService.getFirstProperty(Constants.
+                                                                                         SERVER_INTERNAL_PRIVATE_KEY_PASSWORD);
     }
 
     public CarbonServerConfigurationService getServerConfigService() {
         return serverConfigService;
-    }
-
-    public RegistryService getRegistryService() {
-        return null;
     }
 
     /**
@@ -133,7 +120,7 @@ public class CryptoUtil {
                 KeyStore keyStore;
                 Certificate[] certs;
                 org.wso2.micro.core.util.KeyStoreManager keyMan = org.wso2.micro.core.util.KeyStoreManager.getInstance(
-                        MultitenantConstants.SUPER_TENANT_ID,
+                        Constants.SUPER_TENANT_ID,
                         this.getServerConfigService());
                 if (keyMan.getInternalKeyStore() != null) {
                     keyStore = keyMan.getInternalKeyStore();
@@ -237,9 +224,8 @@ public class CryptoUtil {
                 KeyStore keyStore;
                 PrivateKey privateKey;
                 org.wso2.micro.core.util.KeyStoreManager keyMan = org.wso2.micro.core.util.KeyStoreManager.getInstance(
-                        MultitenantConstants.SUPER_TENANT_ID,
-                        this.getServerConfigService(),
-                        this.getRegistryService());
+                        Constants.SUPER_TENANT_ID,
+                        this.getServerConfigService());
                 if (keyMan.getInternalKeyStore() != null) {
                     keyStore = keyMan.getInternalKeyStore();
                     privateKey = (PrivateKey) keyStore.getKey(internalKeyStoreAlias, internalKeyStoreKeyPass.toCharArray());
@@ -312,10 +298,8 @@ public class CryptoUtil {
                 Cipher keyStoreCipher;
                 KeyStore keyStore;
                 PrivateKey privateKey;
-                org.wso2.micro.core.util.KeyStoreManager keyMan = KeyStoreManager.getInstance(
-                        MultitenantConstants.SUPER_TENANT_ID,
-                        this.getServerConfigService(),
-                        this.getRegistryService());
+                org.wso2.micro.core.util.KeyStoreManager keyMan = KeyStoreManager
+                        .getInstance(Constants.SUPER_TENANT_ID, this.getServerConfigService());
                 if (keyMan.getInternalKeyStore() != null) {
                     keyStore = keyMan.getInternalKeyStore();
                     privateKey = (PrivateKey) keyStore.getKey(internalKeyStoreAlias, internalKeyStoreKeyPass.toCharArray());

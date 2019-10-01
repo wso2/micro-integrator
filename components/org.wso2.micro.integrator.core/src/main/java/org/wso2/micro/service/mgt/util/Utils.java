@@ -22,7 +22,6 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.NetworkUtils;
-import org.wso2.micro.core.transports.http.HttpTransportListener;
 
 import java.io.File;
 import java.net.SocketException;
@@ -68,29 +67,6 @@ public final class Utils {
             return new String[]{wsdlUrlPrefix + "?wsdl", wsdlUrlPrefix + "?wsdl2"};
         }
         return new String[]{};
-    }
-
-    /**
-     * A utility method to check whether Axis2 uses the Servlet transport or the NIO transport
-     *
-     * @param axisConfig
-     * @return
-     */
-    private static boolean isServletTransport(AxisConfiguration axisConfig) {
-        if (!isServletTransportSet) {
-            TransportInDescription transportInDescription = axisConfig.getTransportIn("http");
-            if (transportInDescription == null) {
-                transportInDescription = axisConfig.getTransportIn("https");
-            }
-
-            if (transportInDescription != null) {
-                if (transportInDescription.getReceiver() instanceof HttpTransportListener) {
-                    isServletTransport = true;
-                }
-            }
-            isServletTransportSet = true;
-        }
-        return isServletTransport;
     }
 
     /**
