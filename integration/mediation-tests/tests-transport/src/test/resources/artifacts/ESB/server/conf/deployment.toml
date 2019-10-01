@@ -38,6 +38,37 @@ parameter.destination = "dynamicQueues/StaleConnectionTest"
 parameter.destination_type = "queue"
 parameter.cache_level = "connection"
 
+[[transport.blocking.jms.listener]]
+name = "myTopicConnectionFactory"
+parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+parameter.provider_url = "tcp://localhost:61616"
+parameter.connection_factory_name = "TopicConnectionFactory"
+parameter.connection_factory_type = "topic"
+
+[[transport.blocking.jms.listener]]
+name = "myQueueConnectionFactory"
+parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+parameter.provider_url = "tcp://localhost:61616"
+parameter.connection_factory_name = "QueueConnectionFactory"
+parameter.connection_factory_type = "queue"
+
+[[transport.blocking.jms.listener]]
+name = "default"
+parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+parameter.provider_url = "tcp://localhost:61616"
+parameter.connection_factory_name = "QueueConnectionFactory"
+parameter.connection_factory_type = "queue"
+
+[[transport.blocking.jms.sender]]
+name = "myQueueConnectionFactory2"
+parameter.initial_naming_factory = "org.apache.activemq.jndi.ActiveMQInitialContextFactory"
+parameter.provider_url = "tcp://localhost:61616"
+parameter.connection_factory_name = "QueueConnectionFactory"
+parameter.connection_factory_type = "queue"
+parameter.destination = "dynamicQueues/StaleConnectionTest"
+parameter.destination_type = "queue"
+parameter.cache_level = "connection"
+
 [transport.mail.listener]
 enable = true
 
@@ -67,11 +98,12 @@ sender.enable = false
 
 [transport.mqtt]
 listener.enable = true
-listener.parameter.client_id = "client-id-1234"
-listener.parameter.connection_factory = "mqttConFactory"
-listener.parameter.hostname = "localhost"   # inferred
-listener.parameter.server_port = 1883
-listener.parameter.topic_name = "esb.test"
+listener.client_id = "client-id-1234"
+listener.connection_factory = "mqttConFactory"
+listener.hostname = "localhost"   # inferred
+listener.server_port = 1883
+listener.topic_name = "esb.test"
+
 sender.enable = true
 
 

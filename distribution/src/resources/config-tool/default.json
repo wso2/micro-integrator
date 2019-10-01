@@ -49,6 +49,11 @@
   "user_store.properties.LDAPConnectionTimeout": "5000",
   "user_store.properties.ReplaceEscapeCharactersAtUserLogin": true,
 
+  "authorization_manager.class": "org.wso2.micro.integrator.security.user.core.authorization.JDBCAuthorizationManager",
+  "authorization_manager.properties.AdminRoleManagementPermissions": "/permission",
+  "authorization_manager.properties.AuthorizationCacheEnabled": true,
+  "authorization_manager.properties.GetAllRolesOfUserEnabled": false,
+
   "synapse_properties.'synapse.threads.core'": "20",
   "synapse_properties.'synapse.threads.max'": "100",
   "synapse_properties.'synapse.global_timeout_interval'": "120000",
@@ -114,11 +119,22 @@
   "transport.http.sender.truststore.password": "$ref{truststore.password}",
   "transport.http.sender.ssl_profile.read_interval": "600000",
 
+  "transport.blocking.http.listener.enable": true,
+  "transport.blocking.http.listener.parameter.port": "8200",
+
+  "transport.blocking.http.sender.enable": true,
   "transport.blocking.http.sender.parameter.cacheHttpClient": true,
   "transport.blocking.http.sender.parameter.Transfer-Encoding": "chunked",
   "transport.blocking.http.sender.parameter.defaultMaxConnectionsPerHost": "200",
   "transport.blocking.http.sender.parameter.OmitSOAP12Action": true,
   "transport.blocking.http.sender.parameter.SO_TIMEOUT": "60000",
+
+  "transport.blocking.http.sender.secured_enable": true,
+  "transport.blocking.https.sender.parameter.cacheHttpClient": true,
+  "transport.blocking.https.sender.parameter.Transfer-Encoding": "chunked",
+  "transport.blocking.https.sender.parameter.defaultMaxConnectionsPerHost": "200",
+  "transport.blocking.https.sender.parameter.OmitSOAP12Action": true,
+  "transport.blocking.https.sender.parameter.SO_TIMEOUT": "60000",
 
   "transport.vfs.listener.enable": true,
   "transport.vfs.listener.keystore.file_name": "repository/resources/security/$ref{keystore.tls.file_name}",
@@ -131,6 +147,12 @@
   "transport.msmq.listener.parameter.'msmq.receiver.host'": "$ref{server.hostname}",
 
   "transport.mqtt.listener.mqttConFactory.parameter.'mqtt.server.host.name'": "$ref{server.hostname}",
+
+  "transport.mail.listener.enable": true,
+  "transport.mail.listener.name": "mailto",
+
+  "transport.blocking.mail.listener.enable": true,
+  "transport.blocking.mail.listener.name": "mailto",
 
   "transport.modules": [
     {
@@ -165,7 +187,8 @@
               "handler_class": "org.apache.synapse.transport.passthru.util.RelaySecuirtyMessageBuilderDispatchandler"
             }, {
               "handler_name": "SOAPActionBasedDispatcher",
-              "handler_class": "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"
+              "handler_class": "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher",
+              "handler_order_phase": "Transport"
             }
           ]
         }, {
@@ -173,7 +196,8 @@
           "handlers": [
             {
               "handler_name": "AddressingBasedDispatcher",
-              "handler_class": "org.apache.axis2.dispatchers.AddressingBasedDispatcher"
+              "handler_class": "org.apache.axis2.dispatchers.AddressingBasedDispatcher",
+              "handler_order_phase": "Addressing"
             }
           ]
         }, {
@@ -269,7 +293,8 @@
               "handler_order_phase": "Transport"
             }, {
               "handler_name": "SOAPActionBasedDispatcher",
-              "handler_class": "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher"
+              "handler_class": "org.apache.axis2.dispatchers.SOAPActionBasedDispatcher",
+              "handler_order_phase": "Transport"
             }
           ]
         }, {

@@ -73,6 +73,12 @@ read_timeout = '' # empty by default
 retry_attempts = '' # empty by default
 replace_escape_characters_at_user_login = true   #inferred
 
+[authorization_manager]
+class = "org.wso2.micro.integrator.security.user.core.authorization.JDBCAuthorizationManager"   # inferred
+admin_role_management_permissions = "/permission"   # inferred
+enable_authorization_cache = true                   # inferred
+get_all_roles_user_enable = false                   # inferred
+
 ########################## Massege builders and formatters ###################################
 
 [message_formatters]
@@ -231,12 +237,24 @@ bypass_hosts = ["xxx.sample.com"]
 ########################## Passthroug http/https configurations ###################################
 
 [transport.blocking.http] # Optional
-# common for http/https
-sender.enable_client_caching = true
-sender.transfer_encoding = "chunked"
-sender.default_connections_per_host = 200
-sender.omit_soap12_action = true
-sender.so_timeout = 60000 # inferred timeout in milliseconds
+
+listener.enable = true      # inferred default true
+listener.port = 8200        # inferred default 8200
+listener.hostname = ""                          # no default value
+listener.origin_server = ""                     # no default value
+listener.request_timeout = ""                   # no default value
+listener.request_tcp_no_delay = ""              # no default value
+listener.request_core_thread_pool_size = ""     # no default value
+listener.request_max_thread_pool_size = ""      # no default value
+listener.thread_keepalive_time = ""             # no default value
+listener.thread_keepalive_time_unit = ""        # no default value
+
+sender.enable = true                            # inferred default true
+sender.enable_client_caching = true             # inferred default true
+sender.transfer_encoding = "chunked"            # inferred default chunked
+sender.default_connections_per_host = 200       # inferred default 200
+sender.omit_soap12_action = true                # inferred default true
+sender.so_timeout = 60000                       # inferred default 60000 timeout in milliseconds
 
 ###################################   VFS configurations              ###################################
 [transport.vfs] # enable by default
@@ -247,13 +265,19 @@ listener.keystore.type = "$ref{keystore.tls.type}"                   # inferred
 listener.keystore.password = "$ref{keystore.tls.password}"           # inferred
 listener.keystore.key_password = "$ref{keystore.tls.key_password}"   # inferred
 listener.keystore.alias = "$ref{keystore.tls.alias}"                 # inferred
+
+listener.parameter.customParameter = ""
+
 sender.enable = true
+sender.parameter.customParameter = ""
 
 ################################### FIX transport configurations      ###################################
 [transport.fix] # optional
 
 listener.enable = false         # false by default
+listener.parameter.customParameter = ""
 sender.enable = false           # false by default
+sender.parameter.customParameter = ""
 
 ################################### Custom transport configurations   ###################################
 
@@ -298,16 +322,43 @@ truststore.password = "$ref{truststore.password}"
 ssl_profile.file_path = "conf/sslprofiles/senderprofiles.xml"
 ssl_profile.read_interval = 30000       # interval in milliseconds
 
-[transport]
-default_content_type = "empty/content"
+
+[[custom_transport.blocking.listener]]
+
+class="<qualified class name>"
+protocol = "ISO8583"
+parameter.customParameter = ""
+
+[[custom_transport.blocking.sender]]
+
+class="<qualified class name>"
+protocol = "ISO8583"
+parameter.customParameter = ""
 
 
 ###################################     Mail transport configurations   ###################################
 [transport.mail.listener]
-enable = true
-name = "mailto"         # inferred
+enable = true           # inferred default true
+name = "mailto"         # inferred default mailto
+parameter.customParameter = ""
 
 [[transport.mail.sender]]
+
+name = "mailto"
+parameter.hostname = "smtp.gmail.com"
+parameter.port = "587"
+parameter.enable_tls = true
+parameter.auth = true
+parameter.username = "demo_user"
+parameter.password = "mailpassword"
+parameter.from = "demo_user@wso2.com"
+
+[transport.blocking.mail.listener]      # blocking mail listener, enable by default
+enable = true                           # inferred default true
+name = "mailto"                         # inferred default mailto
+parameter.customParameter = "value"
+
+[[transport.blocking.mail.sender]]       # blocking mail sender, disable by default
 
 name = "mailto"
 parameter.hostname = "smtp.gmail.com"
@@ -323,7 +374,6 @@ parameter.from = "demo_user@wso2.com"
 
 name = "myTopicListener"
 parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
-parameter.broker_name = "artemis"                   # todo broker_name ?
 parameter.provider_url = "tcp://localhost:61616"
 parameter.connection_factory_name = "TopicConnectionFactory"
 parameter.connection_factory_type = "topic" # [queue, topic]
@@ -366,7 +416,6 @@ parameter.consume_error_progression = "2.0"
 
 name = "myTopicSender"
 parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
-parameter.broker_name = "artemis"
 parameter.provider_url = "tcp://localhost:61616"
 parameter.connection_factory_name = "TopicConnectionFactory"
 parameter.connection_factory_type = "topic"
@@ -404,12 +453,95 @@ parameter.max_jsm_connection = 10
 parameter.max_consumer_error_retrieve_before_delay = 20
 parameter.consume_error_delay = "100"       # delay in milliseconds
 parameter.consume_error_progression = "2.0"
+parameter.vender_class_loader = false       # only for IBM MQ
 
-parameter.vender_class_loader = false       # only for IBM MQ       todo tempated only for sender?
+[[transport.blocking.jms.listener]]     # jms listener for blocking transport
 
-# todo reveiw
+name = "myTopicListener"
+parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
+parameter.provider_url = "tcp://localhost:61616"
+parameter.connection_factory_name = "TopicConnectionFactory"
+parameter.connection_factory_type = "topic" # [queue, topic]
+parameter.cache_level = "consumer"
+
+parameter.naming_security_principal = ""
+parameter.naming_security_credential = ""
+parameter.transactionality = ""
+parameter.transaction_jndi_name = ""
+parameter.cache_user_transaction = true
+parameter.session_transaction = true
+parameter.session_acknowledgement = "AUTO_ACKNOWLEDGE"
+parameter.jms_spec_version = "1.1"
+parameter.username = ""
+parameter.password = ""
+parameter.destination = ""
+parameter.destination_type = "queue" # queue/topic
+parameter.default_reply_destination = ""
+parameter.default_destination_type = "queue" # queue/topic
+parameter.message_selector = ""
+parameter.subscription_durable = false
+parameter.durable_subscriber_client_id = ""
+parameter.durable_subscriber_name = ""
+parameter.pub_sub_local = false
+parameter.receive_timeout = "1000"              # timeout in milliseconds
+parameter.concurrent_consumer = 1
+parameter.max_concurrent_consumer = 1
+parameter.idle_task_limit = 10
+parameter.max_message_per_task = -1
+parameter.initial_reconnection_duration = "10000"       # duraton in milliseconds
+parameter.reconnect_progress_factor = 2
+parameter.max_reconnect_duration = "3600000"            # duration in milliseconds
+parameter.reconnect_interval = "3600000"                # duration in milliseconds
+parameter.max_jsm_connection = 10
+parameter.max_consumer_error_retrieve_before_delay = 20
+parameter.consume_error_delay = "100"                   # delay in milliseconds
+parameter.consume_error_progression = "2.0"
+
+[[transport.blocking.jms.sender]]   # jms sender for blocking transport
+
+name = "myTopicSender"
+parameter.initial_naming_factory = "org.apache.activemq.artemis.jndi.ActiveMQInitialContextFactory"
+parameter.provider_url = "tcp://localhost:61616"
+parameter.connection_factory_name = "TopicConnectionFactory"
+parameter.connection_factory_type = "topic"
+parameter.cache_level = "producer"
+
+parameter.naming_security_principal = ""
+parameter.naming_security_credential = ""
+parameter.transactionality = ""
+parameter.transaction_jndi_name = ""
+parameter.cache_user_transaction = true
+parameter.session_transaction = true
+parameter.session_acknowledgement = "AUTO_ACKNOWLEDGE"
+parameter.jms_spec_version = "1.1"
+parameter.username = ""
+parameter.password = ""
+parameter.destination = ""
+parameter.destination_type = "queue" # queue/topic
+parameter.default_reply_destination = ""
+parameter.default_destination_type = "queue" # queue/topic
+parameter.message_selector = ""
+parameter.subscription_durable = false
+parameter.durable_subscriber_client_id = ""
+parameter.durable_subscriber_name = ""
+parameter.pub_sub_local = false
+parameter.receive_timeout = "1000"      # timout in milliseconds
+parameter.concurrent_consumer = 1
+parameter.max_concurrent_consumer = 1
+parameter.idle_task_limit = 10
+parameter.max_message_per_task = -1
+parameter.initial_reconnection_duration = "10000"     # duration in milliseconds
+parameter.reconnect_progress_factor = 2
+parameter.max_reconnect_duration = "3600000"          # duration in milliseconds
+parameter.reconnect_interval = "3600000"                # duration in milliseconds
+parameter.max_jsm_connection = 10
+parameter.max_consumer_error_retrieve_before_delay = 20
+parameter.consume_error_delay = "100"       # delay in milliseconds
+parameter.consume_error_progression = "2.0"
+parameter.vender_class_loader = false       # only for IBM MQ
+
 ###################################     JNDI property configuration     ###################################
-[transport.jndi.connection_factories]       # todo hardcode defaults ?
+[transport.jndi.connection_factories]
 QueueConnectionFactory = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
 TopicConnectionFactory = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
 
@@ -483,14 +615,17 @@ parameter.connection_pool_size = 10
 [transport.ws]
 
 sender.enable = false
-sender.parameter.outflow_dispatch_sequence = "outflowDispatchSeq"               # inferred
-sender.parameter.outflow_dispatch_fault_sequence = "outflowFaultSeq"            # inferred
+sender.outflow_dispatch_sequence = "outflowDispatchSeq"               # inferred
+sender.outflow_dispatch_fault_sequence = "outflowFaultSeq"            # inferred
+sender.parameter.customParameter = ""
 
 [transport.wss]
 
 sender.enable = false
-sender.parameter.outflow_dispatch_sequence = "outflowDispatchSeq"               # inferred
-sender.parameter.outflow_dispatch_fault_sequence = "outflowFaultSeq"            # inferred
+sender.outflow_dispatch_sequence = "outflowDispatchSeq"               # inferred
+sender.outflow_dispatch_fault_sequence = "outflowFaultSeq"            # inferred
+sender.parameter.customParameter = ""
+
 sender.truststore_location = "$ref{truststore.file_name}" # inferred
 sender.truststore_password = "$ref{truststore.password}" # inferred
 
@@ -499,11 +634,14 @@ sender.truststore_password = "$ref{truststore.password}" # inferred
 
 listener.enable = true
 listener.idoc.class = "org.wso2.carbon.transports.sap.SAPTransportListener" # inferred
+listener.idoc.parameter.customParameter = ""
 listener.bapi.class = "org.wso2.carbon.transports.sap.SAPTransportListener" # inferred
+listener.bapi.parameter.customParameter = ""
 sender.enable = true
 sender.idoc.class = "org.wso2.carbon.transports.sap.SAPTransportSender" # inferred
+sender.idoc.parameter.customParameter = ""
 sender.bapi.class = "org.wso2.carbon.transports.sap.SAPTransportSender" # inferred
-
+sender.bapi.parameter.customParameter = ""
 
 ###################################     TCP configurations          ###################################
 [transport.tcp]
@@ -513,47 +651,76 @@ listener.port = 8000
 listener.hostname = "$ref{server.hostname}"
 listener.content_type = ["application/xml"]
 listener.response_client = true
+listener.parameter.customParameter = ""
+
 sender.enable = true
+sender.parameter.customParameter = ""
+
+[transport.blocking.tcp]     # tcp blocking transport
+
+listener.enable = false         # disable by default
+listener.port = 8000
+listener.hostname = "$ref{server.hostname}"
+listener.content_type = ["application/xml"]
+listener.response_client = true
+listener.parameter.customParameter = ""
+
+sender.enable = false            # disable by default
+sender.parameter.customParameter = ""
 
 ###################################     UDP configurations          ###################################
 [transport.udp]
 
-listener.enable = false
-sender.enable =false
+listener.enable = false                 # disable by default
+listener.parameter.customParameter = ""
+
+sender.enable =false                     # disable by default
+sender.parameter.customParameter = ""
+
+[transport.blocking.udp]
+
+listener.enable = false                  # disable by default
+listener.parameter.customParameter = ""
+
+sender.enable = false                    # disable by default
+sender.parameter.customParameter = ""
 
 ###################################     MSMQ configurations         ###################################
 [transport.msmq]
 
 listener.enable = false
 listener.hostname = "$ref{server.hostname}"   # inferred
+listener.parameter.customParameter = ""
+
 sender.enable = false
+sender.parameter.customParameter = ""
 
 ###################################     MQTT configuration          ###################################
 [transport.mqtt]
 
 listener.enable = false
-listener.parameter.hostname = "$ref{server.hostname}"   # inferred
-listener.parameter.connection_factory = "mqttConFactory"                      # todo ? loked=false
-listener.parameter.server_port = 1883
-listener.parameter.client_id = "client-id-1234"
-listener.parameter.topic_name = "esb.test"
+listener.hostname = "$ref{server.hostname}"   # inferred
+listener.connection_factory = "mqttConFactory"
+listener.server_port = 1883
+listener.client_id = "client-id-1234"
+listener.topic_name = "esb.test"
 
 # not reqired parameter list
-listener.parameter.subscription_qos = 0       # 0,1,2
-listener.parameter.session_clean = false
-listener.parameter.enable_ssl = false
-listener.parameter.subscription_username = ""
-listener.parameter.subscription_password = ""
-listener.parameter.temporary_store_directory = ""
-listener.parameter.blocking_sender = false                # todo does blocking sender axis configuration?
-listener.parameter.connect_type = "text/plain"
-listener.parameter.message_retained = false
+listener.subscription_qos = 0       # 0,1,2
+listener.session_clean = false
+listener.enable_ssl = false
+listener.subscription_username = ""
+listener.subscription_password = ""
+listener.temporary_store_directory = ""
+listener.blocking_sender = false
+listener.connect_type = "text/plain"
+listener.message_retained = false
+
+listener.parameter.customParameter = ""
 
 sender.enable = false
+sender.parameter.customParameter = ""
 
-###################################     Http servlet                ###################################
-
-# todo ??
 ###################################     Carbon properties           ###################################
 [system.parameter]
 'org.wso2.CipherTransformation' = "RSA/ECB/OAEPwithSHA1andMGF1Padding"
@@ -664,8 +831,12 @@ class = "org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.
 sender.nonblocking.enable = false
 
 [[transport.parameters]]    # custom parameters for axis2 transport
-name="ok"
-value="abcd"
+name="name"
+value="value"
+
+[[transport.blocking.parameter]]
+name = "name"
+value = "value"
 
 [[transport.modules]]   # all modules should be defined here including defaults
 ref="addressing"
