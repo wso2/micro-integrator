@@ -42,9 +42,19 @@ import com.google.gdata.data.spreadsheet.ListFeed;
 import com.google.gdata.data.spreadsheet.SpreadsheetEntry;
 import com.google.gdata.data.spreadsheet.WorksheetEntry;
 import com.google.gdata.data.spreadsheet.WorksheetFeed;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMText;
+import org.apache.axiom.om.impl.llom.OMTextImpl;
+import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.deployment.DeploymentException;
+import org.apache.axis2.description.Parameter;
+import org.apache.commons.io.IOUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.config.SynapseConfiguration;
+import org.wso2.micro.integrator.dataservices.sql.driver.internal.SQLDriverDSComponent;
 import org.wso2.micro.integrator.dataservices.sql.driver.parser.Constants;
 import org.wso2.micro.integrator.dataservices.sql.driver.processor.reader.DataTable;
 import org.wso2.micro.integrator.dataservices.sql.driver.query.ColumnInfo;
@@ -308,7 +318,7 @@ public class TDriverUtil {
      * @see InputStream
      */
     public static InputStream getInputStreamFromPath(String path) throws IOException, SQLException {
-        InputStream ins;
+        InputStream ins = null;
         if (path.startsWith("http://")) {
             /* This is a url file path */
             /*
@@ -318,37 +328,16 @@ public class TDriverUtil {
             URL url = new URL(path);
             ins = url.openStream();
         } else if (isRegistryPath(path)) {
-//            try {
-//                RegistryService registryService = SQLDriverDSComponent.getRegistryService();
-//                if (registryService == null) {
-//                    throw new SQLException("DBUtils.getInputStreamFromPath(): Registry service is not available");
-//                }
-//                Registry registry;
-//                if (path.startsWith(CONF_REGISTRY_PATH_PREFIX)) {
-//                    if (path.length() > CONF_REGISTRY_PATH_PREFIX.length()) {
-//                        path = path.substring(CONF_REGISTRY_PATH_PREFIX.length());
-//                        registry = registryService.getConfigSystemRegistry(getCurrentTenantId());
-//                    } else {
-//                        throw new SQLException("Empty configuration registry path given");
-//                    }
-//                } else {
-//                    if (path.length() > GOV_REGISTRY_PATH_PREFIX.length()) {
-//                        path = path.substring(GOV_REGISTRY_PATH_PREFIX.length());
-//                        registry = registryService.getGovernanceSystemRegistry(getCurrentTenantId());
-//                    } else {
-//                        throw new SQLException("Empty governance registry path given");
-//                    }
-//                }
-//                if (registry.resourceExists(path)) {
-//                    Resource serviceResource = registry.get(path);
-//                    ins = serviceResource.getContentStream();
-//                } else {
-//                    throw new SQLException(
-//                            "The given XSLT resource path at '" + path + "' does not exist");
-//                }
-//            } catch (RegistryException e) {
-//                throw new SQLException(e);
-//            }
+            ConfigurationContext configCtx = SQLDriverDSComponent.getConfigurationContextService().
+                    getServerConfigContext();
+            Parameter synCfgParam = configCtx.getAxisConfiguration().getParameter
+                    (SynapseConstants.SYNAPSE_CONFIG);
+            if (synCfgParam == null) {
+                throw new DeploymentException("SynapseConfiguration not found");
+            }
+            SynapseConfiguration synapseConfig = (SynapseConfiguration) synCfgParam.getValue();
+            Object regEntry = synapseConfig.getRegistry().lookup(path);
+            ins = ((OMTextImpl) regEntry).getInputStream();
         } else {
             File file = new File(path);
             if (path.startsWith("." + File.separator) || path.startsWith(".." + File.separator)) {
@@ -358,13 +347,7 @@ public class TDriverUtil {
             /* local file */
             ins = new FileInputStream(path);
         }
-        return new InputStream() {
-            @Override
-            public int read() throws IOException {
-                return 0;
-            }
-        };
-//        return ins;
+        return ins;
     }
 
     public static boolean isRegistryPath(String path) {
