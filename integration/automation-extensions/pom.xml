@@ -53,11 +53,27 @@
             <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon.commons</groupId>
+                    <artifactId>org.wso2.carbon.ndatasource.stub</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon.identity</groupId>
+                    <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.extensions</artifactId>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon.identity</groupId>
+                    <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
