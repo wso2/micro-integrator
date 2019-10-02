@@ -1055,8 +1055,7 @@ public class MicroIntegratorRegistry extends AbstractRegistry {
         String resolvedRegKeyPath = resolveRegistryURI(key);
         try {
             // here, a URL object is created in order to remove the protocol from the file path
-            new File(new URL(resolvedRegKeyPath).getFile());
-            return new Resource();
+            return new Resource(new File(new URL(resolvedRegKeyPath).getFile()));
         } catch (MalformedURLException e) {
             if (log.isDebugEnabled()) {
                 log.debug("Requested registry resource does not exist " + key, e);
