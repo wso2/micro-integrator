@@ -783,7 +783,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
      * @return whether main or fault sequence is handled
      */
     private boolean handleMainFaultSeqDeployment(Artifact artifact,
-                                                 AxisConfiguration axisConfig) {
+                                                 AxisConfiguration axisConfig, Deployer deployer) throws DeploymentException {
 
         String fileName = artifact.getFiles().get(0).getName();
         String artifactPath = artifact.getExtractedPath() + File.separator + fileName;
@@ -795,9 +795,24 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 String mainXMLPath = getMainXmlPath(axisConfig);
                 log.info("Copying main sequence to " + mainXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(mainXMLPath));
+                deployer.deploy(new DeploymentFileData(new File(mainXMLPath), deployer));
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
+            } catch (DeploymentException e) {
+                artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
+                throw e;
             } catch (IOException e) {
                 log.error("Error copying main.xml to sequence directory", e);
+            } catch (Throwable throwable) {
+                artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
+                // Since there can be different deployers, they can throw any error.
+                // So need to handle unhandled exception has occurred during deployement. Hence catch all and
+                // wrap it with DeployementException and throw it
+                throw new DeploymentException(throwable);
+            } finally {
+                //clear the log appender once deployment is finished to avoid appending the
+                //same log to other classes.
+                setCustomLogContent(deployer, null);
+                CustomLogSetter.getInstance().clearThreadLocalContent();
             }
         } else if (fileName.matches(FAULT_SEQ_REGEX) || fileName.matches(SynapseAppDeployerConstants.FAULT_SEQ_FILE)) {
             isMainOrFault = true;
@@ -805,9 +820,24 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 String faultXMLPath = getFaultXmlPath(axisConfig);
                 log.info("Copying fault sequence to " + faultXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(faultXMLPath));
+                deployer.deploy(new DeploymentFileData(new File(faultXMLPath), deployer));
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
+            } catch (DeploymentException e) {
+                artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
+                throw e;
             } catch (IOException e) {
                 log.error("Error copying main.xml to sequence directory", e);
+            } catch (Throwable throwable) {
+                artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_FAILED);
+                // Since there can be different deployers, they can throw any error.
+                // So need to handle unhandled exception has occurred during deployement. Hence catch all and
+                // wrap it with DeployementException and throw it
+                throw new DeploymentException(throwable);
+            } finally {
+                //clear the log appender once deployment is finished to avoid appending the
+                //same log to other classes.
+                setCustomLogContent(deployer, null);
+                CustomLogSetter.getInstance().clearThreadLocalContent();
             }
         }
         return isMainOrFault;
@@ -1045,7 +1075,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 File artifactInRepo = new File(artifactDir + File.separator + fileName);
 
                 if (SynapseAppDeployerConstants.SEQUENCE_TYPE.equals(artifact.getType()) &&
-                        handleMainFaultSeqDeployment(artifact, axisConfig)) {
+                        handleMainFaultSeqDeployment(artifact, axisConfig, deployer)) {
                 } else if (artifactInRepo.exists()) {
                     log.warn("Artifact " + fileName + " already found in " + artifactInRepo.getAbsolutePath() +
                             ". Ignoring CAPP's artifact");
