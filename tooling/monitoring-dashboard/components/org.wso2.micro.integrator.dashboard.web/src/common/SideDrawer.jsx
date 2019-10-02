@@ -20,6 +20,7 @@ import LocalEntryIcon from '@material-ui/icons/Assignment';
 import SequenceIcon from '@material-ui/icons/CompareArrows';
 import TemplateIcon from '@material-ui/icons/Description';
 import TaskIcon from '@material-ui/icons/Today';
+import CappIcon from '@material-ui/icons/Dashboard';
 
 const drawerWidth = 240;
 
@@ -55,48 +56,52 @@ export default function SideDrawer() {
                 <div className={classes.toolbar}/>
                 <List>
                     <ListItem button component={Link} to="/proxy">
-                        <ListItemIcon><NotesIcon color="error"/></ListItemIcon>
-                        <ListItemText primary="Proxy services"/>
+                        <ListItemIcon><NotesIcon style={{color:'#065e9b'}}/></ListItemIcon>
+                        <ListItemText primary="Proxy Services"/>
                     </ListItem>
                     <ListItem button component={Link} to="/endpoint">
-                        <ListItemIcon><SendIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><SendIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Endpoints"/>
                     </ListItem>
                     <ListItem button component={Link} to="/inbound-endpoint">
-                        <ListItemIcon><TransformIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><TransformIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Inbound Endpoints"/>
                     </ListItem>
                     <ListItem button component={Link} to="/message-processor">
-                        <ListItemIcon><MessageProcessorIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><MessageProcessorIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Message Processors"/>
                     </ListItem>
                     <ListItem button component={Link} to="/message-store">
-                        <ListItemIcon><MessageStoreIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><MessageStoreIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Message Stores"/>
                     </ListItem>
                     <ListItem button component={Link} to="/api">
-                        <ListItemIcon><ApiIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><ApiIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="API"/>
                     </ListItem>
                     <ListItem button component={Link} to="/template">
-                        <ListItemIcon><TemplateIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><TemplateIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Templates"/>
                     </ListItem>
                     <ListItem button component={Link} to="/sequence">
-                        <ListItemIcon><SequenceIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><SequenceIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Sequences"/>
                     </ListItem>
                     <ListItem button component={Link} to="/task">
-                        <ListItemIcon><TaskIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><TaskIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Tasks"/>
                     </ListItem>
                     <ListItem button component={Link} to="/local-entry">
-                        <ListItemIcon><LocalEntryIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><LocalEntryIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Local Entries"/>
                     </ListItem>
                     <ListItem button component={Link} to="/connector">
-                        <ListItemIcon><ConnectorIcon color="error"/></ListItemIcon>
+                        <ListItemIcon><ConnectorIcon style={{color:'#065e9b'}}/></ListItemIcon>
                         <ListItemText primary="Connectors"/>
+                    </ListItem>
+                    <ListItem button component={Link} to="/capp">
+                        <ListItemIcon><CappIcon style={{color:'#065e9b'}}/></ListItemIcon>
+                        <ListItemText primary="Carbon Applications"/>
                     </ListItem>
                 </List>
                 <Divider/>

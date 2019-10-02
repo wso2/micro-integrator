@@ -119,19 +119,18 @@ export default class InboundEndpointDetailsPage extends Component {
 
     renderBreadCrumbs() {
         return (
-            <Breadcrumbs separator="›" aria-label="breadcrumb">
-                <Box color="inherit" component={Link} to="/inbound-endpoint" fontSize={14}>
-                    Inbound Endpoints
-                </Box>
-                <Box color="textPrimary" fontSize={14}>{this.state.response.name}</Box>
-            </Breadcrumbs>);
+            <div style={{display:"flex"}}>
+                <Box color="inherit" component={Link} to="/inbound-endpoint">Inbound Endpoint</Box>
+                <Box color="textPrimary">&nbsp;>&nbsp;</Box>
+                <Box color="textPrimary"> {this.state.response.name}</Box>
+            </div>
+        );
     }
 
     render() {
         console.log(this.state.config);
         return (
-            <ResourceExplorerParent title={this.state.response.name + " Explorer"}
-                                    content={this.renderInboundEndpointDetails()} breadcrumb={this.renderBreadCrumbs()}/>
+            <ResourceExplorerParent title={this.renderBreadCrumbs()} content={this.renderInboundEndpointDetails()}/>
         );
     }
 }

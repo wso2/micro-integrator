@@ -72,7 +72,12 @@ export default class TemplateListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Template Name", "Type"];
+        const columns = [{
+            name:"Template Name",
+            options: {
+                sortDirection: 'asc'
+            }
+        }, "Type"];
         const options = {
             selectableRows: 'none',
             print: false,
@@ -81,7 +86,7 @@ export default class TemplateListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Templates"}
+                title={"TEMPLATES"}
                 data={this.state.templateData}
                 columns={columns}
                 options={options}

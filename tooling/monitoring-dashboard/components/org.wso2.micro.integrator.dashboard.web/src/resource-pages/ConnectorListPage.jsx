@@ -22,6 +22,8 @@ import ListViewParent from '../common/ListViewParent';
 import ResourceAPI from '../utils/apis/ResourceAPI';
 
 import MUIDataTable from "mui-datatables";
+import DisableIcon from '@material-ui/icons/Block';
+import ActiveIcon from '@material-ui/icons/CheckBox';
 
 export default class ConnectorListPage extends Component {
 
@@ -64,14 +66,27 @@ export default class ConnectorListPage extends Component {
 
     renderResourceList() {
 
-        const columns = ["Library Name", "Package", "Description", "Status"];
+        const columns = ["Library Name", "Package", "Description",
+        {
+        name: "Status",
+        options: {
+        customBodyRender: (value, tableMeta, updateValue) => {
+         if ("enabled" === tableMeta.rowData[3]) {
+                return(<span><ActiveIcon style={{color:"green"}}/> Enabled </span>);
+                    } else {
+      return(<span><DisableIcon style={{color:"red"}}/> Disabled </span>);
+      }
+        }
+      }}];
         const options = {
-            selectableRows: 'none'
+            selectableRows: 'none',
+            print: false,
+            download: false,
         };
 
         return (
             <MUIDataTable
-                title={"Connectors"}
+                title={"CONNECTORS"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

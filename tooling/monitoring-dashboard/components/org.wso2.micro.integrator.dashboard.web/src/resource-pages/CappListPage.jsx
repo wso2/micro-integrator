@@ -24,35 +24,34 @@ import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
 
-export default class InboundEndpointListPage extends Component {
+export default class CappListPage extends Component {
 
     constructor(props) {
         super(props);
-        this.inboundEndpoints = null;
+        this.capps = null;
         this.state = {
             data: [],
         };
     }
 
     /**
-     * Retrieve inbound endpoints from the MI.
+     * Retrieve carbon applications from the MI.
      */
     componentDidMount() {
-        this.retrieveInboundEndpoints();
+        this.retrieveCApps();
     }
 
-    retrieveInboundEndpoints() {
+    retrieveCApps() {
         const data = [];
 
-        new ResourceAPI().getResourceList(`/inbound-endpoints`).then((response) => {
-            this.inboundEndpoints = response.data.list || [];
+        new ResourceAPI().getResourceList(`/applications`).then((response) => {
+            this.capps = response.data.list || [];
 
-            this.inboundEndpoints.forEach((element) => {
+            this.capps.forEach((element) => {
                 const rowData = [];
                 rowData.push(element.name);
-                rowData.push(element.protocol);
+                rowData.push(element.version);
                 data.push(rowData);
-
             });
             this.setState({data: data});
 
@@ -64,20 +63,11 @@ export default class InboundEndpointListPage extends Component {
     renderResourceList() {
 
         const columns = [{
-            name: "Inbound Endpoint Name",
+            name:"Carbon Application",
             options: {
-                sortDirection: 'asc',
-                customBodyRender: (value, tableMeta, updateValue) => {
-                    return (
-                        <Link component="button" variant="body2" onClick={() => {
-                            this.props.history.push(`/inbound-endpoint/explore?name=${tableMeta.rowData[0]}`)
-                        }}>
-                            {tableMeta.rowData[0]}
-                        </Link>
-                    );
-                }
+                sortDirection: 'asc'
             }
-        }, "Protocol"];
+        }, "Version"];
         const options = {
             selectableRows: 'none',
             print: false,
@@ -86,7 +76,7 @@ export default class InboundEndpointListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"INBOUND ENDPOINTS"}
+                title={"CARBON APPLICATIONS"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

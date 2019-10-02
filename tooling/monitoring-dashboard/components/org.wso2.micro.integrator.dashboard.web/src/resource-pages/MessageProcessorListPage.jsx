@@ -22,6 +22,8 @@ import ResourceAPI from '../utils/apis/ResourceAPI';
 import Link from '@material-ui/core/Link';
 
 import MUIDataTable from "mui-datatables";
+import DisableIcon from '@material-ui/icons/Block';
+import ActiveIcon from '@material-ui/icons/CheckBox';
 
 export default class MessageProcessorListPage extends Component {
 
@@ -59,7 +61,6 @@ export default class MessageProcessorListPage extends Component {
         }).catch((error) => {
             //Handle errors here
         });
-        console.log(this.state.data);
     }
 
     renderResourceList() {
@@ -67,6 +68,7 @@ export default class MessageProcessorListPage extends Component {
         const columns = [{
             name: "Message Processor Name",
             options: {
+                sortDirection: 'asc',
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <Link component="button" variant="body2" onClick={() => {
@@ -77,7 +79,19 @@ export default class MessageProcessorListPage extends Component {
                     );
                 }
             }
-        }, "Type", "Status"];
+        }, "Type", {
+            name: "Status",
+            options: {
+                customBodyRender: (value, tableMeta, updateValue) => {
+
+                  if ("active" === tableMeta.rowData[2]) {
+                      return(<span><ActiveIcon style={{color:"green"}}/> Active </span>);
+                  } else {
+                      return(<DisableIcon style={{color:"red"}}/>);
+                  }
+                }
+            }
+        }];
         const options = {
             selectableRows: 'none',
             print: false,
@@ -86,7 +100,7 @@ export default class MessageProcessorListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Message Processors"}
+                title={"MESSAGE PROCESSORS"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

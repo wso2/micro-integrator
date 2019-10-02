@@ -25,20 +25,24 @@ export default class Logout extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            redirectUrl : ""
+            loggedOut: false
         }
     }
 
-    componentDidMount() {
-        AuthManager.logout().then(() => {
-        this.setState(
-            {
-                redirectUrl: "/login",
+    componentWillMount() {
+        AuthManager.logout()
+            .then(() => {
+               this.setState({
+                   loggedOut: true
+               });
             });
-         });
     }
 
+
     render() {
-        return (<Redirect to="/login"/>);
+        if (this.state.loggedOut) {
+            return <Redirect to="/login"/>
+        }
+        return "";
     }
 }

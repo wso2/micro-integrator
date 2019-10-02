@@ -65,6 +65,7 @@ export default class EndpointListPage extends Component {
         const columns = [{
             name: "Endpoint Name",
             options: {
+                sortDirection: 'asc',
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <Link component="button" variant="body2" onClick={() => {
@@ -84,7 +85,7 @@ export default class EndpointListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Endpoints"}
+                title={"ENDPOINTS"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

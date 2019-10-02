@@ -67,6 +67,7 @@ export default class MessageStoreListPage extends Component {
         const columns = [{
             name: "Message Store",
             options: {
+                sortDirection: 'asc',
                 customBodyRender: (value, tableMeta, updateValue) => {
                     return (
                         <Link component="button" variant="body2" onClick={() => {
@@ -86,7 +87,7 @@ export default class MessageStoreListPage extends Component {
 
         return (
             <MUIDataTable
-                title={"Message Stores"}
+                title={"MESSAGE STORES"}
                 data={this.state.data}
                 columns={columns}
                 options={options}

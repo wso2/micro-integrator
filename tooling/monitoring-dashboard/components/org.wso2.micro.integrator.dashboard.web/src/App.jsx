@@ -20,7 +20,7 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter} from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 
-import Login from './auth/Login';
+import Login from './auth/Login2';
 import Logout from './auth/Logout';
 import SecuredRouter from './auth/SecuredRouter';
 
@@ -43,14 +43,6 @@ class App extends Component {
                     <Route component={SecuredRouter} />
                 </Switch>
             </BrowserRouter>
-        );
-    }
-};
-
-class AnonPage extends Component {
-    render() {
-        return (
-            <h1>This is anon page.</h1>
         );
     }
 };

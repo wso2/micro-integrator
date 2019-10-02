@@ -18,12 +18,16 @@
   },
   "homepage": "https://github.com/wso2/micro-integrator#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.25",
+    "@fortawesome/free-solid-svg-icons": "^5.11.2",
+    "@fortawesome/react-fontawesome": "^0.1.5",
     "@material-ui/core": "^4.3.2",
     "@material-ui/icons": "^4.2.1",
     "axios": "^0.19.0",
     "https": "^1.0.0",
     "material-tabs": "0.0.8",
     "material-ui": "^0.20.2",
+    "mdbreact": "^4.20.0",
     "mui-datatables": "^2.8.0",
     "qs": "^6.9.0",
     "query-string": "^6.8.2",
@@ -35,6 +39,7 @@
     "react-router-dom": "^5.0.1",
     "react-syntax-highlighter": "^11.0.2",
     "react-tree-graph": "^4.0.1",
+    "recompose": "^0.30.0",
     "xml-formatter": "^1.1.0"
   },
   "devDependencies": {

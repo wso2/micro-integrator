@@ -59,7 +59,6 @@ export default class HomePage extends Component {
                 {
                     response: response.data,
                 });
-
         }).catch((error) => {
             //Handle errors here
         });
@@ -71,42 +70,6 @@ export default class HomePage extends Component {
                 <Grid item xs={12} style={styles.serverMetaDataItem}>
                     {this.createMetaDataTable(this.state.response)}
                 </Grid>
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Proxy Services</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Endpoints</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Inbound Endpoints</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Message Processors</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Message Stores</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>API</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Templates</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Sequences</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Tasks</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Local Entries</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Connectors</Typography>*/}
-                {/*</Grid>*/}
-                {/*<Grid item xs={6} sm={4} style={styles.gridItem}>*/}
-                {/*<Typography>Carbon Applications</Typography>*/}
-                {/*</Grid>*/}
             </Grid>
         );
     }
@@ -114,10 +77,16 @@ export default class HomePage extends Component {
     createMetaDataTable(metadata) {
         const options = [];
         options.push(this.createData("Server Name", metadata.productName));
+        options.push(this.createData("Version", metadata.productVersion));
         options.push(this.createData("Carbon Home", metadata.carbonHome));
-        options.push(this.createData("Java Home", metadata.javaHome));
         options.push(this.createData("Work Directory", metadata.workDirectory));
         options.push(this.createData("Repository Location", metadata.repositoryLocation));
+        options.push(this.createData("Java Home", metadata.javaHome));
+        options.push(this.createData("Java Version", metadata.javaVersion));
+        options.push(this.createData("Java Vendor", metadata.javaVendor));
+        options.push(this.createData("OS Name", metadata.osName));
+        options.push(this.createData("OS Version", metadata.osVersion));
+
         return (
             <Table>
                 <TableBody>
