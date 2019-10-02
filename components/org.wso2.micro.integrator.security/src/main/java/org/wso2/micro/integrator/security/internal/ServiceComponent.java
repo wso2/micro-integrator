@@ -63,7 +63,7 @@ public class ServiceComponent {
         try {
             engagePoxSecurity();
             String lazyInit = System.getProperty(SecurityConstants.MI_SECURITY_USERMGT_LAZY_INIT);
-            if (lazyInit == null || Boolean.valueOf(lazyInit)) {
+            if (lazyInit == null || Boolean.parseBoolean(lazyInit)) {
                 log.debug("Initializing Security parameters lazily");
             } else {
                 log.debug("Initializing Security parameters eagerly");
@@ -76,6 +76,12 @@ public class ServiceComponent {
 
     private void engagePoxSecurity() {
         try {
+            AxisConfiguration axisConfig = DataHolder.getInstance().getConfigCtx().getAxisConfiguration();
+            Parameter passwordCallbackParam = new Parameter();
+            DefaultPasswordCallback passwordCallbackClass = new DefaultPasswordCallback();
+            passwordCallbackParam.setName("passwordCallbackRef");
+            passwordCallbackParam.setValue(passwordCallbackClass);
+            axisConfig.addParameter(passwordCallbackParam);
             String enablePoxSecurity = CarbonServerConfigurationService.getInstance()
                     .getFirstProperty("EnablePoxSecurity");
             if (enablePoxSecurity == null || "true".equals(enablePoxSecurity)) {
@@ -108,18 +114,6 @@ public class ServiceComponent {
                 throw new UserStoreException("Unable to create Realm Configuration");
             }
             dataHolder.setRealmConfig(config);
-            AxisConfiguration axisConfig = dataHolder.getConfigCtx().getAxisConfiguration();
-
-            Parameter passwordCallbackParam = new Parameter();
-            DefaultPasswordCallback passwordCallbackClass = new DefaultPasswordCallback(config);
-            passwordCallbackParam.setName("passwordCallbackRef");
-            passwordCallbackParam.setValue(passwordCallbackClass);
-
-            try {
-                axisConfig.addParameter(passwordCallbackParam);
-            } catch (AxisFault axisFault) {
-                log.error("Failed to set axis configuration parameter ", axisFault);
-            }
 
             UserStoreManager userStoreManager;
             String userStoreMgtClassStr = config.getUserStoreClass();
