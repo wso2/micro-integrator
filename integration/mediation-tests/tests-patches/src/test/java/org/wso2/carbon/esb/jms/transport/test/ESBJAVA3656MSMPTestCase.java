@@ -16,6 +16,7 @@
  * under the License.
  */
 
+/*
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -99,3 +100,4 @@ public class ESBJAVA3656MSMPTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 }
+*/

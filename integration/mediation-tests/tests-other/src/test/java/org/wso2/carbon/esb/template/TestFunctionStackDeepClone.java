@@ -16,7 +16,7 @@
  *under the License.
  */
 
-package org.wso2.carbon.esb.template;
+/*package org.wso2.carbon.esb.template;
 
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -28,13 +28,14 @@ import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;*/
 
 /**
  * This test case is for an intermittent issue. So passing the test case doesn't guarantee
  * that the fix is included in the pack.
  * Increase of number of iterations will increase the probability of reproducing the issue
  */
+/*
 public class TestFunctionStackDeepClone extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
@@ -86,3 +87,4 @@ public class TestFunctionStackDeepClone extends ESBIntegrationTest {
         super.cleanup();
     }
 }
+*/

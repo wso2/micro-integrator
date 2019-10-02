@@ -15,6 +15,7 @@
  * under the License.
  */
 
+/*
 package org.wso2.carbon.esb.rabbitmq.transport.recovery.test;
 
 import org.testng.Assert;
@@ -109,11 +110,13 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
         rabbitMQServer.stop();
     }
 
-    /**
+    */
+/**
      * Publish messages to broker
      *
      * @param messageCount number of messages to publish
-     */
+     *//*
+
     private void publishMessages(int messageCount) throws InterruptedException {
         try {
             sender.declareAndConnect("exchange2", "queue2");
@@ -141,3 +144,4 @@ public class RabbitMQReceiverConnectionRecoveryTestCase extends ESBIntegrationTe
         configurationManagerAxis2.restoreToLastConfiguration();
     }
 }
+*/

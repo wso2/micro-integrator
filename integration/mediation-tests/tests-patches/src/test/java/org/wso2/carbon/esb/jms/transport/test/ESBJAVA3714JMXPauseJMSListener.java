@@ -1,3 +1,4 @@
+/*
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -22,6 +23,7 @@ import javax.xml.namespace.QName;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+*/
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  * <p>
@@ -38,7 +40,8 @@ import static org.testng.Assert.assertTrue;
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- */
+ *//*
+
 public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
 
     private String PROXY_NAME = "JMStoHTTPStockQuoteProxy";
@@ -161,4 +164,5 @@ public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
         jmxClient.disconnect();
     }
 
-}
+
+}*/

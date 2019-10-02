@@ -16,6 +16,7 @@
  *  under the License.
  */
 
+/*
 package org.wso2.carbon.esb.rest.test.api;
 
 import org.apache.commons.io.FileUtils;
@@ -96,3 +97,4 @@ public class ESBJAVA4519TestCase extends ESBIntegrationTest {
     }
 
 }
+*/

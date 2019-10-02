@@ -16,6 +16,7 @@
  *  under the License.
  */
 
+/*
 package org.wso2.carbon.esb.mediator.test.call;
 
 import org.testng.Assert;
@@ -28,11 +29,13 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
+*/
 /**
  * When we are sending GET requests through call mediator, it will add default content type. By using
  * "<property name="NoDefaultContentType" scope="axis2" value="true"/>", can avoid adding default content type
  * This test class will test removing default content type in call mediator using this property.
- */
+ *//*
+
 public class ESBJAVA5217NoDefaultContentTypeTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
@@ -68,3 +71,4 @@ public class ESBJAVA5217NoDefaultContentTypeTestCase extends ESBIntegrationTest 
         super.cleanup();
     }
 }
+*/

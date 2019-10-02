@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.mediator.test.enrich;
 
 import org.testng.Assert;
@@ -30,9 +31,11 @@ import org.wso2.esb.integration.common.utils.clients.SecureServiceClient;
 
 import java.rmi.RemoteException;
 
+*/
 /**
  * This test case verifies adding custom header with enrich mediator.
- */
+ *//*
+
 public class EnrichAddCustomHeaderTestCase extends ESBIntegrationTest {
     private SecureServiceClient secureAxisServiceClient;
     private LogViewerClient logViewerClient;
@@ -64,12 +67,14 @@ public class EnrichAddCustomHeaderTestCase extends ESBIntegrationTest {
 
     }
 
-    /**
+    */
+/**
      * This method check whether given property contains in the logs.
      *
      * @param property required property which needs to be validate if exists or not.
      * @return A Boolean
-     */
+     *//*
+
     private boolean isPropertyContainedInLog(String property) throws LogViewerLogViewerException, RemoteException {
         LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
         boolean containsProperty = false;
@@ -93,3 +98,4 @@ public class EnrichAddCustomHeaderTestCase extends ESBIntegrationTest {
         applySecurity("StockQuoteProxy", 1, getUserRole());
     }
 }
+*/

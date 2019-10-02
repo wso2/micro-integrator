@@ -16,6 +16,7 @@
  * under the License.
  */
 
+/*
 package org.wso2.carbon.esb.message.processor.test.failover;
 
 import org.testng.annotations.AfterClass;
@@ -30,10 +31,12 @@ import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
 import static org.testng.Assert.assertTrue;
 
+*/
 /**
  * This test case tests whether failover forwarding of messages happen
  * with the failover processor.
- */
+ *//*
+
 public class FailoverForwardingProcessorTestCase extends ESBIntegrationTest {
     private static LogViewerClient logViewer;
     private AxisServiceClient client = new AxisServiceClient();
@@ -92,4 +95,4 @@ public class FailoverForwardingProcessorTestCase extends ESBIntegrationTest {
             cleanup();
         }
     }
-}
+}*/

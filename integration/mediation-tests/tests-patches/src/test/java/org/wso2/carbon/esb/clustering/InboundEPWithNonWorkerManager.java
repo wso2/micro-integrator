@@ -15,6 +15,7 @@
  * under the License.
  */
 
+/*
 package org.wso2.carbon.esb.clustering;
 
 import org.testng.Assert;
@@ -32,11 +33,13 @@ import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import java.io.File;
 import java.rmi.RemoteException;
 
+*/
 /*
 This testcase is to check whether the node is treated as a manager or not when the clustering pattern is set to
 nonWorkerManager.
 https://github.com/wso2/product-ei/issues/532
- */
+ *//*
+
 
 public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
 
@@ -102,4 +105,4 @@ public class InboundEPWithNonWorkerManager extends ESBIntegrationTest {
         }
         return logFound;
     }
-}
+}*/

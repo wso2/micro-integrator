@@ -15,6 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+/*
 package org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy;
 
 import org.testng.Assert;
@@ -30,12 +31,14 @@ import org.wso2.esb.integration.common.utils.common.FileManager;
 import java.io.File;
 import java.util.Calendar;
 
+*/
 /**
  * https://wso2.org/jira/browse/ESBJAVA-4821
  * When ESB proxy service deployment, if proxy service is having an WSDL URI., ESB try to get the
  * WSDL from a server and if the server failed to respond with the wsdl content, ESB wait till that
  * server close the connection. This test class make sure the connection will be closed with read timeout
- */
+ *//*
+
 
 public class ESBJAVA4821WSDLProxyServiceDeploymentTestCase extends ESBIntegrationTest {
 
@@ -101,3 +104,4 @@ public class ESBJAVA4821WSDLProxyServiceDeploymentTestCase extends ESBIntegratio
         }
     }
 }
+*/

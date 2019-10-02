@@ -15,7 +15,7 @@
  *specific language governing permissions and limitations
  *under the License.
  */
-package org.wso2.carbon.esb.car.deployment.test;
+/*package org.wso2.carbon.esb.car.deployment.test;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.lang.ArrayUtils;
@@ -37,9 +37,9 @@ import javax.activation.DataHandler;
 
 import static org.testng.Assert.assertTrue;
 
-/**
+*//**
  * This class can be used to test .car - synchronized deployment feature
- */
+ *//*
 public class SynchronizedCarbonApplicationDeploymentTestCase extends ESBIntegrationTest {
 
     private static LogViewerClient logViewer;
@@ -229,4 +229,4 @@ public class SynchronizedCarbonApplicationDeploymentTestCase extends ESBIntegrat
         }
         return isCarFileDeployed;
     }
-}
+}*/

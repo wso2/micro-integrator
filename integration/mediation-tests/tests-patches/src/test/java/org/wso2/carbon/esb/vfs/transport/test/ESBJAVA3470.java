@@ -18,47 +18,51 @@ package org.wso2.carbon.esb.vfs.transport.test;
  * under the License.
  */
 
-import org.testng.Assert;
+import junit.framework.Assert;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.IOUtils;
-import org.apache.sshd.SshServer;
-import org.apache.sshd.common.NamedFactory;
+import org.apache.sshd.common.config.keys.KeyUtils;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
-import org.apache.sshd.server.Command;
-import org.apache.sshd.server.PublickeyAuthenticator;
-import org.apache.sshd.server.UserAuth;
-import org.apache.sshd.server.auth.UserAuthPublicKey;
-import org.apache.sshd.server.command.ScpCommandFactory;
+import org.apache.sshd.common.keyprovider.KeyPairProvider;
+import org.apache.sshd.common.util.ValidateUtils;
+import org.apache.sshd.server.SshServer;
+import org.apache.sshd.server.auth.pubkey.PublickeyAuthenticator;
+import org.apache.sshd.server.auth.pubkey.UserAuthPublicKeyFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
+import org.apache.sshd.server.scp.ScpCommandFactory;
 import org.apache.sshd.server.session.ServerSession;
-import org.apache.sshd.server.sftp.SftpSubsystem;
+import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-//import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
+import org.wso2.carbon.automation.extensions.servers.sftpserver.SFTPServer;
+import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.List;
-import javax.xml.stream.XMLStreamException;
+import java.util.Arrays;
+
 
 /**
  * Test case for https://wso2.org/jira/browse/ESBJAVA-3470
  * VFS SFTP using passphrase protected keys
  */
 public class ESBJAVA3470 extends ESBIntegrationTest {
+    public static final String DEFAULT_TEST_HOST_KEY_PROVIDER_ALGORITHM = KeyUtils.RSA_ALGORITHM;
     //Server credentials
     //DO NOT CHANGE
     private static final String SFTP_USER_NAME = "sftpuser";
@@ -68,20 +72,58 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
     private static final String MOVE_FOLDER_NAME = "original";
     private static final String STOCK_QUOTE = "http://localhost:9000/services/SimpleStockQuoteService";
     private static final int FTP_PORT = 9009;
-
     private File inputFolder;
     private File outputFolder;
     private File originalFolder;
     private File SFTPFolder;
     private String carbonHome;
-
     private ServerConfigurationManager serverConfigurationManager;
+
+    public static KeyPairProvider createTestHostKeyProvider(Path path) {
+        SimpleGeneratorHostKeyProvider keyProvider = new SimpleGeneratorHostKeyProvider();
+        keyProvider.setPath(ValidateUtils.checkNotNull(path, "No path"));
+        keyProvider.setAlgorithm(DEFAULT_TEST_HOST_KEY_PROVIDER_ALGORITHM);
+        return keyProvider;
+    }
+
+    /**
+     * Copy the given source file to the given destination
+     *
+     * @param sourceFile
+     *                 source file
+     * @param destFile
+     *                 destination file
+     * @throws IOException
+     */
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileInputStream = new FileInputStream(sourceFile);
+            fileOutputStream = new FileOutputStream(destFile);
+
+            FileChannel source = fileInputStream.getChannel();
+            FileChannel destination = fileOutputStream.getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            IOUtils.closeQuietly(fileInputStream);
+            IOUtils.closeQuietly(fileOutputStream);
+        }
+    }
 
     @BeforeClass(alwaysRun = true)
     public void deployService() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
+        serverConfigurationManager.applyConfiguration(
+                new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
+        super.init();
+
         carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
 
         setupSftpFolders(carbonHome);
@@ -90,10 +132,9 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "VFS absolute path test for sftp")
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.ALL})
     public void test()
-//            throws XMLStreamException, ProxyServiceAdminProxyAdminException, IOException, InterruptedException {
-            throws XMLStreamException, IOException, InterruptedException {
+            throws XMLStreamException, ProxyServiceAdminProxyAdminException, IOException, InterruptedException {
 
         String baseDir;
         ClassLoader classLoader = getClass().getClassLoader();
@@ -127,7 +168,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
         //create VFS transport listener proxy
         try {
-            Utils.deploySynapseConfiguration(proxyOM, "SFTPTestCaseProxy", "proxy-services", true);
+            addProxyService(proxyOM);
         } catch (Exception e) {
             log.error("Error while updating the Synapse config", e);
         }
@@ -145,6 +186,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();
+        serverConfigurationManager.restoreToLastConfiguration();
     }
 
     /**
@@ -183,33 +225,30 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
     /**
      * Starts a SFTP server on port 22
-     *
      * @param carbonHome
      */
     private void setupSftpServer(String carbonHome) {
         SshServer sshd = SshServer.setUpDefaultServer();
         sshd.setPort(FTP_PORT);
-        //sshd.setKeyPairProvider(new FileKeyPairProvider(new String[]{"/home/ravi/WORK/SUPPORT/JIRA/SKYTVNZDEV-26/SftpTest/dist/hostkey.ser"}));
+        //sshd.setKeyPairProvider(new FileKeyPairProvider(new
+        // String[]{"/home/ravi/WORK/SUPPORT/JIRA/SKYTVNZDEV-26/SftpTest/dist/hostkey.ser"}));
         ClassLoader classLoader = getClass().getClassLoader();
         log.info("Using identity file: " + classLoader.getResource("sftp/id_rsa.pub").getFile());
         File file = new File(classLoader.getResource("sftp/id_rsa.pub").getFile());
-        sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider(file.getAbsolutePath()));
-
-        List<NamedFactory<UserAuth>> userAuthFactories = new ArrayList<NamedFactory<UserAuth>>();
-        userAuthFactories.add(new UserAuthPublicKey.Factory());
-        sshd.setUserAuthFactories(userAuthFactories);
-        sshd.setFileSystemFactory(new VirtualFileSystemFactory(carbonHome));
+        SFTPServer sftpServer = new SFTPServer();
+        sshd.setKeyPairProvider(SFTPServer.createTestHostKeyProvider(Paths.get(file.getAbsolutePath())));
+        sshd.setKeyPairProvider(createTestHostKeyProvider(Paths.get(file.getAbsolutePath())));
+        sshd.setUserAuthFactories(Arrays.asList(new UserAuthPublicKeyFactory()));
+        sshd.setFileSystemFactory(new VirtualFileSystemFactory(Paths.get(carbonHome)));
         sshd.setPublickeyAuthenticator(new PublickeyAuthenticator() {
             public boolean authenticate(String username, PublicKey key, ServerSession session) {
                 return "sftpuser".equals(username);
             }
         });
 
-        sshd.setCommandFactory(new ScpCommandFactory(new SftpCommandFactory()));
+        sshd.setCommandFactory(new ScpCommandFactory());
 
-        List<NamedFactory<Command>> namedFactoryList = new ArrayList<NamedFactory<Command>>();
-        namedFactoryList.add(new SftpSubsystem.Factory());
-        sshd.setSubsystemFactories(namedFactoryList);
+        sshd.setSubsystemFactories(Arrays.asList(new SftpSubsystemFactory()));
 
         try {
             sshd.start();
@@ -218,30 +257,11 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         }
     }
 
-    /**
-     * Copy the given source file to the given destination
-     *
-     * @param sourceFile source file
-     * @param destFile   destination file
-     * @throws IOException
-     */
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
+    protected void addProxyService(OMElement proxyConfig) throws Exception {
+        String proxyName = proxyConfig.getAttributeValue(new QName("name"));
+        if (esbUtils.isProxyServiceExist(context.getContextUrls().getBackEndUrl(), sessionCookie, proxyName)) {
+            esbUtils.deleteProxyService(context.getContextUrls().getBackEndUrl(), sessionCookie, proxyName);
         }
-        FileInputStream fileInputStream = null;
-        FileOutputStream fileOutputStream = null;
-
-        try {
-            fileInputStream = new FileInputStream(sourceFile);
-            fileOutputStream = new FileOutputStream(destFile);
-
-            FileChannel source = fileInputStream.getChannel();
-            FileChannel destination = fileOutputStream.getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            IOUtils.closeQuietly(fileInputStream);
-            IOUtils.closeQuietly(fileOutputStream);
-        }
+        esbUtils.addProxyService(context.getContextUrls().getBackEndUrl(), sessionCookie, setEndpoints(proxyConfig));
     }
 }

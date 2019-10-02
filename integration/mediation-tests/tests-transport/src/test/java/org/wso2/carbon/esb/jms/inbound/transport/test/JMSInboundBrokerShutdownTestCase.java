@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.util.AXIOMUtil;
@@ -31,9 +32,11 @@ import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.servers.ActiveMQServer;
 
+*/
 /**
  * This class tests server behaviour with broker shutdown, when a JMS Inbound EP is configured.
- */
+ *//*
+
 public class JMSInboundBrokerShutdownTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private ActiveMQServer activeMQServer = new ActiveMQServer();
@@ -89,18 +92,22 @@ public class JMSInboundBrokerShutdownTestCase extends ESBIntegrationTest {
             remoteSystemLogs = logViewerClient.getAllRemoteSystemLogs();
             if (remoteSystemLogs != null) {
                 for (LogEvent logEvent : remoteSystemLogs) {
-                    /*
+                    */
+/*
                     Logs (returned in reversed order) are checked to see if the first error is logged only after the
                     log for server start up.
-                     */
+                     *//*
+
                     logMessage = logEvent.getMessage();
                     if (logMessage.contains(expectedErrorMessage)) {
                         expectedErrorOccurred = true;
                     }
-                    /*
+                    */
+/*
                     Since the logs are in reversed order, the start up is considered successful only if the error is
                     already logged.
-                     */
+                     *//*
+
                     if (logMessage.contains("WSO2 Carbon started")) {
                         assertSuccessfulStart = expectedErrorOccurred;
                         break;
@@ -117,3 +124,4 @@ public class JMSInboundBrokerShutdownTestCase extends ESBIntegrationTest {
         activeMQServer.stopJMSBroker();
     }
 }
+*/

@@ -21,24 +21,40 @@ import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.sshd.server.SshServer;
+import org.apache.sshd.common.NamedFactory;
+import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.auth.password.PasswordAuthenticator;
+import org.apache.sshd.server.auth.UserAuth;
+import org.apache.sshd.client.auth.password.UserAuthPassword;
+import org.apache.sshd.server.scp.ScpCommandFactory;
+import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
+import org.apache.sshd.server.session.ServerSession;
+import org.apache.sshd.server.subsystem.sftp.SftpSubsystem;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.ftpserver.FTPServerManager;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.esb.integration.common.utils.CarbonLogReader;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.carbon.automation.extensions.servers.sftpserver.SFTPServer;
+import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
+//import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
+import org.wso2.carbon.logging.view.data.xsd.LogEvent;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
+import javax.xml.stream.XMLStreamException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
-import javax.xml.stream.XMLStreamException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Integration test for https://wso2.org/jira/browse/ESBJAVA-4679
@@ -47,7 +63,7 @@ import javax.xml.stream.XMLStreamException;
  */
 public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
-    private static final Logger LOGGER = Logger.getLogger(ESBJAVA4679VFSPasswordSecurityTestCase.class);
+    private static final Log LOGGER = LogFactory.getLog(ESBJAVA4679VFSPasswordSecurityTestCase.class);
     private static final String FORWARD_SLASH = "/";
 
     private FTPServerManager ftpServerManager;
@@ -57,7 +73,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
     private File sampleFileFolder;
     private File inputFolder;
     private ServerConfigurationManager serverConfigurationManager;
-    private CarbonLogReader carbonLogReader;
+    private LogViewerClient logViewerClient;
     private String pathToFtpDir;
     private int FTPPort = 8085;
     private String inputFolderName = "in";
@@ -71,8 +87,8 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         FTPPassword = "pass";
 
         pathToFtpDir = getClass().getResource(
-                FORWARD_SLASH + "artifacts" + FORWARD_SLASH + "ESB" + FORWARD_SLASH + "synapseconfig" + FORWARD_SLASH
-                        + "vfsTransport" + FORWARD_SLASH).getPath();
+                FORWARD_SLASH + "artifacts" + FORWARD_SLASH + "ESB" + FORWARD_SLASH + "synapseconfig" +
+                        FORWARD_SLASH + "vfsTransport" + FORWARD_SLASH).getPath();
 
         // Local folder of the FTP server root
         FTPFolder = new File(pathToFtpDir + "securePasswordFTP");
@@ -85,7 +101,8 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         Assert.assertTrue(FTPFolder.mkdir(), "FTP root file folder not created");
 
         // create a directory under FTP server root
-        inputFolder = new File(FTPFolder.getAbsolutePath() + FORWARD_SLASH + inputFolderName);
+        inputFolder = new File(FTPFolder.getAbsolutePath() + FORWARD_SLASH
+                + inputFolderName);
 
         if (inputFolder.exists()) {
             FileUtils.deleteDirectory(inputFolder);
@@ -94,14 +111,22 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         Assert.assertTrue(inputFolder.mkdir(), "FTP data /in folder not created");
 
         // start-up FTP server
-        ftpServerManager = new FTPServerManager(FTPPort, FTPFolder.getAbsolutePath(), FTPUsername, FTPPassword);
+        ftpServerManager = new FTPServerManager(FTPPort,
+                FTPFolder.getAbsolutePath(), FTPUsername, FTPPassword);
         ftpServerManager.startFtpServer();
+
+
 
         super.init();
         // replace the axis2.xml enabled vfs transfer and restart the ESB server
         // gracefully
         serverConfigurationManager = new ServerConfigurationManager(context);
-        carbonLogReader = new CarbonLogReader();
+        serverConfigurationManager.applyConfiguration(new File(getClass()
+                .getResource(FORWARD_SLASH + "artifacts" + FORWARD_SLASH + "ESB" + FORWARD_SLASH +
+                        "synapseconfig" + FORWARD_SLASH + "vfsTransport" + FORWARD_SLASH + "axis2.xml").getPath()));
+        super.init();
+        logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(),
+                getSessionCookie());
 
     }
 
@@ -113,6 +138,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
             Thread.sleep(3000);
             ftpServerManager.stop();
             log.info("FTP Server stopped successfully");
+            serverConfigurationManager.restoreToLastConfiguration();
 
         }
 
@@ -120,7 +146,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "VFS secure password test")
     public void securePasswordTest()
-            throws XMLStreamException, IOException, InterruptedException, LogViewerLogViewerException {
+            throws XMLStreamException, IOException, InterruptedException {
 
         //copy SOAP message  into the SFTP server
         String sentMessageFile = "test.xml";
@@ -130,48 +156,57 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
         //Below is encrypted value of "user1:pass" using local wso2carbon.jks TODO if security settings change, will need to change below value as well. Otherwise this test will fail
         String encryptedPass = "eTAXKdQ89VUVDYhs4ZMe2Zhk1+ZHkBsHCSBjJ5PTNQKBZjr1Ca5jWfYl8+z+6UkvnsBS8L09/4jBDmpKNgrBlu2gMG0dsw4nzNQkXJDORlMuCbsDAHL2EMsxb9QKvD7IbgSZbVeJJC8ICknJUsADsyY2IfYVlCf/PTulvdCQLyk5co3e8Lo636J8tTi/oyHExmRX+wAKrOyHEX8BaIZmeYUdar2uU0bxPPjp0NWFyHf4ZkSp3MQDa9t8GxmoqR/Gx/u+HcLR33iWO+dI7cU46NR5cCnmuq4rwVxjReY9ldqqgQtE3du3mRjBtYF+9zEq+RJ4XMRS3abtv2uviACIIA==";
-        String fileUri =
-                "vfs:ftp://{wso2:vault-decrypt('" + encryptedPass + "')}@localhost:" + FTPPort + "/" + inputFolderName;
-        String moveAfterProcess =
-                "vfs:ftp://{wso2:vault-decrypt('" + encryptedPass + "')}@localhost:" + FTPPort + "/" + outputFolderName;
+        String fileUri = "vfs:ftp://{wso2:vault-decrypt('" + encryptedPass + "')}@localhost:" + FTPPort + "/" + inputFolderName;
+        String moveAfterProcess = "vfs:ftp://{wso2:vault-decrypt('" + encryptedPass + "')}@localhost:" + FTPPort + "/" + outputFolderName;
 
-        carbonLogReader.start();
         String log = "File recieved for secure password for the proxy service - ";
         //create VFS transport listener proxy
         /**
          * TODO Note that encrypted urls provided here are encrypted using wso2carbon.jks, so if it gets changed, these test may fail
          */
-        String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "       name=\"VfsSecurePasswordTest\"\n"
-                + "       transports=\"vfs http https\"\n" + "       startOnLoad=\"true\"\n"
-                + "       trace=\"disable\">\n" + "   <description/>\n" + "   <target>\n" + "      <inSequence>\n"
-                + "         <property name=\"transport.vfs.ReplyFileName\"\n"
-                + "                   expression=\"get-property('transport', 'FILE_NAME')\"\n"
-                + "                   scope=\"transport\"\n" + "                   type=\"STRING\"/>\n"
-                + "         <log level=\"custom\">\n" + "            <property name=\"" + log + "\"\n"
-                + "                      expression=\"fn:concat(' - File ',get-property('transport','FILE_NAME'),' received')\"/>\n"
-                + "         </log>\n" + "         <drop/>\n" + "      </inSequence>\n" + "   </target>\n"
-                + "   <parameter name=\"transport.PollInterval\">1</parameter>\n"
-                + "   <parameter name=\"transport.vfs.ActionAfterProcess\">NONE</parameter>\n"
-                + "   <parameter name=\"transport.vfs.ClusterAwareness\">true</parameter>\n"
-                + "   <parameter name=\"transport.vfs.FileURI\">" + fileUri + "</parameter>\n"
-                + "   <parameter name=\"transport.vfs.MoveAfterProcess\">" + moveAfterProcess + "</parameter>\n"
-                + "   <parameter name=\"transport.vfs.FileNamePattern\">test.*\\.xml</parameter>\n"
-                + "   <parameter name=\"transport.vfs.Locking\">disable</parameter>\n"
-                + "   <parameter name=\"transport.vfs.ContentType\">application/octet-stream</parameter>\n"
-                + "   <parameter name=\"transport.vfs.ActionAfterFailure\">DELETE</parameter>\n" + "</proxy>";
+        String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" +
+                "       name=\"VfsSecurePasswordTest\"\n" +
+                "       transports=\"vfs http https\"\n" +
+                "       startOnLoad=\"true\"\n" +
+                "       trace=\"disable\">\n" +
+                "   <description/>\n" +
+                "   <target>\n" +
+                "      <inSequence>\n" +
+                "         <property name=\"transport.vfs.ReplyFileName\"\n" +
+                "                   expression=\"get-property('transport', 'FILE_NAME')\"\n" +
+                "                   scope=\"transport\"\n" +
+                "                   type=\"STRING\"/>\n" +
+                "         <log level=\"custom\">\n" +
+                "            <property name=\"" + log + "\"\n" +
+                "                      expression=\"fn:concat(' - File ',get-property('transport','FILE_NAME'),' received')\"/>\n" +
+                "         </log>\n" +
+                "         <drop/>\n" +
+                "      </inSequence>\n" +
+                "   </target>\n" +
+                "   <parameter name=\"transport.PollInterval\">1</parameter>\n" +
+                "   <parameter name=\"transport.vfs.ActionAfterProcess\">NONE</parameter>\n" +
+                "   <parameter name=\"transport.vfs.ClusterAwareness\">true</parameter>\n" +
+                "   <parameter name=\"transport.vfs.FileURI\">" + fileUri + "</parameter>\n" +
+                "   <parameter name=\"transport.vfs.MoveAfterProcess\">" + moveAfterProcess + "</parameter>\n" +
+                "   <parameter name=\"transport.vfs.FileNamePattern\">test.*\\.xml</parameter>\n" +
+                "   <parameter name=\"transport.vfs.Locking\">disable</parameter>\n" +
+                "   <parameter name=\"transport.vfs.ContentType\">application/octet-stream</parameter>\n" +
+                "   <parameter name=\"transport.vfs.ActionAfterFailure\">DELETE</parameter>\n" +
+                "</proxy>";
 
         OMElement proxyOM = AXIOMUtil.stringToOM(proxy);
 
         //add the listener proxy to ESB server
         try {
-            Utils.deploySynapseConfiguration(proxyOM, "VfsSecurePasswordTest", "proxy-services", true);
+            addProxyService(proxyOM);
         } catch (Exception e) {
             LOGGER.error("Error while updating the Synapse config", e);
         }
         LOGGER.info("Synapse config updated");
-        boolean isSuccess = carbonLogReader.checkForLog(log, 60);
-        carbonLogReader.stop();
-        Assert.assertTrue(isSuccess, "Secure password deployment failed, file did not received to the vfs proxy");
+        boolean isSuccess = Utils.checkForLog(logViewerClient, log, 30);
+        Assert.assertTrue(
+                isSuccess,
+                "Secure password deployment failed, file did not received to the vfs proxy");
     }
 
     /**
@@ -179,7 +214,7 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
      *
      * @param sourceFile source file
      * @param destFile   destination file
-     * @throws IOException
+     * @throws java.io.IOException
      */
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.exists()) {

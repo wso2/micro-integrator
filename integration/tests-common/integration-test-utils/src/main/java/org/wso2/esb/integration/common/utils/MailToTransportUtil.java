@@ -22,9 +22,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.test.utils.common.EmailSender;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.exception.ESBMailTransportIntegrationTestException;
 
 import java.rmi.RemoteException;
@@ -234,51 +231,6 @@ public class MailToTransportUtil {
                     log.warn("Error when closing the email store : ", e);
                 }
             }
-        }
-    }
-
-    /**
-     * @param backendURL   - server backend URL
-     * @param stringToFind - string to find in the logs
-     * @param cookie       - cookie
-     * @return - found the string or not
-     * @throws ESBMailTransportIntegrationTestException - Is thrown if an error when getting or reading the log.
-     */
-
-    public static boolean searchStringInLog(String backendURL, String stringToFind, String cookie)
-            throws ESBMailTransportIntegrationTestException {
-        boolean expectedStringFound = false;
-        LogViewerClient logViewerClient;
-        long startTime = System.currentTimeMillis();
-
-        try {
-            while ((System.currentTimeMillis() - startTime) < WAIT_TIME_MS) {
-                logViewerClient = new LogViewerClient(backendURL, cookie);
-                LogEvent[] logs = logViewerClient.getAllRemoteSystemLogs();
-                for (LogEvent item : logs) {
-                    String message = item.getMessage();
-                    if (message.contains(stringToFind)) {
-                        log.info("Found the expected message in log : " + message);
-                        expectedStringFound = true;
-                        break;
-                    }
-                }
-                if (expectedStringFound) {
-                    break;
-                }
-                try {
-                    Thread.sleep(500); // wait for 0.5 second to check the log again.
-                } catch (InterruptedException e) {
-                    log.warn("Error while sleep the thread for 0.5 sec");
-                }
-            }
-            return expectedStringFound;
-        } catch (LogViewerLogViewerException e) {
-            log.error("Error when reading the log to find a string ", e);
-            throw new ESBMailTransportIntegrationTestException("Error when reading the log to find a string ", e);
-        } catch (RemoteException e) {
-            log.error("Error when getting the log ", e);
-            throw new ESBMailTransportIntegrationTestException("Error when getting the log ", e);
         }
     }
 

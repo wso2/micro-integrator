@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
 package org.wso2.carbon.esb.mediators.script;
 
 import org.testng.annotations.AfterClass;
@@ -63,3 +64,4 @@ public class ESBJAVA3019_ScriptWithNullJson extends ESBIntegrationTest {
     }
 
 }
+*/

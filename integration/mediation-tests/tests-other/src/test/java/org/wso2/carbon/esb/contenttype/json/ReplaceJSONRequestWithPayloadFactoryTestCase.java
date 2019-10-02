@@ -16,7 +16,7 @@
  *under the License.
  */
 
-package org.wso2.carbon.esb.contenttype.json;
+/*package org.wso2.carbon.esb.contenttype.json;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -30,11 +30,12 @@ import org.wso2.esb.integration.common.utils.Utils;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;*/
 
 /**
  * This class tests the scenario of using Payload factory to replace the contents of JSON payload
  */
+/*
 public class ReplaceJSONRequestWithPayloadFactoryTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
@@ -86,4 +87,4 @@ public class ReplaceJSONRequestWithPayloadFactoryTestCase extends ESBIntegration
                 "Response mismatch for HTTP Get call");
 
     }
-}
+}*/

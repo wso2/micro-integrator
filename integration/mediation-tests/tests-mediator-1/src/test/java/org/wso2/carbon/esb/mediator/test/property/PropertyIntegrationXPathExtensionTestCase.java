@@ -16,6 +16,7 @@
  *under the License.
  */
 
+/*
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
@@ -67,6 +68,7 @@ public class PropertyIntegrationXPathExtensionTestCase extends ESBIntegrationTes
         assertTrue(status, "Expected output received");
     }
 }
+*/
 
 
 

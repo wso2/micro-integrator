@@ -15,7 +15,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.esb.rabbitmq.transport.test;
+/*package org.wso2.carbon.esb.rabbitmq.transport.test;
 
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -29,12 +29,13 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
 
 import java.io.File;
-import java.io.IOException;
+import java.io.IOException;*/
 
 /**
  * RabbitMQJSONConsumerTestCase tests EI as a rabbitmq consumer using a proxy service where the payload is a JSON
  * object.
  */
+/*
 public class RabbitMQJSONConsumerTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
@@ -88,3 +89,4 @@ public class RabbitMQJSONConsumerTestCase extends ESBIntegrationTest {
         logViewer = null;
     }
 }
+*/

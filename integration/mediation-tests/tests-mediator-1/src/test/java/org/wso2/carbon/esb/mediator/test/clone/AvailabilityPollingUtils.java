@@ -16,6 +16,7 @@
  * under the License.
  */
 
+/*
 package org.wso2.carbon.esb.mediator.test.clone;
 
 import org.apache.commons.logging.Log;
@@ -30,12 +31,8 @@ public class AvailabilityPollingUtils {
 
     private static Log log = LogFactory.getLog(AvailabilityPollingUtils.class);
 
-    /**
-     * Check if message received from server logs.
-     *
-     * @param logViewerClient logViewerClient instance of LogViewerClient class
-     * @return Whether REQUEST PARAM VALUE is contained in the log message or not
-     */
+/*
+
     public static Callable<Boolean> isMessageRecived(LogViewerClient logViewerClient) {
         final LogViewerClient logViewer = logViewerClient;
         return new Callable<Boolean>() {
@@ -60,3 +57,4 @@ public class AvailabilityPollingUtils {
         };
     }
 }
+*/

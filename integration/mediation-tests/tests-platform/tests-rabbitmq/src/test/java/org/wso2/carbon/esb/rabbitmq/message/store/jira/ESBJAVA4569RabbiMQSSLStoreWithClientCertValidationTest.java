@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.carbon.esb.rabbitmq.message.store.jira;
+/*package org.wso2.carbon.esb.rabbitmq.message.store.jira;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -45,7 +45,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;*/
 
 //import java.io.File;
 
@@ -54,6 +54,7 @@ import static org.testng.Assert.assertTrue;
  * and validates client certificates, This is written as platform test and make it skipped by default because we can't ship
  * rabbitMQ server inside ESB
  */
+/*
 public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBIntegrationTest {
     private static String url = "http://localhost:8480/rabbitMQRestWithClientCert/store";
     private final SimpleHttpClient httpClient = new SimpleHttpClient();
@@ -126,12 +127,14 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
         loadSampleESBConfiguration(0);
     }
 
-    /**
+    */
+/**
      * Helper method to retrieve queue message from rabbitMQ
      *
      * @return result
      * @throws Exception
-     */
+     *//*
+
     private static String consumeWithoutCertificate() throws Exception {
         String result = "";
 
@@ -175,11 +178,13 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
         return result;
     }
 
-    /**
+    */
+/**
      * Helper method to copy configs before starting rabbitMQ
      *
      * @throws Exception
-     */
+     *//*
+
     private void modifyAndAddRabbitMQConfigs() throws Exception {
         String basePath = TestConfigurationProvider.getResourceLocation() + "/artifacts/ESB/messageStore/rabbitMQ/SSL/";
         String cacertfile = basePath + "rabbitMQ/certs/cacert.pem";
@@ -202,11 +207,13 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
         }
     }
 
-    /**
+    */
+/**
      * Helper method to modify synapse configs to ESB server
      *
      * @throws Exception
-     */
+     *//*
+
     private void modifyAndUpdateSynapseConfigs() throws Exception {
         String basePath = TestConfigurationProvider.getResourceLocation() + "/artifacts/ESB/messageStore/rabbitMQ/SSL/";
 
@@ -229,3 +236,4 @@ public class ESBJAVA4569RabbiMQSSLStoreWithClientCertValidationTest extends ESBI
         }
     }
 }
+*/
