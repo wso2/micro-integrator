@@ -70,6 +70,8 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Tests message burst", enabled = false)
     public void testBurstMessage() throws Exception {
 
+        log.info("This test is removed");
+
         MessageSender[] senders = new MessageSender[10];
         threads = new Thread[10];
         for (int i = 0; i < senders.length; i++) {
@@ -104,10 +106,11 @@ public class CloneBurstTestCase extends ESBIntegrationTest {
         axis2Server2.stop();
         trigger.setStopped(true);
 
-        for (int i = 0; i < threads.length; i++) {
-            if (threads[i].isAlive()) {
-                threads[i].destroy();
-            }
+        if (axis2Server1.isStarted()) {
+            axis2Server1.stop();
+        }
+        if (axis2Server2.isStarted()) {
+            axis2Server2.stop();
         }
         threads = null;
         axis2Server1 = null;
