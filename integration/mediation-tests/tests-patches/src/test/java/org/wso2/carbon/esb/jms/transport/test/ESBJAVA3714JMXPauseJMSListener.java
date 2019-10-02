@@ -133,14 +133,14 @@ public class ESBJAVA3714JMXPauseJMSListener extends ESBIntegrationTest {
     protected void addProxyService(OMElement proxyConfig) throws Exception {
         String proxyName = proxyConfig.getAttributeValue(new QName("name"));
         if (esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), getSessionCookie(), proxyName)) {
-            esbUtils.deleteProxyService(contextUrls.getBackEndUrl(), getSessionCookie(), proxyName);
+//            esbUtils.deleteProxyService(contextUrls.getBackEndUrl(), getSessionCookie(), proxyName);
         }
         esbUtils.addProxyService(contextUrls.getBackEndUrl(), getSessionCookie(), setEndpoints(proxyConfig));
     }
 
     protected void deleteProxyService(String proxyName) throws Exception {
         if (esbUtils.isProxyServiceExist(contextUrls.getBackEndUrl(), getSessionCookie(), proxyName)) {
-            esbUtils.deleteProxyService(contextUrls.getBackEndUrl(), getSessionCookie(), proxyName);
+//            esbUtils.deleteProxyService(contextUrls.getBackEndUrl(), getSessionCookie(), proxyName);
         }
     }
 

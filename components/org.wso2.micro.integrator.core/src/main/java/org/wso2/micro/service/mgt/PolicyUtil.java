@@ -28,7 +28,7 @@ import org.apache.neethi.Policy;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.PolicyReference;
 import org.apache.neethi.PolicyRegistry;
-import org.wso2.carbon.utils.xml.XMLPrettyPrinter;
+import org.wso2.micro.core.util.xml.XMLPrettyPrinter;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;

@@ -39,18 +39,22 @@
             <artifactId>jongo</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon.commons</groupId>
-            <artifactId>org.wso2.carbon.event.core</artifactId>
+            <groupId>org.apache.xmlbeans</groupId>
+            <artifactId>xmlbeans</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.orbit.org.apache.olingo</groupId>
             <artifactId>odata-server</artifactId>
         </dependency>
-
-
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.ndatasource.core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon.mediation</groupId>
+                    <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
@@ -217,6 +221,10 @@
             <groupId>org.apache.axis2</groupId>
             <artifactId>axis2-jaxws</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.ws.security.wso2</groupId>
+            <artifactId>wss4j</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -312,9 +320,6 @@
                             org.apache.poi.openxml4j.exceptions;version="${poi-ooxml.orbit.imp.pkg.version}",
                             org.apache.poi.ss.usermodel;version="${poi.orbit.imp.pkg.version}",
                             org.apache.commons.collections4;version="${commons-collections4.orbit.imp.pkg.version}",
-<!--                            org.wso2.carbon.registry.core;version="${carbon.registry.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.registry.core.service;version="${carbon.registry.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.registry.core.exceptions;version="${carbon.registry.imp.pkg.version}",-->
                             com.mongodb;version="${mongo-java-driver.orbit.imp.pkg.version}",
                             com.mongodb.util;version="${mongo-java-driver.orbit.imp.pkg.version}",
                             org.jongo;version="${jongo.orbit.imp.pkg.version}",
@@ -327,9 +332,6 @@
                             org.webharvest.definition;version="${webharvest-core.orbit.imp.pkg.version}",
                             org.webharvest.runtime;version="${webharvest-core.orbit.imp.pkg.version}",
                             org.webharvest.runtime.variables;version="${webharvest-core.orbit.imp.pkg.version}",
-<!--                            org.wso2.carbon.event.core;version="${carbon-commons.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.event.core.exception;version="${carbon-commons.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.event.core.subscription;version="${carbon-commons.imp.pkg.version}",-->
                             org.apache.commons.codec.binary;version="${commons-codec.orbit.imp.pkg.version}",
                             org.wso2.securevault;version="${wso2.securevault.imp.pkg.version}",
                             org.osgi.framework;version="${osgi.framework.imp.pkg.version}",
@@ -337,15 +339,10 @@
                             org.osgi.service.component;version="${osgi.service.imp.pkg.version}",
                             <!--org.osgi.service.component,-->
                             org.wso2.carbon.securevault;version="${carbon.kernel.imp.pkg.version}",
-<!--                            org.wso2.carbon.transaction.manager;version="${carbon-commons.trnsaction.mgt.imp.pkg.version}", &lt;!&ndash; todo change this to use {carbon-commons.imp.pkg.version} once export packages are corrected - rajith &ndash;&gt;-->
-<!--                            org.wso2.carbon.user.api;version="${carbon.user.api.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.user.core;version="${carbon.kernel.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.user.core.service;version="${carbon.kernel.imp.pkg.version}",-->
                             org.apache.ws.commons.schema;version="${xmlschema.orbit.imp.pkg.version}",
                             org.apache.ws.commons.schema.utils;version="${xmlschema.orbit.imp.pkg.version}",
                             org.apache.ws.commons.schema.constants;version="${xmlschema.orbit.imp.pkg.version}",
                             org.apache.neethi;version="${neethi.orbit.imp.pkg.version}",
-<!--                            org.wso2.carbon.base;version="${carbon.base.imp.pkg.version}",-->
                             org.apache.tomcat.jdbc.pool;version="${jdbc-pool.orbit.imp.pkg.version}",
                             com.google.api.client.googleapis.auth.oauth2;version="${google-api-client.orbit.imp.pkg.version}",
                             com.google.api.client.http;version="${google-http-client.orbit.imp.pkg.version}",

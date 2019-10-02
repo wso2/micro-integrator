@@ -16,15 +16,13 @@
 
 package org.wso2.micro.tomcat.jndi;
 
+import org.apache.naming.SelectorContext;
+import org.wso2.micro.core.Constants;
 
 import java.util.Hashtable;
 import javax.naming.Context;
 import javax.naming.Name;
 import javax.naming.NamingException;
-
-import org.apache.naming.SelectorContext;
-import org.wso2.carbon.context.CarbonContext;
-import org.wso2.micro.core.Constants;
 
 public class CarbonSelectorContext extends SelectorContext {
 
@@ -120,7 +118,7 @@ public class CarbonSelectorContext extends SelectorContext {
     private Object getTenantCarbonSelectorContext(String name) throws NamingException{
 
         Context tenantSubContext = (Context)carbonInitialContext.lookup(name);
-        return new org.wso2.carbon.tomcat.jndi.CarbonSelectorContext(env, initialContext, tenantSubContext);
+        return new CarbonSelectorContext(env, initialContext, tenantSubContext);
     }
 
 }

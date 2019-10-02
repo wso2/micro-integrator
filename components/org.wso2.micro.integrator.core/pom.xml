@@ -45,23 +45,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.mediation.initializer</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.mediation.library</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.proxyadmin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
             <artifactId>org.wso2.carbon.localentry</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.mediation.startup</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.mediation</groupId>
@@ -71,14 +55,6 @@
             <groupId>org.wso2.carbon.mediation</groupId>
             <artifactId>org.wso2.carbon.sequences</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.mediation</groupId>
-            <artifactId>org.wso2.carbon.application.deployer.synapse</artifactId>
-        </dependency>
-<!--        <dependency>-->
-<!--            <groupId>org.wso2.carbon</groupId>-->
-<!--            <artifactId>org.wso2.carbon.utils</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.eclipse.osgi</groupId>
             <artifactId>org.eclipse.osgi</artifactId>
@@ -94,14 +70,6 @@
         <dependency>
             <groupId>org.eclipse.equinox</groupId>
             <artifactId>org.eclipse.equinox.p2.metadata</artifactId>
-        </dependency>
-       <!-- <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.feature.mgt.core</artifactId>
-        </dependency>-->
-        <dependency>
-            <groupId>org.wso2.carbon.data</groupId>
-            <artifactId>org.wso2.carbon.dataservices.core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
@@ -120,7 +88,6 @@
         <dependency>
             <groupId>org.wso2.securevault</groupId>
             <artifactId>org.wso2.securevault</artifactId>
-            <version>${securevault.version}</version>
         </dependency>
     </dependencies>
 
@@ -130,22 +97,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
             </plugin>
-           <!-- <plugin>
-                <groupId>de.jflex</groupId>
-                <artifactId>maven-jflex-plugin</artifactId>
-                <version>1.4.3</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                        <configuration>
-                            <backup>false</backup>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>-->
-
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
@@ -169,7 +120,6 @@
                             org.wso2.micro.tomcat.jndi.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
-<!--                            org.wso2.carbon.utils;version="${carbon.kernel.imp.pkg.version}"-->
                             javax.xml.parsers; version="${javax.xml.parsers.import.pkg.version}",
                             org.apache.naming.*;version="[9.0.0,10.0.0)",
                             javax.activation.*;version="[0.0.0, 1.0.0)",

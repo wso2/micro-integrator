@@ -35,12 +35,12 @@ import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.AxisFault;
+import org.wso2.micro.core.Constants;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationServiceImpl;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import junit.framework.TestCase;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.File;
@@ -69,7 +69,7 @@ public abstract class MediationPersistenceTest extends TestCase {
         MultiXMLConfigurationSerializer serializer = new MultiXMLConfigurationSerializer(path);
         serializer.serialize(synapseConfig);
         synapseConfigSvc = new SynapseConfigurationServiceImpl(synapseConfig,
-                MultitenantConstants.SUPER_TENANT_ID, null);
+                                                               Constants.SUPER_TENANT_ID, null);
         /*getMediationPersistenceManager().init(null, path,
                 synapseConfigSvc.getSynapseConfiguration(), 500L);*/
     }

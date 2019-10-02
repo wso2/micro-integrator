@@ -33,9 +33,6 @@ import org.apache.synapse.SynapseConstants;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
-import org.apache.synapse.task.TaskConstants;
-import org.apache.synapse.task.TaskDescriptionRepository;
-import org.apache.synapse.task.TaskScheduler;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
 import org.osgi.service.component.ComponentContext;
@@ -46,10 +43,7 @@ import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
-import org.wso2.carbon.task.services.TaskDescriptionRepositoryService;
-import org.wso2.carbon.task.services.TaskSchedulerService;
-import org.wso2.carbon.utils.ServerConstants;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
@@ -93,9 +87,6 @@ public class ServiceBusInitializer {
 
     // private SynapseRegistryService synRegSvc;
     // private DataSourceInformationRepositoryService dataSourceInformationRepositoryService;
-    private TaskDescriptionRepositoryService repositoryService;
-
-    private TaskSchedulerService taskSchedulerService;
 
     private SecretCallbackHandlerService secretCallbackHandlerService;
 
@@ -146,7 +137,7 @@ public class ServiceBusInitializer {
             if (contextInfo.getSynapseConfiguration() != null) {
                 // Properties props = new Properties();
                 SynapseConfigurationService synCfgSvc = new SynapseConfigurationServiceImpl(contextInfo
-                        .getSynapseConfiguration(), MultitenantConstants.SUPER_TENANT_ID, configCtxSvc
+                        .getSynapseConfiguration(), Constants.SUPER_TENANT_ID, configCtxSvc
                         .getServerConfigContext());
                 // Update ConfigurationHolder before registering the service
                 ConfigurationHolder.getInstance().setSynapseConfigurationService(synCfgSvc);
@@ -165,8 +156,7 @@ public class ServiceBusInitializer {
             SynapseEnvironment synapseEnvironment = contextInfo.getSynapseEnvironment();
             if (synapseEnvironment != null) {
                 // Properties props = new Properties();
-                SynapseEnvironmentService synEnvSvc = new SynapseEnvironmentServiceImpl(synapseEnvironment,
-                        MultitenantConstants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
+                SynapseEnvironmentService synEnvSvc = new SynapseEnvironmentServiceImpl(synapseEnvironment, Constants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
                 // Update ConfigurationHolder before registering the service
                 ConfigurationHolder.getInstance().setSynapseEnvironmentService(synEnvSvc);
                 synEnvRegistration = bndCtx.registerService(SynapseEnvironmentService.class.getName(), synEnvSvc, null);
@@ -181,7 +171,7 @@ public class ServiceBusInitializer {
             }
             // Properties props = new Properties();
             SynapseRegistrationsService synRegistrationsSvc = new SynapseRegistrationsServiceImpl(synCfgRegistration,
-                    synEnvRegistration, MultitenantConstants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
+                    synEnvRegistration, Constants.SUPER_TENANT_ID, configCtxSvc.getServerConfigContext());
             // Update ConfigurationHolder before registering the service
             ConfigurationHolder.getInstance().setSynapseRegistrationsService(synRegistrationsSvc);
             bndCtx.registerService(SynapseRegistrationsService.class.getName(), synRegistrationsSvc, null);
@@ -269,15 +259,7 @@ public class ServiceBusInitializer {
             serverManager = new ServerManager();
             ServerContextInformation contextInfo = new ServerContextInformation(configContext,
                     configurationInformation);
-            // }
-            if (taskSchedulerService != null) {
-                TaskScheduler scheduler = taskSchedulerService.getTaskScheduler();
-                contextInfo.addProperty(TaskConstants.TASK_SCHEDULER, scheduler);
-            }
-            if (repositoryService != null) {
-                TaskDescriptionRepository repository = repositoryService.getTaskDescriptionRepository();
-                contextInfo.addProperty(TaskConstants.TASK_DESCRIPTION_REPOSITORY, repository);
-            }
+
             if (secretCallbackHandlerService != null) {
                 contextInfo.addProperty(SecurityConstants.PROP_SECRET_CALLBACK_HANDLER, secretCallbackHandlerService
                         .getSecretCallbackHandler());
@@ -330,7 +312,7 @@ public class ServiceBusInitializer {
     public void createSynapseDebugEnvironment(ServerContextInformation contextInfo) {
 
         try {
-            String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
+            String carbonHome = System.getProperty(Constants.CARBON_HOME);
             File synapseProperties = Paths.get(MicroIntegratorBaseUtils.getCarbonConfigDirPath(), "synapse.properties").toFile();
             Properties properties = new Properties();
             InputStream inputStream = new FileInputStream(synapseProperties);
@@ -389,51 +371,6 @@ public class ServiceBusInitializer {
     protected void unsetServerConfigurationService(CarbonServerConfigurationService serverConfigurationService) {
         //nothing to do here since we put this reference to populate the ConfigurationHolder
     }
-
-    // TODO :- check whether we need this when we bring in tasks
-   /* @Reference(
-            name = "task.description.repository.service",
-            service = org.wso2.carbon.task.services.TaskDescriptionRepositoryService.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetTaskDescriptionRepositoryService")
-    protected void setTaskDescriptionRepositoryService(TaskDescriptionRepositoryService repositoryService) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("TaskDescriptionRepositoryService bound to the ESB initialization process");
-        }
-        this.repositoryService = repositoryService;
-    }
-
-    protected void unsetTaskDescriptionRepositoryService(TaskDescriptionRepositoryService repositoryService) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("TaskDescriptionRepositoryService unbound from the ESB environment");
-        }
-        this.repositoryService = null;
-    }
-
-    @Reference(
-            name = "task.scheduler.service",
-            service = org.wso2.carbon.task.services.TaskSchedulerService.class,
-            cardinality = ReferenceCardinality.MANDATORY,
-            policy = ReferencePolicy.DYNAMIC,
-            unbind = "unsetTaskSchedulerService")
-    protected void setTaskSchedulerService(TaskSchedulerService schedulerService) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("TaskSchedulerService bound to the ESB initialization process");
-        }
-        this.taskSchedulerService = schedulerService;
-    }
-
-    protected void unsetTaskSchedulerService(TaskSchedulerService schedulerService) {
-
-        if (log.isDebugEnabled()) {
-            log.debug("TaskSchedulerService unbound from the ESB environment");
-        }
-        this.taskSchedulerService = null;
-    }*/
 
     @Reference(
             name = "secret.callback.handler.service",

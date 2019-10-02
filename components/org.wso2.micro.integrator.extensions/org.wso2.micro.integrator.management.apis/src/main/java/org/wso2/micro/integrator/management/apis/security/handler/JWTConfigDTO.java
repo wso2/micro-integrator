@@ -31,6 +31,7 @@ public class JWTConfigDTO {
     private boolean removeOldestElementOnOverflow = true;
     private boolean useCarbonUserStore;
     private int cleanupThreadInterval;
+    private boolean jwtHandlerEngaged;
 
     public String getExpiry() {
         return expiry;
@@ -94,6 +95,17 @@ public class JWTConfigDTO {
     public void setUseCarbonUserStore(boolean useCarbonUserStore) {
 
         this.useCarbonUserStore = useCarbonUserStore;
+    }
+
+
+    public boolean isJwtHandlerEngaged() {
+
+        return jwtHandlerEngaged;
+    }
+
+    public void setJwtHandlerEngaged(boolean jwtHandlerEngaged) {
+
+        this.jwtHandlerEngaged = jwtHandlerEngaged;
     }
 
 }

@@ -134,12 +134,7 @@
                             com.google.gdata.client;version="${gdata-core.orbit.imp.pkg.version}",
                             com.google.gdata.client.spreadsheet;version="${gdata-spreadsheet.orbit.imp.pkg.version}",
                             com.google.gdata.util;version="${gdata-core.orbit.imp.pkg.version}",
-<!--                            org.wso2.carbon.registry.core;version="${carbon.registry.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.registry.core.service;version="${carbon.registry.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.registry.core.exceptions;version="${carbon.registry.imp.pkg.version}",-->
                             org.apache.commons.logging;version="${carbon.commons.logging.imp.pkg.version}",
-<!--                            org.wso2.carbon.context;version="${carbon.kernel.imp.pkg.version}",-->
-<!--                            org.wso2.carbon.utils.multitenancy;version="${carbon.kernel.imp.pkg.version}",-->
                             org.osgi.service.component;version="${osgi.service.imp.pkg.version}",
                             org.apache.commons.codec.binary;version="${commons-codec.orbit.imp.pkg.version}",
                             com.google.api.client.googleapis.auth.oauth2;version="${google-api-client.orbit.imp.pkg.version}",

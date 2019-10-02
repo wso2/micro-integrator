@@ -20,69 +20,10 @@ import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.osgi.framework.BundleContext;
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.utils.component.xml.Component;
-import org.wso2.carbon.utils.component.xml.ComponentConfigFactory;
-import org.wso2.carbon.utils.component.xml.ComponentConstants;
-import org.wso2.carbon.utils.component.xml.config.HTTPGetRequestProcessorConfig;
-import org.wso2.micro.core.transports.HttpGetRequestProcessor;
-
-import java.io.InputStream;
-import java.net.URL;
-import java.util.Dictionary;
-import java.util.Hashtable;
 
 public class Utils {
 
     private static Log log = LogFactory.getLog(Utils.class);
-
-    /**
-     * Given a bundleContext this method will register any HTTPGetRequestProcessors found in that
-     * bundle
-     * @param bundleContext The bundleContext of the bundle that may have HTTPGetRequestProcessors
-     * @throws Exception Thrown in case the component.xml cannot be processes
-     */
-    public static void registerHTTPGetRequestProcessors(BundleContext bundleContext)
-            throws Exception {
-        URL url = bundleContext.getBundle().getEntry("META-INF/component.xml");
-        if (url == null) {
-            return;
-        }
-
-        InputStream inputStream = url.openStream();
-        Component component = ComponentConfigFactory.build(inputStream);
-        HTTPGetRequestProcessorConfig[] getRequestProcessorConfigs = null;
-        if (component != null) {
-            getRequestProcessorConfigs = (HTTPGetRequestProcessorConfig[])
-                    component.getComponentConfig(ComponentConstants.HTTP_GET_REQUEST_PROCESSORS);
-        }
-
-        if (getRequestProcessorConfigs != null) {
-            for (HTTPGetRequestProcessorConfig getRequestProcessorConfig :
-                    getRequestProcessorConfigs) {
-                Class getRequestProcessorClass;
-                try {
-                    getRequestProcessorClass = bundleContext.getBundle().
-                            loadClass(getRequestProcessorConfig.getClassName());
-                } catch (ClassNotFoundException e) {
-                    getRequestProcessorClass = Class.forName(getRequestProcessorConfig.
-                            getClassName());
-                }
-                org.wso2.micro.core.transports.HttpGetRequestProcessor getRequestProcessor =
-                        (org.wso2.micro.core.transports.HttpGetRequestProcessor) getRequestProcessorClass.newInstance();
-                String item = getRequestProcessorConfig.getItem();
-                Dictionary<String,String> propsMap = new Hashtable<String,String>(2);
-                propsMap.put(ComponentConstants.ELE_ITEM, item);
-                propsMap.put(CarbonConstants.HTTP_GET_REQUEST_PROCESSOR_SERVICE,
-                        org.wso2.micro.core.transports.HttpGetRequestProcessor.class.getName());
-
-                //Registering the HttpGetRequestProcessor implementation in the OSGi registry
-                bundleContext.registerService(HttpGetRequestProcessor.class.getName(),
-                                              getRequestProcessor, propsMap);
-            }
-        }
-    }
 
     public static String replaceSystemProperty(String text) {
         int indexOfStartingChars = -1;

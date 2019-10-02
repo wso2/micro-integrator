@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.mediators.payloadFactory;
 
 import org.apache.axis2.AxisFault;
 import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
@@ -46,12 +45,6 @@ import static org.testng.Assert.assertTrue;
  * This deepchecking will add some perf overhead if the value is actually and xml.
  */
 public class ESBJAVA3573PayloadFormatWithBeginHtmlTagArgument extends ESBIntegrationTest {
-
-    @BeforeClass(alwaysRun = true)
-    public void setEnvironment() throws Exception {
-        super.init();
-        verifyAPIExistence("deepCheckAPI");
-    }
 
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {

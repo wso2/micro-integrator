@@ -21,11 +21,7 @@ import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.wso2.carbon.CarbonConstants;
-import org.wso2.carbon.context.CarbonContext;
-//import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -74,19 +70,13 @@ public abstract class AbstractAdmin {
 
     protected String getTenantDomain() {
         checkAdminService();
-        return CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
+        return Constants.SUPER_TENANT_DOMAIN_NAME;
     }
 
     protected void setConfigurationContext(ConfigurationContext configurationContext) {
         this.configurationContext = configurationContext;
         this.axisConfig = configurationContext.getAxisConfiguration();
     }
-
-
-    protected String getUsername() {
-        return (String) CarbonContext.getThreadLocalCarbonContext().getUsername();
-    }
-
 
     protected HttpSession getHttpSession() {
         checkAdminService();
@@ -106,11 +96,12 @@ public abstract class AbstractAdmin {
             return;
         }
         AxisService axisService = msgCtx.getAxisService();
-        if (axisService.getParameter(CarbonConstants.ADMIN_SERVICE_PARAM_NAME) == null) {
-            throw new RuntimeException("AbstractAdmin can only be extended by Carbon admin services. " +
-                    getClass().getName() + " is not an admin service. Service name " +
-                    axisService.getName() + ". The service should have defined the " +
-                    CarbonConstants.ADMIN_SERVICE_PARAM_NAME + " parameter");
+        if (axisService.getParameter(Constants.ADMIN_SERVICE_PARAM_NAME) == null) {
+            throw new RuntimeException(
+                    "AbstractAdmin can only be extended by Carbon admin services. " + getClass().getName()
+                            + " is not an admin service. Service name " + axisService.getName()
+                            + ". The service should have defined the " + Constants.ADMIN_SERVICE_PARAM_NAME
+                            + " parameter");
         }
     }
 }

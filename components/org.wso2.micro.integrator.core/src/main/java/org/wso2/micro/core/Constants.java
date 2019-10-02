@@ -30,5 +30,53 @@ public class Constants {
 
 
     public static final String CARBON_SERVER_XML_NAMESPACE = "http://wso2.org/projects/carbon/carbon.xml";
+    public static final String ANNOTATION = "annotation";
+    public static final String SERVER_URL = "ServerURL";
+    public static final String AXIS2_CONFIG_SERVICE = "org.apache.axis2.osgi.config.service";
+
+    //primary key store
+    public static final String SERVER_PRIMARY_KEYSTORE_FILE = "Security.KeyStore.Location";
+    public static final String SERVER_PRIMARY_KEYSTORE_PASSWORD = "Security.KeyStore.Password";
+    public static final String SERVER_PRIMARY_KEYSTORE_KEY_ALIAS = "Security.KeyStore.KeyAlias";
+    public static final String SERVER_PRIVATE_KEY_PASSWORD = "Security.KeyStore.KeyPassword";
+    public static final String SERVER_PRIMARY_KEYSTORE_TYPE = "Security.KeyStore.Type";
+
+    //Internal key store which is used for encryption and decryption purpose
+    public static final String SERVER_INTERNAL_KEYSTORE_FILE = "Security.InternalKeyStore.Location";
+    public static final String SERVER_INTERNAL_KEYSTORE_PASSWORD = "Security.InternalKeyStore.Password";
+    public static final String SERVER_INTERNAL_KEYSTORE_KEY_ALIAS = "Security.InternalKeyStore.KeyAlias";
+    public static final String SERVER_INTERNAL_PRIVATE_KEY_PASSWORD = "Security.InternalKeyStore.KeyPassword";
+    public static final String SERVER_INTERNAL_KEYSTORE_TYPE = "Security.InternalKeyStore.Type";
+
+    //properties
+    public static final String PROP_PASSWORD = "password";
+    public static final String PROP_ROLE = "role";
+    public static final String PROP_DESCRIPTION = "description";
+    public static final String PROP_USERS = "users";
+    public static final String PROP_PRIVATE_KEY_ALIAS = "privatekeyAlias";
+    public static final String PROP_TYPE = "type";
+    public static final String PROP_PRIVATE_KEY_PASS = "privatekeyPass";
+
+    //Registry store
+    public static final String SERVER_REGISTRY_KEYSTORE_FILE = "Security.RegistryKeyStore.Location";
+    public static final String SERVER_REGISTRY_KEYSTORE_PASSWORD = "Security.RegistryKeyStore.Password";
+    public static final String SERVER_REGISTRY_KEYSTORE_KEY_ALIAS = "Security.RegistryKeyStore.KeyAlias";
+    public static final String SERVER_REGISTRY_KEY_PASSWORD = "Security.RegistryKeyStore.KeyPassword";
+    public static final String SERVER_REGISTRY_KEYSTORE_TYPE = "Security.RegistryKeyStore.Type";
+
+
+    public static final String HTTP_GET_REQUEST_PROCESSOR_SERVICE = "org.wso2.carbon.osgi.httpGetRequestProcessorService";
+
+    public static final String ADMIN_SERVICE_PARAM_NAME = "adminService";
+
+    public static final String USER_MGT_XML_PATH = "wso2.user.mgt.xml";
+    public static final String COMPONENT_REP0 = "components.repo";
+    public static final String AXIS2_REPO = "axis2.repo";
+
+
+    public static final String REPO_WRITE_MODE = "carbon.repo.write.mode";
+
+    public static final String HTTP_TRANSPORT = "http";
+    public static final String HTTPS_TRANSPORT = "https";
 
 }

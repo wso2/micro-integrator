@@ -63,6 +63,13 @@ public class LoginResource implements MiApiResource {
     @Override
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
+
+        if (!JWTConfig.getInstance().getJwtConfigDto().isJwtHandlerEngaged()) {
+            LOG.error("/Login is accessible only when JWT based auth handler is engaged");
+            handleServerError(axis2MessageContext, "Login is accessible only when JWT based auth handler is engaged");
+            return true;
+        }
+
         //Init token store
         JWTTokenStore tokenStore =
                 JWTInMemoryTokenStore.getInstance(JWTConfig.getInstance().getJwtConfigDto().getTokenStoreSize());

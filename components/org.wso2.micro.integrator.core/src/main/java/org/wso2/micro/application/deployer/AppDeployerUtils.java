@@ -27,22 +27,16 @@ import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.eclipse.equinox.p2.metadata.IInstallableUnit;
-import org.eclipse.equinox.p2.query.IQuery;
-import org.eclipse.equinox.p2.query.QueryUtil;
 import org.osgi.framework.Bundle;
-import org.wso2.micro.core.Constants;
-import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.config.RegistryConfig;
-import org.wso2.carbon.feature.mgt.core.util.ProvisioningUtils;
+import org.wso2.micro.core.Constants;
+import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.internal.ApplicationManager;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
-import javax.xml.namespace.QName;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -62,6 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import javax.xml.namespace.QName;
 
 public final class AppDeployerUtils {
 	
@@ -527,7 +522,7 @@ public final class AppDeployerUtils {
                                                 String runtimeObjectName,
                                                 int tenantId) {
         if (fileName == null || artifactType == null || 
-        		tenantId == MultitenantConstants.INVALID_TENANT_ID) {
+        		tenantId == Constants.INVALID_TENANT_ID) {
             return;
         }
         ApplicationManager appManager = ApplicationManager.getInstance();
@@ -586,47 +581,6 @@ public final class AppDeployerUtils {
             }
         }
         return false;
-    }
-
-    /**
-     * Checks whether the given list of features are already installed in the systme
-     *
-     * @param features - list of features
-     * @return - true if all are installed, else false
-     */
-    public static boolean areAllFeaturesInstalled(List<Feature> features) {
-        for (Feature feature : features) {
-
-        IQuery<IInstallableUnit> query = QueryUtil.createIUQuery(feature.getId(), feature.getVersionRange());
-        IInstallableUnit[] installableUnits = ProvisioningUtils.getProfile().query(query, null).toArray(IInstallableUnit.class);
-            if (installableUnits == null || installableUnits.length == 0) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     * For each artifact type, there's a set of features which are needed to be installed
-     * in the system to properly deploy the artifacts. If all those features don't exist
-     * in the system, artifacts of that type can't be accepted for deployment.
-     * This method builds the acceptance list by checking whether the needed features are already
-     * installed or not.
-     * 
-     * @param features - contains the list of features needed for each artifact type
-     * @return whether each artifact type can be deployed or not
-     */
-    public static Map<String, Boolean> buildAcceptanceList(Map<String, 
-            List<Feature>> features) {
-        HashMap<String, Boolean> acceptanceList = new HashMap<String, Boolean>();
-
-        for (Map.Entry<String, List<Feature>> entry : features.entrySet()) {
-            if (entry.getValue() != null) {
-                acceptanceList.put(entry.getKey(),
-                        AppDeployerUtils.areAllFeaturesInstalled(entry.getValue()));
-            }
-        }
-        return acceptanceList;
     }
 
     /**

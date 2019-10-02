@@ -22,11 +22,10 @@ import org.apache.axis2.description.AxisService;
 import org.apache.http.HttpStatus;
 import org.apache.http.protocol.HTTP;
 import org.apache.ws.commons.schema.XmlSchema;
-import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -35,6 +34,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 
 public final class XsdUtil {
 
@@ -47,11 +47,6 @@ public final class XsdUtil {
                                 String serviceName,
                                 AxisService axisService) throws IOException {
 
-        /*if (GhostDeployerUtils.isGhostService(axisService)) {
-            // if the existing service is a ghost service, deploy the actual one
-            axisService = GhostDeployerUtils.deployActualService(configCtx
-                    .getAxisConfiguration(), axisService);
-        }*/
         if (!org.wso2.micro.core.transports.util.RequestProcessorUtil.canExposeServiceMetadata(axisService)) {
             response.setError(HttpStatus.SC_FORBIDDEN,
                               "Access to service metadata for service: " + serviceName +
@@ -223,36 +218,6 @@ public final class XsdUtil {
                     response.addHeader(HTTP.CONTENT_TYPE, "text/html");
                     outputStream.write("<h4>Schema not found!</h4>".getBytes());
                 }
-            } else {
-                /*String ipAddress = "http://" + NetworkUtils.getLocalHostname() + ":" +
-                        ServerManager.getInstance().getHttpPort();
-                String version =
-                        ServerConfiguration.getInstance().getFirstProperty("Version");
-                outputStream.write(("<html><head>" +
-                        "<title>WSO2 Web Services Application Server v" +
-                        version +
-                        "Management Console" +
-                        " - " +
-                        axisService.getName() +
-                        " Service Schema</title>" +
-                        "</head>" +
-                        "<body>" +
-                        "<b>Schemas for " +
-                        axisService.getName() +
-                        " service</b><br/><br/>").getBytes());
-                if (schemas.size() != 0) {
-                    for (int i = 0; i < schemas.size(); i++) {
-                        String st = "<a href=\"" + ipAddress +
-                                RequestProcessorUtil.getServiceContextPath(configCtx) + "/" +
-                                axisService.getName() + "?xsd&id=" + i +
-                                "&" + ServerConstants.HTTPConstants.ANNOTATION + "=true" + "\">Schema " + i +
-                                "</a><br/>";
-                        outputStream.write(st.getBytes());
-                    }
-                } else {
-                    outputStream.write("<p>No schemas found</p>".getBytes());
-                }
-                outputStream.write("</body></html>".getBytes());*/
             }
         }
     }
@@ -265,13 +230,10 @@ public final class XsdUtil {
                                            isXSDAnnotated(request));
     }
 
-
     private static boolean isXSDAnnotated(CarbonHttpRequest request) {
-        String param = request.getParameter(ServerConstants.HTTPConstants.ANNOTATION);
+        String param = request.getParameter(Constants.ANNOTATION);
         if (param != null && param.length() != 0) {
-            if (param.equals("true")) {
-                return true;
-            }
+            return param.equals("true");
         }
         return false;
     }

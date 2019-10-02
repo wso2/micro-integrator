@@ -477,53 +477,6 @@
         <MaxTempFileLifetime>30</MaxTempFileLifetime>
     </HouseKeeping>
 
-    <!--
-       Configuration for handling different types of file upload & other file uploading related
-       config parameters.
-       To map all actions to a particular FileUploadExecutor, use
-       <Action>*</Action>
-    -->
-    <FileUploadConfig>
-        <!--
-           The total file upload size limit in MB
-        -->
-        <TotalFileSizeLimit>100</TotalFileSizeLimit>
-
-        <Mapping>
-            <Actions>
-                <Action>keystore</Action>
-                <Action>certificate</Action>
-                <Action>*</Action>
-            </Actions>
-            <Class>org.wso2.carbon.ui.transports.fileupload.AnyFileUploadExecutor</Class>
-        </Mapping>
-
-        <Mapping>
-            <Actions>
-                <Action>jarZip</Action>
-            </Actions>
-            <Class>org.wso2.carbon.ui.transports.fileupload.JarZipUploadExecutor</Class>
-        </Mapping>
-        <Mapping>
-            <Actions>
-                <Action>dbs</Action>
-            </Actions>
-            <Class>org.wso2.carbon.ui.transports.fileupload.DBSFileUploadExecutor</Class>
-        </Mapping>
-        <Mapping>
-            <Actions>
-                <Action>tools</Action>
-            </Actions>
-            <Class>org.wso2.carbon.ui.transports.fileupload.ToolsFileUploadExecutor</Class>
-        </Mapping>
-        <Mapping>
-            <Actions>
-                <Action>toolsAny</Action>
-            </Actions>
-            <Class>org.wso2.carbon.ui.transports.fileupload.ToolsAnyFileUploadExecutor</Class>
-        </Mapping>
-    </FileUploadConfig>
-
     <!-- FileNameRegEx is used to validate the file input/upload/write-out names.
     e.g.
      <FileNameRegEx>^(?!(?:CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\.[^.])?$)[^&lt;&gt:"/\\|?*\x00-\x1F][^&lt;&gt:"/\\|?*\x00-\x1F\ .]$</FileNameRegEx>

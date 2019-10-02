@@ -186,7 +186,7 @@ public class SynapseArtifactInitUtils {
      *
      * @param connectorPath - Absolute path of the Carbon application .car file
      * @return - extracted location
-     * @throws org.wso2.carbon.CarbonException - error on extraction
+     * @throws IOException if an error occurs while extracting
      */
     public static String extractConnector(String connectorPath) throws IOException {
         createTempDirectory();
