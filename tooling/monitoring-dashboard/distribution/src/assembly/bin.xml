@@ -116,6 +116,12 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>carbon-home/README.txt</source>
+            <outputDirectory>/</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>carbon-home/LICENSE.txt</source>
             <outputDirectory>/</outputDirectory>
             <filtered>true</filtered>
