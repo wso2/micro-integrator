@@ -251,7 +251,7 @@ public class InboundTransportTest extends ESBIntegrationTest {
         synapseConfig = AXIOMUtil.stringToOM(
                 "<inboundEndpoint name=\"testFile3\" onError=\"inFault\" protocol=\"file\"\n"
                         + " sequence=\"requestHandlerSeq\" suspend=\"false\" xmlns=\"http://ws.apache.org/ns/synapse\">\"\n"
-                        + " <parameters>\n" + " <parameter name=\"interval\">1</parameter>\n"
+                        + " <parameters>\n" + " <parameter name=\"interval\">1.1</parameter>\n"
                         + " <parameter name=\"transport.vfs.ActionAfterErrors\">NONE</parameter>\n"
                         + " <parameter name=\"transport.vfs.Locking\">enable</parameter>\n"
                         + " <parameter name=\"transport.vfs.ContentType\">application/xml</parameter>\n"

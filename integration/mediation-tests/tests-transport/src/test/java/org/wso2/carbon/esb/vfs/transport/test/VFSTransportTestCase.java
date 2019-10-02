@@ -96,7 +96,6 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         addVFSProxy15();
         addVFSProxy16();
         addVFSProxy17();
-        addVFSProxy18();
         addVFSProxy19();
         addVFSProxy20();
         addVFSProxy21();
@@ -545,26 +544,6 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         FileUtils.copyFile(sourceFile, targetFile);
         Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS).
                 atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
-
-        Assert.assertTrue(!outfile.exists());
-    }
-
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
-            + "transport.vfs.FileURI = Linux Path, " + "transport.vfs.ContentType = text/xml, "
-            + "transport.vfs.FileNamePattern = - *\\.xml " + "transport.PollInterval = Non Integer")
-    public void testVFSProxyPollInterval_NonInteger() throws Exception {
-
-        String proxyName = "VFSProxy18";
-        File sourceFile = new File(pathToVfsDir + File.separator + "test.xml");
-        File targetFile = new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "test.xml");
-        File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
-
-        FileUtils.copyFile(sourceFile, targetFile);
-
-        Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS)
-                .atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
-        //The poll interval will be set to 300s here,
 
         Assert.assertTrue(!outfile.exists());
     }
@@ -1117,28 +1096,6 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy17\" transports=\"vfs\">\n"
                 + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
                 + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
-                + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
-                + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
-                + "                <target>\n" + "                        <endpoint>\n"
-                + "                                <address format=\"soap12\" uri=\"http://localhost:9000/services/SimpleStockQuoteService\"/>\n"
-                + "                        </endpoint>\n" + "                        <outSequence>\n"
-                + "                                <property action=\"set\" name=\"OUT_ONLY\" value=\"true\"/>\n"
-                + "                                <send>\n" + "                                        <endpoint>\n"
-                + "                                                <address uri=\"vfs:file://" + pathToVfsDir + "test"
-                + File.separator + proxyName + File.separator + "out" + File.separator + "out.xml\"/> <!--CHANGE-->\n"
-                + "                                        </endpoint>\n" + "                                </send>\n"
-                + "                        </outSequence>\n" + "                </target>\n" + "        </proxy>");
-        addProxy(proxy, proxyName);
-    }
-
-    private void addVFSProxy18() throws Exception {
-
-        String proxyName = "VFSProxy18";
-        OMElement proxy = AXIOMUtil.stringToOM("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-                + "<proxy xmlns=\"http://ws.apache.org/ns/synapse\" name=\"VFSProxy18\" transports=\"vfs\">\n"
-                + "                <parameter name=\"transport.vfs.FileURI\">file://" + pathToVfsDir + "test"
-                + File.separator + proxyName + File.separator + "in" + File.separator + "</parameter> <!--CHANGE-->\n"
-                + "                <parameter name=\"transport.vfs.ContentType\">text/xml</parameter>\n"
                 + "                <parameter name=\"transport.vfs.FileNamePattern\">.*\\.xml</parameter>\n"
                 + "                <parameter name=\"transport.PollInterval\">1</parameter>\n"
                 + "                <target>\n" + "                        <endpoint>\n"
