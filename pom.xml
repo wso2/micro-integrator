@@ -1351,7 +1351,7 @@
         <javax.jsr311.api.version>1.1.1</javax.jsr311.api.version>
         <org.wso2.orbit.javax.xml.bind.version>2.3.1.wso2v1</org.wso2.orbit.javax.xml.bind.version>
 
-        <config.mapper.version>1.0.2</config.mapper.version>
+        <config.mapper.version>1.0.3</config.mapper.version>
         <javax.xml.parsers.import.pkg.version>[0.0.0, 1.0.0)</javax.xml.parsers.import.pkg.version>
         <imp.pkg.version.javax.servlet>[2.6.0, 3.0.0)</imp.pkg.version.javax.servlet>
         <import.package.version.commons.logging>[1.2.0,2.0.0)</import.package.version.commons.logging>
