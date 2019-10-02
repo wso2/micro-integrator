@@ -323,6 +323,7 @@ do
     -DworkerNode=false \
     -Dorg.apache.cxf.io.CachedOutputStream.Threshold=104857600 \
     -Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl \
+    -DavoidConfigHashRead=true \
     $NODE_PARAMS \
     org.wso2.micro.integrator.bootstrap.Bootstrap $*
     status=$?
