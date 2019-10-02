@@ -288,8 +288,7 @@
                     <parameter name="-DenableManagementApi" value="true"/>
 
                     <parameter name="startupScript" value="micro-integrator"/>
-<!--                    <parameter name="cmdArg" value="debug 5005" />-->
-<!--                    <parameter name="-DavoidConfigUpdate" value="true" />-->
+                    <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
                     <name>org.wso2.esb.integration.common.extensions.axis2server.Axis2ServerExtension</name>
