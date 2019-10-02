@@ -23,7 +23,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
     <head>
         <meta content="text/html; charset=iso-8859-1" http-equiv="content-type"/>
-        <title>WSO2 MI v@product.version@ Released - April 2019</title>
+        <title>WSO2 MI v@product.version@ Released - September 2019</title>
     </head>
     <body>
         <div id="header">
@@ -44,8 +44,8 @@
 
             <p>
                 WSO2 MI simplifies integration by allowing users to easily configure message routing, message mediation,
-                transformation, logging, task scheduling, load balancing, failover routing,
-                event brokering etc. Data services and various applications can also be hosted and exposed using WSO2
+                transformation, logging, task scheduling, load balancing, failover routing etc.
+                Data services and various applications can also be hosted and exposed using WSO2
                 MI.
             </p>
 
@@ -73,13 +73,12 @@
                 <li>Easily extendable via custom Java classes (mediator and command)/Spring
                     configurations, or BSF Scripting languages (Javascript, Ruby, Groovy, etc.)</li>
                 <li>Built in support for scheduling tasks using the Quartz scheduler.</li>
-                <li>Load-balancing (with or without sticky sessions)/Fail-over, and clustered
-                    Throttling and Caching support</li>
+                <li>Load-balancing (with or without sticky sessions)/Fail-over and Caching support</li>
                 <li>WS-Security, Caching &amp; Throttling configurable via
                     (message/operation/service level) WS-Policies</li>
                 <li>Lightweight, XML and Web services centric messaging model</li>
                 <li> Support for industrial standards (Hessian binary web service protocol/
-                    Financial Information eXchange protocol and optional Health Level-7 protocol)</li>
+                    Financial Information eXchange protocol)</li>
                 <li>Enhanced support for the VFS (File/FTP/SFTP), JMS, Mail transports with
                     optional TCP/UDP transports and transport switching among any of the above
                     transports</li>
@@ -88,7 +87,6 @@
                 <li>Database lookup &amp; store support with DBMediators with reusable database
                     connection pools</li>
                 <li>WS-Eventing support</li>
-                <li>Rule based mediation of the messages using the Drools rule engine</li>
                 <li>Transactions support via the JMS transport and Transaction mediator for
                     database mediators</li>
                 <li>Internationalized GUI management console with user management for
