@@ -612,6 +612,13 @@
             </includes>
         </dependencySet>
         <dependencySet>
+            <outputDirectory>wso2mi-${pom.version}/repository/deployment/client/modules
+            </outputDirectory>
+            <includes>
+                <include>org.apache.rampart:rampart:mar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
             <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <includes>
                 <include>org.wso2.ei:org.wso2.micro.integrator.bootstrap:jar</include>
