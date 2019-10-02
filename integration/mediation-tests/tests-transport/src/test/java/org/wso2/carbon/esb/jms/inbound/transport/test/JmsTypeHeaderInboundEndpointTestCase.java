@@ -16,6 +16,7 @@
  * under the License.
  *
  */
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -38,10 +39,12 @@ import javax.jms.QueueSession;
 import javax.jms.TextMessage;
 import javax.naming.InitialContext;
 
+*/
 /**
  * This testcase tests whether JMSType header is ignored when transport.jms.ContentTypeProperty"
  * or "transport.jms.ContentType" is specified.
- */
+ *//*
+
 public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "jmsTypeHeaderInboundEndpointTestCase";
@@ -60,11 +63,13 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
         addInboundEndpoint(inboundEpConfig);
     }
 
-    /**
+    */
+/**
      * Test whether JMSType header is ignored when transport.jms.ContentTypeProperty"
      *
      * @throws Exception if any error occurred while running tests
-     */
+     *//*
+
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Test JMSType header with inbound endpoint")
     public void testJmsTypeHeaderWithInboundEndpoint() throws Exception {
@@ -87,11 +92,13 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    /**
+    */
+/**
      * Send a message to testInboundQueue queue
      *
      * @throws Exception
-     */
+     *//*
+
     private void sendMessage() throws Exception {
         InitialContext initialContext = JmsClientHelper.getActiveMqInitialContext();
         QueueConnectionFactory connectionFactory = (QueueConnectionFactory) initialContext
@@ -113,3 +120,4 @@ public class JmsTypeHeaderInboundEndpointTestCase extends ESBIntegrationTest {
         }
     }
 }
+*/

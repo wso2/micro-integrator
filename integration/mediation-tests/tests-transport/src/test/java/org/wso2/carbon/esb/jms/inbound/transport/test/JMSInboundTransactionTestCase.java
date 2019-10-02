@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -33,9 +34,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import javax.xml.stream.XMLStreamException;
 
+*/
 /**
  * Tests JMS transactions with inbound endpoints.
- */
+ *//*
+
 public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient = null;
@@ -54,12 +57,14 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
-    /**
+    */
+/**
      * Tests whether committing a transaction removes the message from the queue.
      * Disabling until find a proper fix to https://github.com/wso2/product-ei/issues/1389
      *
      * @throws Exception for any unexpected exception
-     */
+     *//*
+
     @Test(groups = { "wso2.esb" }, description = "Successfully committing the message", enabled = false)
     public void testTransactionCommit() throws Exception {
 
@@ -86,12 +91,14 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
         Assert.assertTrue(isQueueEmpty(queueName), "Queue (" + queueName + ") should be empty after commit");
     }
 
-    /**
+    */
+/**
      * Tests whether rolling back a transaction does not removes the message from the queue.
      * Disabling until find a proper fix to https://github.com/wso2/product-ei/issues/1389
      *
      * @throws Exception
-     */
+     *//*
+
     @Test(groups = { "wso2.esb" }, description = "Rolling back the failed message to the queue", enabled = false)
     public void testTransactionRollBack() throws Exception {
 
@@ -143,3 +150,4 @@ public class JMSInboundTransactionTestCase extends ESBIntegrationTest {
     }
 
 }
+*/

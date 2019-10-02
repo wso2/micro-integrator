@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -39,9 +40,11 @@ import java.io.File;
 import java.net.URL;
 import javax.activation.DataHandler;
 
+*/
 /**
  * class tests consuming message from a queue using inbound endpoints
- */
+ *//*
+
 public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
     private ServerConfigurationManager serverConfigurationManager;
@@ -95,11 +98,13 @@ public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    /**
+    */
+/**
      * Check whether the JMS listner has started before complete deployment of the JMS proxy.
      *
      * @throws Exception
-     */
+     *//*
+
     @Test(groups = { "wso2.esb" }, description = "Test JMS proxy deployment.")
     public void testDeploymentOrder() throws Exception {
 
@@ -165,3 +170,4 @@ public class JMSInboundMessagePollingTestCase extends ESBIntegrationTest {
     }
 
 }
+*/

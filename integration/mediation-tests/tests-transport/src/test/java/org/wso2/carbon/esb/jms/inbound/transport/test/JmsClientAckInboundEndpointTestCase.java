@@ -16,7 +16,7 @@
  * under the License.
  *
  */
-package org.wso2.carbon.esb.jms.inbound.transport.test;
+/*package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
@@ -33,9 +33,9 @@ import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 
-/**
+*//**
  * This testcase tests consuming message from a queue using client ack mode works
- */
+ *//*
 public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "jmsQueueClientAckInboundEndpointTestCase";
@@ -54,11 +54,11 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
         addInboundEndpoint(inboundEpConfig);
     }
 
-    /**
+    *//**
      * Test whether consuming message from a queue using client ack mode works
      *
      * @throws Exception if any error occurred while running tests
-     */
+     *//*
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Test JMS client ack mode with inbound endpoint")
     public void testJmsQueueToHttpWithInboundEndpoint() throws Exception {
@@ -81,11 +81,11 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    /**
+    *//**
      * Send a message to testInboundQueue queue
      *
      * @throws Exception
-     */
+     *//*
     private void sendMessage() throws Exception {
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
@@ -102,4 +102,4 @@ public class JmsClientAckInboundEndpointTestCase extends ESBIntegrationTest {
             sender.disconnect();
         }
     }
-}
+}*/

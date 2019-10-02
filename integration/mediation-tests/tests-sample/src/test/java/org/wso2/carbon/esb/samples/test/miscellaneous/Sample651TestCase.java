@@ -1,3 +1,4 @@
+/*
 package org.wso2.carbon.esb.samples.test.miscellaneous;
 
 import org.testng.Assert;
@@ -89,3 +90,4 @@ public class Sample651TestCase extends ESBSampleIntegrationTest {
         }
     }
 }
+*/

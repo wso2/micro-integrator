@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.file.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -103,4 +104,4 @@ public class InboundEndpointContentTypePlainTest extends ESBIntegrationTest {
         return file.exists() && file.delete();
     }
 
-}
+}*/

@@ -16,6 +16,7 @@
  * under the License.
  */
 
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -32,9 +33,11 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
 
+*/
 /**
  * Test tenant users with inbound endpoints.
- */
+ *//*
+
 public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
     InboundAdminClient inboundAdminClient1, inboundAdminClient2;
@@ -99,7 +102,8 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
         }
     }
 
-    /**
+    */
+/**
      * Creates the synapse configuration for an inbound endpoint given the inbound endpoint name and the queue name
      * to be connected to.
      *
@@ -108,19 +112,22 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
      * @return the synapse configuration of the inbound endpoint
      * @throws Exception if an error occurs during the conversion of the string representation of the inbound
      *                   endpoint to an OMElement
-     */
+     *//*
+
     private OMElement createJMSInboundEndpoint(String inboundEPName, String queueName) throws Exception {
         OMElement synapseConfig;
         synapseConfig = AXIOMUtil.stringToOM(createInboundEndpointString(inboundEPName, queueName));
         return synapseConfig;
     }
 
-    /**
+    */
+/**
      * Creates a soap message with a symbol specified.
      *
      * @param symbol the symbol to be added
      * @return the soap message
-     */
+     *//*
+
     private String createMessage(String symbol) {
         return "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n"
@@ -131,14 +138,16 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
                 + "           </ns:getQuote>\n" + "       </soapenv:Body>\n" + "</soapenv:Envelope>";
     }
 
-    /**
+    */
+/**
      * Creates a JMS inbound endpoint provied the name of the inbound endpoint and the name of the queue to be
      * listening to.
      *
      * @param inboundEPName the inbound endpoint name
      * @param queueName     the name of the queue to be connected to
      * @return the string representation of inbound endpoint configuration
-     */
+     *//*
+
     private String createInboundEndpointString(String inboundEPName, String queueName) {
         return "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\""
                 + inboundEPName + "\"\n" + "                 sequence=\"jmsInboundTenantRequestHandlerSeq\"\n"
@@ -156,3 +165,4 @@ public class JMSInboundHttpTenantTestCase extends ESBIntegrationTest {
                 + "    </parameters>\n" + "</inboundEndpoint>";
     }
 }
+*/

@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.vfs.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -56,11 +57,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
+*/
 /**
  * Integration test for https://wso2.org/jira/browse/ESBJAVA-4679
  * Checks if vfs can handle secured passwords
  * This sets up a sftp server for the test, hence it requires sudo to run
- */
+ *//*
+
 public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
     private static final Log LOGGER = LogFactory.getLog(ESBJAVA4679VFSPasswordSecurityTestCase.class);
@@ -161,9 +164,11 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
 
         String log = "File recieved for secure password for the proxy service - ";
         //create VFS transport listener proxy
-        /**
+        */
+/**
          * TODO Note that encrypted urls provided here are encrypted using wso2carbon.jks, so if it gets changed, these test may fail
-         */
+         *//*
+
         String proxy = "<proxy xmlns=\"http://ws.apache.org/ns/synapse\"\n" +
                 "       name=\"VfsSecurePasswordTest\"\n" +
                 "       transports=\"vfs http https\"\n" +
@@ -209,13 +214,15 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
                 "Secure password deployment failed, file did not received to the vfs proxy");
     }
 
-    /**
+    */
+/**
      * Copy the given source file to the given destination
      *
      * @param sourceFile source file
      * @param destFile   destination file
      * @throws java.io.IOException
-     */
+     *//*
+
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (!destFile.exists()) {
             destFile.createNewFile();
@@ -235,3 +242,4 @@ public class ESBJAVA4679VFSPasswordSecurityTestCase extends ESBIntegrationTest {
         }
     }
 }
+*/

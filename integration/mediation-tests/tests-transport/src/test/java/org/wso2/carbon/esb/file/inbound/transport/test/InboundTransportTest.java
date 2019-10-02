@@ -15,6 +15,7 @@
  *specific language governing permissions and limitations
  *under the License.
  */
+/*
 package org.wso2.carbon.esb.file.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -354,12 +355,14 @@ public class InboundTransportTest extends ESBIntegrationTest {
         return file.exists() && file.delete();
     }
 
-    /**
+    */
+/**
      * Checks if a file exists.
      *
      * @param file File to be found.
      * @return True if exists, False otherwise.
-     */
+     *//*
+
     private Callable<Boolean> isFileExist(final File file) {
         return new Callable<Boolean>() {
             @Override
@@ -369,12 +372,14 @@ public class InboundTransportTest extends ESBIntegrationTest {
         };
     }
 
-    /**
+    */
+/**
      * Checks if a file does not exist.
      *
      * @param file File to be found.
      * @return True if does not exist, False otherwise.
-     */
+     *//*
+
     private Callable<Boolean> isFileNotExist(final File file) {
         return new Callable<Boolean>() {
             @Override
@@ -384,3 +389,4 @@ public class InboundTransportTest extends ESBIntegrationTest {
         };
     }
 }
+*/

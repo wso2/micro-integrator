@@ -29,11 +29,11 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
-            <class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.ESBJAVA4821WSDLProxyServiceDeploymentTestCase">
+            <!--<class name="org.wso2.carbon.esb.proxyservice.test.wsdlBasedProxy.ESBJAVA4821WSDLProxyServiceDeploymentTestCase">
                 <methods>
                     <exclude name=".*"/>
                 </methods>
-            </class>
+            </class>-->
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.PickEndPointFromRegistryTestCase"/>
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.ProxyServiceEnablingHTTPTestCase"/>
             <class name="org.wso2.carbon.esb.proxyservice.test.loggingProxy.ProxyServiceEndPointThroughURLTestCase"/>
@@ -60,11 +60,11 @@
             <package name="org.wso2.carbon.esb.rest.test.api"/>
         </packages>
         <classes>
-            <class name="org.wso2.carbon.esb.rest.test.api.ESBJAVA4519TestCase">
+            <!--<class name="org.wso2.carbon.esb.rest.test.api.ESBJAVA4519TestCase">
                 <methods>
                     <exclude name=".*"/>
                 </methods>
-            </class>
+            </class>-->
         </classes>
     </test>
     <test name="Rest-API-Header-Test" preserve-order="true" verbose="2" parallel="false">
@@ -102,11 +102,11 @@
             <package name="org.wso2.carbon.esb.scheduledtask.test"/>
         </packages>
         <classes>
-            <class name="org.wso2.carbon.esb.scheduledtask.test.TaskRedeployWithCappTestCase">
+            <!--<class name="org.wso2.carbon.esb.scheduledtask.test.TaskRedeployWithCappTestCase">
                 <methods>
                     <exclude name=".*"/>
                 </methods>
-            </class>
+            </class>-->
         </classes>
     </test>
 

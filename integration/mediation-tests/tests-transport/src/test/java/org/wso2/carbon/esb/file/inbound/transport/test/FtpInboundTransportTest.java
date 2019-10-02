@@ -15,6 +15,7 @@
  *specific language governing permissions and limitations
  *under the License.
  */
+/*
 package org.wso2.carbon.esb.file.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -86,7 +87,9 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
         }
         Assert.assertTrue(outputFolder.mkdir(), "FTP data /in folder not created");
 
-        /* Make the port available */
+        */
+/* Make the port available *//*
+
         Utils.shutdownFailsafe(FTPPort);
 
         // start-up FTP server
@@ -258,4 +261,4 @@ public class FtpInboundTransportTest extends ESBIntegrationTest {
             }
         };
     }
-}
+}*/

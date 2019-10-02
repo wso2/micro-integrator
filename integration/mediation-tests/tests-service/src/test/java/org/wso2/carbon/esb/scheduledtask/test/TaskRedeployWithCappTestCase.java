@@ -1,3 +1,4 @@
+/*
 package org.wso2.carbon.esb.scheduledtask.test;
 
 import org.apache.commons.lang.ArrayUtils;
@@ -19,9 +20,11 @@ import javax.activation.FileDataSource;
 
 import static org.testng.Assert.assertTrue;
 
+*/
 /**
  * Test case related to task redeployment via car file. Related to : https://wso2.org/jira/browse/ESBJAVA-3186
- */
+ *//*
+
 public class TaskRedeployWithCappTestCase extends ESBIntegrationTest {
     private CarbonAppUploaderClient carbonAppUploaderClient;
     private ApplicationAdminClient applicationAdminClient;
@@ -109,3 +112,4 @@ public class TaskRedeployWithCappTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 }
+*/

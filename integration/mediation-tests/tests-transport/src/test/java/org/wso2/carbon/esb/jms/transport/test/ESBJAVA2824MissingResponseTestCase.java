@@ -16,6 +16,7 @@
  *under the License.
  */
 
+/*
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -30,10 +31,12 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 import org.wso2.esb.integration.common.utils.Utils;
 
+*/
 /**
  * Fix for missing response / Axis Fault on read timeout in JMSSender.
  * public Jira - https://wso2.org/jira/browse/ESBJAVA-2824
- */
+ *//*
+
 public class ESBJAVA2824MissingResponseTestCase extends ESBIntegrationTest {
 
     private static final String logLine0 = "Did not receive a JMS response within 30000 ms to destination : queue://bip_reply";
@@ -67,4 +70,4 @@ public class ESBJAVA2824MissingResponseTestCase extends ESBIntegrationTest {
     public void destroy() throws Exception {
         super.cleanup();
     }
-}
+}*/
