@@ -18,15 +18,12 @@
 
 package org.wso2.micro.integrator.security.callback;
 
-import org.wso2.micro.integrator.security.user.api.RealmConfiguration;
-
 /**
  * This is the default implementation of the AbstractPasswordCallbackHandler which loads the realm configuration from
  * the user-mgt.xml file
  */
 public class DefaultPasswordCallback extends AbstractPasswordCallback {
 
-    public DefaultPasswordCallback(RealmConfiguration realmConfiguration) {
-        setRealmConfig(realmConfiguration);
+    public DefaultPasswordCallback() {
     }
 }
