@@ -18,13 +18,30 @@
 
 package org.wso2.micro.integrator.registry;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * Adding basic resource object class so that this can be extended when needed.
  */
 public class Resource {
 
-    public Resource() {
+    private File resourceFile;
 
+    Resource(File file) {
+        resourceFile = file;
+    }
+
+    /**
+     * Returns an input stream from the resource file.
+     *
+     * @return the input stream
+     * @throws IOException if the file does not exist
+     */
+    public InputStream getContentStream() throws IOException {
+        return new FileInputStream(resourceFile);
     }
 
 }
