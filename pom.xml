@@ -86,6 +86,20 @@
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.core</artifactId>
                 <version>${product.mi.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.mediation</groupId>
+                        <artifactId>org.wso2.carbon.inbound.endpoint</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.mediation</groupId>
+                        <artifactId>org.wso2.carbon.inbound.osgi</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.wso2.carbon.mediation</groupId>
+                        <artifactId>org.wso2.carbon.inbound.endpoint.persistence</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>

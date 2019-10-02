@@ -32,8 +32,8 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.core.axis2.Axis2SynapseEnvironment;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSPollingConsumer;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSConstants;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSPollingConsumer;
 
 import java.util.Properties;
 import javax.jms.Message;

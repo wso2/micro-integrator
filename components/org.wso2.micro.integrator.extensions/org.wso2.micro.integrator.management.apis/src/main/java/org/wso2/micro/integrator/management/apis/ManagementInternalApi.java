@@ -22,9 +22,9 @@ package org.wso2.micro.integrator.management.apis;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.rest.cors.CORSConfiguration;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPI;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIHandler;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -24,9 +24,9 @@ import junit.framework.TestCase;
 import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQMessageConsumer;
 import org.junit.Test;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.factory.CachedJMSConnectionFactory;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.factory.JMSConnectionFactory;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSConstants;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.factory.CachedJMSConnectionFactory;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.factory.JMSConnectionFactory;
 
 import java.util.Properties;
 import javax.jms.Connection;

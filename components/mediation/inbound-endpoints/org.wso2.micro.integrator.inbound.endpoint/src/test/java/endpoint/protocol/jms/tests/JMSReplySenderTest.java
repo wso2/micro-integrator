@@ -34,10 +34,10 @@ import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.junit.Test;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.BytesMessageDataSource;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSReplySender;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.factory.CachedJMSConnectionFactory;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.BytesMessageDataSource;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSConstants;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSReplySender;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.factory.CachedJMSConnectionFactory;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
