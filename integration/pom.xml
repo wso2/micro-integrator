@@ -451,6 +451,12 @@
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>automation-extensions</artifactId>
                 <version>${product.mi.version}</version>
+                <exclusions>
+                    <exclusion>
+                       <groupId>org.slf4j</groupId>
+                       <artifactId>log4j-over-slf4j</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>com.h2database</groupId>
