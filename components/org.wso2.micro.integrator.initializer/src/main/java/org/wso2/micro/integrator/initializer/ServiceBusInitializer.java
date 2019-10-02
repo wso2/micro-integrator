@@ -48,7 +48,7 @@ import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.micro.integrator.inbound.endpoint.EndpointListenerLoader;
+import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;

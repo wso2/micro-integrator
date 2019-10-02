@@ -26,7 +26,7 @@ import org.json.JSONObject;
 import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.ArrayList;
 import java.util.HashSet;

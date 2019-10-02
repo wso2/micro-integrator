@@ -30,9 +30,9 @@ import org.apache.synapse.core.axis2.MessageContextCreatorForAxis2;
 import org.apache.synapse.rest.RESTConstants;
 import org.junit.After;
 import org.junit.Test;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.ConfigurationLoader;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPI;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIDispatcher;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIDispatcher;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class DispatcherTestCase {
     @Test
     public void testDispatching() throws Exception {
         System.setProperty(
-                org.wso2.micro.integrator.inbound.endpoint.internal.http.api.Constants.PREFIX_TO_ENABLE_INTERNAL_APIS
+                org.wso2.carbon.inbound.endpoint.internal.http.api.Constants.PREFIX_TO_ENABLE_INTERNAL_APIS
                         + "SampleAPI", "true");
 
         ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis.xml");

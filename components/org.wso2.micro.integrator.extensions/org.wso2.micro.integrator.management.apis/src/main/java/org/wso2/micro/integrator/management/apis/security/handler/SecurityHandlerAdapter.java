@@ -22,7 +22,7 @@ import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPIHandler;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
 import java.util.Map;
 import java.util.Objects;

@@ -27,9 +27,9 @@ import org.apache.activemq.command.ActiveMQQueue;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.junit.Test;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSInjectHandler;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSUtils;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSConstants;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSInjectHandler;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSUtils;
 
 import java.util.Properties;
 import javax.jms.Destination;

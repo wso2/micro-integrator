@@ -29,7 +29,7 @@ import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.core.DBUtils;
 import org.wso2.micro.integrator.dataservices.core.description.query.Query;
 import org.wso2.micro.integrator.dataservices.core.engine.DataService;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceInfo;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServiceSummary;
 import org.wso2.micro.integrator.management.apis.models.dataServices.DataServicesList;

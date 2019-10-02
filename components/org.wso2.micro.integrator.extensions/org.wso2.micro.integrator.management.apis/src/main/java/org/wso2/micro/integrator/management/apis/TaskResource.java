@@ -31,7 +31,7 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.task.TaskDescription;
 import org.apache.synapse.task.TaskDescriptionSerializer;
 import org.json.JSONObject;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
 import java.util.Collection;
 import java.util.HashMap;

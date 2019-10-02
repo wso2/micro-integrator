@@ -20,9 +20,9 @@ package internal.http.api;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Test;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.ConfigurationLoader;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.Constants;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.InternalAPI;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.ConfigurationLoader;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.Constants;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPI;
 
 import java.net.URL;
 import java.util.List;

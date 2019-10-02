@@ -41,6 +41,20 @@
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.core</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon.mediation</groupId>
+                    <artifactId>org.wso2.carbon.inbound.endpoint</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon.mediation</groupId>
+                    <artifactId>org.wso2.carbon.inbound.osgi</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon.mediation</groupId>
+                    <artifactId>org.wso2.carbon.inbound.endpoint.persistence</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
@@ -138,26 +152,26 @@
                         <Bundle-SymbolicName>${project.artifactId}</Bundle-SymbolicName>
                         <Bundle-Name>${project.artifactId}</Bundle-Name>
                         <Export-Package>
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.http.management ;
+                            org.wso2.carbon.inbound.endpoint.protocol.http.management ;
                             version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.http.multitenancy ;
+                            org.wso2.carbon.inbound.endpoint.protocol.http.multitenancy ;
                             version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.generic ; version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.hl7 ; version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint.internal.http.api ; version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint ; version="${project.version}",
-                            org.wso2.micro.integrator.inbound.endpoint.protocol.grpc ; version="${project.version}"
+                            org.wso2.carbon.inbound.endpoint.protocol.generic ; version="${project.version}",
+                            org.wso2.carbon.inbound.endpoint.protocol.hl7 ; version="${project.version}",
+                            org.wso2.carbon.inbound.endpoint.internal.http.api ; version="${project.version}",
+                            org.wso2.carbon.inbound.endpoint ; version="${project.version}",
+                            org.wso2.carbon.inbound.endpoint.protocol.grpc ; version="${project.version}"
                         </Export-Package>
                         <Private-Package>
                             io.grpc.* ; version="${grpc.version}",
                             io.grpc.netty.shaded.io.* ; version="${grpc.version}",
                             io.opencensus.*,
-                            org.wso2.micro.integrator.inbound.endpoint.* ; version="${project.version}",
+                            org.wso2.carbon.inbound.endpoint.* ; version="${project.version}",
                             com.google.* ; version="${google.guava.version}"
                         </Private-Package>
                         <Import-Package>
-                            org.wso2.micro.integrator.inbound.endpoint.persistence,
-                            org.wso2.micro.integrator.inbound.endpoint.osgi.service;
+                            org.wso2.carbon.inbound.endpoint.persistence,
+                            org.wso2.carbon.inbound.endpoint.osgi.service;
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>
                         <Fragment-Host>

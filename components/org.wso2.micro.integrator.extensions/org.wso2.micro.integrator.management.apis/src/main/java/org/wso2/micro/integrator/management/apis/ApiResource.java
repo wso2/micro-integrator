@@ -33,7 +33,7 @@ import org.apache.synapse.rest.dispatch.URITemplateHelper;
 import org.apache.synapse.rest.dispatch.URLMappingHelper;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.micro.integrator.inbound.endpoint.internal.http.api.APIResource;
+import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.core.util.NetworkUtils;
 
 import java.net.MalformedURLException;

@@ -16,4 +16,4 @@
 # under the License.
 #
 
-org.wso2.micro.integrator.inbound.endpoint.inboundfactory.InboundRequestProcessorFactoryImpl
+org.wso2.carbon.inbound.endpoint.inboundfactory.InboundRequestProcessorFactoryImpl

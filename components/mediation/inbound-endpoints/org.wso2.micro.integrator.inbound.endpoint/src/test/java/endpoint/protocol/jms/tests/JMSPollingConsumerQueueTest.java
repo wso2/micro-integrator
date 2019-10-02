@@ -25,10 +25,10 @@ import junit.framework.TestCase;
 import org.apache.activemq.command.ActiveMQDestination;
 import org.apache.activemq.command.ActiveMQTextMessage;
 import org.junit.Test;
-import org.wso2.micro.integrator.inbound.endpoint.common.InboundTask;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSConstants;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSPollingConsumer;
-import org.wso2.micro.integrator.inbound.endpoint.protocol.jms.JMSTask;
+import org.wso2.carbon.inbound.endpoint.common.InboundTask;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSConstants;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSPollingConsumer;
+import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSTask;
 
 import java.util.Properties;
 import javax.jms.Message;
