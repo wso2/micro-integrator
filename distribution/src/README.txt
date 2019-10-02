@@ -13,8 +13,8 @@ Data services and various applications can also be hosted and exposed using WSO2
 Key features of WSO2 MI @product.version@
 ==================================
 
-See the online WSO2 EI documentation for more information on product features: https://docs.wso2
-.com/display/EI650/WSO2+Enterprise+Integrator+Documentation
+See the online WSO2 MI documentation for more information on product features:
+https://ei.docs.wso2.com/en/7.0.0/micro-integrator/overview/introduction/
 
 
 Installation & Running
@@ -26,7 +26,7 @@ Running the Integrator
 2. Run micro-integrator.sh or micro-integrator.bat.
 
 
-WSO2 EI distribution directory
+WSO2 MI distribution directory
 =============================================
 
  - bin
