@@ -330,16 +330,14 @@ public class TDriverUtil {
         } else if (isRegistryPath(path)) {
             ConfigurationContext configCtx = SQLDriverDSComponent.getConfigurationContextService().
                     getServerConfigContext();
-            if (configCtx != null) {
-                Parameter synCfgParam = configCtx.getAxisConfiguration().getParameter
-                        (SynapseConstants.SYNAPSE_CONFIG);
-                if (synCfgParam == null) {
-                    throw new DeploymentException("SynapseConfiguration not found");
-                }
-                SynapseConfiguration synapseConfig = (SynapseConfiguration) synCfgParam.getValue();
-                Object regEntry = synapseConfig.getRegistry().lookup(path);
-                ins = ((OMTextImpl) regEntry).getInputStream();
+            Parameter synCfgParam = configCtx.getAxisConfiguration().getParameter
+                    (SynapseConstants.SYNAPSE_CONFIG);
+            if (synCfgParam == null) {
+                throw new DeploymentException("SynapseConfiguration not found");
             }
+            SynapseConfiguration synapseConfig = (SynapseConfiguration) synCfgParam.getValue();
+            Object regEntry = synapseConfig.getRegistry().lookup(path);
+            ins = ((OMTextImpl) regEntry).getInputStream();
         } else {
             File file = new File(path);
             if (path.startsWith("." + File.separator) || path.startsWith(".." + File.separator)) {

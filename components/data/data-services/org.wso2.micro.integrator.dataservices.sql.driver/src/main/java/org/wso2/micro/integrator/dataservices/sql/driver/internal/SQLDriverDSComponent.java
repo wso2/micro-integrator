@@ -22,21 +22,16 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferenceCardinality;
+import org.osgi.service.component.annotations.ReferencePolicy;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 
-/**
-* @scr.component name="org.wso2.carbon.dataservices.sql.driver" immediate="true"
-* @scr.reference name="configContext.service" interface="org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService"
-* cardinality="1..1" policy="dynamic"  bind="setAxis2ConfigurationContextService" unbind="unsetAxis2ConfigurationContextService"
-*/
 public class SQLDriverDSComponent {
 
     private static Log log = LogFactory.getLog(SQLDriverDSComponent.class);
 
     private static Axis2ConfigurationContextService configurationContextService = null;
-
-    public SQLDriverDSComponent() {
-    }
 
     protected void activate(ComponentContext ctxt) {
     try {
@@ -51,6 +46,12 @@ public class SQLDriverDSComponent {
         log.debug("SQL driver bundle is deactivated ");
     }
 
+    @Reference(
+            name = "org.wso2.carbon.dataservices.sql.driver",
+            service = org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService.class,
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC,
+            unbind = "unsetAxis2ConfigurationContextService")
     protected void setAxis2ConfigurationContextService(Axis2ConfigurationContextService configurationContextService) {
         if (log.isDebugEnabled()) {
             log.debug("Setting the Axis2 Configuration Context Service");
