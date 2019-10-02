@@ -53,35 +53,28 @@ cd $BASEDIR
 
 DIR="../../../../../cmd/build"
 
-if [ -d "$DIR" ]; then
-    echo "CLI build exists. Hence skipping the cli environment setup"
-    cd ../../../../../cmd/build
-    pwd
-    ls
-    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
-else
-    cd ../../../../../cmd
-    go mod vendor
-    sleep 10
+cd ../../../../../cmd
+go mod vendor
+sleep 10
 
-    #build Micro Integrator CLI
-    echo "Build Micro Integrator CLI"
-    cd ../
+#build Micro Integrator CLI
+echo "Build Micro Integrator CLI"
+cd ../
 
-    #get the version from the pom
-    getPomVersion
-    cd cmd
-    ./build.sh -t mi.go -v ${VERSION} -f
+#get the version from the pom
+getPomVersion
+cd cmd
+./build.sh -t mi.go -v ${VERSION} -f
 
-    cd build
-    pwd
-    ls
-    tar -xvzf wso2mi-cli-$VERSION-linux-x64.tar.gz
+cd build
+pwd
+ls
+tar -xvzf "wso2mi-cli-$VERSION-linux-x64.tar.gz"
 
-    #start the application
-    cd wso2mi-cli-$VERSION/bin
-    echo "ClI setup Complete"
-fi
+#start the application
+cd wso2mi-cli-$VERSION/bin
+echo "ClI setup Complete"
+
 
 }
 
