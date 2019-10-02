@@ -57,6 +57,8 @@ public class ServiceComponent {
     private static Log log = LogFactory.getLog(ServiceComponent.class);
     //to track whether this is the first time initialization of the pack.
     private static boolean isFirstInitialization = true;
+    private static RealmConfiguration config;
+    private static DataHolder dataHolder;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -76,6 +78,27 @@ public class ServiceComponent {
 
     private void engagePoxSecurity() {
         try {
+            this.dataHolder = DataHolder.getInstance();
+            if (dataHolder.getRealmConfig() == null || dataHolder.getUserStoreManager() == null) {
+                log.debug("Initializing Security parameters");
+                this.config = RealmConfigXMLProcessor.createRealmConfig();
+                if (config == null) {
+                    throw new UserStoreException("Unable to create Realm Configuration");
+                }
+                dataHolder.setRealmConfig(config);
+                AxisConfiguration axisConfig = dataHolder.getConfigCtx().getAxisConfiguration();
+
+                Parameter passwordCallbackParam = new Parameter();
+                DefaultPasswordCallback passwordCallbackClass = new DefaultPasswordCallback(config);
+                passwordCallbackParam.setName("passwordCallbackRef");
+                passwordCallbackParam.setValue(passwordCallbackClass);
+
+                try {
+                    axisConfig.addParameter(passwordCallbackParam);
+                } catch (AxisFault axisFault) {
+                    log.error("Failed to set axis configuration parameter ", axisFault);
+                }
+            }
             String enablePoxSecurity = CarbonServerConfigurationService.getInstance()
                     .getFirstProperty("EnablePoxSecurity");
             if (enablePoxSecurity == null || "true".equals(enablePoxSecurity)) {
@@ -100,26 +123,7 @@ public class ServiceComponent {
      */
     public static synchronized void initSecurityParams() throws UserStoreException {
 
-        DataHolder dataHolder = DataHolder.getInstance();
         if (dataHolder.getRealmConfig() == null || dataHolder.getUserStoreManager() == null) {
-            log.info("Initializing Security parameters");
-            RealmConfiguration config = RealmConfigXMLProcessor.createRealmConfig();
-            if (config == null) {
-                throw new UserStoreException("Unable to create Realm Configuration");
-            }
-            dataHolder.setRealmConfig(config);
-            AxisConfiguration axisConfig = dataHolder.getConfigCtx().getAxisConfiguration();
-
-            Parameter passwordCallbackParam = new Parameter();
-            DefaultPasswordCallback passwordCallbackClass = new DefaultPasswordCallback(config);
-            passwordCallbackParam.setName("passwordCallbackRef");
-            passwordCallbackParam.setValue(passwordCallbackClass);
-
-            try {
-                axisConfig.addParameter(passwordCallbackParam);
-            } catch (AxisFault axisFault) {
-                log.error("Failed to set axis configuration parameter ", axisFault);
-            }
 
             UserStoreManager userStoreManager;
             String userStoreMgtClassStr = config.getUserStoreClass();
