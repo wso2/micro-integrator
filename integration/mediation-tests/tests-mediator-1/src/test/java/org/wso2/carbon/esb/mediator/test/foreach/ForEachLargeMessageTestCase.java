@@ -24,7 +24,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 
 /**
  * Tests sending different number of large messages through foreach mediator
@@ -32,43 +31,43 @@ import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
 
 public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
 
-    private String symbol;
     private CarbonLogReader carbonLogReader;
 
     @BeforeClass
     public void setEnvironment() throws Exception {
         init();
-        symbol = FixedSizeSymbolGenerator.generateMessageMB(1);
         carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests large message in small number 5")
+    @Test(groups = "wso2.esb",
+            description = "Tests large message in small number 5")
     public void testSmallNumbers() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response;
         for (int i = 0; i < 5; i++) {
-            response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachLargeMessageTestProxy"), null,
-                    "IBM" + symbol);
+            response = axis2Client
+                    .sendCustomQuoteRequest(getProxyServiceURLHttp("foreachLargeMessageTestProxy"), null, "IBM");
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("IBM"), "Incorrect symbol in response");
-            response = null;
         }
         if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
             if (!carbonLogReader.checkForLog("IBM", DEFAULT_TIMEOUT)) {
                 Assert.fail("Incorrect message entered ForEach scope. Could not find symbol IBM ..");
             }
         }
-        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 5), "Count of messages entered ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 5),
+                          "Count of messages entered ForEach scope is incorrect");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests large message in large number 10")
+    @Test(groups = "wso2.esb",
+            description = "Tests large message in large number 10")
     public void testLargeNumbers() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response;
         for (int i = 0; i < 10; i++) {
-            response = axis2Client.sendCustomQuoteRequest(getProxyServiceURLHttp("foreachLargeMessageTestProxy"), null,
-                    "SUN" + symbol);
+            response = axis2Client
+                    .sendCustomQuoteRequest(getProxyServiceURLHttp("foreachLargeMessageTestProxy"), null, "SUN");
             Assert.assertNotNull(response);
             Assert.assertTrue(response.toString().contains("SUN"), "Incorrect symbol in response");
         }
@@ -77,27 +76,8 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
                 Assert.fail("Incorrect message entered ForEach scope. Could not find symbol SUN ..");
             }
         }
-        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 10), "Count of messages entered ForEach scope is incorrect");
-    }
-
-    @Test(groups = "wso2.esb", description = "Tests large message 3MB")
-    public void testLargeMessage() throws Exception {
-        carbonLogReader.clearLogs();
-
-        String symbol2 = FixedSizeSymbolGenerator.generateMessageMB(3);
-        OMElement response;
-
-        response = axis2Client
-                .sendCustomQuoteRequest(getProxyServiceURLHttp("foreachLargeMessageTestProxy"), null, "MSFT" + symbol2);
-        Assert.assertNotNull(response);
-        Assert.assertTrue(response.toString().contains("MSFT"), "Incorrect symbol in response");
-
-        if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
-            if (!carbonLogReader.checkForLog("MSFT", DEFAULT_TIMEOUT)) {
-                Assert.fail("Incorrect message entered ForEach scope. Could not find symbol MSFT ..");
-            }
-        }
-        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 1), "Count of messages entered ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 10),
+                          "Count of messages entered ForEach scope is incorrect");
     }
 
     @AfterClass(alwaysRun = true)
