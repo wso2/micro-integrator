@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package util;
+package org.wso2.micro.integrator.cli.util;
 
 import java.io.BufferedReader;
 import java.io.File;

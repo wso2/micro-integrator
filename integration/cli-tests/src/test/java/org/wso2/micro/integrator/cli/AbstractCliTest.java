@@ -23,8 +23,8 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import static util.TestUtils.getMIBuildPath;
-import static util.TestUtils.runCommandWithArgs;
+import static org.wso2.micro.integrator.cli.util.TestUtils.getMIBuildPath;
+import static org.wso2.micro.integrator.cli.util.TestUtils.runCommandWithArgs;
 
 public abstract class AbstractCliTest {
     private static final Log LOG = LogFactory.getLog(AbstractCliTest.class);

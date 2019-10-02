@@ -24,9 +24,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import util.TestUtils;
+import org.wso2.micro.integrator.cli.util.TestUtils;
 
-import static util.TestUtils.getMIBuildPath;
+import static org.wso2.micro.integrator.cli.util.TestUtils.getMIBuildPath;
 
 public class LoginLogoutTest extends AbstractCliTest {
     private static final Log LOG = LogFactory.getLog(LoginLogoutTest.class);

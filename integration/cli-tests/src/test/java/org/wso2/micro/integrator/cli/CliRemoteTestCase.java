@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import util.TestUtils;
+import org.wso2.micro.integrator.cli.util.TestUtils;
 
 public class CliRemoteTestCase {
 
