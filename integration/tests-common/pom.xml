@@ -43,9 +43,30 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>org.wso2.orbit.commons-httpclient</groupId>
+            <artifactId>commons-httpclient</artifactId>
+            <version>${orbit.version.commons.httpclient}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-codec</groupId>
+                    <artifactId>commons-codec</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
             <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.wso2.carbon.commons</groupId>
+                    <artifactId>org.wso2.carbon.ndatasource.stub</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon.identity</groupId>
+                    <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.automationutils</groupId>
@@ -59,6 +80,10 @@
                 <exclusion>
                     <groupId>org.seleniumhq.selenium</groupId>
                     <artifactId>selenium-java</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.wso2.carbon.identity</groupId>
+                    <artifactId>org.wso2.carbon.user.mgt.stub</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -133,6 +158,12 @@
             <groupId>org.wso2.carbon.mediation</groupId>
             <artifactId>org.wso2.carbon.localentry.stub</artifactId>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.axis2.wso2</groupId>
+                    <artifactId>axis2-client</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon.mediation</groupId>
