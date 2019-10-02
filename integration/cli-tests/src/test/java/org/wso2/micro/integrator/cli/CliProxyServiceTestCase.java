@@ -48,7 +48,7 @@ public class CliProxyServiceTestCase extends AbstractCliTest{
         Assert.assertEquals(outputForCLICommand.size(), 4);
         // 4: Table heading, cliTestProxy, cliAddressProxy, MediatorTestProxy
 
-        String tableHeading = "NAME                WSDL 1.1                                                WSDL 2.0";
+        String tableHeading = "NAME                WSDL 1.1                                                   WSDL 2.0";
 
         String testProxyTableRow = "MediatorTestProxy   " +
                 "http://localhost:8290/services/MediatorTestProxy?wsdl   " +
