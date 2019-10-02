@@ -59,19 +59,10 @@ public class TestUtils {
         String line;
         List<String> lines = new ArrayList<>();
         while ((line = reader.readLine()) != null) {
-            lines.add(line);
+            lines.add(line.trim());
         }
 
         return lines;
-    }
-
-    public static String getStringOutputOfList(List<String> lines) {
-        String outputString = "";
-        for (String s : lines) {
-            outputString = outputString.concat(s + "\n");
-        }
-
-        return outputString;
     }
 
     /**

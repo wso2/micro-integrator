@@ -48,11 +48,23 @@ public class CliProxyServiceTestCase extends AbstractCliTest{
         Assert.assertEquals(outputForCLICommand.size(), 4);
         // 4: Table heading, cliTestProxy, cliAddressProxy, MediatorTestProxy
 
-        String outputString = TestUtils.getStringOutputOfList(outputForCLICommand);
+        String tableHeading = "NAME                WSDL 1.1                                                WSDL 2.0";
 
-        Assert.assertTrue(outputString.contains(CLI_MEDIATOR_PROXY));
-        Assert.assertTrue(outputString.contains(CLI_TEST_PROXY));
-        Assert.assertTrue(outputString.contains(CLI_ADDRESS_PROXY));
+        String testProxyTableRow = "MediatorTestProxy   " +
+                "http://localhost:8290/services/MediatorTestProxy?wsdl   " +
+                "http://localhost:8290/services/MediatorTestProxy?wsdl2";
+        String mediatorProxyTableRow = "cliTestProxy        " +
+                "http://localhost:8290/services/cliTestProxy?wsdl        " +
+                "http://localhost:8290/services/cliTestProxy?wsdl2";
+        String addressProxyTableRow = "cliAddressProxy     " +
+                "http://localhost:8290/services/cliAddressProxy?wsdl     " +
+                "http://localhost:8290/services/cliAddressProxy?wsdl2";
+
+
+        Assert.assertEquals(outputForCLICommand.get(0), tableHeading);
+        Assert.assertTrue(outputForCLICommand.contains(testProxyTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(mediatorProxyTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(addressProxyTableRow));
     }
 
     /**

@@ -48,11 +48,15 @@ public class CliAPITestCase extends AbstractCliTest {
         Assert.assertEquals(outputForCLICommand.size(), 4);
         // 4:  Table Heading, cliSampleApi_1, cliSampleApi_2, HelloWorld (from the CAR file)
 
-        String outputString = TestUtils.getStringOutputOfList(outputForCLICommand);
+        String tableHeading = "NAME             URL";
+        String sampleApi1TableRow = CLI_SAMPLE_API_1 + "   http://localhost:8290/cliSampleApi_1";
+        String sampleApi2TableRow = CLI_SAMPLE_API_2 + "   http://localhost:8290/cliSampleApi_2";
+        String helloWorldApiTableRow = HELLO_WORLD_API + "       http://localhost:8290/hello-world";
 
-        Assert.assertTrue(outputString.contains(CLI_SAMPLE_API_1));
-        Assert.assertTrue(outputString.contains(CLI_SAMPLE_API_2));
-        Assert.assertTrue(outputString.contains(HELLO_WORLD_API));
+        Assert.assertEquals(outputForCLICommand.get(0), tableHeading);
+        Assert.assertTrue(outputForCLICommand.contains(sampleApi1TableRow));
+        Assert.assertTrue(outputForCLICommand.contains(sampleApi2TableRow));
+        Assert.assertTrue(outputForCLICommand.contains(helloWorldApiTableRow));
     }
 
     /**
@@ -73,7 +77,7 @@ public class CliAPITestCase extends AbstractCliTest {
     public void miShowApiNotFoundTest() throws IOException {
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.API,
-                Constants.SHOW, "TestAPI");
+                Constants.SHOW, "UndefinedAPI");
         Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of the API 404 Not Found");
     }
 

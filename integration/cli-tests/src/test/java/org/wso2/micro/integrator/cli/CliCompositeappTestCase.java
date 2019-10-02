@@ -47,10 +47,13 @@ public class CliCompositeappTestCase extends AbstractCliTest {
         Assert.assertEquals(outputForCLICommand.size(), 3);
         // 3: 2 CApps, Table Heading
 
-        String outputString = TestUtils.getStringOutputOfList(outputForCLICommand);
+        final String tableHeading = "NAME                              VERSION";
+        final String mediatorCarTableRow = "MediatorCApp                      1.0.0";
+        final String helloCarTableRow = "hello-worldCompositeApplication   1.0.0";
 
-        Assert.assertTrue(outputString.contains(CLI_TEST_MEDIATOR_CAR));
-        Assert.assertTrue(outputString.contains(CLI_TEST_HELLO_CAR));
+        Assert.assertEquals(outputForCLICommand.get(0), tableHeading);
+        Assert.assertTrue(outputForCLICommand.contains(mediatorCarTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(helloCarTableRow));
     }
 
     /**

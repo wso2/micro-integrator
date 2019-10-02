@@ -49,12 +49,17 @@ public class CliSequenceTestCase extends AbstractCliTest {
         Assert.assertEquals(outputForCLICommand.size(), 5);
         // 5: Table heading, main, fault, CliTestSequence, CliSampleSequence
 
-        String outputString = TestUtils.getStringOutputOfList(outputForCLICommand);
+        String tableHeading = "NAME                STATS      TRACING";
+        String testSequenceTableRow = "CliTestSequence     disabled   disabled";
+        String sampleSequenceTableRow = "CliSampleSequence   disabled   disabled";
+        String mainSequenceTableRow = "main                disabled   disabled";
+        String faultSequenceTableRow = "fault               disabled   disabled";
 
-        Assert.assertTrue(outputString.contains(CLI_TEST_SEQUENCE));
-        Assert.assertTrue(outputString.contains(CLI_SAMPLE_SEQUENCE));
-        Assert.assertTrue(outputString.contains(MAIN_SEQUENCE));
-        Assert.assertTrue(outputString.contains(FAULT_SEQUENCE));
+        Assert.assertEquals(outputForCLICommand.get(0), tableHeading);
+        Assert.assertTrue(outputForCLICommand.contains(testSequenceTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(sampleSequenceTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(mainSequenceTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(faultSequenceTableRow));
     }
 
     /**

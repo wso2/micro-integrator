@@ -18,11 +18,11 @@
 
 package org.wso2.micro.integrator.cli;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import org.testng.Assert;
+import org.testng.annotations.Test;
 import util.TestUtils;
 
 public class CliRemoteTestCase {
@@ -39,14 +39,18 @@ public class CliRemoteTestCase {
     @Test( priority = 1 )
     public void miAddRemoteServer() throws IOException, InterruptedException {
 
-        builder = new ProcessBuilder(TestUtils.getMIBuildPath(), Constants.REMOTE, Constants.REMOTE_ADD, CLI_TEST_REMOTE_SERVER, REMOTE_HOST, REMOTE_PORT);
+        builder = new ProcessBuilder(TestUtils.getMIBuildPath(), Constants.REMOTE, Constants.REMOTE_ADD,
+                CLI_TEST_REMOTE_SERVER, REMOTE_HOST, REMOTE_PORT);
         builder.start();
         TimeUnit.MILLISECONDS.sleep(3000);
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.REMOTE, Constants.SHOW);
-        String serverName[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
 
-        Assert.assertEquals(serverName[0].substring(0, serverName[0].length() - 1), CLI_TEST_REMOTE_SERVER);
+        Assert.assertEquals(outputForCLICommand.get(0), "remotes:");
+        Assert.assertEquals(outputForCLICommand.get(1), CLI_TEST_REMOTE_SERVER + ":");
+        Assert.assertEquals(outputForCLICommand.get(2), "remote_address: " + REMOTE_HOST);
+        Assert.assertEquals(outputForCLICommand.get(3), "remote_port: \"" + REMOTE_PORT + "\"");
+
     }
 
     /**
@@ -55,13 +59,15 @@ public class CliRemoteTestCase {
     @Test( priority = 2 )
     public void miUpdateRemoteServer() throws IOException, InterruptedException {
 
-        builder = new ProcessBuilder(TestUtils.getMIBuildPath(), Constants.REMOTE, Constants.REMOTE_UPDATE, CLI_TEST_REMOTE_SERVER, GET_REMOTE_HOST_UPDATE, REMOTE_PORT);
+        builder = new ProcessBuilder(TestUtils.getMIBuildPath(), Constants.REMOTE, Constants.REMOTE_UPDATE,
+                CLI_TEST_REMOTE_SERVER, GET_REMOTE_HOST_UPDATE, REMOTE_PORT);
         builder.start();
         TimeUnit.MILLISECONDS.sleep(3000);
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.REMOTE, Constants.SHOW);
 
-        Assert.assertTrue(outputForCLICommand.stream().anyMatch(str -> str.trim().contains(GET_REMOTE_HOST_UPDATE)), "Fail to Update host of the remote server of " + CLI_TEST_REMOTE_SERVER);
+        Assert.assertTrue(outputForCLICommand.stream().anyMatch(str -> str.trim().contains(GET_REMOTE_HOST_UPDATE)),
+                "Fail to Update host of the remote server of " + CLI_TEST_REMOTE_SERVER);
 
     }
 
@@ -71,11 +77,13 @@ public class CliRemoteTestCase {
     @Test( priority = 4 )
     public void miRemoveRemoteServer() throws IOException, InterruptedException {
 
-        builder = new ProcessBuilder(TestUtils.getMIBuildPath(), Constants.REMOTE, Constants.REMOTE_REMOVE, CLI_TEST_REMOTE_SERVER);
+        builder = new ProcessBuilder(TestUtils.getMIBuildPath(), Constants.REMOTE, Constants.REMOTE_REMOVE,
+                CLI_TEST_REMOTE_SERVER);
         builder.start();
         TimeUnit.MILLISECONDS.sleep(3000);
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.REMOTE, Constants.SHOW);
-        Assert.assertNotEquals(outputForCLICommand.stream().anyMatch(str -> str.trim().contentEquals(CLI_TEST_REMOTE_SERVER)), "Fail to remove " + CLI_TEST_REMOTE_SERVER);
+        Assert.assertNotEquals(outputForCLICommand.stream().anyMatch(str -> str.trim().contentEquals(CLI_TEST_REMOTE_SERVER)),
+                "Fail to remove " + CLI_TEST_REMOTE_SERVER);
     }
 }
