@@ -18,17 +18,25 @@
 
 package org.wso2.micro.integrator.cli;
 
-import util.TestUtils;
-import org.testng.Assert;
-import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.util.List;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.micro.integrator.cli.util.TestUtils;
 
-public class CliSequenceTestCase {
+public class CliSequenceTestCase extends AbstractCliTest {
 
     private static final String CLI_TEST_SEQUENCE = "CliTestSequence";
     private static final String CLI_SAMPLE_SEQUENCE = "CliSampleSequence";
+    private static final String MAIN_SEQUENCE = "main";
+    private static final String FAULT_SEQUENCE = "fault";
+
+    @BeforeClass
+    public void loginBeforeClass() throws IOException {
+        super.login();
+    }
 
     /**
      * Get information about all Sequence
@@ -37,11 +45,21 @@ public class CliSequenceTestCase {
     public void miShowSequenceAllTest() throws IOException {
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.SEQUENCE, Constants.SHOW);
-        String artifactName_seq_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
-        String artifactName_seq_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
 
-        Assert.assertEquals(artifactName_seq_1[0], CLI_TEST_SEQUENCE);
-        Assert.assertEquals(artifactName_seq_2[0], CLI_SAMPLE_SEQUENCE);
+        Assert.assertEquals(outputForCLICommand.size(), 5);
+        // 5: Table heading, main, fault, CliTestSequence, CliSampleSequence
+
+        String tableHeading = "NAME                STATS      TRACING";
+        String testSequenceTableRow = "CliTestSequence     disabled   disabled";
+        String sampleSequenceTableRow = "CliSampleSequence   disabled   disabled";
+        String mainSequenceTableRow = "main                disabled   disabled";
+        String faultSequenceTableRow = "fault               disabled   disabled";
+
+        Assert.assertEquals(outputForCLICommand.get(0), tableHeading);
+        Assert.assertTrue(outputForCLICommand.contains(testSequenceTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(sampleSequenceTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(mainSequenceTableRow));
+        Assert.assertTrue(outputForCLICommand.contains(faultSequenceTableRow));
     }
 
     /**
@@ -50,8 +68,9 @@ public class CliSequenceTestCase {
     @Test
     public void miShowSequenceTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.SEQUENCE, Constants.SHOW, CLI_TEST_SEQUENCE);
-        Assert.assertEquals(outputForCLICommand.get(0), "Name - CliTestSequence");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.SEQUENCE,
+                Constants.SHOW, CLI_TEST_SEQUENCE);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - " + CLI_TEST_SEQUENCE);
     }
 
     /**
@@ -60,7 +79,13 @@ public class CliSequenceTestCase {
     @Test
     public void miShowSequenceNotFoundTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.SEQUENCE, Constants.SHOW, "CLITestSequence");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.SEQUENCE,
+                Constants.SHOW, "UndefinedSequence");
         Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of the Sequence 404 Not Found");
+    }
+
+    @AfterClass
+    public void logoutAfterClass() throws IOException {
+        super.logout();
     }
 }

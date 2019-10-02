@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package util;
+package org.wso2.micro.integrator.cli.util;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,14 +52,14 @@ public class TestUtils {
         return runCommandWithArgs(arguments);
     }
 
-    private static List<String> runCommandWithArgs(String[] arguments) throws IOException {
+    public static List<String> runCommandWithArgs(String[] arguments) throws IOException {
 
         Process process = runMiCommand(arguments);
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
         String line;
         List<String> lines = new ArrayList<>();
         while ((line = reader.readLine()) != null) {
-            lines.add(line);
+            lines.add(line.trim());
         }
 
         return lines;

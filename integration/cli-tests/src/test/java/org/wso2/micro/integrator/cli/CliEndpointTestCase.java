@@ -18,16 +18,23 @@
 
 package org.wso2.micro.integrator.cli;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.List;
-import util.TestUtils;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.micro.integrator.cli.util.TestUtils;
 
-public class CliEndpointTestCase {
+public class CliEndpointTestCase extends AbstractCliTest {
 
-    private static final String CLI_TEST_EP = "SimpleEP";
+    private static final String CLI_SIMPLE_EP = "SimpleEP";
     private static final String CLI_STOCK_EP = "SimpleStockQuoteServiceEndpoint";
+
+    @BeforeClass
+    public void loginBeforeClass() throws IOException {
+        super.login();
+    }
 
     /**
      * Get information about all the Endpoints
@@ -36,12 +43,17 @@ public class CliEndpointTestCase {
     public void miShowEndpointAllTest() throws IOException {
 
         List<String> outputForCLICommand = TestUtils.getOutputForCLICommand(Constants.ENDPOINT, Constants.SHOW);
-        String artifactName_ep_1[] = TestUtils.getArtifactList(outputForCLICommand).get(0).split(" ", 2);
-        String artifactName_ep_2[] = TestUtils.getArtifactList(outputForCLICommand).get(1).split(" ", 2);
 
-        Assert.assertEquals(artifactName_ep_1[0], CLI_TEST_EP);
-        Assert.assertEquals(artifactName_ep_2[0], CLI_STOCK_EP);
+        Assert.assertEquals(outputForCLICommand.size(), 3);
+        // 3: Table heading, SimpleEP, SimpleStockQuoteServiceEndpoint
 
+        final String TABLE_HEADING = "NAME                              TYPE      METHOD   URL";
+        final String SIMPLE_EP_TABLE_ROW = "SimpleEP                          address";
+        final String STOCK_EP_TABLE_ROW = "SimpleStockQuoteServiceEndpoint   address";
+
+        Assert.assertEquals(outputForCLICommand.get(0), TABLE_HEADING);
+        Assert.assertTrue(outputForCLICommand.contains(SIMPLE_EP_TABLE_ROW));
+        Assert.assertTrue(outputForCLICommand.contains(STOCK_EP_TABLE_ROW));
     }
 
 
@@ -52,8 +64,9 @@ public class CliEndpointTestCase {
     @Test
     public void miShowEndpointTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.ENDPOINT, Constants.SHOW, CLI_TEST_EP);
-        Assert.assertEquals(outputForCLICommand.get(0), "Name - SimpleEP");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.ENDPOINT,
+                Constants.SHOW, CLI_SIMPLE_EP);
+        Assert.assertEquals(outputForCLICommand.get(0), "Name - " + CLI_SIMPLE_EP);
     }
 
     /**
@@ -62,8 +75,14 @@ public class CliEndpointTestCase {
     @Test
     public void miShowEndpointNotFoundTest() throws IOException {
 
-        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.ENDPOINT, Constants.SHOW, "CLITestEP");
+        List<String> outputForCLICommand = TestUtils.getOutputForCLICommandArtifactName(Constants.ENDPOINT,
+                Constants.SHOW, "UndefinedEndpoint");
         Assert.assertEquals(outputForCLICommand.get(0), "[ERROR] Getting Information of Endpoint 404 Not Found");
+    }
+
+    @AfterClass
+    public void logoutAfterClass() throws IOException {
+        super.logout();
     }
 
 }
