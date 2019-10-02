@@ -23,7 +23,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.servers.WireMonitorServer;
 
@@ -52,7 +51,7 @@ public class MessageProcessorSOAPHeadersTestcase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Testcase to check preservation of SOAP headers during MSMP scenario")
     public void testPreservationOfSoapHeadersMSMPScennario()
-            throws IOException, LogViewerLogViewerException, InterruptedException {
+            throws IOException, InterruptedException {
         String payload =
                 "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"><soapenv:Header/>"
                         + "<soapenv:Body/></soapenv:Envelope>";

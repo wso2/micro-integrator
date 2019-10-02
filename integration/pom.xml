@@ -740,7 +740,7 @@
     <properties>
         <commons-io.version>2.6</commons-io.version>
         <neethi.orbit.version>2.0.4.wso2v4</neethi.orbit.version>
-        <andes.version>3.2.98</andes.version>
+        <andes.version>3.3.4</andes.version>
         <org.apache.geronimo.specs.version>1.0.1</org.apache.geronimo.specs.version>
         <hawtbuf.version>1.9</hawtbuf.version>
         <geronimo.specs.jms.version>1.1.1</geronimo.specs.jms.version>
@@ -785,7 +785,7 @@
 
         <!-- TODO Remove after fixing the test cases, kept for compilation purposes.-->
         <carbon.registry.version>4.6.46</carbon.registry.version>
-        <carbon.identity.framework.version>5.12.387</carbon.identity.framework.version>
+        <carbon.identity.framework.version>5.14.67</carbon.identity.framework.version>
     </properties>
 
     <profiles>
