@@ -43,6 +43,7 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
     private final String payload = "{\n" + "  \"email\" : \"jms@yomail.com\",\n" + "  \"firstName\" : \"Jms\",\n"
             + "  \"lastName\" : \"Broker\",\n" + "  \"id\" : 10\n" + "}";
 
+    //
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
