@@ -255,7 +255,7 @@
 <!--                                </bundleDef>-->
                                 <!--Management API-->
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.management.apis:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.management.apis:${project.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.orbit.com.fasterxml.jackson.core:jackson-core:${fasterxml.jackson.version}

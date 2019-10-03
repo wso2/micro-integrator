@@ -78,10 +78,10 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.carbon.mediator.cache:${product.mi.version}
+                                    org.wso2.ei:org.wso2.carbon.mediator.cache:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediator.oauth:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.mediator.oauth:${project.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.carbon.identity.inbound.auth.oauth2:org.wso2.carbon.identity.oauth.stub:${carbon.identity.oauth.version}

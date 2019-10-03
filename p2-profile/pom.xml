@@ -94,10 +94,10 @@
                                 </featureArtifactDef>
 <!--                                &lt;!&ndash;1. Carbon-Mediation&ndash;&gt;-->
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediators.server.feature:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.mediators.server.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.initializer.feature:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.initializer.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon.mediation:org.wso2.carbon.relay.server.feature:${carbon.mediation.version}
@@ -179,7 +179,7 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.server.feature:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.server.feature:${project.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.identity.xacml.mediator.feature:${project.version}
@@ -189,12 +189,12 @@
                                 </featureArtifactDef>
 
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.security.server.feature:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.security.server.feature:${project.version}
                                 </featureArtifactDef>
 
                                 <!-- DSS -->
                                 <featureArtifactDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.dataservices.server.feature:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.dataservices.server.feature:${project.version}
                                 </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
@@ -251,7 +251,7 @@
                             <features>
                                 <feature>
                                     <id>org.wso2.micro.integrator.mediator.publishevent.server.feature.group</id>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.apache.synapse.wso2.feature.group</id>
@@ -272,7 +272,7 @@
                                 <!--1 Carbon Mediation -->
                                 <feature>
                                     <id>org.wso2.micro.integrator.mediators.server.feature.group</id>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.relay.server.feature.group</id>
@@ -381,15 +381,15 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.micro.integrator.server.feature.group</id>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.micro.integrator.initializer.feature.group</id>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.micro.integrator.security.server.feature.group</id>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.micro.integrator.crypto.feature.group</id>
@@ -398,7 +398,7 @@
                                 <!-- DSS -->
                                 <feature>
                                     <id>org.wso2.micro.integrator.dataservices.server.feature.group</id>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                 </feature>
                             </features>
                         </configuration>

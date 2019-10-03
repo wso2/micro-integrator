@@ -64,10 +64,10 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.security:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.security:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.ei:org.wso2.micro.integrator.mediation.security:${product.mi.version}
+                                    org.wso2.ei:org.wso2.micro.integrator.mediation.security:${project.version}
                                 </bundleDef>
                                 <bundleDef>
                                     org.wso2.orbit.com.nimbusds:nimbus-jose-jwt:${nimbus-jose.orbit.version}

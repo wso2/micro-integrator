@@ -76,11 +76,11 @@
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../../distribution/target/wso2mi-${product.mi.version}.zip
+                            ${basedir}/../../distribution/target/wso2mi-${project.version}.zip
                         </carbon.zip>
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
-                        <version>${product.mi.version}</version>
+                        <version>${project.version}</version>
                     </systemProperties>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
@@ -111,7 +111,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.ei</groupId>
                                     <artifactId>wso2mi</artifactId>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>

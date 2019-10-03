@@ -428,7 +428,7 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>integration-test-utils</artifactId>
-                <version>${product.mi.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jacoco</groupId>
@@ -450,7 +450,7 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>automation-extensions</artifactId>
-                <version>${product.mi.version}</version>
+                <version>${project.version}</version>
                 <exclusions>
                     <exclusion>
                        <groupId>org.slf4j</groupId>
@@ -466,12 +466,12 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>service-samples</artifactId>
-                <version>${product.mi.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>admin-clients</artifactId>
-                <version>${product.mi.version}</version>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.code.gson</groupId>
@@ -660,7 +660,7 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.ei.dataservice.integration.common.clients</artifactId>
-                <version>${product.mi.version}</version>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -684,13 +684,13 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.ei.dataservice.integration.common.utils</artifactId>
-                <version>${product.mi.version}</version>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>dataservice-client-samples</artifactId>
-                <version>${product.mi.version}</version>
+                <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
