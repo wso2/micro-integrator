@@ -46,7 +46,8 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators")
+    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint "
+            + "using iterate and aggregate mediators" , enabled = false)
     public void testForEachInlineSequenceWithIterateEndpoint() throws Exception {
         carbonLogReader.clearLogs();
         String response = client
