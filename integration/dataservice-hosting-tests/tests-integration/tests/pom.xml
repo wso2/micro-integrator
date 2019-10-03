@@ -64,7 +64,7 @@
                         </property>
 
                         <carbon.zip>
-                            ${basedir}/../../../../distribution/target/wso2mi-${product.mi.version}.zip
+                            ${basedir}/../../../../distribution/target/wso2mi-${project.version}.zip
                         </carbon.zip>
 
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>

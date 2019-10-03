@@ -34,7 +34,7 @@
                     <executable>java</executable>
                     <arguments>
                         <argument>
-                            -Dcarbon.zip=${basedir}/../../../distribution/target/wso2mi-${product.mi.version}.zip
+                            -Dcarbon.zip=${basedir}/../../../distribution/target/wso2mi-${project.version}.zip
                         </argument>
                         <argument>-Dbasedir=${basedir}</argument>
                         <argument>-Dinstr.file=${basedir}/instrumentation.txt</argument>

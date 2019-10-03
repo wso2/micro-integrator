@@ -47,7 +47,7 @@
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../../../distribution/target/wso2ei-${product.mi.version}.zip
+                            ${basedir}/../../../distribution/target/wso2ei-${project.version}.zip
                         </carbon.zip>
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
@@ -110,7 +110,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.ei</groupId>
                                     <artifactId>wso2ei</artifactId>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
@@ -149,7 +149,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2ei-${project.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -170,7 +170,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2ei-${project.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -191,7 +191,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/samples/service-bus/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2ei-${project.version}/samples/service-bus/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -212,7 +212,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/deployment/client/modules
+                                        ${basedir}/target/tobeCopied/wso2ei-${project.version}/repository/deployment/client/modules
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
@@ -233,7 +233,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/samples/service-bus/
+                                        ${basedir}/target/tobeCopied/wso2ei-${project.version}/samples/service-bus/
                                     </directory>
                                     <includes>
                                         <include>**/*.xml</include>
@@ -298,7 +298,7 @@
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <carbon.zip>
-                            ${basedir}/../../../distribution/target/wso2mi-${product.mi.version}.zip
+                            ${basedir}/../../../distribution/target/wso2mi-${project.version}.zip
                         </carbon.zip>
                         <instr.file>${basedir}/../coverage-report/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/../coverage-report/filters.txt</filters.file>
@@ -363,7 +363,7 @@
                                 <artifactItem>
                                     <groupId>org.wso2.ei</groupId>
                                     <artifactId>wso2mi</artifactId>
-                                    <version>${product.mi.version}</version>
+                                    <version>${project.version}</version>
                                     <type>zip</type>
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${basedir}/target/tobeCopied/</outputDirectory>
@@ -452,7 +452,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2mi-${product.mi.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -473,7 +473,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2mi-${product.mi.version}/repository/resources/security/
+                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
                                     </directory>
                                     <includes>
                                         <include>**/*.jks</include>
@@ -494,7 +494,7 @@
                             <resources>
                                 <resource>
                                     <directory>
-                                        ${basedir}/target/tobeCopied/wso2mi-${product.mi.version}/repository/deployment/client/modules/
+                                        ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/deployment/client/modules/
                                     </directory>
                                     <includes>
                                         <include>**/*.mar</include>
@@ -516,7 +516,7 @@
                                    <resources>
                                        <resource>
                                            <directory>
-                                               ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/samples/service-bus/resources/security/
+                                               ${basedir}/target/tobeCopied/wso2ei-${project.version}/samples/service-bus/resources/security/
                                            </directory>
                                            <includes>
                                                <include>**/*.jks</include>
@@ -537,7 +537,7 @@
                                    <resources>
                                        <resource>
                                            <directory>
-                                               ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/repository/deployment/client/modules
+                                               ${basedir}/target/tobeCopied/wso2ei-${project.version}/repository/deployment/client/modules
                                            </directory>
                                            <includes>
                                                <include>**/*.mar</include>
@@ -558,7 +558,7 @@
                                    <resources>
                                        <resource>
                                            <directory>
-                                               ${basedir}/target/tobeCopied/wso2ei-${product.mi.version}/samples/service-bus/
+                                               ${basedir}/target/tobeCopied/wso2ei-${project.version}/samples/service-bus/
                                            </directory>
                                            <includes>
                                                <include>**/*.xml</include>

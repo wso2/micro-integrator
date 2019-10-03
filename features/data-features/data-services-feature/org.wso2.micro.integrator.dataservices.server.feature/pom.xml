@@ -57,15 +57,15 @@
                                 </properties>
                             </adviceFile>
                             <bundles>
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.core:${product.mi.version}</bundleDef>
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.common:${product.mi.version}</bundleDef>
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.sql.driver:${product.mi.version}</bundleDef>
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.odata.endpoint:${product.mi.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.core:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.common:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.sql.driver:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.dataservices.odata.endpoint:${project.version}</bundleDef>
 
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.common:${product.mi.version}</bundleDef>
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.core:${product.mi.version}</bundleDef>
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.rdbms:${product.mi.version}</bundleDef>
-                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.capp.deployer:${product.mi.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.common:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.core:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.rdbms:${project.version}</bundleDef>
+                                <bundleDef>org.wso2.ei:org.wso2.micro.integrator.ndatasource.capp.deployer:${project.version}</bundleDef>
 
                                 <bundleDef>org.wso2.orbit.commons-text:commons-text:${commons-text.orbit.version}</bundleDef>
                                 <bundleDef>org.wso2.orbit.org.apache.commons:commons-lang3:${commons-lang3.orbit.version}</bundleDef>
