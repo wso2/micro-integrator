@@ -42,6 +42,7 @@ import org.wso2.carbon.automation.extensions.servers.sftpserver.SFTPServer;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import javax.xml.namespace.QName;
@@ -86,44 +87,11 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         return keyProvider;
     }
 
-    /**
-     * Copy the given source file to the given destination
-     *
-     * @param sourceFile
-     *                 source file
-     * @param destFile
-     *                 destination file
-     * @throws IOException
-     */
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-        FileInputStream fileInputStream = null;
-        FileOutputStream fileOutputStream = null;
-
-        try {
-            fileInputStream = new FileInputStream(sourceFile);
-            fileOutputStream = new FileOutputStream(destFile);
-
-            FileChannel source = fileInputStream.getChannel();
-            FileChannel destination = fileOutputStream.getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            IOUtils.closeQuietly(fileInputStream);
-            IOUtils.closeQuietly(fileOutputStream);
-        }
-    }
-
     @BeforeClass(alwaysRun = true)
     public void deployService() throws Exception {
 
         super.init();
         serverConfigurationManager = new ServerConfigurationManager(context);
-        serverConfigurationManager.applyConfiguration(
-                new File(getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/axis2.xml").getPath()));
-        super.init();
-
         carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
 
         setupSftpFolders(carbonHome);
@@ -168,7 +136,7 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
 
         //create VFS transport listener proxy
         try {
-            addProxyService(proxyOM);
+            Utils.deploySynapseConfiguration(proxyOM, "SFTPTestCaseProxy", "proxy-services", true);
         } catch (Exception e) {
             log.error("Error while updating the Synapse config", e);
         }
@@ -186,7 +154,6 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         //sshd.stop();
         log.info("SFTP Server stopped successfully");
         super.cleanup();
-        serverConfigurationManager.restoreToLastConfiguration();
     }
 
     /**
@@ -254,6 +221,33 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
             sshd.start();
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Copy the given source file to the given destination
+     *
+     * @param sourceFile source file
+     * @param destFile   destination file
+     * @throws IOException
+     */
+    public static void copyFile(File sourceFile, File destFile) throws IOException {
+        if (!destFile.exists()) {
+            destFile.createNewFile();
+        }
+        FileInputStream fileInputStream = null;
+        FileOutputStream fileOutputStream = null;
+
+        try {
+            fileInputStream = new FileInputStream(sourceFile);
+            fileOutputStream = new FileOutputStream(destFile);
+
+            FileChannel source = fileInputStream.getChannel();
+            FileChannel destination = fileOutputStream.getChannel();
+            destination.transferFrom(source, 0, source.size());
+        } finally {
+            IOUtils.closeQuietly(fileInputStream);
+            IOUtils.closeQuietly(fileOutputStream);
         }
     }
 
