@@ -24,6 +24,12 @@
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.security</artifactId>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.rampart.wso2</groupId>
+                    <artifactId>rampart-trust</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
