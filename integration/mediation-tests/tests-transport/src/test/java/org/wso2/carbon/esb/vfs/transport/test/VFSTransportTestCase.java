@@ -307,7 +307,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport :"
             + " transport.vfs.FileURI = /home/someuser/somedir " + "transport.vfs.ContentType = text/plain, "
             + "transport.vfs.FileNamePattern = - *\\.txt, "
-            + "transport.PollInterval=1, transport.vfs.ActionAfterProcess=MOVE")
+            + "transport.PollInterval=1, transport.vfs.ActionAfterProcess=MOVE" , enabled = false)
     public void testVFSProxyActionAfterProcess_Move() throws Exception {
 
         //Related proxy : VFSProxy7
