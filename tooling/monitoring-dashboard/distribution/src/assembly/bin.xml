@@ -89,6 +89,12 @@
             </includes>
             <fileMode>444</fileMode>
         </fileSet>
+
+        <fileSet>
+            <directory>target/update/</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <fileMode>744</fileMode>
+        </fileSet>
     </fileSets>
     <files>
         <file>
