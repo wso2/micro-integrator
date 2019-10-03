@@ -257,10 +257,16 @@
         <parameter locked="false" name="keystore.identity.store.password">{{transport.vfs.listener.keystore.password}}</parameter>
         <parameter locked="false" name="keystore.identity.key.password">{{transport.vfs.listener.keystore.key_password}}</parameter>
         <parameter locked="false" name="keystore.identity.alias">{{transport.vfs.listener.keystore.alias}}</parameter>
+        {% for name,value in transport.vfs.listener.parameter.items() %}
+        <parameter name="{{name}}" locked="false">{{value}}</parameter>
+        {% endfor %}
     </transportReceiver>
     {% endif %}
     {% if transport.mail.listener.enable == true %}
     <transportReceiver name="{{transport.mail.listener.name}}" class="org.apache.axis2.transport.mail.MailTransportListener">
+        {% for name,value in transport.mail.listener.parameter.items() %}
+        <parameter name="{{name}}" locked="false">{{value}}</parameter>
+        {% endfor %}
     </transportReceiver>
     {% endif %}
     {% if transport.jms.listener is defined %}
@@ -275,14 +281,26 @@
     </transportReceiver>
     {% endif %}
     {% if transport.fix.listener.enable == true %}
-    <transportReceiver name="fix" class="org.apache.synapse.transport.fix.FIXTransportListener"/>
+    <transportReceiver name="fix" class="org.apache.synapse.transport.fix.FIXTransportListener">
+        {% for parameter_key,parameter_value in transport.fix.listener.parameter.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportReceiver>
     {% endif %}
     <!-- SAP Transport Listeners -->
     {% if transport.sap.listener.idoc.enable == true %}
-    <transportReceiver name="idoc" class="{{transport.sap.listener.idoc.class}}"/>
+    <transportReceiver name="idoc" class="{{transport.sap.listener.idoc.class}}">
+        {% for parameter_key,parameter_value in transport.sap.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportReceiver>
     {% endif %}
     {% if transport.sap.listener.bapi.enable == true %}
-    <transportReceiver name="bapi" class="{{transport.sap.listener.bapi.class}}"/>
+    <transportReceiver name="bapi" class="{{transport.sap.listener.bapi.class}}">
+        {% for parameter_key,parameter_value in transport.bapi.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportReceiver>
     {% endif %}
     {% if transport.rabbitmq.listener.AMQPConnectionFactory is defined %}
     <transportReceiver name="{{transport.rabbitmq.listener.name}}" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
@@ -344,7 +362,11 @@
     </transportReceiver>
     {% endif %}
     {% if transport.udp.listener.enable == true %}
-    <transportReceiver name="udp" class="org.apache.axis2.transport.udp.UDPListener"/>
+    <transportReceiver name="udp" class="org.apache.axis2.transport.udp.UDPListener">
+        {% for parameter_key,parameter_value in transport.udp.listener.parameter.items() %}
+        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportReceiver>
     {% endif %}
     {% if transport.msmq.listener.enable == true %}
     <transportReceiver name="msmq" class="org.apache.axis2.transport.msmq.MSMQListener">
@@ -462,7 +484,11 @@
     <transportSender name="local" class="org.apache.axis2.transport.local.NonBlockingLocalTransportSender"/>
     {% endif %}
     {% if transport.vfs.sender.enable == true %}
-    <transportSender name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportSender"/>
+    <transportSender name="vfs" class="org.apache.synapse.transport.vfs.VFSTransportSender">
+        {% for parameter_key,parameter_value in  transport.vfs.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     {% for mail_sender in transport.mail.sender %}
     <transportSender name="{{mail_sender.name}}" class="org.apache.axis2.transport.mail.MailTransportSender">
@@ -472,14 +498,26 @@
     </transportSender>
     {% endfor %}
     {% if transport.fix.sender.enable == true %}
-    <transportSender name="fix" class="org.apache.synapse.transport.fix.FIXTransportSender"/>
+    <transportSender name="fix" class="org.apache.synapse.transport.fix.FIXTransportSender">
+        {% for parameter_key,parameter_value in transport.fix.sender.parameter.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     <!-- SAP Transport Senders -->
     {% if transport.sap.sender.idoc.enable == true %}
-    <transportSender name="idoc" class="{{transport.sap.sender.idoc.class}}"/>
+    <transportSender name="idoc" class="{{transport.sap.sender.idoc.class}}">
+        {% for parameter_key,parameter_value in transport.sap.sender.idoc.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     {% if transport.sap.sender.bapi.enable == true %}
-    <transportSender name="bapi" class="{{transport.sap.sender.bapi.class}}"/>
+    <transportSender name="bapi" class="{{transport.sap.sender.bapi.class}}">
+        {% for parameter_key,parameter_value in transport.sap.sender.bapi.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     {% if transport.rabbitmq.sender.AMQPConnectionFactory is defined %}
     <transportReceiver name="{{transport.rabbitmq.sender.name}}" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender">
@@ -541,16 +579,32 @@
     </transportSender>
     {% endfor %}
     {% if transport.tcp.sender.enable == true %}
-    <transportSender name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportSender"/>
+    <transportSender name="tcp" class="org.apache.axis2.transport.tcp.TCPTransportSender">
+        {% for parameter_key,parameter_value in transport.tcp.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     {% if transport.udp.sender.enable == true %}
-    <transportSender name="udp" class="org.apache.axis2.transport.udp.UDPSender"/>
+    <transportSender name="udp" class="org.apache.axis2.transport.udp.UDPSender">
+        {% for parameter_key,parameter_value in transport.udp.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     {% if transport.msmq.sender.enable == true %}
-    <transportSender name="msmq" class="org.apache.axis2.transport.msmq.MSMQSender"/>
+    <transportSender name="msmq" class="org.apache.axis2.transport.msmq.MSMQSender">
+        {% for parameter_key,parameter_value in transport.msmq.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     {% if transport.mqtt.sender.enable == true %}
-    <transportSender name="mqtt" class="org.apache.axis2.transport.mqtt.MqttSender"/>
+    <transportSender name="mqtt" class="org.apache.axis2.transport.mqtt.MqttSender">
+        {% for parameter_key,parameter_value in transport.mqtt.sender.parameter.items() %}
+        <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
     {% endif %}
     <!-- ================================================= -->
     <!--             Global Engaged Modules                -->

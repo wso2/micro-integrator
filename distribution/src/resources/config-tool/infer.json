@@ -28,14 +28,14 @@
   },
   "transport.ws.sender.enable": {
     "true": {
-      "transport.ws.sender.parameter.outflow_dispatch_sequence": "outflowDispatchSeq",
-      "transport.ws.sender.parameter.outflow_dispatch_fault_sequence": "outflowFaultSeq"
+      "transport.ws.sender.parameter.'ws.outflow.dispatch.sequence'": "outflowDispatchSeq",
+      "transport.ws.sender.parameter.'ws.outflow.dispatch.fault.sequence'": "outflowFaultSeq"
     }
   },
   "transport.wss.sender.enable": {
     "true": {
-      "transport.wss.sender.parameter.outflow_dispatch_sequence": "outflowDispatchSeq",
-      "transport.wss.sender.parameter.outflow_dispatch_fault_sequence": "outflowFaultSeq",
+      "transport.wss.sender.parameter.'ws.outflow.dispatch.sequence'": "outflowDispatchSeq",
+      "transport.wss.sender.parameter.'ws.outflow.dispatch.fault.sequence'": "outflowFaultSeq",
       "transport.wss.sender.truststore_location": "$ref{truststore.file_name}",
       "transport.wss.sender.truststore_password": "$ref{truststore.tls.password}"
     }

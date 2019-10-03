@@ -37,5 +37,11 @@
             <Property name="{{property_name}}">{{property_value}}</Property>
             {% endfor %}
         </UserStoreManager>
+
+        <AuthorizationManager class="{{authorization_manager.class}}">
+            {% for property_name,property_value in authorization_manager.properties.items() %}
+            <Property name="{{property_name}}">{{property_value}}</Property>
+            {% endfor %}
+        </AuthorizationManager>
     </Realm>
 </UserManager>

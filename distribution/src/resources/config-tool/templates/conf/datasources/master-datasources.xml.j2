@@ -18,8 +18,7 @@
                     <password>{{data.password}}</password>
                     <driverClassName>{{data.driver}}</driverClassName>
                     {% for property_name,property_value in data.pool_options.items() %}
-                    <{{property_name}}>{{property_value}}
-                    </{{property_name}}>
+                    <{{property_name}}>{{property_value}}</{{property_name}}>
                     {% endfor %}
                 </configuration>
             </definition>
