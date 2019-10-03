@@ -96,12 +96,12 @@
     </test>
 
     <test name="Message-Processor-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.message.processor.test.forwarding"/>
-            <package name="org.wso2.carbon.esb.message.processor.test"/>
-        </packages>
         <!--Disabled test due to the issue https://github.com/wso2/product-ei/issues/515-->
         <classes>
+            <!--Disabled test due to the issue https://github.com/wso2/micro-integrator/issues/1004-->
+            <!--class name="org.wso2.carbon.esb.message.processor.test.forwarding.StoreAndForwardWithEmptyMessageBodyTesCase"/-->
+            <class name="org.wso2.carbon.esb.message.processor.test.forwarding.ESBJAVA2006RetryOnSOAPFaultTestCase"/>
+            <class name="org.wso2.carbon.esb.message.processor.test.forwarding.WithInMemoryStoreTestCase"/>
             <class name="org.wso2.carbon.esb.message.processor.test.MessageProcessorAdminTestCase">
                 <methods>
                     <exclude name=".*"/>

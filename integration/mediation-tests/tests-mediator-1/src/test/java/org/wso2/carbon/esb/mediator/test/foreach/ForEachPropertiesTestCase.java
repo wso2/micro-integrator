@@ -48,7 +48,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         headers.put("Accept-Charset", "UTF-8");
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct")
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct", enabled = false)
     public void testSingleForEachProperties() throws Exception {
         carbonLogReader.clearLogs();
         String request =
