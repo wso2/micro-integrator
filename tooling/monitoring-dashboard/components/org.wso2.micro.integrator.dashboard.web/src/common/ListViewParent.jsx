@@ -74,7 +74,7 @@ export default class ListViewParent extends Component {
                     </Box>
                     <Box id={"footer-box"}>
                         <Paper style={styles.footer} square={true}>
-                            <Typography style={{paddingTop:'15px'}}>
+                            <Typography>
                                 © 2005 - 2019 WSO2 Inc. All Rights Reserved.
                             </Typography>
                         </Paper>

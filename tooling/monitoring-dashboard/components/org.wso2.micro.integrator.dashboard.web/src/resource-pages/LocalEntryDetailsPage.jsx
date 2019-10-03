@@ -94,7 +94,7 @@ export default class LocalEntryDetailsPage extends Component {
 
                 <Box pb={5}>
                     <TableHeaderBox title="Value"/>
-                    <Box boxShadow={1} minHeight={100} color="text.secondary" paddingLeft={2}>
+                    <Box boxShadow={1} minHeight={100} color="text.secondary">
                         {this.state.value}
                     </Box>
                 </Box>
