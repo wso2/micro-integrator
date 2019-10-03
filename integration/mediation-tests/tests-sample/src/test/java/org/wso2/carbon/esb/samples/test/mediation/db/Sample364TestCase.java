@@ -16,7 +16,7 @@
  *under the License.
  */
 
-package org.wso2.carbon.esb.samples.test.mediation.db;
+/*package org.wso2.carbon.esb.samples.test.mediation.db;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.jdbc.ScriptRunner;
@@ -196,4 +196,4 @@ public class Sample364TestCase extends ESBSampleIntegrationTest {
         FileUtils.moveFile(new File(datasourceBkupPath), new File(datasourceOriginalPath));
     }
 
-}
+}*/

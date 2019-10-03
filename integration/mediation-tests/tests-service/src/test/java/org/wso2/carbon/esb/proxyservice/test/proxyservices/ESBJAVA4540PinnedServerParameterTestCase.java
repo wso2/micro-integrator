@@ -15,6 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
+/*
 package org.wso2.carbon.esb.proxyservice.test.proxyservices;
 
 import org.apache.http.HttpResponse;
@@ -32,11 +33,13 @@ import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 import java.util.HashMap;
 import java.util.Map;
 
+*/
 /**
  * This test class will test the Proxy Service deployment  when pinnedService parameter value does
  * not contain current instance name
  * https://wso2.org/jira/browse/ESBJAVA-4540
- */
+ *//*
+
 public class ESBJAVA4540PinnedServerParameterTestCase extends ESBIntegrationTest {
 
     private final String proxyServiceName = "pinnedServerProxy";
@@ -92,3 +95,4 @@ public class ESBJAVA4540PinnedServerParameterTestCase extends ESBIntegrationTest
                 "Proxy service deployed successfully");
     }
 }
+*/

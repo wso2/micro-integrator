@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -30,9 +31,11 @@ import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 
+*/
 /**
  * This testcase tests consuming message from a queue and sending to a backend works
- */
+ *//*
+
 public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "jmsQueueToHttpWithInboundEndpointTestCase";
@@ -51,11 +54,13 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
         addInboundEndpoint(inboundEpConfig);
     }
 
-    /**
+    */
+/**
      * Test whether consuming message from a queue and sending to a backend works (i.e. JMS -> HTTP)
      *
      * @throws Exception if any error occurred while running tests
-     */
+     *//*
+
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Test JMS to HTTP communication with inbound endpoint")
     public void testJmsQueueToHttpWithInboundEndpoint() throws Exception {
@@ -77,11 +82,13 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
         super.cleanup();
     }
 
-    /**
+    */
+/**
      * Send a message to testInboundQueue queue
      *
      * @throws Exception
-     */
+     *//*
+
     private void sendMessage() throws Exception {
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
@@ -100,3 +107,4 @@ public class JmsToBackendWithInboundEndpointTestCase extends ESBIntegrationTest 
         }
     }
 }
+*/

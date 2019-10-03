@@ -16,6 +16,7 @@
  * under the License.
  */
 
+/*
 package org.wso2.carbon.esb.file.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -36,10 +37,12 @@ import java.io.File;
 import java.net.URL;
 import javax.activation.DataHandler;
 
+*/
 /**
  * Tests the invocation of a proxy service via a dynamic sequence registered in the registry upon the receipt of a
  * file using the file inbound.
- */
+ *//*
+
 public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewerClient;
@@ -118,11 +121,13 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
         return synapseConfig;
     }
 
-    /**
+    */
+/**
      * Uploads sequence to governance registry.
      *
      * @throws Exception if the URL representing th e resource file is invalid
-     */
+     *//*
+
     private void uploadResourcesToGovernanceRegistry() throws Exception {
         resourceAdminServiceStub
                 .addResource("/_system/governance/fileInboundDynamicSequence", "application/xml", "xml files",
@@ -132,3 +137,4 @@ public class FileInboundWithDynamicSequenceTestCase extends ESBIntegrationTest {
     }
 
 }
+*/

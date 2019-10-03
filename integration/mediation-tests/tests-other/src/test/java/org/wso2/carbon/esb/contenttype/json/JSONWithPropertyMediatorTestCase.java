@@ -16,7 +16,7 @@
  *under the License.
  */
 
-package org.wso2.carbon.esb.contenttype.json;
+/*package org.wso2.carbon.esb.contenttype.json;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -30,11 +30,12 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;*/
 
 /**
  * This class tests the behaviour of the property mediator for JSON payloads
  */
+/*
 public class JSONWithPropertyMediatorTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
@@ -96,3 +97,4 @@ public class JSONWithPropertyMediatorTestCase extends ESBIntegrationTest {
         assertEquals(getResponse.getEntity(String.class), SecondJSON_PAYLOAD, "Response mismatch for HTTP Get call");
     }
 }
+*/

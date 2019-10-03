@@ -363,6 +363,10 @@
                     <groupId>org.wso2.carbon.mediation</groupId>
                     <artifactId>org.wso2.carbon.rest.api</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -386,7 +390,17 @@
         <dependency>
             <groupId>org.apache.sshd</groupId>
             <artifactId>sshd-core</artifactId>
-            <version>0.13.0</version>
+            <version>${sshd.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-scp</artifactId>
+            <version>${sshd.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.sshd</groupId>
+            <artifactId>sshd-sftp</artifactId>
+            <version>${sshd.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.mina</groupId>
@@ -424,5 +438,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-
+    <properties>
+        <sshd.version>2.2.0</sshd.version>
+    </properties>
 </project>

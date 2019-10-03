@@ -102,11 +102,6 @@
         </packages>
         <!--Disabled test due to the issue https://github.com/wso2/product-ei/issues/515-->
         <classes>
-            <class name="org.wso2.carbon.esb.message.processor.test.failover.FailoverForwardingProcessorTestCase">
-                <methods>
-                    <exclude name=".*" />
-                </methods>
-            </class>
             <class name="org.wso2.carbon.esb.message.processor.test.MessageProcessorAdminTestCase">
                 <methods>
                     <exclude name=".*"/>

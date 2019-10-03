@@ -16,7 +16,7 @@
  * under the License.
  */
 
-package org.wso2.carbon.esb.endpoint.test;
+/*package org.wso2.carbon.esb.endpoint.test;
 
 import org.apache.axis2.AxisFault;
 import org.testng.Assert;
@@ -80,7 +80,7 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
         axis2Server3 = null;
         super.cleanup();
     }
-    /*
+    *//*
     @AfterMethod(groups = "wso2.esb")
     public void startServersA() throws InterruptedException, IOException {
         if (!axis2Server1.isStarted()) {
@@ -90,7 +90,7 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
             axis2Server3.start();
         }
         Thread.sleep(1000);
-    }*/
+    }*//*
 
     @BeforeMethod(groups = "wso2.esb")
     public void startServersB() throws InterruptedException, IOException {
@@ -162,6 +162,6 @@ public class FailOverWithDisabledErrors extends ESBIntegrationTest {
             request(++i);
         }
     }
-}
+}*/
 
 

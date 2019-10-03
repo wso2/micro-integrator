@@ -224,12 +224,6 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
-            <!-- Excluding due to https://github.com/wso2/micro-integrator/issues/486-->
-            <class name="org.wso2.carbon.esb.mediator.test.enrich.EnrichAddCustomHeaderTestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
         </classes>
     </test>
 
@@ -280,28 +274,6 @@
         <packages>
             <package name="org.wso2.carbon.esb.mediator.test.property"/>
         </packages>
-        <classes>
-            <class name="org.wso2.carbon.esb.mediator.test.property.PropertyIntegrationXpathAxis2PropertyTestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
-            <class name="org.wso2.carbon.esb.mediator.test.property.PropertyIntegrationXPathTrpPropertyTestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
-            <class name="org.wso2.carbon.esb.mediator.test.property.PropertyIntegrationXPathExtensionTestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
-            <class name="org.wso2.carbon.esb.mediator.test.property.PropertyIntegrationXPathBodyTestCase">
-                <methods>
-                    <exclude name=".*"/>
-                </methods>
-            </class>
-        </classes>
     </test>
 
     <test name="PayloadFactory-mediator-Test" preserve-order="true" verbose="2">

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
+/*
 package org.wso2.carbon.esb.rabbitmq.transport.test;
 
 import org.testng.Assert;
@@ -28,12 +28,12 @@ import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
 
-import java.io.File;
+import java.io.File;*/
 
 /**
  * Test RabbitMQ receiver with different content-types and with content type service parameter
  */
-public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
+/*public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
     private RabbitMQProducerClient sender;
@@ -84,4 +84,4 @@ public class RabbitMQContentTypeTestCase extends ESBIntegrationTest {
         sender.disconnect();
         super.cleanup();
     }
-}
+}*/

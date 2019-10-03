@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
 package org.wso2.carbon.esb.passthru.transport.test;
 
 import org.testng.Assert;
@@ -28,6 +29,7 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
+*/
 
 /**
  * Related JIRA: https://wso2.org/jira/browse/ESBJAVA-4973
@@ -35,7 +37,7 @@ import java.io.File;
  * This test was done using random ip addresses to check whether the defined ip addresses get set for http/https
  * pass-through listeners
  */
-public class ESBJAVA4973BindAddressFeatureTestCase extends ESBIntegrationTest {
+/*public class ESBJAVA4973BindAddressFeatureTestCase extends ESBIntegrationTest {
     private ServerConfigurationManager serverConfigurationManager;
     private LogViewerClient logViewerClient;
 
@@ -89,4 +91,4 @@ public class ESBJAVA4973BindAddressFeatureTestCase extends ESBIntegrationTest {
             serverConfigurationManager = null;
         }
     }
-}
+}*/

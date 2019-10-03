@@ -16,6 +16,7 @@
  *under the License.
  */
 
+/*
 package org.wso2.carbon.esb.jms.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -39,10 +40,12 @@ import java.util.Map;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+*/
 /**
  * Check if the message processor retries with JSON messages as expected.
  * https://wso2.org/jira/browse/ESBJAVA-3018
- */
+ *//*
+
 public class MSMPJsonRetryTestCase extends ESBIntegrationTest {
 
     private TomcatServerManager tomcatServerManager;
@@ -92,4 +95,4 @@ public class MSMPJsonRetryTestCase extends ESBIntegrationTest {
         tomcatServerManager.stop();
         super.cleanup();
     }
-}
+}*/

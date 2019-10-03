@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.message.store.jdbc.test;
 
 import org.apache.axiom.om.OMElement;
@@ -146,3 +147,4 @@ public class JDBCMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         serverConfigurationManager.restartGracefully();
     }
 }
+*/

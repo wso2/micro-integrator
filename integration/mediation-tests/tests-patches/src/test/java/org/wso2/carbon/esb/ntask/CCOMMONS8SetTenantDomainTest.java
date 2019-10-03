@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+/*
 package org.wso2.carbon.esb.ntask;
 
 import org.testng.Assert;
@@ -30,8 +31,6 @@ import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException
 import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.integration.common.utils.FileManager;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.io.File;
@@ -47,9 +46,11 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPathExpressionException;
 
+*/
 /**
  * Server startup shouldn't throw any FATAL errors when registry is mounted
- */
+ *//*
+
 public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
 
     public static final String ERROR_MESSAGE = "Failed to add the root collection to the coreRegistry";
@@ -95,9 +96,11 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
 
     }
 
-    /**
+    */
+/**
      * Starting up the server and check the logs for error.
-     */
+     *//*
+
     @Test(groups = "wso2.esb", description = "Test startup logs to see whether ntask FATAL exception occurred", enabled = true)
     public void testStartupNtaskErrorTest() {
 
@@ -131,12 +134,14 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
         }
     }
 
-    /**
+    */
+/**
      * Helper method to change the remote instance url of the registry mount in registry.xml file
      *
      * @param path
      * @param url
-     */
+     *//*
+
     private void changeRegistryFile(String path, String url) {
         try {
             File inputFile = new File(path);
@@ -164,3 +169,4 @@ public class CCOMMONS8SetTenantDomainTest extends ESBIntegrationTest {
     }
 
 }
+*/

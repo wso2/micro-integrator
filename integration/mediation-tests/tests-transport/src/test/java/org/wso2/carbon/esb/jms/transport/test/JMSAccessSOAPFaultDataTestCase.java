@@ -15,7 +15,7 @@
  *specific language governing permissions and limitations
  *under the License.
  */
-package org.wso2.carbon.esb.jms.transport.test;
+/*package org.wso2.carbon.esb.jms.transport.test;
 
 import org.testng.Assert;
 import org.apache.axiom.om.OMElement;
@@ -35,10 +35,10 @@ import org.wso2.esb.integration.common.utils.servers.axis2.SampleAxis2Server;
 
 import java.rmi.RemoteException;
 
-/**
+*//**
  * This test case is written to track the issue reported in
  * soap fault when doing a JMS transport
- */
+ *//*
 public class JMSAccessSOAPFaultDataTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient = null;
     private SampleAxis2Server axisServer = null;
@@ -96,4 +96,4 @@ public class JMSAccessSOAPFaultDataTestCase extends ESBIntegrationTest {
         super.cleanup();
 
     }
-}
+}*/

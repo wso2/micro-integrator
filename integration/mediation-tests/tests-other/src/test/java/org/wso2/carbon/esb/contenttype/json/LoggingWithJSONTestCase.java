@@ -16,7 +16,7 @@
  *under the License.
  */
 
-package org.wso2.carbon.esb.contenttype.json;
+/*package org.wso2.carbon.esb.contenttype.json;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -37,11 +37,12 @@ import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertTrue;*/
 
 /**
  * This test class is to verify the logging functionality of JSON payloads
  */
+/*
 public class LoggingWithJSONTestCase extends ESBIntegrationTest {
 
     private LogViewerClient logViewer;
@@ -140,4 +141,4 @@ public class LoggingWithJSONTestCase extends ESBIntegrationTest {
 
     }
 
-}
+}*/

@@ -15,7 +15,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.wso2.carbon.esb.inbound.endpoint.jms.test;
+/*package org.wso2.carbon.esb.inbound.endpoint.jms.test;
 
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
@@ -29,7 +29,7 @@ import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.io.File;
+import java.io.File;*/
 
 /**
  * https://wso2.org/jira/browse/ESBJAVA-4293
@@ -37,7 +37,7 @@ import java.io.File;
  * https://wso2.org/jira/browse/ESBJAVA-4864
  */
 
-public class ESBJAVA4863JMSTransactionRollbackTestCase extends ESBIntegrationTest {
+/*public class ESBJAVA4863JMSTransactionRollbackTestCase extends ESBIntegrationTest {
     private LogViewerClient logViewerClient;
 
     @BeforeClass(alwaysRun = true)
@@ -130,4 +130,4 @@ public class ESBJAVA4863JMSTransactionRollbackTestCase extends ESBIntegrationTes
     public void destroy() throws Exception {
         super.cleanup();
     }
-}
+}*/

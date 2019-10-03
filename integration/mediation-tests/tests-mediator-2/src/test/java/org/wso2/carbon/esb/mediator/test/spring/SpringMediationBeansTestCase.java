@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.mediator.test.spring;
 
 import org.apache.axis2.AxisFault;
@@ -35,11 +36,13 @@ import java.rmi.RemoteException;
 import javax.activation.DataHandler;
 import javax.activation.FileDataSource;
 
+*/
 /**
  * Related to https://wso2.org/jira/browse/ESBJAVA-3291
  * This class tests whether the SpringMediator throws proper error while the
  * custom java class having any problem.
- */
+ *//*
+
 public class SpringMediationBeansTestCase extends ESBIntegrationTest {
 
     private final String SPRING_XML_LOCATION = "/artifacts/ESB/mediatorconfig/spring";
@@ -121,3 +124,4 @@ public class SpringMediationBeansTestCase extends ESBIntegrationTest {
         resourceAdminServiceStub.deleteResource("/_system/config/spring");
     }
 }
+*/

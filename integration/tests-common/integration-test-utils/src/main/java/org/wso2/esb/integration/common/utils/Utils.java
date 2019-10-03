@@ -27,9 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageConsumer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.carbon.integration.common.admin.client.ApplicationAdminClient;
-import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.clients.mediation.MessageStoreAdminClient;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 
@@ -180,26 +177,6 @@ public class Utils {
     }
 
     /**
-     * Check if the system log contains the expected string. The search will be done for maximum 10 seconds.
-     *
-     * @param logViewerClient log viewer used for test
-     * @param expected        expected string
-     * @return true if a match found, false otherwise
-     * @throws RemoteException             due to a logviewer error
-     * @throws LogViewerLogViewerException due to a logviewer error
-     */
-    public static boolean assertIfSystemLogContains(LogViewerClient logViewerClient, String expected)
-            throws RemoteException, LogViewerLogViewerException {
-        boolean matchFound = false;
-        long startTime = System.currentTimeMillis();
-        LogEvent[] systemLogs;
-        while (!matchFound && (System.currentTimeMillis() - startTime) < 10000) {
-            matchFound = assertIfLogExists(logViewerClient, expected);
-        }
-        return matchFound;
-    }
-
-    /**
      * Check if the log contains the expected string. The search will be done for maximum 10 seconds.
      *
      * @param carbonLogReader carbon log reader
@@ -215,26 +192,6 @@ public class Utils {
         return matchFound;
     }
 
-    private static boolean assertIfLogExists(LogViewerClient logViewerClient, String expected)
-            throws RemoteException, LogViewerLogViewerException {
-
-        LogEvent[] systemLogs;
-        systemLogs = logViewerClient.getAllRemoteSystemLogs();
-        boolean matchFound = false;
-        if (systemLogs != null) {
-            for (LogEvent logEvent : systemLogs) {
-                if (logEvent == null) {
-                    continue;
-                }
-                if (logEvent.getMessage().contains(expected)) {
-                    matchFound = true;
-                    break;
-                }
-            }
-        }
-        return matchFound;
-    }
-
     private static boolean assertIfLogExists(CarbonLogReader carbonLogReader, String expected) {
         boolean matchFound = false;
         if (carbonLogReader != null) {
@@ -244,61 +201,6 @@ public class Utils {
             }
         }
         return matchFound;
-    }
-
-    /**
-     * Check whether a log found with expected string of given priority
-     *
-     * @param logViewerClient LogViewerClient object
-     * @param priority        priority level
-     * @param expected        expected string
-     * @return true if a log found with expected string of given priority, false otherwise
-     * @throws RemoteException
-     * @throws LogViewerLogViewerException
-     */
-    private static boolean assertIfLogExistsWithGivenPriority(LogViewerClient logViewerClient, String priority,
-                                                              String expected)
-            throws RemoteException, LogViewerLogViewerException {
-
-        LogEvent[] systemLogs;
-        systemLogs = logViewerClient.getAllRemoteSystemLogs();
-        boolean matchFound = false;
-        if (systemLogs != null) {
-            for (LogEvent logEvent : systemLogs) {
-                if (logEvent == null) {
-                    continue;
-                }
-                if (logEvent.getPriority().equals(priority) && logEvent.getMessage().contains(expected)) {
-                    matchFound = true;
-                    break;
-                }
-            }
-        }
-        return matchFound;
-    }
-
-    /**
-     * Check for the existence of the given log message. The polling will happen in one second intervals.
-     *
-     * @param logViewerClient log viewer used for test
-     * @param expected        expected log string
-     * @param timeout         max time to do polling in seconds
-     * @return true if the log is found with given timeout, false otherwise
-     * @throws InterruptedException        if interrupted while sleeping
-     * @throws RemoteException             due to a logviewer error
-     * @throws LogViewerLogViewerException due to a logviewer error
-     */
-    public static boolean checkForLog(LogViewerClient logViewerClient, String expected, int timeout)
-            throws InterruptedException, RemoteException, LogViewerLogViewerException {
-        boolean logExists = false;
-        for (int i = 0; i < timeout; i++) {
-            TimeUnit.SECONDS.sleep(1);
-            if (assertIfLogExists(logViewerClient, expected)) {
-                logExists = true;
-                break;
-            }
-        }
-        return logExists;
     }
 
     /**
@@ -339,32 +241,6 @@ public class Utils {
         for (int i = 0; i < timeout; i++) {
             TimeUnit.SECONDS.sleep(1);
             if (logReader.getLogs().contains(expected)) {
-                logExists = true;
-                break;
-            }
-        }
-        return logExists;
-    }
-
-    /**
-     * Check for the existence of a given log message of given priority within the given timeout
-     *
-     * @param logViewerClient LogViewerClient object
-     * @param priority        priority level
-     * @param expected        expected string to search in logs
-     * @param timeout         timeout value in seconds
-     * @return true if a log found with the given priority and content within the given timeout, false otherwise
-     * @throws InterruptedException
-     * @throws LogViewerLogViewerException
-     * @throws RemoteException
-     */
-    public static boolean checkForLogsWithPriority(LogViewerClient logViewerClient, String priority, String expected,
-                                                   int timeout)
-            throws InterruptedException, LogViewerLogViewerException, RemoteException {
-        boolean logExists = false;
-        for (int i = 0; i < timeout; i++) {
-            TimeUnit.SECONDS.sleep(1);
-            if (assertIfLogExistsWithGivenPriority(logViewerClient, priority, expected)) {
                 logExists = true;
                 break;
             }

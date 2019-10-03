@@ -22,7 +22,6 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
@@ -41,7 +40,7 @@ public class ESBJAVA_3698_MessageBuildingWithDifferentPayloadAndContentTypeTestC
     @Test(groups = { "wso2.esb" }, description = "Check for Axis Fault when xml payload is sent with application/json"
             + " content type", enabled = true)
     public void testAxisFaultWithXmlPayloadAndJSONContentType()
-            throws ClientProtocolException, IOException, InterruptedException, LogViewerLogViewerException {
+            throws ClientProtocolException, IOException, InterruptedException {
         carbonLogReader.start();
         final HttpPost post = new HttpPost("http://localhost:8480/ESBJAVA3698jsonstockquote/test");
         post.addHeader("Content-Type", "application/json");

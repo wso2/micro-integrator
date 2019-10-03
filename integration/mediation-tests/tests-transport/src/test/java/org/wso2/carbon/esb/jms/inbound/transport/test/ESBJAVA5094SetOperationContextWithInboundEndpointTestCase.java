@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -27,17 +28,18 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.types.carbon.LogEvent;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.SqlDataSourceUtil;
 
 import java.io.File;
 import java.util.ArrayList;
 
+*/
 /**
  * Related JIRA: https://wso2.org/jira/browse/ESBJAVA-5094
  * This testcase tests whether the operation context of axis2 context is set back when it is null with inbound endpoint
- */
+ *//*
+
 public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends ESBIntegrationTest {
 
     private static final String QUEUE_NAME = "testInboundQueue";
@@ -93,11 +95,13 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
 
     }
 
-    /**
+    */
+/**
      * Test whether the operation context of axis2 message is set when it is null with inbound endpoint
      *
      * @throws Exception
-     */
+     *//*
+
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = {
             "wso2.esb" }, description = "Test for the operation context of axis2 context with inbound endpoint")
@@ -131,11 +135,13 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
         super.cleanup();
     }
 
-    /**
+    */
+/**
      * Add a h2 datasource with a database "test"
      *
      * @throws Exception
-     */
+     *//*
+
     private void addDataSource() throws Exception {
         ArrayList<File> sqlFileList = new ArrayList<>();
         File stock = new File(
@@ -146,11 +152,13 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
 
     }
 
-    /**
+    */
+/**
      * Send a message to testInboundQueue queue
      *
      * @throws Exception
-     */
+     *//*
+
     private void sendMessage() throws Exception {
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
@@ -170,3 +178,4 @@ public class ESBJAVA5094SetOperationContextWithInboundEndpointTestCase extends E
         }
     }
 }
+*/

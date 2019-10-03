@@ -15,6 +15,7 @@
  * limitations under the License.
  */
 
+/*
 package org.wso2.carbon.esb.passthru.transport.test;
 
 import org.testng.Assert;
@@ -30,9 +31,11 @@ import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 
 import java.io.File;
 
+*/
 /**
  * Testcase for check whether Synapse handlers getting executed in blocking calls.
- */
+ *//*
+
 public class ESBJAVA4883SynapseHandlerBlockingCallTestCase extends ESBIntegrationTest {
 
     private ServerConfigurationManager serverConfigurationManager;
@@ -82,3 +85,4 @@ public class ESBJAVA4883SynapseHandlerBlockingCallTestCase extends ESBIntegratio
         return logFound;
     }
 }
+*/

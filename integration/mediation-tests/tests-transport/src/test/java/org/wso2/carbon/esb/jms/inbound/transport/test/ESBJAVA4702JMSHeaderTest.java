@@ -17,6 +17,7 @@
  *
  */
 
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -26,7 +27,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
-import org.wso2.carbon.logging.view.stub.LogViewerLogViewerException;
 import org.wso2.esb.integration.common.clients.inbound.endpoint.InboundAdminClient;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
@@ -34,19 +34,23 @@ import org.wso2.esb.integration.common.utils.Utils;
 import java.rmi.RemoteException;
 import javax.xml.stream.XMLStreamException;
 
+*/
 /**
  * Test whether JMS properties are propagated through inbound endpoints.
  * https://wso2.org/jira/browse/ESBJAVA-4702
- */
+ *//*
+
 public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
     private InboundAdminClient inboundAdminClient;
     private LogViewerClient logViewerClient;
 
-    /**
+    */
+/**
      * This method initializes an activeMQ server and adds relevant synapse configs to the ESB instance
      *
      * @throws Exception if error occurs in super.init call
-     */
+     *//*
+
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
@@ -58,17 +62,18 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
         addInboundEndpoint(addEndpoint());
     }
 
-    /**
+    */
+/**
      * This tests whether the JMS headers are set when reading the headers using an inbound endpoint
      *
      * @throws RemoteException             if error occurs in sending the request or reading the logs
      * @throws XMLStreamException          if error occurs in reading the payload
-     * @throws LogViewerLogViewerException if logviewer is not initialized properly
      * @throws InterruptedException        if thread.sleep call is interrupted
-     */
+     *//*
+
     @Test(groups = { "wso2.esb" }, description = "Test JMS Headers : ESBJAVA-4702")
     public void JMSInboundEndpointHeaderTest()
-            throws RemoteException, XMLStreamException, LogViewerLogViewerException, InterruptedException {
+            throws RemoteException, XMLStreamException, InterruptedException {
         logViewerClient = new LogViewerClient(contextUrls.getBackEndUrl(), getSessionCookie());
         logViewerClient.clearLogs();
         axis2Client.sendRobust(getProxyServiceURLHttp("jmsHeaderInboundEpTestProxy"), null, null,
@@ -82,12 +87,14 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    /**
+    */
+/**
      * Provides the endpoint definition as an OMElement
      *
      * @return an OMElement of the endpoint definition
      * @throws XMLStreamException if error occurs when reading the xml
-     */
+     *//*
+
     private OMElement addEndpoint() throws XMLStreamException {
         OMElement synapseConfig = null;
         synapseConfig = AXIOMUtil.stringToOM(
@@ -110,3 +117,4 @@ public class ESBJAVA4702JMSHeaderTest extends ESBIntegrationTest {
         return synapseConfig;
     }
 }
+*/

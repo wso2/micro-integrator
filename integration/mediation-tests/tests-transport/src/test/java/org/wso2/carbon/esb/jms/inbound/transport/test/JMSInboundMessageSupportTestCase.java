@@ -15,6 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+/*
 package org.wso2.carbon.esb.jms.inbound.transport.test;
 
 import org.apache.axiom.om.OMElement;
@@ -31,10 +32,12 @@ import org.wso2.esb.integration.common.utils.clients.jmsclient.JMSQueueMessagePr
 
 import javax.xml.stream.XMLStreamException;
 
+*/
 /**
  * This class tests polling of messages of different JMS message types, by JMS inbound endpoints.
  * Currently includes tests for BytesMessages and MapMessages.
- */
+ *//*
+
 public class JMSInboundMessageSupportTestCase extends ESBIntegrationTest {
     private JMSQueueMessageProducer jmsQueueMessageProducer;
     private LogViewerClient logViewerClient;
@@ -130,14 +133,16 @@ public class JMSInboundMessageSupportTestCase extends ESBIntegrationTest {
         super.cleanup();
     }
 
-    /**
+    */
+/**
      * Method to retrieve the xml configuration of the endpoint with the specified name, for the specified queue.
      *
      * @param name      name of the inbound endpoint
      * @param queueName name of the queue
      * @return the xml configuration of the JMS inbound endpoint
      * @throws XMLStreamException if there is an error in processing
-     */
+     *//*
+
     private OMElement getEndpointConfig(String name, String queueName) throws XMLStreamException {
         return AXIOMUtil.stringToOM(
                 "<inboundEndpoint xmlns=\"http://ws.apache.org/ns/synapse\"\n" + "                 name=\"" + name
@@ -158,4 +163,4 @@ public class JMSInboundMessageSupportTestCase extends ESBIntegrationTest {
                         + "        <parameter name=\"transport.jms.ConnectionFactoryType\">queue</parameter>\n"
                         + "    </parameters>\n" + "</inboundEndpoint>");
     }
-}
+}*/

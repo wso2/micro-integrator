@@ -16,6 +16,7 @@
  *under the License.
  */
 
+/*
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.testng.annotations.BeforeClass;
@@ -28,9 +29,11 @@ import java.io.IOException;
 
 import static org.testng.Assert.assertTrue;
 
+*/
 /**
  * This class tests the functionality of  xpath Prefix for Axis2 MessageContext properties
- */
+ *//*
+
 public class PropertyIntegrationXpathAxis2PropertyTestCase extends ESBIntegrationTest {
 
     private static LogViewerClient logViewer;
@@ -65,3 +68,4 @@ public class PropertyIntegrationXpathAxis2PropertyTestCase extends ESBIntegratio
         assertTrue(isBody, "Message defined in axis2 scope Not found");
     }
 }
+*/
