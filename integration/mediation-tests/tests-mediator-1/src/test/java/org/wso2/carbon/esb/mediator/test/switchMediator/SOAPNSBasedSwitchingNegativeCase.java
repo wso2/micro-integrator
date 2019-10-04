@@ -42,7 +42,8 @@ public class SOAPNSBasedSwitchingNegativeCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Switch Mediator:Write xpath expression using SOAP 1.1/1.2 NS Send SOAP 1.1/1.2 response and assert switch")
+            "wso2.esb" }, description = "Switch Mediator:Write xpath expression using SOAP 1.1/1.2 NS Send SOAP 1.1/1"
+            + ".2 response and assert switch" , enabled = false)
     public void testXPathOnDifferentSOAPNS() throws AxisFault, XPathExpressionException {
         OMElement response1 = null;
         OMElement response2 = null;
