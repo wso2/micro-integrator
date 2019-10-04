@@ -37,7 +37,7 @@ public class InjectToProxyTestCase extends ESBIntegrationTest {
         carbonLogReader = new CarbonLogReader();
     }
 
-    @Test(groups = { "wso2.esb" })
+    @Test(groups = { "wso2.esb" }, enabled = false)
     public void injectToProxyTest() throws Exception {
         OMElement task = AXIOMUtil.stringToOM(
                 "<task xmlns=\"http://ws.apache.org/ns/synapse\"\n"
@@ -57,6 +57,7 @@ public class InjectToProxyTestCase extends ESBIntegrationTest {
         Utils.deploySynapseConfiguration(task, "SampleInjectToProxyTask", "tasks", true);
         boolean invokedLogFound = Utils.logExists(carbonLogReader, "PROXY INVOKED", 4);
         assertTrue(invokedLogFound);
+        carbonLogReader.stop();
     }
 
     @AfterClass(alwaysRun = true)

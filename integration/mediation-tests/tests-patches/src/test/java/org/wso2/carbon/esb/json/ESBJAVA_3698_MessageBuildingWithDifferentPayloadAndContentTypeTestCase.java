@@ -38,7 +38,7 @@ public class ESBJAVA_3698_MessageBuildingWithDifferentPayloadAndContentTypeTestC
     }
 
     @Test(groups = { "wso2.esb" }, description = "Check for Axis Fault when xml payload is sent with application/json"
-            + " content type", enabled = true)
+            + " content type", enabled = false)
     public void testAxisFaultWithXmlPayloadAndJSONContentType()
             throws ClientProtocolException, IOException, InterruptedException {
         carbonLogReader.start();

@@ -34,8 +34,9 @@ public class FurtherProcessingOfSwitchAfterMatchTestCase extends ESBIntegrationT
         carbonLogReader = new CarbonLogReader();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Switch Mediator: Test whether further processing of the switch block is done after a match is found.")
+    @Test(groups = {"wso2.esb"},
+          description = "Switch Mediator: Test whether further processing of the switch block is done after a match " +
+                  "is found.", enabled = false)
     public void testFurtherProcessingOfSwitch() throws Exception {
         carbonLogReader.start();
 

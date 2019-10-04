@@ -40,7 +40,7 @@ public class ESBJAVA4852URITemplateWithCompleteURLTestCase extends ESBIntegratio
         logReader = new CarbonLogReader();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sending complete URL to API and for dispatching")
+    @Test(groups = { "wso2.esb" }, description = "Sending complete URL to API and for dispatching", enabled = false)
     public void testCompleteURLWithHTTPMethod() throws Exception {
         logReader.start();
 

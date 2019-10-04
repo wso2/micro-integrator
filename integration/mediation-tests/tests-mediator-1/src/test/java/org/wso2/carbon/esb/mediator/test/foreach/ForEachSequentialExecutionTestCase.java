@@ -40,12 +40,13 @@ public class ForEachSequentialExecutionTestCase extends ESBIntegrationTest {
     public void setEnvironment() throws Exception {
         init();
         client = new IterateClient();
-        carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to sequentially transform payload")
+    @Test(groups = "wso2.esb", description = "Test foreach inline sequence to sequentially transform payload",
+          enabled = false)
     public void testSequentialExecution() throws Exception {
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         carbonLogReader.clearLogs();
         String response = client
                 .send(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), createMultipleSymbolPayLoad(10),

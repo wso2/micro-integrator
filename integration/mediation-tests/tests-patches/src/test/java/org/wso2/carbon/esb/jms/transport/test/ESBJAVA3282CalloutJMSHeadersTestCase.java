@@ -37,7 +37,7 @@ public class ESBJAVA3282CalloutJMSHeadersTestCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Callout JMS headers test case")
+    @Test(groups = {"wso2.esb"}, description = "Callout JMS headers test case", enabled = false)
     public void testCalloutJMSHeaders() throws Exception {
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<payload/>";

@@ -26,7 +26,6 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -43,7 +42,8 @@ public class RabbitMQStoreTestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath("/artifacts/ESB/store/rabbitmqStoreTest.xml");
     }
 
-    @Test(groups = "wso2.esb", description = "Testing store and forward mechanism using RabbitMQ message store")
+    @Test(groups = "wso2.esb", description = "Testing store and forward mechanism using RabbitMQ message store",
+          enabled = false)
     public void testRMQStoreAndForward() throws Exception {
         logReader.start();
         client.sendRobust(Utils.getStockQuoteRequest("RMQ"), getProxyServiceURLHttp("rmqstoreTestProxy"), "getQuote");

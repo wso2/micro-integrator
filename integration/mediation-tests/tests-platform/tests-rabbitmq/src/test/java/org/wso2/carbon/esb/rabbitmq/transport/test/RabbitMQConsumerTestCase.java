@@ -17,6 +17,8 @@
 
 package org.wso2.carbon.esb.rabbitmq.transport.test;
 
+import java.io.IOException;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -29,8 +31,6 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
 import org.wso2.esb.integration.common.utils.common.FixedSizeSymbolGenerator;
-
-import java.io.IOException;
 
 /**
  * RabbitMQConsumerTestCase tests EI as a rabbitmq consumer for small messages as well as large messages.
@@ -53,7 +53,7 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
         logReader = new CarbonLogReader();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer ")
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer ", enabled = false)
     public void testRabbitMQConsumer() throws Exception {
         logReader.start();
 
@@ -70,7 +70,8 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ Consumer with large messages ~10KB")
+    @Test(groups = {"wso2.esb"}, description = "Test ESB as a RabbitMQ Consumer with large messages ~10KB",
+          enabled = false)
     public void testRabbitMQConsumerLargeMessage() throws Exception {
         logReader = new CarbonLogReader();
         logReader.start();
@@ -84,7 +85,8 @@ public class RabbitMQConsumerTestCase extends ESBIntegrationTest {
         Thread.sleep(20000);
 
         logReader.stop();
-        Assert.assertEquals(logReader.getNumberOfOccurencesForLog("received = true"), 200, "All messages are not received from queue");
+        Assert.assertEquals(logReader.getNumberOfOccurencesForLog("received = true"), 200,
+                            "All messages are not received from queue");
     }
 
     @AfterClass(alwaysRun = true)

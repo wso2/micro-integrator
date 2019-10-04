@@ -35,13 +35,11 @@ import static org.wso2.esb.integration.common.utils.Utils.assertIfSystemLogConta
  */
 public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
 
-    CarbonLogReader logReader = new CarbonLogReader();
     private static final String PROXY_NAME = "aggregateEmptyJsonPayloadTestProxy";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        logReader.start();
     }
 
     /**
@@ -50,9 +48,10 @@ public class AggregateEmptyJsonPayloadTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ")
+    @Test(groups = "wso2.esb", description = "Test CorrelateOn in Aggregate mediator ", enabled = false)
     public void testAggregateEmptyJsonPayload() throws Exception {
-
+        CarbonLogReader logReader = new CarbonLogReader();
+        logReader.start();
         String inputPayload = "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\">\n"
                 + "<soapenv:Header/>\n" + "<soapenv:Body>\n" + "<m0:getQuote xmlns:m0=\"http://services.samples\">\n"
                 + " <m0:request>IBM\n" + " </m0:request>\n" + "   <m0:request>WSO2\n" + " </m0:request>\n"

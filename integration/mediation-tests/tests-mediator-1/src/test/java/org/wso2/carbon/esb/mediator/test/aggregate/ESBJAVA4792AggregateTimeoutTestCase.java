@@ -51,7 +51,7 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
-            + "aggregator timeout when iterator is used")
+            + "aggregator timeout when iterator is used", enabled = false)
     public void checkOnCompleteExecutionInIterator() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
@@ -67,7 +67,7 @@ public class ESBJAVA4792AggregateTimeoutTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Make sure that on complete is not triggered when message received after "
-            + "aggregator timeout when clone is used")
+            + "aggregator timeout when clone is used", enabled = false)
     public void checkOnCompleteExecutionInClone() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();

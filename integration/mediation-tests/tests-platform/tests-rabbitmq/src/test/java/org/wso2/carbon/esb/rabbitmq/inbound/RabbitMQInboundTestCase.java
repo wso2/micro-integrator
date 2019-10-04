@@ -29,7 +29,6 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.rabbitmqclient.RabbitMQProducerClient;
 
-import java.io.File;
 
 /**
  * Includes a test case which deploys a simple rabbitmq inbound endpoint and tests for message consumption through
@@ -52,7 +51,7 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
      *
      * @throws Exception if an error occurs while accessing the logViewer client or while publishing messages.
      */
-    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ inbound endpoint ")
+    @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ inbound endpoint ", enabled = false)
     public void testRabbitMQInboundEndpoint() throws Exception {
         sender = RabbitMQServerInstance.createProducerWithDeclaration("exchange", "simple_inbound_endpoint_test");
 
@@ -80,7 +79,7 @@ public class RabbitMQInboundTestCase extends ESBIntegrationTest {
      *                   endpoint.
      */
     @Test(groups = { "wso2.esb" }, description = "Test ESB RabbitMQ inbound endpoint deployment with incorrect server "
-            + "port")
+            + "port", enabled = false)
     public void testRabbitMQInboundEndpointDeploymentWithInvalidServerConfigs() throws Exception {
         logReader.start();
         CarbonServerExtension.restartServer();

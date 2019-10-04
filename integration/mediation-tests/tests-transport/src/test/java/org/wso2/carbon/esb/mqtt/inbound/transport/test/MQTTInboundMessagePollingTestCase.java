@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.esb.mqtt.inbound.transport.test;
 
+import java.io.File;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
@@ -33,8 +35,6 @@ import org.wso2.esb.integration.common.extensions.jmsserver.ActiveMQServerExtens
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
-
-import java.io.File;
 
 /**
  * This test case is to check if Inbound MQTT Transport receives MQTT messages once deployed
@@ -61,7 +61,8 @@ public class MQTTInboundMessagePollingTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Check if Inbound MQTT Transport receives messages without issue")
+    @Test(groups = {"wso2.esb"}, description = "Check if Inbound MQTT Transport receives messages without issue",
+          enabled = false)
     public void testMQTTInboundEndpointMessagePolling() throws Exception {
         //connect to broker and publish a message
         String brokerURL = "tcp://localhost:1883";

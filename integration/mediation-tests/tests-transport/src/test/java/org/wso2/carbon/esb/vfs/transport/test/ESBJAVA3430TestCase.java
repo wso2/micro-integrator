@@ -1,5 +1,7 @@
 package org.wso2.carbon.esb.vfs.transport.test;
 
+import java.io.File;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.io.FileUtils;
@@ -11,8 +13,6 @@ import org.wso2.carbon.automation.extensions.servers.ftpserver.FTPServerManager;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.io.File;
 
 /**
  * Related to https://wso2.org/jira/browse/ESBJAVA-3430 This class tests whether
@@ -74,7 +74,8 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
         carbonLogReader.stop();
     }
 
-    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP directly in root directory")
+    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP directly in root directory",
+          enabled = false)
     public void TestCreateFileInRoot() throws Exception {
 
         // To check the timed out exception happened
@@ -94,10 +95,11 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
         boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", DEFAULT_TIMEOUT);
         carbonLogReader.clearLogs();
         Assert.assertFalse(isError && timeout,
-                " The null check for the replyFile.getParent() in VFSTransportSender is not available");
+                           " The null check for the replyFile.getParent() in VFSTransportSender is not available");
     }
 
-    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP, in a directory under root")
+    @Test(groups = "wso2.esb", description = "VFS NPE in Creating a File in FTP, in a directory under root",
+          enabled = false)
     public void TestCreateFileInDirectoryUnderRoot() throws Exception {
 
         // To check the timed out exception happened
@@ -115,6 +117,6 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
         // To check whether the NPE happened
         boolean isError = carbonLogReader.checkForLog("Error creating file under the FTP root", DEFAULT_TIMEOUT);
         Assert.assertFalse(isError && timeout,
-                " The null check for the replyFile.getParent() in VFSTransportSender is not available");
+                           " The null check for the replyFile.getParent() in VFSTransportSender is not available");
     }
 }

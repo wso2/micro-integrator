@@ -65,7 +65,7 @@ public class MailToTransportRemoveHeaderTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test email transport remove header parameter")
+    @Test(groups = { "wso2.esb" }, description = "Test email transport remove header parameter", enabled = false)
     public void testEmailRemoveHeaderTransport() throws Exception {
         Date date = new Date();
         String emailSubject = "Remove Headers Test : " + new Timestamp(date.getTime());

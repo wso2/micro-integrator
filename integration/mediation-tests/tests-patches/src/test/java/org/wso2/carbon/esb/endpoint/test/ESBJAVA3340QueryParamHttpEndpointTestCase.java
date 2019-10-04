@@ -32,12 +32,13 @@ public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTes
     public void init() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
     @Test(groups = {
-            "wso2.esb"}, description = "Sending a Message Via REST to test query param works with space character")
+            "wso2.esb"}, description = "Sending a Message Via REST to test query param works with space character",
+          enabled = false)
     public void testPassParamsToEndpoint() throws InterruptedException {
+        carbonLogReader.start();
         String requestString = "/context?queryParam=some%20value";
         boolean isSpaceCharacterEscaped;
         try {
@@ -49,7 +50,7 @@ public class ESBJAVA3340QueryParamHttpEndpointTestCase extends ESBIntegrationTes
         carbonLogReader.stop();
 
         Assert.assertTrue(isSpaceCharacterEscaped,
-                "Fail to send a message via REST when query parameter consist of space character");
+                          "Fail to send a message via REST when query parameter consist of space character");
     }
 
 }

@@ -33,11 +33,11 @@ public class HeadMethodResponseTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = " Checking response for HEAD request contains a body")
+    @Test(groups = "wso2.esb", description = " Checking response for HEAD request contains a body", enabled = false)
     public void testResponseBodyOfHEADRequest() throws Exception {
+        carbonLogReader.start();
         SimpleHttpClient httpClient = new SimpleHttpClient();
         httpClient.doGet(contextUrls.getServiceUrl() + "/HeadMethodResponseTestClientProxy", null);
 

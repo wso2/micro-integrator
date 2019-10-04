@@ -30,16 +30,16 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import static org.testng.Assert.assertTrue;
 
 public class APIHeadMethod extends ESBIntegrationTest {
-    CarbonLogReader logReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        logReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "API HTTP HEAD Method")
+    @Test(groups = "wso2.esb", description = "API HTTP HEAD Method", enabled = false)
     public void apiHTTPHeadMethodTest() throws Exception {
+        CarbonLogReader logReader = new CarbonLogReader();
+        logReader.start();
         String restURL = "http://localhost:8480/headTest";
         DefaultHttpClient httpclient = new DefaultHttpClient();
 

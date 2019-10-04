@@ -18,11 +18,11 @@
 package org.wso2.carbon.esb.mediator.test.property;
 
 import org.apache.axiom.om.OMElement;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -40,7 +40,8 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
         carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (default scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (default scope)",
+          enabled = false)
     public void testIntVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -50,7 +51,8 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
         assertTrue(isMatchFound("symbol = 123"), "Integer Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (default scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (default scope)",
+          enabled = false)
     public void testStringVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -61,7 +63,8 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
                 "String Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (default scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (default scope)",
+          enabled = false)
     public void testFloatVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -71,7 +74,8 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
         assertTrue(isMatchFound("symbol = 123.123"), "Float Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (default scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (default scope)",
+          enabled = false)
     public void testLongVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -81,7 +85,8 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
         assertTrue(isMatchFound("symbol = 123123123"), "Long Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (default scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (default scope)",
+          enabled = false)
     public void testShortVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -91,7 +96,7 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
         assertTrue(isMatchFound("symbol = 12"), "Short Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (default scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (default scope)", enabled = false)
     public void testOMVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -109,5 +114,10 @@ public class PropertyIntegrationDefaultScopeRemovePropertiesTestCase extends ESB
         boolean isSet = carbonLogReader.checkForLog(matchStr, DEFAULT_TIMEOUT) &&
                 carbonLogReader.checkForLog("symbol = null", DEFAULT_TIMEOUT);
         return isSet;
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        carbonLogReader.stop();
     }
 }

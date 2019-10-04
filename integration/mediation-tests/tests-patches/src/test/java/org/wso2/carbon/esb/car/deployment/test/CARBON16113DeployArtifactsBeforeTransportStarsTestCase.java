@@ -48,7 +48,8 @@ public class CARBON16113DeployArtifactsBeforeTransportStarsTestCase extends ESBI
         carbonLogReader.stop();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Testing whether CApp is deployed before transport starts")
+    @Test(groups = {"wso2.esb"}, description = "Testing whether CApp is deployed before transport starts",
+          enabled = false)
     public void carReDeploymentTest() {
         boolean cappBeforeTransport = false;
         String logs = carbonLogReader.getLogs();

@@ -66,7 +66,7 @@ public class MailToTransportActionAfterProcessDeleteTestCase extends ESBIntegrat
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test email transport action after process delete")
+    @Test(groups = { "wso2.esb" }, description = "Test email transport action after process delete", enabled = false)
     public void testEmailTransportActionAfterProcessDelete() throws Exception {
         Date date = new Date();
         emailSubject = "Process Delete : " + new Timestamp(date.getTime());

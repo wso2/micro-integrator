@@ -25,8 +25,6 @@ import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static org.testng.Assert.assertTrue;
 
@@ -42,14 +40,14 @@ public class ForEachJSONPayloadTestCase extends ESBIntegrationTest {
     public void uploadSynapseConfig() throws Exception {
         super.init();
         verifyProxyServiceExistence("foreachJSONTestProxy");
-        carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         headers = new HashMap<>();
         headers.put("Accept-Charset", "UTF-8");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test ForEach mediator with JSON payload")
+    @Test(groups = {"wso2.esb"}, description = "Test ForEach mediator with JSON payload", enabled = false)
     public void testForEachMediatorWithJSONPayload() throws Exception {
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         String request = "{\"getQuote\":{\"request\":[{\"symbol\":\"IBM\"},{\"symbol\":\"WSO2\"},{\"symbol\":\"MSFT\"}]}}";
 
         simpleHttpClient = new SimpleHttpClient();

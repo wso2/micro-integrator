@@ -1,5 +1,7 @@
 package org.wso2.carbon.esb.mediators.callout;
 
+import java.rmi.RemoteException;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -11,8 +13,6 @@ import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
-import java.rmi.RemoteException;
-
 public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
     private CarbonLogReader carbonLogReader;
 
@@ -23,11 +23,12 @@ public class ESBJAVA_4239_AccessHTTPSCAfterCallout extends ESBIntegrationTest {
     public void deployeService() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test whether an HTTP SC can be retrieved after the callout mediator.")
+    @Test(groups = {"wso2.esb"}, description = "Test whether an HTTP SC can be retrieved after the callout mediator.",
+          enabled = false)
     public void testFetchHTTP_SC_After_Callout_Mediator() throws RemoteException, InterruptedException {
+        carbonLogReader.start();
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         AxisServiceClient client = new AxisServiceClient();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");

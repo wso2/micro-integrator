@@ -26,19 +26,18 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 public class CallTemplateIntegrationParamsWithValuesTestCase extends ESBIntegrationTest {
-    private CarbonLogReader carbonLogReader;
     private String proxyServiceName = "CallTemplateIntegrationParamsWithValuesTestCaseProxy";
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Call Template Mediator Sample Parameters with"
-            + " values assigned test")
+            + " values assigned test", enabled = false)
     public void testTemplatesParameter() throws Exception {
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp(proxyServiceName), null, "IBM");
         boolean requestLog = false;

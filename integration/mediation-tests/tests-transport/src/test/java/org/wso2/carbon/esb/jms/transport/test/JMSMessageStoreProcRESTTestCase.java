@@ -18,6 +18,9 @@
 
 package org.wso2.carbon.esb.jms.transport.test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.http.HttpResponse;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -27,10 +30,6 @@ import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.testng.Assert.assertEquals;
 
 public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
@@ -59,7 +58,8 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "JMS Message store/processor support for RESTful services.")
+    @Test(groups = {"wso2.esb"}, description = "JMS Message store/processor support for RESTful services.",
+          enabled = false)
     public void testJMSMessageStoreAndProcessor() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
@@ -69,8 +69,8 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         assertEquals(response.getStatusLine().getStatusCode(), 202);
 
         Assert.assertTrue(carbonLogReader.checkForLog(logLine0, DEFAULT_TIMEOUT) &&
-                        carbonLogReader.checkForLog(logLine1, DEFAULT_TIMEOUT),
-                "Expected messages are not logged in JMSMessageStoreProcRESTTestCase.");
+                                  carbonLogReader.checkForLog(logLine1, DEFAULT_TIMEOUT),
+                          "Expected messages are not logged in JMSMessageStoreProcRESTTestCase.");
         carbonLogReader.stop();
     }
 

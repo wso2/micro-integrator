@@ -44,7 +44,7 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20")
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~20", enabled = false)
     public void testSmallNumbers() throws Exception {
         carbonLogReader.clearLogs();
 
@@ -64,7 +64,7 @@ public class ForEachSmallMessageTestCase extends ESBIntegrationTest {
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 20), "Count of messages entered ForEach scope is incorrect");
     }
 
-    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100")
+    @Test(groups = "wso2.esb", description = "Tests small message in small number ~100", enabled = false)
     public void testLargeNumbers() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = null;

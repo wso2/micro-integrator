@@ -42,7 +42,7 @@ public class LogMediatorLevelTest extends ESBIntegrationTest {
         Thread.sleep(2000);
     }
 
-    @Test(groups = "wso2.esb", description = "Tests System Logs")
+    @Test(groups = "wso2.esb", description = "Tests System Logs", enabled = false)
     public void testSystemLogs() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();

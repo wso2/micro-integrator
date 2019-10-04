@@ -63,7 +63,7 @@ public class NativeJsonSupportByNashornJsTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with NashornJS")
+    @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with NashornJS", enabled = false)
     public void testSerializingJson() throws Exception {
         carbonLogReader.clearLogs();
         Map<String, String> httpHeaders = new HashMap<>();

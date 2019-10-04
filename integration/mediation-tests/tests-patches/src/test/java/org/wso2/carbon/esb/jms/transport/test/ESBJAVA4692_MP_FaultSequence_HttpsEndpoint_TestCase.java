@@ -32,7 +32,7 @@ public class ESBJAVA4692_MP_FaultSequence_HttpsEndpoint_TestCase extends ESBInte
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "MP Fault Sequence test case for https")
+    @Test(groups = {"wso2.esb"}, description = "MP Fault Sequence test case for https", enabled = false)
     public void testCalloutJMSHeaders() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();

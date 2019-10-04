@@ -17,6 +17,9 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
+import java.util.Iterator;
+import javax.xml.namespace.QName;
+
 import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
@@ -25,9 +28,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.esb.mediator.test.iterate.IterateClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.util.Iterator;
-import javax.xml.namespace.QName;
 
 /**
  * Test a complete flow of modifying payload using a payloadfactorymediator within foreach mediator
@@ -72,7 +72,10 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
         Assert.assertEquals(i, 2, "Message count mismatched in response");
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and aggregate mediators")
+    @Test(groups = "wso2.esb",
+          description = "Test foreach sequence ref to transform payload, passed to endpoint using iterate and " +
+                  "aggregate mediators",
+          enabled = false)
     public void testForEachSequenceRefWithIterateEndpoint() throws Exception {
         carbonLogReader.clearLogs();
         String response = client

@@ -40,7 +40,8 @@ public class CloneFunctionalContextTestCase extends ESBIntegrationTest {
         carbonLogReader = new CarbonLogReader();
     }
 
-    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry")
+    @Test(groups = "wso2.esb", description = "Tests SEQUENCES from  the governance registry and configuration registry",
+          enabled = false)
     public void testSequence() throws Exception {
         carbonLogReader.start();
 

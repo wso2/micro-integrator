@@ -56,7 +56,7 @@ public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationT
 
     @Test(groups = {"wso2.esb"},
             description = "Testing whether a deactivated Message Processor from a capp is deployed successfully " +
-                    "upon ESB server restart")
+                    "upon ESB server restart", enabled = false)
     public void testDeactivatedMPUponServerRestart() throws Exception {
 
         CarbonLogReader carbonLogReader = new CarbonLogReader();
@@ -81,6 +81,7 @@ public class DeactivatedCappMPBehaviourOnRestartTestCase extends ESBIntegrationT
                 "Error occurred while deploying Carbon Application!");
         Assert.assertTrue(Utils.logExists(carbonLogReader, SUCCESS_MESSAGE, 10),
                 "Unable to deploy Carbon Application!");
+        carbonLogReader.stop();
     }
 
     /*

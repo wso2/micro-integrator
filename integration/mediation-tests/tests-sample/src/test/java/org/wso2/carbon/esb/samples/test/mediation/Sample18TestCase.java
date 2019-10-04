@@ -42,11 +42,11 @@ public class Sample18TestCase extends ESBSampleIntegrationTest {
     public void uploadSynapseConfig() throws Exception {
         super.init();
         endpoint = getProxyServiceURLHttp("Sample18TestCaseProxy");
-        carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using ForEachMediator")
+    @Test(groups = { "wso2.esb" }, description = "Transforming a Message Using ForEachMediator", enabled = false)
     public void testTransformWithForEachMediator() throws Exception {
+        carbonLogReader.start();
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
                         + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"

@@ -40,7 +40,7 @@ public class InjectToSequenceTestCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" })
+    @Test(groups = { "wso2.esb" }, enabled = false)
     public void injectToSequenceTest() throws Exception {
         OMElement task = AXIOMUtil.stringToOM(
                 "<task xmlns=\"http://ws.apache.org/ns/synapse\"\n"

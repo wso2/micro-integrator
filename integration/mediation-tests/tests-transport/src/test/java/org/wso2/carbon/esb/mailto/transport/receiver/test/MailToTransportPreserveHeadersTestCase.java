@@ -67,7 +67,7 @@ public class MailToTransportPreserveHeadersTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test email transport preserve header parameter")
+    @Test(groups = { "wso2.esb" }, description = "Test email transport preserve header parameter", enabled = false)
     public void testEmailPreserveHeaderTransport() throws Exception {
         Date date = new Date();
         String emailSubject = "Preserve Headers Test : " + new Timestamp(date.getTime());

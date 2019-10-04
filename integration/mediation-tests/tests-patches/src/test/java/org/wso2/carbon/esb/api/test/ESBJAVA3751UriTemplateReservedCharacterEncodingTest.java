@@ -38,7 +38,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved character : ")
+            + " reserved character : ", enabled = false)
     public void testURITemplateExpandWithPercentEncoding() throws Exception {
         carbonLogReader.clearLogs();
         boolean isPercentEncoded = false;
@@ -51,7 +51,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of reserved "
-            + "character : with percent encoding escaped at uri-template expansion")
+            + "character : with percent encoding escaped at uri-template expansion", enabled = false)
     public void testURITemplateExpandWithEscapedPercentEncoding() throws Exception {
         boolean isPercentEncoded = false;
         carbonLogReader.clearLogs();
@@ -64,7 +64,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a path param consist of"
-            + " reserved character : ")
+            + " reserved character : ", enabled = false)
     public void testURITemplateExpandWithPercentEncodingPathParamCase() throws Exception {
         carbonLogReader.clearLogs();
         boolean isPercentEncoded = false;
@@ -77,7 +77,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a path param consist of reserved "
-            + "character : with percent encoding escaped at uri-template expansion")
+            + "character : with percent encoding escaped at uri-template expansion", enabled = false)
     public void testURITemplateExpandWithEscapedPercentEncodingPathParam() throws Exception {
         carbonLogReader.clearLogs();
         boolean isPercentEncoded = false;
@@ -90,7 +90,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved space character ")
+            + " reserved space character ", enabled = false)
     public void testURITemplateParameterDecodingSpaceCharacterCase() throws Exception {
         carbonLogReader.clearLogs();
         boolean isPercentEncoded = false;
@@ -108,7 +108,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved + character ")
+            + " reserved + character ", enabled = false)
     public void testURITemplateParameterDecodingPlusCharacterCase() throws Exception {
         carbonLogReader.clearLogs();
         boolean isPercentEncoded = false;
@@ -126,7 +126,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a query param consist of"
-            + " reserved + character ")
+            + " reserved + character ", enabled = false)
     public void testURITemplateParameterDecodingWithPercentEncodingEscapedAtExpansion() throws Exception {
         carbonLogReader.clearLogs();
         boolean isPercentEncoded = false;
@@ -143,7 +143,7 @@ public class ESBJAVA3751UriTemplateReservedCharacterEncodingTest extends ESBInte
     }
 
     @Test(groups = { "wso2.esb" }, description = "Sending http request with a path param consist of"
-            + " whole URL including protocol , host , port etc. ")
+            + " whole URL including protocol , host , port etc. ", enabled = false)
     public void testURITemplateSpecialCaseVariableWithFullURL() throws Exception {
         carbonLogReader.clearLogs();
         boolean isPercentEncoded = false;

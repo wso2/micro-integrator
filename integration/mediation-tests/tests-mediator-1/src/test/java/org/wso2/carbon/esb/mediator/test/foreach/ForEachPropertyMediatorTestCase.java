@@ -17,16 +17,15 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
-
-import java.util.HashMap;
-import java.util.Map;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -47,7 +46,8 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
         headers.put("Accept-Charset", "UTF-8");
     }
 
-    @Test(groups = "wso2.esb", description = "Test multiple foreach constructs with property mediator in flow")
+    @Test(groups = "wso2.esb", description = "Test multiple foreach constructs with property mediator in flow",
+          enabled = false)
     public void testForEachPropertyMediator() throws Exception {
         carbonLogReader.clearLogs();
         String request =
@@ -91,7 +91,8 @@ public class ForEachPropertyMediatorTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Test nested foreach constructs with property mediator in flow")
+    @Test(groups = "wso2.esb", description = "Test nested foreach constructs with property mediator in flow",
+          enabled = false)
     public void testNestedForEachPropertiesWithID() throws Exception {
         carbonLogReader.clearLogs();
         String request =

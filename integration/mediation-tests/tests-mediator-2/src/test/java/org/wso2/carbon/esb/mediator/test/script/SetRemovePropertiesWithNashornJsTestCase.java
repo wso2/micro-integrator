@@ -46,7 +46,7 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         carbonLogReader.stop();
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator")
+    @Test(groups = "wso2.esb", description = "Set a property with axis2 scope in script mediator", enabled = false)
     public void testSetPropertyWithAxis2ScopeInScript() throws Exception {
         carbonLogReader.clearLogs();
         boolean propertySet;
@@ -61,7 +61,7 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         Assert.assertTrue(propertyRemoved, " The property with axis2 scope is not removed ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator")
+    @Test(groups = "wso2.esb", description = "Set a property with transport scope in script mediator", enabled = false)
     public void testSetPropertyWithTransportScopeInScript() throws Exception {
         carbonLogReader.clearLogs();
         boolean propertySet;
@@ -76,7 +76,7 @@ public class SetRemovePropertiesWithNashornJsTestCase extends ESBIntegrationTest
         Assert.assertTrue(propertyRemoved, " The property with transport scope is not removed ");
     }
 
-    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator")
+    @Test(groups = "wso2.esb", description = "Set a property with operation scope in script mediator", enabled = false)
     public void testSetPropertyWithOperationScopeInScript() throws Exception {
         carbonLogReader.clearLogs();
         boolean propertySet;

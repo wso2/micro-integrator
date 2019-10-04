@@ -33,12 +33,11 @@ public class JMSOutOnlyTestCase extends ESBIntegrationTest {
     protected void init() throws Exception {
         super.init();
         carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test proxy service with out-only jms transport")
+    @Test(groups = { "wso2.esb" }, description = "Test proxy service with out-only jms transport", enabled = false)
     public void testJMSProxy() throws Exception {
-
+        carbonLogReader.start();
         AxisServiceClient client = new AxisServiceClient();
         String payload = "<?xml version='1.0' encoding='UTF-8'?>"
                 + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\""

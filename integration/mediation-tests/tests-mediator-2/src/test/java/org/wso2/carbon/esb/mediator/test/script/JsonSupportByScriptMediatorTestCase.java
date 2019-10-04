@@ -63,7 +63,7 @@ public class JsonSupportByScriptMediatorTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with JS")
+    @Test(groups = { "wso2.esb" }, description = "Serialize JSON payload with JS", enabled = false)
     public void testSerializingJson() throws Exception {
         carbonLogReader.clearLogs();
         Map<String, String> httpHeaders = new HashMap<>();

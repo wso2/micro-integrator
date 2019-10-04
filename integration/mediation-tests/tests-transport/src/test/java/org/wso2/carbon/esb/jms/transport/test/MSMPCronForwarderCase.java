@@ -55,7 +55,7 @@ public class MSMPCronForwarderCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor")
+    @Test(groups = { "wso2.esb" }, description = "Test Cron Forwarding of message processor", enabled = false)
     public void testMessageProcessorCronForwader() throws Exception {
 
         // SEND THE REQUEST

@@ -83,7 +83,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Send sample request")
+    @Test(groups = "wso2.esb", description = "Send sample request", enabled = false)
     public void testSendingToDefinedProxies() throws Exception {
 
         OMElement response = axis2Client

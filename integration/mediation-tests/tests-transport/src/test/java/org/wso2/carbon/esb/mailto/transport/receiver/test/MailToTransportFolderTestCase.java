@@ -62,7 +62,7 @@ public class MailToTransportFolderTestCase extends ESBIntegrationTest {
         GreenMailServer.deleteAllEmails("imap");
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test email transport folder parameter")
+    @Test(groups = { "wso2.esb" }, description = "Test email transport folder parameter", enabled = false)
     public void testEmailTransportFolder() throws Exception {
         Date date = new Date();
         emailSubject = "Folder Test : " + new Timestamp(date.getTime());

@@ -38,11 +38,11 @@ public class DistributedCachingHeaderSerializationTestcase extends ESBIntegratio
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "cache meditor test enabling axis2 clustering.")
+    @Test(groups = "wso2.esb", description = "cache meditor test enabling axis2 clustering.", enabled = false)
     public void testDistributedCachingHeaderSerialization() throws Exception {
+        carbonLogReader.start();
         String requestXml = "<a>ABC</a>";
 
         SimpleHttpClient httpClient = new SimpleHttpClient();

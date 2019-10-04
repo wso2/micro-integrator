@@ -18,6 +18,8 @@
 
 package org.wso2.carbon.esb.mailto.transport.receiver.test;
 
+import java.io.File;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
@@ -28,9 +30,6 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
-
-import java.io.File;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -58,10 +57,11 @@ public class MailToTransportInvalidAddressTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test email transport with invalid address parameter and pop3 protocol")
+            "wso2.esb"}, description = "Test email transport with invalid address parameter and pop3 protocol",
+          enabled = false)
     public void testEmailTransportInvalidAddress() throws Exception {
         assertTrue(carbonLogReader.checkForLog("Error connecting to mail server for address", DEFAULT_TIMEOUT),
-                "Couldn't find the error message in log");
+                   "Couldn't find the error message in log");
     }
 
     @AfterClass(alwaysRun = true)

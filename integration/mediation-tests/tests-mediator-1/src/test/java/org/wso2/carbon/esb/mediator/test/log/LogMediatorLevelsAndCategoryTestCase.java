@@ -63,7 +63,7 @@ public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
         Assert.assertTrue(response.toString().contains("WSO2"), "Did not receive the expected response");
     }
 
-    @Test(groups = "wso2.esb", description = "Test debug level log")
+    @Test(groups = "wso2.esb", description = "Test debug level log", enabled = false)
     public void testDebugLevelLogs() throws InterruptedException {
         Boolean isDebugLogAvailable = isLogAvailable("*****LOGGING IN DEBUG CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isDebugLogAvailable, "DEBUG Log not found. Debug logs not working properly");
@@ -79,49 +79,49 @@ public class LogMediatorLevelsAndCategoryTestCase extends ESBIntegrationTest {
         Assert.assertTrue(isTraceLogAvailable, "TRACE Log not found. Trace logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test info level log")
+    @Test(groups = "wso2.esb", description = "Test info level log", enabled = false)
     public void testInfoLevelLogs() throws InterruptedException {
         Boolean isInfoLogAvailable = isLogAvailable("*****LOGGING IN INFO CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isInfoLogAvailable, "INFO Log not found. Info logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test warn level log")
+    @Test(groups = "wso2.esb", description = "Test warn level log", enabled = false)
     public void testWarnLevelLogs() throws InterruptedException {
         Boolean isWarnLogAvailable = isLogAvailable("*****LOGGING IN WARN CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isWarnLogAvailable, "Warn Log not found. Warn logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test error level log")
+    @Test(groups = "wso2.esb", description = "Test error level log", enabled = false)
     public void testErrorLevelLogs() throws InterruptedException {
         Boolean isErrorLogAvailable = isLogAvailable("*****LOGGING IN ERROR CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isErrorLogAvailable, "Error Log not found. Error logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test fatal level log")
+    @Test(groups = "wso2.esb", description = "Test fatal level log", enabled = false)
     public void testFatalLevelLogs() throws InterruptedException{
         Boolean isFatalLogAvailable = isLogAvailable("*****LOGGING IN FATAL CATEGORY - CUSTOM LEVEL*****");
         Assert.assertTrue(isFatalLogAvailable, "Fatal Log not found. Fatal logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test full level log")
+    @Test(groups = "wso2.esb", description = "Test full level log", enabled = false)
     public void testFullLevelLogs() throws  InterruptedException {
         Boolean isFullLogAvailable = isLogAvailable("*****LOGGING AT FULL LEVEL*****");
         Assert.assertTrue(isFullLogAvailable, "Full level logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test Header level log")
+    @Test(groups = "wso2.esb", description = "Test Header level log", enabled = false)
     public void testHeaderLevelLogs() throws InterruptedException {
         Boolean isHeaderLogAvailable = isLogAvailable("*****LOGGING AT HEADER LEVEL*****");
         Assert.assertTrue(isHeaderLogAvailable, "Header level logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test simple level log")
+    @Test(groups = "wso2.esb", description = "Test simple level log", enabled = false)
     public void testSimpleLevelLogs() throws InterruptedException {
         Boolean isSimpleLogAvailable = isLogAvailable("*****LOGGING AT SIMPLE LEVEL*****");
         Assert.assertTrue(isSimpleLogAvailable, "Simple level logs not working properly");
     }
 
-    @Test(groups = "wso2.esb", description = "Test custom level log")
+    @Test(groups = "wso2.esb", description = "Test custom level log", enabled = false)
     public void testCustomLevelLogs() throws InterruptedException{
         Boolean isCustomLogAvailable = isLogAvailable("*****LOGGING AT CUSTOM LEVEL*****");
         Assert.assertTrue(isCustomLogAvailable, "Custom level logs not working properly");

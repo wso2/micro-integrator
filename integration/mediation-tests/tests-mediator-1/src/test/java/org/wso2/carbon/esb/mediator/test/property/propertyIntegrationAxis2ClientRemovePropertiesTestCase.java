@@ -23,7 +23,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -42,7 +41,8 @@ public class propertyIntegrationAxis2ClientRemovePropertiesTestCase extends ESBI
         carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2-client scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2-client scope)",
+          enabled = false)
     public void testStringVal() throws Exception {
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("propertyAxis2ClientRemoveTestProxy"), null,

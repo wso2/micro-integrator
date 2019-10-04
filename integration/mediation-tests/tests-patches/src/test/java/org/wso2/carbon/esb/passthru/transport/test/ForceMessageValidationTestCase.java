@@ -16,6 +16,11 @@
 
 package org.wso2.carbon.esb.passthru.transport.test;
 
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -26,11 +31,6 @@ import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
-
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * This class tests for force validation passthru-http properties introduced for JSON (force.json.message.validation)
@@ -72,7 +72,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
      * @throws Exception
      */
     @Test(groups = "wso2.esb", description = "Test for invalid JSON payload with force.json.message.validation "
-            + "property.")
+            + "property.", enabled = false)
     public void testInvalidJSONMessage() throws Exception {
         carbonLogReader.clearLogs();
 
@@ -93,7 +93,8 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
      *
      * @throws Exception
      */
-    @Test(groups = "wso2.esb", description = "Test for invalid XML payload with force.xml.message.validation property.")
+    @Test(groups = "wso2.esb", description = "Test for invalid XML payload with force.xml.message.validation property.",
+          enabled = false)
     public void testInvalidXMLMessage() throws Exception {
         carbonLogReader.clearLogs();
 
@@ -106,7 +107,7 @@ public class ForceMessageValidationTestCase extends ESBIntegrationTest {
 
         HttpRequestUtil.doPost(new URL(getApiInvocationURL(API_NAME)), inputPayload, requestHeader);
         Assert.assertTrue(carbonLogReader.checkForLog(expectedOutput, DEFAULT_TIMEOUT),
-                "Test fails for forcing XML validation with force.xml.message.validation passthru-http property.");
+                          "Test fails for forcing XML validation with force.xml.message.validation passthru-http property.");
     }
 
     @AfterClass(alwaysRun = true)

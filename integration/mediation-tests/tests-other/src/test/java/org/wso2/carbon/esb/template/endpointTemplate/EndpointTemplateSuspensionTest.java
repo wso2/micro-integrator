@@ -43,7 +43,7 @@ public class EndpointTemplateSuspensionTest extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb", description = "Test invoking EP which cause timeout and verify whether Endpoint "
-            + "template has been marked for suspension")
+            + "template has been marked for suspension", enabled = false)
     public void testTemplateEndpointSuspension() throws IOException, InterruptedException {
 
         String contentType = "text/xml";//Content-Type

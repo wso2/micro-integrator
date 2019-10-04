@@ -1,5 +1,7 @@
 package org.wso2.carbon.esb.mediators.clone;
 
+import java.rmi.RemoteException;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -9,8 +11,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.rmi.RemoteException;
 
 /**
  * This test is used to verify that the EmptyStackException does NOT occur when
@@ -27,9 +27,7 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
         /* deploying the artifact defined in the proxy_service.xml */
 
         verifyProxyServiceExistence("CloneMediatorEmptyStackProxy");
-
         carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
     /**
@@ -40,8 +38,12 @@ public class ESBJAVA3412EmptyStackExceptionTest extends ESBIntegrationTest {
      * @throws InterruptedException
      * @throws RemoteException
      */
-    @Test(groups = "wso2.esb", description = "Checking for Empty Stack Exception when clone mediators are used with continue parent attribute set to true")
+    @Test(groups = "wso2.esb",
+          description = "Checking for Empty Stack Exception when clone mediators are used with continue parent " +
+                  "attribute set to true",
+          enabled = false)
     public void testForEmptyStackAfterCloned_With_ContinueParent() throws InterruptedException, RemoteException {
+        carbonLogReader.start();
         final String expectedErrorMsg = "Unexpected error executing task/async inject";
         final String expectedStackTrace = "java.util.Stack.peek";
 

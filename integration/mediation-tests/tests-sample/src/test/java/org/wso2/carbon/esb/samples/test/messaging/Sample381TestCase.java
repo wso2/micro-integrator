@@ -30,12 +30,11 @@ public class Sample381TestCase extends ESBSampleIntegrationTest {
 
     @BeforeClass(alwaysRun = true)
     public void startJMSBrokerAndConfigureESB() throws Exception {
-
         super.init();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" }, description = "Test JMS broker with topic")
+    @Test(groups = { "wso2.esb" }, description = "Test JMS broker with topic", enabled = false)
     public void JMSBrokerTopicTest() throws Exception {
 
         int numberOfMsgToExpect = 5;

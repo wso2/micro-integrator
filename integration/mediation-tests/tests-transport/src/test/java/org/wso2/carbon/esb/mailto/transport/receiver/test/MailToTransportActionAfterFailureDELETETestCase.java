@@ -18,6 +18,10 @@
 
 package org.wso2.carbon.esb.mailto.transport.receiver.test;
 
+import java.io.File;
+import java.sql.Timestamp;
+import java.util.Date;
+
 import com.icegreen.greenmail.user.GreenMailUser;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
@@ -30,11 +34,6 @@ import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.clients.GreenMailClient;
 import org.wso2.esb.integration.common.utils.servers.GreenMailServer;
-
-import java.io.File;
-import java.sql.Timestamp;
-import java.util.Date;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -67,14 +66,15 @@ public class MailToTransportActionAfterFailureDELETETestCase extends ESBIntegrat
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test email transport received action after failure delete")
+    @Test(groups = {"wso2.esb"}, description = "Test email transport received action after failure delete",
+          enabled = false)
     public void testEmailTransportActionAfterFailureDELETE() throws Exception {
         Date date = new Date();
         emailSubject = "Failure Delete : " + new Timestamp(date.getTime());
         greenMailClient.sendMail(emailSubject);
 
-        assertTrue(carbonLogReader.checkForLog( "Failed to process message", DEFAULT_TIMEOUT),
-                "Couldn't get the failure message!");
+        assertTrue(carbonLogReader.checkForLog("Failed to process message", DEFAULT_TIMEOUT),
+                   "Couldn't get the failure message!");
 
         assertTrue(GreenMailServer.checkEmailDeleted(emailSubject, "imap"), "Mail has not been deleted successfully");
     }

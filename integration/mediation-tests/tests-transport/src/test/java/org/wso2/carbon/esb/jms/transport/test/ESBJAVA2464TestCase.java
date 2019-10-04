@@ -15,18 +15,20 @@ public class ESBJAVA2464TestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        carbonLogReader.start();
     }
 
-    @Test(groups = {
-            "wso2.esb" }, description = "Test ESBJAVA2464 proxy service with jms and nonBlockingLocal transport")
+    @Test(groups = {"wso2.esb"}, description = "Test ESBJAVA2464 proxy service with jms and nonBlockingLocal transport",
+          enabled = false)
     public void testMessageInjection() throws Exception {
+        carbonLogReader.start();
         Thread.sleep(7000);
 
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         String message = "<?xml version='1.0' encoding='UTF-8'?>"
-                + "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">"
+                +
+                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
+                "xmlns:echo=\"http://echo.services.core.carbon.wso2.org\">"
                 + "  <soapenv:Header/>" + "  <soapenv:Body>" + "     <echo:echoInt>" + "        <!--Optional:-->"
                 + "       <in>1</in>" + "     </echo:echoInt>" + "  </soapenv:Body>" + "</soapenv:Envelope>";
 

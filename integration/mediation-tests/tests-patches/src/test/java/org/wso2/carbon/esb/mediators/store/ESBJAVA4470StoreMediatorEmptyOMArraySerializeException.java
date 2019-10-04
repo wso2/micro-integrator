@@ -18,14 +18,13 @@
 
 package org.wso2.carbon.esb.mediators.store;
 
+import java.util.concurrent.TimeUnit;
+
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.util.concurrent.TimeUnit;
-
 import static org.testng.Assert.assertFalse;
 
 public class ESBJAVA4470StoreMediatorEmptyOMArraySerializeException extends ESBIntegrationTest {
@@ -35,7 +34,8 @@ public class ESBJAVA4470StoreMediatorEmptyOMArraySerializeException extends ESBI
         super.init();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test if Store Mediator Serialize Empty OM Array without Exception")
+    @Test(groups = {"wso2.esb"}, description = "Test if Store Mediator Serialize Empty OM Array without Exception",
+          enabled = false)
     public void testStoreMediatorEmptyOMArrayPropertySerialize() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
@@ -47,6 +47,7 @@ public class ESBJAVA4470StoreMediatorEmptyOMArraySerializeException extends ESBI
         boolean logFound = carbonLogReader.checkForLog("Index: 0, Size: 0", DEFAULT_TIMEOUT) &&
                 carbonLogReader.checkForLog("ERROR", DEFAULT_TIMEOUT);
         assertFalse(logFound, "Exception thrown when serializing OM Array property by Store Mediator");
+        carbonLogReader.stop();
     }
 
 }

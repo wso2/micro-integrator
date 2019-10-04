@@ -27,7 +27,6 @@ import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -43,7 +42,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Check whether polling is suspended.")
+    @Test(groups = { "wso2.esb" }, description = "Check whether polling is suspended.", enabled = false)
     public void testPollingWithSuspensionLimit() throws Exception {
 
         pushMessageToQue(addEndpoint());
@@ -54,13 +53,14 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, "inbound-endpoints", true);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Check whether polling is permanently suspended when limit is zero.")
+    @Test(groups = {"wso2.esb"}, description = "Check whether polling is permanently suspended when limit is zero.",
+          enabled = false)
     public void testPollingWithSuspensionLimitAsZero() throws Exception {
 
         pushMessageToQue(addEndpointWithSuspensionLimitZero());
 
         assertTrue(Utils.checkForLog(carbonLogReader, "Polling is suspended permanently", 10),
-                "JMS Polling is not permanently suspended though the suspension limit is 0.");
+                   "JMS Polling is not permanently suspended though the suspension limit is 0.");
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, "inbound-endpoints", true);
     }
 

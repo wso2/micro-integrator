@@ -41,7 +41,7 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb",
-            description = "Tests large message in small number 5")
+            description = "Tests large message in small number 5", enabled = false)
     public void testSmallNumbers() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response;
@@ -61,7 +61,7 @@ public class ForEachLargeMessageTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb",
-            description = "Tests large message in large number 10")
+            description = "Tests large message in large number 10", enabled = false)
     public void testLargeNumbers() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response;

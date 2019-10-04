@@ -49,7 +49,7 @@ public class FaultSequenceExecutionOrderTestCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Correct Fault Sequence Invoke Test")
+    @Test(groups = {"wso2.esb"}, description = "Correct Fault Sequence Invoke Test", enabled = false)
     public void testCorrectFaultSequenceExecution() throws Exception {
         String contentType = "application/xml";
         SimpleHttpClient httpClient = new SimpleHttpClient();

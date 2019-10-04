@@ -25,7 +25,6 @@ import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -42,13 +41,16 @@ public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test successful deployment of scheduled task with large interval value")
+            "wso2.esb"}, description = "Test successful deployment of scheduled task with large interval value",
+          enabled = false)
     public void testDeployWithLargeIntervalValue() throws Exception {
 
         OMElement task = AXIOMUtil.stringToOM(
                 "<task xmlns=\"http://ws.apache.org/ns/synapse\"\n"
                         + "           name=\"ESBJAVA5234TestTask\"\n"
-                        + "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple.quartz\">\n"
+                        +
+                        "           class=\"org.apache.synapse.startup.tasks.MessageInjector\" group=\"synapse.simple" +
+                        ".quartz\">\n"
                         + "    <trigger count=\"1\" interval=\"25920000\"/>\n"
                         + "    <property name=\"message\" "
                         + "xmlns:task=\"http://www.wso2.org/products/wso2commons/tasks\">\n"
@@ -65,7 +67,7 @@ public class TaskWithLargeIntervalValueTestCase extends ESBIntegrationTest {
         Utils.deploySynapseConfiguration(task, "ESBJAVA5234TestTask", "tasks", true);
         boolean assertValue = Utils
                 .logExists(carbonLogReader, "injected value from ESBJAVA5234TestTask received",
-                        5);
+                           5);
         assertTrue(assertValue, "Scheduled task with large interval value has not deployed.");
     }
 

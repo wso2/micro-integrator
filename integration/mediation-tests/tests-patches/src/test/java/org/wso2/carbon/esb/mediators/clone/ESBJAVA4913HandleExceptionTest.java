@@ -22,7 +22,7 @@ public class ESBJAVA4913HandleExceptionTest extends ESBIntegrationTest {
     /**
      * Verifies whether the mediator reach error sequence on error while executing.
      */
-    @Test(groups = "wso2.esb", description = "Check if clone mediator reach error sequence on error.")
+    @Test(groups = "wso2.esb", description = "Check if clone mediator reach error sequence on error.", enabled = false)
     public void testExceptionHandlingInCloneMediator() throws Exception{
 
         final String expectedErrorMsg = "This is error sequence from sequenceOne";

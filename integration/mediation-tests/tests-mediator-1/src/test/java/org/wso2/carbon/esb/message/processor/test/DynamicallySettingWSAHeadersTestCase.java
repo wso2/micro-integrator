@@ -17,14 +17,6 @@
  */
 package org.wso2.carbon.esb.message.processor.test;
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
-import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
-import org.wso2.esb.integration.common.utils.CarbonLogReader;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -32,6 +24,14 @@ import java.io.Writer;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
+
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
+import org.wso2.carbon.automation.test.utils.http.client.HttpURLConnectionClient;
+import org.wso2.esb.integration.common.utils.CarbonLogReader;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 /**
  * Test case to test whether message processor is able to handle messages when their WSA headers are set dynamically.
@@ -43,7 +43,9 @@ public class DynamicallySettingWSAHeadersTestCase extends ESBIntegrationTest {
         super.init();
     }
 
-    @Test(groups = "wso2.esb", description = "Testing message Processor handling message when setting wsa headers dynamically")
+    @Test(groups = "wso2.esb",
+          description = "Testing message Processor handling message when setting wsa headers dynamically",
+          enabled = false)
     public void testForwardingWithInMemoryStore()
             throws InterruptedException, MalformedURLException, AutomationFrameworkException {
         CarbonLogReader carbonLogReader = new CarbonLogReader();

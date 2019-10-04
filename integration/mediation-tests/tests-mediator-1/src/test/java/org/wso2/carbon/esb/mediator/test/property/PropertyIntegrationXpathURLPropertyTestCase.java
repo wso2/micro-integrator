@@ -43,7 +43,7 @@ public class PropertyIntegrationXpathURLPropertyTestCase extends ESBIntegrationT
         carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Test getting the  URI element of a request URL")
+    @Test(groups = { "wso2.esb" }, description = "Test getting the  URI element of a request URL", enabled = false)
     public void testXpathURLProperty() throws Exception {
         boolean isUri = false;
         HttpRequestUtil.sendGetRequest(getApiInvocationURL("XpathURLPropertyApi") + "/edit?a=wso2&b=2.4", null);

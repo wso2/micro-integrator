@@ -31,12 +31,13 @@ public class SwitchInsideSwitchTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void beforeClass() throws Exception {
         super.init();
-        carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Switch Mediator: Testing Switch inside Switch Scenario")
+    @Test(groups = {"wso2.esb"}, description = "Switch Mediator: Testing Switch inside Switch Scenario",
+          enabled = false)
     public void testSample2() throws Exception {
+        carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("switchMediatorSwitchInsideSwitchTestProxy"),
                         getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");

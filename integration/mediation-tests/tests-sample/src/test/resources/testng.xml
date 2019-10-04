@@ -55,9 +55,6 @@
         </classes>
     </test>
     <test name="ESB-Sample-Miscellaneous-Test" preserve-order="true" verbose="2">
-        <packages>
-            <package name="org.wso2.carbon.esb.samples.test.miscellaneous.*"/>
-        </packages>
         <classes>
             <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample653TestCase">
                 <methods>
@@ -69,6 +66,10 @@
                     <exclude name=".*"/>
                 </methods>
             </class>
+            <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample654TestCase"/>
+            <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample655TestCase"/>
+            <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample656TestCase"/>
+            <class name="org.wso2.carbon.esb.samples.test.miscellaneous.Sample657TestCase"/>
         </classes>
     </test>
     <test name="ESB-Sample-Proxy-Test" preserve-order="true" verbose="2">

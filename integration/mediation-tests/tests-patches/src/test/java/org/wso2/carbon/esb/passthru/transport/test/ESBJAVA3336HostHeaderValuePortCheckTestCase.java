@@ -39,7 +39,6 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
 
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
-
         init();
         context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
         serverConfigurationManager = new ServerConfigurationManager(context);
@@ -47,14 +46,13 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
         serverConfigurationManager.applyMIConfiguration(modifiedLog4j2File);
         serverConfigurationManager.restartMicroIntegrator();
         carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.ALL })
     @Test(groups = "wso2.esb",
-            description = "Test wrong port(80) attached with the HOST_HEADERS for https backend")
+            description = "Test wrong port(80) attached with the HOST_HEADERS for https backend", enabled = false)
     public void testHOST_HEADERPropertyTest() throws Exception {
-
-        carbonLogReader.start();
         try {
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("ESBJAVA3336httpsBackendProxyService"), null,
                                                     "WSO2");

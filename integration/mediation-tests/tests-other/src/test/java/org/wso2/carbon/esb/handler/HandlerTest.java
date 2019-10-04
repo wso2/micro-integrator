@@ -44,7 +44,8 @@ public class HandlerTest extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Sending a Message Via proxy to check synapse handler logs")
+    @Test(groups = {"wso2.esb"}, description = "Sending a Message Via proxy to check synapse handler logs",
+          enabled = false)
     public void testSynapseHandlerExecution() throws IOException, InterruptedException {
         boolean handlerStatus = false;
         carbonLogReader.clearLogs();
@@ -64,7 +65,7 @@ public class HandlerTest extends ESBIntegrationTest {
     }
 
     @Test(groups = {"wso2.esb"}, description = "Sending a message via proxy to check whether Synapse Handlers get "
-            + "invoked when a SoapFault come as a response")
+            + "invoked when a SoapFault come as a response", enabled = false)
     public void testSynapseHandlerExecutionWhenSoapFaultRecieved()
             throws InterruptedException {
         boolean responseInStatus = false;

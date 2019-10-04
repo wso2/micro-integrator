@@ -23,7 +23,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -42,7 +41,8 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
         carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (axis2 scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Integer (axis2 scope)",
+          enabled = false)
     public void testIntVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -52,7 +52,8 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
         assertTrue(isMatchFound("symbol = 123"), "Integer Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2 scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type String (axis2 scope)",
+          enabled = false)
     public void testStringVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -63,7 +64,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
                 "String Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (axis2 scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Float (axis2 scope)", enabled = false)
     public void testFloatVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -73,7 +74,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
         assertTrue(isMatchFound("symbol = 123.123"), "Float Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (axis2 scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Long (axis2 scope)", enabled = false)
     public void testLongVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -83,7 +84,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
         assertTrue(isMatchFound("symbol = 123"), "Long Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (axis2 scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type Short (axis2 scope)", enabled = false)
     public void testShortVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client
@@ -93,7 +94,7 @@ public class PropertyIntegrationAxis2ScopeRemovePropertiesTestCase extends ESBIn
         assertTrue(isMatchFound("symbol = 12"), "Short Property Not Either Set or Removed in the Axis2 scope!!");
     }
 
-    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (axis2 scope)")
+    @Test(groups = "wso2.esb", description = "Remove action as \"value\" and type OM (axis2 scope)", enabled = false)
     public void testOMVal() throws Exception {
         carbonLogReader.clearLogs();
         OMElement response = axis2Client

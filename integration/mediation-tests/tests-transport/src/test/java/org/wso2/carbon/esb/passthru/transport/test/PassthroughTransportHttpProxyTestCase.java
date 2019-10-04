@@ -44,7 +44,7 @@ public class PassthroughTransportHttpProxyTestCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Passthrough Transport Http.proxy test case")
+    @Test(groups = "wso2.esb", description = "Passthrough Transport Http.proxy test case", enabled = false)
     public void passthroughTransportHttpProxy() throws Exception {
 
         try {

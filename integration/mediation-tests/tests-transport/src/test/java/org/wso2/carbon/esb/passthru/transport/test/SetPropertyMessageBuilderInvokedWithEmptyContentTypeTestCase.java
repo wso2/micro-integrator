@@ -40,13 +40,12 @@ public class SetPropertyMessageBuilderInvokedWithEmptyContentTypeTestCase extend
     public void setEnvironment() throws Exception {
         super.init();
         jsonclient = new JSONClient();
-        carbonLogReader.start();
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test whether the msg builder invoked property is set when the content"
-            + " type is empty")
+            + " type is empty", enabled = false)
     public void testMsgBuilderInvokedPropertyWhenContentTypeisEmpty() throws Exception {
-
+        carbonLogReader.start();
         int port = 8090;
         String expectedResponse =
                 "HTTP/1.0 200 OK\r\n" + "Server: CERN/3.0 libwww/2.17\r\n" + "Date: Tue, 16 Nov 1994 08:12:31 GMT\r\n"

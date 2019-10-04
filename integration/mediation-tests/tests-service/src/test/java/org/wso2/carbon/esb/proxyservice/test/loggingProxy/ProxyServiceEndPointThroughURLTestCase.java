@@ -33,11 +33,11 @@ public class ProxyServiceEndPointThroughURLTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void setEnvironment() throws Exception {
         super.init();
-        carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Proxy service with providing endpoint through url")
+    @Test(groups = "wso2.esb", description = "Proxy service with providing endpoint through url", enabled = false)
     public void testLoggingProxy() throws Exception {
+        carbonLogReader.start();
         OMElement response = axis2Client
                 .sendSimpleStockQuoteRequest(getProxyServiceURLHttp("StockQuoteLoggingProxy"), null, "WSO2");
 

@@ -1,5 +1,9 @@
 package org.wso2.carbon.esb.http.inbound.transport.test;
 
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
@@ -11,10 +15,6 @@ import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
-
-import java.io.File;
-import java.net.URL;
-import java.util.HashMap;
 
 /**
  * Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
@@ -63,7 +63,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch")
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Sequence Dispatch", enabled = false)
     public void inboundHttpSuperSequenceTest() throws Exception {
 
         HttpRequestUtil.doPost(new URL(urlContext), REQUEST_PAYLOAD, new HashMap<>());
@@ -72,7 +72,7 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
         carbonLogReader.clearLogs();
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch")
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant API Dispatch", enabled = false)
     public void inboundHttpSuperAPITest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest(urlContext + "foo", null, "WSO2");
         Assert.assertTrue(carbonLogReader.checkForLog("FOO", DEFAULT_TIMEOUT));
@@ -90,14 +90,16 @@ public class HttpInboundDispatchTestCase extends ESBIntegrationTest {
         carbonLogReader.clearLogs();
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch")
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Default Main Sequence Dispatch",
+          enabled = false)
     public void inboundHttpSuperDefaultMainTest() throws Exception {
         HttpRequestUtil.doPost(new URL("http://" + getHostname() + ":9091/"), REQUEST_PAYLOAD, new HashMap<>());
-        Assert.assertTrue(carbonLogReader.checkForLog("main sequence executed for call to non-existent = /", DEFAULT_TIMEOUT));
+        Assert.assertTrue(
+                carbonLogReader.checkForLog("main sequence executed for call to non-existent = /", DEFAULT_TIMEOUT));
         carbonLogReader.clearLogs();
     }
 
-    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch")
+    @Test(groups = "wso2.esb", description = "Inbound HTTP Super Tenant Proxy Dispatch", enabled = false)
     public void inboundHttpSuperProxyDispatchTest() throws Exception {
         axis2Client.sendSimpleStockQuoteRequest(urlContext + "services/HttpInboundDispatchTestProxy", null, "WSO2");
         Assert.assertTrue(carbonLogReader.checkForLog("PROXY_HIT", DEFAULT_TIMEOUT));

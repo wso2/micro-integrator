@@ -17,6 +17,10 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMNamespace;
@@ -29,11 +33,6 @@ import org.wso2.carbon.esb.mediator.test.iterate.IterateClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
-
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -53,7 +52,7 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Transforming a Message Using a Nested ForEach Construct")
+    @Test(groups = {"wso2.esb"}, description = "Transforming a Message Using a Nested ForEach Construct", enabled = false)
     public void testNestedForEach() throws Exception {
         carbonLogReader.clearLogs();
         String request =
@@ -93,7 +92,10 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
+    @Test(groups = "wso2.esb",
+          description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending " +
+                  "Payload to backend",
+          enabled = false)
     public void testNestedForEachMediatorWithIterate() throws Exception {
         carbonLogReader.clearLogs();
         String response = client.send(getProxyServiceURLHttp("nested_foreach_iterate"), createMultipleSymbolPayLoad(10), "urn:getQuote");

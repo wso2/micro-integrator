@@ -39,12 +39,12 @@ public class ESBJAVA_4118_SOAPHeaderHandlingTest extends ESBIntegrationTest {
         super.init();
         verifyProxyServiceExistence("TestCalloutSoapHeader");
         carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb", description = "Test whether the callout mediator successfully handle SOAP messages "
-            + "Having SOAP header")
+            + "Having SOAP header", enabled = false)
     public void testSOAPHeaderHandling() throws Exception {
+        carbonLogReader.start();
         String endpoint = "http://localhost:8480/services/TestCalloutSoapHeader";
         String soapRequest =
                 TestConfigurationProvider.getResourceLocation() + "artifacts" + File.separator + "ESB" + File.separator

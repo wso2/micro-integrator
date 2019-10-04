@@ -1,5 +1,8 @@
 package org.wso2.carbon.esb.vfs.transport.test;
 
+import java.io.IOException;
+import javax.xml.stream.XMLStreamException;
+
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.axis2.AxisFault;
@@ -13,9 +16,6 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.Utils;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 
 /**
  * This test class related to - https://wso2.org/jira/browse/ESBJAVA-3419
@@ -45,18 +45,19 @@ public class VFSHidePasswordLogESBJAVA3419 extends ESBIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportListener not logs the clear password on error")
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
+    @Test(groups = {"wso2.esb"}, description = "Checking VFSTransportListener not logs the clear password on error",
+          enabled = false)
     public void testVFSListenerHidePasswordInLog() throws Exception {
 
         Assert.assertFalse(logReader.checkForLog("ClearPassword", DEFAULT_TIMEOUT),
-                " The password is getting printed in the log in the VFSTransportListener.");
+                           " The password is getting printed in the log in the VFSTransportListener.");
         logReader.clearLogs();
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Checking VFSTransportSender not logs the clear password on error",
-            dependsOnMethods = "testVFSListenerHidePasswordInLog")
+            dependsOnMethods = "testVFSListenerHidePasswordInLog", enabled = false)
     public void testVFSSenderHidePasswordInLog() throws Exception {
         try {
             OMElement response = axis2Client

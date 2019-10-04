@@ -47,7 +47,7 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
 
     private String JDBC_URL;
 
-    @BeforeClass
+    @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
         AutomationContext automationContext = new AutomationContext();
@@ -66,7 +66,7 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
         carbonLogReader = new CarbonLogReader();
     }
 
-    @Test
+    @Test(groups = { "wso2.esb" }, description = "Message with empty body", enabled = false)
     public void testWithEmptyMessage() throws Exception {
 
         String location = getESBResourceLocation() + File.separator + "messageProcessorConfig" + File.separator
@@ -83,9 +83,10 @@ public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTe
         client.fireAndForget(null, proxyServiceUrl, "");
         Assert.assertTrue(Utils.logExists(carbonLogReader, "REPLY = MESSAGE", 10),
                 "Message with empty body not processed!");
+        carbonLogReader.stop();
     }
 
-    @AfterClass
+    @AfterClass(alwaysRun = true)
     public void cleanup() throws Exception {
         h2DatabaseManager.disconnect();
         h2DatabaseManager = null;

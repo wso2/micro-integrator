@@ -17,18 +17,17 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -48,7 +47,7 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         headers.put("Accept-Charset", "UTF-8");
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct" )
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a single foreach construct", enabled = false)
     public void testSingleForEachProperties() throws Exception {
         carbonLogReader.clearLogs();
         String request =
@@ -124,7 +123,9 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         }
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified")
+    @Test(groups = "wso2.esb",
+          description = "Test foreach properties in a multiple foreach constructs without id specified",
+          enabled = false)
     public void testMultipleForEachPropertiesWithoutID() throws Exception {
         carbonLogReader.clearLogs();
         String request =
@@ -210,7 +211,8 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
         foreachAssert(carbonLogReader.getLogs());
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs with id specified")
+    @Test(groups = "wso2.esb",
+          description = "Test foreach properties in a multiple foreach constructs with id specified", enabled = false)
     public void testMultipleForEachPropertiesWithID() throws Exception {
         carbonLogReader.clearLogs();
         String request =

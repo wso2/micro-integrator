@@ -34,7 +34,7 @@ public class ServerStartupTestCase extends ESBIntegrationTest {
         carbonLogReader = new CarbonLogReader();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "verify server startup errors")
+    @Test(groups = { "wso2.esb" }, description = "verify server startup errors", enabled = false)
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     public void testVerifyLogs() throws InterruptedException {
         carbonLogReader.start();

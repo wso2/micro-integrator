@@ -17,16 +17,17 @@
 
 package org.wso2.carbon.esb.mediator.test.foreach;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.clients.SimpleHttpClient;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import static org.testng.Assert.assertTrue;
 
 /**
@@ -46,7 +47,8 @@ public class NestedForEachPropertiesTestCase extends ESBIntegrationTest {
         carbonLogReader.start();
     }
 
-    @Test(groups = "wso2.esb", description = "Test foreach properties in a nested foreach constructs with id specified")
+    @Test(groups = "wso2.esb", description = "Test foreach properties in a nested foreach constructs with id specified",
+          enabled = false)
     public void testNestedForEachPropertiesWithID() throws Exception {
         String request =
                 "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"

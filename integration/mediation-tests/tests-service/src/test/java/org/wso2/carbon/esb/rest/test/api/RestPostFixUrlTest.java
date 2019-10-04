@@ -42,7 +42,7 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
         logReader.start();
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource")
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource", enabled = false)
     public void testRESTURITemplateWithContextURL() throws Exception {
 
         /** To check whether the Context URL part "anotherParam" available.
@@ -58,7 +58,7 @@ public class RestPostFixUrlTest extends ESBIntegrationTest {
 
     }
 
-    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource")
+    @Test(groups = { "wso2.esb" }, description = "Sending a Message Via REST with additional resource", enabled = false)
     public void testRESTURITemplateWithAdditionalParam() throws Exception {
 
         /** To check whether the Context URL part "anotherParam" available
