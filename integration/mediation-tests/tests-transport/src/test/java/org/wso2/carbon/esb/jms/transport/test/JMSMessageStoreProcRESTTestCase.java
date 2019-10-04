@@ -59,8 +59,7 @@ public class JMSMessageStoreProcRESTTestCase extends ESBIntegrationTest {
         Thread.sleep(1000);
     }
 
-    @Test(groups = { "wso2.esb" }, description = "JMS Message store/processor support for RESTful services.",
-            enabled = false)
+    @Test(groups = { "wso2.esb" }, description = "JMS Message store/processor support for RESTful services.")
     public void testJMSMessageStoreAndProcessor() throws Exception {
         CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
