@@ -17,6 +17,10 @@
  */
 package org.wso2.carbon.esb.message.processor.test;
 
+import java.rmi.RemoteException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
+
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
@@ -28,10 +32,6 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.test.utils.axis2client.AxisServiceClient;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-
-import java.rmi.RemoteException;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The Message processor is configured with 200,202 as non retry status codes.
@@ -51,7 +51,10 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     }
 
     @Test(groups = {
-            "wso2.esb" }, description = "Test whether a Message Processor retries sending the message to the EP when the response status code is 500 and MP is configured with 200,202 as non-retry status codes.")
+            "wso2.esb"},
+          description = "Test whether a Message Processor retries sending the message to the EP when the response " +
+                  "status code is 500 and MP is configured with 200,202 as non-retry status codes.",
+          enabled = false)
     public void testMPRetryUponHTTP_SC_500_response_with_200_And_202_AsNonRetrySCs()
             throws RemoteException, InterruptedException {
 
