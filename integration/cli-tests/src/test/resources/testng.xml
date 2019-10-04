@@ -34,7 +34,8 @@
             <class name="org.wso2.micro.integrator.cli.CliAPITestCase"></class>
             <class name="org.wso2.micro.integrator.cli.CliCompositeappTestCase"></class>
             <class name="org.wso2.micro.integrator.cli.CliSequenceTestCase"></class>
-            <class name="org.wso2.micro.integrator.cli.CliProxyServiceTestCase"></class>
+            <!-- Disabling due to https://github.com/wso2/micro-integrator/issues/1022 -->
+<!--            <class name="org.wso2.micro.integrator.cli.CliProxyServiceTestCase"></class>-->
             <class name="org.wso2.micro.integrator.cli.CliRemoteTestCase"></class>
             <class name="org.wso2.micro.integrator.cli.LoginLogoutTest"></class>
         </classes>
