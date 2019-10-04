@@ -23,10 +23,8 @@ import java.io.File;
 
 public class CachableDurationTestCase extends ESBIntegrationTest {
 
-    Logger logger = Logger.getLogger(CachableDurationTestCase.class);
-
+    private Logger logger = Logger.getLogger(CachableDurationTestCase.class);
     private MicroRegistryManager registryManager;
-
     private CarbonLogReader carbonLogReader;
 
     private static final String NAME = "cache_test";
@@ -41,64 +39,52 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
         super.init();
         registryManager = new MicroRegistryManager();
         carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
         String sourceFile = getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "registry"
                 + File.separator + "caching" + File.separator + "registry.xml";
         String registryConfig = FileUtils.readFileToString(new File(sourceFile));
-        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(registryConfig), "registry", "",
-                true);
+        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(registryConfig), "registry", "", true);
         uploadResourcesToConfigRegistry();
     }
 
-    @Test(groups = "wso2.esb", description = "ESBRegistry cachableDuration 0 property test")
+    @Test(groups = "wso2.esb",
+            description = "ESBRegistry cachableDuration 0 property test")
     public void testCachableDuration() throws Exception {
 
-        carbonLogReader.clearLogs();
-        //invoking the service
-        SendRequest();
-
-        //Check if the property we set is used
-        boolean validLogMessage = validateLogMessage(OLD_VALUE);
-        Assert.assertTrue(validLogMessage);
-
-        //Update the registry value
+        carbonLogReader.start();
+        clearLogsAndSendRequest();
+        Assert.assertTrue(Utils.checkForLog(carbonLogReader, OLD_VALUE, 10),
+                          "Expected value : " + OLD_VALUE + " not found in logs.");
         updateResourcesInConfigRegistry();
-        Assert.assertTrue(registryManager.getProperty(PATH, RESOURCE_PATH, NAME).equals(NEW_VALUE));
-        carbonLogReader.clearLogs();
-        SendRequest();
-
-        //Check if the new value is being used
-        boolean validChangedLogMessage = validateLogMessage(NEW_VALUE);
-        Assert.assertTrue(validChangedLogMessage);
-
+        Assert.assertEquals(NEW_VALUE, registryManager.getProperty(PATH, RESOURCE_PATH, NAME));
+        clearLogsAndSendRequest();
+        Assert.assertTrue(Utils.checkForLog(carbonLogReader, NEW_VALUE, 10),
+                          "Expected value : " + NEW_VALUE + " not found in logs.");
     }
 
-    private boolean validateLogMessage(String value) throws InterruptedException {
-        String logs = carbonLogReader.getLogs();
-        Assert.assertNotNull(logs, "No logs found");
-        Assert.assertTrue(logs.length() > 0, "No logs found");
-        return Utils.checkForLog(carbonLogReader, value, 10);
-    }
+    private void clearLogsAndSendRequest() {
 
-    private void SendRequest() {
         try {
             carbonLogReader.clearLogs();
             axis2Client.sendSimpleStockQuoteRequest(getProxyServiceURLHttp("CachableDurationTestCaseProxy"),
-                            getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE), "IBM");
+                                                    getBackEndServiceUrl(ESBTestConstant.SIMPLE_STOCK_QUOTE_SERVICE),
+                                                    "IBM");
         } catch (Exception e) {
             logger.debug(e.getMessage());
         }
     }
 
     private void uploadResourcesToConfigRegistry() throws Exception {
+
         registryManager.addProperty(PATH, RESOURCE_PATH, NAME, OLD_VALUE);
     }
 
-    private void updateResourcesInConfigRegistry() throws Exception {
+    private void updateResourcesInConfigRegistry() {
+
         try {
             // Add a resource to cache resource due to limitation as in https://github.com/wso2/micro-integrator/issues/536
-            String sampleFile =  getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "registry"
-                    + File.separator + "caching" + File.separator + "sample.txt";
+            String sampleFile =
+                    getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "registry"
+                            + File.separator + "caching" + File.separator + "sample.txt";
             registryManager.addResource(PATH + RESOURCE_PATH, sampleFile);
             registryManager.updateProperty(PATH, RESOURCE_PATH, NAME, NEW_VALUE, true);
             Thread.sleep(5000);
@@ -110,14 +96,13 @@ public class CachableDurationTestCase extends ESBIntegrationTest {
 
     @AfterClass(alwaysRun = true)
     public void unDeployService() throws Exception {
-        // un deploying deployed artifact
+
         registryManager.restoreOriginalResources();
         // restore to original registry.xml file
         String sourceFile = getESBResourceLocation() + File.separator + "synapseconfig" + File.separator + "registry"
                 + File.separator + "caching" + File.separator + "registry_original.xml";
         String registryConfig = FileUtils.readFileToString(new File(sourceFile));
-        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(registryConfig), "registry", "",
-                true);
+        Utils.deploySynapseConfiguration(AXIOMUtil.stringToOM(registryConfig), "registry", "", true);
         carbonLogReader.stop();
     }
 
