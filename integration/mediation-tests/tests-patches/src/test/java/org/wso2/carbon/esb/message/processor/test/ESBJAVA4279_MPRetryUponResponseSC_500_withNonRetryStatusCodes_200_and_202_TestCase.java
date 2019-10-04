@@ -21,6 +21,7 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMNamespace;
+import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
@@ -29,6 +30,8 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 
 import java.rmi.RemoteException;
+import java.util.concurrent.Callable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * The Message processor is configured with 200,202 as non retry status codes.
@@ -41,33 +44,29 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     private static final String EXPECTED_ERROR_MESSAGE = "Message forwarding failed";
     private static final String EXPECTED_MP_DEACTIVATION_MSG = "Successfully deactivated the message processor [Processor1]";
     private static final int RETRY_COUNT = 4;
-    private CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
     public void deployeService() throws Exception {
         super.init();
-        carbonLogReader = new CarbonLogReader();
-        carbonLogReader.start();
     }
 
     @Test(groups = {
             "wso2.esb" }, description = "Test whether a Message Processor retries sending the message to the EP when the response status code is 500 and MP is configured with 200,202 as non-retry status codes.")
     public void testMPRetryUponHTTP_SC_500_response_with_200_And_202_AsNonRetrySCs()
             throws RemoteException, InterruptedException {
-        boolean isRetriedUpon_500_response = false;
-        boolean isRetryCompleted = false;
-        boolean isMpDeactivated = false;
+
         final String proxyUrl = getProxyServiceURLHttp(PROXY_SERVICE_NAME);
         AxisServiceClient client = new AxisServiceClient();
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
+        carbonLogReader.start();
         client.sendRobust(createPlaceOrderRequest(3.141593E0, 4, "IBM"), proxyUrl, "placeOrder");
 
-
-
         // Wait till the log appears
-        Thread.sleep(20000);
-        isRetriedUpon_500_response = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT);
-        isRetryCompleted = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT, RETRY_COUNT);
-        isMpDeactivated = carbonLogReader.checkForLog(EXPECTED_MP_DEACTIVATION_MSG, DEFAULT_TIMEOUT);
+        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(20, TimeUnit.SECONDS).
+                until(isMPDeactivationMessageExists(carbonLogReader));
+        boolean isRetriedUpon_500_response = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT);
+        boolean isRetryCompleted = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT, RETRY_COUNT);
+        boolean isMpDeactivated = carbonLogReader.checkForLog(EXPECTED_MP_DEACTIVATION_MSG, DEFAULT_TIMEOUT);
         Assert.assertTrue(isRetriedUpon_500_response && isRetryCompleted && isMpDeactivated,
                 "MP does not retry sending the request upon receiving HTTP SC 500 response");
         carbonLogReader.stop();
@@ -76,7 +75,7 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
     /*
      * This method will create a request required for place orders
      */
-    public static OMElement createPlaceOrderRequest(double purchPrice, int qty, String symbol) {
+    private OMElement createPlaceOrderRequest(double purchPrice, int qty, String symbol) {
         OMFactory factory = OMAbstractFactory.getOMFactory();
         OMNamespace ns = factory.createOMNamespace("http://services.samples", "m0");
         OMElement placeOrder = factory.createOMElement("placeOrder", ns);
@@ -92,5 +91,9 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
         order.addChild(symb);
         placeOrder.addChild(order);
         return placeOrder;
+    }
+
+    private Callable<Boolean> isMPDeactivationMessageExists(CarbonLogReader carbonLogReader) {
+        return () -> carbonLogReader.checkForLog(EXPECTED_MP_DEACTIVATION_MSG, DEFAULT_TIMEOUT);
     }
 }
