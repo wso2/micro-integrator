@@ -6,8 +6,8 @@ This is a light weight UI server hosting the react application that implements t
 
 Running the Monitoring Dashboard
 ======================================================================
-1. Go to the bin directory and run the dashboard.sh file.
-2. Load the login page with the dashboard context. i.e: https://localhost:9743/dashboard/login
+1. Go to the bin directory and run the dashboard.sh / dashboard.bat as appropriate.
+2. Load the login page with the dashboard context. i.e: https://localhost:9743/dashboard
 
 Known issues of WSO2 MI @product.version@
 ======================================================================
