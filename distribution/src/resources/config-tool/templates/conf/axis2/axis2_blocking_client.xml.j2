@@ -184,8 +184,21 @@
         {% endfor %}
     </transportReceiver>
     {% endif %}
-
-    {% if transport.blocking.jms.listener is defined %}
+    {% if transport.blocking.jms.listener_enable is defined %}
+        {% if transport.blocking.jms.listener_enable and transport.blocking.jms.listener|length==0 %}
+    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener"/>
+        {% elif transport.blocking.jms.listener_enable %}
+    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
+            {% for listener in transport.blocking.jms.listener %}
+        <parameter name="{{listener.name}}" locked="false">
+                {% for name,value in listener.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                {% endfor %}
+        </parameter>
+            {% endfor %}
+    </transportReceiver>
+        {% endif %}
+    {% elif transport.blocking.jms.listener|length>0 %}
     <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
         {% for listener in transport.blocking.jms.listener %}
         <parameter name="{{listener.name}}" locked="false">
@@ -257,9 +270,22 @@
        {% endfor %}
     </transportSender>
     {% endif %}
-    {% if transport.blocking.jms.sender is defined %}
-    <transportSender name="jms"
-                     class="org.apache.axis2.transport.jms.JMSSender">
+    {% if transport.blocking.jms.sender_enable is defined %}
+        {% if transport.blocking.jms.sender_enable and transport.blocking.jms.sender|length==0 %}
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender"/>
+        {% elif transport.blocking.jms.sender_enable %}
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
+            {% for sender in transport.blocking.jms.sender %}
+        <parameter name="{{sender.name}}" locked="false">
+                {% for name,value in sender.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                {% endfor %}
+        </parameter>
+            {% endfor %}
+    </transportSender>
+        {% endif %}
+    {% elif transport.blocking.jms.sender|length>0 %}
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
         {% for sender in transport.blocking.jms.sender %}
         <parameter name="{{sender.name}}" locked="false">
             {% for name,value in sender.parameter.items() %}

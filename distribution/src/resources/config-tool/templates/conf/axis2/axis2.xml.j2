@@ -269,7 +269,21 @@
         {% endfor %}
     </transportReceiver>
     {% endif %}
-    {% if transport.jms.listener is defined %}
+    {% if transport.jms.listener_enable is defined %}
+        {% if transport.jms.listener_enable and transport.jms.listener|length==0 %}
+    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener"/>
+        {% elif transport.jms.listener_enable %}
+    <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
+            {% for listener in transport.jms.listener %}
+        <parameter name="{{listener.name}}" locked="false">
+                {% for name,value in listener.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                {% endfor %}
+        </parameter>
+            {% endfor %}
+    </transportReceiver>
+        {% endif %}
+    {% elif transport.jms.listener|length>0 %}
     <transportReceiver name="jms" class="org.apache.axis2.transport.jms.JMSListener">
         {% for listener in transport.jms.listener %}
         <parameter name="{{listener.name}}" locked="false">
@@ -290,25 +304,41 @@
     <!-- SAP Transport Listeners -->
     {% if transport.sap.listener.idoc.enable == true %}
     <transportReceiver name="idoc" class="{{transport.sap.listener.idoc.class}}">
-        {% for parameter_key,parameter_value in transport.sap.listener.parameter.items() %}
+        {% for parameter_key,parameter_value in transport.sap.listener.idoc.parameter.items() %}
         <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
         {% endfor %}
     </transportReceiver>
     {% endif %}
     {% if transport.sap.listener.bapi.enable == true %}
     <transportReceiver name="bapi" class="{{transport.sap.listener.bapi.class}}">
-        {% for parameter_key,parameter_value in transport.bapi.listener.parameter.items() %}
+        {% for parameter_key,parameter_value in transport.sap.listener.bapi.parameter.items() %}
         <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
         {% endfor %}
     </transportReceiver>
     {% endif %}
-    {% if transport.rabbitmq.listener.AMQPConnectionFactory is defined %}
-    <transportReceiver name="{{transport.rabbitmq.listener.name}}" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
-        <parameter name="AMQPConnectionFactory" locked="false">
-            {% for parameter_key,parameter_value in transport.rabbitmq.listener.AMQPConnectionFactory.parameter.items() %}
-            <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+    {% if transport.rabbitmq.listener_enable is defined %}
+        {% if transport.rabbitmq.listener_enable and transport.rabbitmq.listener|length==0 %}
+    <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener"/>
+        {% elif transport.rabbitmq.listener_enable %}
+    <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
+            {% for listener in transport.rabbitmq.listener %}
+        <parameter name="{{listener.name}}" locked="false">
+                {% for name,value in listener.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                {% endfor %}
+        </parameter>
+            {% endfor %}
+    </transportReceiver>
+        {% endif %}
+    {% elif transport.rabbitmq.listener|length>0 %}
+    <transportReceiver name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQListener">
+        {% for listener in transport.rabbitmq.listener %}
+        <parameter name="{{listener.name}}" locked="false">
+            {% for name,value in listener.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
             {% endfor %}
         </parameter>
+        {% endfor %}
     </transportReceiver>
     {% endif %}
     {% if transport.mqtt.listener.enable == true %}
@@ -469,7 +499,21 @@
         {% endif %}
     </transportSender>
     {% endif %}
-    {% if transport.jms.sender is defined %}
+    {% if transport.jms.sender_enable is defined %}
+        {% if transport.jms.sender_enable and transport.jms.sender|length==0 %}
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender"/>
+        {% elif transport.jms.sender_enable %}
+    <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
+            {% for sender in transport.jms.sender %}
+        <parameter name="{{sender.name}}" locked="false">
+                {% for name,value in sender.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                {% endfor %}
+        </parameter>
+            {% endfor %}
+    </transportSender>
+        {% endif %}
+    {% elif transport.jms.sender|length>0 %}
     <transportSender name="jms" class="org.apache.axis2.transport.jms.JMSSender">
         {% for sender in transport.jms.sender %}
         <parameter name="{{sender.name}}" locked="false">
@@ -516,6 +560,31 @@
     <transportSender name="bapi" class="{{transport.sap.sender.bapi.class}}">
         {% for parameter_key,parameter_value in transport.sap.sender.bapi.parameter.items() %}
         <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+        {% endfor %}
+    </transportSender>
+    {% endif %}
+    {% if transport.rabbitmq.sender_enable is defined %}
+        {% if transport.rabbitmq.sender_enable and transport.rabbitmq.sender|length==0 %}
+    <transportSender name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender"/>
+        {% elif transport.rabbitmq.sender_enable %}
+    <transportSender name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender">
+            {% for sender in transport.rabbitmq.sender %}
+        <parameter name="{{sender.name}}" locked="false">
+                {% for name,value in sender.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+                {% endfor %}
+        </parameter>
+            {% endfor %}
+    </transportSender>
+        {% endif %}
+    {% elif transport.rabbitmq.sender|length>0 %}
+    <transportSender name="rabbitmq" class="org.apache.axis2.transport.rabbitmq.RabbitMQSender">
+        {% for sender in transport.rabbitmq.sender %}
+        <parameter name="{{sender.name}}" locked="false">
+            {% for name,value in sender.parameter.items() %}
+            <parameter name="{{name}}" locked="false">{{value}}</parameter>
+            {% endfor %}
+        </parameter>
         {% endfor %}
     </transportSender>
     {% endif %}
