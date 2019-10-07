@@ -41,6 +41,7 @@ properties.isCascadeDeleteEnabled = true    #inferred
 
 [user_store]
 #usr-mgt.xml
+type = "read_only_ldap" # inferred default read_only_ldap
 class = "org.wso2.micro.integrator.security.user.core.ldap.ReadOnlyLDAPUserStoreManager" # inferred
 connection_url = "ldap://localhost:10389"   #inferred
 connection_name = "uid=admin,ou=system"   #inferred
@@ -160,7 +161,7 @@ io_buffer_size = 16384              # inferred default: 16384
 max_http_connection_per_host_port = 32767
 preserve_http_user_agent = false
 preserve_http_server_name = true
-preserve_http_headers = ["Content-Type"]  # inferred todo , sepereated or | seperated ?
+preserve_http_headers = ["Content-Type"]  # inferred
 disable_connection_keepalive = false      # Keep this in deployment.toml file
 enable_message_size_validation = false
 max_message_size_bytes = 81920
@@ -182,17 +183,15 @@ listener.secured_protocols = "TLSv1,TLSv1.1,TLSv1.2" # inferred default: TLSv1,T
 listener.verify_client = "require"              # inferred disable by default, mutual ssl   optional/required/none
 listener.ssl_profile.file_path = "conf/sslprofiles/listenerprofiles.xml" # type 0
 listener.ssl_profile.read_interval = 3600000       # inferred in milliseconds
-# todo need to template for wich tranport ?
-listener.preferred_ciphers = "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256,TLS_DHE_RSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA,TLS_DHE_RSA_WITH_AES_128_CBC_SHA,TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,TLS_DHE_RSA_WITH_AES_128_GCM_SHA256"
 listener.certificate_revocation_verifier_enable = false # false by default
 listener.certificate_revocation_cache_size = 1024     # inferred
 listener.certificate_revocation_cache_delay = 1000     # inferred
 
-listener.keystore.file_name ="$ref{keystore.tls.file_name}" # inferred
+listener.keystore.file_name ="repository/resources/security/$ref{keystore.tls.file_name}" # inferred
 listener.keystore.type = "$ref{keystore.tls.type}" # inferred
 listener.keystore.password = "$ref{keystore.tls.password}" # inferred
 listener.keystore.key_password = "$ref{keystore.tls.key_password}" # inferred
-listener.truststore.file_name = "$ref{truststore.file_name}" # inferred
+listener.truststore.file_name = "repository/resources/security/$ref{truststore.file_name}" # inferred
 listener.truststore.type = "$ref{truststore.type}" # inferred
 listener.truststore.password = "$ref{truststore.password}" # inferred
 
@@ -207,11 +206,11 @@ sender.certificate_revocation_cache_size = 1024     # inferred
 sender.certificate_revocation_cache_delay = 1000     # inferred delay in milliseconds
 
 sender.secured_enable = true                # inferred default true
-sender.keystore.file_name ="$ref{keystore.tls.file_name}" # inferred
+sender.keystore.file_name ="repository/resources/security/$ref{keystore.tls.file_name}" # inferred
 sender.keystore.type = "$ref{keystore.tls.type}" # inferred
 sender.keystore.password = "$ref{keystore.tls.password}" # inferred
 sender.keystore.key_password = "$ref{keystore.tls.key_password}" # inferred
-sender.truststore.file_name = "$ref{truststore.file_name}" # inferred
+sender.truststore.file_name = "repository/resources/security/$ref{truststore.file_name}" # inferred
 sender.truststore.type = "$ref{truststore.type}" # inferred
 sender.truststore.password = "$ref{truststore.password}" # inferred
 
@@ -370,6 +369,10 @@ parameter.password = "mailpassword"
 parameter.from = "demo_user@wso2.com"
 
 ###################################     JSM Transport Configurations    ###################################
+
+[transport.jms]
+listener_enable = true
+
 [[transport.jms.listener]]
 
 name = "myTopicListener"
@@ -411,6 +414,9 @@ parameter.max_jsm_connection = 10
 parameter.max_consumer_error_retrieve_before_delay = 20
 parameter.consume_error_delay = "100"                   # delay in milliseconds
 parameter.consume_error_progression = "2.0"
+
+[transport.jms]
+sender_enable = true
 
 [[transport.jms.sender]]
 
@@ -455,6 +461,9 @@ parameter.consume_error_delay = "100"       # delay in milliseconds
 parameter.consume_error_progression = "2.0"
 parameter.vender_class_loader = false       # only for IBM MQ
 
+[transport.blocking.jms]
+listener_enable = true
+
 [[transport.blocking.jms.listener]]     # jms listener for blocking transport
 
 name = "myTopicListener"
@@ -496,6 +505,9 @@ parameter.max_jsm_connection = 10
 parameter.max_consumer_error_retrieve_before_delay = 20
 parameter.consume_error_delay = "100"                   # delay in milliseconds
 parameter.consume_error_progression = "2.0"
+
+[transport.blocking.jms]
+sender_enable = true
 
 [[transport.blocking.jms.sender]]   # jms sender for blocking transport
 
@@ -553,9 +565,12 @@ StockQuotesQueue = "StockQuotesQueue"
 MyTopic = "example.MyTopic"
 
 ###################################     Rabbit MQ configurations        ###################################
+[transport.rabbitmq]
+listener_enable = true
+
 [[transport.rabbitmq.listener]]
 
-name = "rabbitMQListener"
+name = "AMQPConnectionFactory"
 parameter.hostname = "localhost"
 parameter.port = 5672
 parameter.username = "guest"
@@ -583,16 +598,19 @@ parameter.connection_pool_size = 25
 
 parameter.ssl_enable = true
 parameter.ssl_version = "SSL"
-parameter.keystore_file_name ="$ref{keystore.tls.file_name}" # inferred
-parameter.keystore_type = "$ref{keystore.tls.type}" # inferred
-parameter.keystore_password = "$ref{keystore.tls.password}" # inferred
-parameter.truststore_file_name ="$ref{truststore.file_name}" # inferred
-parameter.truststore_type = "$ref{truststore.type}" # inferred
-parameter.truststore_password = "$ref{truststore.password}" # inferred
+parameter.keystore_file_name =""
+parameter.keystore_type = ""
+parameter.keystore_password = ""
+parameter.truststore_file_name =""
+parameter.truststore_type = ""
+parameter.truststore_password = ""
+
+[transport.rabbitmq]
+sender_enable = true
 
 [[transport.rabbitmq.sender]]
 
-name = "rabbitMQSender"
+name = "AMQPConnectionFactory"
 parameter.hostname = "localhost"
 parameter.port = 5672
 parameter.username = "guest"
@@ -632,14 +650,16 @@ sender.truststore_password = "$ref{truststore.password}" # inferred
 ###################################     SAP configurations          ###################################
 [transport.sap] # optional
 
-listener.enable = true
+listener.idoc.enable = false
 listener.idoc.class = "org.wso2.carbon.transports.sap.SAPTransportListener" # inferred
 listener.idoc.parameter.customParameter = ""
+listener.bapi.enable = false
 listener.bapi.class = "org.wso2.carbon.transports.sap.SAPTransportListener" # inferred
 listener.bapi.parameter.customParameter = ""
-sender.enable = true
+sender.idoc.enable = false
 sender.idoc.class = "org.wso2.carbon.transports.sap.SAPTransportSender" # inferred
 sender.idoc.parameter.customParameter = ""
+sender.bapi.enable = false
 sender.bapi.class = "org.wso2.carbon.transports.sap.SAPTransportSender" # inferred
 sender.bapi.parameter.customParameter = ""
 
@@ -762,8 +782,8 @@ flow.statistics.capture_all=false
 statistics.enable_clean=true
 statistics.clean_interval = 1000    # interval in milliseconds
 
-flow.statistics.tracer.collect_payloads=false
-flow.statistics.tracer.collect_properties=false
+stat.tracer.collect_payloads=false
+stat.tracer.collect_mediation_properties=false
 
 inbound.core_threads = 20
 inbound.max_threads = 100

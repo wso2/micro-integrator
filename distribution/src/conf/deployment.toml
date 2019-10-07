@@ -1,6 +1,9 @@
 [server]
 hostname = "localhost"
 
+[user_store]
+type = "read_only_ldap"
+
 [keystore.tls]
 file_name = "wso2carbon.jks"
 password = "wso2carbon"
