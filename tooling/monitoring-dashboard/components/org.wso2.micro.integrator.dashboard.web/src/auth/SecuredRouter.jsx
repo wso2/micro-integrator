@@ -76,6 +76,9 @@ export default class SecuredRouter extends Component {
 
         return (
             <Switch>
+                <Route exact path='/'>
+                    <Redirect to="/home" />
+                </Route>
                 <Route exact path='/proxy' component={ProxyServiceListPage}/>
                 <Route exact path='/endpoint' component={EndpointListPage}/>
                 <Route path='/endpoint/explore' component={EndpointDetailsPage}/>
