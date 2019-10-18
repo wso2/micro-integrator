@@ -28,9 +28,9 @@ import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.test.utils.dbutils.H2DataBaseManager;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.common.XPathConstants;
 
 import static org.testng.Assert.assertEquals;
 import static org.wso2.carbon.esb.mediator.test.db.DBTestUtil.getDBPath;
