@@ -346,15 +346,15 @@
         -->
         <KeyStore>
             <!-- Keystore file location-->
-            <Location>${carbon.home}/repository/resources/security/{{keystore.tls.file_name}}</Location>
+            <Location>${carbon.home}/repository/resources/security/{{keystore.primary.file_name}}</Location>
             <!-- Keystore type (JKS/PKCS12 etc.)-->
-            <Type>{{keystore.tls.type}}</Type>
+            <Type>{{keystore.primary.type}}</Type>
             <!-- Keystore password-->
-            <Password>{{keystore.tls.password}}</Password>
+            <Password>{{keystore.primary.password}}</Password>
             <!-- Private Key alias-->
-            <KeyAlias>{{keystore.tls.alias}}</KeyAlias>
+            <KeyAlias>{{keystore.primary.alias}}</KeyAlias>
             <!-- Private Key password-->
-            <KeyPassword>{{keystore.tls.key_password}}</KeyPassword>
+            <KeyPassword>{{keystore.primary.key_password}}</KeyPassword>
         </KeyStore>
 
         <!--

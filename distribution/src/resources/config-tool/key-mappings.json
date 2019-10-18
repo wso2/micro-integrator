@@ -327,10 +327,10 @@
 
   "transport.rabbitmq.listener:parameter.ssl_enable": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.enabled'",
   "transport.rabbitmq.listener:parameter.ssl_version": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.version'",
-  "transport.rabbitmq.listener:parameter.keystore_file_name": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.keystore.location'",
+  "transport.rabbitmq.listener:parameter.keystore_location": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.keystore.location'",
   "transport.rabbitmq.listener:parameter.keystore_type": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.keystore.type'",
   "transport.rabbitmq.listener:parameter.keystore_password": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.keystore.password'",
-  "transport.rabbitmq.listener:parameter.truststore_file_name": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.truststore.location'",
+  "transport.rabbitmq.listener:parameter.truststore_location": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.truststore.location'",
   "transport.rabbitmq.listener:parameter.truststore_type": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.truststore.type'",
   "transport.rabbitmq.listener:parameter.truststore_password": "transport.rabbitmq.listener:parameter.'rabbitmq.connection.ssl.truststore.password'",
 
