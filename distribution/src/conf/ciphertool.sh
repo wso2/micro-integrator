@@ -108,7 +108,7 @@ CARBON_CLASSPATH=""
 for f in "$CARBON_HOME"/wso2/lib/*.jar
 do
   # Omit Saxon-HE jar from CARBON_HOME/wso2/lib/ since it override required XPathFactory implementation
-  if [[ "$f" != *"Saxon-HE"* ]]; then
+  if [ "$f" != "$CARBON_HOME"/wso2/lib/Saxon-HE*".jar" ]; then
        CARBON_CLASSPATH=$CARBON_CLASSPATH:$f
   fi;
 done
