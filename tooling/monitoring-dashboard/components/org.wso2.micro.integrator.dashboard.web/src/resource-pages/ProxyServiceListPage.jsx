@@ -79,7 +79,33 @@ export default class ProxyServiceListPage extends Component {
                         );
                     }
                 }
-            }, "WSDL1.1", "WSDL2.0"];
+            }, {
+                name: "WSDL 1.1",
+                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link component="button" variant="body2" onClick={() => {
+                                window.location = tableMeta.rowData[1];
+                            }}>
+                                {tableMeta.rowData[1]}
+                            </Link>
+                        );
+                    }
+                }
+            }, {
+                name: "WSDL 2.0",
+                options: {
+                    customBodyRender: (value, tableMeta, updateValue) => {
+                        return (
+                            <Link component="button" variant="body2" onClick={() => {
+                                window.location = tableMeta.rowData[2];
+                            }}>
+                                {tableMeta.rowData[2]}
+                            </Link>
+                        );
+                    }
+                }
+            }];
         const options = {
             selectableRows: 'none',
             print: false,
