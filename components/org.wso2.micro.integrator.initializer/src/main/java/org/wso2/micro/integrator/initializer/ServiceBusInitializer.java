@@ -30,6 +30,7 @@ import org.apache.synapse.ServerConfigurationInformationFactory;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.ServerManager;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.commons.util.FilePropertyLoader;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
@@ -101,6 +102,10 @@ public class ServiceBusInitializer {
             log.debug(ServiceBusInitializer.class.getName() + "#activate() BEGIN - " + System.currentTimeMillis());
         }
         log.debug("Activating Micro Integrator...");
+
+        //Loading file properties before the task services start
+        log.debug("Loading file property configurations");
+        FilePropertyLoader.loadPropertiesFile();
 
         if (taskService != null && !taskService.isServerInit()) {
             log.debug("Initialize Task Service");
