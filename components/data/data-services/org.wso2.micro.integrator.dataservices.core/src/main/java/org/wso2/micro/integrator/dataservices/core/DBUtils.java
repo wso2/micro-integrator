@@ -44,7 +44,7 @@ import org.apache.synapse.config.SynapseConfiguration;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.wso2.micro.integrator.core.resolvers.ResolverFactory;
+import org.apache.synapse.commons.resolvers.ResolverFactory;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.DBSFields;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.RDBMSEngines;
