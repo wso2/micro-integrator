@@ -20,6 +20,9 @@
                     {% for property_name,property_value in data.pool_options.items() %}
                     <{{property_name}}>{{property_value}}</{{property_name}}>
                     {% endfor %}
+                    {% if data.jmx_enable is defined %}
+                    <jmxEnabled>{{data.jmx_enable}}</jmxEnabled>
+                    {% endif %}
                 </configuration>
             </definition>
         </datasource>

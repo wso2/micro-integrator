@@ -101,7 +101,7 @@
    	Carbon UI components.
     -->
     <MgtProxyContextPath></MgtProxyContextPath>
-    <ProxyContextPath></ProxyContextPath>
+    <ProxyContextPath>{{server.proxy_context_path}}</ProxyContextPath>
 
     <!-- In-order to  get the registry http Port from the back-end when the default http transport is not the same-->
     <!--RegistryHttpPort>9763</RegistryHttpPort-->
@@ -129,9 +129,9 @@
         <!-- The JMX Ports -->
         <JMX>
             <!--The port RMI registry is exposed-->
-            <RMIRegistryPort>9999</RMIRegistryPort>
+            <RMIRegistryPort>{{monitoring.jmx.rmi_registry_port}}</RMIRegistryPort>
             <!--The port RMI server should be exposed-->
-            <RMIServerPort>11111</RMIServerPort>
+            <RMIServerPort>{{monitoring.jmx.rmi_server_port}}</RMIServerPort>
         </JMX>
 
         <!-- Embedded LDAP server specific ports -->
@@ -577,13 +577,13 @@
             enable publishing events to the servers in a round robin manner.
             e.g.; tcp://analytics-server-1:7612,tcp://analytics-server-2:7612
          -->
-        <ServerURL>tcp://localhost:7612</ServerURL>
-        <AuthServerURL>ssl://localhost:7712</AuthServerURL>
+        <ServerURL>{{monitoring.ei_analytics.server_url}}</ServerURL>
+        <AuthServerURL>{{monitoring.ei_analytics.auth_server_url}}</AuthServerURL>
         <!--
             Credentails of the admin user of the analytics server.
         -->
-        <Username>admin</Username>
-        <Password>admin</Password>
+        <Username>{{monitoring.ei_analytics.username}}</Username>
+        <Password>{{monitoring.ei_analytics.password}}</Password>
     </Analytics>
 
 </Server>

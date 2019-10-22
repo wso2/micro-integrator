@@ -97,6 +97,10 @@
     <parameter name="{{parameter.name}}" locked="false">{{parameter.value}}</parameter>
     {% endfor %}
 
+    {% for parameter_key,parameter_value in axis2_transport.parameter.items() %}
+    <parameter name="{{parameter_key}}" locked="false">{{parameter_value}}</parameter>
+    {% endfor %}
+
     <!-- To override repository/services you need to uncomment following parameter and value -->
     <!-- SHOULD be absolute file path. -->
     <!--<parameter name="ServicesDirectory" locked="false">service</parameter>-->
@@ -388,7 +392,9 @@
         {% for parameter_key,parameter_value in transport.tcp.listener.parameter.items() %}
         <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
         {% endfor %}
+        {% if transport.tcp.listener.content_type is defined %}
         <parameter name="transport.tcp.contentType">{% for content_item in transport.tcp.listener.content_type %}{{content_item}}{% if loop.index < transport.tcp.listener.content_type|length %},{% endif %}{% endfor %}</parameter>
+        {% endif %}
     </transportReceiver>
     {% endif %}
     {% if transport.udp.listener.enable == true %}
