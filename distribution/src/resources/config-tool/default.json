@@ -392,8 +392,17 @@
   "database.enable_config": true,
   "database.enable_gov": true,
 
-  "system.parameter": {
-    "org.wso2.CipherTransformation": "RSA/ECB/OAEPwithSHA1andMGF1Padding",
-    "org.wso2.SecureVaultPasswordRegEx": "^[\\\\S]{5,30}$"
-  }
+  "monitoring.jmx.rmi_registry_port": "9999",
+  "monitoring.jmx.rmi_server_port": "11111",
+  "monitoring.jmx.rmi_server_start": true,
+  "monitoring.jmx.rmi_hostname": "$ref{server.hostname}",
+
+  "monitoring.ei_analytics.server_url": "tcp://localhost:7612",
+  "monitoring.ei_analytics.auth_server_url": "ssl://localhost:7712",
+  "monitoring.ei_analytics.username": "admin",
+  "monitoring.ei_analytics.password": "admin",
+
+  "system.parameter.'org.wso2.CipherTransformation'": "RSA/ECB/OAEPwithSHA1andMGF1Padding",
+  "system.parameter.'org.wso2.SecureVaultPasswordRegEx'": "^[\\\\S]{5,30}$"
+
 }

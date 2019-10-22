@@ -4,6 +4,7 @@
 hostname = "localhost"
 offset  = 0     # inferred
 hide_admin_service_wsdl = true #inferred
+proxy_context_path = "" # empty by default
 
 # axis2.xml file
 enable_mtom = false # optional  default: false
@@ -11,6 +12,10 @@ enable_swa = false # optional   default: false
 userAgent = "WSO2 ${product.key} ${product.version}"    #inferred
 serverDetails = "WSO2 ${product.key} ${product.version}"    #inferred
 synapse_config_file_path = "repository/deployment/server/synapse-configs"  #inferred no docs for the end user
+http_content_negotiation = true     # true by default
+auth2_token_validation_service = "https://localhost:9444/services/OAuth2TokenValidationService"
+identity_server_username = "admin"
+identity_server_password = "admin"
 
 # swagger handlers in carbon.xml file
 [[server.get_request_processor]]
@@ -181,6 +186,7 @@ listener.secured_wsdl_epr_prefix = "$ref{server.hostname}"  # no default
 listener.secured_bind_address = "$ref{server.hostname}"
 listener.secured_protocols = "TLSv1,TLSv1.1,TLSv1.2" # inferred default: TLSv1,TLSv1.1,TLSv1.2
 listener.verify_client = "require"              # inferred disable by default, mutual ssl   optional/required/none
+listener.preferred_ciphers = "TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256,TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256" # no defaults
 listener.ssl_profile.file_path = "conf/sslprofiles/listenerprofiles.xml" # type 0
 listener.ssl_profile.read_interval = 3600000       # inferred in milliseconds
 listener.certificate_revocation_verifier_enable = false # false by default
@@ -199,8 +205,11 @@ sender.enable = true        # inferred default true
 sender.warn_on_http_500 = "*"       # optional
 sender.proxy_host = "$ref{server.hostname}"
 sender.proxy_port = 3128
+sender.secured_proxy_host = "$ref{server.hostname}"
+sender.secured_proxy_port = 3128
 sender.non_proxy_hosts = ["$ref{server.hostname}"]
 sender.hostname_verifier = "AllowAll"
+sender.secured_protocols = "TLSv1,TLSv1.1,TLSv1.2" # no defaults
 sender.certificate_revocation_verifier_enable = false # false by default
 sender.certificate_revocation_cache_size = 1024     # inferred
 sender.certificate_revocation_cache_delay = 1000     # inferred delay in milliseconds
@@ -254,6 +263,17 @@ sender.transfer_encoding = "chunked"            # inferred default chunked
 sender.default_connections_per_host = 200       # inferred default 200
 sender.omit_soap12_action = true                # inferred default true
 sender.so_timeout = 60000                       # inferred default 60000 timeout in milliseconds
+sender.proxy_host = "$ref{server.hostname}"     # no defaults
+sender.proxy_port = 3128                        # no defaults
+
+sender.secured_enable = true                            # true by default
+sender.secured_enable_client_caching = true             # inferred default true
+sender.secured_transfer_encoding = "chunked"            # inferred default chunked
+sender.secured_default_connections_per_host = 200       # inferred default 200
+sender.secured_omit_soap12_action = true                # inferred default true
+sender.secured_so_timeout = 60000                       # inferred default 60000 timeout in milliseconds
+sender.secured_proxy_host = "$ref{server.hostname}"     # no defaults
+sender.secured_proxy_port = 3128                        # no defaults
 
 ###################################   VFS configurations              ###################################
 [transport.vfs] # enable by default
@@ -554,8 +574,8 @@ parameter.vender_class_loader = false       # only for IBM MQ
 
 ###################################     JNDI property configuration     ###################################
 [transport.jndi.connection_factories]
-QueueConnectionFactory = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
-TopicConnectionFactory = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
+'connectionfactory.QueueConnectionFactory' = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
+'connectionfactory.TopicConnectionFactory' = "amqp://admin:admin@clientID/carbon?brokerlist='tcp://localhost:5675'"
 
 [transport.jndi.queue]
 JMSMS = "JMSMS"
@@ -788,6 +808,10 @@ stat.tracer.collect_mediation_properties=false
 inbound.core_threads = 20
 inbound.max_threads = 100
 
+internal_http_api_enable = true     # inferred  true by default
+internal_http_api_port = 9191       # inferred 9191 by default
+internal_https_api_port = 9154      # inferred 9154 by default
+
 ###################################   Database configurations   ###################################
 [[datasource]]
 id = "WSO2_CARBON_DB"
@@ -838,6 +862,20 @@ admin_password = "password_2"
 keystore_password = "password_3"
 key_password = "password_4"
 truststrore_password = "password_5"
+
+##################################### Monitoring configurations #########################################
+[monitoring]
+# carbon.xml
+jmx.rmi_registry_port=9999              # inferred default 9999
+jmx.rmi_server_port=11111               # inferred default 11111
+# jmx.xml
+jmx.rmi_server_start=true               # inferred default true
+jmx.rmi_hostname="$ref{server.hostname}"    # inferred default server.hostname
+
+ei_analytics.server_url = "tcp://localhost:7612"    # inferred
+ei_analytics.auth_server_url = "ssl://localhost:7712"       # inferred
+ei_analytics.username = "admin"                             # inferred
+ei_analytics.password = "admin"                             # inferred
 
 ##################################### Hidden properties with no documentations ###################################
 
