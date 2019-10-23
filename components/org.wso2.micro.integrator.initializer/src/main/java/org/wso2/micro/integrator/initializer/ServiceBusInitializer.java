@@ -103,10 +103,6 @@ public class ServiceBusInitializer {
         }
         log.debug("Activating Micro Integrator...");
 
-        //Loading file properties before the task services start
-        log.debug("Loading file property configurations");
-        FilePropertyLoader.loadPropertiesFile();
-
         if (taskService != null && !taskService.isServerInit()) {
             log.debug("Initialize Task Service");
             taskService.serverInitialized();
