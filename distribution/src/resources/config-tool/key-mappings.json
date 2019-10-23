@@ -54,6 +54,8 @@
   "mediation.synapse.build_valid_nc_name": "synapse_properties.'synapse.commons.json.buildValidNCNames'",
   "mediation.synapse.enable_auto_primitive": "synapse_properties.'synapse.commons.json.output.autoPrimitive'",
   "mediation.synapse.json_out_auto_array": "synapse_properties.'synapse.commons.json.output.jsonoutAutoArray'",
+  "mediation.synapse.commons_file_properties_location" : "synapse_properties.'synapse.commons.file.properties.location'",
+  "mediation.synapse.commons_file_properties_file_name" : "synapse_properties.'synapse.commons.file.properties.file.name'",
 
   "mediation.flow.statistics.enable": "synapse_properties.'mediation.flow.statistics.enable'",
   "mediation.flow.statistics.capture_all": "synapse_properties.'mediation.flow.statistics.collect.all'",
