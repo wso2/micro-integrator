@@ -1,0 +1,31 @@
+[server]
+hostname = "localhost"
+http_content_negotiation = true
+
+[transport.passthru.http.listener]
+port=8280
+
+[transport.passthru.https.listener]
+port=8243
+
+[transport.http]
+max_worker_pool_size=500
+
+[transport.rabbitmq]
+listener_enable = true
+sender_enable = true
+
+[[transport.rabbitmq.listener]]
+
+name = "AMQPConnectionFactory"
+parameter.hostname = "localhost"
+parameter.port = 5672
+parameter.username = "guest"
+parameter.password = "guest"
+parameter.connection_factory = ""
+parameter.retry_interval = "10000"
+parameter.retry_count = 5
+
+[mediation]
+synapse.enable_xpath_dom_failover=true
+
