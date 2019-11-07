@@ -467,6 +467,13 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
+        <file>
+            <source>src/conf/file.properties</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>file.properties</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
 
         <!-- Cipher Tool Files -->
         <file>
