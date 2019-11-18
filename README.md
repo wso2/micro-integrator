@@ -2,6 +2,7 @@
 
 [![Build Status](https://wso2.org/jenkins/buildStatus/icon?job=products/micro-integrator)](https://wso2.org/jenkins/job/products/job/micro-integrator/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[<img src="https://img.shields.io/badge/Slack-@wso2--ei/microintegrator-blue">](https://wso2-ei.slack.com/messages/microintegrator/)
 
 
 WSO2 Micro integrator is a open-source, lightweight, fast,
