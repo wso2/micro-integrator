@@ -30,6 +30,7 @@ import org.apache.synapse.ServerConfigurationInformationFactory;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.ServerManager;
 import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.commons.util.FilePropertyLoader;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;

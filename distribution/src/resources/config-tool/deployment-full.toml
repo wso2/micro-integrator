@@ -773,6 +773,10 @@ synapse.core_threads = 20
 synapse.max_threads = 100
 synapse.threads_queue_length = 10
 
+#configuration for file property variable supports for synapse artifacts
+synapse.commons_file_properties_location = "default"
+synapse.commons_file_properties_file_name = "file.properties"
+
 synapse.global_timeout_interval = "120000"  # interval in milliseconds
 
 # Uncomment following to support fallback XPATH 2.0 support with DOM and Saxon

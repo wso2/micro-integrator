@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 
-import org.wso2.micro.integrator.core.resolvers.ResolverFactory;
+import org.apache.synapse.commons.resolvers.ResolverFactory;
 import org.apache.tomcat.jdbc.pool.PoolConfiguration;
 import org.apache.tomcat.jdbc.pool.PoolProperties;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
