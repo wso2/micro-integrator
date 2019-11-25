@@ -324,6 +324,7 @@ do
     -Dorg.apache.cxf.io.CachedOutputStream.Threshold=104857600 \
     -Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl \
     -DavoidConfigHashRead=true \
+    -Dsynapse.commons.file.properties.path=default \
     $NODE_PARAMS \
     -Dorg.apache.activemq.SERIALIZABLE_PACKAGES="*" \
     org.wso2.micro.integrator.bootstrap.Bootstrap $*
