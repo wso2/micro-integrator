@@ -35,7 +35,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 import java.io.*;
-import java.net.HttpURLConnection;
+import java.net.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
