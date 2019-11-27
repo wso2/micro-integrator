@@ -71,6 +71,7 @@ public class TestUtils {
 	public static final String ORDER_DETAILS_NESTED_XSD_PATH = "./src/test/resources/xsd/order_details_nested.xsd";
 	
 	public static final String OFFICES_XSD_PATH = "./src/test/resources/xsd/offices.xsd";
+	public static final String OFFICES_XSD_PATH2 = "./src/test/resources/xsd/offices.xsd";
 
 	/**
 	 * Calls an operation of a target web service with the given parameters and
@@ -87,6 +88,19 @@ public class TestUtils {
 	 */
 	public static OMElement callOperation(String epr, String opName,
 			Map<String, String> params) throws AxisFault {
+		EndpointReference targetEPR = new EndpointReference(epr);
+		OMElement payload = getPayload(opName, params);
+		Options options = new Options();
+		options.setTo(targetEPR);
+		options.setAction("urn:" + opName);
+		ServiceClient sender = new ServiceClient();
+		sender.setOptions(options);
+		OMElement result = sender.sendReceive(payload);
+		return result;
+	}
+
+	public static OMElement callOperation2(String epr, String opName,
+										  Map<String, String> params) throws AxisFault {
 		EndpointReference targetEPR = new EndpointReference(epr);
 		OMElement payload = getPayload(opName, params);
 		Options options = new Options();
