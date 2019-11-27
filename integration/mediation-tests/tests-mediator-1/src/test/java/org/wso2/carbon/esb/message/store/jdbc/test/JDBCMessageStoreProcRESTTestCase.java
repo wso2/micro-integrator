@@ -26,7 +26,6 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
-import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.carbon.automation.test.utils.dbutils.MySqlDatabaseManager;
 import org.wso2.carbon.integration.common.admin.client.LogViewerClient;

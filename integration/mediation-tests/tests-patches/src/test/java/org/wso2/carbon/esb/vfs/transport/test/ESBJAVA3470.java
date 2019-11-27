@@ -38,12 +38,12 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.carbon.automation.extensions.servers.sftpserver.SFTPServer;
 import org.wso2.carbon.proxyadmin.stub.ProxyServiceAdminProxyAdminException;
 import org.wso2.carbon.utils.ServerConstants;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
+import org.wso2.esb.integration.common.utils.servers.SftpServerRunner;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
@@ -202,8 +202,6 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
         ClassLoader classLoader = getClass().getClassLoader();
         log.info("Using identity file: " + classLoader.getResource("sftp/id_rsa.pub").getFile());
         File file = new File(classLoader.getResource("sftp/id_rsa.pub").getFile());
-        SFTPServer sftpServer = new SFTPServer();
-        sshd.setKeyPairProvider(SFTPServer.createTestHostKeyProvider(Paths.get(file.getAbsolutePath())));
         sshd.setKeyPairProvider(createTestHostKeyProvider(Paths.get(file.getAbsolutePath())));
         sshd.setUserAuthFactories(Arrays.asList(new UserAuthPublicKeyFactory()));
         sshd.setFileSystemFactory(new VirtualFileSystemFactory(Paths.get(carbonHome)));
@@ -212,13 +210,12 @@ public class ESBJAVA3470 extends ESBIntegrationTest {
                 return "sftpuser".equals(username);
             }
         });
-
         sshd.setCommandFactory(new ScpCommandFactory());
-
         sshd.setSubsystemFactories(Arrays.asList(new SftpSubsystemFactory()));
+        SftpServerRunner sftpServerRunner = new SftpServerRunner(sshd);
 
         try {
-            sshd.start();
+            sftpServerRunner.start();
         } catch (Exception e) {
             e.printStackTrace();
         }

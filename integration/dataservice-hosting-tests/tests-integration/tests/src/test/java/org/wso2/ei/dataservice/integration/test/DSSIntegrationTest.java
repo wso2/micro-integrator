@@ -26,12 +26,12 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.context.beans.Tenant;
 import org.wso2.carbon.automation.engine.context.beans.User;
-import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.test.utils.common.TestConfigurationProvider;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.ei.dataservice.integration.common.utils.DSSTestCaseUtils;
 import org.wso2.ei.dataservice.integration.common.utils.SqlDataSourceUtil;
+import org.wso2.ei.dataservice.integration.common.utils.XPathConstants;
 import org.xml.sax.SAXException;
 
 import java.io.File;

@@ -25,7 +25,6 @@ import org.apache.commons.logging.LogFactory;
 import org.testng.Assert;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
-import org.wso2.carbon.automation.extensions.XPathConstants;
 import org.wso2.carbon.automation.test.utils.common.FileManager;
 import org.wso2.carbon.automation.test.utils.dbutils.DatabaseFactory;
 import org.wso2.carbon.automation.test.utils.dbutils.DatabaseManager;

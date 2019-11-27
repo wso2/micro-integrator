@@ -33,16 +33,6 @@
     <dependencies>
         <dependency>
             <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.engine</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
-            <artifactId>org.wso2.carbon.automation.extensions</artifactId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon.automation</groupId>
             <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
             <scope>compile</scope>
         </dependency>

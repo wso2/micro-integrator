@@ -68,26 +68,6 @@
                 <version>${automation.framework.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.carbon.automation</groupId>
-                <artifactId>org.wso2.carbon.automation.extensions</artifactId>
-                <version>${automation.framework.version}</version>
-                <scope>compile</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.seleniumhq.selenium</groupId>
-                        <artifactId>selenium-htmlunit-driver</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.seleniumhq.selenium</groupId>
-                        <artifactId>selenium-java</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.apache.cxf</groupId>
-                        <artifactId>cxf-rt-frontend-jaxrs</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.wso2.carbon.automationutils</groupId>
                 <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
                 <version>${automation.framework.utils.version}</version>

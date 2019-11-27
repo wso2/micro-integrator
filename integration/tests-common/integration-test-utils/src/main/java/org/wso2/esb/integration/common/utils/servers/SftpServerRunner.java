@@ -23,10 +23,8 @@ import org.apache.sshd.server.SshServer;
 import org.apache.sshd.common.NamedFactory;
 import org.apache.sshd.common.file.virtualfs.VirtualFileSystemFactory;
 import org.apache.sshd.server.command.Command;
-import org.apache.sshd.server.auth.password.PasswordAuthenticator;
 import org.apache.sshd.server.scp.ScpCommandFactory;
 import org.apache.sshd.server.keyprovider.SimpleGeneratorHostKeyProvider;
-import org.apache.sshd.server.session.ServerSession;
 import org.apache.sshd.server.subsystem.sftp.SftpSubsystemFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +44,10 @@ public class SftpServerRunner {
         this.sftpServer = new SftpServer(port, ftpFolderPath, userName, password);
     }
 
+    public SftpServerRunner(SshServer sshServer) {
+        this.sftpServer = new SftpServer(sshServer);
+    }
+
     public void start() {
         Thread thread = new Thread(sftpServer);
         thread.start();
@@ -58,35 +60,29 @@ public class SftpServerRunner {
     private class SftpServer implements Runnable {
 
         private final Logger LOGGER = LoggerFactory.getLogger(SftpServer.class);
-        private final SshServer sshd = SshServer.setUpDefaultServer();
-        private final int port;
-        private final String path;
-        private final String ftpUser;
-        private final String ftpPassword;
+        private SshServer sshd = SshServer.setUpDefaultServer();
 
         SftpServer(int port, String path, String ftpUser, String ftpPassword) {
-            this.port = port;
-            this.path = path;
-            this.ftpUser = ftpUser;
-            this.ftpPassword = ftpPassword;
-        }
 
-        @Override
-        public void run() {
             sshd.setPort(port);
             sshd.setSubsystemFactories(
                     Arrays.<NamedFactory<Command>>asList(new SftpSubsystemFactory()));
             sshd.setCommandFactory(new ScpCommandFactory());
             sshd.setKeyPairProvider(new SimpleGeneratorHostKeyProvider());
             sshd.setFileSystemFactory(new VirtualFileSystemFactory(Paths.get(path)));
-            sshd.setPasswordAuthenticator(new PasswordAuthenticator() {
-                @Override
-                public boolean authenticate(final String username, final String password, final ServerSession session) {
-                    return StringUtils.equals(username, ftpUser) && StringUtils.equals(password, ftpPassword);
-                }
-            });
+            sshd.setPasswordAuthenticator((username, password, session) -> StringUtils.equals(username, ftpUser)
+                                                                           && StringUtils.equals(password,
+                                                                                                 ftpPassword));
+        }
+
+        SftpServer(SshServer sshServer) {
+            this.sshd = sshServer;
+        }
+
+        @Override
+        public void run() {
             try {
-                LOGGER.info("Starting SFTP server on port {}", port);
+                LOGGER.info("Starting SFTP server on port {}", sshd.getPort());
                 sshd.start();
             } catch (IOException e) {
                 LOGGER.error("Error starting SFTP server", e);
