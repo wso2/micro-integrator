@@ -1,6 +1,8 @@
 # Synapse Unit Testing Framework
 Unit testing framework for synapse provides an in-built way to execute a unit test against a given synapse configuration artifacts such as sequence, proxy, api, local entry, endpoint. Mainly it required a test artifact which is your main configuration, supportive artifacts which needs to execute the test artifact if exists and test cases with assertions. 
 
+![Architecture Diagram](images/synapse_unit_test_framework_architecture.jpg)
+
 ### Features
 - Support deploy sequence, proxy, API, endpoint and local-entry artifacts
 - Able to run multiple test cases against a test artifact and supportive artifacts
@@ -67,6 +69,8 @@ class TCPClient {
 } 
 ```
 
+Or else, follow the [Create Unit Test Suite](https://ei.docs.wso2.com/en/latest/micro-integrator/develop/creating-unit-test-suite/) documentation to create and run the unit tests via WSO2 Integration Studio easily.
+
 ## Sample Test Cases
 Each request needs to be sent to the unit testing server via a TCP transport (user defined port or default 9008 port). 
 
@@ -95,7 +99,7 @@ Client request via TCP:
     </artifacts>
 
     <test-cases>
-        <test-case>
+        <test-case name="test-one">
             <input>
                 <payload>
                     <![CDATA[
@@ -208,7 +212,7 @@ Client request via TCP:
 
     <test-cases>
         <!-- One or more test cases with inputs and assertions -->
-        <test-case>
+        <test-case name="test-one">
             <assertions>
                 <assertEquals>
                     <actual>$body</actual>
@@ -266,7 +270,7 @@ Client request via TCP:
 
     <test-cases>
         <!-- One or more test cases with inputs and assertions -->
-        <test-case>
+        <test-case name="test-one">
             <input>
                 <request-path>/</request-path>
                 <request-method>GET</request-method>
@@ -352,7 +356,7 @@ Client request via TCP:
 
     <test-cases>
         <!-- One or more test cases with inputs and assertions -->
-        <test-case>
+        <test-case name="test-one">
             <assertions>
                 <assertEquals>
                     <actual>$body</actual>
