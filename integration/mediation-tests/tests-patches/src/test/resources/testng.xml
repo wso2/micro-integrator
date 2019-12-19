@@ -37,9 +37,8 @@
     <test name="API-Test" preserve-order="true" verbose="2">
         <classes>
             <class name="org.wso2.carbon.esb.api.test.ESBJAVA3751UriTemplateReservedCharacterEncodingTest"/>
-            <!-- Disable testcases due to https://github.com/wso2/micro-integrator/issues/341
             <class name="org.wso2.carbon.esb.api.apidefinition.ESBJAVA4907SwaggerGenerationTestCase"/>
-            <class name="org.wso2.carbon.esb.api.apidefinition.ESBJAVA4936SwaggerGenerationJsonYamlTestCase"/-->
+            <class name="org.wso2.carbon.esb.api.apidefinition.ESBJAVA4936SwaggerGenerationJsonYamlTestCase"/>
         </classes>
     </test>
 
