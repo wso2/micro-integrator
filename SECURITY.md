@@ -15,4 +15,4 @@ WSO2 takes security issues very seriously. If you have any concerns regarding ou
 
 Warning : Please do not create GitHub issues for security vulnerabilities.
 
-WSO2 guidelines for reporting a security vulnerability page describes how to report a Security Vulnerability and includes a public key if you wish to send secure messages to security@wso2.com
+[WSO2 guidelines for reporting a security vulnerability](https://docs.wso2.com/display/Security/WSO2+Security+Vulnerability+Reporting+Guidelines) page describes how to report a Security Vulnerability and includes a public key if you wish to send secure messages to security@wso2.com
