@@ -40,7 +40,7 @@ import java.util.Random;
  * when the message has no body.
  * Issue : https://github.com/wso2/product-ei/issues/1449
  */
-public class StoreAndForwardWithEmptyMessageBodyTesCase extends ESBIntegrationTest {
+public class StoreAndForwardWithEmptyMessageBodyTestCase extends ESBIntegrationTest {
 
     private H2DataBaseManager h2DatabaseManager;
     private static CarbonLogReader carbonLogReader;
