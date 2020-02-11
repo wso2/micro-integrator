@@ -26,8 +26,8 @@ import (
 )
 
 const remoteCmdLiteral = "remote"
-const remoteCmdShortDesc = "Add, remove, update or select Micro Integrator"
-const remoteCmdLongDesc = "Add, remove, update or select Micro Integrator which will be associated with the CLI\n"
+const remoteCmdShortDesc = "Add, remove, update or select Micro Integrator, login or logout of Micro Integrator"
+const remoteCmdLongDesc = "Add, remove, update or select Micro Integrator, login or logout of Micro Integrator which will be associated with the CLI\n"
 
 var remoteUsage = dedent.Dedent(`
 Usage
@@ -39,6 +39,8 @@ Available Commands:
   update [nick-name] [host] [port]         Update a Micro Integrator
   select [nick-name]                       Select a Micro Integrator on which commands are executed
   show                                     Show available Micro Integrators
+  login                                    Login to the current Micro Integrator instance
+  logout                                   Logout of the current Micro Integrator instance
 `)
 
 var remoteCmdExamples = dedent.Dedent(`
@@ -53,9 +55,13 @@ To select the current Micro Integrator
   ` + programName + ` ` + remoteCmdLiteral + ` ` + remoteSelectCmdLiteral + ` TestServer ` + `
 To show available Micro Integrators
   ` + programName + ` ` + remoteCmdLiteral + ` ` + remoteShowCmdLiteral + `
+To login to the current Micro Integrator instance
+  ` + programName + ` ` + remoteCmdLiteral + ` ` + loginCmdLiteral + `
+To logout of the current Micro Integrator instance
+  ` + programName + ` ` + remoteCmdLiteral + ` ` + logoutCmdLiteral + `
 `)
 
-var remoteCmdValidArgs = []string{"add", "remove", "update", "select", "show"}
+var remoteCmdValidArgs = []string{"add", "remove", "update", "select", "show", "login", "logout"}
 
 var remoteCmd = &cobra.Command{
 	Use:   "remote [command]",
