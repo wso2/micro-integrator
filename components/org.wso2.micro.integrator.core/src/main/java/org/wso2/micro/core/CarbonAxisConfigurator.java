@@ -16,6 +16,21 @@
 
 package org.wso2.micro.core;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import javax.xml.namespace.QName;
+
 import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.AxisFault;
@@ -36,23 +51,12 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.micro.application.deployer.Axis2DeployerProvider;
+import org.wso2.micro.core.deployment.CarbonDeploymentSchedulerTask;
 import org.wso2.micro.core.services.listners.Axis2ConfigServiceListener;
 import org.wso2.micro.core.util.Axis2ConfigItemHolder;
 import org.wso2.micro.core.util.ServerException;
+import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import javax.xml.namespace.QName;
 
 /**
  * WSO2 Carbon implementation of AxisConfigurator to load Axis2
@@ -75,8 +79,8 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
 
     private BundleContext bundleContext;
     private String carbonContextRoot;
-/*    private ScheduledExecutorService scheduler;
-    private CarbonDeploymentSchedulerTask schedulerTask;*/
+    private ScheduledExecutorService scheduler;
+    private CarbonDeploymentSchedulerTask schedulerTask;
 
     public boolean isInitialized() {
         return isInitialized;
@@ -223,7 +227,6 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
         }
         return axisConfig;
     }
-
 
     public boolean isGlobalyEngaged(AxisModule axisModule) {
         String modName = axisModule.getName();
@@ -385,22 +388,18 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
 
     @Override
     protected void startSearch(RepositoryListener listener) {
-        //TODO need to implement
- /*       schedulerTask = new CarbonDeploymentSchedulerTask(listener,
-                                                          axisConfig,
-                                                          MultitenantConstants.SUPER_TENANT_ID,
-                                                          MultitenantConstants.SUPER_TENANT_DOMAIN_NAME);
-        scheduler = Executors
-                .newScheduledThreadPool(1, new CarbonThreadFactory(new ThreadGroup("CarbonDeploymentSchedulerThread")));
-        String deploymentInterval =
-                CoreServerInitializer.
-                        getServerConfigurationService().getFirstProperty("Axis2Config.DeploymentUpdateInterval");
+        schedulerTask = new CarbonDeploymentSchedulerTask(listener, axisConfig);
+        scheduler = Executors.newScheduledThreadPool(1, new CarbonThreadFactory(
+                new ThreadGroup("CarbonDeploymentSchedulerThread")));
+
+        String deploymentInterval = CarbonCoreDataHolder.getInstance().getServerConfigurationService().getFirstProperty(
+                "Axis2Config.DeploymentUpdateInterval");
         int deploymentIntervalInt = 15;
-        if(deploymentInterval != null) {
-           deploymentIntervalInt = Integer.parseInt(deploymentInterval);
+        if (deploymentInterval != null) {
+            deploymentIntervalInt = Integer.parseInt(deploymentInterval);
         }
         scheduler.scheduleWithFixedDelay(schedulerTask, 0, deploymentIntervalInt, TimeUnit.SECONDS);
-   */
+
     }
 
     @Override
@@ -484,4 +483,18 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
         return axis2xmlStream;
     }
 
+    public void deployServices() {
+        setWebLocationString(webLocation);
+        if (repoLocation != null && repoLocation.trim().length() != 0) {
+            if (isUrlRepo) {
+                try {
+                    loadServicesFromUrl(new URL(repoLocation));
+                } catch (MalformedURLException e) {
+                    log.error("Services repository URL " + repoLocation + " is invalid");
+                }
+            } else {
+                super.loadServices();
+            }
+        }
+    }
 }

@@ -20,12 +20,17 @@ package org.wso2.micro.integrator.initializer;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.axis2.deployment.Deployer;
+import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.description.Parameter;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.engine.AxisConfigurator;
 import org.apache.axis2.engine.ListenerManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.ServerStatus;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 
@@ -58,6 +63,8 @@ public class StartupFinalizer {
      * Finalizes the server startup.
      */
     public void finalizeStartup() {
+        // Register CappAxis2Deployer in DeploymentEngine (required for CApp deployment)
+        this.addCAppDeployer(configCtx.getAxisConfiguration());
         completeInitialization();
     }
 
@@ -68,7 +75,44 @@ public class StartupFinalizer {
         /*listerManagerServiceRegistration.unregister();*/
     }
 
+    /**
+     * Function to add CApp deployer
+     *
+     * @param axisConfiguration  AxisConfiguration
+     * @return boolean status of the CApp deployment
+     */
+    public boolean addCAppDeployer(AxisConfiguration axisConfiguration) {
+        boolean successfullyAdded = true;
+        try {
+            String appsRepo = "carbonapps";
+            // Initialize CApp deployer here
+            Class deployerClass = Class.
+                    forName("org.wso2.micro.integrator.initializer.deployment.application.deployer.CappAxis2Deployer");
+
+            Deployer deployer = (Deployer) deployerClass.newInstance();
+            deployer.setDirectory(appsRepo);
+            deployer.setExtension("car");
+
+            //Add the deployer to deployment engine
+            DeploymentEngine deploymentEngine =
+                    (DeploymentEngine) axisConfiguration.getConfigurator();
+            deploymentEngine.addDeployer(deployer, appsRepo, "car");
+        } catch (Exception e) {
+            successfullyAdded = false;
+        }
+        return successfullyAdded;
+    }
+
     private void completeInitialization() {
+        try {
+            AxisConfigurator axisConfigurator = configCtx.getAxisConfiguration().getConfigurator();
+            if (axisConfigurator instanceof CarbonAxisConfigurator) {
+                ((CarbonAxisConfigurator) axisConfigurator).deployServices();
+            }
+        } catch (Exception e) {
+            log.error("Runtime exception while deploying artifacts ", e);
+        }
+
         ListenerManager listenerManager = configCtx.getListenerManager();
         if (listenerManager == null) {
             listenerManager = new ListenerManager();

@@ -21,6 +21,7 @@ import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.deployment.DeploymentException;
+import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -66,7 +67,9 @@ public class AppDeployerServiceComponent {
 
         // Initialize deployers
         ArtifactDeploymentManager artifactDeploymentManager = new ArtifactDeploymentManager(configCtx.getAxisConfiguration());
-        CAppDeploymentManager cAppDeploymentManager = new CAppDeploymentManager(configCtx.getAxisConfiguration());
+        CAppDeploymentManager cAppDeploymentManager = CAppDeploymentManager.getInstance();
+        cAppDeploymentManager.init(configCtx.getAxisConfiguration());
+
         initializeDeployers(artifactDeploymentManager, cAppDeploymentManager);
 
         // Register eventSink deployer
@@ -74,14 +77,6 @@ public class AppDeployerServiceComponent {
 
         // Deploy artifacts
         artifactDeploymentManager.deploy();
-
-        // Deploy carbon applications
-        try {
-            cAppDeploymentManager.deploy();
-        } catch (CarbonException e) {
-            log.error("Error occurred while deploying carbon application", e);
-        }
-        log.debug("MicroIntegrator artifact/Capp Deployment completed");
 
         // Finalize server startup
         startupFinalizer = new StartupFinalizer(configCtx, ctxt.getBundleContext());
@@ -180,8 +175,8 @@ public class AppDeployerServiceComponent {
        cAppDeploymentManager.registerDeploymentHandler(new FileRegistryResourceDeployer(
                 synapseEnvironmentService.getSynapseEnvironment().getSynapseConfiguration().getRegistry()));
         cAppDeploymentManager.registerDeploymentHandler(new DataSourceCappDeployer());
-        cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
+        cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
 
     }
 

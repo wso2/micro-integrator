@@ -32,7 +32,7 @@ import java.util.List;
  */
 @SuppressWarnings("unused")
 public class FileManipulator {
-    private static final Log log = LogFactory.getLog(org.wso2.carbon.utils.FileManipulator.class);
+    private static final Log log = LogFactory.getLog(org.wso2.micro.core.util.FileManipulator.class);
 
     /**
      * Deletes all files and subdirectories under dir.
