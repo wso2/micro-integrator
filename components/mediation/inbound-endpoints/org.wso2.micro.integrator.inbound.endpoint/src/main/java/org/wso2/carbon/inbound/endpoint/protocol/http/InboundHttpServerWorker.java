@@ -60,7 +60,7 @@ public class InboundHttpServerWorker extends ServerWorker {
 
     private static final Log log = LogFactory.getLog(InboundHttpServerWorker.class);
 
-    private SourceRequest request = null;
+    private SourceRequest request;
     private int port;
     private String tenantDomain;
     private RESTRequestHandler restHandler;
@@ -121,9 +121,6 @@ public class InboundHttpServerWorker extends ServerWorker {
                     log.error("Cannot find deployed inbound endpoint " + endpointName + "for process request");
                     return;
                 }
-
-                //                OpenEventCollector.reportEntryEvent(synCtx, endpointName, endpoint.getAspectConfiguration(),
-                //                                                    ComponentType.INBOUNDENDPOINT);
 
                 CustomLogSetter.getInstance().setLogAppender(endpoint.getArtifactContainerName());
 
