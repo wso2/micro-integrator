@@ -38,9 +38,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -57,6 +54,7 @@ public class CAppDeploymentManager {
     private AxisConfiguration axisConfiguration;
     private List<AppDeploymentHandler> appDeploymentHandlers;
     private static Map<String, ArrayList<CarbonApplication>> tenantcAppMap;
+    private static ArrayList<String> faultyCapps = new ArrayList<>();
 
     public CAppDeploymentManager(AxisConfiguration axisConfiguration) {
         this.axisConfiguration = axisConfiguration;
@@ -145,6 +143,7 @@ public class CAppDeploymentManager {
                                 AppDeployerUtils.getTenantIdLogString(AppDeployerUtils.getTenantId()));
 
                     } catch (DeploymentException e) {
+                        faultyCapps.add(cAppName);
                         log.error("Error occurred while deploying the Carbon application: " + targetCAppPath , e);
                     }
                 }
@@ -376,5 +375,12 @@ public class CAppDeploymentManager {
         throw new CarbonException(msg, e);
     }
 
-
+    /**
+     * Get a list of faulty CAPPs in the server.
+     *
+     * @return list of faulty CAPPs
+     */
+    public static ArrayList<String> getFaultyCapps() {
+        return faultyCapps;
+    }
 }

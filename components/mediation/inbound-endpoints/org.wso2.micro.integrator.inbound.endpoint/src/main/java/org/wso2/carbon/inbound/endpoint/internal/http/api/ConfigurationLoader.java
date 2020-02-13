@@ -75,6 +75,9 @@ public class ConfigurationLoader {
 
     private static final int PORT_OFFSET = PersistenceUtils.getPortOffset();
 
+    // This name configured in internal-apis.xml file
+    private static final String READINESS_PROBE_API_NAME = "ReadinessProbe";
+
     public static void loadInternalApis(String apiFilePath) {
 
         OMElement apiConfig = MiscellaneousUtil.loadXMLConfig(apiFilePath);
@@ -108,8 +111,11 @@ public class ConfigurationLoader {
                             if (name == null || name.isEmpty()) {
                                 handleException("Name not specified in one or more handlers");
                             }
+                            // Readiness-probe api is enabled by default.
+                            // other APIs must be enabled manually.
                             if (!Boolean.parseBoolean(
-                                    System.getProperty(Constants.PREFIX_TO_ENABLE_INTERNAL_APIS + name))) {
+                                    System.getProperty(Constants.PREFIX_TO_ENABLE_INTERNAL_APIS + name)) &&
+                                    !READINESS_PROBE_API_NAME.equals(name)) {
                                 continue;
                             }
                         } else {
