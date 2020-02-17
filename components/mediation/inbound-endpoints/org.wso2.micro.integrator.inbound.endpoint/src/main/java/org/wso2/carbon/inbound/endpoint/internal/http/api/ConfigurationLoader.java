@@ -111,11 +111,12 @@ public class ConfigurationLoader {
                             if (name == null || name.isEmpty()) {
                                 handleException("Name not specified in one or more handlers");
                             }
-                            // Readiness-probe api is enabled by default.
+                            // Readiness-probe api is enabled by default. ( to disable use -DdisableReadiness=true )
                             // other APIs must be enabled manually.
                             if (!Boolean.parseBoolean(
                                     System.getProperty(Constants.PREFIX_TO_ENABLE_INTERNAL_APIS + name)) &&
-                                    !READINESS_PROBE_API_NAME.equals(name)) {
+                                    !(READINESS_PROBE_API_NAME.equals(name) && !Boolean.parseBoolean(
+                                            System.getProperty(Constants.DISABLE_READINESS_PROBE)))) {
                                 continue;
                             }
                         } else {

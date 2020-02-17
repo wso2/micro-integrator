@@ -362,4 +362,25 @@ public class Utils {
         }
     }
 
+    /**
+     * Un-deploy a carbon application from the server artifacts location and restart if needed.
+     *
+     * @param artifactName  CAPP name ( must include the extension Ex:- app1.car )
+     * @param restartServer Server restart required
+     */
+    public static void undeployCarbonApplication(String artifactName, boolean restartServer) {
+        CarbonServerExtension.shutdownServer();
+        String pathString =
+                System.getProperty("carbon.home") + File.separator + "repository" + File.separator + "deployment"
+                        + File.separator + "server" + File.separator + "carbonapps" + File.separator + artifactName;
+        Path path = FileSystems.getDefault().getPath(pathString);
+        try {
+            Files.deleteIfExists(path);
+        } catch (IOException e) {
+            log.error("Error while deleting the file", e);
+        }
+        if (restartServer) {
+            CarbonServerExtension.restartServer();
+        }
+    }
 }

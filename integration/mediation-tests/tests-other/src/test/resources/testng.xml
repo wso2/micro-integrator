@@ -107,7 +107,7 @@
             </class>
         </classes>
     </test>
-    
+
     <test name="Stats-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.statistics"/>
@@ -124,6 +124,12 @@
     <test name="LocalEntry-Test" preserve-order="true" verbose="2">
         <packages>
             <package name="org.wso2.carbon.esb.localentry.test.*"/>
+        </packages>
+    </test>
+
+    <test name="Kubernetes probe tests" preserve-order="true" verbose="2">
+        <packages>
+            <package name="org.wso2.carbon.esb.probes.test"/>
         </packages>
     </test>
 

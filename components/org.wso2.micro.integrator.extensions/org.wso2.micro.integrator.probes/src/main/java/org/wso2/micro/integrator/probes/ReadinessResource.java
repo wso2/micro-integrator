@@ -77,7 +77,8 @@ public class ReadinessResource extends APIResource {
 
         ArrayList<String> faultyCapps = CAppDeploymentManager.getFaultyCapps();
         if (faultyCapps.size() > 0) {
-            response += "\"status\": \"not ready, faulty CAPPs detected\"}";
+            String faultyList = String.join("\",\"", faultyCapps);
+            response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList + "\"]}";
             axisCtx.setProperty(HTTP_SC, 500);
         } else {
             response += "\"status\" : \"ready\"}";
