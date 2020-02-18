@@ -19,5 +19,5 @@ jobs:
       with:
         java-version: openjdk11
     - name: Test product with Maven
-      run: mvn -B clean install --file integration/pom.xml
+      run: mvn -B clean install --file integration/pom.xml -fae
 
