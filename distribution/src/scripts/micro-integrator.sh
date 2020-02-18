@@ -325,6 +325,7 @@ do
     -Djavax.xml.xpath.XPathFactory:http://java.sun.com/jaxp/xpath/dom=net.sf.saxon.xpath.XPathFactoryImpl \
     -DavoidConfigHashRead=true \
     -Dproperties.file.path=default \
+    -DenableReadinessProbe=true \
     $NODE_PARAMS \
     -Dorg.apache.activemq.SERIALIZABLE_PACKAGES="*" \
     org.wso2.micro.integrator.bootstrap.Bootstrap $*

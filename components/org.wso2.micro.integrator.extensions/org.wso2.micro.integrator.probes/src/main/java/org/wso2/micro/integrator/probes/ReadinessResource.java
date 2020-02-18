@@ -39,8 +39,9 @@ import java.util.Set;
 public class ReadinessResource extends APIResource {
 
     private static Log log = LogFactory.getLog(ReadinessResource.class);
-    public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
-    public static final String HTTP_SC = "HTTP_SC";
+    private static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
+    private static final String HTTP_SC = "HTTP_SC";
+    private static String CACHED_RESPONSE = "";
 
     /**
      * Constructor for creating an API Resource.
@@ -70,19 +71,29 @@ public class ReadinessResource extends APIResource {
         axisCtx.setProperty(Constants.Configuration.CONTENT_TYPE, "application/json");
         // Sending a response body for a GET request
         axisCtx.removeProperty(NO_ENTITY_BODY);
-        // appending MI server version number to the response
-        CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
-        String miVersion = serverConfig.getServerVersion();
-        String response = "{\"version\":\"" + miVersion + "\",";
 
-        ArrayList<String> faultyCapps = CAppDeploymentManager.getFaultyCapps();
-        if (faultyCapps.size() > 0) {
-            String faultyList = String.join("\",\"", faultyCapps);
-            response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList + "\"]}";
-            axisCtx.setProperty(HTTP_SC, 500);
+        String response = "{\"version\":\"";
+
+        if (CACHED_RESPONSE.isEmpty()) {
+            // appending MI server version number to the response
+            CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
+            String miVersion = serverConfig.getServerVersion();
+            response += miVersion + "\",";
+
+            ArrayList<String> faultyCapps = CAppDeploymentManager.getFaultyCapps();
+            if (faultyCapps.size() > 0) {
+                String faultyList = String.join("\",\"", faultyCapps);
+                response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList +
+                        "\"]}";
+                axisCtx.setProperty(HTTP_SC, 500);
+            } else {
+                response += "\"status\" : \"ready\"}";
+                axisCtx.setProperty(HTTP_SC, 200);
+            }
+            // update cache
+            CACHED_RESPONSE = response;
         } else {
-            response += "\"status\" : \"ready\"}";
-            axisCtx.setProperty(HTTP_SC, 200);
+            response = CACHED_RESPONSE;
         }
 
         try {
