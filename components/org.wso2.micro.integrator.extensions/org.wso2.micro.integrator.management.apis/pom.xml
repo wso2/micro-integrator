@@ -60,6 +60,7 @@
                             org.wso2.micro.integrator.management.apis.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
+                            org.apache.commons.configuration;version="${commons.configuration.version}",
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
