@@ -31,9 +31,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+import java.util.Properties;
 
 public class Utils {
 
@@ -105,5 +108,25 @@ public class Utils {
             serviceAdmin.init(messageContext.getConfiguration().getAxisConfiguration());
         }
         return serviceAdmin;
+    }
+
+    /**
+     * Util method to return the specified  property from a properties file.
+     *
+     * @param srcFile - The source file which needs to be looked up.
+     * @param key     - Key of the property.
+     * @return - Value of the property.
+     */
+    public static String getProperty(File srcFile, String key) {
+
+        String value = null;
+        try (FileInputStream fis = new FileInputStream(srcFile)) {
+            Properties properties = new Properties();
+            properties.load(fis);
+            value = properties.getProperty(key);
+        } catch (Exception e) {
+            LOG.error("Error occurred while retrieving the property" + e.getMessage());
+        }
+        return value;
     }
 }
