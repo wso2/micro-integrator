@@ -95,8 +95,7 @@ public class KeyStoreBasedInternalCryptoProviderTest {
     private KeyStore getKeyStore() throws Exception {
 
         KeyStore keyStore = KeyStore.getInstance("JKS");
-        keyStore.load(this.getClass().getResourceAsStream(File.separator + KEY_STORE_FILE_NAME),
-                      KEY_STORE_PASSWORD.toCharArray());
+        keyStore.load(this.getClass().getResourceAsStream("/" + KEY_STORE_FILE_NAME), KEY_STORE_PASSWORD.toCharArray());
         return keyStore;
     }
 
