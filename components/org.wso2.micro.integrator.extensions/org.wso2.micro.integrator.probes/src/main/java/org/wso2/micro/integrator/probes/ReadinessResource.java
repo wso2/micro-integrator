@@ -72,15 +72,17 @@ public class ReadinessResource extends APIResource {
         // Sending a response body for a GET request
         axisCtx.removeProperty(NO_ENTITY_BODY);
 
-        String response = "{\"version\":\"";
+        String response = "";
 
-        if (CACHED_RESPONSE.isEmpty()) {
+        if (!CACHED_RESPONSE.isEmpty()) {
+            response = CACHED_RESPONSE;
+        } else {
             // appending MI server version number to the response
             CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
             String miVersion = serverConfig.getServerVersion();
-            response += miVersion + "\",";
+            response = "{\"version\":\"" + miVersion + "\",";
 
-            ArrayList<String> faultyCapps = CAppDeploymentManager.getFaultyCapps();
+            ArrayList<String> faultyCapps = new ArrayList<>(CAppDeploymentManager.getFaultyCapps());
             if (faultyCapps.size() > 0) {
                 String faultyList = String.join("\",\"", faultyCapps);
                 response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList +
@@ -92,15 +94,17 @@ public class ReadinessResource extends APIResource {
             }
             // update cache
             CACHED_RESPONSE = response;
-        } else {
-            response = CACHED_RESPONSE;
         }
 
         try {
             JsonUtil.getNewJsonPayload(axisCtx, response, true, true);
         } catch (AxisFault axisFault) {
             log.error("Error occurred while generating health-check response", axisFault);
+            // sending 500 without a response payload
+            axisCtx.setProperty(NO_ENTITY_BODY, true);
+            axisCtx.setProperty(HTTP_SC, 500);
         }
+        // return true always since return false = return 404
         return true;
     }
 }

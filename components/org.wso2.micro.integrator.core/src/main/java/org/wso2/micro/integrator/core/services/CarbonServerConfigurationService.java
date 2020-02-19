@@ -564,6 +564,6 @@ public class CarbonServerConfigurationService {
 	 * @return WSO2 server version.
 	 */
 	public String getServerVersion() {
-		return getFirstProperty(SERVER_VERSION);
+	    return getFirstProperty(SERVER_VERSION);
 	}
 }

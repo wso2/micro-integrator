@@ -19,7 +19,6 @@
 package org.wso2.carbon.esb.probes.test;
 
 import org.apache.http.HttpResponse;
-import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -30,7 +29,6 @@ import org.wso2.esb.integration.common.utils.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class ReadienssProbeTestCase extends ESBIntegrationTest {
 
@@ -51,9 +49,6 @@ public class ReadienssProbeTestCase extends ESBIntegrationTest {
     @Test(groups = {"wso2.esb"}, description = "Test Readiness probe with a faulty CAPP")
     public void testReadinessWithFaultyCapps() throws Exception {
 
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).
-                until(isManagementApiAvailable());
-
         HttpResponse response = client.doGet(READINESS_URL, headers);
         String responsePayload = client.getResponsePayload(response);
 
@@ -61,13 +56,12 @@ public class ReadienssProbeTestCase extends ESBIntegrationTest {
         Assert.assertFalse(responsePayload.isEmpty(), "Readiness response should not be empty");
     }
 
-    @Test(groups = {"wso2.esb"}, description = "Test Readiness probe without faulty CAPPs")
+    @Test(groups = {"wso2.esb"}, description = "Test Readiness probe without faulty CAPPs",
+            dependsOnMethods = {"testReadinessWithFaultyCapps"})
     public void testReadinessWithoutFaultyCapps() throws Exception {
 
         // undeploy the faulty CAPP and restart the server
         Utils.undeployCarbonApplication(FAULTY_CAPP_NAME, true);
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).
-                until(isManagementApiAvailable());
 
         HttpResponse response = client.doGet(READINESS_URL, headers);
         String responsePayload = client.getResponsePayload(response);

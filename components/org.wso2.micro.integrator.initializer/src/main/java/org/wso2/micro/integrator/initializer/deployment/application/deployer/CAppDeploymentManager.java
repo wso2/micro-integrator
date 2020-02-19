@@ -39,6 +39,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -380,7 +381,7 @@ public class CAppDeploymentManager {
      *
      * @return list of faulty CAPPs
      */
-    public static ArrayList<String> getFaultyCapps() {
-        return faultyCapps;
+    public static List<String> getFaultyCapps() {
+        return Collections.unmodifiableList(faultyCapps);
     }
 }
