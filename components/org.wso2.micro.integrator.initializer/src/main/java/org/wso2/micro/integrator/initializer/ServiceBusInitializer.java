@@ -515,11 +515,11 @@ public class ServiceBusInitializer {
             cardinality = ReferenceCardinality.MANDATORY,
             policy = ReferencePolicy.DYNAMIC)
     public void setConfigAdminService(ConfigurationAdmin configAdminService) {
-        log.debug("Set ConfigAdmin Service");
+        log.debug("Setting ConfigurationAdmin Service");
         ConfigurationHolder.getInstance().setConfigAdminService(configAdminService);
     }
 
     public void unsetConfigAdminService(ConfigurationAdmin configAdminService) {
-        log.debug("Unset ConfigAdmin Service");
+        log.debug("Unsetting ConfigurationAdmin Service");
     }
 }
