@@ -116,12 +116,8 @@ public class Utils {
     public static void updateLoggingConfiguration() throws IOException {
 
         ConfigurationAdmin configurationAdmin = ConfigurationHolder.getInstance().getConfigAdminService();
-        if (configurationAdmin != null) {
-            Configuration configuration =
-                    configurationAdmin.getConfiguration(Constants.PAX_LOGGING_CONFIGURATION_PID, "?");
-            configuration.update();
-        } else {
-            LOG.error("Unable to apply logging configuration, Continuing with previous logging configuration");
-        }
+        Configuration configuration =
+                configurationAdmin.getConfiguration(Constants.PAX_LOGGING_CONFIGURATION_PID, "?");
+        configuration.update();
     }
 }
