@@ -56,6 +56,7 @@
                             org.wso2.micro.integrator.management.apis.*;version="${project.version}"
                         </Export-Package>
                         <Import-Package>
+                            org.osgi.service.cm;version="${version.eclipse.equinox.cm}",
                             *;resolution:=optional
                         </Import-Package>
                     </instructions>
