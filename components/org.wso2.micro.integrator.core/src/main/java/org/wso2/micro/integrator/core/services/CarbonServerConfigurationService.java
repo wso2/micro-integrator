@@ -85,6 +85,11 @@ public class CarbonServerConfigurationService {
 	 */
 	public static final String HTTP_PORT = "HTTP.Port";
 
+	/**
+	 * Constant used to define the WSO2 server version.
+	 */
+	public static final String SERVER_VERSION = "Version";
+
 	private static final int ENTITY_EXPANSION_LIMIT = 0;
 
 	/**
@@ -551,5 +556,14 @@ public class CarbonServerConfigurationService {
 
 	protected String getProtectedValue(String key) {
 		return secretResolver.resolve("Carbon." + key);
+	}
+
+	/**
+	 * Take the WSO2 server version from the carbon.xml file.
+	 *
+	 * @return WSO2 server version.
+	 */
+	public String getServerVersion() {
+	    return getFirstProperty(SERVER_VERSION);
 	}
 }
