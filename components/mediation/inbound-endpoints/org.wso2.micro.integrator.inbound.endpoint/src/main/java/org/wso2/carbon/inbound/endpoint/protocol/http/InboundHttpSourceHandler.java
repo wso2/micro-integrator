@@ -23,10 +23,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpException;
 import org.apache.http.nio.NHttpServerConnection;
+import org.apache.synapse.transport.passthru.PassThroughConstants;
 import org.apache.synapse.transport.passthru.ProtocolState;
 import org.apache.synapse.transport.passthru.SourceContext;
 import org.apache.synapse.transport.passthru.SourceHandler;
 import org.apache.synapse.transport.passthru.SourceRequest;
+import org.apache.synapse.transport.passthru.TargetContext;
 import org.apache.synapse.transport.passthru.config.SourceConfiguration;
 import org.wso2.carbon.inbound.endpoint.protocol.http.config.WorkerPoolConfiguration;
 import org.wso2.carbon.inbound.endpoint.protocol.http.management.HTTPEndpointManager;
@@ -57,6 +59,13 @@ public class InboundHttpSourceHandler extends SourceHandler {
     @Override
     public void requestReceived(NHttpServerConnection conn) {
         try {
+
+            if (sourceConfiguration.isCorrelationLoggingEnabled()) {
+                setCorrelationId(conn);
+                SourceContext sourceContext = (SourceContext) conn.getContext()
+                        .getAttribute(TargetContext.CONNECTION_INFORMATION);
+                sourceContext.updateLastStateUpdatedTime();
+            }
             //Create Source Request related to HTTP Request
             SourceRequest request = getSourceRequest(conn);
             if (request == null) {
@@ -85,8 +94,19 @@ public class InboundHttpSourceHandler extends SourceHandler {
             if (workerPool == null) {
                 workerPool = sourceConfiguration.getWorkerPool();
             }
-            workerPool.execute(
-                    new InboundHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request, sourceConfiguration, os));
+
+            Object correlationId = conn.getContext().getAttribute(PassThroughConstants.CORRELATION_ID);
+            if (correlationId != null) {
+                workerPool.execute(
+                        new InboundCorrelationEnabledHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request,
+                                                                      sourceConfiguration, os,
+                                                                      System.currentTimeMillis(),
+                                                                      correlationId.toString()));
+            } else {
+                workerPool.execute(
+                        new InboundHttpServerWorker(port, SUPER_TENANT_DOMAIN_NAME, request, sourceConfiguration, os));
+            }
+
         } catch (HttpException e) {
             log.error("HttpException occurred when creating Source Request", e);
             informReaderError(conn);

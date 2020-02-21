@@ -23,6 +23,7 @@ package org.wso2.micro.integrator.initializer.utils;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
@@ -41,6 +42,7 @@ public class ConfigurationHolder {
     private SynapseConfigurationService synapseConfigurationService;
     private SynapseEnvironmentService synapseEnvironmentService;
     private SynapseRegistrationsService synapseRegistrationsService;
+    private ConfigurationAdmin configAdminService;
 
     private Map<Integer, ServiceRegistration> synapseRegistrations =
             new HashMap<Integer, ServiceRegistration>(); 
@@ -106,5 +108,13 @@ public class ConfigurationHolder {
 
     public void setSynapseRegistrationsService(SynapseRegistrationsService synapseRegistrationsService) {
         this.synapseRegistrationsService = synapseRegistrationsService;
+    }
+
+    public void setConfigAdminService(ConfigurationAdmin configAdminService) {
+        this.configAdminService = configAdminService;
+    }
+
+    public ConfigurationAdmin getConfigAdminService() {
+        return configAdminService;
     }
 }

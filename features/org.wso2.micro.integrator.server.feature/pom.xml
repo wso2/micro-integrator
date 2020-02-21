@@ -258,6 +258,9 @@
                                     org.wso2.ei:org.wso2.micro.integrator.management.apis:${project.version}
                                 </bundleDef>
                                 <bundleDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.probes:${project.version}
+                                </bundleDef>
+                                <bundleDef>
                                     org.wso2.orbit.com.fasterxml.jackson.core:jackson-core:${fasterxml.jackson.version}
                                 </bundleDef>
                                 <bundleDef>
@@ -267,6 +270,7 @@
                                     org.wso2.orbit.com.fasterxml.jackson.core:jackson-annotations:${fasterxml.jackson.version}
                                 </bundleDef>
                                 <bundleDef>org.atomikos.wso2:atomikos:${atomikos.version}</bundleDef>
+                                <bundleDef>org.eclipse.platform:org.eclipse.equinox.cm:${version.eclipse.equinox.cm}</bundleDef>
                                 <bundleDef>commons-configuration:commons-configuration:${commons.configuration.version}</bundleDef>
                             </bundles>
 

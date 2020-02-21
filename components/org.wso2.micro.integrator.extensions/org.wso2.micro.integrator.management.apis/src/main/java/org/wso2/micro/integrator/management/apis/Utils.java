@@ -29,6 +29,9 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.rest.RESTConstants;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.osgi.service.cm.Configuration;
+import org.osgi.service.cm.ConfigurationAdmin;
+import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 
 import java.io.File;
@@ -108,6 +111,17 @@ public class Utils {
             serviceAdmin.init(messageContext.getConfiguration().getAxisConfiguration());
         }
         return serviceAdmin;
+    }
+
+    /**
+     * Method to update pax-logging configuration.
+     */
+    public static void updateLoggingConfiguration() throws IOException {
+
+        ConfigurationAdmin configurationAdmin = ConfigurationHolder.getInstance().getConfigAdminService();
+        Configuration configuration =
+                configurationAdmin.getConfiguration(Constants.PAX_LOGGING_CONFIGURATION_PID, "?");
+        configuration.update();
     }
 
     /**

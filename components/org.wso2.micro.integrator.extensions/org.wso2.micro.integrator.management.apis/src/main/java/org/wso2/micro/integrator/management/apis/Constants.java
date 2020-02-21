@@ -83,4 +83,7 @@ public class Constants {
     // Synapse service statuses
     public static final String ACTIVE_STATUS = "active";
     public static final String INACTIVE_STATUS = "inactive";
+
+    // Constant on pax logging
+    public static final String PAX_LOGGING_CONFIGURATION_PID = "org.ops4j.pax.logging";
 }
