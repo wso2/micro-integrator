@@ -36,6 +36,7 @@ import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceRegistration;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -506,5 +507,19 @@ public class ServiceBusInitializer {
     protected void unsetTaskService(TaskService taskService) {
 
         this.taskService = null;
+    }
+
+    @Reference(name = "osgi.configadmin.service",
+            service = ConfigurationAdmin.class,
+            unbind = "unsetConfigAdminService",
+            cardinality = ReferenceCardinality.MANDATORY,
+            policy = ReferencePolicy.DYNAMIC)
+    public void setConfigAdminService(ConfigurationAdmin configAdminService) {
+        log.debug("Setting ConfigurationAdmin Service");
+        ConfigurationHolder.getInstance().setConfigAdminService(configAdminService);
+    }
+
+    public void unsetConfigAdminService(ConfigurationAdmin configAdminService) {
+        log.debug("Unsetting ConfigurationAdmin Service");
     }
 }
