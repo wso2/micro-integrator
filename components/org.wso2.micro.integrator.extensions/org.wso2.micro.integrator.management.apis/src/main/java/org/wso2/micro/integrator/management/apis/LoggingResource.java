@@ -45,9 +45,11 @@ public class LoggingResource extends ApiResource {
 
     private static final Level[] logLevels = new Level[]{Level.OFF, Level.TRACE, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
-    private String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-    private String filePath = carbonHome + File.separator + "conf" + File.separator + "log4j2.properties";
-    private JSONObject jsonBody = new JSONObject();
+    private JSONObject jsonBody;
+    private String filePath = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + "/" + "log4j2.properties";
+
+    private PropertiesConfiguration config = new PropertiesConfiguration();
+    private PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout(config);
 
     public LoggingResource(String urlTemplate) {
         super(urlTemplate);
@@ -76,7 +78,6 @@ public class LoggingResource extends ApiResource {
 
         String logLevel;
         String loggerName;
-        JSONObject jsonBody;
 
         String httpMethod = axis2MessageContext.getProperty("HTTP_METHOD").toString();
 
@@ -119,35 +120,24 @@ public class LoggingResource extends ApiResource {
 
     private JSONObject updateLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName,
                                         String logLevel) {
-
+        jsonBody = new JSONObject();
         File log4j2PropertiesFile = new File(filePath);
-        String loggers = Utils.getProperty(log4j2PropertiesFile, "loggers");
-
-        PropertiesConfiguration config = new PropertiesConfiguration();
-        PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout(config);
 
         try {
+            String loggers = Utils.getProperty(log4j2PropertiesFile, "loggers");
             layout.load(new InputStreamReader(new FileInputStream(log4j2PropertiesFile)));
             if (loggerName.equals(Constants.ROOT_LOGGER)) {
-                config.setProperty(loggerName + ".level", logLevel);
-                layout.save(new FileWriter(filePath, false));
-                Utils.updateLoggingConfiguration();
-                jsonBody.put(Constants.MESSAGE, "Successfully updated log level of rootLogger " + logLevel);
+                setLoggerLevel(loggerName + ".level", logLevel);
             } else {
                 if (loggers.contains(loggerName)) {
-                    config.setProperty("logger." + loggerName + ".level", logLevel);
-                    layout.save(new FileWriter(filePath, false));
-                    Utils.updateLoggingConfiguration();
-                    jsonBody.put(Constants.MESSAGE, "Successfully updated log level of logger " + loggerName
-                            + " to " + logLevel);
+                    setLoggerLevel("logger." + loggerName + ".level", logLevel);
                 } else {
-                    log.error("Specified logger " + loggerName + " is not found");
-                    jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
+                    jsonBody = createJsonError(loggerName);
                     axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
                 }
             }
         } catch (ConfigurationException | IOException e) {
-            log.error("Exception while updating logger data " + e.getMessage());
+            log.error("Exception while updating logger data " + e);
             jsonBody = Utils.createJsonErrorObject("Error updating logger " + loggerName);
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
         }
@@ -156,21 +146,28 @@ public class LoggingResource extends ApiResource {
 
     private JSONObject getLoggerData(org.apache.axis2.context.MessageContext axis2MessageContext, String loggerName) {
 
-        String logLevel;
-        String componentName;
-
+        String logLevel = null;
+        String componentName = null;
+        jsonBody = new JSONObject();
         File log4j2PropertiesFile = new File(filePath);
-        String logger = Utils.getProperty(log4j2PropertiesFile, "loggers");
 
-        if (loggerName.equals(Constants.ROOT_LOGGER)) {
-            componentName = "Not available for rootLogger";
-            logLevel = Utils.getProperty(log4j2PropertiesFile, loggerName + ".level");
-        } else if (logger.contains(loggerName)) {
-            componentName = Utils.getProperty(log4j2PropertiesFile, "logger." + loggerName + ".name");
-            logLevel = Utils.getProperty(log4j2PropertiesFile, "logger." + loggerName + ".level");
-        } else {
-            log.error("Specified logger " + loggerName + " is not found");
-            jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
+        try {
+            String logger = Utils.getProperty(log4j2PropertiesFile, "loggers");
+
+            if (loggerName.equals(Constants.ROOT_LOGGER)) {
+                componentName = "Not available for rootLogger";
+                logLevel = Utils.getProperty(log4j2PropertiesFile, loggerName + ".level");
+            } else if (logger.contains(loggerName)) {
+                componentName = Utils.getProperty(log4j2PropertiesFile, "logger." + loggerName + ".name");
+                logLevel = Utils.getProperty(log4j2PropertiesFile, "logger." + loggerName + ".level");
+            } else {
+                jsonBody = createJsonError(loggerName);
+                axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                return jsonBody;
+            }
+        } catch (IOException e) {
+            log.error("Error while obtaining logger data " + e);
+            jsonBody = Utils.createJsonErrorObject("Error getting logger data for logger " + loggerName);
             axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
             return jsonBody;
         }
@@ -189,5 +186,19 @@ public class LoggingResource extends ApiResource {
                 returnValue = true;
         }
         return returnValue;
+    }
+
+    private JSONObject createJsonError(String loggerName) {
+        log.error("Specified logger " + loggerName + " is not found");
+        JSONObject jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
+        return jsonBody;
+    }
+
+    private void setLoggerLevel(String loggerLevelKey , String logLevel) throws IOException, ConfigurationException {
+        config.setProperty(loggerLevelKey , logLevel);
+        layout.save(new FileWriter(filePath, false));
+        Utils.updateLoggingConfiguration();
+        jsonBody.put(Constants.MESSAGE, "Successfully updated " + loggerLevelKey
+                + " to " + logLevel);
     }
 }

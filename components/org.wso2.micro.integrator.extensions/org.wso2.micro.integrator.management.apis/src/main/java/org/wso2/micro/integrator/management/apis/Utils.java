@@ -117,15 +117,15 @@ public class Utils {
      * @param key     - Key of the property.
      * @return - Value of the property.
      */
-    public static String getProperty(File srcFile, String key) {
+    public static String getProperty(File srcFile, String key) throws IOException {
 
         String value = null;
         try (FileInputStream fis = new FileInputStream(srcFile)) {
             Properties properties = new Properties();
             properties.load(fis);
             value = properties.getProperty(key);
-        } catch (Exception e) {
-            LOG.error("Error occurred while retrieving the property" + e.getMessage());
+        } catch (IOException e) {
+            throw new IOException("Error occurred while reading the input stream");
         }
         return value;
     }
