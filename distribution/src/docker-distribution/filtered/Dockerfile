@@ -20,30 +20,41 @@
 FROM adoptopenjdk/openjdk8:jre8u212-b03-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>"
 
-# docker image build arguments for user/group configurations
+# set Docker image build arguments
+# build arguments for user/group configurations
 ARG USER=wso2carbon
 ARG USER_ID=802
 ARG USER_GROUP=wso2
 ARG USER_GROUP_ID=802
 ARG USER_HOME=/home/${USER}
-# docker image build arguments for wso2 product installation
+# docker image build arguments for Micro Integrator product installation
 ARG MICROESB_NAME=wso2mi
-ARG MICROESB_HOME=${USER_HOME}/${MICROESB_NAME}
+
+# get the Micro Integrator version which is passed as a build argument and assert to be not empty
+ARG MICROESB_VERSION
+RUN test -n "$MICROESB_VERSION"
+
+ARG MICROESB_SERVER=${MICROESB_NAME}-${MICROESB_VERSION}
+ARG MICROESB_HOME=${USER_HOME}/${MICROESB_SERVER}
 
 # create the user and group
 RUN \
     addgroup --system -g ${USER_GROUP_ID} ${USER_GROUP} \
     && adduser --system --home ${USER_HOME} -g ${USER_GROUP_ID} -u ${USER_ID} ${USER}
 
-# copy the wso2 micro intergator product distribution to user's home directory
+# copy Micro Intergator product distribution to user's home directory
 COPY --chown=wso2carbon:wso2 ${MICROESB_NAME}/ ${MICROESB_HOME}
 
 # set the user and work directory
 USER ${USER}
 WORKDIR ${USER_HOME}
 
-# expose micro-integrator ports
+# set environment variables
+ENV WORKING_DIRECTORY=${USER_HOME} \
+    WSO2_SERVER_HOME=${MICROESB_HOME}
+
+# expose Micro Integrator ports
 EXPOSE 8290 8253
 
-# initiate container and execute the micro integrator product startup script
-ENTRYPOINT ["/home/wso2carbon/wso2mi/bin/micro-integrator.sh"]
+# initiate container and execute the Micro Integrator product startup script
+ENTRYPOINT $WSO2_SERVER_HOME/bin/micro-integrator.sh
