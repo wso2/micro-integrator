@@ -54,5 +54,6 @@
         <module>crypto-service</module>
         <module>org.wso2.micro.integrator.bootstrap</module>
         <module>data</module>
+        <module>org.wso2.micro.integrator.coordination</module>
     </modules>
 </project>

@@ -31,7 +31,9 @@ import org.quartz.Scheduler;
 import org.quartz.impl.StdSchedulerFactory;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.core.ServerStartupObserver;
+import org.wso2.micro.integrator.coordination.ClusterCoordinator;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.core.TaskStartupHandler;
 import org.wso2.micro.integrator.ntask.core.impl.QuartzCachedThreadPool;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
@@ -61,6 +63,8 @@ public class TasksDSComponent {
 
     private static ExecutorService executor = Executors.newCachedThreadPool();
 
+    private static DataSourceService dataSourceService;
+
     @Activate
     protected void activate(ComponentContext ctx) {
 
@@ -82,11 +86,16 @@ public class TasksDSComponent {
             if (getTaskService() == null) {
                 taskService = new TaskServiceImpl();
             }
+
+            ClusterCoordinator clusterCoordinator = new ClusterCoordinator(dataSourceService);
+            clusterCoordinator.startCoordinator();
+
             BundleContext bundleContext = ctx.getBundleContext();
             bundleContext
                     .registerService(ServerStartupObserver.class.getName(), new TaskStartupHandler(taskService), null);
             bundleContext.registerService(TaskService.class.getName(), getTaskService(), null);
             //            bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(), new TaskAxis2ConfigurationContextObserver(getTaskService()), null);
+
 
         } catch (Throwable e) {
             log.error("Error in intializing Tasks component: " + e.getMessage(), e);
@@ -143,6 +152,19 @@ public class TasksDSComponent {
     protected void unsetSecretCallbackHandlerService(SecretCallbackHandlerService secretCallbackHandlerService) {
 
         TasksDSComponent.secretCallbackHandlerService = null;
+    }
+
+    @Reference(name = "org.wso2.carbon.ndatasource",
+               service = DataSourceService.class,
+               cardinality = ReferenceCardinality.MANDATORY,
+               policy = ReferencePolicy.DYNAMIC,
+               unbind = "unsetDatasourceHandlerService")
+    protected void setDatasourceHandlerService(DataSourceService dataSourceService) {
+        this.dataSourceService = dataSourceService;
+    }
+
+    protected void unsetDatasourceHandlerService(DataSourceService dataSourceService) {
+        this.dataSourceService = null;
     }
 
 }
