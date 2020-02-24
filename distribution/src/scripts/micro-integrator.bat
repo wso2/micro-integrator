@@ -97,6 +97,10 @@ if ""%1""==""version""   goto commandVersion
 if ""%1""==""-version""  goto commandVersion
 if ""%1""==""--version"" goto commandVersion
 
+if ""%1""==""stop""   goto stopServer
+if ""%1""==""-stop""  goto stopServer
+if ""%1""==""--stop"" goto stopServer
+
 shift
 goto setupArgs
 
@@ -119,6 +123,12 @@ goto findJdk
 
 :noDebugPort
 echo Please specify the debug port after the --debug option
+goto end
+
+:stopServer
+set /p processId= < %CARBON_HOME%\wso2carbon.pid
+echo Stopping the Micro Integrator Server
+taskkill /F /PID %processId%
 goto end
 
 rem ----- commandLifecycle -----------------------------------------------------
