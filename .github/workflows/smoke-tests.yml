@@ -1,6 +1,6 @@
 name: Smoke Tests ( openjdk8 )
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   others:
