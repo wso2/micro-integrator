@@ -30,17 +30,25 @@ import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.core.util.FileManipulator;
 
-public class CappAxis2Deployer extends AbstractDeployer {
+public class CappDeployer extends AbstractDeployer {
 
-    private static final Log log = LogFactory.getLog(CappAxis2Deployer.class);
+    private static final Log log = LogFactory.getLog(CappDeployer.class);
 
     private AxisConfiguration axisConfig;
 
+    /**
+     * Carbon application repository directory
+     */
     private String cAppDir;
+
+    /**
+     * Carbon application file directory (i.e. '.car')
+     */
+    private String extension;
 
     public void init(ConfigurationContext configurationContext) {
         if (log.isDebugEnabled()) {
-            log.debug("Initializing Capp Axis2 Deployer..");
+            log.debug("Initializing Capp Deployer..");
         }
         this.axisConfig = configurationContext.getAxisConfiguration();
 
@@ -48,25 +56,16 @@ public class CappAxis2Deployer extends AbstractDeployer {
         String appUnzipDir = AppDeployerUtils.getAppUnzipDir() + File.separator +
                 AppDeployerUtils.getTenantIdString();
         FileManipulator.deleteDir(appUnzipDir);
-
-        // load the existing Carbon apps from tenant registry space
-//        loadPersistedApps();
-
     }
 
     /**
      * Axis2 deployment engine will call this method when a .car archive is deployed. So we only have to call the
-     * applicationManager to deploy it using the absolute path of the deployed .car file.
+     * cAppDeploymentManager to deploy it using the absolute path of the deployed .car file.
      *
      * @param deploymentFileData - info about the deployed file
      * @throws DeploymentException - error while deploying cApp
      */
     public void deploy(DeploymentFileData deploymentFileData) throws DeploymentException {
-        /**
-         * Before each cApp deployment, we load the existing apps from registry. This is to fix
-         * an issue which occurs in a cluster with deployment synchronizer.
-         */
-//        loadPersistedApps();
         String artifactPath = deploymentFileData.getAbsolutePath();
         try {
             CAppDeploymentManager.getInstance().deploy(artifactPath, axisConfig);
@@ -78,12 +77,20 @@ public class CappAxis2Deployer extends AbstractDeployer {
 
     }
 
-    public void setDirectory(String s) {
-        this.cAppDir = s;
+    public void setDirectory(String cAppDir) {
+        this.cAppDir = cAppDir;
     }
 
-    public void setExtension(String s) {
+    public String getDirectory() {
+        return cAppDir;
+    }
 
+    public void setExtension(String extension) {
+        this.extension = extension;
+    }
+
+    public String getExtension() {
+        return extension;
     }
 
     /**
@@ -91,13 +98,12 @@ public class CappAxis2Deployer extends AbstractDeployer {
      * the file path and call the undeploy method on applicationManager.
      *
      * @param filePath - deleted .car file path
-     * @throws DeploymentException
+     * @throws DeploymentException - error while un-deploying cApp
      */
     public void undeploy(String filePath) throws DeploymentException {
-        String tenantId = AppDeployerUtils.getTenantIdString();
         String artifactPath = AppDeployerUtils.formatPath(filePath);
         CarbonApplication existingApp = null;
-        for (CarbonApplication carbonApp : CAppDeploymentManager.getCarbonApps(tenantId)) {
+        for (CarbonApplication carbonApp : CAppDeploymentManager.getCarbonApps()) {
             if (artifactPath.equals(carbonApp.getAppFilePath())) {
                 existingApp = carbonApp;
                 break;
@@ -107,23 +113,13 @@ public class CappAxis2Deployer extends AbstractDeployer {
             CAppDeploymentManager.getInstance().undeployCarbonApp(existingApp, axisConfig);
         } else {
             log.info("Undeploying Faulty Carbon Application On : " + filePath);
-            removeFaultyCAppOnUndeploy(filePath);
+            CAppDeploymentManager.getInstance().removeFaultyCarbonApp(filePath);
         }
         super.undeploy(filePath);
     }
 
-    private void removeFaultyCAppOnUndeploy(String filePath) {
-        String tenantId = AppDeployerUtils.getTenantIdString();
-        //check whether this application file name already exists in faulty app list
-        for (String faultyAppPath : CAppDeploymentManager.getInstance().getFaultyCarbonApps(tenantId).keySet()) {
-            if (filePath.equals(faultyAppPath)) {
-                CAppDeploymentManager.getInstance().removeFaultyCarbonApp(tenantId, faultyAppPath);
-                break;
-            }
-        }
-    }
-
-    public void cleanup() throws DeploymentException {
-//        //cleanup the capp list of a tenant during a tenant unload
+    public void cleanup() {
+        //cleanup the capp list during the unload
+        CAppDeploymentManager.getInstance().cleanupCarbonApps();
     }
 }

@@ -75,8 +75,8 @@ public class CarbonAppResource extends APIResource {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
-        ArrayList<CarbonApplication> appList
-                = CAppDeploymentManager.getCarbonApps(String.valueOf(AppDeployerUtils.getTenantId()));
+        List<CarbonApplication> appList
+                = CAppDeploymentManager.getCarbonApps();
 
         JSONObject jsonBody = Utils.createJSONList(appList.size());
 
@@ -108,8 +108,8 @@ public class CarbonAppResource extends APIResource {
 
     private JSONObject getCarbonAppByName(String carbonAppName) {
 
-        ArrayList<CarbonApplication> appList
-                = CAppDeploymentManager.getCarbonApps(String.valueOf(AppDeployerUtils.getTenantId()));
+        List<CarbonApplication> appList
+                = CAppDeploymentManager.getCarbonApps();
 
         for (CarbonApplication app: appList) {
             if (app.getAppName().equals(carbonAppName)) {

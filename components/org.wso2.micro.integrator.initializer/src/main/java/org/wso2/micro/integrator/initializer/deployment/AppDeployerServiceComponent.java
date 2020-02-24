@@ -17,11 +17,15 @@
  */
 package org.wso2.micro.integrator.initializer.deployment;
 
+import java.io.File;
+
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.deployment.Deployer;
 import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.deployment.DeploymentException;
-import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.description.Parameter;
+import org.apache.axis2.engine.AxisConfigurator;
+import org.apache.axis2.util.JavaUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.osgi.service.component.ComponentContext;
@@ -31,19 +35,19 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
-import org.wso2.micro.integrator.dataservices.core.DBDeployer;
-import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
-import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
-import org.wso2.micro.integrator.initializer.StartupFinalizer;
-import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
-import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.application.deployer.handler.DefaultAppDeployer;
+import org.wso2.micro.core.CarbonAxisConfigurator;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.dataservices.core.DBDeployer;
+import org.wso2.micro.integrator.initializer.StartupFinalizer;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
 import org.wso2.micro.integrator.initializer.deployment.artifact.deployer.ArtifactDeploymentManager;
+import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.FileRegistryResourceDeployer;
 import org.wso2.micro.integrator.initializer.deployment.synapse.deployer.SynapseAppDeployer;
+import org.wso2.micro.integrator.initializer.services.SynapseEnvironmentService;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
-
-import java.io.File;
+import org.wso2.micro.integrator.ndatasource.capp.deployer.DataSourceCappDeployer;
+import static org.wso2.micro.integrator.initializer.deployment.DeploymentConstants.TAG_HOT_DEPLOYMENT;
 
 @Component(name = "org.wso2.micro.integrator.initializer.deployment.AppDeployerServiceComponent", immediate = true)
 public class AppDeployerServiceComponent {
@@ -77,6 +81,20 @@ public class AppDeployerServiceComponent {
 
         // Deploy artifacts
         artifactDeploymentManager.deploy();
+
+        Parameter hotDeployment = configCtx.getAxisConfiguration().getParameter(TAG_HOT_DEPLOYMENT);
+        if (hotDeployment != null && JavaUtils.isTrue(hotDeployment.getValue(), true)) {
+            // Invoke registered deployers, so that they will be triggered followed by hot deployment.
+            invokeRegisteredDeployers();
+        } else {
+            try {
+                // Deploy all carbon applications in cApp directory during the startup time.
+                cAppDeploymentManager.deploy();
+            } catch (CarbonException e) {
+                log.error("Error occurred while deploying carbon application", e);
+            }
+            log.debug("MicroIntegrator artifact/Capp Deployment completed");
+        }
 
         // Finalize server startup
         startupFinalizer = new StartupFinalizer(configCtx, ctxt.getBundleContext());
@@ -178,6 +196,8 @@ public class AppDeployerServiceComponent {
         cAppDeploymentManager.registerDeploymentHandler(new DefaultAppDeployer());
         cAppDeploymentManager.registerDeploymentHandler(new SynapseAppDeployer());
 
+        // Register CappDeployer in DeploymentEngine (required for CApp hot deployment)
+        addCAppDeployer();
     }
 
     /**
@@ -203,6 +223,42 @@ public class AppDeployerServiceComponent {
             log.error("Error registering eventSink deployer", e);
         } catch (IllegalAccessException e) {
             log.error("Error instantiating EventSinkDeployer class", e);
+        }
+    }
+
+    /**
+     * Initialize and add the CappDeployer to the Deployment Engine.
+     */
+    private void addCAppDeployer() {
+        try {
+            String appsRepo = "carbonapps";
+            // Initialize CApp deployer here
+            Class deployerClass = Class.
+                    forName("org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer");
+            Deployer deployer = (Deployer) deployerClass.newInstance();
+
+            //Add the deployer to deployment engine
+            DeploymentEngine deploymentEngine =
+                    (DeploymentEngine) configCtx.getAxisConfiguration().getConfigurator();
+            deploymentEngine.addDeployer(deployer, appsRepo, "car");
+        } catch (ClassNotFoundException e) {
+            log.error("Can not find class CappDeployer", e);
+        } catch (IllegalAccessException | InstantiationException e) {
+            log.error("Error while instantiating CappDeployer class", e);
+        }
+    }
+
+    /**
+     * Invoke all registered deployers.
+     */
+    private void invokeRegisteredDeployers() {
+        try {
+            AxisConfigurator axisConfigurator = configCtx.getAxisConfiguration().getConfigurator();
+            if (axisConfigurator instanceof CarbonAxisConfigurator) {
+                ((CarbonAxisConfigurator) axisConfigurator).deployServices();
+            }
+        } catch (Exception e) {
+            log.error("Runtime exception while deploying artifacts ", e);
         }
     }
 }

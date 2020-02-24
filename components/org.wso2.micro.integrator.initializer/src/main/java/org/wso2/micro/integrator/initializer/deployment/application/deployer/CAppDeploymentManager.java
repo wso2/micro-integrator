@@ -199,8 +199,8 @@ public class CAppDeploymentManager {
     }
 
     /**
-     * Check whether there is an already existing Carbon application with the given name. Use app name with version to
-     * support multiple capp versions.
+     * Check whether there is an already existing Carbon application with the given name.
+     * Use app name with version to support multiple capp versions
      *
      * @param newAppNameWithVersion - name of the new app
      * @param axisConfig            - AxisConfiguration instance
