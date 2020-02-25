@@ -171,4 +171,11 @@ public class TestServerManager {
         log.info("Server restarted successfully ...");
     }
 
+    public static void startMIServer() throws AutomationFrameworkException {
+
+        log.info("Preparing to start the MI server ...");
+        carbonServer.startServerUsingCarbonHome(carbonHome, commandMap);
+        log.info("Server restarted successfully ...");
+    }
+
 }

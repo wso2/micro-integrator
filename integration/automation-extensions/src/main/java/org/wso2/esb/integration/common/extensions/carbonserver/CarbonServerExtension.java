@@ -159,6 +159,14 @@ public class CarbonServerExtension extends ExecutionListenerExtension {
         }
     }
 
+    public static void startServer() {
+        try {
+            serverManager.startMIServer();
+        } catch (AutomationFrameworkException e) {
+            throw new RuntimeException("Exception occurred while starting the MI server", e);
+        }
+    }
+
     public static void shutdownServer() {
         try {
             serverManager.stopServer();
