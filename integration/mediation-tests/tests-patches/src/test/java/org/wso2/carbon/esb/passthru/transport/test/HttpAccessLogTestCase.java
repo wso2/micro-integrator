@@ -26,6 +26,7 @@ import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
@@ -64,11 +65,12 @@ public class HttpAccessLogTestCase extends ESBIntegrationTest {
         httpLogDir = carbonHome + File.separator + "repository" + File.separator + "logs" + File.separator + "httpLogs";
         File log4jProperties = new File(carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
         String propertyName = "nhttp.log.directory";
+        CarbonServerExtension.shutdownServer();
         createNewDir(httpLogDir);
         applyProperty(srcFile, propertyName, httpLogDir);
         String loggers = getProperty(log4jProperties, "loggers");
         applyLog4j2Properties(loggers, log4jProperties);
-        serverConfigurationManager.restartMicroIntegrator();
+        CarbonServerExtension.startServer();
         super.init();
     }
 
