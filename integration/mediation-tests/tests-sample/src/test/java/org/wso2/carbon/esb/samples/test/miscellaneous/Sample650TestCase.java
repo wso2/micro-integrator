@@ -19,7 +19,6 @@ package org.wso2.carbon.esb.samples.test.miscellaneous;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.commons.io.FileUtils;
-import org.awaitility.Awaitility;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -34,8 +33,6 @@ import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 
 import java.io.File;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 
@@ -43,7 +40,6 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
 
     private LocalEntriesAdminClient localEntriesAdminClient;
     private ServerConfigurationManager serverManager = null;
-    private static final String MANAGEMENT_API_MESSAGE = "Listener started on 0.0.0.0:";
     CarbonLogReader carbonLogReader;
 
     @BeforeClass(alwaysRun = true)
@@ -74,12 +70,7 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
                 TestConfigurationProvider.getResourceLocation() + File.separator + "artifacts" + File.separator + "ESB"
                         + File.separator + "miscellaneous" + File.separator + "deployment.toml"));
 
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(50, TimeUnit.SECONDS).
-                until(isManagementApiAwailable(carbonLogReader));
-        // serverManager.restartGracefully();
         super.init();
-
-        localEntriesAdminClient = new LocalEntriesAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -137,15 +128,6 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test tasks", enabled = false)
     public void testTasks() throws Exception {
         assertTrue(getNoOfArtifacts("tasks") == 1, "tasks not added");
-    }
-
-    private Callable<Boolean> isManagementApiAwailable(final CarbonLogReader carbonLogReader) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return carbonLogReader.checkForLog(MANAGEMENT_API_MESSAGE + (9154 + getPortOffset()), DEFAULT_TIMEOUT);
-            }
-        };
     }
 
     @AfterClass(alwaysRun = true)
