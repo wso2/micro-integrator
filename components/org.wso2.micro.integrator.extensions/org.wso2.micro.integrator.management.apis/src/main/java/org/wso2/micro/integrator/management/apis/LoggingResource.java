@@ -46,7 +46,7 @@ public class LoggingResource extends ApiResource {
     private static final Level[] logLevels = new Level[]{Level.OFF, Level.TRACE, Level.DEBUG, Level.INFO, Level.WARN, Level.ERROR, Level.FATAL};
 
     private JSONObject jsonBody;
-    private String filePath = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + "/" + "log4j2.properties";
+    private String filePath = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + File.separator + "log4j2.properties";
 
     private PropertiesConfiguration config = new PropertiesConfiguration();
     private PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout(config);
@@ -87,16 +87,14 @@ public class LoggingResource extends ApiResource {
                 jsonBody = getLoggerData(axis2MessageContext, param);
             } else {
                 // 400-Bad Request loggerName is missing
-                jsonBody = Utils.createJsonErrorObject("Logger Name is missing");
-                axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                jsonBody = createJsonError("Logger Name is missing", "", axis2MessageContext);
             }
         } else {
             if (jsonPayload.has(Constants.LOGGING_LEVEL)) {
                 logLevel = jsonPayload.getString(Constants.LOGGING_LEVEL);
                 if (!isALogLevel(logLevel)) {
                     // 400-Bad Request Invalid loggingLevel
-                    jsonBody = Utils.createJsonErrorObject("Invalid log level " + logLevel);
-                    axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                    jsonBody = createJsonError("Invalid log level " + logLevel, "", axis2MessageContext);
                 } else {
                     if (jsonPayload.has(Constants.LOGGER_NAME)) {
                         loggerName = jsonPayload.getString(Constants.LOGGER_NAME);
@@ -104,14 +102,12 @@ public class LoggingResource extends ApiResource {
                         jsonBody = updateLoggerData(axis2MessageContext, loggerName, logLevel);
                     } else {
                         // 400-Bad Request logger name is missing
-                        jsonBody = Utils.createJsonErrorObject("Logger name is missing");
-                        axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                        jsonBody = createJsonError("Logger name is missing", "", axis2MessageContext);
                     }
                 }
             } else {
                 // 400-Bad Request logLevel is missing
-                jsonBody = Utils.createJsonErrorObject("Log level is missing");
-                axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                jsonBody = createJsonError("Log level is missing", "", axis2MessageContext);
             }
         }
         Utils.setJsonPayLoad(axis2MessageContext, jsonBody);
@@ -132,14 +128,12 @@ public class LoggingResource extends ApiResource {
                 if (loggers.contains(loggerName)) {
                     setLoggerLevel("logger." + loggerName + ".level", logLevel);
                 } else {
-                    jsonBody = createJsonError(loggerName);
-                    axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                    jsonBody = createJsonError("Specified logger " + loggerName + " is not found",
+                            "", axis2MessageContext);
                 }
             }
-        } catch (ConfigurationException | IOException e) {
-            log.error("Exception while updating logger data " + e);
-            jsonBody = Utils.createJsonErrorObject("Error updating logger " + loggerName);
-            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+        } catch (ConfigurationException | IOException exception) {
+            jsonBody = createJsonError("Exception while updating logger data ", exception, axis2MessageContext);
         }
         return jsonBody;
     }
@@ -161,14 +155,12 @@ public class LoggingResource extends ApiResource {
                 componentName = Utils.getProperty(log4j2PropertiesFile, "logger." + loggerName + ".name");
                 logLevel = Utils.getProperty(log4j2PropertiesFile, "logger." + loggerName + ".level");
             } else {
-                jsonBody = createJsonError(loggerName);
-                axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+                jsonBody = createJsonError("Specified logger " + loggerName + " is not found",
+                        "", axis2MessageContext);
                 return jsonBody;
             }
-        } catch (IOException e) {
-            log.error("Error while obtaining logger data " + e);
-            jsonBody = Utils.createJsonErrorObject("Error getting logger data for logger " + loggerName);
-            axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
+        } catch (IOException exception) {
+            jsonBody = createJsonError("Error while obtaining logger data ", exception, axis2MessageContext);
             return jsonBody;
         }
 
@@ -188,9 +180,11 @@ public class LoggingResource extends ApiResource {
         return returnValue;
     }
 
-    private JSONObject createJsonError(String loggerName) {
-        log.error("Specified logger " + loggerName + " is not found");
-        JSONObject jsonBody = Utils.createJsonErrorObject("Invalid logger " + loggerName);
+    private JSONObject createJsonError(String message, Object exception,
+                                       org.apache.axis2.context.MessageContext axis2MessageContext) {
+        log.error(message + exception);
+        JSONObject jsonBody = Utils.createJsonErrorObject(message);
+        axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, Constants.BAD_REQUEST);
         return jsonBody;
     }
 
