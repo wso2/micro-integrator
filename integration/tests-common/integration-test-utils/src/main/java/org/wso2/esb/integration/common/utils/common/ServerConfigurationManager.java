@@ -305,11 +305,11 @@ public class ServerConfigurationManager {
      * @throws AutomationUtilException - throws if apply configuration fails
      * @throws IOException             - throws if apply configuration fails
      */
-    public void applyMIConfigurationWithRestart(File newConfig)
-            throws AutomationUtilException, IOException {
+    public void applyMIConfigurationWithRestart(File newConfig) throws AutomationUtilException, IOException {
         //to backup existing configuration
+        CarbonServerExtension.shutdownServer();
         applyConfigurationUtil(newConfig, newConfig);
-        restartMicroIntegrator();
+        CarbonServerExtension.startServer();
     }
 
     /**
