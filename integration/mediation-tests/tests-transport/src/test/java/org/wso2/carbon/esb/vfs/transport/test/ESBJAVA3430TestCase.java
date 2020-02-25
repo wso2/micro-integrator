@@ -38,9 +38,7 @@ public class ESBJAVA3430TestCase extends ESBIntegrationTest {
         String inputFolderName = "in";
         int FTPPort = 8085;
 
-        pathToFtpDir = getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath();
+        pathToFtpDir = getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/").getPath();
 
         // Local folder of the FTP server root
         FTPFolder = new File(pathToFtpDir + "FTP_Location" + File.separator);

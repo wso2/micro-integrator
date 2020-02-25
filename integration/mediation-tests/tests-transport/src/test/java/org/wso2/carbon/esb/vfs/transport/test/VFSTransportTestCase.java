@@ -57,9 +57,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        pathToVfsDir = getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath();
+        pathToVfsDir = getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/").getPath();
 
         rootFolder = new File(pathToVfsDir + "test" + File.separator);
         File outFolder = new File(pathToVfsDir + "test" + File.separator + "out" + File.separator);

@@ -44,9 +44,7 @@ public class ESBJAVA4450TestCase extends ESBIntegrationTest {
         String FTPPassword = "admin";
         String inputFolderName = "in";
         int FTPPort = 8086;
-        String pathToFtpDir = getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath();
+        String pathToFtpDir = getClass().getResource("/artifacts/ESB/synapseconfig/vfsTransport/").getPath();
         // Local folder of the FTP server root
         FTPFolder = new File(pathToFtpDir + "FTP_Location" + File.separator);
         // create FTP server root folder if not exists

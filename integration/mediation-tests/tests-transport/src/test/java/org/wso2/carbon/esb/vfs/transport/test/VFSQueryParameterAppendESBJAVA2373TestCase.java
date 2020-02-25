@@ -41,14 +41,13 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
 
     private static final String APPEND_TRUE_PROXY_NAME = "VFSQueryParamAppendTrueProxy";
     private static final String APPEND_FALSE_PROXY_NAME = "VFSQueryParamAppendFalseProxy";
+    private static final String BASE_PATH = "/artifacts/ESB/synapseconfig/vfsTransport/";
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
         super.init();
-        File outfolder = new File(getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath() + "test" + File.separator + "out"
-                + File.separator);
+        File outfolder = new File(
+                getClass().getResource(BASE_PATH).getPath() + "test" + File.separator + "out" + File.separator);
         outfolder.mkdirs();
         deployArtifacts();
     }
@@ -71,10 +70,7 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
         } catch (AxisFault e) {
         }
 
-        File appendTrueFile = new File(getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath()
-                + "out/vfs-ESBJAVA2373-append-true");
+        File appendTrueFile = new File(getClass().getResource(BASE_PATH).getPath() + "out/vfs-ESBJAVA2373-append-true");
         Assert.assertTrue(appendTrueFile.exists(), "File with transport.vfs.Append=true file has been created?");
 
         long fileSize = appendTrueFile.length();
@@ -96,10 +92,8 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
         } catch (AxisFault e) {
         }
 
-        File appendFalseFile = new File(getClass().getResource(
-                File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                        + File.separator + "vfsTransport" + File.separator).getPath()
-                + "out/vfs-ESBJAVA2373-append-false");
+        File appendFalseFile = new File(
+                getClass().getResource(BASE_PATH).getPath() + "out/vfs-ESBJAVA2373-append-false");
         Assert.assertTrue(appendFalseFile.exists(), "File with transport.vfs.Append=false file has been created?");
 
         try {
@@ -138,9 +132,8 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
                         + "           xmlns=\"http://ws.apache.org/ns/synapse\""
                         + "           transports=\"https http\"\n" + "           startOnLoad=\"true\"\n"
                         + "           trace=\"disable\">\n" + "        <target>\n" + "            <inSequence>\n"
-                        + "                <header name=\"To\" value=\"vfs:file://" + getClass().getResource(
-                        File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                                + File.separator + "vfsTransport" + File.separator).getPath()
+                        + "                <header name=\"To\" value=\"vfs:file://" + getClass().getResource(BASE_PATH)
+                        .getPath()
                         + "out/vfs-ESBJAVA2373-append-true?transport.vfs.Append=true" + "\"/>"
                         + "                <log level=\"full\"/>"
                         + "                <property name=\"OUT_ONLY\" value=\"true\"/>\n"
@@ -166,9 +159,8 @@ public class VFSQueryParameterAppendESBJAVA2373TestCase extends ESBIntegrationTe
                         + "           xmlns=\"http://ws.apache.org/ns/synapse\""
                         + "           transports=\"https http\"\n" + "           startOnLoad=\"true\"\n"
                         + "           trace=\"disable\">\n" + "        <target>\n" + "            <inSequence>\n"
-                        + "                <header name=\"To\" value=\"vfs:file://" + getClass().getResource(
-                        File.separator + "artifacts" + File.separator + "ESB" + File.separator + "synapseconfig"
-                                + File.separator + "vfsTransport" + File.separator).getPath()
+                        + "                <header name=\"To\" value=\"vfs:file://" + getClass().getResource(BASE_PATH)
+                        .getPath()
                         + "out/vfs-ESBJAVA2373-append-false?transport.vfs.Append=false" + "\"/>"
                         + "                <log level=\"full\"/>"
                         + "                <property name=\"OUT_ONLY\" value=\"true\"/>\n"
