@@ -26,6 +26,7 @@ import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.carbon.integration.common.utils.LoginLogoutClient;
 import org.wso2.carbon.integration.common.utils.exceptions.AutomationUtilException;
 import org.wso2.carbon.utils.ServerConstants;
+import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -248,16 +249,20 @@ public class ServerConfigurationManager {
      * restore to a last configuration and restart the server
      */
     public void restoreToLastMIConfiguration() throws IOException, AutomationUtilException {
+
+        // shut down the server before applying configs to avoid file lock issues.
+        CarbonServerExtension.shutdownServer();
+
         for (ConfigData data : configData) {
             Files.move(data.getBackupConfig().toPath(), data.getOriginalConfig().toPath(),
-                    StandardCopyOption.REPLACE_EXISTING);
+                       StandardCopyOption.REPLACE_EXISTING);
 
             if (data.getBackupConfig().exists()) {
                 throw new IOException(
                         "File rename from " + data.getBackupConfig() + "to " + data.getOriginalConfig() + "fails");
             }
         }
-        restartMicroIntegrator();
+        CarbonServerExtension.startServer();
     }
 
     /**
