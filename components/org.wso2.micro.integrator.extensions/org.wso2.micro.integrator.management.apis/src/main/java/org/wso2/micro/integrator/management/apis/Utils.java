@@ -34,9 +34,12 @@ import org.osgi.service.cm.ConfigurationAdmin;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Objects;
+import java.util.Properties;
 
 public class Utils {
 
@@ -119,5 +122,25 @@ public class Utils {
         Configuration configuration =
                 configurationAdmin.getConfiguration(Constants.PAX_LOGGING_CONFIGURATION_PID, "?");
         configuration.update();
+    }
+
+    /**
+     * Util method to return the specified  property from a properties file.
+     *
+     * @param srcFile - The source file which needs to be looked up.
+     * @param key     - Key of the property.
+     * @return - Value of the property.
+     */
+    public static String getProperty(File srcFile, String key) throws IOException {
+
+        String value = null;
+        try (FileInputStream fis = new FileInputStream(srcFile)) {
+            Properties properties = new Properties();
+            properties.load(fis);
+            value = properties.getProperty(key);
+        } catch (IOException e) {
+            throw new IOException("Error occurred while reading the input stream");
+        }
+        return value;
     }
 }

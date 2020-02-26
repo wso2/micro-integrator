@@ -1533,6 +1533,7 @@
         <!-- Commons Version -->
         <commons-logging.imp.pkg.version>0.0.0</commons-logging.imp.pkg.version>
         <osgi.framework.imp.pkg.version>[1.9.0,2.0.0)</osgi.framework.imp.pkg.version>
+        <commons.configuration.version>1.10</commons.configuration.version>
 
         <h2.engine.orbit.version>1.3.175.wso2v1</h2.engine.orbit.version>
         <h2.engine.orbit.imp.pkg.version>[1.3.175.wso2v1,1.4.0)</h2.engine.orbit.imp.pkg.version>
