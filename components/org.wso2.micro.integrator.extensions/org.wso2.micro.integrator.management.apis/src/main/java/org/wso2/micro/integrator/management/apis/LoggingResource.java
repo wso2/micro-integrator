@@ -48,8 +48,8 @@ public class LoggingResource extends ApiResource {
     private JSONObject jsonBody;
     private String filePath = System.getProperty(ServerConstants.CARBON_CONFIG_DIR_PATH) + File.separator + "log4j2.properties";
 
-    private PropertiesConfiguration config = new PropertiesConfiguration();
-    private PropertiesConfigurationLayout layout = new PropertiesConfigurationLayout(config);
+    private PropertiesConfiguration config;
+    private PropertiesConfigurationLayout layout;
 
     public LoggingResource(String urlTemplate) {
         super(urlTemplate);
@@ -118,6 +118,8 @@ public class LoggingResource extends ApiResource {
                                         String logLevel) {
         jsonBody = new JSONObject();
         File log4j2PropertiesFile = new File(filePath);
+        config = new PropertiesConfiguration();
+        layout = new PropertiesConfigurationLayout(config);
 
         try {
             String loggers = Utils.getProperty(log4j2PropertiesFile, "loggers");
