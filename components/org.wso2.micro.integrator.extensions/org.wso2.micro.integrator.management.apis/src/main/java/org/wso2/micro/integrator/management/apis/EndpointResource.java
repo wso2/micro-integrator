@@ -28,6 +28,7 @@ import org.apache.synapse.endpoints.Endpoint;
 import org.json.JSONObject;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
+import javax.xml.namespace.QName;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Map;
@@ -91,8 +92,13 @@ public class EndpointResource extends APIResource {
 
             OMElement element = EndpointSerializer.getElementFromEndpoint(ep);
             OMElement firstElement = element.getFirstElement();
-
-            String type = firstElement.getLocalName();
+            String type;
+            // For template endpoints the endpoint type can not be retrieved from firstElement
+            if (firstElement == null) {
+                type = element.getAttribute(new QName("template")).getLocalName();
+            } else {
+                type = firstElement.getLocalName();
+            }
             endpointObject.put(Constants.TYPE, type);
 
             jsonBody.getJSONArray(Constants.LIST).put(endpointObject);
