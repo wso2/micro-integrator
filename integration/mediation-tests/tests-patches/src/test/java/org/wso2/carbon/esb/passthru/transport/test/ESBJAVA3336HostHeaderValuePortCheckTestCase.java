@@ -41,11 +41,8 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
     public void setEnvironment() throws Exception {
 
         init();
-        context = new AutomationContext("ESB", TestUserMode.SUPER_TENANT_ADMIN);
-        serverConfigurationManager = new ServerConfigurationManager(context);
-        File modifiedLog4j2File = serverConfigurationManager.enableHTTPWireLogs();
-        serverConfigurationManager.applyMIConfiguration(modifiedLog4j2File);
-        serverConfigurationManager.restartMicroIntegrator();
+        // Set HTTP wire logs to DEBUG level
+        configureHTTPWireLogs("DEBUG");
         carbonLogReader = new CarbonLogReader();
     }
 
@@ -72,7 +69,8 @@ public class ESBJAVA3336HostHeaderValuePortCheckTestCase extends ESBIntegrationT
     @AfterClass(alwaysRun = true)
     public void stop() throws Exception {
         carbonLogReader.stop();
-        serverConfigurationManager.restoreToLastMIConfiguration();
+        // Disable HTTP wire logs
+        configureHTTPWireLogs("OFF");
     }
 
 }
