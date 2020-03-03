@@ -23,18 +23,16 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.wso2.micro.application.deployer.AppDeployerUtils;
 import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import  org.wso2.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
+import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 
 public class CarbonAppResource extends APIResource {
 
@@ -76,7 +74,7 @@ public class CarbonAppResource extends APIResource {
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
 
         List<CarbonApplication> appList
-                = CAppDeploymentManager.getCarbonApps();
+                = CappDeployer.getCarbonApps();
 
         JSONObject jsonBody = Utils.createJSONList(appList.size());
 
@@ -109,7 +107,7 @@ public class CarbonAppResource extends APIResource {
     private JSONObject getCarbonAppByName(String carbonAppName) {
 
         List<CarbonApplication> appList
-                = CAppDeploymentManager.getCarbonApps();
+                = CappDeployer.getCarbonApps();
 
         for (CarbonApplication app: appList) {
             if (app.getAppName().equals(carbonAppName)) {

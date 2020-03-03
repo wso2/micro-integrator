@@ -159,8 +159,8 @@ public class ConnectorResource implements MiApiResource {
         String connector = payload.get(NAME_ATTRIBUTE).getAsString();
         String packageName = payload.get(PACKAGE_ATTRIBUTE).getAsString();
         String state = payload.get(STATUS_ATTRIBUTE).getAsString();
-        SynapseAppDeployer appDeployer = new SynapseAppDeployer();
         AxisConfiguration axisConfiguration = axis2MessageContext.getConfigurationContext().getAxisConfiguration();
+        SynapseAppDeployer appDeployer = new SynapseAppDeployer(axisConfiguration);
         String qualifiedName = getQualifiedName(connector, packageName);
         Boolean updated = appDeployer.
                 updateStatus(qualifiedName, connector, packageName, state, axisConfiguration);

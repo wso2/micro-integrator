@@ -24,9 +24,11 @@ public class DeploymentConstants {
     public static final String DSS_DIR_NAME = "dataservices";
     public static final String EVENT_STREAMS_DIR_NAME = "eventstreams";
     public static final String EVENT_PUBLISHERS_DIR_NAME = "eventpublishers";
+    public static final String EVENT_SINK_DIR_NAME = "event-sinks";
 
     public static final String DSS_TYPE_DBS = "dbs";
     public static final String XML_TYPE_EXTENSION = "xml";
+    public static final String CAPP_TYPE_EXTENSION = "car";
     public static final String DSS_TYPE_EXTENSION = ".dbs";
 
     public static final String TAG_HOT_DEPLOYMENT = "hotdeployment";

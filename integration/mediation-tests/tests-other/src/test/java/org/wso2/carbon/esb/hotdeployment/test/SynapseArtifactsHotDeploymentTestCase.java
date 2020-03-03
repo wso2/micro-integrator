@@ -19,6 +19,8 @@ package org.wso2.carbon.esb.hotdeployment.test;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -29,6 +31,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
+import org.wso2.carbon.automation.extensions.servers.httpserver.SimpleHttpClient;
 import org.wso2.carbon.integration.common.utils.FileManager;
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
@@ -36,8 +39,8 @@ import org.wso2.esb.integration.common.utils.ESBTestConstant;
 import org.wso2.esb.integration.common.utils.common.ServerConfigurationManager;
 import org.wso2.esb.integration.common.utils.common.TestConfigurationProvider;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 
 /**
@@ -66,6 +69,14 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
     private final String messageStoreFileName = "HotDeploymentTestMessageStore.xml";
     private final String cAppFileName = "HotDeployment_1.0.0.car";
 
+    private final String proxyName = "HotDeploymentTestProxy";
+    private final String sequenceName = "HotDeploymentTestSequence";
+    private final String endpointName = "HotDeploymentTestEndpoint";
+    private final String apiName = "HotDeploymentTestAPI";
+    private final String localEntryName = "HotDeploymentTestLocalEntry";
+    private final String messageStoreName = "HotDeploymentTestMessageStore";
+    private final String cAppName = "HotDeploymentCompositeApplication";
+
     private CarbonLogReader carbonLogReader = new CarbonLogReader();
 
     @BeforeClass(alwaysRun = true)
@@ -82,226 +93,127 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
     }
 
     @Test(groups = "wso2.esb",
-          description = "Proxy Service Hot Deployment")
-    public void testProxyServiceHotDeployment() throws Exception {
-        String proxyName = "HotDeploymentTestProxy";
-        String proxyServiceFile = SERVER_DEPLOYMENT_DIR + "proxy-services" + File.separator + proxyFileName;
-
+          description = "Carbon Application Hot Deployment")
+    public void testHotDeployment() throws Exception {
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isProxyHotDeployed(proxyName));
-        assertTrue(checkProxyServiceExistence(proxyName), "Proxy Deployment failed");
 
-        carbonLogReader.clearLogs();
-        FileUtils.touch(new File(proxyServiceFile));
-        log.info(proxyFileName + " has been updated and waiting for redeployment");
-
-        assertTrue(carbonLogReader.checkForLog("'HotDeploymentTestProxy' has been update from file", DEFAULT_TIMEOUT),
-                   "Proxy deployment failed on updating file. Log message not found");
-
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isProxyHotDeployed(proxyName));
-        assertTrue(checkProxyServiceExistence(proxyName), "Proxy Deployment failed on updating file");
-
-        Awaitility.await().atMost(20, SECONDS).until(fileDelete(proxyServiceFile));
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isProxyUnDeployed(proxyName));
-        assertFalse(checkProxyServiceExistence(proxyName),
-                           "Proxy Undeployment failed");
-    }
-
-
-    @Test(groups = "wso2.esb",
-          description = "Sequence Hot Deployment")
-    public void testSequenceHotDeployment() throws Exception {
-        String sequenceName = "HotDeploymentTestSequence";
-        String sequenceFile = SERVER_DEPLOYMENT_DIR + "sequences" + File.separator + sequenceFileName;
-
+        assertTrue(checkProxyServiceExistence(proxyName), "Proxy Service Deployment failed");
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isSequenceHotDeployed(sequenceName));
         assertTrue(checkSequenceExistence(sequenceName), "Sequence Deployment failed");
 
-        carbonLogReader.clearLogs();
-        FileUtils.touch(new File(sequenceFile));
-        log.info(sequenceFileName + " has been updated and waiting for redeployment");
-
-        assertTrue(
-                carbonLogReader.checkForLog("HotDeploymentTestSequence has been updated from the file", DEFAULT_TIMEOUT),
-                "Sequence deployment failed on updating file. Log message not found");
-
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isSequenceHotDeployed(sequenceName));
-        assertTrue(checkSequenceExistence(sequenceName), "Sequence Deployment failed on updating file");
-
-        Awaitility.await().atMost(20, SECONDS).until(fileDelete(sequenceFile));
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isSequenceUnDeployed(sequenceName));
-        assertFalse(checkSequenceExistence(sequenceName),
-                           "Sequence Undeployment failed");
-    }
-
-    @Test(groups = "wso2.esb",
-          description = "Endpoint Hot Deployment")
-    public void testEndpointHotDeployment() throws Exception {
-        String endpointName = "HotDeploymentTestEndpoint";
-        String endpointFile = SERVER_DEPLOYMENT_DIR + "endpoints" + File.separator + endpointFileName;
-
-
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isEndpointHotDeployed(endpointName));
         assertTrue(checkEndpointExistence(endpointName), "Endpoint Deployment failed");
-
-        carbonLogReader.clearLogs();
-        FileUtils.touch(new File(endpointFile));
-        log.info(endpointFileName + " has been updated and waiting for redeployment");
-
-        assertTrue(
-                carbonLogReader.checkForLog("HotDeploymentTestEndpoint has been updated from the file", DEFAULT_TIMEOUT),
-                "Endpoint deployment failed on updating file. Log message not found");
-
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isEndpointHotDeployed(endpointName));
-        assertTrue(checkEndpointExistence(endpointName), "Endpoint Deployment failed on updating file");
-
-        Awaitility.await().atMost(20, SECONDS).until(fileDelete(endpointFile));
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isEndpointUnDeployed(endpointName));
-        assertFalse(checkEndpointExistence(endpointName),
-                           "Endpoint Undeployment failed");
-    }
-
-    @Test(groups = "wso2.esb",
-          description = "API Hot Deployment")
-    public void testAPIHotDeployment() throws Exception {
-        String apiName = "HotDeploymentTestAPI";
-        String apiFile = SERVER_DEPLOYMENT_DIR + "api" + File.separator + apiFileName;
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isApiHotDeployed(apiName));
         assertTrue(checkApiExistence(apiName), "API Deployment failed");
 
-        carbonLogReader.clearLogs();
-        FileUtils.touch(new File(apiFile));
-        log.info(apiFileName + " has been updated and waiting for redeployment");
-
-        assertTrue(carbonLogReader.checkForLog("HotDeploymentTestAPI has been updated from the file", DEFAULT_TIMEOUT),
-                   "API deployment failed on updating file. Log message not found");
-
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isApiHotDeployed(apiName));
-        assertTrue(checkApiExistence(apiName), "API Deployment failed on updating file");
-
-        Awaitility.await().atMost(20, SECONDS).until(fileDelete(apiFile));
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isApiUnDeployed(apiName));
-        assertFalse(checkApiExistence(apiName),
-                           "API Undeployment failed");
-    }
-
-    @Test(groups = "wso2.esb",
-          description = "Local Entry Hot Deployment")
-    public void testLocalEntryHotDeployment() throws Exception {
-        String localEntryName = "HotDeploymentTestLocalEntry";
-        String localEntryFile = SERVER_DEPLOYMENT_DIR + "local-entries" + File.separator + localEntryFileName;
-
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isLocalEntryHotDeployed(localEntryName));
         assertTrue(checkLocalEntryExistence(localEntryName), "Local Entry Deployment failed");
-
-        carbonLogReader.clearLogs();
-        FileUtils.touch(new File(localEntryFile));
-        log.info(localEntryFileName + " has been updated and waiting for redeployment");
-
-        assertTrue(
-                carbonLogReader.checkForLog("HotDeploymentTestLocalEntry has been updated from the file", DEFAULT_TIMEOUT),
-                "Local Entry deployment failed on updating file. Log message not found");
-
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isLocalEntryHotDeployed(localEntryName));
-        assertTrue(checkLocalEntryExistence(localEntryName), "Local Entry Deployment failed on updating file");
-
-        Awaitility.await().atMost(20, SECONDS).until(fileDelete(localEntryFile));
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isLocalEntryUnDeployed(localEntryName));
-        assertFalse(checkLocalEntryExistence(localEntryName),
-                           "Local Entry Undeployment failed");
-    }
-
-    @Test(groups = "wso2.esb",
-          description = "Message Store Hot Deployment")
-    public void testMessageStoreHotDeployment() throws Exception {
-        String messageStoreName = "HotDeploymentTestMessageStore";
-        String messageStoreFile = SERVER_DEPLOYMENT_DIR + "message-stores" + File.separator + messageStoreFileName;
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isMessageStoreHotDeployed(messageStoreName));
         assertTrue(checkMessageStoreExistence(messageStoreName), "Message Store Deployment failed");
 
-        carbonLogReader.clearLogs();
-        FileUtils.touch(new File(messageStoreFile));
-        log.info(messageStoreFileName + " has been updated and waiting for redeployment");
-
-        assertTrue(carbonLogReader.checkForLog("HotDeploymentTestMessageStore has been updated from the file", DEFAULT_TIMEOUT),
-                   "Message Store deployment failed on updating file. Log message not found");
-
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isMessageStoreHotDeployed(messageStoreName));
-        assertTrue(checkMessageStoreExistence(messageStoreName),
-                          "Message Store Deployment failed on updating file");
-
-        Awaitility.await().atMost(20, SECONDS).until(fileDelete(messageStoreFile));
-        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
-                                                                           TimeUnit.MILLISECONDS).until(
-                isMessageStoreUnDeployed(messageStoreName));
-        assertFalse(checkMessageStoreExistence(messageStoreName),
-                           "Message Store Undeployment failed");
-    }
-
-    @Test(groups = "wso2.esb",
-          description = "Carbon Application Hot Deployment")
-    public void testCAppHotDeployment() throws Exception {
-        String cAppName = "HotDeploymentCompositeApplication";
-        String cAppFile = CAPP_DEPLOYMENT_DIR + File.separator + cAppFileName;
-
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isCAppHotDeployed(cAppName));
-        assertTrue(checkCarbonAppExistence(cAppName), "Carbon Application Deployment failed");
+        assertTrue(checkCarbonAppExistence(cAppName), "Carbon application Deployment failed");
+    }
+
+    @Test(groups = "wso2.esb", dependsOnMethods = "testHotDeployment",
+          description = "Carbon Application Hot Un-deployment")
+    public void testHotUnDeployment() throws Exception {
+
+        String proxyServiceFile = SERVER_DEPLOYMENT_DIR + "proxy-services" + File.separator + proxyFileName;
+        Awaitility.await().atMost(20, SECONDS).until(fileDelete(proxyServiceFile));
+
+        String sequenceFile = SERVER_DEPLOYMENT_DIR + "sequences" + File.separator + sequenceFileName;
+        Awaitility.await().atMost(20, SECONDS).until(fileDelete(sequenceFile));
+
+        String endpointFile = SERVER_DEPLOYMENT_DIR + "endpoints" + File.separator + endpointFileName;
+        Awaitility.await().atMost(20, SECONDS).until(fileDelete(endpointFile));
+
+        String apiFile = SERVER_DEPLOYMENT_DIR + "api" + File.separator + apiFileName;
+        Awaitility.await().atMost(20, SECONDS).until(fileDelete(apiFile));
+
+        String localEntryFile = SERVER_DEPLOYMENT_DIR + "local-entries" + File.separator + localEntryFileName;
+        Awaitility.await().atMost(20, SECONDS).until(fileDelete(localEntryFile));
+
+        String messageStoreFile = SERVER_DEPLOYMENT_DIR + "message-stores" + File.separator + messageStoreFileName;
+        Awaitility.await().atMost(20, SECONDS).until(fileDelete(messageStoreFile));
+
+        String cAppFile = CAPP_DEPLOYMENT_DIR + File.separator + cAppFileName;
+        Awaitility.await().atMost(20, SECONDS).until(fileDelete(cAppFile));
+
 
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
-                isProxyHotDeployed("hotDeploymentCAppTestingProxy"));
-        assertTrue(checkProxyServiceExistence("hotDeploymentCAppTestingProxy"),
-                          "transform Proxy service deployment failed");
+                isProxyUnDeployed(proxyName));
+        assertFalse(checkProxyServiceExistence(proxyName), "Proxy Undeployment failed");
 
-        Awaitility.await().atMost(20, SECONDS).until(fileDelete(cAppFile));
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
+                                                                           TimeUnit.MILLISECONDS).until(
+                isSequenceUnDeployed(sequenceName));
+        assertFalse(checkSequenceExistence(sequenceName), "Sequence Undeployment failed");
+
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
+                                                                           TimeUnit.MILLISECONDS).until(
+                isEndpointUnDeployed(endpointName));
+        assertFalse(checkEndpointExistence(endpointName), "Endpoint Undeployment failed");
+
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
+                                                                           TimeUnit.MILLISECONDS).until(
+                isApiUnDeployed(apiName));
+        assertFalse(checkApiExistence(apiName), "API Undeployment failed");
+
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
+                                                                           TimeUnit.MILLISECONDS).until(
+                isLocalEntryUnDeployed(localEntryName));
+        assertFalse(checkLocalEntryExistence(localEntryName), "Local Entry Undeployment failed");
+
+        Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
+                                                                           TimeUnit.MILLISECONDS).until(
+                isMessageStoreUnDeployed(messageStoreName));
+        assertFalse(checkMessageStoreExistence(messageStoreName), "Message Store Undeployment failed");
+
         Awaitility.await().pollInterval(500, TimeUnit.MILLISECONDS).atMost(SERVICE_DEPLOYMENT_DELAY,
                                                                            TimeUnit.MILLISECONDS).until(
                 isCAppUnDeployed(cAppName));
-        assertFalse(checkCarbonAppExistence(cAppName),
-                           "Carbon Application Undeployment failed");
+        assertFalse(checkCarbonAppExistence(cAppName), "Carbon Application Undeployment failed");
+    }
+
+    @Test(groups = "wso2.esb",
+          description = "Readiness Probe with Hot Deployment enabled")
+    public void testReadinessProbeWithHotDeployment() throws Exception {
+        SimpleHttpClient client = new SimpleHttpClient();
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+
+        carbonLogReader.start();
+
+        client.doGet("http://localhost:9391/healthz", headers);
+
+        assertTrue(carbonLogReader.checkForLog(
+                "Readiness probe configured while hot deployment is enabled. Faulty artifact deployment will not prevent the probe from being activated.", DEFAULT_TIMEOUT),
+                   "Readiness probe invocation does not give a warning message when hot deployment is enabled ");
     }
 
     @AfterClass(alwaysRun = true)
     public void unDeployService() throws Exception {
         super.cleanup();
+        carbonLogReader.stop();
         serverConfigurationManager.restoreToLastConfiguration();
     }
 

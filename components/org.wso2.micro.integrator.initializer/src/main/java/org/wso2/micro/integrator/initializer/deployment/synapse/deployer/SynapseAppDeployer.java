@@ -111,7 +111,14 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
 
     private HashMap<String, Deployer> synapseDeployers = new HashMap<>();
 
-    public SynapseAppDeployer(){
+    private boolean hotDeployment = false;
+
+    public SynapseAppDeployer(AxisConfiguration axisConfig){
+        Parameter hotDeploymentParam = axisConfig.getParameter(TAG_HOT_DEPLOYMENT);
+        if (hotDeploymentParam != null) {
+            hotDeployment = JavaUtils.isTrue(hotDeploymentParam.getValue(), true);
+        }
+
         initializeDefaultSynapseDeployers();
     }
 
@@ -803,7 +810,6 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
         String fileName = artifact.getFiles().get(0).getName();
         String artifactPath = artifact.getExtractedPath() + File.separator + fileName;
         boolean isMainOrFault = false;
-        Parameter hotDeployment = axisConfig.getParameter(TAG_HOT_DEPLOYMENT);
 
         if (fileName.matches(MAIN_SEQ_REGEX) || fileName.matches(SynapseAppDeployerConstants.MAIN_SEQ_FILE)) {
             isMainOrFault = true;
@@ -812,7 +818,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 log.info("Copying main sequence to " + mainXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(mainXMLPath));
 
-                if (hotDeployment != null && JavaUtils.isFalse(hotDeployment.getValue(), true)) {
+                if (!hotDeployment) {
                     deployer.deploy(new DeploymentFileData(new File(mainXMLPath), deployer));
                 }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
@@ -840,7 +846,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 log.info("Copying fault sequence to " + faultXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(faultXMLPath));
 
-                if (hotDeployment != null && JavaUtils.isFalse(hotDeployment.getValue(), true)) {
+                if (!hotDeployment) {
                     deployer.deploy(new DeploymentFileData(new File(faultXMLPath), deployer));
                 }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);

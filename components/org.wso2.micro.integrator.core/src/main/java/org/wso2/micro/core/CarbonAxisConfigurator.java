@@ -40,6 +40,7 @@ import org.apache.axis2.deployment.DeploymentEngine;
 import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.ModuleDeployer;
 import org.apache.axis2.deployment.RepositoryListener;
+import org.apache.axis2.deployment.scheduler.SchedulerTask;
 import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
@@ -51,7 +52,6 @@ import org.apache.commons.logging.LogFactory;
 import org.osgi.framework.BundleContext;
 import org.osgi.util.tracker.ServiceTracker;
 import org.wso2.micro.application.deployer.Axis2DeployerProvider;
-import org.wso2.micro.core.deployment.CarbonDeploymentSchedulerTask;
 import org.wso2.micro.core.services.listners.Axis2ConfigServiceListener;
 import org.wso2.micro.core.util.Axis2ConfigItemHolder;
 import org.wso2.micro.core.util.ServerException;
@@ -387,15 +387,21 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
 
     @Override
     protected void startSearch(RepositoryListener listener) {
-        CarbonDeploymentSchedulerTask schedulerTask = new CarbonDeploymentSchedulerTask(listener, axisConfig);
+        SchedulerTask schedulerTask = new SchedulerTask(listener, axisConfig);
         scheduler = Executors.newScheduledThreadPool(1, new CarbonThreadFactory(
-                new ThreadGroup("CarbonDeploymentSchedulerThread")));
+                new ThreadGroup("HotDeploymentSchedulerThread")));
 
         String deploymentInterval = CarbonCoreDataHolder.getInstance().getServerConfigurationService().getFirstProperty(
                 "Axis2Config.DeploymentUpdateInterval");
         int deploymentIntervalInt = 15;
         if (deploymentInterval != null) {
-            deploymentIntervalInt = Integer.parseInt(deploymentInterval);
+            try {
+                deploymentIntervalInt = Integer.parseInt(deploymentInterval);
+            } catch (NumberFormatException e) {
+                log.error(
+                        "Error parsing the value of the DeploymentUpdateInterval element in carbon.xml. Continuing " +
+                                "with the default value of " + deploymentIntervalInt, e);
+            }
         }
         scheduler.scheduleWithFixedDelay(schedulerTask, 0, deploymentIntervalInt, TimeUnit.SECONDS);
 
@@ -486,16 +492,14 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
      * Deploy all services in the given repoLocation.
      */
     public void deployServices() {
-        if (repoLocation != null && repoLocation.trim().length() != 0) {
-            if (isUrlRepo) {
-                try {
-                    loadServicesFromUrl(new URL(repoLocation));
-                } catch (MalformedURLException e) {
-                    log.error("Services repository URL " + repoLocation + " is invalid");
-                }
-            } else {
-                super.loadServices();
+        if (isUrlRepo) {
+            try {
+                loadServicesFromUrl(new URL(repoLocation));
+            } catch (MalformedURLException e) {
+                log.error("Services repository URL " + repoLocation + " is invalid");
             }
+        } else {
+            super.loadServices();
         }
     }
 }
