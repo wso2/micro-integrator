@@ -130,3 +130,7 @@ dist/
 ## Auto completion scripts for the CLI
 cmd/shell-completions/
 
+# Generated stuffs
+components/mediation/inbound-endpoints/org.wso2.micro.integrator.inbound.endpoint/activemq-data/
+components/mediation/inbound-endpoints/org.wso2.micro.integrator.inbound.endpoint/propertyValue
+

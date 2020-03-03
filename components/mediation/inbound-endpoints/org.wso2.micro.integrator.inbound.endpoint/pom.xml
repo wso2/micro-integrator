@@ -185,15 +185,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven.surefire.plugin.version}</version>
                 <configuration>
-                    <systemProperties>
-                        <property>
-                            <name>jacoco-agent.destfile</name>
-                            <value>
-                                target/coverage-reports/jacoco-unit-commons.exec
-                            </value>
-                        </property>
-                    </systemProperties>
-                    <argLine>${argLine}</argLine>
+                    <systemPropertyVariables>
+                        <jacoco-agent.destfile>target/coverage-reports/jacoco-unit-commons.exec</jacoco-agent.destfile>
+                    </systemPropertyVariables>
                 </configuration>
             </plugin>
             <plugin>
