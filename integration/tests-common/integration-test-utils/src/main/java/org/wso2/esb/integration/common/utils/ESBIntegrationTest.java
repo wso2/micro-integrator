@@ -23,6 +23,7 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.HttpResponse;
+import org.apache.synapse.SynapseException;
 import org.awaitility.Awaitility;
 import org.json.JSONObject;
 import org.testng.Assert;
@@ -1078,5 +1079,33 @@ public abstract class ESBIntegrationTest {
     protected void reloadSessionCookie() throws Exception {
         /*context = new AutomationContext(ESBTestConstant.ESB_PRODUCT_GROUP, TestUserMode.SUPER_TENANT_ADMIN);
         sessionCookie = login(context);*/
+    }
+
+    /**
+     * This method enables the HTTP wire logs in log4j2 properties file.
+     *
+     * @param logLevel - The log-level of synapse-transport-http-wire logger
+     */
+    public void configureHTTPWireLogs(String logLevel) {
+        if (!isManagementApiAvailable) {
+            Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(DEFAULT_TIMEOUT, TimeUnit.SECONDS).
+                    until(isManagementApiAvailable());
+        }
+        try {
+            SimpleHttpClient client = new SimpleHttpClient();
+            Map<String, String> headers = new HashMap<>();
+            headers.put("Accept", "application/json");
+
+            String endpoint = "https://" + hostName + ":" + (DEFAULT_INTERNAL_API_HTTPS_PORT + portOffset) + "/management/"
+                    + "logging";
+
+            JSONObject payload = new JSONObject();
+            payload.put("loggerName", "synapse-transport-http-wire");
+            payload.put("loggingLevel", logLevel);
+
+            client.doPatch(endpoint, headers, payload.toString(), "application/json");
+        } catch (IOException e) {
+            throw new SynapseException("Error updating the log-level of synapse-transport-http-wire logger", e);
+        }
     }
 }

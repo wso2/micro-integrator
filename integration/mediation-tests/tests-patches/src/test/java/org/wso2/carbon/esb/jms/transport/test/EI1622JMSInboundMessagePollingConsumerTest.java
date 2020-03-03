@@ -49,7 +49,7 @@ public class EI1622JMSInboundMessagePollingConsumerTest extends ESBIntegrationTe
         pushMessageToQue(addEndpoint());
 
         assertTrue(Utils.checkForLog(carbonLogReader, "Suspending polling as the pollingSuspensionLimit of 2 "
-                        + "reached. Polling will be re-started after 3000 milliseconds", 10),
+                        + "reached. Polling will be re-started after 3000 milliseconds", 60),
                 "JMS Polling suspension is not enabled.");
         Utils.undeploySynapseConfiguration(ENDPOINT_NAME, "inbound-endpoints", true);
     }

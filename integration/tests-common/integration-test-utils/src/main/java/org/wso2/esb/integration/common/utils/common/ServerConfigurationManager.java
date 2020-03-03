@@ -324,41 +324,6 @@ public class ServerConfigurationManager {
     }
 
     /**
-     * A util function which edits the log4j2 properties file and the entries to enable http
-     * wire logs.
-     *
-     * @return - A new File object with wire logs configurations applied.
-     */
-    public File enableHTTPWireLogs() {
-
-        String carbonHome = System.getProperty(ServerConstants.CARBON_HOME);
-        File log4j2PropertiesFile = new File(
-                carbonHome + File.separator + "conf" + File.separator + "log4j2.properties");
-        String loggers = getProperty(log4j2PropertiesFile, "loggers");
-
-        if (loggers == null) {
-            Assert.fail("Loggers property became null");
-        }
-        File destinationFile = new File(log4j2PropertiesFile.getName());
-
-        try (FileInputStream fis = new FileInputStream(log4j2PropertiesFile);
-                FileOutputStream fos = new FileOutputStream(destinationFile)) {
-
-            Properties properties = new Properties();
-            properties.load(fis);
-            properties.setProperty("loggers", "" + loggers + ", synapse-transport-http-wire");
-            properties.setProperty("logger.synapse-transport-http-wire.name", "org.apache.synapse.transport.http.wire");
-            properties.setProperty("logger.synapse-transport-http-wire.level", "DEBUG");
-            properties.store(fos, null);
-            fos.flush();
-
-        } catch (Exception e) {
-            Assert.fail("Exception occurred with the message : " + e.getMessage());
-        }
-        return destinationFile;
-    }
-
-    /**
      * Util method to return the specified  property from a properties file.
      *
      * @param srcFile - The source file which needs to be looked up.
