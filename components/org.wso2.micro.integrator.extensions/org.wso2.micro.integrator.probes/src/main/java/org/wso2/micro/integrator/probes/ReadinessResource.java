@@ -42,6 +42,7 @@ public class ReadinessResource extends APIResource {
     private static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
     private static final String HTTP_SC = "HTTP_SC";
     private static String CACHED_RESPONSE = "";
+    private static int CACHED_RESPONSE_CODE;
 
     /**
      * Constructor for creating an API Resource.
@@ -74,9 +75,7 @@ public class ReadinessResource extends APIResource {
 
         String response = "";
 
-        if (!CACHED_RESPONSE.isEmpty()) {
-            response = CACHED_RESPONSE;
-        } else {
+        if (CACHED_RESPONSE.isEmpty()) {
             // appending MI server version number to the response
             CarbonServerConfigurationService serverConfig = CarbonServerConfigurationService.getInstance();
             String miVersion = serverConfig.getServerVersion();
@@ -87,17 +86,19 @@ public class ReadinessResource extends APIResource {
                 String faultyList = String.join("\",\"", faultyCapps);
                 response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList +
                         "\"]}";
-                axisCtx.setProperty(HTTP_SC, 500);
+                CACHED_RESPONSE_CODE = 500;
             } else {
                 response += "\"status\" : \"ready\"}";
-                axisCtx.setProperty(HTTP_SC, 200);
+                CACHED_RESPONSE_CODE = 200;
             }
-            // update cache
+            // update cached response
             CACHED_RESPONSE = response;
         }
 
+        axisCtx.setProperty(HTTP_SC, CACHED_RESPONSE_CODE);
+
         try {
-            JsonUtil.getNewJsonPayload(axisCtx, response, true, true);
+            JsonUtil.getNewJsonPayload(axisCtx, CACHED_RESPONSE, true, true);
         } catch (AxisFault axisFault) {
             log.error("Error occurred while generating health-check response", axisFault);
             // sending 500 without a response payload
