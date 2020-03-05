@@ -1557,6 +1557,7 @@
         <wrapper.version>3.2.3</wrapper.version>
         <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
         <grpc.version>1.21.0</grpc.version>
+        <axis2-java2wsdl.version>1.6.2</axis2-java2wsdl.version>
     </properties>
 
     <repositories>
