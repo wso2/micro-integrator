@@ -31,6 +31,14 @@
     <name>DataServices Clients</name>
     <description>Clients in WSO2 DataServices</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.axis2</groupId>
+            <artifactId>axis2-java2wsdl</artifactId>
+            <version>${axis2-java2wsdl.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <sourceDirectory>src</sourceDirectory>
         <plugins>
