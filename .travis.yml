@@ -38,8 +38,7 @@ matrix:
         - openjdk8
       install: true
 
-      script: mvn install -P smoke-tests -Dsurefire.useSystemClassLoader=false -fae -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn | egrep -v 'DEBUG|TRACE|ObjectProvider|BuilderClass|MarshallingClass|UnmarshallingClass|XMLTooling|Validator|^$|^[[:space:]]*$|^#'
-
+      script: mvn install -P smoke-tests -fae -Dskip.server.info.logs=true
       cache:
         directories:
           - $HOME/.m2
