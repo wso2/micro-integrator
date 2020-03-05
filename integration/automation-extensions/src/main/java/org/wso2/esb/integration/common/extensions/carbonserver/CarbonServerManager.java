@@ -18,6 +18,7 @@
 
 package org.wso2.esb.integration.common.extensions.carbonserver;
 
+import org.apache.axis2.util.JavaUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.logging.Log;
@@ -69,6 +70,7 @@ public class CarbonServerManager {
     private String scriptName;
     private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
     private int managementPort;
+    private boolean skipServerInfoLogs = false;
 
     public CarbonServerManager(AutomationContext context) {
         this.automationContext = context;
@@ -129,10 +131,16 @@ public class CarbonServerManager {
                 process = Runtime.getRuntime().exec(cmdArray, null, commandDir);
             }
 
+            String skipLogsSystemProperty = "skip.server.info.logs";
+            skipServerInfoLogs = JavaUtils.isTrue(System.getProperty(skipLogsSystemProperty), false);
+
+            if (!skipServerInfoLogs) {
+                inputStreamHandler = new ServerLogReader("inputStream", process.getInputStream());
+                inputStreamHandler.start();
+            } else {
+                log.info("Skipping server info logs as per system property " + skipLogsSystemProperty);
+            }
             errorStreamHandler = new ServerLogReader("errorStream", process.getErrorStream());
-            inputStreamHandler = new ServerLogReader("inputStream", process.getInputStream());
-            // start the stream readers
-            inputStreamHandler.start();
             errorStreamHandler.start();
 
             //register shutdown hook
@@ -248,8 +256,11 @@ public class CarbonServerManager {
                 throw new AutomationFrameworkException("Failed to stop server ", e);
             }
 
-            inputStreamHandler.stop();
+            if (!skipServerInfoLogs) {
+                inputStreamHandler.stop();
+            }
             errorStreamHandler.stop();
+
             process.destroy();
             process = null;
 
@@ -346,9 +357,9 @@ public class CarbonServerManager {
         }
 
         long time = System.currentTimeMillis() + DEFAULT_START_STOP_WAIT_MS;
-        while (!inputStreamHandler.getOutput().contains(SERVER_SHUTDOWN_MESSAGE) && System.currentTimeMillis() < time) {
+      /*  while (!inputStreamHandler.getOutput().contains(SERVER_SHUTDOWN_MESSAGE) && System.currentTimeMillis() < time) {
             // wait until server shutdown is completed
-        }
+        }*/
 
         time = System.currentTimeMillis();
 
