@@ -28,4 +28,5 @@ public class Constants {
     public static final String DATASERVICE_JSON_FORMATTER = "dsJsonFormatter";
     public static final String PASSTHRU_JSON_BUILDER = "passthruJsonBuilder";
     public static final String PASSTHRU_JSON_FORMATTER = "passthruJsonFormatter";
+    public static final String HOT_DEPLOYMENT = "hotdeployment";
 }

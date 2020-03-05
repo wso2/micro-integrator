@@ -31,6 +31,7 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 
 /**
@@ -96,6 +97,12 @@ public class ReadinessResource extends APIResource {
         }
 
         axisCtx.setProperty(HTTP_SC, CACHED_RESPONSE_CODE);
+
+        if (MicroIntegratorBaseUtils.isHotDeploymentEnabled()) {
+            log.warn("Hot Deployment and Readiness Probe configurations are both enabled in your server! Note that "
+                             + "the readiness probe will not identify faulty artifacts that are hot deployed. Be sure "
+                             + "to disable hot deployment if the readiness probe is enabled.");
+        }
 
         try {
             JsonUtil.getNewJsonPayload(axisCtx, CACHED_RESPONSE, true, true);

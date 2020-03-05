@@ -30,6 +30,4 @@ public class DeploymentConstants {
     public static final String XML_TYPE_EXTENSION = "xml";
     public static final String CAPP_TYPE_EXTENSION = "car";
     public static final String DSS_TYPE_EXTENSION = ".dbs";
-
-    public static final String TAG_HOT_DEPLOYMENT = "hotdeployment";
 }

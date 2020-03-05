@@ -89,7 +89,6 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
                         + "deployment.toml"));
         super.init();
         copyArtifactsToDeploymentDirectory();
-        carbonLogReader.start();
     }
 
     @Test(groups = "wso2.esb",
@@ -206,7 +205,10 @@ public class SynapseArtifactsHotDeploymentTestCase extends ESBIntegrationTest {
         client.doGet("http://localhost:9391/healthz", headers);
 
         assertTrue(carbonLogReader.checkForLog(
-                "Readiness probe configured while hot deployment is enabled. Faulty artifact deployment will not prevent the probe from being activated.", DEFAULT_TIMEOUT),
+                "Hot Deployment and Readiness Probe configurations are both enabled in your server! Note that "
+                        + "the readiness probe will not identify faulty artifacts that are hot deployed. Be sure to "
+                        + "disable hot deployment if the readiness probe is enabled.",
+                DEFAULT_TIMEOUT),
                    "Readiness probe invocation does not give a warning message when hot deployment is enabled ");
     }
 
