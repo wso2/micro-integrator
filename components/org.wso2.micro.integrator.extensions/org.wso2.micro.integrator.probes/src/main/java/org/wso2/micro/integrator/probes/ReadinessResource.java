@@ -18,6 +18,10 @@
 
 package org.wso2.micro.integrator.probes;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.commons.logging.Log;
@@ -27,11 +31,7 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
-import org.wso2.micro.integrator.initializer.deployment.application.deployer.CAppDeploymentManager;
-
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+import org.wso2.micro.integrator.initializer.deployment.application.deployer.CappDeployer;
 
 /**
  * API resource of the readiness probe API.
@@ -81,7 +81,7 @@ public class ReadinessResource extends APIResource {
             String miVersion = serverConfig.getServerVersion();
             response = "{\"version\":\"" + miVersion + "\",";
 
-            ArrayList<String> faultyCapps = new ArrayList<>(CAppDeploymentManager.getFaultyCapps());
+            ArrayList<String> faultyCapps = new ArrayList<>(CappDeployer.getFaultyCapps());
             if (faultyCapps.size() > 0) {
                 String faultyList = String.join("\",\"", faultyCapps);
                 response += "\"status\": \"not ready, faulty CAPPs detected\", \"Faulty CAPPs\" : [\"" + faultyList +

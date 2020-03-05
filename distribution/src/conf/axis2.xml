@@ -23,6 +23,8 @@
     <!--                  Parameters                       -->
     <!-- ================================================= -->
 
+    <!-- Change this to true if you want to enable hot deployment of services -->
+    <parameter name="hotdeployment" locked="false">false</parameter>
     <!-- Change this to true if you want to enable MTOM -->
     <parameter name="enableMTOM" locked="false">false</parameter>
     <!-- Change this to true if you want to enable SwA -->

@@ -33,7 +33,6 @@ import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.config.RegistryConfig;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.util.CarbonException;
-import org.wso2.micro.integrator.core.internal.ApplicationManager;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 
@@ -506,41 +505,6 @@ public final class AppDeployerUtils {
             throw new CarbonException("Error while extracting cApp artifact : " + fileName, e);
         }
         return dest;
-    }
-
-    /**
-     * Finds the owner application of the provided artifact file name and sets the runtime
-     * object name in the corresponding artifact.
-     *
-     * @param fileName     - file name of the artifact
-     * @param artifactType - this can be a module or a service
-     * @param runtimeObjectName - name of the runtime object corresponding to this file
-     * @param tenantId - id of the tenant in which the artifact is deployed
-     */
-    public static void attachArtifactToOwnerApp(String fileName,
-                                                String artifactType,
-                                                String runtimeObjectName,
-                                                int tenantId) {
-        if (fileName == null || artifactType == null || 
-        		tenantId == Constants.INVALID_TENANT_ID) {
-            return;
-        }
-        ApplicationManager appManager = ApplicationManager.getInstance();
-        Artifact appArtifact;
-        for (CarbonApplication carbonApp : appManager.getCarbonApps(String.valueOf(tenantId))) {
-            appArtifact = carbonApp.getAppConfig().getApplicationArtifact();
-            for (Artifact.Dependency dep : appArtifact.getDependencies()) {
-                if (dep.getArtifact() != null) {
-                    Artifact depArtifact = dep.getArtifact();
-                    for (CappFile file : depArtifact.getFiles()) {
-                        if (file.getName().equals(fileName) &&
-                                depArtifact.getType().equals(artifactType)) {
-                            depArtifact.setRuntimeObjectName(runtimeObjectName);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     /**

@@ -967,6 +967,18 @@ public abstract class ESBIntegrationTest {
         return response.contains(sequenceName);
     }
 
+    protected boolean checkLocalEntryExistence(String localEntryName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("local-entries");
+        return response.contains(localEntryName);
+    }
+
+    protected boolean checkMessageStoreExistence(String messageStoreName) throws IOException {
+
+        String response = retrieveArtifactUsingManagementApi("message-stores");
+        return response.contains(messageStoreName);
+    }
+
     private String retrieveArtifactUsingManagementApi(String artifactType) throws IOException {
 
         if (!isManagementApiAvailable) {

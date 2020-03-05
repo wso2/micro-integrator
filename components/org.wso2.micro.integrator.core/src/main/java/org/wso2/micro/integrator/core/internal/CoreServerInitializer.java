@@ -111,10 +111,6 @@ public class CoreServerInitializer {
             log.debug(CoreServerInitializer.class.getName() + "#initMIServer() BEGIN - " + System.currentTimeMillis());
         }
         try {
-
-            ApplicationManager applicationManager = ApplicationManager.getInstance();
-            applicationManager.init(); // this will allow application manager to register deployment handlers
-
             // read required-features.xml
             URL reqFeaturesResource = bundleContext.getBundle().getResource(AppDeployerConstants.REQ_FEATURES_XML);
             if (reqFeaturesResource != null) {
