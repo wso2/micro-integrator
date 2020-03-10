@@ -21,10 +21,7 @@ package org.wso2.micro.integrator.coordination;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.node.NodeDetail;
-import org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
-import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
-import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 
 import java.util.List;
 import javax.sql.DataSource;
@@ -36,17 +33,9 @@ public class ClusterCoordinator {
     private static final Log log = LogFactory.getLog(ClusterCoordinator.class);
     private RDBMSCoordinationStrategy rdbmsCoordinationStrategy;
 
-    public ClusterCoordinator(DataSourceService dataSourceService) throws DataSourceException{
-        CarbonDataSource dataSource = dataSourceService.getDataSource(RDBMSConstantUtils.COORDINATION_DB_NAME);
-        if (dataSource == null) {
-            return;
-        }
-        Object coordinationDatasource = dataSource.getDSObject();
-        if (!(coordinationDatasource instanceof DataSource)) {
-            throw new DataSourceException("DataSource is not an RDBMS data source.");
-        }
-        this.rdbmsCoordinationStrategy = new
-                RDBMSCoordinationStrategy((DataSource) coordinationDatasource);
+    public ClusterCoordinator(DataSource coordinationDatasource) throws DataSourceException {
+
+        this.rdbmsCoordinationStrategy = new RDBMSCoordinationStrategy(coordinationDatasource);
     }
 
     public void startCoordinator() {
