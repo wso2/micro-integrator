@@ -61,6 +61,8 @@ public class RDBMSMemberEventListenerTask implements Runnable {
      */
     private List<MemberEventListener> listeners;
 
+    private Long inactiveTimestamp = 0L;
+
     public RDBMSMemberEventListenerTask(String nodeId, String localGroupId, int heartbeatMaxRetryTime,
                                         RDBMSCommunicationBusContextImpl communicationBusContext) {
         this.nodeID = nodeId;
@@ -74,7 +76,7 @@ public class RDBMSMemberEventListenerTask implements Runnable {
      * The task that is periodically run to read membership events and to notify the listeners.
      */
     @Override public void run() {
-        long inactiveTimestamp = 0L;
+
         try {
             List<MemberEvent> membershipEvents = readMembershipEvents();
             if (!membershipEvents.isEmpty()) {
@@ -101,12 +103,13 @@ public class RDBMSMemberEventListenerTask implements Runnable {
             }
         } catch (Throwable e) {
             log.warn("Error occurred while reading membership events. ", e);
-            if (inactiveTimestamp == 0L) {
+            if (inactiveTimestamp.equals(0L)) {
                 inactiveTimestamp = System.currentTimeMillis();
             }
             long inactiveHeartbeatAge = System.currentTimeMillis() - inactiveTimestamp;
             if (inactiveHeartbeatAge > heartbeatMaxRetryTime) {
                 log.warn("Node became unresponsive due to not being able to read events from database");
+                inactiveTimestamp = 0L; // reset in active time stamp
                 notifyUnresponsiveness(nodeID, localGroupId);
             }
         }
