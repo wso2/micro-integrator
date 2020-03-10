@@ -28,7 +28,6 @@ import org.apache.axis2.deployment.DeploymentException;
 import org.apache.axis2.deployment.repository.util.DeploymentFileData;
 import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.axis2.util.JavaUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -73,6 +72,7 @@ import org.wso2.micro.application.deployer.CarbonApplication;
 import org.wso2.micro.application.deployer.config.Artifact;
 import org.wso2.micro.application.deployer.config.CappFile;
 import org.wso2.micro.application.deployer.handler.AppDeploymentHandler;
+import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.initializer.ServiceBusConstants;
 import org.wso2.micro.integrator.initializer.ServiceBusUtils;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
@@ -95,8 +95,6 @@ import java.util.concurrent.locks.ReentrantLock;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
-import static org.wso2.micro.integrator.initializer.deployment.DeploymentConstants.TAG_HOT_DEPLOYMENT;
-
 public class SynapseAppDeployer implements AppDeploymentHandler {
 
     private static final Log log = LogFactory.getLog(SynapseAppDeployer.class);
@@ -111,14 +109,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
 
     private HashMap<String, Deployer> synapseDeployers = new HashMap<>();
 
-    private boolean hotDeployment = false;
-
-    public SynapseAppDeployer(AxisConfiguration axisConfig){
-        Parameter hotDeploymentParam = axisConfig.getParameter(TAG_HOT_DEPLOYMENT);
-        if (hotDeploymentParam != null) {
-            hotDeployment = JavaUtils.isTrue(hotDeploymentParam.getValue(), true);
-        }
-
+    public SynapseAppDeployer(){
         initializeDefaultSynapseDeployers();
     }
 
@@ -818,7 +809,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 log.info("Copying main sequence to " + mainXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(mainXMLPath));
 
-                if (!hotDeployment) {
+                if (!MicroIntegratorBaseUtils.isHotDeploymentEnabled()) {
                     deployer.deploy(new DeploymentFileData(new File(mainXMLPath), deployer));
                 }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
@@ -846,7 +837,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 log.info("Copying fault sequence to " + faultXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(faultXMLPath));
 
-                if (!hotDeployment) {
+                if (!MicroIntegratorBaseUtils.isHotDeploymentEnabled()) {
                     deployer.deploy(new DeploymentFileData(new File(faultXMLPath), deployer));
                 }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
