@@ -32,7 +32,10 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.core.ServerStartupObserver;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
+import org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
+import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.core.TaskStartupHandler;
 import org.wso2.micro.integrator.ntask.core.impl.QuartzCachedThreadPool;
@@ -43,6 +46,7 @@ import java.io.File;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import javax.sql.DataSource;
 
 /**
  * This class represents the Tasks declarative service component.
@@ -64,6 +68,8 @@ public class TasksDSComponent {
     private static ExecutorService executor = Executors.newCachedThreadPool();
 
     private static DataSourceService dataSourceService;
+    private Object coordinationDatasourceObject;
+    private boolean coordinationEnabled;
 
     @Activate
     protected void activate(ComponentContext ctx) {
@@ -83,23 +89,46 @@ public class TasksDSComponent {
             }
             TasksDSComponent.scheduler = fac.getScheduler();
             TasksDSComponent.getScheduler().start();
+
+            coordinationEnabled = isTaskDataSourceAvailable();
+            if (coordinationEnabled) {
+                log.info("Initializing  RDBMS coordination");
+                DataSource coordinationDataSource = (DataSource) coordinationDatasourceObject;
+                ClusterCoordinator clusterCoordinator = new ClusterCoordinator(coordinationDataSource);
+                clusterCoordinator.startCoordinator();
+            }
+
             if (getTaskService() == null) {
                 taskService = new TaskServiceImpl();
             }
-
-            ClusterCoordinator clusterCoordinator = new ClusterCoordinator(dataSourceService);
-            clusterCoordinator.startCoordinator();
 
             BundleContext bundleContext = ctx.getBundleContext();
             bundleContext
                     .registerService(ServerStartupObserver.class.getName(), new TaskStartupHandler(taskService), null);
             bundleContext.registerService(TaskService.class.getName(), getTaskService(), null);
-            //            bundleContext.registerService(Axis2ConfigurationContextObserver.class.getName(), new TaskAxis2ConfigurationContextObserver(getTaskService()), null);
-
 
         } catch (Throwable e) {
             log.error("Error in intializing Tasks component: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Check whether the WSO2_COORDINATION_DB is defined.
+     *
+     * @return - true if datasource defined.
+     * @throws DataSourceException
+     */
+    private boolean isTaskDataSourceAvailable() throws DataSourceException {
+
+        CarbonDataSource dataSource = dataSourceService.getDataSource(RDBMSConstantUtils.COORDINATION_DB_NAME);
+        if (dataSource == null) {
+            return false;
+        }
+        coordinationDatasourceObject = dataSource.getDSObject();
+        if (!(coordinationDatasourceObject instanceof DataSource)) {
+            throw new DataSourceException("DataSource is not an RDBMS data source.");
+        }
+        return true;
     }
 
     private Properties getStandardQuartzProps() {
