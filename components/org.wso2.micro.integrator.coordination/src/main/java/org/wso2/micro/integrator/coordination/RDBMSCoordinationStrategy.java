@@ -30,7 +30,6 @@ import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -201,14 +200,8 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         return nodeDetail.isCoordinator();
     }
 
-    // todo remove properties map
     @Override
     public void joinGroup() {
-        joinGroup(null);
-    }
-
-    @Override
-    public void joinGroup(Map<String, Object> propertiesMap) {
         boolean retryClusterJoin = false;
         long inactivityTime = 0L;
         do {
@@ -239,7 +232,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                     }
                     isCoordinatorTasksRunning = true;
                     retryClusterJoin = false;
-                    this.threadExecutor.execute(new HeartBeatExecutionTask(propertiesMap, stillCoordinator));
+                    this.threadExecutor.execute(new HeartBeatExecutionTask(stillCoordinator));
                 } catch (ClusterCoordinationException e) {
                     inactivityTime = System.currentTimeMillis();
                     log.error("Node with ID " + localNodeId + " in group " + localGroupId + " could not join to the " +
@@ -263,15 +256,9 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         rdbmsMemberEventProcessor.addEventListener(memberEventListener);
     }
 
-    @Override
-    public void setPropertiesMap(Map<String, Object> propertiesMap) {
-        communicationBusContext.updatePropertiesMap(localNodeId, localGroupId, propertiesMap);
-    }
-
     private String generateRandomId() {
         return UUID.randomUUID().toString();
     }
-
 
     /**
      * This class will schedule and execute coordination tasks
@@ -280,9 +267,8 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         private CoordinatorElectionTask coordinatorElectionTask;
         private long lastHeartbeatFinishedTime;
 
-        public HeartBeatExecutionTask(Map<String, Object> propertiesMap, boolean stillCoordinator) {
-            coordinatorElectionTask = new CoordinatorElectionTask(localNodeId, localGroupId, propertiesMap,
-                                                                  stillCoordinator);
+        public HeartBeatExecutionTask(boolean stillCoordinator) {
+            coordinatorElectionTask = new CoordinatorElectionTask(localNodeId, localGroupId, stillCoordinator);
         }
 
         @Override
@@ -342,21 +328,14 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         private String localGroupId;
 
         /**
-         * The unique property map of the node.
-         */
-        private Map<String, Object> localPropertiesMap;
-
-        /**
          * Constructor.
          *
          * @param nodeId  node ID of the current node
          * @param groupId group ID of the current group
          */
-        private CoordinatorElectionTask(String nodeId, String groupId, Map<String, Object> propertiesMap,
-                                        boolean stillCoordinator) {
+        private CoordinatorElectionTask(String nodeId, String groupId, boolean stillCoordinator) {
             this.localGroupId = groupId;
             this.localNodeId = nodeId;
-            this.localPropertiesMap = propertiesMap;
             if (stillCoordinator) {
                 this.currentNodeState = NodeState.COORDINATOR;
                 this.previousNodeState = NodeState.COORDINATOR;
@@ -461,7 +440,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
             boolean heartbeatEntryExists = communicationBusContext.updateNodeHeartbeat(localNodeId, localGroupId,
                                                                                        currentHeartbeatTime);
             if (!heartbeatEntryExists) {
-                communicationBusContext.createNodeHeartbeatEntry(localNodeId, localGroupId, localPropertiesMap);
+                communicationBusContext.createNodeHeartbeatEntry(localNodeId, localGroupId);
             }
         }
 
@@ -557,7 +536,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         private void storeRemovedMemberDetails(List<String> allActiveNodeIds, List<NodeDetail> removedNodeDetails) {
             for (NodeDetail nodeDetail : removedNodeDetails) {
                 communicationBusContext.insertRemovedNodeDetails(nodeDetail.getNodeId(), nodeDetail.getGroupId(),
-                                                                 allActiveNodeIds, nodeDetail.getPropertiesMap());
+                                                                 allActiveNodeIds);
             }
         }
 

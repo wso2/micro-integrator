@@ -23,12 +23,8 @@ package org.wso2.micro.integrator.coordination.util;
  */
 public class RDBMSConstantUtils {
 
-    private static final String CLUSTER_NODE_STATUS_TABLE = "CLUSTER_NODE_STATUS_TABLE";
-
     // Cluster node status table columns
-    private static final String NODE_ID = "NODE_ID";
     public static final String GROUP_ID = "GROUP_ID";
-    private static final String PROPERTY_MAP = "PROPERTY_MAP";
     public static final String TASK_MARK_NODE_NOT_NEW = "marking node as not new";
 
     //columns for cluster membership communication
@@ -44,7 +40,6 @@ public class RDBMSConstantUtils {
     public static final String TASK_UPDATE_NODE_HEARTBEAT = "updating node heartbeat";
     public static final String TASK_CREATE_NODE_HEARTBEAT = "creating node heartbeat";
     public static final String TASK_GET_ALL_QUEUES = "getting all queues";
-    public static final String TASK_UPDATE_PROPERTIES_MAP = "updating properties map";
     public static final String TASK_REMOVE_NODE_HEARTBEAT = "removing node heartbeat entry";
 
     public static final String HEART_BEAT_INTERVAL = "heartBeatInterval";
@@ -59,10 +54,4 @@ public class RDBMSConstantUtils {
 
     public static final String COORDINATION_DB_NAME = "WSO2_COORDINATION_DB";
 
-    /**
-     * Prepared statement to update properties map
-     */
-    public static final String PS_UPDATE_PROPERTIES_MAP =
-            "UPDATE " + CLUSTER_NODE_STATUS_TABLE + " SET " + PROPERTY_MAP + " =? WHERE " + NODE_ID + " =? AND "
-            + GROUP_ID + " =?";
 }

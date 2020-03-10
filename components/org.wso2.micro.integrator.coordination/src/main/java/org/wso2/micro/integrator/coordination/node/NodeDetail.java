@@ -18,8 +18,6 @@
 
 package org.wso2.micro.integrator.coordination.node;
 
-import java.util.Map;
-
 /**
  * This class contains node heartbeat data of a specific node.
  */
@@ -45,11 +43,6 @@ public class NodeDetail {
     private final boolean isNewNode;
 
     /**
-     * The property map of the current node.
-     */
-    private Map<String, Object> propertiesMap;
-
-    /**
      * Indicate if the node is the coordinator node.
      */
     private boolean isCoordinator;
@@ -61,16 +54,13 @@ public class NodeDetail {
      * @param groupId       cluster agent's socket address
      * @param lastHeartbeat last heartbeat received from the node
      * @param isCoordinator check if this node is the coordinator
-     * @param propertiesMap the map of properties
      * @param isNewNode     true if new node
      */
-    public NodeDetail(String nodeId, String groupId, boolean isCoordinator, long lastHeartbeat, boolean isNewNode,
-                      Map<String, Object> propertiesMap) {
+    public NodeDetail(String nodeId, String groupId, boolean isCoordinator, long lastHeartbeat, boolean isNewNode ) {
         this.nodeId = nodeId;
         this.lastHeartbeat = lastHeartbeat;
         this.isNewNode = isNewNode;
         this.groupId = groupId;
-        this.propertiesMap = propertiesMap;
         this.isCoordinator = isCoordinator;
     }
     /**
@@ -118,12 +108,4 @@ public class NodeDetail {
         return isCoordinator;
     }
 
-    /**
-     * The getter method for property map
-     *
-     * @return property map
-     */
-    public Map<String, Object> getPropertiesMap() {
-        return propertiesMap;
-    }
 }
