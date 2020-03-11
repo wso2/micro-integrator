@@ -66,16 +66,5 @@ public interface CoordinationStrategy {
      */
     void joinGroup();
 
-    /**
-     * Join the configured group with a properties Map
-     * @param propertiesMap a map of properties of the node
-     */
-    void joinGroup(Map<String, Object> propertiesMap);
-
-    /**
-     * Set the properties map of the local node
-     * @param propertiesMap the map of properties to be set
-     */
-    void setPropertiesMap(Map<String, Object> propertiesMap);
 }
 

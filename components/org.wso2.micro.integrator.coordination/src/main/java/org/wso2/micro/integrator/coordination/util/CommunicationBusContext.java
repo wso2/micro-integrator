@@ -22,7 +22,6 @@ import org.wso2.micro.integrator.coordination.exception.ClusterCoordinationExcep
 import org.wso2.micro.integrator.coordination.node.NodeDetail;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * This interface contains required methods for communication bus layer.
@@ -88,11 +87,9 @@ public interface CommunicationBusContext {
      *
      * @param nodeId local node ID
      * @param groupId local group ID
-     * @param propertiesMap property map of local node
      * @throws ClusterCoordinationException when an error is detected while calling the store (mostly due to a DB error)
      */
-    void createNodeHeartbeatEntry(String nodeId, String groupId, Map<String, Object> propertiesMap)
-            throws ClusterCoordinationException;
+    void createNodeHeartbeatEntry(String nodeId, String groupId) throws ClusterCoordinationException;
 
     /**
      * Get node heart beat status for all existing nodes
@@ -119,11 +116,10 @@ public interface CommunicationBusContext {
      * @param removedMember ID of the removed member
      * @param groupId group from which the member was removed
      * @param clusterNodes list of nodes to notify the event
-     * @param removedPropertiesMap property map of removed node
      * @throws ClusterCoordinationException when an error is detected while calling the store (mostly due to a DB error)
      */
-    void insertRemovedNodeDetails(String removedMember, String groupId, List<String> clusterNodes,
-                                  Map<String, Object> removedPropertiesMap) throws ClusterCoordinationException;
+    void insertRemovedNodeDetails(String removedMember, String groupId, List<String> clusterNodes)
+            throws ClusterCoordinationException;
 
     /**
      * Use this method to indicate that the coordinator detected the node addition to cluster.
@@ -201,16 +197,5 @@ public interface CommunicationBusContext {
     NodeDetail getRemovedNodeData(String nodeId, String groupId, String removedNodeId)
             throws ClusterCoordinationException;
 
-    /**
-     * Update the properties map of a node
-     *
-     * @param nodeId is the Id of the node whose properties are being updated
-     * @param groupId is the group which the node belongs to
-     * @param propertiesMap the map of properties to be updated
-     *
-     * @throws ClusterCoordinationException
-     */
-    void updatePropertiesMap(String nodeId, String groupId, Map<String, Object> propertiesMap)
-            throws ClusterCoordinationException;
 }
 

@@ -30,15 +30,6 @@ import org.wso2.micro.integrator.coordination.util.MemberEventType;
 import org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils;
 import org.wso2.micro.integrator.coordination.util.StringUtil;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InvalidClassException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.ObjectStreamClass;
-import java.sql.Blob;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
@@ -47,9 +38,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import javax.sql.DataSource;
-import javax.sql.rowset.serial.SerialBlob;
 
 /**
  * The RDBMS based communication bus layer for the nodes. This layer handles the database level calls.
@@ -59,9 +48,6 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
      * The log class
      */
     private static final Log log = LogFactory.getLog(RDBMSCommunicationBusContextImpl.class);
-
-    private static final String POSTGRESQL_DATABASE = "PostgreSQL";
-    private static final String MSSQL_DATABASE = "Microsoft SQL Server";
 
     /**
      * The datasource which is used to be connected to the database.
@@ -85,10 +71,6 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
         } finally {
             close(connection, "Getting carbon coordination database information");
         }
-    }
-
-    private enum Table {
-        LEADER_STATUS_TABLE, CLUSTER_NODE_STATUS_TABLE, MEMBERSHIP_EVENT_TABLE, REMOVED_MEMBERS_TABLE
     }
 
     public RDBMSCommunicationBusContextImpl() {
@@ -232,7 +214,6 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
         } finally {
             close(preparedStatement, RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
             close(connection, RDBMSConstantUtils.TASK_ADD_MESSAGE_ID);
-            //  return false;
         }
     }
 
@@ -389,26 +370,16 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     }
 
     @Override
-    public void createNodeHeartbeatEntry(String nodeId, String groupId, Map propertiesMap)
-            throws ClusterCoordinationException {
+    public void createNodeHeartbeatEntry(String nodeId, String groupId) throws ClusterCoordinationException {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
             connection = getConnection();
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(propertiesMap);
-            byte[] propertiesMapAsBytes = byteArrayOutputStream.toByteArray();
             preparedStatement = connection.prepareStatement(queryManager.getQuery(
                     DBQueries.INSERT_NODE_HEARTBEAT_ROW));
             preparedStatement.setString(1, nodeId);
             preparedStatement.setLong(2, System.currentTimeMillis());
             preparedStatement.setString(3, groupId);
-            if (databaseType.equals(POSTGRESQL_DATABASE)) {
-                preparedStatement.setBlob(4, new SerialBlob(propertiesMapAsBytes));
-            } else {
-                preparedStatement.setBinaryStream(4, new ByteArrayInputStream(propertiesMapAsBytes));
-            }
             preparedStatement.executeUpdate();
             connection.commit();
             if (log.isDebugEnabled()) {
@@ -418,8 +389,6 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             rollback(connection, RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT);
             throw new ClusterCoordinationException("Error occurred while " + RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT
                                                    + ". Node ID: " + nodeId + " group ID " + groupId, e);
-        } catch (IOException e) {
-            throw new ClusterCoordinationException(e);
         } finally {
             close(preparedStatement, RDBMSConstantUtils.TASK_UPDATE_COORDINATOR_HEARTBEAT);
             close(connection, RDBMSConstantUtils.TASK_CREATE_NODE_HEARTBEAT);
@@ -449,39 +418,16 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
                 if (coordinatorNodeId != null) {
                     isCoordinatorNode = coordinatorNodeId.equals(nodeId);
                 }
-                Map<String, Object> propertiesMap = null;
-                Blob blob;
-                if (databaseType.equals(MSSQL_DATABASE)) {
-                    blob = new SerialBlob(resultSet.getBytes(3));
-                } else {
-                    blob = resultSet.getBlob(3);
-                }
-                if (blob != null) {
-                    int blobLength = (int) blob.length();
-                    byte[] bytes = blob.getBytes(1L, blobLength);
-                    ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                    try {
-                        ObjectInputStream ois = new RDBMSCommunicationBusContextImpl.LookAheadObjectInputStream(bis);
-                        Object blobObject = ois.readObject();
-                        if (blobObject instanceof Map) {
-                            propertiesMap = (Map) blobObject;
-                        }
-                    } catch (IOException e) {
-                        log.error("Error in retrieving properties map when getting details of cluster " + groupId, e);
-                    }
-                }
-                long lastHeartbeat = resultSet.getLong(4);
-                boolean isNewNode = convertIntToBoolean(resultSet.getInt(5));
+                long lastHeartbeat = resultSet.getLong(3);
+                boolean isNewNode = convertIntToBoolean(resultSet.getInt(4));
                 NodeDetail heartBeatData = new NodeDetail(nodeId, groupId, isCoordinatorNode,
-                                                          lastHeartbeat, isNewNode, propertiesMap);
+                                                          lastHeartbeat, isNewNode);
                 nodeDataList.add(heartBeatData);
             }
 
         } catch (SQLException e) {
             String errMsg = RDBMSConstantUtils.TASK_GET_ALL_QUEUES;
             throw new ClusterCoordinationException("Error occurred while " + errMsg, e);
-        } catch (ClassNotFoundException e) {
-            throw new ClusterCoordinationException("Error retrieving the property map. ", e);
         } finally {
             close(resultSet, RDBMSConstantUtils.TASK_GET_ALL_QUEUES);
             close(preparedStatement, RDBMSConstantUtils.TASK_GET_ALL_QUEUES);
@@ -509,31 +455,9 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(2, removedMemberId);
             preparedStatement.setString(3, groupId);
             resultSet = preparedStatement.executeQuery();
-            Map<String, Object> propertiesMap = null;
 
             if (resultSet.next()) {
-                Blob blob;
-                if (databaseType.equals(MSSQL_DATABASE)) {
-                    blob = new SerialBlob(resultSet.getBytes(2));
-                } else {
-                    blob = resultSet.getBlob(2);
-                }
-                if (blob != null) {
-                    int blobLength = (int) blob.length();
-                    byte[] bytes = blob.getBytes(1, blobLength);
-                    ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                    try {
-                        ObjectInputStream ois = new RDBMSCommunicationBusContextImpl.LookAheadObjectInputStream(bis);
-                        Object blobObject = ois.readObject();
-                        if (blobObject instanceof Map) {
-                            propertiesMap = (Map) blobObject;
-                        }
-                    } catch (IOException e) {
-                        log.error("Error in retrieving properties map when getting details of cluster " + groupId, e);
-                    }
-                }
-                nodeDetail = new NodeDetail(removedMemberId, groupId, false, 0, false,
-                                            propertiesMap);
+                nodeDetail = new NodeDetail(removedMemberId, groupId, false, 0, false);
             }
             clearMembershipEvents = connection
                     .prepareStatement(queryManager.getQuery(DBQueries.DELETE_REMOVED_MEMBER_DETAIL_FOR_NODE));
@@ -545,8 +469,6 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
         } catch (SQLException e) {
             String errMsg = RDBMSConstantUtils.TASK_GET_ALL_QUEUES;
             throw new ClusterCoordinationException("Error occurred while " + errMsg, e);
-        } catch (ClassNotFoundException e) {
-            throw new ClusterCoordinationException("Error retrieving the removed node data. ", e);
         } finally {
             close(resultSet, RDBMSConstantUtils.TASK_GET_ALL_QUEUES);
             close(preparedStatement, RDBMSConstantUtils.TASK_GET_ALL_QUEUES);
@@ -558,54 +480,6 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
                       + StringUtil.removeCRLFCharacters(groupId) + " executed successfully");
         }
         return nodeDetail;
-    }
-
-    @Override
-    public void updatePropertiesMap(String nodeId, String groupId, Map<String, Object> propertiesMap)
-            throws ClusterCoordinationException {
-        Connection connection = null;
-        PreparedStatement preparedStatement = null;
-        ByteArrayOutputStream byteArrayOutputStream = null;
-        try {
-            connection = getConnection();
-            byteArrayOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(propertiesMap);
-            byte[] propertiesMapAsBytes = byteArrayOutputStream.toByteArray();
-            preparedStatement = connection.prepareStatement(queryManager.getQuery(
-                    DBQueries.UPDATE_PROPERTIES_MAP));
-            if (databaseType.equals(POSTGRESQL_DATABASE)) {
-                preparedStatement.setBlob(1, new SerialBlob(propertiesMapAsBytes));
-            } else {
-                preparedStatement.setBinaryStream(1, new ByteArrayInputStream(propertiesMapAsBytes));
-            }
-            preparedStatement.setString(2, nodeId);
-            preparedStatement.setString(3, groupId);
-            preparedStatement.executeUpdate();
-            connection.commit();
-            if (log.isDebugEnabled()) {
-                log.debug(RDBMSConstantUtils.TASK_UPDATE_PROPERTIES_MAP + " of node " + nodeId + " executed successfully");
-            }
-        } catch (SQLException e) {
-            rollback(connection, RDBMSConstantUtils.TASK_UPDATE_PROPERTIES_MAP);
-            throw new ClusterCoordinationException("Error occurred while " + RDBMSConstantUtils.TASK_UPDATE_PROPERTIES_MAP
-                                                   + ". Node ID: " + nodeId + " group ID " + groupId, e);
-        } catch (IOException e) {
-            throw new ClusterCoordinationException("Error in " + RDBMSConstantUtils.PS_UPDATE_PROPERTIES_MAP + ". Node ID: "
-                                                   + nodeId + " group ID " + groupId, e);
-        } finally {
-            if (byteArrayOutputStream != null) {
-                try {
-                    byteArrayOutputStream.close();
-                } catch (IOException e) {
-                    log.error("Closing Byte Array Output Stream after "
-                              + RDBMSConstantUtils.TASK_UPDATE_PROPERTIES_MAP, e);
-                }
-            }
-            close(preparedStatement, RDBMSConstantUtils.TASK_UPDATE_PROPERTIES_MAP);
-            close(connection, RDBMSConstantUtils.TASK_UPDATE_PROPERTIES_MAP);
-        }
-
     }
 
     @Override
@@ -625,40 +499,15 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             preparedStatement.setString(1, groupId);
             preparedStatement.setString(2, nodeId);
             resultSet = preparedStatement.executeQuery();
-            Map<String, Object> propertiesMap = null;
             if (resultSet.next()) {
                 boolean isCoordinatorNode = nodeId.equals(coordinatorNodeId);
-                Blob blob;
-                if (databaseType.equals(MSSQL_DATABASE)) {
-                    blob = new SerialBlob(resultSet.getBytes(3));
-                } else {
-                    blob = resultSet.getBlob(3);
-                }
-                if (blob != null) {
-                    int blobLength = (int) blob.length();
-                    byte[] bytes = blob.getBytes(1L, blobLength);
-                    ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-                    try {
-                        ObjectInputStream ois = new RDBMSCommunicationBusContextImpl.LookAheadObjectInputStream(bis);
-                        Object blobObject = ois.readObject();
-                        if (blobObject instanceof Map) {
-                            propertiesMap = (Map) blobObject;
-                        }
-                    } catch (IOException e) {
-                        log.error("Error in retrieving properties map when getting details of cluster " + groupId, e);
-                    }
-                }
-                long lastHeartbeat = resultSet.getLong(4);
-                boolean isNewNode = convertIntToBoolean(resultSet.getInt(5));
-                nodeDetail = new NodeDetail(nodeId, groupId, isCoordinatorNode, lastHeartbeat,
-                                            isNewNode, propertiesMap);
+                long lastHeartbeat = resultSet.getLong(3);
+                boolean isNewNode = convertIntToBoolean(resultSet.getInt(4));
+                nodeDetail = new NodeDetail(nodeId, groupId, isCoordinatorNode, lastHeartbeat, isNewNode);
             }
-
         } catch (SQLException e) {
             String errMsg = RDBMSConstantUtils.TASK_GET_ALL_QUEUES;
             throw new ClusterCoordinationException("Error occurred while " + errMsg, e);
-        } catch (ClassNotFoundException e) {
-            throw new ClusterCoordinationException("Error retrieving the node data ", e);
         } finally {
             close(resultSet, RDBMSConstantUtils.TASK_GET_ALL_QUEUES);
             close(preparedStatement, RDBMSConstantUtils.TASK_GET_ALL_QUEUES);
@@ -698,8 +547,8 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     }
 
     @Override
-    public void insertRemovedNodeDetails(String removedMember, String groupId, List<String> clusterNodes,
-                                         Map<String, Object> removedPropertiesMap) throws ClusterCoordinationException {
+    public void insertRemovedNodeDetails(String removedMember, String groupId, List<String> clusterNodes)
+            throws ClusterCoordinationException {
         Connection connection = null;
         PreparedStatement storeRemovedMembersPreparedStatement = null;
         String task = "Storing removed member: " + removedMember + " in group " + groupId;
@@ -707,25 +556,11 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             connection = getConnection();
             storeRemovedMembersPreparedStatement = connection
                     .prepareStatement(queryManager.getQuery(DBQueries.INSERT_REMOVED_MEMBER_DETAILS));
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
-            objectOutputStream.writeObject(removedPropertiesMap);
-            objectOutputStream.flush();
-            byteArrayOutputStream.flush();
-            objectOutputStream.close();
-            byteArrayOutputStream.close();
-            byte[] propertiesMapAsBytes = byteArrayOutputStream.toByteArray();
-            // ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(propertiesMapAsBytes);
+
             for (String clusterNode : clusterNodes) {
                 storeRemovedMembersPreparedStatement.setString(1, clusterNode);
                 storeRemovedMembersPreparedStatement.setString(2, groupId);
                 storeRemovedMembersPreparedStatement.setString(3, removedMember);
-                if (databaseType.equals(POSTGRESQL_DATABASE)) {
-                    storeRemovedMembersPreparedStatement.setBlob(4, new SerialBlob(propertiesMapAsBytes));
-                } else {
-                    storeRemovedMembersPreparedStatement.setBinaryStream(4,
-                                                                         new ByteArrayInputStream(propertiesMapAsBytes));
-                }
                 storeRemovedMembersPreparedStatement.addBatch();
             }
             storeRemovedMembersPreparedStatement.executeBatch();
@@ -737,8 +572,6 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
             rollback(connection, task);
             throw new ClusterCoordinationException(
                     "Error storing removed member: " + removedMember + " in group " + groupId, e);
-        } catch (IOException e) {
-            throw new ClusterCoordinationException("Error while inserting removed node data", e);
         } finally {
             close(storeRemovedMembersPreparedStatement, task);
             close(connection, task);
@@ -909,31 +742,4 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
         return value != 0;
     }
 
-    private static class LookAheadObjectInputStream extends ObjectInputStream {
-
-        LookAheadObjectInputStream(InputStream inputStream) throws IOException {
-            super(inputStream);
-        }
-
-        @Override
-        protected Class<?> resolveClass(ObjectStreamClass desc) throws IOException,
-                                                                       ClassNotFoundException {
-            try {
-                if ((!(desc.getName().equals(String.class.getName()))) &&
-                    (!(desc.getName().equals(Integer.class.getName()))) &&
-                    (!(desc.getName().equals(Float.class.getName()))) &&
-                    (!(desc.getName().equals(Long.class.getName()))) &&
-                    (!(desc.getName().equals(Boolean.class.getName()))) &&
-                    (!(desc.getName().equals(Number.class.getName()))) &&
-                    (!(desc.getName().equals(CharSequence.class.getName()))) &&
-                    !(Class.forName(desc.getName()).newInstance() instanceof Map)) {
-                    throw new InvalidClassException("Unauthorized deserialization attempt ", desc.getName());
-                }
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new InvalidClassException("Invalid class of type " + desc.getName() +
-                                                " used for cluster properties.");
-            }
-            return super.resolveClass(desc);
-        }
-    }
 }
