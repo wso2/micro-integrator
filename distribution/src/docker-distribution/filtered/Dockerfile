@@ -44,6 +44,8 @@ RUN \
 
 # copy Micro Intergator product distribution to user's home directory
 COPY --chown=wso2carbon:wso2 ${MICROESB_NAME}/ ${MICROESB_HOME}
+# copy init script to user home
+COPY --chown=wso2carbon:wso2 docker-entrypoint.sh ${USER_HOME}/
 
 # set the user and work directory
 USER ${USER}
@@ -57,4 +59,4 @@ ENV WORKING_DIRECTORY=${USER_HOME} \
 EXPOSE 8290 8253
 
 # initiate container and execute the Micro Integrator product startup script
-ENTRYPOINT $WSO2_SERVER_HOME/bin/micro-integrator.sh
+ENTRYPOINT ["/home/wso2carbon/docker-entrypoint.sh"]
