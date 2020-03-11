@@ -330,8 +330,9 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         /**
          * Constructor.
          *
-         * @param nodeId  node ID of the current node
-         * @param groupId group ID of the current group
+         * @param nodeId           - node ID of the current node
+         * @param groupId          - group ID of the current group
+         * @param stillCoordinator - whether this node is still a coordinator
          */
         private CoordinatorElectionTask(String nodeId, String groupId, boolean stillCoordinator) {
             this.localGroupId = groupId;
