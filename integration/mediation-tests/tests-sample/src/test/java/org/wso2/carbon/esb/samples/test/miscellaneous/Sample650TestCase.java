@@ -106,30 +106,6 @@ public class Sample650TestCase extends ESBSampleIntegrationTest {
 
     }
 
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Test End points")
-    public void testEndPoints() throws Exception {
-        assertTrue(getNoOfArtifacts("endpoints") == 1, "End points not added");
-    }
-
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Test local entries", enabled = false)
-    public void testLocalEntries() throws Exception {
-        assertTrue(localEntriesAdminClient.getEntryDataCount() > 1, "local entries not added");
-    }
-
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Test Sequences")
-    public void testSequences() throws Exception {
-        assertTrue(getNoOfArtifacts("sequences") > 3, "Sequences not added");
-    }
-
-    @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
-    @Test(groups = "wso2.esb", description = "Test tasks", enabled = false)
-    public void testTasks() throws Exception {
-        assertTrue(getNoOfArtifacts("tasks") == 1, "tasks not added");
-    }
-
     @AfterClass(alwaysRun = true)
     public void destroy() throws Exception {
         carbonLogReader.stop();
