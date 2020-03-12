@@ -693,6 +693,7 @@ public class RDBMSCommunicationBusContextImpl implements CommunicationBusContext
     private void close(Connection connection, String task) {
         try {
             if (connection != null && !connection.isClosed()) {
+                connection.rollback(); // to prevent inconsistencies in select statements
                 connection.close();
             }
         } catch (SQLException e) {
