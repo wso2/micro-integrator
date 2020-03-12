@@ -18,20 +18,23 @@
 
 package org.wso2.carbon.esb.mediator.test.smooks;
 
-import org.apache.axiom.om.util.AXIOMUtil;
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
-import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
-import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
-import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.Utils;
-
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.axiom.om.util.AXIOMUtil;
+import org.awaitility.Awaitility;
+import org.testng.Assert;
+import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.esb.mediator.test.smooks.utils.FileUtils;
+import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
+import org.wso2.esb.integration.common.utils.Utils;
 
 /**
  * This test case is for verifying the functionality of processing relatively large files(>16K TCP buffer size) with
@@ -59,12 +62,16 @@ public class SmooksLargeFileProcessingTestCase extends ESBIntegrationTest {
         Files.createDirectories(Paths.get(smooksResourceDir, "test", "in"));
         Files.copy(source, destination, StandardCopyOption.REPLACE_EXISTING);
         /*
-         * The polling interval of the VFS proxy is 1000 ms. Therefore 2000ms waiting time was added to provide
+         * The polling interval of the VFS proxy is 1s. Therefore atmost 10s waiting time was added to provide
          * enough time for the processing
          */
-        Thread.sleep(2000);
+        Path outPutFilePath = Paths.get(smooksResourceDir, "test", "out", "Out.xml");
 
-        String smooksOut = new String(Files.readAllBytes(Paths.get(smooksResourceDir, "test", "out", "Out.xml")));
+        Awaitility.await().pollInterval(1, TimeUnit.SECONDS).atMost(10, TimeUnit.SECONDS).until(
+                FileUtils.checkFileExistence(outPutFilePath));
+        Assert.assertTrue(Files.exists(outPutFilePath), "Output file has not been created");
+
+        String smooksOut = new String(Files.readAllBytes(outPutFilePath));
         Assert.assertTrue(smooksOut.contains(
                 "<csv-record number=\"160\"><firstname>Andun</firstname><lastname>Sameera</lastname>"
                         + "<gender>Male</gender><age>4</age><country>SriLanka</country></csv-record>"),
