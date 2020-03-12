@@ -98,7 +98,7 @@ public class ReadinessResource extends APIResource {
 
         axisCtx.setProperty(HTTP_SC, CACHED_RESPONSE_CODE);
 
-        if (MicroIntegratorBaseUtils.isHotDeploymentEnabled()) {
+        if (MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled()) {
             log.warn("Hot Deployment and Readiness Probe configurations are both enabled in your server! Note that "
                              + "the readiness probe will not identify faulty artifacts that are hot deployed. Be sure "
                              + "to disable hot deployment if the readiness probe is enabled.");

@@ -113,7 +113,8 @@ public class ConfigurationLoader {
                                     System.getProperty(Constants.PREFIX_TO_ENABLE_INTERNAL_APIS + name))) {
                                 continue;
                             }
-                            if (READINESS_PROBE.equals(name) && MicroIntegratorBaseUtils.isHotDeploymentEnabled()) {
+                            if (READINESS_PROBE.equals(name) && MicroIntegratorBaseUtils.getCarbonAxisConfigurator()
+                                    .isHotDeploymentEnabled()) {
                                 log.warn("Hot Deployment and Readiness Probe configurations are both enabled "
                                                  + "in your server! Note that the readiness probe will not "
                                                  + "identify faulty artifacts that are hot deployed. Be sure to "

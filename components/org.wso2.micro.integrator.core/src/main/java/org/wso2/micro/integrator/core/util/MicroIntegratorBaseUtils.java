@@ -54,7 +54,6 @@ import org.apache.axis2.deployment.DeploymentConstants;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.axis2.util.JavaUtils;
 import org.apache.axis2.util.XMLUtils;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.logging.Log;
@@ -64,6 +63,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.wso2.micro.core.CarbonAxisConfigurator;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
@@ -79,7 +79,7 @@ public class MicroIntegratorBaseUtils {
     private static OMElement axis2Config;
     private static final String TRUE = "true";
     private static final int ENTITY_EXPANSION_LIMIT = 0;
-    private static Boolean hotDeployment;
+    private static CarbonAxisConfigurator carbonAxisConfigurator;
 
     public static String getServerXml() {
 
@@ -333,22 +333,6 @@ public class MicroIntegratorBaseUtils {
         }
     }
 
-    public static synchronized boolean isHotDeploymentEnabled() {
-        if (hotDeployment == null) {
-            try {
-                String hotDeploymentParam = getPropertyFromAxisConf(
-                        org.wso2.micro.integrator.core.Constants.HOT_DEPLOYMENT);
-                hotDeployment = JavaUtils.isTrue(hotDeploymentParam, false);
-            } catch (IOException | XMLStreamException e) {
-                log.error("Error while reading the " + org.wso2.micro.integrator.core.Constants.HOT_DEPLOYMENT
-                                  + " parameter from axis2.xml. Hot Deployment will be set to false.", e);
-                // Setting hotDeployment as false in any occurrence of an error while reading the axis2.xml file.
-                hotDeployment = false;
-            }
-        }
-        return hotDeployment;
-    }
-
     private static String getPropertyFromAxisConf(String parameter) throws IOException, XMLStreamException {
 
         try (InputStream file = new FileInputStream(Paths.get(getCarbonConfigDirPath(), "axis2",
@@ -559,5 +543,21 @@ public class MicroIntegratorBaseUtils {
         //to available at the other context as required (fix 2011-11-30)
         System.setProperty("portOffset", portOffset);
         return portOffset == null? portNumber : portNumber + Integer.parseInt(portOffset);
+    }
+
+    /**
+     * This is to set the carbonAxisConfigurator instance.
+     *
+     * @param carbonAxisConfig Carbon Axis Configurator
+     */
+    public static void setCarbonAxisConfigurator(CarbonAxisConfigurator carbonAxisConfig) {
+        carbonAxisConfigurator = carbonAxisConfig;
+    }
+
+    /**
+     * This is to get the carbonAxisConfigurator instance.
+     */
+    public static CarbonAxisConfigurator getCarbonAxisConfigurator() {
+        return carbonAxisConfigurator;
     }
 }
