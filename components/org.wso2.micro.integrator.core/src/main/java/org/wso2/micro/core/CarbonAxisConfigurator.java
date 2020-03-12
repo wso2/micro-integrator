@@ -46,6 +46,7 @@ import org.apache.axis2.description.Parameter;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.AxisConfigurator;
 import org.apache.axis2.i18n.Messages;
+import org.apache.axis2.util.JavaUtils;
 import org.apache.axis2.util.XMLUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -86,6 +87,7 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
     }
 
     public CarbonAxisConfigurator() {
+        this.hotDeployment = false;
     }
 
 
@@ -224,6 +226,7 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
             Parameter contextRootParam = new Parameter("contextRoot", carbonContextRoot);
             axisConfig.addParameter(contextRootParam);
         }
+        updateHotDeploymentParameter();
         return axisConfig;
     }
 
@@ -236,6 +239,26 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
             }
         }
         return false;
+    }
+
+    /**
+     * Update the hotDeployment variable after reading the hot deployment parameter from the axis configuration. If the
+     * value is null, then the hotDeployment variable will be set to false which is the default value.
+     */
+    private void updateHotDeploymentParameter() {
+        Parameter hotDeployment = axisConfig.getParameter(org.wso2.micro.integrator.core.Constants.HOT_DEPLOYMENT);
+        if (hotDeployment != null) {
+            this.hotDeployment = JavaUtils.isTrue(hotDeployment.getValue(), false);
+        }
+    }
+
+    /**
+     * This will return the value of hotDeployment.
+     *
+     * @return <code>true</code> if the hot deployment is enabled, <code>false</code> otherwise.
+     */
+    public boolean isHotDeploymentEnabled() {
+        return this.hotDeployment;
     }
 
     public void engageGlobalModules() throws AxisFault {

@@ -809,7 +809,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 log.info("Copying main sequence to " + mainXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(mainXMLPath));
 
-                if (!MicroIntegratorBaseUtils.isHotDeploymentEnabled()) {
+                if (!MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled()) {
                     deployer.deploy(new DeploymentFileData(new File(mainXMLPath), deployer));
                 }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);
@@ -837,7 +837,7 @@ public class SynapseAppDeployer implements AppDeploymentHandler {
                 log.info("Copying fault sequence to " + faultXMLPath);
                 FileUtils.copyFile(new File(artifactPath), new File(faultXMLPath));
 
-                if (!MicroIntegratorBaseUtils.isHotDeploymentEnabled()) {
+                if (!MicroIntegratorBaseUtils.getCarbonAxisConfigurator().isHotDeploymentEnabled()) {
                     deployer.deploy(new DeploymentFileData(new File(faultXMLPath), deployer));
                 }
                 artifact.setDeploymentStatus(AppDeployerConstants.DEPLOYMENT_STATUS_DEPLOYED);

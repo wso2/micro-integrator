@@ -282,6 +282,7 @@ public class CoreServerInitializer {
             bundleContext.registerService(Axis2ConfigurationContextService.class.getName(),
                     axis2ConfigurationContextService, null);
             CarbonCoreDataHolder.getInstance().setAxis2ConfigurationContextService(axis2ConfigurationContextService);
+            MicroIntegratorBaseUtils.setCarbonAxisConfigurator(carbonAxisConfigurator);
 
         } catch (Throwable e) {
             log.fatal("WSO2 Carbon initialization Failed", e);
