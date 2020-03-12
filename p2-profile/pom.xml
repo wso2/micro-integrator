@@ -172,7 +172,7 @@
                                     org.wso2.ciphertool:org.wso2.ciphertool.feature:${cipher.tool.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
-                                    org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${carbon.mediation.version}
+                                    org.wso2.carbon.mediation:org.wso2.carbon.transports.sap.feature:${sap-adapter.feature.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.websocket.feature:${project.version}
@@ -293,7 +293,7 @@
 
                                 <feature>
                                     <id>org.wso2.carbon.transports.sap.feature.group</id>
-                                    <version>${carbon.mediation.version}</version>
+                                    <version>${sap-adapter.feature.version}</version>
                                 </feature>
 
                                 <feature>
