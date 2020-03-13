@@ -26,56 +26,23 @@ BASEDIR=$(dirname "$0")
 echo "Platform : $platform"
 echo "BitType : $bitType"
 
-getPomVersion(){
-    VERSION=$(cat pom.xml | grep "^    <version>.*</version>$" | awk -F'[><]' '{print $3}');
-    echo "Version : $VERSION"
-}
-
-buildCli(){
-    go mod vendor
-    sleep 10
-
-    #build Micro Integrator CLI
-    echo "Build Micro Integrator CLI"
-    cd ../
-
-    #get the version from the pom
-    getPomVersion
-    cd cmd
-    ./build.sh -t mi.go -v ${VERSION} -f
-}
-
 #Setting up the CLI environment
 #Check if the cli build is available in the location
-setup(){
-
 cd $BASEDIR
 
-DIR="../../../../../cmd/build"
+#Get the CLI distribution from the latest jenkins build
+DISTRIBUTION_NAME=$(eval "curl -s https://wso2.org/jenkins/job/products/job/product-mi-tooling/lastSuccessfulBuild/api/json | python3 -c \"import sys, json; print(json.load(sys.stdin)['artifacts'][1]['fileName'])\"")
+echo "name: $DISTRIBUTION_NAME"
+cd ../../../target
 
-cd ../../../../../cmd
-go mod vendor
-sleep 10
+#Download the latest CLI distribution
+echo "downloading https://wso2.org/jenkins/job/products/job/product-mi-tooling/lastSuccessfulBuild/artifact/cmd/build/$DISTRIBUTION_NAME"
+wget "https://wso2.org/jenkins/job/products/job/product-mi-tooling/lastSuccessfulBuild/artifact/cmd/build/$DISTRIBUTION_NAME"
 
-#build Micro Integrator CLI
-echo "Build Micro Integrator CLI"
-cd ../
-
-#get the version from the pom
-getPomVersion
-cd cmd
-./build.sh -t mi.go -v ${VERSION} -f
-
-cd build
-pwd
-ls
-tar -xvzf "wso2mi-cli-$VERSION-linux-x64.tar.gz"
+#Extract the CLI
+mkdir wso2mi-cli
+tar -xvzf "$DISTRIBUTION_NAME" --strip=1 -C wso2mi-cli
 
 #start the application
-cd wso2mi-cli-$VERSION/bin
+cd wso2mi-cli/bin
 echo "ClI setup Complete"
-
-
-}
-
-setup
