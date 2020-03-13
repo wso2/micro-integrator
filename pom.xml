@@ -1210,7 +1210,6 @@
                 <module>p2-profile</module>
                 <module>distribution</module>
                 <module>integration</module>
-                <module>tooling/monitoring-dashboard</module>
             </modules>
         </profile>
         <profile>
