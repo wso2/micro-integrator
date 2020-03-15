@@ -114,6 +114,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         this.threadExecutor = Executors.newSingleThreadExecutor(namedThreadFactory);
 
         this.localNodeId = generateRandomId();
+        log.info("This node is registering to the cluster with id : [" + localNodeId + "]");
         this.communicationBusContext = communicationBusContext;
         this.rdbmsMemberEventProcessor = new RDBMSMemberEventProcessor(localNodeId, localGroupId,
                                                                        heartbeatMaxRetryInterval, communicationBusContext);
@@ -258,6 +259,14 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
 
     private String generateRandomId() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * Gives the id of this node.
+     * @return The Node ID of this node.
+     */
+    public String getThisNodeId() {
+        return localNodeId;
     }
 
     /**

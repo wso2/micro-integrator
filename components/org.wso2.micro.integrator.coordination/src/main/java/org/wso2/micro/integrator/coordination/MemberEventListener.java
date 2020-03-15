@@ -18,7 +18,6 @@
 
 package org.wso2.micro.integrator.coordination;
 
-
 import org.wso2.micro.integrator.coordination.node.NodeDetail;
 
 /**
@@ -51,9 +50,15 @@ public abstract class MemberEventListener {
 
     /**
      * Invoked when the node is in inactive state.
-     *
      */
     public abstract void becameUnresponsive(String nodeId);
+
+    /**
+     * Invoked when the node is back to active state after being inactive.
+     *
+     * @param nodeId - The Id of this node
+     */
+    public abstract void reJoined(String nodeId);
 
     public String getGroupId() {
         return this.groupId;

@@ -17,7 +17,6 @@
  */
 package org.wso2.micro.integrator.mediation.ntask;
 
-import com.hazelcast.core.IExecutorService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.task.SynapseTaskException;
@@ -25,11 +24,10 @@ import org.apache.synapse.task.TaskDescription;
 import org.apache.synapse.task.TaskManager;
 import org.apache.synapse.task.TaskManagerObserver;
 import org.wso2.micro.core.ServerStartupHandler;
-import org.wso2.micro.integrator.ntask.common.TaskException;
+import org.wso2.micro.integrator.mediation.ntask.internal.NtaskService;
 import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.impl.LocalTaskActionListener;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
-import org.wso2.micro.integrator.mediation.ntask.internal.NtaskService;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,11 +107,13 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
 				}
                 taskManager.registerTask(taskInfo);
                 if (NtaskService.getTaskService().isServerInit()) {
-                    taskManager.scheduleTask(taskInfo.getName());
+                    if (logger.isDebugEnabled()) {
+                        logger.debug("Submitting task [ " + taskId(taskDescription) + " ] to the task manager.");
+                    }
+                    taskManager.handleTask(taskInfo.getName());
                 }
                 removeTask(taskDescription);
-			}
-			logger.info("Scheduled task " + taskId(taskDescription));
+            }
 		} catch (Exception e) {
 			logger.error("Scheduling task [" + taskId(taskDescription) + "::" +
 			                     taskDescription.getTaskGroup() + "] FAILED. Error: " +
