@@ -14,25 +14,6 @@
 
 matrix:
   include:
-    - language: go
-      go:
-        - 1.12.x
-
-      env:
-        - GO111MODULE=on
-
-      before_install:
-        - cd cmd/
-        - go mod download
-
-      script:
-        - go test -v ./...
-
-      cache:
-        directories:
-          - $HOME/.cache/go-build
-          - $HOME/gopath/pkg/mod
-
     - language: java
       jdk:
         - openjdk8
