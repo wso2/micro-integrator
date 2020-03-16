@@ -560,7 +560,7 @@
             </dependency>
             <dependency>
                 <groupId>org.eclipse.paho</groupId>
-                <artifactId>mqtt-client</artifactId>
+                <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
                 <version>${org.eclipse.paho.version}</version>
             </dependency>
             <dependency>
@@ -732,7 +732,7 @@
         <geronimo.specs.jms.version>1.1.1</geronimo.specs.jms.version>
         <ibatis-core.version>3.0</ibatis-core.version>
         <netty.version>4.1.11.Final</netty.version>
-        <org.eclipse.paho.version>0.4.0</org.eclipse.paho.version>
+        <org.eclipse.paho.version>1.2.0</org.eclipse.paho.version>
         <activemq.version>5.9.1</activemq.version>
         <ca.uhn.hapi.wso2.version>2.1.0.wso2v1</ca.uhn.hapi.wso2.version>
         <cglib.version>2.2</cglib.version>
