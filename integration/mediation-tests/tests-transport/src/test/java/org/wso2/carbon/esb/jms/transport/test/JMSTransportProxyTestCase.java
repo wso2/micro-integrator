@@ -17,7 +17,6 @@
  */
 package org.wso2.carbon.esb.jms.transport.test;
 
-import org.apache.axiom.om.OMElement;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -26,14 +25,11 @@ import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMe
 import org.wso2.carbon.automation.extensions.servers.jmsserver.client.JMSQueueMessageProducer;
 import org.wso2.carbon.automation.extensions.servers.jmsserver.controller.config.JMSBrokerConfigurationProvider;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
-import org.wso2.esb.integration.common.utils.JMSEndpointManager;
 
 public class JMSTransportProxyTestCase extends ESBIntegrationTest {
     @BeforeClass(alwaysRun = true)
     protected void init() throws Exception {
         super.init();
-        OMElement synapse = esbUtils.loadResource("/artifacts/ESB/jms/transport/jms_transport_proxy_service.xml");
-        updateESBConfiguration(JMSEndpointManager.setConfigurations(synapse));
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test proxy service with jms transport")
@@ -41,7 +37,7 @@ public class JMSTransportProxyTestCase extends ESBIntegrationTest {
 
         JMSQueueMessageProducer sender = new JMSQueueMessageProducer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
-        String queueName = "JmsProxy";
+        String queueName = "JmsTransportProxy";
         try {
             sender.connect(queueName);
             for (int i = 0; i < 3; i++) {

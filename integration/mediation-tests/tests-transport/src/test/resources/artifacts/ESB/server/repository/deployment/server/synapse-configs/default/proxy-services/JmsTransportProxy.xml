@@ -1,9 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="http://ws.apache.org/ns/synapse">
-    <proxy name="JmsProxy"
-           transports="jms"
-           startOnLoad="true"
-           trace="disable">
+<proxy xmlns="http://ws.apache.org/ns/synapse" name="JmsTransportProxy" transports="jms" startOnLoad="true" trace="disable">
         <target>
             <endpoint>
                 <address uri="http://localhost:9000/services/SimpleStockQuoteService"/>
@@ -21,6 +16,3 @@
             </rules>
         </parameter>
     </proxy>
-
-
-</definitions>
