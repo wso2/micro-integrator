@@ -238,9 +238,20 @@ public class CarbonServerManager {
             log.info("Shutting down server ...");
 
             try {
+                // Waiting for 3 mins max until the server gets shut down
+                int retryCount = 36;
+                for (int i = 0; i < retryCount; i++) {
+                    if (isRemotePortInUse("localhost", managementPort)) {
+                        startProcess(carbonHome, getStartScriptCommand("stop"));
+                        waitTill(() -> isRemotePortInUse("localhost", managementPort), 5, TimeUnit.SECONDS);
+                    } else {
+                        break;
+                    }
+                }
 
-                startProcess(carbonHome, getStartScriptCommand("stop"));
-                waitTill(() -> isRemotePortInUse("localhost", managementPort), 180, TimeUnit.SECONDS);
+                if (isRemotePortInUse("localhost", managementPort)) {
+                    throw new AutomationFrameworkException("Failed shutting down the sever");
+                }
 
                 log.info("Server stopped successfully ...");
 
