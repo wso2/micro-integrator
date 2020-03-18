@@ -9,7 +9,7 @@
         <inSequence>
             <call>
                 <endpoint>
-                    <address uri="https://127.0.0.1:8443/services/echo"/>
+                    <address uri="https://localhost:8443/services/echo"/>
                 </endpoint>
             </call>
         <respond />
