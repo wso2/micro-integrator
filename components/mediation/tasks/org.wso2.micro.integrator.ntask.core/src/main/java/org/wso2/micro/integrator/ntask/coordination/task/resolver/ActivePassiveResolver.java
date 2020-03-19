@@ -20,7 +20,7 @@ package org.wso2.micro.integrator.ntask.coordination.task.resolver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.ntask.coordination.task.ClusterNodeDetails;
+import org.wso2.micro.integrator.ntask.coordination.task.ClusterCommunicator;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ public class ActivePassiveResolver implements TaskLocationResolver {
 
     private static final Log log = LogFactory.getLog(ActivePassiveResolver.class);
 
-    private String nodeId = null;
+    private String destinedNode = null;
 
     @Override
     public void init(Map<String, String> properties) {
@@ -49,20 +49,21 @@ public class ActivePassiveResolver implements TaskLocationResolver {
      * @return Node id fot the task.
      */
     @Override
-    public String getTaskNodeLocation(ClusterNodeDetails clusterNodeDetails, String taskName) {
-        List<String> allNodesAvailableInCluster = clusterNodeDetails.getAllNodeIds();
+    public String getTaskNodeLocation(ClusterCommunicator clusterCommunicator, String taskName) {
+
+        List<String> allNodesAvailableInCluster = clusterCommunicator.getAllNodeIds();
         int noOfNodesInCluster = allNodesAvailableInCluster.size();
         if (noOfNodesInCluster == 0) {
             log.warn("No nodes are registered to the cluster successfully yet.");
             return null;
         }
-        if (nodeId == null || !allNodesAvailableInCluster.contains(nodeId)) {
+        if (destinedNode == null || !allNodesAvailableInCluster.contains(destinedNode)) {
             int location = new Random().nextInt();
-            nodeId = allNodesAvailableInCluster.get(Math.abs(location) % noOfNodesInCluster);
+            destinedNode = allNodesAvailableInCluster.get(Math.abs(location) % noOfNodesInCluster);
         }
         if (log.isDebugEnabled()) {
-            log.info("The task : " + taskName + ", is resolved to node with id : " + nodeId);
+            log.debug("The task : " + taskName + ", is resolved to node with id : " + destinedNode);
         }
-        return nodeId;
+        return destinedNode;
     }
 }

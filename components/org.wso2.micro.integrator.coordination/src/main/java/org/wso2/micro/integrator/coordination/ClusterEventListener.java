@@ -31,26 +31,26 @@ public class ClusterEventListener extends MemberEventListener {
 
     @Override
     public void memberAdded(NodeDetail nodeDetail) {
-        LOG.info("Member added : [" + nodeDetail.getNodeId() + "]");
+        LOG.info("Member added [" + nodeDetail.getNodeId() + "]");
     }
 
     @Override
     public void memberRemoved(NodeDetail nodeDetail) {
-        LOG.info("Member removed : [" + nodeDetail.getNodeId() + "]");
+        LOG.info("Member removed [" + nodeDetail.getNodeId() + "]");
     }
 
     @Override
     public void coordinatorChanged(NodeDetail nodeDetail) {
-        LOG.info("Coordinator changed to : [" + nodeDetail.getNodeId() + "]");
+        LOG.info("Coordinator changed to [" + nodeDetail.getNodeId() + "]");
     }
 
     @Override
     public void becameUnresponsive(String nodeId) {
-        LOG.info("This node lost connection to the cluster.");
+        LOG.info("Lost connection to the cluster.");
     }
 
     @Override
     public void reJoined(String nodeId) {
-        LOG.info("This node re-joined the cluster successfully.");
+        LOG.info("Re-joined the cluster successfully.");
     }
 }

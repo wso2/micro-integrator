@@ -83,12 +83,8 @@ public class ClusterCoordinator {
     public List<String> getAllNodeIds() {
 
         List<String> nodeIds = new ArrayList<>();
-        List<NodeDetail> allNodes;
         try {
-            allNodes = rdbmsCoordinationStrategy.getAllNodeDetails();
-            for (NodeDetail node : allNodes) {
-                nodeIds.add(node.getNodeId());
-            }
+            rdbmsCoordinationStrategy.getAllNodeDetails().forEach(node -> nodeIds.add(node.getNodeId()));
         } catch (ClusterCoordinationException ex) {
             log.error("Exception occurred while retrieving all node Ids.", ex);
         }

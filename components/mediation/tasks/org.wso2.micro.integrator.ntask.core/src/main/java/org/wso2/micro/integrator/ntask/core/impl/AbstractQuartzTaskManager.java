@@ -39,8 +39,9 @@ import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.spi.OperableTrigger;
 import org.wso2.micro.integrator.ntask.common.TaskConstants;
 import org.wso2.micro.integrator.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskDataBase;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
 import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.TaskRepository;
@@ -48,7 +49,6 @@ import org.wso2.micro.integrator.ntask.core.TaskUtils;
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
 
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -71,17 +71,17 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 
     private TaskRepository taskRepository;
     private Scheduler scheduler;
-    private TaskDataBase taskDataBase;
+    private TaskStore taskStore;
 
-    public AbstractQuartzTaskManager(TaskRepository taskRepository, TaskDataBase taskDataBase) throws TaskException {
+    public AbstractQuartzTaskManager(TaskRepository taskRepository, TaskStore taskStore) throws TaskException {
 
         this.taskRepository = taskRepository;
         this.scheduler = TasksDSComponent.getScheduler();
-        this.taskDataBase = taskDataBase;
+        this.taskStore = taskStore;
         try {
             Matcher<TriggerKey> tenantTaskTypeGroupMatcher = GroupMatcher.groupEquals(this.getTenantTaskGroup());
-            this.getScheduler().getListenerManager()
-                    .addTriggerListener(new TaskTriggerListener(this.getTenantTaskGroup()), tenantTaskTypeGroupMatcher);
+            this.getScheduler().getListenerManager().addTriggerListener(
+                    new TaskTriggerListener(this.getTenantTaskGroup()), tenantTaskTypeGroupMatcher);
         } catch (SchedulerException e) {
             throw new TaskException("Error in initiating task trigger listener", TaskException.Code.UNKNOWN, e);
         }
@@ -404,12 +404,12 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
                     String taskName = trigger.getJobKey().getName();
                     TaskUtils.setTaskFinished(getTaskRepository(), taskName, true);
                     boolean isCoordinatedTask =
-                            DataHolder.getInstance().getTaskManager().getAllCoordinatedTasksDeployed()
-                                    .contains(taskName);
+                            DataHolder.getInstance().getTaskManager().getAllCoordinatedTasksDeployed().contains(
+                                    taskName);
                     if (isCoordinatedTask) {
-                        taskDataBase.updateTaskState(taskName, CoordinatedTask.States.COMPLETED);
+                        taskStore.updateTaskState(taskName, CoordinatedTask.States.COMPLETED);
                     }
-                } catch (TaskException | SQLException e) {
+                } catch (TaskException | TaskCoordinationException e) {
                     log.error("Error in Finishing Task [" + trigger.getJobKey().getName() + "]: " + e.getMessage(), e);
                 }
             }

@@ -177,11 +177,12 @@ public class RDBMSMemberEventListenerTask implements Runnable {
      * @param member The node ID of the event occurred
      */
     private void notifyRejoin(String member, String groupId) {
-        for (MemberEventListener listener : listeners) {
+
+        listeners.forEach(listener -> {
             if (listener.getGroupId().equals(groupId)) {
                 listener.reJoined(member);
             }
-        }
+        });
     }
 
     /**

@@ -18,7 +18,7 @@
 package org.wso2.micro.integrator.ntask.coordination.task.resolver;
 
 import org.wso2.micro.integrator.ntask.common.TaskException;
-import org.wso2.micro.integrator.ntask.coordination.task.ClusterNodeDetails;
+import org.wso2.micro.integrator.ntask.coordination.task.ClusterCommunicator;
 
 import java.util.Map;
 
@@ -39,10 +39,10 @@ public interface TaskLocationResolver {
     /**
      * Returns the node id in which the task needs to be scheduled.
      *
-     * @param clusterNodeDetails - The cluster clusterNodeDetails instance.
-     * @param taskName           - Name of the task
+     * @param clusterCommunicator - The cluster clusterCommunicator instance.
+     * @param taskName            - Name of the task
      * @return - Node Id .
      */
-    String getTaskNodeLocation(ClusterNodeDetails clusterNodeDetails, String taskName);
+    String getTaskNodeLocation(ClusterCommunicator clusterCommunicator, String taskName);
 
 }

@@ -18,7 +18,7 @@
 package org.wso2.micro.integrator.ntask.core;
 
 import org.wso2.micro.integrator.ntask.common.TaskException;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskDataBase;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
 
 import java.util.List;
 
@@ -27,9 +27,9 @@ import java.util.List;
  */
 public interface TaskManagerFactory {
 
-    TaskManager getTaskManager(TaskManagerId tmId, TaskDataBase taskDataBase) throws TaskException;
+    TaskManager getTaskManager(TaskManagerId tmId, TaskStore taskStore) throws TaskException;
 
-    List<TaskManager> getStartupSchedulingTaskManagersForType(String taskType, TaskDataBase taskDataBase)
+    List<TaskManager> getStartupSchedulingTaskManagersForType(String taskType, TaskStore taskStore)
             throws TaskException;
 
 }

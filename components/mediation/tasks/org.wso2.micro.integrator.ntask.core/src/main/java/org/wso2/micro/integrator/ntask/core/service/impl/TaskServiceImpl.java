@@ -20,7 +20,7 @@ package org.wso2.micro.integrator.ntask.core.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.ntask.common.TaskException;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskDataBase;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
 import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.TaskManagerFactory;
 import org.wso2.micro.integrator.ntask.core.TaskManagerId;
@@ -43,11 +43,11 @@ public class TaskServiceImpl implements TaskService {
     private Set<String> registeredTaskTypes;
     private boolean serverInit;
     private TaskManagerFactory taskManagerFactory;
-    private TaskDataBase taskDataBase;
+    private TaskStore taskStore;
 
-    public TaskServiceImpl(TaskDataBase taskDataBase) {
+    public TaskServiceImpl(TaskStore taskStore) {
 
-        this.taskDataBase = taskDataBase;
+        this.taskStore = taskStore;
         this.registeredTaskTypes = new HashSet<>();
         this.taskManagerFactory = new ScheduledTasksManagerFactory();
         log.info("Starting task service .");
@@ -72,7 +72,7 @@ public class TaskServiceImpl implements TaskService {
             log.debug("Initializing task managers [" + taskType + "]");
         }
         List<TaskManager> startupTms =
-                this.getTaskManagerFactory().getStartupSchedulingTaskManagersForType(taskType, taskDataBase);
+                this.getTaskManagerFactory().getStartupSchedulingTaskManagersForType(taskType, taskStore);
         for (TaskManager tm : startupTms) {
             tm.initStartupTasks();
         }
@@ -80,7 +80,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskManager getTaskManager(String taskType) throws TaskException {
-        return this.getTaskManagerFactory().getTaskManager(new TaskManagerId(SUPER_TENANT_ID, taskType), taskDataBase);
+        return this.getTaskManagerFactory().getTaskManager(new TaskManagerId(SUPER_TENANT_ID, taskType), taskStore);
     }
 
     @Override

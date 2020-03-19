@@ -63,6 +63,10 @@ public class CoordinatedTask {
         return this.taskName;
     }
 
+    public String toString() {
+        return "Task Name [" + taskName + "] state [" + taskState + "] destined Node [" + destinedNodeId + "]";
+    }
+
     public enum States {
         NONE,
         RUNNING,

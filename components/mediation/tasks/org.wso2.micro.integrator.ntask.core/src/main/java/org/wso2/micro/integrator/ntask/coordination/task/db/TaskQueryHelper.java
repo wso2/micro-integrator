@@ -18,7 +18,6 @@
 
 package org.wso2.micro.integrator.ntask.coordination.task.db;
 
-import org.wso2.micro.integrator.ntask.coordination.task.ConstantUtil;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
 
 /**
@@ -26,48 +25,54 @@ import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
  */
 public class TaskQueryHelper {
 
-    public static final String ADD_TASK =
-            "INSERT INTO " + ConstantUtil.TABLE_NAME + " ( " + ConstantUtil.TASK_NAME + ", "
-                    + ConstantUtil.DESTINED_NODE_ID + ", " + ConstantUtil.TASK_STATE + ") " + "VALUES (?,NULL,?)";
+    //task table Name
+    private static final String TABLE_NAME = "COORDINATED_TASK_TABLE";
 
-    public static final String UPDATE_TASK =
-            "UPDATE  " + ConstantUtil.TABLE_NAME + " SET  " + ConstantUtil.DESTINED_NODE_ID + " = ? , "
-                    + ConstantUtil.TASK_STATE + " = ?  WHERE " + ConstantUtil.TASK_NAME + " = ?";
+    // Task table columns
+    public static final String TASK_NAME = "TASK_NAME";
+    public static final String DESTINED_NODE_ID = "DESTINED_NODE_ID";
+    public static final String TASK_STATE = "TASK_STATE";
+
+    public static final String ADD_TASK_IF_NOT_EXISTS =
+            "INSERT IGNORE INTO " + TABLE_NAME + " ( " + TASK_NAME + ", " + DESTINED_NODE_ID + ", " + TASK_STATE + ") "
+                    + "VALUES (?,NULL,\"" + CoordinatedTask.States.NONE + "\")";
+
+    public static final String UPDATE_ASSIGNMENT_AND_RUNNING_STATE_TO_NONE =
+            "UPDATE  " + TABLE_NAME + " SET  " + DESTINED_NODE_ID + " = ? , " + TASK_STATE + " = ( CASE " + TASK_STATE
+                    + " WHEN \"" + CoordinatedTask.States.RUNNING + "\"THEN \"" + CoordinatedTask.States.NONE
+                    + "\" ELSE " + TASK_STATE + " END ) WHERE " + TASK_NAME + " = ?";
 
     public static final String UPDATE_TASK_STATE =
-            "UPDATE  " + ConstantUtil.TABLE_NAME + "  SET " + ConstantUtil.TASK_STATE + " = ? WHERE "
-                    + ConstantUtil.TASK_NAME + " =? ";
+            "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = ? WHERE " + TASK_NAME + " =? ";
 
-    public static final String RETRIEVE_ALL_TASKS =
-            "SELECT  " + ConstantUtil.TASK_NAME + " FROM " + ConstantUtil.TABLE_NAME;
+    public static final String RETRIEVE_ALL_TASKS = "SELECT  " + TASK_NAME + " FROM " + TABLE_NAME;
 
     public static final String RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS =
-            "SELECT * FROM " + ConstantUtil.TABLE_NAME + " WHERE  " + ConstantUtil.DESTINED_NODE_ID + " IS NULL AND "
-                    + ConstantUtil.TASK_STATE + " !=\"" + CoordinatedTask.States.COMPLETED + "\"";
+            "SELECT " + TASK_NAME + " FROM " + TABLE_NAME + " WHERE  " + DESTINED_NODE_ID + " IS NULL AND " + TASK_STATE
+                    + " !=\"" + CoordinatedTask.States.COMPLETED + "\"";
 
-    public static final String RETRIEVE_TASKS_OF_PARTICULAR_NODE =
-            "SELECT " + ConstantUtil.TASK_NAME + " FROM " + ConstantUtil.TABLE_NAME + "  WHERE "
-                    + ConstantUtil.DESTINED_NODE_ID + " =? AND " + ConstantUtil.TASK_STATE + " =?";
+    public static final String RETRIEVE_TASKS_OF_NODE =
+            "SELECT " + TASK_NAME + " FROM " + TABLE_NAME + "  WHERE " + DESTINED_NODE_ID + " =? AND " + TASK_STATE
+                    + " =?";
 
-    public static final String CLEAN_INVALID_NODES =
-            "UPDATE " + ConstantUtil.TABLE_NAME + " SET " + ConstantUtil.DESTINED_NODE_ID + " = NULL , "
-                    + ConstantUtil.TASK_STATE + " = ? WHERE " + ConstantUtil.TASK_NAME + " =?";
+    public static final String REMOVE_ASSIGNMENT_AND_UPDATE_RUNNING_STATE_TO_NONE =
+            "UPDATE " + TABLE_NAME + " SET " + DESTINED_NODE_ID + " = NULL , " + TASK_STATE + " = ( CASE " + TASK_STATE
+                    + " WHEN \"" + CoordinatedTask.States.RUNNING + "\"THEN \"" + CoordinatedTask.States.NONE
+                    + "\" ELSE " + TASK_STATE + " END ) WHERE " + TASK_NAME + " =?";
 
     public static final String REMOVE_TASKS_OF_NODE =
-            "DELETE FROM " + ConstantUtil.TABLE_NAME + "  WHERE " + ConstantUtil.DESTINED_NODE_ID + " =?";
+            "DELETE FROM " + TABLE_NAME + "  WHERE " + DESTINED_NODE_ID + " =?";
 
-    public static final String DELETE_TASK =
-            "DELETE FROM " + ConstantUtil.TABLE_NAME + " WHERE " + ConstantUtil.TASK_NAME + " =?";
+    public static final String DELETE_TASK = "DELETE FROM " + TABLE_NAME + " WHERE " + TASK_NAME + " =?";
 
     public static final String CLEAN_TASKS_OF_NODE =
-            "UPDATE " + ConstantUtil.TABLE_NAME + " SET " + ConstantUtil.DESTINED_NODE_ID + " = NULL , "
-                    + ConstantUtil.TASK_STATE + " = ( CASE " + ConstantUtil.TASK_STATE + " WHEN \""
-                    + CoordinatedTask.States.RUNNING + "\"THEN \"" + CoordinatedTask.States.NONE + "\" ELSE "
-                    + ConstantUtil.TASK_STATE + " END ) WHERE " + ConstantUtil.DESTINED_NODE_ID + " = ?";
+            "UPDATE " + TABLE_NAME + " SET " + DESTINED_NODE_ID + " = NULL , " + TASK_STATE + " = ( CASE " + TASK_STATE
+                    + " WHEN \"" + CoordinatedTask.States.RUNNING + "\"THEN \"" + CoordinatedTask.States.NONE
+                    + "\" ELSE " + TASK_STATE + " END ) WHERE " + DESTINED_NODE_ID + " = ?";
 
-    public static final String GET_ALL_ASSIGNED_IN_COMPLETE_TASKS =
-            "SELECT * FROM " + ConstantUtil.TABLE_NAME + " WHERE " + ConstantUtil.DESTINED_NODE_ID + " IS NOT NULL AND "
-                    + ConstantUtil.TASK_STATE + " != \"" + CoordinatedTask.States.COMPLETED + "\"";
+    public static final String GET_ALL_ASSIGNED_INCOMPLETE_TASKS =
+            "SELECT * FROM " + TABLE_NAME + " WHERE " + DESTINED_NODE_ID + " IS NOT NULL AND " + TASK_STATE + " != \""
+                    + CoordinatedTask.States.COMPLETED + "\"";
 
     private TaskQueryHelper() throws IllegalAccessException {
         throw new IllegalAccessException("This class not to be initialized.");

@@ -114,7 +114,6 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         this.threadExecutor = Executors.newSingleThreadExecutor(namedThreadFactory);
 
         this.localNodeId = generateRandomId();
-        log.info("This node is registering to the cluster with id : [" + localNodeId + "]");
         this.communicationBusContext = communicationBusContext;
         this.rdbmsMemberEventProcessor = new RDBMSMemberEventProcessor(localNodeId, localGroupId,
                                                                        heartbeatMaxRetryInterval, communicationBusContext);
@@ -234,6 +233,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                     isCoordinatorTasksRunning = true;
                     retryClusterJoin = false;
                     this.threadExecutor.execute(new HeartBeatExecutionTask(stillCoordinator));
+                    log.info("Successfully joined the cluster with id [" + localNodeId + "]");
                 } catch (ClusterCoordinationException e) {
                     inactivityTime = System.currentTimeMillis();
                     log.error("Node with ID " + localNodeId + " in group " + localGroupId + " could not join to the " +

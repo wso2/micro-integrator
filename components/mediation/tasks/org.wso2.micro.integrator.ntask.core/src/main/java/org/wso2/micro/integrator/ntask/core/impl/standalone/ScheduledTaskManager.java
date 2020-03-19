@@ -23,8 +23,9 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.task.TaskDescription;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskDataBase;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
 import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.TaskRepository;
 import org.wso2.micro.integrator.ntask.core.TaskUtils;
@@ -32,8 +33,6 @@ import org.wso2.micro.integrator.ntask.core.impl.AbstractQuartzTaskManager;
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
 
-import java.sql.SQLException;
-import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -49,12 +48,12 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      */
     private List<String> deployedCoordinatedTasks = new ArrayList<>();
     private SynapseEnvironment synapseEnvironment = null;
-    private TaskDataBase taskDataBase;
+    private TaskStore taskStore;
 
-    ScheduledTaskManager(TaskRepository taskRepository, TaskDataBase taskDataBase) throws TaskException {
+    ScheduledTaskManager(TaskRepository taskRepository, TaskStore taskStore) throws TaskException {
 
-        super(taskRepository, taskDataBase);
-        this.taskDataBase = taskDataBase;
+        super(taskRepository, taskStore);
+        this.taskStore = taskStore;
     }
 
     @Override
@@ -80,15 +79,9 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
             }
             deployedCoordinatedTasks.add(taskName);
             try {
-                taskDataBase.addTaskToDB(new CoordinatedTask(taskName, null, CoordinatedTask.States.NONE));
-            } catch (SQLIntegrityConstraintViolationException ex) {
-                if (log.isDebugEnabled()) {
-                    log.debug(
-                            "The task [" + taskName + "] is already present in task data base, hence not adding" + ".");
-                }
-            } catch (SQLException e) {
-                throw new TaskException("Exception occurred while adding task : " + taskName,
-                                        TaskException.Code.DATABASE_ERROR);
+                taskStore.addTaskIfNotExist(taskName);
+            } catch (TaskCoordinationException ex) {
+                throw new TaskException("Error adding task : " + taskName, TaskException.Code.DATABASE_ERROR, ex);
             }
             return;
         }
@@ -154,8 +147,10 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
             rescheduleTask(taskName);
         }
         try {
-            taskDataBase.updateTaskState(taskName, CoordinatedTask.States.RUNNING);
-        } catch (SQLException e) {
+            taskStore.updateTaskState(taskName, CoordinatedTask.States.RUNNING);
+        } catch (TaskCoordinationException e) {
+            // stopping since the db write failed.
+            stopExecution(taskName);
             throw new TaskException(
                     "Exception occurred while updating the state of the task : " + taskName + " to :" + " "
                             + CoordinatedTask.States.RUNNING, TaskException.Code.DATABASE_ERROR);
@@ -195,9 +190,9 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
         // result can be false.
         if (deployedCoordinatedTasks.contains(taskName)) {
             try {
-                taskDataBase.removeTasksFromDB(Collections.singletonList(taskName));
-            } catch (SQLException ex) {
-                log.error("Exception occurred while removing tasks.", ex);
+                taskStore.deleteTasks(Collections.singletonList(taskName));
+            } catch (TaskCoordinationException ex) {
+                log.error("Error while removing tasks.", ex);
             }
             deployedCoordinatedTasks.remove(taskName);
         }

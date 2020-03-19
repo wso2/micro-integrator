@@ -20,8 +20,7 @@ package org.wso2.micro.integrator.ntask.coordination.task.resolver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.ntask.coordination.task.ClusterNodeDetails;
-import org.wso2.micro.integrator.ntask.coordination.task.ConstantUtil;
+import org.wso2.micro.integrator.ntask.coordination.task.ClusterCommunicator;
 
 import java.util.List;
 import java.util.Map;
@@ -37,25 +36,26 @@ public class RoundRobinResolver implements TaskLocationResolver {
 
     private AtomicInteger taskLocation = new AtomicInteger(0);
     private int taskServerCount;
+    private static final String TASK_SERVER_COUNT_PROPERTY = "task_server_count";
 
     @Override
     public void init(Map<String, String> properties) {
 
         int serverCount = 1;
         try {
-            serverCount = Integer.parseInt(properties.get(ConstantUtil.TASK_SERVER_COUNT_PROPERTY));
+            serverCount = Integer.parseInt(properties.get(TASK_SERVER_COUNT_PROPERTY));
         } catch (NumberFormatException ex) {
-            log.error("Specify an int value for " + ConstantUtil.TASK_SERVER_COUNT_PROPERTY + ". Default "
+            log.error("Specify an int value for " + TASK_SERVER_COUNT_PROPERTY + ". Default "
                               + "value of 1 will be used.", ex);
         }
         this.taskServerCount = serverCount;
     }
 
     @Override
-    public String getTaskNodeLocation(ClusterNodeDetails clusterNodeDetails, String taskName) {
+    public String getTaskNodeLocation(ClusterCommunicator clusterCommunicator, String taskName) {
 
         int location = taskLocation.incrementAndGet();
-        List<String> allNodesAvailableInCluster = clusterNodeDetails.getAllNodeIds();
+        List<String> allNodesAvailableInCluster = clusterCommunicator.getAllNodeIds();
         int availableNoOfNodes = allNodesAvailableInCluster.size();
         if (availableNoOfNodes == 0) {
             log.warn("No nodes are registered to the cluster successfully yet.");
@@ -66,11 +66,11 @@ public class RoundRobinResolver implements TaskLocationResolver {
                              + " node(s) available cluster ...");
             return null;
         }
-        String nodeId = allNodesAvailableInCluster.get(Math.abs(location) % availableNoOfNodes);
+        String destinedNode = allNodesAvailableInCluster.get(Math.abs(location) % availableNoOfNodes);
         if (log.isDebugEnabled()) {
-            log.debug("The task : " + taskName + ", is resolved to node with id : " + nodeId);
+            log.debug("The task : " + taskName + ", is resolved to node with id : " + destinedNode);
         }
-        return nodeId;
+        return destinedNode;
     }
 
 }

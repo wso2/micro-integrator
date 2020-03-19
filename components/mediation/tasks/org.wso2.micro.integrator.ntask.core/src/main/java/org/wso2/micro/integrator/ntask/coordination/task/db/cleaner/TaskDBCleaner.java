@@ -21,12 +21,12 @@ package org.wso2.micro.integrator.ntask.coordination.task.db.cleaner;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
+import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskDataBase;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
 import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,26 +40,26 @@ public class TaskDBCleaner {
 
     private DataHolder dataHolder = DataHolder.getInstance();
     private ClusterCoordinator clusterCoordinator = dataHolder.getClusterCoordinator();
-    private TaskDataBase taskDataBase;
+    private TaskStore taskStore;
 
     /**
      * Constructor.
      *
-     * @param taskDataBase - Task database.
+     * @param taskStore - Task database.
      */
-    public TaskDBCleaner(TaskDataBase taskDataBase) {
-        this.taskDataBase = taskDataBase;
+    public TaskDBCleaner(TaskStore taskStore) {
+        this.taskStore = taskStore;
     }
 
     /**
      * Cleans the task db. Removes the invalid tasks and invalid nodes ( nodes that are no more in cluster ).
      *
-     * @throws SQLException When something goes wrong while connecting to the data base.
+     * @throws TaskCoordinationException When something goes wrong while connecting to the data base.
      */
-    public void clean() throws SQLException {
+    public void clean() throws TaskCoordinationException {
 
         LOG.debug("Starting task db cleaning.");
-        List<String> allTasks = taskDataBase.getAllTasksInDB();
+        List<String> allTasks = taskStore.getAllTaskNames();
         if (allTasks.isEmpty()) {
             LOG.debug("No tasks found in task database.");
             return;
@@ -70,37 +70,32 @@ public class TaskDBCleaner {
     }
 
     /**
-     * Checks whether the destined node is valid ( i.e it is still present in the cluster) and remove it if it is not.
+     * Checks whether the destined node is valid and remove it if it is not.
      *
-     * @throws SQLException - When something goes connecting to the data base.
+     * @throws TaskCoordinationException - When something goes updating tasks.
      */
-    private void validateDestinedNodeAndUpdateDB() throws SQLException {
+    private void validateDestinedNodeAndUpdateDB() throws TaskCoordinationException {
 
-        List<CoordinatedTask> assignedIncompleteTasks = taskDataBase.getAllAssignedInCompleteTasks();
-        List<CoordinatedTask> taskNodesToBeCleaned = new ArrayList<>();
+        List<CoordinatedTask> assignedIncompleteTasks = taskStore.getAllAssignedIncompleteTasks();
         List<String> allNodesAvailableInCluster = clusterCoordinator.getAllNodeIds();
         if (allNodesAvailableInCluster.isEmpty()) {
             LOG.warn("No nodes are registered to the cluster successfully yet.");
             return;
         }
-        for (CoordinatedTask task : assignedIncompleteTasks) {
+        List<String> tasksToBeUpdated = new ArrayList<>();
+        assignedIncompleteTasks.forEach(task -> {
             // check whether the node assigned is still valid
             String nodeId = task.getDestinedNodeId();
             if (!allNodesAvailableInCluster.contains(nodeId)) {
-                // changing running task to none since node is invalid
-                CoordinatedTask.States state = task.getTaskState();
-                if (CoordinatedTask.States.RUNNING.equals(state)) {
-                    task.setTaskState(CoordinatedTask.States.NONE);
-                }
+                String taskName = task.getTaskName();
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug("The node [" + nodeId + "] of task [" + task.getTaskName() + "] is not found in cluster"
-                                      + ". Hence the node assignment will be removed and the state will be set to ["
-                                      + state + "].");
+                    LOG.debug("The node [" + nodeId + "] of task [" + taskName + "] is not found in cluster"
+                                      + ". Hence the node assignment will be removed.");
                 }
-                taskNodesToBeCleaned.add(task);
+                tasksToBeUpdated.add(taskName);
             }
-        }
-        taskDataBase.cleanInvalidNodesAndUpdateState(taskNodesToBeCleaned);
+        });
+        taskStore.unAssignAndUpdateRunningTasksToNone(tasksToBeUpdated);
     }
 
     /**
@@ -108,9 +103,9 @@ public class TaskDBCleaner {
      * deployed as coordinated task.
      *
      * @param tasksList - The list of tasks to be checked.
-     * @throws SQLException - When something goes wrong while updating the task data base.
+     * @throws TaskCoordinationException - When something goes wrong while updating the task data base.
      */
-    private void removeInvalidTasksFromDB(List<String> tasksList) throws SQLException {
+    private void removeInvalidTasksFromDB(List<String> tasksList) throws TaskCoordinationException {
 
         ScheduledTaskManager taskManager = (ScheduledTaskManager) dataHolder.getTaskManager();
         if (taskManager == null) {
@@ -119,18 +114,15 @@ public class TaskDBCleaner {
         }
         List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
         if (LOG.isDebugEnabled()) {
-            for (String deployedCoordinatedTask : deployedCoordinatedTasks) {
-                LOG.debug("List of deployed coordinated tasks [" + deployedCoordinatedTask + "].");
-            }
+            LOG.debug("Following list of tasks are found deployed coordinated task list.");
+            deployedCoordinatedTasks.forEach(LOG::debug);
         }
         // we first add to list and then to db while deploying. So all the tasks retrieved from the db should be in
         // the list, if not they are invalid entries.
         tasksList.removeAll(deployedCoordinatedTasks);
-        taskDataBase.removeTasksFromDB(tasksList);
+        taskStore.deleteTasks(tasksList);
         if (LOG.isDebugEnabled()) {
-            for (String removedTask : tasksList) {
-                LOG.debug("Removed invalid task :" + removedTask);
-            }
+            tasksList.forEach(removedTask -> LOG.debug("Removed invalid task :" + removedTask));
         }
     }
 

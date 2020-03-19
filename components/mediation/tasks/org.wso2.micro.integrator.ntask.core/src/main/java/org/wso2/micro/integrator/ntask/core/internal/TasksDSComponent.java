@@ -37,8 +37,9 @@ import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskDataBase;
+import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.TaskEventListener;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.ActivePassiveResolver;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
 import org.wso2.micro.integrator.ntask.core.TaskStartupHandler;
@@ -47,7 +48,6 @@ import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.ntask.core.service.impl.TaskServiceImpl;
 
 import java.io.File;
-import java.sql.SQLException;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -75,7 +75,7 @@ public class TasksDSComponent {
     private static DataSourceService dataSourceService;
     private Object coordinationDatasourceObject;
     private DataHolder dataHolder = DataHolder.getInstance();
-    private TaskDataBase taskDataBase;
+    private TaskStore taskStore;
     private TaskLocationResolver resolver;
     private ClusterCoordinator clusterCoordinator;
     private CoordinatedTaskScheduleManager coordinatedTaskScheduleManager;
@@ -107,12 +107,12 @@ public class TasksDSComponent {
                 dataHolder.setClusterCoordinator(clusterCoordinator);
                 dataHolder.setCoordinationEnabledGlobally(true);
                 // initialize task data base.
-                taskDataBase = new TaskDataBase(coordinationDataSource);
+                taskStore = new TaskStore(coordinationDataSource);
                 // removing all tasks assigned to this node since this node hasn't even  joined the cluster yet and
                 // cannot have tasks assigned to it already. Will be useful in case of static node ids
                 try {
-                    taskDataBase.removeTasksOfNode(clusterCoordinator.getThisNodeId());
-                } catch (SQLException e) {
+                    taskStore.deleteTasks(clusterCoordinator.getThisNodeId());
+                } catch (TaskCoordinationException e) {
                     log.error("Error while removing the tasks of this node.", e);
                 }
                 // initialize task location resolver
@@ -120,22 +120,22 @@ public class TasksDSComponent {
             }
 
             if (getTaskService() == null) {
-                taskService = new TaskServiceImpl(taskDataBase);
+                taskService = new TaskServiceImpl(taskStore);
             }
 
             BundleContext bundleContext = ctx.getBundleContext();
-            bundleContext
-                    .registerService(ServerStartupObserver.class.getName(), new TaskStartupHandler(taskService), null);
+            bundleContext.registerService(ServerStartupObserver.class.getName(), new TaskStartupHandler(taskService),
+                                          null);
             bundleContext.registerService(TaskService.class.getName(), getTaskService(), null);
 
             if (isCoordinationEnabled) {
                 // join cluster
                 clusterCoordinator.startCoordinator();
-                clusterCoordinator.registerListener(new TaskEventListener(taskDataBase, resolver));
+                clusterCoordinator.registerListener(new TaskEventListener(taskStore, resolver));
                 // the task scheduler should be started after registering task service.
-                coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(taskDataBase, clusterCoordinator,
+                coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(taskStore, clusterCoordinator,
                                                                                     resolver);
-                coordinatedTaskScheduleManager.startTaskScheduler("upon server start.");
+                coordinatedTaskScheduleManager.startTaskScheduler("");
             }
         } catch (Throwable e) {
             log.error("Error in initializing Tasks component: " + e.getMessage(), e);
@@ -158,6 +158,7 @@ public class TasksDSComponent {
      * @return - Default Resolver.
      */
     private TaskLocationResolver getDefaultResolver() {
+        log.info("Task location resolver defaults to active passive.");
         return new ActivePassiveResolver();
     }
 
@@ -193,7 +194,8 @@ public class TasksDSComponent {
 
         ScheduledExecutorService executorService = dataHolder.getTaskScheduler();
         if (executorService != null) {
-            log.info("Shutting down coordinated task scheduler upon server shut down .");
+            log.info("Shutting down coordinated task scheduler.");
+            executorService.shutdown();
         }
         if (TasksDSComponent.getScheduler() != null) {
             try {

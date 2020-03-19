@@ -20,7 +20,7 @@ package org.wso2.micro.integrator.ntask.coordination.task.resolver;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.ntask.coordination.task.ClusterNodeDetails;
+import org.wso2.micro.integrator.ntask.coordination.task.ClusterCommunicator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,14 +42,14 @@ public class TaskNodeResolver implements TaskLocationResolver {
     @Override
     public void init(Map<String, String> properties) {
 
-        for (Map.Entry<String, String> property : properties.entrySet()) {
-            if (TASK_NODES.equals(property.getKey()) && property.getValue() != null && !property.getValue().isEmpty()) {
-                String[] nodeIds = property.getValue().trim().split(",");
+        properties.forEach((key, value) -> {
+            if (TASK_NODES.equals(key.trim()) && value != null && !value.isEmpty()) {
+                String[] nodeIds = value.trim().split(",");
                 for (String nodeId : nodeIds) {
                     definedNodeList.add(nodeId.trim());
                 }
             }
-        }
+        });
         if (definedNodeList.isEmpty()) {
             throw new UnsupportedOperationException(
                     TaskNodeResolver.class.getName() + " is initialized with empty an set of " + TASK_NODES);
@@ -57,34 +57,34 @@ public class TaskNodeResolver implements TaskLocationResolver {
     }
 
     @Override
-    public String getTaskNodeLocation(ClusterNodeDetails clusterNodeDetails, String taskName) {
+    public String getTaskNodeLocation(ClusterCommunicator clusterCommunicator, String taskName) {
 
-        List<String> tempDefinedList = new ArrayList<>(definedNodeList.subList(0, definedNodeList.size()));
-        List<String> allNodesAvailableInCluster = clusterNodeDetails.getAllNodeIds();
+        List<String> tempDefinedList = new ArrayList<>(definedNodeList);
+        List<String> allNodesAvailableInCluster = clusterCommunicator.getAllNodeIds();
         if (allNodesAvailableInCluster.isEmpty()) {
             log.warn("No nodes are registered to the cluster successfully yet.");
             return null;
         }
-        String nodeId = null;
+        String destinedNode = null;
         while (!tempDefinedList.isEmpty()) {
             int location = taskLocation.incrementAndGet();
-            nodeId = tempDefinedList.get(Math.abs(location) % tempDefinedList.size());
-            if (allNodesAvailableInCluster.contains(nodeId)) {
+            destinedNode = tempDefinedList.get(Math.abs(location) % tempDefinedList.size());
+            if (allNodesAvailableInCluster.contains(destinedNode)) {
                 break;
             } else {
-                tempDefinedList.remove(nodeId);
-                nodeId = null;
+                tempDefinedList.remove(destinedNode);
+                destinedNode = null;
             }
         }
-        if (nodeId == null) {
+        if (destinedNode == null) {
             log.info("No nodes defined in the " + TASK_NODES
                              + " is found in the cluster. Hence can't resolve a location for the task " + taskName);
             return null;
         }
         if (log.isDebugEnabled()) {
-            log.debug("The task : " + taskName + ", is resolved to node with id : " + nodeId);
+            log.debug("The task : " + taskName + ", is resolved to node with id : " + destinedNode);
         }
-        return nodeId;
+        return destinedNode;
     }
 
 }

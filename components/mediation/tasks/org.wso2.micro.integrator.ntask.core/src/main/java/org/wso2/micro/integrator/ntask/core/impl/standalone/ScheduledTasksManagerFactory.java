@@ -18,7 +18,7 @@
 package org.wso2.micro.integrator.ntask.core.impl.standalone;
 
 import org.wso2.micro.integrator.ntask.common.TaskException;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskDataBase;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
 import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.TaskManagerFactory;
 import org.wso2.micro.integrator.ntask.core.TaskManagerId;
@@ -35,31 +35,31 @@ import java.util.List;
 public class ScheduledTasksManagerFactory implements TaskManagerFactory {
 
     @Override
-    public TaskManager getTaskManager(TaskManagerId tmId, TaskDataBase taskDataBase) throws TaskException {
+    public TaskManager getTaskManager(TaskManagerId tmId, TaskStore taskStore) throws TaskException {
 
-        return this.createTaskManager(tmId, taskDataBase);
+        return this.createTaskManager(tmId, taskStore);
     }
 
-    private TaskManager createTaskManager(TaskManagerId tmId, TaskDataBase taskDataBase) throws TaskException {
+    private TaskManager createTaskManager(TaskManagerId tmId, TaskStore taskStore) throws TaskException {
 
         TaskRepository taskRepo = new FileBasedTaskRepository(tmId.getTenantId(), tmId.getTaskType());
-        ScheduledTaskManager scheduledTaskManager = new ScheduledTaskManager(taskRepo, taskDataBase);
+        ScheduledTaskManager scheduledTaskManager = new ScheduledTaskManager(taskRepo, taskStore);
         DataHolder.getInstance().setTaskManager(scheduledTaskManager);
         return scheduledTaskManager;
     }
 
     @Override
-    public List<TaskManager> getStartupSchedulingTaskManagersForType(String taskType, TaskDataBase taskDataBase)
+    public List<TaskManager> getStartupSchedulingTaskManagersForType(String taskType, TaskStore taskStore)
             throws TaskException {
-        return getTaskManagers(taskType, taskDataBase);
+        return getTaskManagers(taskType, taskStore);
     }
 
-    private List<TaskManager> getTaskManagers(String taskType, TaskDataBase taskDataBase) throws TaskException {
+    private List<TaskManager> getTaskManagers(String taskType, TaskStore taskStore) throws TaskException {
 
         List<TaskManagerId> tmIds = FileBasedTaskRepository.getAllTenantTaskManagersForType(taskType);
         List<TaskManager> result = new ArrayList<>();
         for (TaskManagerId tmId : tmIds) {
-            result.add(this.createTaskManager(tmId, taskDataBase));
+            result.add(this.createTaskManager(tmId, taskStore));
         }
         return result;
     }

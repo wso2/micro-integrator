@@ -18,33 +18,6 @@
 
 package org.wso2.micro.integrator.core.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.management.ManagementPermission;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.util.base64.Base64Utils;
 import org.apache.axis2.AxisFault;
@@ -72,6 +45,34 @@ import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
 import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.management.ManagementPermission;
+import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
 import static org.wso2.micro.core.util.CarbonUtils.getSecuredTransformerFactory;
 
 public class MicroIntegratorBaseUtils {
@@ -575,10 +576,7 @@ public class MicroIntegratorBaseUtils {
         Parameter synapseEnvironmentParatemer =
                 CarbonCoreDataHolder.getInstance().getAxis2ConfigurationContextService().getServerConfigContext()
                         .getAxisConfiguration().getParameter(SynapseConstants.SYNAPSE_ENV);
-        if (synapseEnvironmentParatemer != null) {
-            return (SynapseEnvironment) synapseEnvironmentParatemer.getValue();
-        }
-        return null;
+        return (SynapseEnvironment) synapseEnvironmentParatemer.getValue();
     }
 
 }

@@ -28,11 +28,11 @@ import java.util.List;
  *
  * @see org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver
  */
-public class ClusterNodeDetails {
+public class ClusterCommunicator {
 
     private ClusterCoordinator clusterCoordinator;
 
-    public ClusterNodeDetails(ClusterCoordinator coordinator) {
+    public ClusterCommunicator(ClusterCoordinator coordinator) {
         this.clusterCoordinator = coordinator;
     }
 
