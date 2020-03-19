@@ -38,6 +38,7 @@ import java.util.List;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
+import static org.wso2.micro.core.util.CarbonUtils.resolveSystemProperty;
 import static org.wso2.micro.integrator.security.user.core.constants.UserCoreErrorConstants.ErrorMessages.ERROR_CODE_DUPLICATE_WHILE_WRITING_TO_DATABASE;
 
 public class DatabaseUtil {
@@ -93,6 +94,7 @@ public class DatabaseUtil {
 
         String dataSourceName = realmConfig.getUserStoreProperty(JDBCRealmConstants.DATASOURCE);
         if (dataSourceName != null) {
+            dataSourceName = resolveSystemProperty(dataSourceName);
             return lookupDataSource(dataSourceName);
         }
 
@@ -328,6 +330,7 @@ public class DatabaseUtil {
 
         String dataSourceName = realmConfig.getRealmProperty(JDBCRealmConstants.DATASOURCE);
         if (dataSourceName != null) {
+            dataSourceName = resolveSystemProperty(dataSourceName);
             return lookupDataSource(dataSourceName);
         }
 

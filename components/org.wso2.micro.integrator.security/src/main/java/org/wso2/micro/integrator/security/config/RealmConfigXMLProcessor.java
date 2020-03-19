@@ -48,6 +48,8 @@ import java.util.regex.Pattern;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 
+import static org.wso2.micro.core.util.CarbonUtils.resolveSystemProperty;
+
 /**
  * This class is responsible for loading the realm configuration from the user-mgt.xml file
  */
@@ -120,6 +122,9 @@ public class RealmConfigXMLProcessor {
             Entry<String, String> entry = (Entry) ite.next();
             String name = (String) entry.getKey();
             String value = (String) entry.getValue();
+            if (value != null) {
+                value = resolveSystemProperty(value);
+            }
             OMElement propElem = factory.createOMElement(new QName("Property"));
             OMAttribute propAttr = factory.createOMAttribute("name", (OMNamespace) null, name);
             propElem.addAttribute(propAttr);
