@@ -16,3 +16,6 @@ file_name = "client-truststore.jks"
 password = "wso2carbon"
 alias = "symmetric.key.value"
 algorithm = "AES"
+
+[management_api_token_handler]
+enable = false

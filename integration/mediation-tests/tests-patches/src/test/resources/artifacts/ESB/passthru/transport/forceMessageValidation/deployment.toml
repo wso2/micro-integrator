@@ -13,3 +13,6 @@ type = "database"
 [transport.http]
 force_xml_validation=true
 force_json_validation=true
+
+[management_api_token_handler]
+enable = false

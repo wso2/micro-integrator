@@ -19,3 +19,6 @@ listener.keystore.password = "edcrfv"
 listener.keystore.key_password = "qazwsx"
 listener.keystore.alias = "vfs"
 sender.enable = true
+
+[management_api_token_handler]
+enable = false

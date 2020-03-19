@@ -81,3 +81,6 @@ parameter.cache_level = "connection"
 [mediation]
 synapse.preserve_namespace_on_xml_to_json = false
 synapse.disable_custom_replace_regex = "@@@"
+
+[management_api_token_handler]
+enable = false

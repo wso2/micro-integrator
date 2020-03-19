@@ -4,3 +4,6 @@ hostname = "localhost"
 [transport.http]
 listener.enable = false
 sender.enable = false
+
+[management_api_token_handler]
+enable = false

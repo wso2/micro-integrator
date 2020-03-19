@@ -5,4 +5,5 @@ synapse_config_file_path = "samples/service-bus/synapse_sample_650.xml"
 [user_store]
 type = "database"
 
-
+[management_api_token_handler]
+enable = false

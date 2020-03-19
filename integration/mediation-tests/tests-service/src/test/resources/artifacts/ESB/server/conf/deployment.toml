@@ -12,3 +12,6 @@ type = "database"
 
 [mediation]
 synapse.preserve_namespace_on_xml_to_json=true
+
+[management_api_token_handler]
+enable = false
