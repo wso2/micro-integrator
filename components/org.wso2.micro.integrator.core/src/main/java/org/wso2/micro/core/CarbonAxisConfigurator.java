@@ -247,8 +247,8 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
      */
     private void updateHotDeploymentParameter() {
         Parameter hotDeployment = axisConfig.getParameter(org.wso2.micro.integrator.core.Constants.HOT_DEPLOYMENT);
-        if (hotDeployment != null) {
-            this.hotDeployment = JavaUtils.isTrue(hotDeployment.getValue(), false);
+        if (hotDeployment != null && "true".equalsIgnoreCase(hotDeployment.getValue().toString())) {
+            this.hotDeployment = true;
         }
     }
 
