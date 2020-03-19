@@ -17,3 +17,6 @@ algorithm = "AES"
 flow.statistics.enable = true
 stat.tracer.collect_payloads = true
 stat.tracer.collect_mediation_properties = true
+
+[management_api_token_handler]
+enable = false

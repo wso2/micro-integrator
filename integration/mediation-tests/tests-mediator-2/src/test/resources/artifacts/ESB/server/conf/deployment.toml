@@ -10,3 +10,6 @@ port=8243
 
 [user_store]
 type = "database"
+
+[management_api_token_handler]
+enable = false

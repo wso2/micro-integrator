@@ -25,3 +25,6 @@ listener.ssl_profile.file_path = "../../../src/test/resources/artifacts/ESB/dyna
 listener.ssl_profile.read_interval = "15000"
 
 sender.hostname_verifier = "AllowAll"
+
+[management_api_token_handler]
+enable = false

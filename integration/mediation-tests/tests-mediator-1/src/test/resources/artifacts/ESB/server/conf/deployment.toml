@@ -72,3 +72,6 @@ parameter.cache_level = "connection"
 
 [mediation]
 synapse.enable_xpath_dom_failover=true
+
+[management_api_token_handler]
+enable = false

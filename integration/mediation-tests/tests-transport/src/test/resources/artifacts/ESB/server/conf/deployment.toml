@@ -118,3 +118,5 @@ sender.enable = true
 [transport.local]
 sender.nonblocking.enable = true
 
+[management_api_token_handler]
+enable = false
