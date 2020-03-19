@@ -246,9 +246,10 @@ public class CarbonAxisConfigurator extends DeploymentEngine implements AxisConf
      * value is null, then the hotDeployment variable will be set to false which is the default value.
      */
     private void updateHotDeploymentParameter() {
+        this.hotDeployment = false;
         Parameter hotDeployment = axisConfig.getParameter(org.wso2.micro.integrator.core.Constants.HOT_DEPLOYMENT);
-        if (hotDeployment != null) {
-            this.hotDeployment = JavaUtils.isTrue(hotDeployment.getValue(), false);
+        if (hotDeployment != null && "true".equalsIgnoreCase(hotDeployment.getValue().toString())) {
+            this.hotDeployment = true;
         }
     }
 
