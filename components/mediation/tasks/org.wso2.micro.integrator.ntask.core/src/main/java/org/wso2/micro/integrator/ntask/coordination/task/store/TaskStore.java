@@ -16,10 +16,11 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.ntask.coordination.task;
+package org.wso2.micro.integrator.ntask.coordination.task.store;
 
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
-import org.wso2.micro.integrator.ntask.coordination.task.db.connector.RDMBSConnector;
+import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
+import org.wso2.micro.integrator.ntask.coordination.task.store.connector.RDMBSConnector;
 
 import java.util.List;
 import java.util.Map;

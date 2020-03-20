@@ -22,10 +22,10 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
 import org.wso2.micro.integrator.ntask.coordination.task.ClusterCommunicator;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
-import org.wso2.micro.integrator.ntask.coordination.task.db.cleaner.TaskDBCleaner;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
 import org.wso2.micro.integrator.ntask.coordination.task.scehduler.CoordinatedTaskScheduler;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
+import org.wso2.micro.integrator.ntask.coordination.task.store.cleaner.TaskStoreCleaner;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -57,12 +57,12 @@ public class CoordinatedTaskScheduleManager {
     public void startTaskScheduler(String msg) {
 
         ScheduledExecutorService taskSchedulerExecutor = Executors.newSingleThreadScheduledExecutor();
-        TaskDBCleaner taskDBCleaner = new TaskDBCleaner(taskStore);
+        TaskStoreCleaner taskStoreCleaner = new TaskStoreCleaner(taskStore);
         // the frequency at which task resolving need to be done per cleaning.
         int resolvingFrequency = 5;
         ClusterCommunicator connector = new ClusterCommunicator(clusterCoordinator);
         CoordinatedTaskScheduler taskScheduler = new CoordinatedTaskScheduler(taskStore, resolver, connector,
-                                                                              taskDBCleaner, resolvingFrequency);
+                                                                              taskStoreCleaner, resolvingFrequency);
         int initialDelay = 0; // can start immediately as the task service is already registered.
         //todo read from toml
         int period = 2;

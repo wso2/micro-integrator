@@ -39,7 +39,7 @@ import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.TaskEventListener;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.ActivePassiveResolver;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
 import org.wso2.micro.integrator.ntask.core.TaskStartupHandler;

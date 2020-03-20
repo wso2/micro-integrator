@@ -25,9 +25,9 @@ import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.ClusterCommunicator;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
-import org.wso2.micro.integrator.ntask.coordination.task.db.cleaner.TaskDBCleaner;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
+import org.wso2.micro.integrator.ntask.coordination.task.store.cleaner.TaskStoreCleaner;
 import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
@@ -38,7 +38,7 @@ import java.util.Map;
 
 /**
  * Scheduler class, which runs periodically to retrieve all the scheduled tasks assigned to the node and schedule
- * them locally. Also if the running node is leader, it cleans up the task data base and resolve the un assigned nodes.
+ * them locally. Also if the running node is leader, it cleans up the task store and resolve the un assigned nodes.
  */
 public class CoordinatedTaskScheduler implements Runnable {
 
@@ -48,7 +48,7 @@ public class CoordinatedTaskScheduler implements Runnable {
     private TaskLocationResolver taskLocationResolver;
     private ClusterCoordinator clusterCoordinator = dataHolder.getClusterCoordinator();
     private TaskStore taskStore;
-    private TaskDBCleaner taskDBCleaner;
+    private TaskStoreCleaner taskStoreCleaner;
     private int resolvingFrequency;
     private int resolveCount = 0;
     private ClusterCommunicator clusterCommunicator;
@@ -59,11 +59,11 @@ public class CoordinatedTaskScheduler implements Runnable {
     }
 
     public CoordinatedTaskScheduler(TaskStore taskStore, TaskLocationResolver taskLocationResolver,
-                                    ClusterCommunicator connector, TaskDBCleaner cleaner, int frequency) {
+                                    ClusterCommunicator connector, TaskStoreCleaner cleaner, int frequency) {
         this.taskStore = taskStore;
         this.taskLocationResolver = taskLocationResolver;
         this.clusterCommunicator = connector;
-        this.taskDBCleaner = cleaner;
+        this.taskStoreCleaner = cleaner;
         this.resolvingFrequency = frequency;
     }
 
@@ -74,8 +74,8 @@ public class CoordinatedTaskScheduler implements Runnable {
             if (clusterCoordinator.isLeader()) {
                 // cleaning will run for each n times resolving frequency . ( n = 0,1,2 ... ).
                 if (resolveCount % resolvingFrequency == 0) {
-                    LOG.debug("This node is leader hence cleaning task database.");
-                    taskDBCleaner.clean();
+                    LOG.debug("This node is leader hence cleaning task store.");
+                    taskStoreCleaner.clean();
                     resolveCount = 0;
                 }
                 LOG.debug("This node is leader hence resolving unassigned tasks.");
@@ -83,7 +83,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                 resolveCount++;
                 resolveUnassignedNotCompletedTasksAndUpdateDB();
             } else {
-                LOG.debug("This node is not leader. Hence not cleaning data base or resolving un assigned tasks.");
+                LOG.debug("This node is not leader. Hence not cleaning task store or resolving un assigned tasks.");
             }
             // schedule all tasks assigned to this node and in state none
             scheduleAllTasksAssignedToThisNode();
@@ -93,9 +93,9 @@ public class CoordinatedTaskScheduler implements Runnable {
     }
 
     /**
-     * Add failed tasks to the data base.
+     * Add failed tasks to the store.
      *
-     * @throws TaskCoordinationException - When something goes wrong while retrieving all the tasks from the data base.
+     * @throws TaskCoordinationException - When something goes wrong while retrieving all the tasks from store.
      */
     private void addFailedTasks() throws TaskCoordinationException {
 
@@ -151,10 +151,10 @@ public class CoordinatedTaskScheduler implements Runnable {
     }
 
     /**
-     * Resolves the un assigned tasks and update the task database.
+     * Resolves the un assigned tasks and update the task store.
      * Synchronized since this will be triggered in leader periodically and upon member addition.
      *
-     * @throws TaskCoordinationException when something goes wrong connecting to the data base
+     * @throws TaskCoordinationException when something goes wrong connecting to the store
      */
     public synchronized void resolveUnassignedNotCompletedTasksAndUpdateDB() throws TaskCoordinationException {
 

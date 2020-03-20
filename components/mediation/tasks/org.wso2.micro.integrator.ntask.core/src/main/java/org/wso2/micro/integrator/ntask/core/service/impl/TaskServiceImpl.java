@@ -20,7 +20,7 @@ package org.wso2.micro.integrator.ntask.core.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.ntask.common.TaskException;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.TaskManagerFactory;
 import org.wso2.micro.integrator.ntask.core.TaskManagerId;
@@ -71,8 +71,8 @@ public class TaskServiceImpl implements TaskService {
         if (log.isDebugEnabled()) {
             log.debug("Initializing task managers [" + taskType + "]");
         }
-        List<TaskManager> startupTms =
-                this.getTaskManagerFactory().getStartupSchedulingTaskManagersForType(taskType, taskStore);
+        List<TaskManager> startupTms = this.getTaskManagerFactory().getStartupSchedulingTaskManagersForType(taskType,
+                                                                                                            taskStore);
         for (TaskManager tm : startupTms) {
             tm.initStartupTasks();
         }

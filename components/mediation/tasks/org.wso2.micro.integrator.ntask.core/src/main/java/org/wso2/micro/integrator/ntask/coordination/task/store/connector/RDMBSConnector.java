@@ -16,14 +16,13 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.ntask.coordination.task.db.connector;
+package org.wso2.micro.integrator.ntask.coordination.task.store.connector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinateTaskRunTimeException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
-import org.wso2.micro.integrator.ntask.coordination.task.db.TaskQueryHelper;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -36,9 +35,9 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 
-import static org.wso2.micro.integrator.ntask.coordination.task.db.TaskQueryHelper.DESTINED_NODE_ID;
-import static org.wso2.micro.integrator.ntask.coordination.task.db.TaskQueryHelper.TASK_NAME;
-import static org.wso2.micro.integrator.ntask.coordination.task.db.TaskQueryHelper.TASK_STATE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DESTINED_NODE_ID;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_NAME;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_STATE;
 
 /**
  * The connector class which deals with underlying coordinated task table.
