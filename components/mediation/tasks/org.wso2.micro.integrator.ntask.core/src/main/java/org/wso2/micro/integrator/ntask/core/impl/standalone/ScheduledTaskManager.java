@@ -47,6 +47,11 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      * The list which holds the list of coordinated tasks deployed in this node.
      */
     private List<String> deployedCoordinatedTasks = new ArrayList<>();
+
+    /**
+     * The list of tasks for which the addition failed.
+     */
+    private List<String> additionFailedTasks = new ArrayList<>();
     private SynapseEnvironment synapseEnvironment = null;
     private TaskStore taskStore;
 
@@ -81,11 +86,16 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
             try {
                 taskStore.addTaskIfNotExist(taskName);
             } catch (TaskCoordinationException ex) {
+                additionFailedTasks.add(taskName);
                 throw new TaskException("Error adding task : " + taskName, TaskException.Code.DATABASE_ERROR, ex);
             }
             return;
         }
         scheduleTask(taskName);
+    }
+
+    public List<String> getAdditionFailedTasks() {
+        return additionFailedTasks;
     }
 
     /**

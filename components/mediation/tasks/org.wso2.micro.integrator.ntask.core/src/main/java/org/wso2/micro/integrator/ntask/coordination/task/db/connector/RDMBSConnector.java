@@ -289,42 +289,6 @@ public class RDMBSConnector {
     }
 
     /**
-     * Add the task if doesn't exist already.
-     *
-     * @param taskNames - The tasks which needs to be added.
-     */
-    public void addTaskIfNotExist(List<String> taskNames) throws TaskCoordinationException {
-
-        if (taskNames.isEmpty()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug(EMPTY_LIST + " for task addition.");
-            }
-            return;
-        }
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.ADD_TASK)) {
-            for (String taskName : taskNames) {
-                preparedStatement.setString(1, taskName);
-                preparedStatement.addBatch();
-            }
-            int[] results = preparedStatement.executeBatch();
-            if (LOG.isDebugEnabled()) {
-                int index = 0;
-                for (int result : results) {
-                    if (result == 0) {
-                        LOG.debug("Task [" + taskNames.get(index) + "] already exists.");
-                    } else {
-                        LOG.debug("Successfully added the task [" + taskNames.get(index) + "].");
-                    }
-                    index++;
-                }
-            }
-        } catch (SQLException ex) {
-            throw new TaskCoordinationException(ERROR_MSG, ex);
-        }
-    }
-
-    /**
      * Updates the destined node id and state to none if it was in running.
      *
      * @param tasks - List of tasks to be updated.
