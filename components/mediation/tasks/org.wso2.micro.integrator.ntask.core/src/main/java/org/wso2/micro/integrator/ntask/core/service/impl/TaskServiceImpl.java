@@ -20,9 +20,11 @@ package org.wso2.micro.integrator.ntask.core.service.impl;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
+import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.TaskManagerFactory;
 import org.wso2.micro.integrator.ntask.core.TaskManagerId;
-import org.wso2.micro.integrator.ntask.core.impl.standalone.StandaloneTaskManagerFactory;
+import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTasksManagerFactory;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 
 import java.util.HashSet;
@@ -40,16 +42,15 @@ public class TaskServiceImpl implements TaskService {
     private static final int SUPER_TENANT_ID = -1234;
     private Set<String> registeredTaskTypes;
     private boolean serverInit;
-    private org.wso2.micro.integrator.ntask.core.TaskManagerFactory taskManagerFactory;
-    private TaskServerMode effectiveTaskServerMode;
+    private TaskManagerFactory taskManagerFactory;
+    private TaskStore taskStore;
 
-    public TaskServiceImpl() {
+    public TaskServiceImpl(TaskStore taskStore) {
 
+        this.taskStore = taskStore;
         this.registeredTaskTypes = new HashSet<>();
-        this.taskManagerFactory = new StandaloneTaskManagerFactory();
-        this.effectiveTaskServerMode = TaskServerMode.STANDALONE;
-
-        log.info("Task service starting in " + this.getEffectiveTaskServerMode() + " mode...");
+        this.taskManagerFactory = new ScheduledTasksManagerFactory();
+        log.info("Starting task service .");
     }
 
     @Override
@@ -70,16 +71,16 @@ public class TaskServiceImpl implements TaskService {
         if (log.isDebugEnabled()) {
             log.debug("Initializing task managers [" + taskType + "]");
         }
-        List<org.wso2.micro.integrator.ntask.core.TaskManager> startupTms = this.getTaskManagerFactory()
-                .getStartupSchedulingTaskManagersForType(taskType);
-        for (org.wso2.micro.integrator.ntask.core.TaskManager tm : startupTms) {
+        List<TaskManager> startupTms =
+                this.getTaskManagerFactory().getStartupSchedulingTaskManagersForType(taskType, taskStore);
+        for (TaskManager tm : startupTms) {
             tm.initStartupTasks();
         }
     }
 
     @Override
-    public org.wso2.micro.integrator.ntask.core.TaskManager getTaskManager(String taskType) throws TaskException {
-        return this.getTaskManagerFactory().getTaskManager(new TaskManagerId(SUPER_TENANT_ID, taskType));
+    public TaskManager getTaskManager(String taskType) throws TaskException {
+        return this.getTaskManagerFactory().getTaskManager(new TaskManagerId(SUPER_TENANT_ID, taskType), taskStore);
     }
 
     @Override
@@ -104,10 +105,6 @@ public class TaskServiceImpl implements TaskService {
             log.error(msg, e);
             throw new RuntimeException(msg, e);
         }
-    }
-
-    public TaskServerMode getEffectiveTaskServerMode() {
-        return effectiveTaskServerMode;
     }
 
 }

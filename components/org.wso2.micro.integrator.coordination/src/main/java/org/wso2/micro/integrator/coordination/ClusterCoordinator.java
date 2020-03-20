@@ -20,9 +20,11 @@ package org.wso2.micro.integrator.coordination;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.micro.integrator.coordination.exception.ClusterCoordinationException;
 import org.wso2.micro.integrator.coordination.node.NodeDetail;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.sql.DataSource;
 
@@ -30,6 +32,7 @@ import javax.sql.DataSource;
  * Coordinator class to start running Clustering.
  */
 public class ClusterCoordinator {
+
     private static final Log log = LogFactory.getLog(ClusterCoordinator.class);
     private RDBMSCoordinationStrategy rdbmsCoordinationStrategy;
 
@@ -39,10 +42,62 @@ public class ClusterCoordinator {
     }
 
     public void startCoordinator() {
+
+        rdbmsCoordinationStrategy.registerEventListener(new ClusterEventListener());
         rdbmsCoordinationStrategy.joinGroup();
         List<NodeDetail> nodeDetailList = rdbmsCoordinationStrategy.getAllNodeDetails();
         for (NodeDetail nodeDetail : nodeDetailList) {
             log.info("Node connected: " + nodeDetail.getNodeId());
         }
     }
+
+    /**
+     * Registers an event listener to listen to cluster events.
+     *
+     * @param listener - Listener instance.
+     */
+    public void registerListener(MemberEventListener listener) {
+        rdbmsCoordinationStrategy.registerEventListener(listener);
+    }
+
+    /**
+     * Checks whether the current node is leader or not.
+     *
+     * @return - whether this node is leader or not.
+     */
+    public boolean isLeader() {
+        boolean isLeader = false;
+        try {
+            isLeader = rdbmsCoordinationStrategy.isLeaderNode();
+        } catch (ClusterCoordinationException ex) {
+            log.error("Exception occurred while checking leader node.", ex);
+        }
+        return isLeader;
+    }
+
+    /**
+     * Give the ids of all the nodes present in the cluster.
+     *
+     * @return - List of node ids.
+     */
+    public List<String> getAllNodeIds() {
+
+        List<String> nodeIds = new ArrayList<>();
+        try {
+            rdbmsCoordinationStrategy.getAllNodeDetails().forEach(node -> nodeIds.add(node.getNodeId()));
+        } catch (ClusterCoordinationException ex) {
+            log.error("Exception occurred while retrieving all node Ids.", ex);
+        }
+        return nodeIds;
+    }
+
+    /**
+     * Returns the id of this node.
+     *
+     * @return - Id of this node.
+     */
+    public String getThisNodeId() {
+        return rdbmsCoordinationStrategy.getThisNodeId();
+    }
+
 }

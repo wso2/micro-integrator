@@ -18,6 +18,7 @@
 package org.wso2.micro.integrator.ntask.core.service;
 
 import org.wso2.micro.integrator.ntask.common.TaskException;
+import org.wso2.micro.integrator.ntask.core.TaskManager;
 
 import java.util.Set;
 
@@ -31,9 +32,9 @@ public interface TaskService {
      *
      * @param taskType The type of the tasks, e.g. DSS, ESB, MS
      * @return The created / looked-up task manager
-     * @throws TaskException
+     * @throws TaskException - Exception
      */
-    public org.wso2.micro.integrator.ntask.core.TaskManager getTaskManager(String taskType) throws TaskException;
+    TaskManager getTaskManager(String taskType) throws TaskException;
 
     /**
      * This method registers a task type in the server,
@@ -41,31 +42,27 @@ public interface TaskService {
      * to be started up immediately.
      *
      * @param taskType The task type
-     * @throws TaskException
+     * @throws TaskException - Exception
      */
-    public void registerTaskType(String taskType) throws TaskException;
+    void registerTaskType(String taskType) throws TaskException;
 
     /**
      * Retrieves all the registered task types.
      *
      * @return The task types
      */
-    public Set<String> getRegisteredTaskTypes();
+    Set<String> getRegisteredTaskTypes();
 
     /**
      * Notifies the task service implementation that the server is fully initialized.
      */
-    public void serverInitialized();
+    void serverInitialized();
 
     /**
      * Checks whether the task server is full initialized.
      *
      * @return true if initialized
      */
-    public boolean isServerInit();
-
-    enum TaskServerMode {
-        STANDALONE
-    }
+    boolean isServerInit();
 
 }

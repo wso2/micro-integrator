@@ -233,6 +233,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                     isCoordinatorTasksRunning = true;
                     retryClusterJoin = false;
                     this.threadExecutor.execute(new HeartBeatExecutionTask(stillCoordinator));
+                    log.info("Successfully joined the cluster with id [" + localNodeId + "]");
                 } catch (ClusterCoordinationException e) {
                     inactivityTime = System.currentTimeMillis();
                     log.error("Node with ID " + localNodeId + " in group " + localGroupId + " could not join to the " +
@@ -258,6 +259,14 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
 
     private String generateRandomId() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * Gives the id of this node.
+     * @return The Node ID of this node.
+     */
+    public String getThisNodeId() {
+        return localNodeId;
     }
 
     /**

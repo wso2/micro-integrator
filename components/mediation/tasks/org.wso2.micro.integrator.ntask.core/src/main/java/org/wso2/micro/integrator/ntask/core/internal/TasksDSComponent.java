@@ -37,6 +37,11 @@ import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
+import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskEventListener;
+import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
+import org.wso2.micro.integrator.ntask.coordination.task.resolver.ActivePassiveResolver;
+import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
 import org.wso2.micro.integrator.ntask.core.TaskStartupHandler;
 import org.wso2.micro.integrator.ntask.core.impl.QuartzCachedThreadPool;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
@@ -46,6 +51,7 @@ import java.io.File;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import javax.sql.DataSource;
 
 /**
@@ -66,10 +72,13 @@ public class TasksDSComponent {
     private static TaskService taskService;
 
     private static ExecutorService executor = Executors.newCachedThreadPool();
-
     private static DataSourceService dataSourceService;
     private Object coordinationDatasourceObject;
-    private boolean coordinationEnabled;
+    private DataHolder dataHolder = DataHolder.getInstance();
+    private TaskStore taskStore;
+    private TaskLocationResolver resolver;
+    private ClusterCoordinator clusterCoordinator;
+    private CoordinatedTaskScheduleManager coordinatedTaskScheduleManager;
 
     @Activate
     protected void activate(ComponentContext ctx) {
@@ -90,26 +99,67 @@ public class TasksDSComponent {
             TasksDSComponent.scheduler = fac.getScheduler();
             TasksDSComponent.getScheduler().start();
 
-            coordinationEnabled = isTaskDataSourceAvailable();
-            if (coordinationEnabled) {
-                log.info("Initializing  RDBMS coordination");
+            boolean isCoordinationEnabled = isCoordinationDataSourceAvailable();
+            if (isCoordinationEnabled) {
+                log.info("Initializing task coordination.");
                 DataSource coordinationDataSource = (DataSource) coordinationDatasourceObject;
-                ClusterCoordinator clusterCoordinator = new ClusterCoordinator(coordinationDataSource);
-                clusterCoordinator.startCoordinator();
+                clusterCoordinator = new ClusterCoordinator(coordinationDataSource);
+                dataHolder.setClusterCoordinator(clusterCoordinator);
+                dataHolder.setCoordinationEnabledGlobally(true);
+                // initialize task data base.
+                taskStore = new TaskStore(coordinationDataSource);
+                // removing all tasks assigned to this node since this node hasn't even  joined the cluster yet and
+                // cannot have tasks assigned to it already. Will be useful in case of static node ids
+                try {
+                    taskStore.deleteTasks(clusterCoordinator.getThisNodeId());
+                } catch (TaskCoordinationException e) {
+                    log.error("Error while removing the tasks of this node.", e);
+                }
+                // initialize task location resolver
+                resolver = getResolver();
             }
 
             if (getTaskService() == null) {
-                taskService = new TaskServiceImpl();
+                taskService = new TaskServiceImpl(taskStore);
             }
 
             BundleContext bundleContext = ctx.getBundleContext();
-            bundleContext
-                    .registerService(ServerStartupObserver.class.getName(), new TaskStartupHandler(taskService), null);
+            bundleContext.registerService(ServerStartupObserver.class.getName(), new TaskStartupHandler(taskService),
+                                          null);
             bundleContext.registerService(TaskService.class.getName(), getTaskService(), null);
 
+            if (isCoordinationEnabled) {
+                // join cluster
+                clusterCoordinator.startCoordinator();
+                clusterCoordinator.registerListener(new TaskEventListener(taskStore, resolver));
+                // the task scheduler should be started after registering task service.
+                coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(taskStore, clusterCoordinator,
+                                                                                    resolver);
+                coordinatedTaskScheduleManager.startTaskScheduler("");
+            }
         } catch (Throwable e) {
-            log.error("Error in intializing Tasks component: " + e.getMessage(), e);
+            log.error("Error in initializing Tasks component: " + e.getMessage(), e);
         }
+    }
+
+    /**
+     * Initializes the task resolver.
+     *
+     * @return - TaskLocationResolver
+     */
+    private TaskLocationResolver getResolver() {
+        // todo load resolvers from toml and if not specified return default
+        return getDefaultResolver();
+    }
+
+    /**
+     * Get the default resolver.
+     *
+     * @return - Default Resolver.
+     */
+    private TaskLocationResolver getDefaultResolver() {
+        log.info("Task location resolver defaults to active passive.");
+        return new ActivePassiveResolver();
     }
 
     /**
@@ -118,7 +168,7 @@ public class TasksDSComponent {
      * @return - true if datasource defined.
      * @throws DataSourceException
      */
-    private boolean isTaskDataSourceAvailable() throws DataSourceException {
+    private boolean isCoordinationDataSourceAvailable() throws DataSourceException {
 
         CarbonDataSource dataSource = dataSourceService.getDataSource(RDBMSConstantUtils.COORDINATION_DB_NAME);
         if (dataSource == null) {
@@ -142,6 +192,11 @@ public class TasksDSComponent {
     @Deactivate
     protected void deactivate(ComponentContext ctx) {
 
+        ScheduledExecutorService executorService = dataHolder.getTaskScheduler();
+        if (executorService != null) {
+            log.info("Shutting down coordinated task scheduler.");
+            executorService.shutdown();
+        }
         if (TasksDSComponent.getScheduler() != null) {
             try {
                 TasksDSComponent.getScheduler().shutdown();

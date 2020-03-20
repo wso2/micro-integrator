@@ -61,6 +61,21 @@ public interface TaskManager {
     public boolean deleteTask(String taskName) throws TaskException;
 
     /**
+     * Handles the task with given name. Schedule if its not coordinated else update the task DB.
+     *
+     * @param taskName The name of the task
+     * @throws TaskException - Exception
+     */
+    void handleTask(String taskName) throws TaskException;
+
+    /**
+     * Get all the coordinated tasks ( the tasks which need db interaction ) deployed in this node.
+     *
+     * @return - List of deployed coordinated tasks.
+     */
+    List<String> getAllCoordinatedTasksDeployed();
+
+    /**
      * Pauses a task with the given name.
      *
      * @param taskName The name of the task

@@ -63,6 +63,8 @@ public class RDBMSMemberEventListenerTask implements Runnable {
 
     private Long inactiveTimestamp = 0L;
 
+    private boolean wasMemberUnresponsive = false;
+
     public RDBMSMemberEventListenerTask(String nodeId, String localGroupId, int heartbeatMaxRetryTime,
                                         RDBMSCommunicationBusContextImpl communicationBusContext) {
         this.nodeID = nodeId;
@@ -101,15 +103,21 @@ public class RDBMSMemberEventListenerTask implements Runnable {
                     log.debug("No membership events to sync");
                 }
             }
+            if (wasMemberUnresponsive) {
+                notifyRejoin(nodeID, localGroupId);
+                wasMemberUnresponsive = false;
+                inactiveTimestamp = 0L; // reset in active time stamp
+            }
         } catch (Throwable e) {
             log.warn("Error occurred while reading membership events. ", e);
             if (inactiveTimestamp.equals(0L)) {
                 inactiveTimestamp = System.currentTimeMillis();
             }
             long inactiveHeartbeatAge = System.currentTimeMillis() - inactiveTimestamp;
-            if (inactiveHeartbeatAge > heartbeatMaxRetryTime) {
+            if ((inactiveHeartbeatAge > heartbeatMaxRetryTime) && !wasMemberUnresponsive) {
                 log.warn("Node became unresponsive due to not being able to read events from database");
                 inactiveTimestamp = 0L; // reset in active time stamp
+                wasMemberUnresponsive = true;
                 notifyUnresponsiveness(nodeID, localGroupId);
             }
         }
@@ -164,9 +172,23 @@ public class RDBMSMemberEventListenerTask implements Runnable {
     }
 
     /**
+     * Notifies the responsiveness to registered listeners when the node becomes responsive being after un responsive.
+     *
+     * @param member The node ID of the event occurred
+     */
+    private void notifyRejoin(String member, String groupId) {
+
+        listeners.forEach(listener -> {
+            if (listener.getGroupId().equals(groupId)) {
+                listener.reJoined(member);
+            }
+        });
+    }
+
+    /**
      * Notifies the unresponsiveness to registered listeners.
      *
-     * @param member The node ID of the event occured
+     * @param member The node ID of the event occurred
      */
     private void notifyUnresponsiveness(String member, String groupId) {
         for (MemberEventListener listener : listeners) {

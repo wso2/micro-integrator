@@ -18,6 +18,34 @@
 
 package org.wso2.micro.integrator.core.util;
 
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.util.base64.Base64Utils;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.Constants;
+import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.deployment.DeploymentConstants;
+import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.Parameter;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.axis2.util.XMLUtils;
+import org.apache.commons.httpclient.Header;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseConstants;
+import org.apache.synapse.core.SynapseEnvironment;
+import org.apache.xerces.util.SecurityManager;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.wso2.micro.core.CarbonAxisConfigurator;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.core.internal.CarbonCoreDataHolder;
+import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
+import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
+import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,29 +73,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.axiom.om.OMElement;
-import org.apache.axiom.util.base64.Base64Utils;
-import org.apache.axis2.AxisFault;
-import org.apache.axis2.Constants;
-import org.apache.axis2.client.ServiceClient;
-import org.apache.axis2.deployment.DeploymentConstants;
-import org.apache.axis2.description.AxisService;
-import org.apache.axis2.engine.AxisConfiguration;
-import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.axis2.util.XMLUtils;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.xerces.util.SecurityManager;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.wso2.micro.core.CarbonAxisConfigurator;
-import org.wso2.micro.core.util.CarbonException;
-import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
-import org.wso2.micro.integrator.core.resolver.CarbonEntityResolver;
-import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import static org.wso2.micro.core.util.CarbonUtils.getSecuredTransformerFactory;
 
 public class MicroIntegratorBaseUtils {
@@ -560,4 +565,18 @@ public class MicroIntegratorBaseUtils {
     public static CarbonAxisConfigurator getCarbonAxisConfigurator() {
         return carbonAxisConfigurator;
     }
+
+    /**
+     * Get Synapse Environment. This might throw NPE if called before SynapseEnvironment is initialized.
+     *
+     * @return SynapseEnvironment - SynapseEnvironment
+     */
+    public static SynapseEnvironment getSynapseEnvironment() {
+
+        Parameter synapseEnvironmentParatemer =
+                CarbonCoreDataHolder.getInstance().getAxis2ConfigurationContextService().getServerConfigContext()
+                        .getAxisConfiguration().getParameter(SynapseConstants.SYNAPSE_ENV);
+        return (SynapseEnvironment) synapseEnvironmentParatemer.getValue();
+    }
+
 }
