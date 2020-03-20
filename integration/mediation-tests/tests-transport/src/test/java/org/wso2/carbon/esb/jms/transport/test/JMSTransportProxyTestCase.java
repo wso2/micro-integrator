@@ -54,7 +54,7 @@ public class JMSTransportProxyTestCase extends ESBIntegrationTest {
             sender.disconnect();
         }
 
-        Thread.sleep(10000);
+        Thread.sleep(30000);
         JMSQueueMessageConsumer consumer = new JMSQueueMessageConsumer(
                 JMSBrokerConfigurationProvider.getInstance().getBrokerConfiguration());
         try {
