@@ -47,11 +47,6 @@ public class RDBMSMemberEventListenerTask implements Runnable {
     private String localGroupId;
 
     /**
-     * Heart bear max retry time of the node
-     */
-    private int heartbeatMaxRetryTime;
-
-    /**
      * Communication bus object to communicate with the database for the context store.
      */
     private RDBMSCommunicationBusContextImpl communicationBusContext;
@@ -61,17 +56,14 @@ public class RDBMSMemberEventListenerTask implements Runnable {
      */
     private List<MemberEventListener> listeners;
 
-    private Long inactiveTimestamp = 0L;
-
     private boolean wasMemberUnresponsive = false;
 
-    public RDBMSMemberEventListenerTask(String nodeId, String localGroupId, int heartbeatMaxRetryTime,
+    public RDBMSMemberEventListenerTask(String nodeId, String localGroupId,
                                         RDBMSCommunicationBusContextImpl communicationBusContext) {
         this.nodeID = nodeId;
         this.localGroupId = localGroupId;
         this.listeners = new ArrayList<>();
         this.communicationBusContext = communicationBusContext;
-        this.heartbeatMaxRetryTime = heartbeatMaxRetryTime;
     }
 
     /**
@@ -106,19 +98,12 @@ public class RDBMSMemberEventListenerTask implements Runnable {
             if (wasMemberUnresponsive) {
                 notifyRejoin(nodeID, localGroupId);
                 wasMemberUnresponsive = false;
-                inactiveTimestamp = 0L; // reset in active time stamp
             }
         } catch (Throwable e) {
-            log.warn("Error occurred while reading membership events. ", e);
-            if (inactiveTimestamp.equals(0L)) {
-                inactiveTimestamp = System.currentTimeMillis();
-            }
-            long inactiveHeartbeatAge = System.currentTimeMillis() - inactiveTimestamp;
-            if ((inactiveHeartbeatAge > heartbeatMaxRetryTime) && !wasMemberUnresponsive) {
-                log.warn("Node became unresponsive due to not being able to read events from database");
-                inactiveTimestamp = 0L; // reset in active time stamp
-                wasMemberUnresponsive = true;
+            log.error("Error occurred while reading membership events. ", e);
+            if (!wasMemberUnresponsive) {
                 notifyUnresponsiveness(nodeID, localGroupId);
+                wasMemberUnresponsive = true;
             }
         }
     }
