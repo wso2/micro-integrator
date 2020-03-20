@@ -24,6 +24,7 @@ import org.apache.axiom.om.OMNamespace;
 import org.apache.axiom.soap.SOAPFactory;
 import org.testng.Assert;
 import org.wso2.esb.integration.common.utils.clients.axis2client.AxisOperationClient;
+import org.wso2.esb.integration.common.utils.clients.axis2client.AxisServiceClient;
 
 import java.io.IOException;
 
@@ -62,14 +63,17 @@ public class AggregatedRequestClient {
     }
 
     public OMElement getResponsenew() throws IOException {
-        AxisOperationClient operationClient = new AxisOperationClient();
+//        AxisOperationClient operationClient = new AxisOperationClient();
+        AxisServiceClient serviceClient = new AxisServiceClient();
         OMElement response = null;
         try {
-            response = operationClient
-                    .send(proxyServiceUrl, null, createMultipleQuoteRequestBodynew(symbol, no_of_iterations),
-                            "urn:getQuote");
+            response = serviceClient.sendReceive(createMultipleQuoteRequestBodynew(symbol, no_of_iterations), proxyServiceUrl,
+                                                 "getQuote");
+//            response = operationClient
+//                    .send(proxyServiceUrl, null, createMultipleQuoteRequestBodynew(symbol, no_of_iterations),
+//                            "urn:getQuote");
         } finally {
-            operationClient.destroy();
+//            operationClient.destroy();
         }
 
         return response;
