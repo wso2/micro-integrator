@@ -33,8 +33,8 @@ public class TaskQueryHelper {
     public static final String DESTINED_NODE_ID = "DESTINED_NODE_ID";
     public static final String TASK_STATE = "TASK_STATE";
 
-    public static final String ADD_TASK_IF_NOT_EXISTS =
-            "INSERT IGNORE INTO " + TABLE_NAME + " ( " + TASK_NAME + ", " + DESTINED_NODE_ID + ", " + TASK_STATE + ") "
+    public static final String ADD_TASK =
+            "INSERT INTO " + TABLE_NAME + " ( " + TASK_NAME + ", " + DESTINED_NODE_ID + ", " + TASK_STATE + ") "
                     + "VALUES (?,NULL,\"" + CoordinatedTask.States.NONE + "\")";
 
     public static final String UPDATE_ASSIGNMENT_AND_RUNNING_STATE_TO_NONE =

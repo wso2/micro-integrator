@@ -30,6 +30,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -272,15 +273,15 @@ public class RDMBSConnector {
     public void addTaskIfNotExist(String taskName) throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.ADD_TASK_IF_NOT_EXISTS)) {
+                TaskQueryHelper.ADD_TASK)) {
             preparedStatement.setString(1, taskName);
-            int result = preparedStatement.executeUpdate();
+            preparedStatement.executeUpdate();
             if (LOG.isDebugEnabled()) {
-                if (result == 0) {
-                    LOG.debug("Task [" + taskName + "] already exists.");
-                } else {
-                    LOG.debug("Successfully added the task [" + taskName + "].");
-                }
+                LOG.debug("Successfully added the task [" + taskName + "].");
+            }
+        } catch (SQLIntegrityConstraintViolationException ex) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Task [" + taskName + "] already exists.");
             }
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
@@ -301,7 +302,7 @@ public class RDMBSConnector {
             return;
         }
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.ADD_TASK_IF_NOT_EXISTS)) {
+                TaskQueryHelper.ADD_TASK)) {
             for (String taskName : taskNames) {
                 preparedStatement.setString(1, taskName);
                 preparedStatement.addBatch();

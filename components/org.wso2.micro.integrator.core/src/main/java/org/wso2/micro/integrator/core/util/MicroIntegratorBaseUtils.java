@@ -567,7 +567,7 @@ public class MicroIntegratorBaseUtils {
     }
 
     /**
-     * Get Synapse Environment.
+     * Get Synapse Environment. This might throw NPE if called before SynapseEnvironment is initialized.
      *
      * @return SynapseEnvironment - SynapseEnvironment
      */
