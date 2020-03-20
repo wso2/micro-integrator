@@ -46,7 +46,13 @@ public class AxisServiceClient {
             options = new Options();
             options.setTo(new EndpointReference(endPointReference));
             options.setProperty(org.apache.axis2.transport.http.HTTPConstants.CHUNKED, Boolean.FALSE);
-            options.setTimeOutInMilliSeconds(45000);
+            //Increase ReadTimeOut to 3 mins in Windows environments since the operation execution is taking longer in
+            // Windows
+            if (System.getProperty("os.name").contains("Windows")) {
+                options.setTimeOutInMilliSeconds(180000);
+            } else {
+                options.setTimeOutInMilliSeconds(45000);
+            }
             options.setAction("urn:" + operation);
             sender.setOptions(options);
 
