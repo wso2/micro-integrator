@@ -66,7 +66,7 @@ public class TaskEventListener extends MemberEventListener {
             CoordinatedTaskScheduler taskScheduler = new CoordinatedTaskScheduler(taskStore, locationResolver,
                                                                                   clusterCommunicator);
             try {
-                taskScheduler.resolveUnassignedNotCompletedTasksAndUpdateDB();
+                taskScheduler.resolveUnassignedNotCompletedTasksAndUpdateStore();
             } catch (TaskCoordinationException e) {
                 LOG.error("Exception occurred while resolving un assigned tasks upon member addition " + nodeDetail
                         .getNodeId(), e);
