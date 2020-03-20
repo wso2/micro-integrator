@@ -103,6 +103,7 @@ public class TaskEventListener extends MemberEventListener {
         if (taskScheduler != null) {
             LOG.info("Shutting down coordinated task scheduler scheduler since the node became unresponsive.");
             taskScheduler.shutdown();
+            dataHolder.setTaskScheduler(null);
         }
         TaskManager taskManager = dataHolder.getTaskManager();
         if (taskManager == null) {
