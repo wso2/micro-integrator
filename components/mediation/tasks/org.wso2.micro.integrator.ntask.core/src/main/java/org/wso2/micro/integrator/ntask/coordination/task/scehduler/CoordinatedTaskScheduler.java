@@ -81,7 +81,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                 LOG.debug("This node is leader hence resolving unassigned tasks.");
                 addFailedTasks();
                 resolveCount++;
-                resolveUnassignedNotCompletedTasksAndUpdateDB();
+                resolveUnassignedNotCompletedTasksAndUpdateStore();
             } else {
                 LOG.debug("This node is not leader. Hence not cleaning task store or resolving un assigned tasks.");
             }
@@ -156,7 +156,7 @@ public class CoordinatedTaskScheduler implements Runnable {
      *
      * @throws TaskCoordinationException when something goes wrong connecting to the store
      */
-    public synchronized void resolveUnassignedNotCompletedTasksAndUpdateDB() throws TaskCoordinationException {
+    public synchronized void resolveUnassignedNotCompletedTasksAndUpdateStore() throws TaskCoordinationException {
 
         List<String> unAssignedTasks = taskStore.retrieveAllUnAssignedAndIncompleteTasks();
         if (unAssignedTasks.isEmpty()) {
