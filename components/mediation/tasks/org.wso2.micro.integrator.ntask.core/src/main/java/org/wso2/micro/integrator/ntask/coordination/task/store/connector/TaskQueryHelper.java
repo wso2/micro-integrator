@@ -16,14 +16,14 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.ntask.coordination.task.db;
+package org.wso2.micro.integrator.ntask.coordination.task.store.connector;
 
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
 
 /**
  * The class which contains all the data base queries for the task database.
  */
-public class TaskQueryHelper {
+class TaskQueryHelper {
 
     //task table Name
     private static final String TABLE_NAME = "COORDINATED_TASK_TABLE";

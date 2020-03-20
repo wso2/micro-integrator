@@ -27,6 +27,7 @@ import org.wso2.micro.integrator.ntask.common.TaskException;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
 import org.wso2.micro.integrator.ntask.coordination.task.scehduler.CoordinatedTaskScheduler;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 import org.wso2.micro.integrator.ntask.core.internal.CoordinatedTaskScheduleManager;

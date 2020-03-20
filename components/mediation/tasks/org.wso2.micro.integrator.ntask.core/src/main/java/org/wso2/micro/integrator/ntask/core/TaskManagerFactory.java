@@ -18,7 +18,7 @@
 package org.wso2.micro.integrator.ntask.core;
 
 import org.wso2.micro.integrator.ntask.common.TaskException;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 
 import java.util.List;
 

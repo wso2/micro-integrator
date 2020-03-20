@@ -16,14 +16,14 @@
  * under the License.
  */
 
-package org.wso2.micro.integrator.ntask.coordination.task.db.cleaner;
+package org.wso2.micro.integrator.ntask.coordination.task.store.cleaner;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
-import org.wso2.micro.integrator.ntask.coordination.task.TaskStore;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
@@ -31,12 +31,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The class which is responsible for cleaning the task data base. This will remove the tasks if they are invalid and
+ * The class which is responsible for cleaning the task store. This will remove the tasks if they are invalid and
  * will remove the node assignments if they are no more present in the cluster.
  */
-public class TaskDBCleaner {
+public class TaskStoreCleaner {
 
-    private static final Log LOG = LogFactory.getLog(TaskDBCleaner.class);
+    private static final Log LOG = LogFactory.getLog(TaskStoreCleaner.class);
 
     private DataHolder dataHolder = DataHolder.getInstance();
     private ClusterCoordinator clusterCoordinator = dataHolder.getClusterCoordinator();
@@ -47,34 +47,34 @@ public class TaskDBCleaner {
      *
      * @param taskStore - Task database.
      */
-    public TaskDBCleaner(TaskStore taskStore) {
+    public TaskStoreCleaner(TaskStore taskStore) {
         this.taskStore = taskStore;
     }
 
     /**
-     * Cleans the task db. Removes the invalid tasks and invalid nodes ( nodes that are no more in cluster ).
+     * Cleans the task store. Removes the invalid tasks and invalid nodes ( nodes that are no more in cluster ).
      *
-     * @throws TaskCoordinationException When something goes wrong while connecting to the data base.
+     * @throws TaskCoordinationException When something goes wrong while connecting to the store.
      */
     public void clean() throws TaskCoordinationException {
 
-        LOG.debug("Starting task db cleaning.");
+        LOG.debug("Starting task store cleaning.");
         List<String> allTasks = taskStore.getAllTaskNames();
         if (allTasks.isEmpty()) {
             LOG.debug("No tasks found in task database.");
             return;
         }
-        removeInvalidTasksFromDB(allTasks);
-        validateDestinedNodeAndUpdateDB();
-        LOG.debug("Completed task db cleaning.");
+        removeInvalidTasksFromStore(allTasks);
+        validateDestinedNodeAndUpdateStore();
+        LOG.debug("Completed task store cleaning.");
     }
 
     /**
      * Checks whether the destined node is valid and remove it if it is not.
      *
-     * @throws TaskCoordinationException - When something goes updating tasks.
+     * @throws TaskCoordinationException - When something goes wrong while updating tasks.
      */
-    private void validateDestinedNodeAndUpdateDB() throws TaskCoordinationException {
+    private void validateDestinedNodeAndUpdateStore() throws TaskCoordinationException {
 
         List<CoordinatedTask> assignedIncompleteTasks = taskStore.getAllAssignedIncompleteTasks();
         List<String> allNodesAvailableInCluster = clusterCoordinator.getAllNodeIds();
@@ -99,13 +99,13 @@ public class TaskDBCleaner {
     }
 
     /**
-     * From the list of tasks provided removes the invalid tasks entries in the data base ( i.e tasks that are not
+     * From the list of tasks provided removes the invalid tasks entries in the store ( i.e tasks that are not
      * deployed as coordinated task.
      *
      * @param tasksList - The list of tasks to be checked.
-     * @throws TaskCoordinationException - When something goes wrong while updating the task data base.
+     * @throws TaskCoordinationException - When something goes wrong while updating the store.
      */
-    private void removeInvalidTasksFromDB(List<String> tasksList) throws TaskCoordinationException {
+    private void removeInvalidTasksFromStore(List<String> tasksList) throws TaskCoordinationException {
 
         ScheduledTaskManager taskManager = (ScheduledTaskManager) dataHolder.getTaskManager();
         if (taskManager == null) {
@@ -117,8 +117,8 @@ public class TaskDBCleaner {
             LOG.debug("Following list of tasks are found deployed coordinated task list.");
             deployedCoordinatedTasks.forEach(LOG::debug);
         }
-        // we first add to list and then to db while deploying. So all the tasks retrieved from the db should be in
-        // the list, if not they are invalid entries.
+        // We first add to list and then to the store  while deploying. So all the tasks retrieved from the store
+        // should be in the list, if not they are invalid entries.
         tasksList.removeAll(deployedCoordinatedTasks);
         taskStore.deleteTasks(tasksList);
         if (LOG.isDebugEnabled()) {
