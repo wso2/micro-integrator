@@ -125,16 +125,6 @@ public class TaskStore {
     }
 
     /**
-     * Add the tasks.
-     *
-     * @param task - The list of task  names which needs to be added.
-     */
-    public void addTaskIfNotExist(List<String> task) throws TaskCoordinationException {
-
-        rdmbsConnector.addTaskIfNotExist(task);
-    }
-
-    /**
      * Updates the state and node id.
      *
      * @param tasks - List of tasks to be updated.

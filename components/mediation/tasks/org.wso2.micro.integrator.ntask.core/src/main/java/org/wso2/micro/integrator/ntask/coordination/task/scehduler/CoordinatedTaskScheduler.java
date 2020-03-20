@@ -32,6 +32,7 @@ import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -78,6 +79,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                     resolveCount = 0;
                 }
                 LOG.debug("This node is leader hence resolving unassigned tasks.");
+                addFailedTasks();
                 resolveCount++;
                 resolveUnassignedNotCompletedTasksAndUpdateDB();
             } else {
@@ -87,6 +89,30 @@ public class CoordinatedTaskScheduler implements Runnable {
             scheduleAllTasksAssignedToThisNode();
         } catch (Throwable throwable) { // catching throwable to prohibit permanent stopping of the executor service.
             LOG.fatal("Unexpected error occurred while trying to schedule tasks.", throwable);
+        }
+    }
+
+    /**
+     * Add failed tasks to the data base.
+     *
+     * @throws TaskCoordinationException - When something goes wrong while retrieving all the tasks from the data base.
+     */
+    private void addFailedTasks() throws TaskCoordinationException {
+
+        ScheduledTaskManager taskManager = (ScheduledTaskManager) dataHolder.getTaskManager();
+        List<String> failedTasks = taskManager.getAdditionFailedTasks();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Following list of tasks were found in the failed list.");
+            failedTasks.forEach(LOG::debug);
+        }
+        Iterator<String> iter = failedTasks.iterator();
+        while (iter.hasNext()) {
+            String task = iter.next();
+            taskStore.addTaskIfNotExist(task);
+            iter.remove();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Successfully added the failed task [" + task + "]");
+            }
         }
     }
 
