@@ -131,7 +131,7 @@ public class TasksDSComponent {
             bundleContext.registerService(TaskService.class.getName(), getTaskService(), null);
 
             if (isCoordinationEnabled) {
-                clusterCoordinator.registerListener(new ClusterEventListener());
+                clusterCoordinator.registerListener(new ClusterEventListener(clusterCoordinator.getThisNodeId()));
                 ScheduledTaskManager scheduledTaskManager = dataHolder.getTaskManager();
                 clusterCoordinator.registerListener(new TaskEventListener(scheduledTaskManager, taskStore, resolver));
                 // the task scheduler should be started after registering task service.
