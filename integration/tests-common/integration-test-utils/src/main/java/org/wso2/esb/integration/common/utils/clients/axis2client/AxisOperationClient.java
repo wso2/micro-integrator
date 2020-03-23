@@ -153,6 +153,7 @@ public class AxisOperationClient {
         outMsgCtx = new MessageContext();
         //assigning message context&rsquo;s option object into instance variable
         Options options = outMsgCtx.getOptions();
+        options.setTimeOutInMilliSeconds(ClientUtils.getReadTimeout());
         //setting properties into option
         if (trpUrl != null && !"null".equals(trpUrl)) {
             options.setProperty(Constants.Configuration.TRANSPORT_URL, trpUrl);
