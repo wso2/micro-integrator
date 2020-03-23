@@ -32,6 +32,7 @@ import org.quartz.impl.StdSchedulerFactory;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.core.ServerStartupObserver;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
+import org.wso2.micro.integrator.coordination.ClusterEventListener;
 import org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
@@ -39,11 +40,12 @@ import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.TaskEventListener;
-import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.ActivePassiveResolver;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
+import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 import org.wso2.micro.integrator.ntask.core.TaskStartupHandler;
 import org.wso2.micro.integrator.ntask.core.impl.QuartzCachedThreadPool;
+import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.micro.integrator.ntask.core.service.impl.TaskServiceImpl;
 
@@ -129,12 +131,14 @@ public class TasksDSComponent {
             bundleContext.registerService(TaskService.class.getName(), getTaskService(), null);
 
             if (isCoordinationEnabled) {
+                clusterCoordinator.registerListener(new ClusterEventListener());
+                ScheduledTaskManager scheduledTaskManager = dataHolder.getTaskManager();
+                clusterCoordinator.registerListener(new TaskEventListener(scheduledTaskManager, taskStore, resolver));
+                // the task scheduler should be started after registering task service.
+                coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(scheduledTaskManager, taskStore,
+                                                                                    clusterCoordinator, resolver);
                 // join cluster
                 clusterCoordinator.startCoordinator();
-                clusterCoordinator.registerListener(new TaskEventListener(taskStore, resolver));
-                // the task scheduler should be started after registering task service.
-                coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(taskStore, clusterCoordinator,
-                                                                                    resolver);
                 coordinatedTaskScheduleManager.startTaskScheduler("");
             }
         } catch (Throwable e) {

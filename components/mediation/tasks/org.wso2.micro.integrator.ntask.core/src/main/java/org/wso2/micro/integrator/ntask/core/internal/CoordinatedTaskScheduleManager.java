@@ -26,6 +26,7 @@ import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationRe
 import org.wso2.micro.integrator.ntask.coordination.task.scehduler.CoordinatedTaskScheduler;
 import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
 import org.wso2.micro.integrator.ntask.coordination.task.store.cleaner.TaskStoreCleaner;
+import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -43,9 +44,11 @@ public class CoordinatedTaskScheduleManager {
     private TaskStore taskStore;
     private ClusterCoordinator clusterCoordinator;
     private TaskLocationResolver resolver;
+    private ScheduledTaskManager taskManager;
 
-    public CoordinatedTaskScheduleManager(TaskStore taskStore, ClusterCoordinator clusterCoordinator,
-                                          TaskLocationResolver resolver) {
+    public CoordinatedTaskScheduleManager(ScheduledTaskManager taskManager, TaskStore taskStore,
+                                          ClusterCoordinator clusterCoordinator, TaskLocationResolver resolver) {
+        this.taskManager = taskManager;
         this.taskStore = taskStore;
         this.clusterCoordinator = clusterCoordinator;
         this.resolver = resolver;
@@ -57,12 +60,13 @@ public class CoordinatedTaskScheduleManager {
     public void startTaskScheduler(String msg) {
 
         ScheduledExecutorService taskSchedulerExecutor = Executors.newSingleThreadScheduledExecutor();
-        TaskStoreCleaner taskStoreCleaner = new TaskStoreCleaner(taskStore);
+        TaskStoreCleaner taskStoreCleaner = new TaskStoreCleaner(taskManager, taskStore);
         // the frequency at which task resolving need to be done per cleaning.
         int resolvingFrequency = 5;
         ClusterCommunicator connector = new ClusterCommunicator(clusterCoordinator);
-        CoordinatedTaskScheduler taskScheduler = new CoordinatedTaskScheduler(taskStore, resolver, connector,
-                                                                              taskStoreCleaner, resolvingFrequency);
+        CoordinatedTaskScheduler taskScheduler = new CoordinatedTaskScheduler(taskManager, taskStore, resolver,
+                                                                              connector, taskStoreCleaner,
+                                                                              resolvingFrequency);
         int initialDelay = 0; // can start immediately as the task service is already registered.
         //todo read from toml
         int period = 2;

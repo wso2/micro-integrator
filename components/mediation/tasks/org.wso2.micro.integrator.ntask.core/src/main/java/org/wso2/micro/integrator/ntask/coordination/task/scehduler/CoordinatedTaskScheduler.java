@@ -52,14 +52,17 @@ public class CoordinatedTaskScheduler implements Runnable {
     private int resolvingFrequency;
     private int resolveCount = 0;
     private ClusterCommunicator clusterCommunicator;
+    private ScheduledTaskManager taskManager;
 
-    public CoordinatedTaskScheduler(TaskStore taskStore, TaskLocationResolver taskLocationResolver,
-                                    ClusterCommunicator connector) {
-        this(taskStore, taskLocationResolver, connector, null, 1);
+    public CoordinatedTaskScheduler(ScheduledTaskManager taskManager, TaskStore taskStore,
+                                    TaskLocationResolver taskLocationResolver, ClusterCommunicator connector) {
+        this(taskManager, taskStore, taskLocationResolver, connector, null, 1);
     }
 
-    public CoordinatedTaskScheduler(TaskStore taskStore, TaskLocationResolver taskLocationResolver,
-                                    ClusterCommunicator connector, TaskStoreCleaner cleaner, int frequency) {
+    public CoordinatedTaskScheduler(ScheduledTaskManager taskManager, TaskStore taskStore,
+                                    TaskLocationResolver taskLocationResolver, ClusterCommunicator connector,
+                                    TaskStoreCleaner cleaner, int frequency) {
+        this.taskManager = taskManager;
         this.taskStore = taskStore;
         this.taskLocationResolver = taskLocationResolver;
         this.clusterCommunicator = connector;
@@ -99,7 +102,6 @@ public class CoordinatedTaskScheduler implements Runnable {
      */
     private void addFailedTasks() throws TaskCoordinationException {
 
-        ScheduledTaskManager taskManager = (ScheduledTaskManager) dataHolder.getTaskManager();
         List<String> failedTasks = taskManager.getAdditionFailedTasks();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Following list of tasks were found in the failed list.");
@@ -130,15 +132,14 @@ public class CoordinatedTaskScheduler implements Runnable {
             LOG.debug("No tasks assigned to this node to be scheduled.");
             return;
         }
-        ScheduledTaskManager coordinatedTaskManager = (ScheduledTaskManager) dataHolder.getTaskManager();
-        List<String> deployedCoordinatedTasks = coordinatedTaskManager.getAllCoordinatedTasksDeployed();
+        List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
         tasksOfThisNode.forEach(taskName -> {
             if (deployedCoordinatedTasks.contains(taskName)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Submitting retrieved task [" + taskName + "] to the task manager.");
                 }
                 try {
-                    coordinatedTaskManager.scheduleCoordinatedTask(taskName);
+                    taskManager.scheduleCoordinatedTask(taskName);
                 } catch (TaskException e) {
                     LOG.error("Exception occurred while scheduling coordinated task : " + taskName, e);
                 }
