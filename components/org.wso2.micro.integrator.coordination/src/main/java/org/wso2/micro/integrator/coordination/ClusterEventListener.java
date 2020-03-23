@@ -29,9 +29,18 @@ public class ClusterEventListener extends MemberEventListener {
 
     private static final Log LOG = LogFactory.getLog(ClusterCoordinator.class);
 
+    private String thisNodeId;
+
+    public ClusterEventListener(String nodeId) {
+        thisNodeId = nodeId;
+    }
+
     @Override
     public void memberAdded(NodeDetail nodeDetail) {
-        LOG.info("Member added [" + nodeDetail.getNodeId() + "]");
+        String nodeId = nodeDetail.getNodeId();
+        if (!thisNodeId.equals(nodeId)) {
+            LOG.info("Member added [" + nodeId + "]");
+        }
     }
 
     @Override
@@ -41,7 +50,10 @@ public class ClusterEventListener extends MemberEventListener {
 
     @Override
     public void coordinatorChanged(NodeDetail nodeDetail) {
-        LOG.info("Coordinator changed to [" + nodeDetail.getNodeId() + "]");
+        String coordinatorId = nodeDetail.getNodeId();
+        if (!thisNodeId.equals(coordinatorId)) {
+            LOG.info("Coordinator changed to [" + coordinatorId + "]");
+        }
     }
 
     @Override

@@ -21,7 +21,6 @@ package org.wso2.micro.integrator.coordination;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.exception.ClusterCoordinationException;
-import org.wso2.micro.integrator.coordination.node.NodeDetail;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 
 import java.util.ArrayList;
@@ -44,10 +43,9 @@ public class ClusterCoordinator {
     public void startCoordinator() {
 
         rdbmsCoordinationStrategy.joinGroup();
-        List<NodeDetail> nodeDetailList = rdbmsCoordinationStrategy.getAllNodeDetails();
-        for (NodeDetail nodeDetail : nodeDetailList) {
-            log.info("Node connected: " + nodeDetail.getNodeId());
-        }
+        List<String> allNodeIds = this.getAllNodeIds();
+        allNodeIds.remove(getThisNodeId());
+        allNodeIds.forEach(id -> log.info("Connected with node [" + id + "]"));
     }
 
     /**
