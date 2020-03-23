@@ -47,8 +47,8 @@ public class RDBMSConstantUtils {
     public static final String LOCAL_GROUP_ID = "localGroupId";
     public static final String SCHEDULED_PERIOD = "scheduledPeriod";
 
-    public static final int DEFAULT_HEART_BEAT_INTERVAL = 5000;
-    public static final int DEFAULT_HEART_BEAT_MAX_RETRY = 3;
+    public static final int DEFAULT_HEART_BEAT_INTERVAL = 2000;
+    public static final int DEFAULT_HEART_BEAT_MAX_RETRY = 2;
     public static final String DEFAULT_LOCAL_GROUP_ID = "default";
     public static final int DEFAULT_SCHEDULED_PERIOD_INTERVAL = 1000;
 
