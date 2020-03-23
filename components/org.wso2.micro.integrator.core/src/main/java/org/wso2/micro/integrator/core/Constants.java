@@ -29,4 +29,12 @@ public class Constants {
     public static final String PASSTHRU_JSON_BUILDER = "passthruJsonBuilder";
     public static final String PASSTHRU_JSON_FORMATTER = "passthruJsonFormatter";
     public static final String HOT_DEPLOYMENT = "hotdeployment";
+
+    /**
+     * Constants used to resolve environment variables and system properties
+     */
+    public static final String SYS_PROPERTY_PLACEHOLDER_PREFIX = "$sys{";
+    public static final String ENV_VAR_PLACEHOLDER_PREFIX = "$env{";
+    public static final String DYNAMIC_PROPERTY_PLACEHOLDER_PREFIX = "${";
+    public static final String PLACEHOLDER_SUFFIX = "}";
 }

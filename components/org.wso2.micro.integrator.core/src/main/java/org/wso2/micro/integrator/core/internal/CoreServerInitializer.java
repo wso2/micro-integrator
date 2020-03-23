@@ -65,6 +65,7 @@ import java.util.Map;
 import javax.servlet.ServletException;
 
 import static org.apache.axis2.transport.TransportListener.HOST_ADDRESS;
+import static org.wso2.micro.core.util.CarbonUtils.resolveSystemProperty;
 
 public class CoreServerInitializer {
 
@@ -160,7 +161,7 @@ public class CoreServerInitializer {
             hence we are setting it manually here */
             //TODO: proper fix would be to move the networkUtil class to carbon.base level
             String serverURL = serverConfigurationService.getFirstProperty(org.wso2.micro.core.Constants.SERVER_URL);
-            serverURL = Utils.replaceSystemProperty(serverURL);
+            serverURL = resolveSystemProperty(serverURL);
             serverConfigurationService.overrideConfigurationProperty(org.wso2.micro.core.Constants.SERVER_URL, serverURL);
             serverName = serverConfigurationService.getFirstProperty("Name");
 
