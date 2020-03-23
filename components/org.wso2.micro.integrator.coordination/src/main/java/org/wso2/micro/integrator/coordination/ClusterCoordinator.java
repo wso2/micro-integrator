@@ -43,7 +43,6 @@ public class ClusterCoordinator {
 
     public void startCoordinator() {
 
-        rdbmsCoordinationStrategy.registerEventListener(new ClusterEventListener());
         rdbmsCoordinationStrategy.joinGroup();
         List<NodeDetail> nodeDetailList = rdbmsCoordinationStrategy.getAllNodeDetails();
         for (NodeDetail nodeDetail : nodeDetailList) {

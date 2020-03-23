@@ -19,7 +19,7 @@
 package org.wso2.micro.integrator.ntask.core.internal;
 
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
-import org.wso2.micro.integrator.ntask.core.TaskManager;
+import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -33,7 +33,7 @@ public class DataHolder {
     private static final DataHolder instance = new DataHolder();
     private boolean coordinationEnabledGlobally = false;
     private ClusterCoordinator clusterCoordinator;
-    private TaskManager taskManager;
+    private ScheduledTaskManager taskManager;
     private ScheduledExecutorService taskScheduler;
 
     private DataHolder() {
@@ -60,11 +60,11 @@ public class DataHolder {
         this.clusterCoordinator = clusterCoordinator;
     }
 
-    public TaskManager getTaskManager() {
+    public ScheduledTaskManager getTaskManager() {
         return taskManager;
     }
 
-    public void setTaskManager(TaskManager taskManager) {
+    public void setTaskManager(ScheduledTaskManager taskManager) {
         this.taskManager = taskManager;
     }
 

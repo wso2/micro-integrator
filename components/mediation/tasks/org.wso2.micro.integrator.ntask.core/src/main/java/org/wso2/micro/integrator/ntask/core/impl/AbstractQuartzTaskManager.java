@@ -46,7 +46,6 @@ import org.wso2.micro.integrator.ntask.core.TaskInfo;
 import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.TaskRepository;
 import org.wso2.micro.integrator.ntask.core.TaskUtils;
-import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
 
 import java.util.Date;
@@ -403,10 +402,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
                 try {
                     String taskName = trigger.getJobKey().getName();
                     TaskUtils.setTaskFinished(getTaskRepository(), taskName, true);
-                    boolean isCoordinatedTask =
-                            DataHolder.getInstance().getTaskManager().getAllCoordinatedTasksDeployed().contains(
-                                    taskName);
-                    if (isCoordinatedTask) {
+                    if (getAllCoordinatedTasksDeployed().contains(taskName)) {
                         taskStore.updateTaskState(taskName, CoordinatedTask.States.COMPLETED);
                     }
                 } catch (TaskException | TaskCoordinationException e) {

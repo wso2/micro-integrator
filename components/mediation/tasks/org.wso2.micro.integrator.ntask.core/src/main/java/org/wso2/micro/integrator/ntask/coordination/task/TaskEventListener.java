@@ -28,7 +28,6 @@ import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.resolver.TaskLocationResolver;
 import org.wso2.micro.integrator.ntask.coordination.task.scehduler.CoordinatedTaskScheduler;
 import org.wso2.micro.integrator.ntask.coordination.task.store.TaskStore;
-import org.wso2.micro.integrator.ntask.core.TaskManager;
 import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 import org.wso2.micro.integrator.ntask.core.internal.CoordinatedTaskScheduleManager;
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
@@ -47,9 +46,12 @@ public class TaskEventListener extends MemberEventListener {
     private ClusterCoordinator clusterCoordinator = dataHolder.getClusterCoordinator();
     private TaskStore taskStore;
     private TaskLocationResolver locationResolver;
+    private ScheduledTaskManager taskManager;
 
-    public TaskEventListener(TaskStore taskStore, TaskLocationResolver locationResolver) {
+    public TaskEventListener(ScheduledTaskManager taskManager, TaskStore taskStore,
+                             TaskLocationResolver locationResolver) {
 
+        this.taskManager = taskManager;
         this.taskStore = taskStore;
         this.locationResolver = locationResolver;
     }
@@ -63,7 +65,8 @@ public class TaskEventListener extends MemberEventListener {
         if (clusterCoordinator.isLeader()) {
             LOG.debug("Current node is leader, hence resolving unassigned tasks upon member addition.");
             ClusterCommunicator clusterCommunicator = new ClusterCommunicator(clusterCoordinator);
-            CoordinatedTaskScheduler taskScheduler = new CoordinatedTaskScheduler(taskStore, locationResolver,
+            CoordinatedTaskScheduler taskScheduler = new CoordinatedTaskScheduler(taskManager, taskStore,
+                                                                                  locationResolver,
                                                                                   clusterCommunicator);
             try {
                 taskScheduler.resolveUnassignedNotCompletedTasksAndUpdateStore();
@@ -105,16 +108,11 @@ public class TaskEventListener extends MemberEventListener {
             taskScheduler.shutdown();
             dataHolder.setTaskScheduler(null);
         }
-        TaskManager taskManager = dataHolder.getTaskManager();
-        if (taskManager == null) {
-            return; // if taskManager is null , there will be no tasks running in the node.
-        }
-        ScheduledTaskManager scheduledTaskManager = (ScheduledTaskManager) taskManager;
-        List<String> tasks = scheduledTaskManager.getAllCoordinatedTasksDeployed();
+        List<String> tasks = taskManager.getAllCoordinatedTasksDeployed();
         // stop all running coordinated tasks.
         tasks.forEach(task -> {
             try {
-                scheduledTaskManager.stopExecution(task);
+                taskManager.stopExecution(task);
                 LOG.info("Stopped execution of task " + task);
             } catch (TaskException e) {
                 LOG.error("Unable to pause the task " + task, e);
@@ -135,7 +133,7 @@ public class TaskEventListener extends MemberEventListener {
             LOG.error("Error occurred while cleaning the tasks of node " + nodeId, e);
         }
         // start the scheduler again since the node joined cluster successfully.
-        CoordinatedTaskScheduleManager scheduleManager = new CoordinatedTaskScheduleManager(taskStore,
+        CoordinatedTaskScheduleManager scheduleManager = new CoordinatedTaskScheduleManager(taskManager, taskStore,
                                                                                             clusterCoordinator,
                                                                                             locationResolver);
         scheduleManager.startTaskScheduler(" upon rejoining the cluster");

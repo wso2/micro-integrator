@@ -41,13 +41,15 @@ public class TaskStoreCleaner {
     private DataHolder dataHolder = DataHolder.getInstance();
     private ClusterCoordinator clusterCoordinator = dataHolder.getClusterCoordinator();
     private TaskStore taskStore;
+    private ScheduledTaskManager taskManager;
 
     /**
      * Constructor.
      *
      * @param taskStore - Task database.
      */
-    public TaskStoreCleaner(TaskStore taskStore) {
+    public TaskStoreCleaner(ScheduledTaskManager taskManager, TaskStore taskStore) {
+        this.taskManager = taskManager;
         this.taskStore = taskStore;
     }
 
@@ -107,11 +109,6 @@ public class TaskStoreCleaner {
      */
     private void removeInvalidTasksFromStore(List<String> tasksList) throws TaskCoordinationException {
 
-        ScheduledTaskManager taskManager = (ScheduledTaskManager) dataHolder.getTaskManager();
-        if (taskManager == null) {
-            LOG.info("Task manager is not yet initialized, hence cancelling removing invalid tasks.");
-            return;
-        }
         List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
         if (LOG.isDebugEnabled()) {
             LOG.debug("Following list of tasks are found deployed coordinated task list.");
