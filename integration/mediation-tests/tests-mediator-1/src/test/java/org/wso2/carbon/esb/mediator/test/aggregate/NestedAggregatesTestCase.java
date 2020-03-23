@@ -86,7 +86,7 @@ public class NestedAggregatesTestCase extends ESBIntegrationTest {
     /*   https://wso2.org/jira/browse/ESBJAVA-2152   */
     @Test(groups = { "wso2.esb" }, description = "sending nested aggregate request > request iterator count 2500")
     public void testNestedAggregateWithLargeMessage() throws IOException, XMLStreamException {
-        int messageItr = 15;
+        int messageItr = 10;
         String response = aggregatedRequestClient.getResponse(createNestedQuoteRequestBody("WSO2", messageItr));
         OMElement response2 = AXIOMUtil.stringToOM(response);
         OMElement soapBody = response2.getFirstElement();
