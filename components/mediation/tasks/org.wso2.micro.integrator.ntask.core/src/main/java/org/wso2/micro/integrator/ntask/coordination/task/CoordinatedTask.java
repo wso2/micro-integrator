@@ -55,10 +55,6 @@ public class CoordinatedTask {
         return this.taskState;
     }
 
-    public void setTaskState(States state) {
-        this.taskState = state;
-    }
-
     public String getTaskName() {
         return this.taskName;
     }
@@ -71,6 +67,8 @@ public class CoordinatedTask {
         NONE,
         RUNNING,
         PAUSED,
-        COMPLETED
+        COMPLETED,
+        DEACTIVATED,  // when a task is deactivated from an external request ( like deactivating msg processor via api )
+        ACTIVATED     // when a task is activated from an external request ( like activating msg processor via api )
     }
 }

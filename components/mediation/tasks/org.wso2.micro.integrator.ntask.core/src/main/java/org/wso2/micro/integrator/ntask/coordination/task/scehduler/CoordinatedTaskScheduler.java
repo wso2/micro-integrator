@@ -31,6 +31,7 @@ import org.wso2.micro.integrator.ntask.coordination.task.store.cleaner.TaskStore
 import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager;
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -53,6 +54,7 @@ public class CoordinatedTaskScheduler implements Runnable {
     private int resolveCount = 0;
     private ClusterCommunicator clusterCommunicator;
     private ScheduledTaskManager taskManager;
+    private String localNodeId;
 
     public CoordinatedTaskScheduler(ScheduledTaskManager taskManager, TaskStore taskStore,
                                     TaskLocationResolver taskLocationResolver, ClusterCommunicator connector) {
@@ -68,12 +70,15 @@ public class CoordinatedTaskScheduler implements Runnable {
         this.clusterCommunicator = connector;
         this.taskStoreCleaner = cleaner;
         this.resolvingFrequency = frequency;
+        this.localNodeId = clusterCoordinator.getThisNodeId();
     }
 
     @Override
     public void run() {
 
         try {
+            pauseDeactivatedTasks();
+            scheduleAssignedTasks(CoordinatedTask.States.ACTIVATED);
             if (clusterCoordinator.isLeader()) {
                 // cleaning will run for each n times resolving frequency . ( n = 0,1,2 ... ).
                 if (resolveCount % resolvingFrequency == 0) {
@@ -89,10 +94,42 @@ public class CoordinatedTaskScheduler implements Runnable {
                 LOG.debug("This node is not leader. Hence not cleaning task store or resolving un assigned tasks.");
             }
             // schedule all tasks assigned to this node and in state none
-            scheduleAllTasksAssignedToThisNode();
+            scheduleAssignedTasks(CoordinatedTask.States.NONE);
         } catch (Throwable throwable) { // catching throwable to prohibit permanent stopping of the executor service.
             LOG.fatal("Unexpected error occurred while trying to schedule tasks.", throwable);
         }
+    }
+
+    /**
+     * Pause ( stop execution ) the deactivated tasks.
+     *
+     * @throws TaskCoordinationException - when something goes wrong while retrieving tasks information from store.
+     */
+    private void pauseDeactivatedTasks() throws TaskCoordinationException {
+
+        List<String> deactivatedTasks = taskStore.retrieveTaskNames(localNodeId, CoordinatedTask.States.DEACTIVATED);
+        if (LOG.isDebugEnabled()) {
+            deactivatedTasks.stream().map(
+                    task -> "Task [" + task + "] retrieved in [" + CoordinatedTask.States.DEACTIVATED + "] state.")
+                    .forEachOrdered(LOG::debug);
+        }
+        ScheduledTaskManager scheduledTaskManager = taskManager;
+        List<String> pausedTasks = new ArrayList<>();
+        List<String> deployedTasks = taskManager.getAllCoordinatedTasksDeployed();
+        deactivatedTasks.forEach(task -> {
+            if (deployedTasks.contains(task)) {
+                try {
+                    scheduledTaskManager.stopExecution(task);
+                    pausedTasks.add(task);
+                } catch (TaskException e) {
+                    LOG.error("Error stopping the task [" + task + "]", e);
+                }
+            } else {
+                LOG.info("The task [" + task + "] retrieved to be paused is not a deployed task "
+                                 + "in this node or an invalid entry, hence ignoring it.");
+            }
+        });
+        taskStore.updateTaskState(pausedTasks, CoordinatedTask.States.PAUSED);
     }
 
     /**
@@ -121,15 +158,17 @@ public class CoordinatedTaskScheduler implements Runnable {
     /**
      * Schedules all tasks assigned to this node.
      *
+     * @param state - The state of the tasks which need to be scheduled.
      * @throws TaskCoordinationException - When something goes wrong while retrieving all the assigned tasks.
      */
-    private void scheduleAllTasksAssignedToThisNode() throws TaskCoordinationException {
+    private void scheduleAssignedTasks(CoordinatedTask.States state) throws TaskCoordinationException {
 
         LOG.debug("Retrieving tasks assigned to this node and to be scheduled.");
-        List<String> tasksOfThisNode = taskStore.retrieveTaskNames(clusterCoordinator.getThisNodeId(),
-                                                                   CoordinatedTask.States.NONE);
+        List<String> tasksOfThisNode = taskStore.retrieveTaskNames(localNodeId, state);
         if (tasksOfThisNode.isEmpty()) {
-            LOG.debug("No tasks assigned to this node to be scheduled.");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("No tasks assigned to this node to be scheduled in state " + state);
+            }
             return;
         }
         List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
@@ -144,9 +183,8 @@ public class CoordinatedTaskScheduler implements Runnable {
                     LOG.error("Exception occurred while scheduling coordinated task : " + taskName, e);
                 }
             } else {
-                LOG.info("The task [" + taskName + "] retrieved is not a deployed coordinated task "
-                                 + "in this node or an invalid entry, hence ignoring it. It will be eventually "
-                                 + "cleaned or deployed.");
+                LOG.info("The task [" + taskName + "] retrieved to be scheduled is not a deployed task "
+                                 + "in this node or an invalid entry, hence ignoring it.");
             }
         });
     }
@@ -171,6 +209,6 @@ public class CoordinatedTaskScheduler implements Runnable {
                 tasksToBeUpdated.put(taskName, destinedNode);
             }
         });
-        taskStore.updateAssignmentAndRunningStateToNone(tasksToBeUpdated);
+        taskStore.updateAssignmentAndState(tasksToBeUpdated);
     }
 }

@@ -97,7 +97,7 @@ public class TaskStoreCleaner {
                 tasksToBeUpdated.add(taskName);
             }
         });
-        taskStore.unAssignAndUpdateRunningTasksToNone(tasksToBeUpdated);
+        taskStore.unAssignAndUpdateState(tasksToBeUpdated);
     }
 
     /**
