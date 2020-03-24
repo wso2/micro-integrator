@@ -17,7 +17,7 @@
   ~ under the License.
   -->
     <proxy xmlns="http://ws.apache.org/ns/synapse"
-           name="MailTranportInvalidAddress"
+           name="MailTransportInvalidAddress"
            transports="mailto"
            statistics="disable"
            trace="disable"
