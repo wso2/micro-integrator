@@ -451,10 +451,9 @@ public class CappDeployer extends AbstractDeployer {
      * @throws DeploymentException - error while un-deploying cApp
      */
     public void undeploy(String filePath) throws DeploymentException {
-        String artifactPath = AppDeployerUtils.formatPath(filePath);
         CarbonApplication existingApp = null;
         for (CarbonApplication carbonApp : getCarbonApps()) {
-            if (artifactPath.equals(carbonApp.getAppFilePath())) {
+            if (filePath.equals(carbonApp.getAppFilePath())) {
                 existingApp = carbonApp;
                 break;
             }
