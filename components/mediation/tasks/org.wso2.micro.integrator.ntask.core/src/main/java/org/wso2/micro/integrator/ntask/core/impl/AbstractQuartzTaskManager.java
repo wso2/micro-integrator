@@ -158,6 +158,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         String taskGroup = this.getTenantTaskGroup();
         try {
             this.getScheduler().pauseJob(new JobKey(taskName, taskGroup));
+            log.info("Task paused: [" + this.getTaskType() + "][" + taskName + "]");
         } catch (SchedulerException e) {
             throw new TaskException("Error in pausing task with name: " + taskName, TaskException.Code.UNKNOWN, e);
         }
@@ -276,6 +277,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
                 ((OperableTrigger) trigger).setNextFireTime(trigger.getFireTimeAfter(null));
             }
             this.getScheduler().resumeJob(new JobKey(taskName, taskGroup));
+            log.info("Task resumed: [" + this.getTaskType() + "][" + taskName + "]");
         } catch (SchedulerException e) {
             throw new TaskException("Error in resuming task with name: " + taskName, TaskException.Code.UNKNOWN, e);
         }

@@ -52,6 +52,11 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      * The list of tasks for which the addition failed.
      */
     private List<String> additionFailedTasks = new ArrayList<>();
+
+    /**
+     * The tasks which were stopped in this node (can be due to pause or node becoming un responsive)
+     */
+    private List<String> stoppedTasks = new ArrayList<>();
     private SynapseEnvironment synapseEnvironment = null;
     private TaskStore taskStore;
 
@@ -150,11 +155,10 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      */
     public void scheduleCoordinatedTask(String taskName) throws TaskException {
 
-        String taskGroup = this.getTenantTaskGroup();
-        if (!containsLocalTask(taskName, taskGroup)) {
+        if (!stoppedTasks.contains(taskName)) {
             scheduleTask(taskName);
         } else {
-            rescheduleTask(taskName);
+            resumeTask(taskName);
         }
         try {
             taskStore.updateTaskState(taskName, CoordinatedTask.States.RUNNING);
@@ -179,6 +183,7 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      */
     public void stopExecution(String taskName) throws TaskException {
         this.pauseLocalTask(taskName);
+        stoppedTasks.add(taskName);
     }
 
     @Override
@@ -205,6 +210,7 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
                 log.error("Error while removing tasks.", ex);
             }
             deployedCoordinatedTasks.remove(taskName);
+            stoppedTasks.remove(taskName);
         }
         return result;
     }

@@ -113,7 +113,6 @@ public class TaskEventListener extends MemberEventListener {
         tasks.forEach(task -> {
             try {
                 taskManager.stopExecution(task);
-                LOG.info("Stopped execution of task " + task);
             } catch (TaskException e) {
                 LOG.error("Unable to pause the task " + task, e);
             }
