@@ -35,9 +35,21 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.ADD_TASK;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.CLEAN_TASKS_OF_NODE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DELETE_TASK;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DESTINED_NODE_ID;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.GET_ALL_ASSIGNED_INCOMPLETE_TASKS;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.REMOVE_ASSIGNMENT_AND_UPDATE_STATE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.REMOVE_TASKS_OF_NODE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_ALL_TASKS;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_TASKS_OF_NODE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_TASK_STATE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_NAME;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_STATE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.UPDATE_ASSIGNMENT_AND_STATE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.UPDATE_TASK_STATE;
 
 /**
  * The connector class which deals with underlying coordinated task table.
@@ -45,9 +57,9 @@ import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.
 public class RDMBSConnector {
 
     private static final Log LOG = LogFactory.getLog(RDMBSConnector.class);
-    private DataSource dataSource;
     private static final String ERROR_MSG = "Error while doing data base operation.";
     private static final String EMPTY_LIST = "Provided list is empty ";
+    private DataSource dataSource;
 
     /**
      * Constructor.
@@ -75,7 +87,7 @@ public class RDMBSConnector {
      *
      * @param tasks - List of coordinated tasks which needs to be updated.
      */
-    public void unAssignAndUpdateRunningStateToNone(List<String> tasks) throws TaskCoordinationException {
+    public void unAssignAndUpdateState(List<String> tasks) throws TaskCoordinationException {
 
         if (tasks.isEmpty()) {
             if (LOG.isDebugEnabled()) {
@@ -84,7 +96,7 @@ public class RDMBSConnector {
             return;
         }
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.REMOVE_ASSIGNMENT_AND_UPDATE_RUNNING_STATE_TO_NONE)) {
+                REMOVE_ASSIGNMENT_AND_UPDATE_STATE)) {
             for (String task : tasks) {
                 preparedStatement.setString(1, task);
                 preparedStatement.addBatch();
@@ -102,15 +114,14 @@ public class RDMBSConnector {
     }
 
     /**
-     * For all the tasks which has this destined node id , sets it to null and update the task state to none if it was
-     * in a running state.
+     * Sets the destined node id to null and state to none if running or to paused if deactivated.
      *
-     * @param nodeId - Node Id.
+     * @param nodeId - Node Id which needs to be set to null.
      */
-    public void unAssignAndUpdateRunningStateToNone(String nodeId) throws TaskCoordinationException {
+    public void unAssignAndUpdateState(String nodeId) throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.CLEAN_TASKS_OF_NODE)) {
+                CLEAN_TASKS_OF_NODE)) {
             preparedStatement.setString(1, nodeId);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Un assigning the tasks of node [" + nodeId + "].");
@@ -135,7 +146,7 @@ public class RDMBSConnector {
             throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.RETRIEVE_TASKS_OF_NODE)) {
+                RETRIEVE_TASKS_OF_NODE)) {
             preparedStatement.setString(1, nodeID);
             preparedStatement.setString(2, state.name());
             return query(preparedStatement, "for node [" + nodeID + "] with state [" + state.name() + "]");
@@ -159,7 +170,7 @@ public class RDMBSConnector {
     public void deleteTasks(String nodeId) throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.REMOVE_TASKS_OF_NODE)) {
+                REMOVE_TASKS_OF_NODE)) {
             preparedStatement.setString(1, nodeId);
             preparedStatement.executeUpdate();
             if (LOG.isDebugEnabled()) {
@@ -184,7 +195,7 @@ public class RDMBSConnector {
             return;
         }
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.DELETE_TASK)) {
+                DELETE_TASK)) {
             for (String task : tasks) {
                 preparedStatement.setString(1, task);
                 preparedStatement.addBatch();
@@ -242,8 +253,29 @@ public class RDMBSConnector {
     public List<String> getAllTaskNames() throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.RETRIEVE_ALL_TASKS)) {
+                RETRIEVE_ALL_TASKS)) {
             return query(preparedStatement, "for all available tasks names.");
+        } catch (SQLException ex) {
+            throw new TaskCoordinationException(ERROR_MSG, ex);
+        }
+    }
+
+    /**
+     * Retrieve the task state
+     *
+     * @param taskName -  Name of the task.
+     * @return - Task state
+     * @throws TaskCoordinationException Exception
+     */
+    public CoordinatedTask.States getTaskState(String taskName) throws TaskCoordinationException {
+
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
+                RETRIEVE_TASK_STATE)) {
+            preparedStatement.setString(1, taskName);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                resultSet.next();
+                return CoordinatedTask.States.valueOf(resultSet.getString(TASK_STATE));
+            }
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
         }
@@ -257,7 +289,7 @@ public class RDMBSConnector {
     public List<CoordinatedTask> getAllAssignedIncompleteTasks() throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.GET_ALL_ASSIGNED_INCOMPLETE_TASKS)) {
+                GET_ALL_ASSIGNED_INCOMPLETE_TASKS)) {
             return executeQuery(preparedStatement);
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
@@ -272,7 +304,7 @@ public class RDMBSConnector {
     public void addTaskIfNotExist(String taskName) throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.ADD_TASK)) {
+                ADD_TASK)) {
             preparedStatement.setString(1, taskName);
             preparedStatement.executeUpdate();
             if (LOG.isDebugEnabled()) {
@@ -292,7 +324,7 @@ public class RDMBSConnector {
      *
      * @param tasks - List of tasks to be updated.
      */
-    public void updateAssignmentAndRunningStateToNone(Map<String, String> tasks) throws TaskCoordinationException {
+    public void updateAssignmentAndState(Map<String, String> tasks) throws TaskCoordinationException {
 
         if (tasks.isEmpty()) {
             if (LOG.isDebugEnabled()) {
@@ -301,7 +333,7 @@ public class RDMBSConnector {
             return;
         }
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.UPDATE_ASSIGNMENT_AND_RUNNING_STATE_TO_NONE)) {
+                UPDATE_ASSIGNMENT_AND_STATE)) {
             for (Map.Entry<String, String> entry : tasks.entrySet()) {
                 preparedStatement.setString(1, entry.getValue());
                 preparedStatement.setString(2, entry.getKey());
@@ -320,18 +352,25 @@ public class RDMBSConnector {
     /**
      * Updates the stat of a task.
      *
-     * @param taskName - Name of the task.
-     * @param state    - State to be updated.
+     * @param tasks - Name of the task.
+     * @param state - State to be updated.
      */
-    public void updateTaskState(String taskName, CoordinatedTask.States state) throws TaskCoordinationException {
+    public void updateTaskState(List<String> tasks, CoordinatedTask.States state) throws TaskCoordinationException {
 
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(EMPTY_LIST + " for    update assignment and state change to none if running.");
+            return;
+        }
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.UPDATE_TASK_STATE)) {
-            preparedStatement.setString(1, state.name());
-            preparedStatement.setString(2, taskName);
-            preparedStatement.executeUpdate();
+                UPDATE_TASK_STATE)) {
+            for (String task : tasks) {
+                preparedStatement.setString(1, state.name());
+                preparedStatement.setString(2, task);
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
             if (LOG.isDebugEnabled()) {
-                LOG.debug("Successfully updated the state of the the task [" + taskName + "] to [" + state + "].");
+                tasks.stream().map(task -> "Paused task [" + task + "]").forEachOrdered(LOG::debug);
             }
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
@@ -346,7 +385,7 @@ public class RDMBSConnector {
     public List<String> retrieveAllUnAssignedAndIncompleteTasks() throws TaskCoordinationException {
 
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                TaskQueryHelper.RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS)) {
+                RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS)) {
             return query(preparedStatement, "for unassigned incomplete tasks");
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);

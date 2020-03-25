@@ -85,7 +85,7 @@ public class TaskEventListener extends MemberEventListener {
         }
         String nodeId = nodeDetail.getNodeId();
         try {
-            taskStore.unAssignAndUpdateRunningTasksToNone(nodeId);
+            taskStore.unAssignAndUpdateState(nodeId);
         } catch (TaskCoordinationException e) {
             LOG.error("Error occurred while cleaning the tasks of node " + nodeId, e);
         }
@@ -127,7 +127,7 @@ public class TaskEventListener extends MemberEventListener {
             // removing the node id so that it will be resolved and assigned again in case if member removal
             // hasn't happened already or the task hasn't been captured by task cleaning event.
             // this will ensure that the task duplication doesn't occur.
-            taskStore.unAssignAndUpdateRunningTasksToNone(nodeId);
+            taskStore.unAssignAndUpdateState(nodeId);
         } catch (Throwable e) { // catching throwable so that we don't miss starting the scheduler
             LOG.error("Error occurred while cleaning the tasks of node " + nodeId, e);
         }

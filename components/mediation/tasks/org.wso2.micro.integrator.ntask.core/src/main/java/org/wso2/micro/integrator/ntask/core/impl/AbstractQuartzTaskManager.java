@@ -48,6 +48,7 @@ import org.wso2.micro.integrator.ntask.core.TaskRepository;
 import org.wso2.micro.integrator.ntask.core.TaskUtils;
 import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -56,7 +57,7 @@ import java.util.Map;
 /**
  * This class represents an abstract class implementation of TaskManager based on Quartz Scheduler.
  *
- * @see org.wso2.micro.integrator.ntask.core.TaskManager
+ * @see TaskManager
  */
 public abstract class AbstractQuartzTaskManager implements TaskManager {
 
@@ -86,7 +87,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    public TaskRepository getTaskRepository() {
+    protected TaskRepository getTaskRepository() {
         return taskRepository;
     }
 
@@ -98,7 +99,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         return this.getTaskRepository().getTenantId();
     }
 
-    public String getTaskType() {
+    protected String getTaskType() {
         return this.getTaskRepository().getTasksType();
     }
 
@@ -164,11 +165,11 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    protected String getTenantTaskGroup() {
+    private String getTenantTaskGroup() {
         return "TENANT_" + this.getTenantId() + "_TYPE_" + this.getTaskType();
     }
 
-    private JobDataMap getJobDataMapFromTaskInfo(org.wso2.micro.integrator.ntask.core.TaskInfo taskInfo) {
+    private JobDataMap getJobDataMapFromTaskInfo(TaskInfo taskInfo) {
         JobDataMap dataMap = new JobDataMap();
         dataMap.put(TaskConstants.TASK_CLASS_NAME, taskInfo.getTaskClass());
         dataMap.put(TaskConstants.TASK_PROPERTIES, taskInfo.getProperties());
@@ -187,13 +188,13 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
     }
 
     protected synchronized void scheduleLocalTask(String taskName) throws TaskException {
-        boolean paused = org.wso2.micro.integrator.ntask.core.TaskUtils
-                .isTaskPaused(this.getTaskRepository(), taskName);
+        boolean paused = TaskUtils.isTaskPaused(this.getTaskRepository(), taskName);
         this.scheduleLocalTask(taskName, paused);
     }
 
     private synchronized void scheduleLocalTask(String taskName, boolean paused) throws TaskException {
-        org.wso2.micro.integrator.ntask.core.TaskInfo taskInfo = this.getTaskRepository().getTask(taskName);
+
+        TaskInfo taskInfo = this.getTaskRepository().getTask(taskName);
         String taskGroup = this.getTenantTaskGroup();
         if (taskInfo == null) {
             throw new TaskException("Non-existing task for scheduling with name: " + taskName,
@@ -206,8 +207,8 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         Class<? extends Job> jobClass = taskInfo.getTriggerInfo().isDisallowConcurrentExecution() ?
                 NonConcurrentTaskQuartzJobAdapter.class :
                 TaskQuartzJobAdapter.class;
-        JobDetail job = JobBuilder.newJob(jobClass).withIdentity(taskName, taskGroup)
-                .usingJobData(this.getJobDataMapFromTaskInfo(taskInfo)).build();
+        JobDetail job = JobBuilder.newJob(jobClass).withIdentity(taskName, taskGroup).usingJobData(
+                this.getJobDataMapFromTaskInfo(taskInfo)).build();
         Trigger trigger = this.getTriggerFromInfo(taskName, taskGroup, taskInfo.getTriggerInfo());
         try {
             this.getScheduler().scheduleJob(job, trigger);
@@ -220,8 +221,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    private Trigger getTriggerFromInfo(String taskName, String taskGroup,
-                                       org.wso2.micro.integrator.ntask.core.TaskInfo.TriggerInfo triggerInfo)
+    private Trigger getTriggerFromInfo(String taskName, String taskGroup, TaskInfo.TriggerInfo triggerInfo)
             throws TaskException {
         TriggerBuilder<Trigger> triggerBuilder = TriggerBuilder.newTrigger().withIdentity(taskName, taskGroup);
         if (triggerInfo.getStartTime() == null) {
@@ -248,11 +248,10 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 
     protected synchronized void rescheduleLocalTask(String taskName) throws TaskException {
         String taskGroup = this.getTenantTaskGroup();
-        org.wso2.micro.integrator.ntask.core.TaskInfo taskInfo = this.getTaskRepository().getTask(taskName);
+        TaskInfo taskInfo = this.getTaskRepository().getTask(taskName);
         Trigger trigger = this.getTriggerFromInfo(taskName, taskGroup, taskInfo.getTriggerInfo());
         try {
-            boolean paused = org.wso2.micro.integrator.ntask.core.TaskUtils
-                    .isTaskPaused(this.getTaskRepository(), taskName);
+            boolean paused = TaskUtils.isTaskPaused(this.getTaskRepository(), taskName);
             Date resultDate = this.getScheduler().rescheduleJob(new TriggerKey(taskName, taskGroup), trigger);
             if (resultDate == null) {
                 /* do normal schedule */
@@ -283,12 +282,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    protected synchronized boolean isLocalTaskScheduled(String taskName) throws TaskException {
-        String taskGroup = this.getTenantTaskGroup();
-        return this.containsLocalTask(taskName, taskGroup);
-    }
-
-    protected boolean containsLocalTask(String taskName, String taskGroup) throws TaskException {
+    private boolean containsLocalTask(String taskName, String taskGroup) throws TaskException {
         try {
             return this.getScheduler().checkExists(new JobKey(taskName, taskGroup));
         } catch (SchedulerException e) {
@@ -296,16 +290,14 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    private CronScheduleBuilder getCronScheduleBuilder(
-            org.wso2.micro.integrator.ntask.core.TaskInfo.TriggerInfo triggerInfo) throws TaskException {
+    private CronScheduleBuilder getCronScheduleBuilder(TaskInfo.TriggerInfo triggerInfo) throws TaskException {
         CronScheduleBuilder cb = CronScheduleBuilder.cronSchedule(triggerInfo.getCronExpression());
         cb = this.handleCronScheduleMisfirePolicy(triggerInfo, cb);
         return cb;
     }
 
-    private CronScheduleBuilder handleCronScheduleMisfirePolicy(
-            org.wso2.micro.integrator.ntask.core.TaskInfo.TriggerInfo triggerInfo, CronScheduleBuilder cb)
-            throws TaskException {
+    private CronScheduleBuilder handleCronScheduleMisfirePolicy(TaskInfo.TriggerInfo triggerInfo,
+                                                                CronScheduleBuilder cb) throws TaskException {
         switch (triggerInfo.getMisfirePolicy()) {
         case DEFAULT:
             return cb;
@@ -322,22 +314,22 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    private SimpleScheduleBuilder getSimpleScheduleBuilder(
-            org.wso2.micro.integrator.ntask.core.TaskInfo.TriggerInfo triggerInfo) throws TaskException {
+    private SimpleScheduleBuilder getSimpleScheduleBuilder(TaskInfo.TriggerInfo triggerInfo) throws TaskException {
         SimpleScheduleBuilder scheduleBuilder = null;
         if (triggerInfo.getRepeatCount() == -1) {
             scheduleBuilder = SimpleScheduleBuilder.simpleSchedule().repeatForever();
         } else if (triggerInfo.getRepeatCount() > 0) {
             scheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withRepeatCount(triggerInfo.getRepeatCount());
         }
-        scheduleBuilder = scheduleBuilder.withIntervalInMilliseconds(triggerInfo.getIntervalMillis());
-        scheduleBuilder = this.handleSimpleScheduleMisfirePolicy(triggerInfo, scheduleBuilder);
+        if (scheduleBuilder != null) {
+            scheduleBuilder = scheduleBuilder.withIntervalInMilliseconds(triggerInfo.getIntervalMillis());
+            scheduleBuilder = this.handleSimpleScheduleMisfirePolicy(triggerInfo, scheduleBuilder);
+        }
         return scheduleBuilder;
     }
 
-    private SimpleScheduleBuilder handleSimpleScheduleMisfirePolicy(
-            org.wso2.micro.integrator.ntask.core.TaskInfo.TriggerInfo triggerInfo, SimpleScheduleBuilder sb)
-            throws TaskException {
+    private SimpleScheduleBuilder handleSimpleScheduleMisfirePolicy(TaskInfo.TriggerInfo triggerInfo,
+                                                                    SimpleScheduleBuilder sb) throws TaskException {
         switch (triggerInfo.getMisfirePolicy()) {
         case DEFAULT:
             return sb;
@@ -372,7 +364,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 
         private String name;
 
-        public TaskTriggerListener(String name) {
+        TaskTriggerListener(String name) {
             this.name = name;
         }
 
@@ -383,7 +375,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 
         @Override
         public void triggerFired(Trigger trigger, JobExecutionContext jobExecutionContext) {
-
+            // do nothing here
         }
 
         @Override
@@ -393,7 +385,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 
         @Override
         public void triggerMisfired(Trigger trigger) {
-
+            // do nothing here
         }
 
         @Override
@@ -405,7 +397,8 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
                     String taskName = trigger.getJobKey().getName();
                     TaskUtils.setTaskFinished(getTaskRepository(), taskName, true);
                     if (getAllCoordinatedTasksDeployed().contains(taskName)) {
-                        taskStore.updateTaskState(taskName, CoordinatedTask.States.COMPLETED);
+                        taskStore.updateTaskState(Collections.singletonList(taskName),
+                                                  CoordinatedTask.States.COMPLETED);
                     }
                 } catch (TaskException | TaskCoordinationException e) {
                     log.error("Error in Finishing Task [" + trigger.getJobKey().getName() + "]: " + e.getMessage(), e);

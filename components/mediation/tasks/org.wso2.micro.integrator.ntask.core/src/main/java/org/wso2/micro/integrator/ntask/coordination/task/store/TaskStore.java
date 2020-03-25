@@ -22,6 +22,7 @@ import org.wso2.micro.integrator.ntask.coordination.TaskCoordinationException;
 import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
 import org.wso2.micro.integrator.ntask.coordination.task.store.connector.RDMBSConnector;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
@@ -46,20 +47,19 @@ public class TaskStore {
      *
      * @param tasks - List of tasks which needs to be updated.
      */
-    public void unAssignAndUpdateRunningTasksToNone(List<String> tasks) throws TaskCoordinationException {
+    public void unAssignAndUpdateState(List<String> tasks) throws TaskCoordinationException {
 
-        rdmbsConnector.unAssignAndUpdateRunningStateToNone(tasks);
+        rdmbsConnector.unAssignAndUpdateState(tasks);
     }
 
     /**
-     * For all the tasks which has this destined node id , sets it to null and update the task state to none if it was
-     * in a running state.
+     * Sets the destined node id to null and state to none if running or to paused if deactivated.
      *
-     * @param nodeId - Node Id.
+     * @param nodeId - Node Id which needs to be set to null.
      */
-    public void unAssignAndUpdateRunningTasksToNone(String nodeId) throws TaskCoordinationException {
+    public void unAssignAndUpdateState(String nodeId) throws TaskCoordinationException {
 
-        rdmbsConnector.unAssignAndUpdateRunningStateToNone(nodeId);
+        rdmbsConnector.unAssignAndUpdateState(nodeId);
     }
 
     /**
@@ -93,6 +93,30 @@ public class TaskStore {
     public void deleteTasks(List<String> coordinatedTasks) throws TaskCoordinationException {
 
         rdmbsConnector.deleteTasks(coordinatedTasks);
+    }
+
+    /**
+     * Activates the task.
+     *
+     * @param taskName - Name of the task.
+     */
+    public void activateTask(String taskName) throws TaskCoordinationException {
+
+        updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.ACTIVATED);
+    }
+
+    /**
+     * Deactivates the task.
+     *
+     * @param taskName - Name of the task.
+     */
+    public void deactivateTask(String taskName) throws TaskCoordinationException {
+
+        updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.DEACTIVATED);
+    }
+
+    public CoordinatedTask.States getTaskState(String taskName) throws TaskCoordinationException {
+        return rdmbsConnector.getTaskState(taskName);
     }
 
     /**
@@ -130,20 +154,20 @@ public class TaskStore {
      *
      * @param tasks - List of tasks to be updated.
      */
-    public void updateAssignmentAndRunningStateToNone(Map<String, String> tasks) throws TaskCoordinationException {
+    public void updateAssignmentAndState(Map<String, String> tasks) throws TaskCoordinationException {
 
-        rdmbsConnector.updateAssignmentAndRunningStateToNone(tasks);
+        rdmbsConnector.updateAssignmentAndState(tasks);
     }
 
     /**
      * Updates the stat of a task.
      *
-     * @param taskName - Name of the task.
-     * @param state    - State to be updated.
+     * @param tasks - Names of the task.
+     * @param state - State to be updated.
      */
-    public void updateTaskState(String taskName, CoordinatedTask.States state) throws TaskCoordinationException {
+    public void updateTaskState(List<String> tasks, CoordinatedTask.States state) throws TaskCoordinationException {
 
-        rdmbsConnector.updateTaskState(taskName, state);
+        rdmbsConnector.updateTaskState(tasks, state);
     }
 
     /**

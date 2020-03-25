@@ -45,25 +45,19 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
 
     private static final Log logger = LogFactory.getLog(NTaskTaskManager.class.getName());
 
-    /**
-     * TODO ClusterGroupCommunicator NTASK_P2P_COMM_EXECUTOR is private in the carbon-commons-4.4.1 release, 
-     * this should be changed to use ClusterGroupCommunicator.NTASK_P2P_COMM_EXECUTOR.
-     */
-    private static final String NTASK_P2P_COMM_EXECUTOR = "__NTASK_P2P_COMM_EXECUTOR__";
-
     private String name;
 
     private boolean initialized = false;
 
     private org.wso2.micro.integrator.ntask.core.TaskManager taskManager;
 
-    private final Map<String, Object> properties = new HashMap<String, Object>(5);
+    private final Map<String, Object> properties = new HashMap<>(5);
 
-    protected final Properties configProperties = new Properties();
+    private final Properties configProperties = new Properties();
 
-    private final List<TaskManagerObserver> observers = new ArrayList<TaskManagerObserver>();
+    private final List<TaskManagerObserver> observers = new ArrayList<>();
 
-    private final List<TaskDescription> taskQueue = new ArrayList<TaskDescription>();
+    private final List<TaskDescription> taskQueue = new ArrayList<>();
 
     private final Object taskQueueLock = new Object();
 
@@ -205,7 +199,7 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
                     logger.warn("#pause Could not pause task [" + taskName + "]. Task manager is not available.");
                     return false;
                 }
-                taskManager.pauseTask(taskName);
+                taskManager.handleTaskPause(taskName);
             }
             return true;
         } catch (Exception e) {
@@ -227,7 +221,8 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
                 }
                 List<TaskInfo> taskList = taskManager.getAllTasks();
                 for (TaskInfo taskInfo : taskList) {
-                    taskManager.pauseTask(taskInfo.getName());
+                    String taskName = taskInfo.getName();
+                    taskManager.handleTaskPause(taskName);
                 }
             }
             return true;
@@ -251,7 +246,7 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
                     logger.warn("#resume Could not resume task [" + taskName + "]. Task manager is not available.");
                     return false;
                 }
-                taskManager.resumeTask(taskName);
+                taskManager.handleTaskResume(taskName);
             }
         } catch (Exception e) {
             logger.error("Cannot resume task [" + taskName + "]. Error: " + e.getLocalizedMessage(), e);
@@ -273,7 +268,7 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
                 }
                 List<TaskInfo> taskList = taskManager.getAllTasks();
                 for (TaskInfo taskInfo : taskList) {
-                    taskManager.resumeTask(taskInfo.getName());
+                    taskManager.handleTaskResume(taskInfo.getName());
                 }
             }
             return true;
@@ -574,8 +569,7 @@ public class NTaskTaskManager implements TaskManager, TaskServiceObserver, Serve
                 return false;
             }
             try {
-                return taskManager.getTaskState(taskName)
-                                  .equals(org.wso2.micro.integrator.ntask.core.TaskManager.TaskState.PAUSED);
+                return taskManager.isDeactivated(taskName);
             } catch (Exception e) {
                 /*
                  * This fix was given to avoid error messages printing
