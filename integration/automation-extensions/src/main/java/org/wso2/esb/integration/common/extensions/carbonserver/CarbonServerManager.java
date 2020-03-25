@@ -69,6 +69,8 @@ public class CarbonServerManager {
     private String scriptName;
     private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
     private int managementPort;
+    private int retryLimit = 3;
+    private int retryAttempt = 0;
 
     public CarbonServerManager(AutomationContext context) {
         this.automationContext = context;
@@ -148,7 +150,17 @@ public class CarbonServerManager {
             waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, TimeUnit.SECONDS);
 
             if (!isRemotePortInUse("localhost", managementPort)) {
-                throw new RuntimeException("Server initialization failed");
+                if (retryAttempt < retryLimit) {
+                    retryAttempt++;
+                    log.info("Restarting server due to startup failure. Retry attempt: " + retryAttempt);
+                    serverShutdown(portOffset, true);
+                    startServerUsingCarbonHome(carbonHome, commandMap);
+                } else {
+                    retryAttempt = 0;
+                    throw new RuntimeException("Server initialization failed");
+                }
+            } else {
+                retryAttempt = 0;
             }
 
             log.info("Server started successfully ...");
