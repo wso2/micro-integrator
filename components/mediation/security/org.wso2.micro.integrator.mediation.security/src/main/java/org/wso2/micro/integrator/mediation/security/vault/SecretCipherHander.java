@@ -19,6 +19,7 @@ package org.wso2.micro.integrator.mediation.security.vault;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.SynapseException;
 
 /**
  * Entry point for manage secrets
@@ -29,6 +30,7 @@ class SecretCipherHander {
 
 	/* Root Secret Repository */
 	private RegistrySecretRepository parentRepository = new RegistrySecretRepository();
+	private FileSecretRepository fileSecretRepository = new FileSecretRepository();
 
 	SecretCipherHander(org.apache.synapse.MessageContext synCtx) {
 		super();
@@ -46,4 +48,20 @@ class SecretCipherHander {
 		return parentRepository.getSecret(alias);
 	}
 
+	public String getSecret(String alias, SecretSrcData secretSrcData) {
+
+		if (VaultType.DOCKER.equals(secretSrcData.getVaultType()) || VaultType.FILE.equals(secretSrcData.getVaultType())) {
+			String resolvedAlias = secretSrcData.getSecretRoot() + alias;
+			if (secretSrcData.isEncrypted()) {
+				return fileSecretRepository.getSecret(resolvedAlias);
+			}
+			return fileSecretRepository.getPlainTextSecret(resolvedAlias);
+		} else if (VaultType.REG.equals(secretSrcData.getVaultType())) {
+			// For registry type we only support plain text
+			return parentRepository.getSecret(alias);
+		} else {
+			// Will never reach here unless customized
+			throw new SynapseException("Unknown secret type : " + secretSrcData.getVaultType().toString());
+		}
+	}
 }

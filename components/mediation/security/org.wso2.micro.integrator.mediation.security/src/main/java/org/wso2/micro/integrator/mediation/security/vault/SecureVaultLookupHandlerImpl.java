@@ -58,7 +58,7 @@ public class SecureVaultLookupHandlerImpl implements SecureVaultLookupHandler {
 	 * .LookupType)
 	 */
 	@Override
-	public String evaluate(String aliasPasword, MessageContext synCtx) {
+	public String evaluate(String aliasPasword, SecretSrcData secretSrcData, MessageContext synCtx) {
 		SynapseConfiguration synapseConfiguration = synCtx.getConfiguration();
 		Map<String, Object> decryptedCacheMap = synapseConfiguration.getDecryptedCacheMap();
 		if (decryptedCacheMap.containsKey(aliasPasword)) {
@@ -74,21 +74,32 @@ public class SecureVaultLookupHandlerImpl implements SecureVaultLookupHandler {
 					return cacheContext.getDecryptedValue();
 				} else {
 					decryptedCacheMap.remove(aliasPasword);
-					return vaultLookup(aliasPasword, synCtx, decryptedCacheMap);
+					return vaultLookup(aliasPasword, secretSrcData, synCtx, decryptedCacheMap);
 				}
 			} else {
-				return vaultLookup(aliasPasword, synCtx, decryptedCacheMap);
+				return vaultLookup(aliasPasword, secretSrcData, synCtx, decryptedCacheMap);
 			}
 		} else {
-			return vaultLookup(aliasPasword, synCtx, decryptedCacheMap);
+			return vaultLookup(aliasPasword, secretSrcData, synCtx, decryptedCacheMap);
 		}
 	}
 
-	private String vaultLookup(String aliasPasword, MessageContext synCtx,
-							   Map<String, Object> decryptedCacheMap) {
+	@Override
+	public String evaluate(String aliasPasword, MessageContext synCtx) {
+		return evaluate(aliasPasword, new SecretSrcData(), synCtx);
+	}
+
+	/**
+	 * Return the decrypted secret value
+	 * @param aliasPasword Password alias
+	 * @param secretSrcData SecretSrcData object
+	 * @param synCtx synapse message context
+	 * @param decryptedCacheMap decrypted cache map from the message context
+	 * */
+	private String vaultLookup(String aliasPasword, SecretSrcData secretSrcData, MessageContext synCtx, Map<String, Object> decryptedCacheMap) {
 		synchronized (decryptlockObj) {
 			SecretCipherHander secretManager = new SecretCipherHander(synCtx);
-			String decryptedValue = secretManager.getSecret(aliasPasword);
+			String decryptedValue = secretManager.getSecret(aliasPasword, secretSrcData);
 			if (decryptedCacheMap == null) {
 				return null;
 			}

@@ -29,6 +29,7 @@ import org.jaxen.FunctionCallException;
 import org.jaxen.function.StringFunction;
 import org.wso2.micro.integrator.mediation.security.vault.SecureVaultLookupHandler;
 import org.wso2.micro.integrator.mediation.security.vault.SecureVaultLookupHandlerImpl;
+import org.wso2.micro.integrator.mediation.security.vault.SecretSrcData;
 
 /**
  * Implements the XPath extension function synapse:vault-lookup(scope,prop-name)
@@ -79,8 +80,7 @@ public class VaultLookupFunction implements Function {
 		SecureVaultLookupHandler mediationSecurity;
 		try {
 			mediationSecurity = SecureVaultLookupHandlerImpl.getDefaultSecurityService();
-			String val = mediationSecurity.evaluate(argOne, synCtx);
-			return val;
+			return mediationSecurity.evaluate(argOne, getSecretSourceInfo(args), synCtx);
 		} catch (Exception msg) {
 			throw new FunctionCallException(msg);
 		}
@@ -94,6 +94,16 @@ public class VaultLookupFunction implements Function {
 		if (log.isDebugEnabled()) {
 			log.debug(msg);
 		}
+	}
+
+	private SecretSrcData getSecretSourceInfo (List args) {
+		// since this vault-lookup function accepts 3 arguments.
+	    if (args.size() == 3) {
+			String secretType = args.get(1).toString();
+			boolean isEncrypted = Boolean.parseBoolean(args.get(2).toString());
+			return new SecretSrcData(secretType, isEncrypted);
+		}
+		return new SecretSrcData();
 	}
 
 }
