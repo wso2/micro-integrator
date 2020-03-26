@@ -29,6 +29,7 @@ import org.wso2.carbon.inbound.endpoint.protocol.http.InboundHttpListener;
 import org.wso2.carbon.inbound.endpoint.protocol.https.InboundHttpsListener;
 import org.wso2.carbon.inbound.endpoint.protocol.kafka.KAFKAProcessor;
 import org.wso2.carbon.inbound.endpoint.protocol.mqtt.MqttListener;
+import org.wso2.carbon.inbound.endpoint.protocol.nats.InboundNatsListener;
 import org.wso2.carbon.inbound.endpoint.protocol.rabbitmq.RabbitMQListener;
 import org.wso2.carbon.inbound.endpoint.protocol.securewebsocket.InboundSecureWebsocketListener;
 import org.wso2.carbon.inbound.endpoint.protocol.websocket.InboundWebsocketListener;
@@ -42,7 +43,7 @@ import org.wso2.carbon.inbound.endpoint.protocol.jms.JMSProcessor;
  */
 public class InboundRequestProcessorFactoryImpl implements InboundRequestProcessorFactory {
 
-    public static enum Protocols {jms, file, http, https, hl7, kafka, mqtt, rabbitmq, ws, wss, grpc}
+    public static enum Protocols {jms, file, http, https, hl7, kafka, mqtt, rabbitmq, ws, wss, grpc, nats}
 
     /**
      * return underlying Request Processor Implementation according to protocol
@@ -77,6 +78,8 @@ public class InboundRequestProcessorFactoryImpl implements InboundRequestProcess
                 inboundRequestProcessor = new RabbitMQListener(params);
             } else if (Protocols.grpc.toString().equals(protocol)) {
                 inboundRequestProcessor = new InboundGRPCListener(params);
+            } else if (Protocols.nats.toString().equals(protocol)) {
+                inboundRequestProcessor = new InboundNatsListener(params);
             }
         } else if (params.getClassImpl() != null) {
             if (GenericInboundListener.isListeningInboundEndpoint(params)) {
