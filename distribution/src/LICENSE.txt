@@ -32,7 +32,7 @@ org.wso2.micro.integrator.websocket.transport_1.2.0.m2.jar                      
 org.wso2.carbon.mediator.smooks_4.7.37.jar                                                          bundle         apache2
 arq_1.0.0.wso2v1.jar                                                                                bundle         bsd
 icu4j-3.8.jar                                                                                       jarinbundle    icu
-axis2-transport-jms_2.0.0.wso2v43.jar                                                               bundle         apache2
+axis2-transport-jms_2.0.0.wso2v44.jar                                                               bundle         apache2
 woden_1.0.0.M9-wso2v1.jar                                                                           bundle         apache2
 org.eclipse.equinox.launcher_1.3.200.v20160318-1642.jar                                             bundle         epl1
 org.apache.felix.gogo.runtime_0.10.0.v201209301036.jar                                              bundle         apache2
@@ -41,7 +41,7 @@ jongo_1.4.0.wso2v1.jar                                                          
 org.wso2.micro.integrator.inbound.endpoint_1.2.0.m2.jar                                             bundle         apache2
 org.eclipse.equinox.concurrent_1.1.0.v20130327-1442.jar                                             bundle         epl1
 httpcore-nio_4.3.3.wso2v4.jar                                                                       bundle         apache2
-axis2-transport-xmpp_2.0.0.wso2v43.jar                                                              bundle         apache2
+axis2-transport-xmpp_2.0.0.wso2v44.jar                                                              bundle         apache2
 org.eclipse.equinox.p2.director.app_1.0.300.v20150129-0838.jar                                      bundle         epl1
 org.wso2.micro.integrator.dataservices.common_1.2.0.m2.jar                                          bundle         apache2
 axis2_1.6.1.wso2v43.jar                                                                             bundle         apache2
@@ -64,7 +64,7 @@ org.eclipse.equinox.common_3.8.0.v20160509-1230.jar                             
 org.wso2.carbon.relay.mediators.builder_4.7.37.jar                                                  bundle         apache2
 commons-text_1.6.0.wso2v1.jar                                                                       bundle         apache2
 json-schema-validator-all_2.2.6.wso2v7.jar                                                          bundle         apache2
-axis2-transport-tcp_2.0.0.wso2v43.jar                                                               bundle         apache2
+axis2-transport-tcp_2.0.0.wso2v44.jar                                                               bundle         apache2
 rampart-policy_1.6.1.wso2v39.jar                                                                    bundle         apache2
 tomcat-jsp-api_9.0.21.wso2v1.jar                                                                    bundle         apache2
 org.eclipse.core.contenttype_3.4.200.v20130326-1255.jar                                             bundle         epl1
@@ -104,7 +104,7 @@ org.wso2.carbon.identity.entitlement.stub_4.7.12.jar                            
 rampart-trust_1.6.1.wso2v39.jar                                                                     bundle         apache2
 js_1.7.0.R4wso2v1.jar                                                                               bundle         mpl10
 jaxb_2.2.5.wso2v1.jar                                                                               bundle         cddl1
-axis2-transport-rabbitmq-amqp_2.0.0.wso2v43.jar                                                     bundle         apache2
+axis2-transport-rabbitmq-amqp_2.0.0.wso2v44.jar                                                     bundle         apache2
 jackson-core_2.9.8.wso2v1.jar                                                                       bundle         apache2
 org.wso2.micro.integrator.ntask.core_1.2.0.m2.jar                                                   bundle         apache2
 org.wso2.orbit.javax.transaction.jta_1.1.0.wso2v2.jar                                               bundle         apache2
@@ -123,7 +123,7 @@ org.wso2.micro.integrator.dataservices.odata.endpoint_1.2.0.m2.jar              
 org.eclipse.equinox.p2.directorywatcher_1.1.0.v20131211-1531.jar                                    bundle         epl1
 poi_3.17.0.wso2v1.jar                                                                               bundle         apache2
 wsdl4j_1.6.2.wso2v4.jar                                                                             bundle         apache2
-axis2-transport-mail_2.0.0.wso2v43.jar                                                              bundle         apache2
+axis2-transport-mail_2.0.0.wso2v44.jar                                                              bundle         apache2
 hapi_2.1.0.wso2v1.jar                                                                               bundle         mpl10
 org.eclipse.equinox.p2.metadata_2.2.0.v20131211-1531.jar                                            bundle         epl1
 org.wso2.micro.integrator.management.apis_1.2.0.m2.jar                                              bundle         apache2
@@ -161,7 +161,7 @@ org.eclipse.equinox.p2.repository_2.3.0.v20131211-1531.jar                      
 org.eclipse.ecf.identity_3.2.0.v20130604-1622.jar                                                   bundle         epl1
 org.wso2.micro.integrator.ndatasource.rdbms_1.2.0.m2.jar                                            bundle         apache2
 org.ops4j.pax.logging.pax-logging-log4j2_1.11.0.jar                                                 bundle         apache2
-axis2-transport-mqtt_2.0.0.wso2v43.jar                                                              bundle         apache2
+axis2-transport-mqtt_2.0.0.wso2v44.jar                                                              bundle         apache2
 smooks_1.5.1.wso2v1.jar                                                                             bundle         apache2
 org.wso2.micro.integrator.ndatasource.core_1.2.0.m2.jar                                             bundle         apache2
 org.apache.velocity_1.7.0.jar                                                                       bundle         apache2
@@ -177,7 +177,7 @@ org.wso2.micro.integrator.core_1.2.0.m2.jar                                     
 org.eclipse.ecf.provider.filetransfer.httpclient_4.0.200.v20120319-0616.jar                         bundle         epl1
 org.wso2.micro.integrator.coordination_1.2.0.m2.jar                                                 bundle         apache2
 org.wso2.carbon.transports.sap_4.7.33.jar                                                           bundle         apache2
-axis2-transport-udp_2.0.0.wso2v43.jar                                                               bundle         apache2
+axis2-transport-udp_2.0.0.wso2v44.jar                                                               bundle         apache2
 libthrift_0.8.0.wso2v1.jar                                                                          bundle         apache2
 org.objenesis_2.1.0.jar                                                                             bundle         apache2
 commons-collections4_4.1.0.wso2v1.jar                                                               bundle         apache2
