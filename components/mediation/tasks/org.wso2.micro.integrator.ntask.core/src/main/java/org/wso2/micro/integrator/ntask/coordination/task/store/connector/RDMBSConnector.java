@@ -273,8 +273,10 @@ public class RDMBSConnector {
                 RETRIEVE_TASK_STATE)) {
             preparedStatement.setString(1, taskName);
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                resultSet.next();
-                return CoordinatedTask.States.valueOf(resultSet.getString(TASK_STATE));
+                if (resultSet.next()) {
+                    return CoordinatedTask.States.valueOf(resultSet.getString(TASK_STATE));
+                }
+                return null;
             }
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
