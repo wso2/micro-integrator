@@ -841,6 +841,11 @@ public class DBDeployer extends AbstractDeployer {
 			/* save the data service object in the AxisService */
 			axisService.addParameter(DBConstants.DATA_SERVICE_OBJECT, dataService);
 
+			String swaggerResourcePath = dataService.getSwaggerResourcePath();
+			if (swaggerResourcePath != null && !swaggerResourcePath.isEmpty()) {
+				axisService.addParameter(DBConstants.SWAGGER_RESOURCE_PATH, swaggerResourcePath);
+			}
+
 			/* set service description */
 			axisService.setDocumentation(dataService.getDescription());
 

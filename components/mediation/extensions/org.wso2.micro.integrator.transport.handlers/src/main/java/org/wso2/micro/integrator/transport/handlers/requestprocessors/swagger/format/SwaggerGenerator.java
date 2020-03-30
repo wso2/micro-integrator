@@ -18,22 +18,19 @@
 package org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format;
 
 import org.apache.axiom.ext.io.StreamCopyException;
-import org.apache.axiom.om.OMNode;
-import org.apache.axiom.om.OMText;
 import org.apache.axiom.util.blob.BlobOutputStream;
 import org.apache.axis2.AxisFault;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
 import org.apache.synapse.config.SynapseConfigUtils;
-import org.apache.synapse.config.SynapseConfiguration;
-import org.apache.synapse.registry.Registry;
 import org.apache.synapse.rest.API;
 import org.apache.synapse.rest.version.DefaultStrategy;
 import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
+import org.wso2.micro.integrator.transport.handlers.utils.SwaggerUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -96,12 +93,10 @@ public class SwaggerGenerator {
      * Function to extract swagger definition from the registry
      *
      * @param api API object
-     * @param request CarbonHttpRequest which contains the request URI info
      * @return null if registry content unavailable or empty, otherwise relevant content
      */
-    protected String retrieveFromRegistry(API api, CarbonHttpRequest request) {
+    protected String retrieveAPISwaggerFromRegistry(API api) {
 
-        String defString = null;
         String resourcePath = api.getSwaggerResourcePath();
 
         if (resourcePath == null) {
@@ -117,17 +112,7 @@ public class SwaggerGenerator {
 
         }
 
-        // Retrieve from registry
-        SynapseConfiguration synapseConfig =
-                SynapseConfigUtils.getSynapseConfiguration(Constants.SUPER_TENANT_DOMAIN_NAME);
-        Registry registry = synapseConfig.getRegistry();
-        OMNode regContent = registry.lookup(resourcePath);
-
-        if (regContent instanceof OMText) {
-            defString = ((OMText) regContent).getText();
-        }
-
-        return defString;
+        return SwaggerUtils.fetchSwaggerFromRegistry(resourcePath);
     }
 
     /**

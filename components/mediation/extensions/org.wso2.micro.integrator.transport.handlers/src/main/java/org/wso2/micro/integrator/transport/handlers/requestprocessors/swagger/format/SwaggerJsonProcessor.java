@@ -28,11 +28,14 @@ import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
 import org.wso2.micro.core.transports.HttpGetRequestProcessor;
+import org.wso2.micro.integrator.transport.handlers.utils.SwaggerProcessorConstants;
+import org.wso2.micro.integrator.transport.handlers.utils.SwaggerUtils;
 
 /**
  * Provides Swagger definition for the API in JSON format.
  */
 public class SwaggerJsonProcessor extends SwaggerGenerator implements HttpGetRequestProcessor {
+
     Log log = LogFactory.getLog(SwaggerJsonProcessor.class);
     /**
      * Process incoming GET request and update the response with the swagger definition for the requested API
@@ -42,24 +45,42 @@ public class SwaggerJsonProcessor extends SwaggerGenerator implements HttpGetReq
      * @param configurationContext axis2 configuration context
      * @throws Exception if any exception occurred during definition generation
      */
-    public void process(CarbonHttpRequest request, CarbonHttpResponse response,
-                        ConfigurationContext configurationContext) throws AxisFault {
+    @Override
+    public void process(CarbonHttpRequest request, CarbonHttpResponse response, ConfigurationContext configurationContext) throws Exception {
         API api = getAPIFromSynapseConfig(request);
-
-        if (api == null) {
-            handleException(request.getRequestURI());
+        String responseString = null;
+        if (api != null) {
+            responseString = processAPI(api);
+        } else if (request.getContextPath().contains("/" + SwaggerProcessorConstants.SERVICES_PREFIX)) {
+            responseString = SwaggerUtils.takeDataServiceSwagger(request.getRequestURI(), configurationContext, true);
         } else {
-            String responseString = retrieveFromRegistry(api, request);
+            handleException(request.getRequestURI());
+        }
+
+        if (responseString != null && !responseString.isEmpty()) {
+            updateResponse(response, responseString, SwaggerConstants.CONTENT_TYPE_JSON);
+        } else {
+            handleException(request.getRequestURI());
+        }
+    }
+
+    // fetch / generate swagger definition for an API
+    private String processAPI(API api) throws AxisFault {
+        MIServerConfig serverConfig = new MIServerConfig();
+        String responseString;
+        try {
+            responseString = retrieveAPISwaggerFromRegistry(api);
             if (responseString == null) {
                 if (log.isDebugEnabled()) {
                     log.debug("Generating swagger definition for: " + api.getName());
                 }
                 JSONObject jsonDefinition =
-                        new JSONObject(new GenericApiObjectDefinition(api, new MIServerConfig()).getDefinitionMap());
+                        new JSONObject(new GenericApiObjectDefinition(api, serverConfig).getDefinitionMap());
                 responseString = jsonDefinition.toString();
             }
-
-            updateResponse(response, responseString, SwaggerConstants.CONTENT_TYPE_JSON);
+            return responseString;
+        } catch (AxisFault e) {
+            throw new AxisFault("Error occurred while retrieving swagger definition from registry", e);
         }
     }
 }

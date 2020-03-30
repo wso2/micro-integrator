@@ -186,6 +186,16 @@ public class DataServiceFactory {
                                                                        itr.next()));
             }
 
+            String swaggerLocation = dbsElement.getAttributeValue(new QName(DBSFields.SWAGGER_LOCATION));
+
+            if (swaggerLocation != null && !swaggerLocation.isEmpty()) {
+                if (dataService.getResourceIds().isEmpty()) {
+                    throw new DataServiceFault("Cannot expose a swagger from a data-service which does not have any " +
+                            "resources defined");
+                }
+                dataService.setSwaggerResourcePath(swaggerLocation);
+            }
+
             /* init the data service object */
             dataService.init();
 

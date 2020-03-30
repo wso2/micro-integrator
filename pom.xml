@@ -1171,6 +1171,36 @@
                 <artifactId>sap-adapter</artifactId>
                 <version>${sap-adapter.feature.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${io.swagger.models.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${io.swagger.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${io.swagger.annotation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.dataformat.yaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax.validation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1571,6 +1601,13 @@
         <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
         <grpc.version>1.21.0</grpc.version>
         <axis2-java2wsdl.version>1.6.2</axis2-java2wsdl.version>
+        <!-- swagger feature versions -->
+        <io.swagger.models.version>1.5.23</io.swagger.models.version>
+        <io.swagger.core.version>1.5.23</io.swagger.core.version>
+        <io.swagger.annotation.version>1.5.23</io.swagger.annotation.version>
+        <jackson.dataformat.yaml.version>2.9.9</jackson.dataformat.yaml.version>
+        <javax.validation.version>1.1.0.Final</javax.validation.version>
+        <snakeyaml.version>1.25</snakeyaml.version>
     </properties>
 
     <repositories>
