@@ -1171,6 +1171,36 @@
                 <artifactId>sap-adapter</artifactId>
                 <version>${sap-adapter.feature.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-models</artifactId>
+                <version>${io.swagger.models.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-core</artifactId>
+                <version>${io.swagger.core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${io.swagger.annotation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.dataformat</groupId>
+                <artifactId>jackson-dataformat-yaml</artifactId>
+                <version>${jackson.dataformat.yaml.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>javax.validation</groupId>
+                <artifactId>validation-api</artifactId>
+                <version>${javax.validation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.yaml</groupId>
+                <artifactId>snakeyaml</artifactId>
+                <version>${snakeyaml.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1257,8 +1287,8 @@
         <carbon.kernel.version>4.5.0</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.5.0,5.0.0)</carbon.kernel.imp.pkg.version>
 
-        <synapse.version>2.1.7-wso2v148</synapse.version>
-        <carbon.mediation.version>4.7.36</carbon.mediation.version>
+        <synapse.version>2.1.7-wso2v149</synapse.version>
+        <carbon.mediation.version>4.7.38</carbon.mediation.version>
         <carbon.crypto.version>1.1.3</carbon.crypto.version>
         <carbon.crypto.api.imp.pkg.version.range>[1.1.0,1.2.0)</carbon.crypto.api.imp.pkg.version.range>
         <carbon.data.version>4.5.2</carbon.data.version>
@@ -1571,6 +1601,13 @@
         <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>
         <grpc.version>1.21.0</grpc.version>
         <axis2-java2wsdl.version>1.6.2</axis2-java2wsdl.version>
+        <!-- swagger feature versions -->
+        <io.swagger.models.version>1.5.23</io.swagger.models.version>
+        <io.swagger.core.version>1.5.23</io.swagger.core.version>
+        <io.swagger.annotation.version>1.5.23</io.swagger.annotation.version>
+        <jackson.dataformat.yaml.version>2.9.9</jackson.dataformat.yaml.version>
+        <javax.validation.version>1.1.0.Final</javax.validation.version>
+        <snakeyaml.version>1.25</snakeyaml.version>
     </properties>
 
     <repositories>

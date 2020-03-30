@@ -30,6 +30,7 @@ public final class DBConstants {
         throw new AssertionError();
     }
 
+    public static final String SWAGGER_RESOURCE_PATH = "org.wso2.ws.dataservice.dataservice.swagger.path";
     public static final String WSO2_DS_NAMESPACE = "http://ws.wso2.org/dataservice";
     public static final String DATA_SERVICE_OBJECT = "org.wso2.ws.dataservice.dataservice.obj";
     public static final String DB_SERVICE_DEPLOYER = "org.wso2.ws.dataservice.dataservice.deployer";
@@ -172,6 +173,24 @@ public final class DBConstants {
         public static final String VARINT = "VARINT";
         public static final String UUID = "UUID";
         public static final String INETADDRESS = "INETADDRESS";
+    }
+
+    /**
+     * Constants to define swagger data types;
+     */
+    public static final class SwaggerDataTypes {
+
+        private SwaggerDataTypes() {
+            throw new AssertionError();
+        }
+
+        public static final String STRING = "string";
+        public static final String NUMBER = "number";
+        public static final String INTEGER = "integer";
+        public static final String BOOLEAN = "boolean";
+        public static final String ARRAY = "array";
+        public static final String OBJECT = "object";
+
     }
 
     /**
@@ -869,7 +888,7 @@ public final class DBConstants {
         public static final String USE_COLUMN_NUMBERS = "useColumnNumbers";
         public static final String ESCAPE_NON_PRINTABLE_CHAR = "escapeNonPrintableChar";
         public static final String STRUCT_TYPE = "structType";
-
+        public static final String SWAGGER_LOCATION = "publishSwagger";
     }
 
     /**
