@@ -165,7 +165,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    private String getTenantTaskGroup() {
+    protected String getTenantTaskGroup() {
         return "TENANT_" + this.getTenantId() + "_TYPE_" + this.getTaskType();
     }
 
@@ -200,7 +200,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
             throw new TaskException("Non-existing task for scheduling with name: " + taskName,
                                     TaskException.Code.NO_TASK_EXISTS);
         }
-        if (this.containsLocalTask(taskName, taskGroup)) {
+        if (this.isPreviouslyScheduled(taskName, taskGroup)) {
             /* to make the scheduleLocalTask operation idempotent */
             return;
         }
@@ -266,7 +266,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
 
     protected synchronized void resumeLocalTask(String taskName) throws TaskException {
         String taskGroup = this.getTenantTaskGroup();
-        if (!this.containsLocalTask(taskName, taskGroup)) {
+        if (!this.isPreviouslyScheduled(taskName, taskGroup)) {
             throw new TaskException("Non-existing task for resuming with name: " + taskName,
                                     TaskException.Code.NO_TASK_EXISTS);
         }
@@ -282,7 +282,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         }
     }
 
-    private boolean containsLocalTask(String taskName, String taskGroup) throws TaskException {
+    protected boolean isPreviouslyScheduled(String taskName, String taskGroup) throws TaskException {
         try {
             return this.getScheduler().checkExists(new JobKey(taskName, taskGroup));
         } catch (SchedulerException e) {
@@ -397,6 +397,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
                     String taskName = trigger.getJobKey().getName();
                     TaskUtils.setTaskFinished(getTaskRepository(), taskName, true);
                     if (getAllCoordinatedTasksDeployed().contains(taskName)) {
+                        getLocallyRunningCoordinatedTasks().remove(taskName);
                         taskStore.updateTaskState(Collections.singletonList(taskName),
                                                   CoordinatedTask.States.COMPLETED);
                     }

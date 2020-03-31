@@ -46,13 +46,22 @@ class TaskQueryHelper {
             "UPDATE  " + TABLE_NAME + " SET  " + DESTINED_NODE_ID + " = ? , " + TASK_STATE + " = " + TASK_STATE_CONST
                     + " WHERE " + TASK_NAME + " = ?";
 
+    static final String DEACTIVATE_TASK =
+            "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = \"" + CoordinatedTask.States.DEACTIVATED + "\" "
+                    + "WHERE " + TASK_NAME + " =? AND " + TASK_STATE + " !=\"" + CoordinatedTask.States.PAUSED + "\"";
+
+    static final String ACTIVATE_TASK =
+            "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = \"" + CoordinatedTask.States.ACTIVATED + "\" WHERE "
+                    + TASK_NAME + " =? AND " + TASK_STATE + " !=\"" + CoordinatedTask.States.RUNNING + "\"";
+
     static final String UPDATE_TASK_STATE =
             "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = ? WHERE " + TASK_NAME + " =? ";
 
-    static final String RETRIEVE_ALL_TASKS = "SELECT  " + TASK_NAME + " FROM " + TABLE_NAME;
+    static final String UPDATE_TASK_STATE_FOR_DESTINED_NODE =
+            "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = ? WHERE " + TASK_NAME + " =? AND " + DESTINED_NODE_ID
+                    + " =?";
 
-    static final String RETRIEVE_TASK_STATE =
-            "SELECT " + TASK_STATE + " FROM " + TABLE_NAME + " WHERE " + TASK_NAME + " =?";
+    static final String RETRIEVE_ALL_TASKS = "SELECT  " + TASK_NAME + " FROM " + TABLE_NAME;
 
     static final String RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS =
             "SELECT " + TASK_NAME + " FROM " + TABLE_NAME + " WHERE  " + DESTINED_NODE_ID + " IS NULL AND " + TASK_STATE
@@ -72,7 +81,8 @@ class TaskQueryHelper {
 
     static final String CLEAN_TASKS_OF_NODE =
             "UPDATE " + TABLE_NAME + " SET " + DESTINED_NODE_ID + " = NULL , " + TASK_STATE + " = " + TASK_STATE_CONST
-                    + " WHERE " + DESTINED_NODE_ID + " = ?";
+                    + " WHERE " + DESTINED_NODE_ID + " = ? AND " + TASK_STATE + " !=\""
+                    + CoordinatedTask.States.COMPLETED + "\"";
 
     static final String GET_ALL_ASSIGNED_INCOMPLETE_TASKS =
             "SELECT * FROM " + TABLE_NAME + " WHERE " + DESTINED_NODE_ID + " IS NOT NULL AND " + TASK_STATE + " != \""

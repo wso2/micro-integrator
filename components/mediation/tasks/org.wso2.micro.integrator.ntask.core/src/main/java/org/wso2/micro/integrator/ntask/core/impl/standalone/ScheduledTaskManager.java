@@ -34,7 +34,6 @@ import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 import org.wso2.micro.integrator.ntask.core.internal.TasksDSComponent;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -54,21 +53,17 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      */
     private List<String> additionFailedTasks = new ArrayList<>();
 
-    private List<String> deactivationFailedTasks = new ArrayList<>();
+    private List<String> locallyRunningCoordinatedTasks = new ArrayList<>();
 
-    private List<String> activationFailedTasks = new ArrayList<>();
-
-    /**
-     * The tasks which were stopped in this node (can be due to pause or node becoming un responsive)
-     */
-    private List<String> stoppedTasks = new ArrayList<>();
     private SynapseEnvironment synapseEnvironment = null;
     private TaskStore taskStore;
+    private String localNodeId;
 
     ScheduledTaskManager(TaskRepository taskRepository, TaskStore taskStore) throws TaskException {
 
         super(taskRepository, taskStore);
         this.taskStore = taskStore;
+        this.localNodeId = DataHolder.getInstance().getLocalNodeId();
     }
 
     @Override
@@ -160,20 +155,27 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      */
     public void scheduleCoordinatedTask(String taskName) throws TaskException {
 
-        if (!stoppedTasks.contains(taskName)) {
-            scheduleTask(taskName);
-        } else {
-            resumeLocalTask(taskName);
-        }
         try {
-            taskStore.updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.RUNNING);
+            if (taskStore.updateTaskState(taskName, CoordinatedTask.States.RUNNING, localNodeId)) {
+                if (!isPreviouslyScheduled(taskName, getTenantTaskGroup())) {
+                    scheduleTask(taskName);
+                } else {
+                    resumeLocalTask(taskName);
+                }
+                locallyRunningCoordinatedTasks.add(taskName);
+            } else {
+                log.error("Failed to update state as " + CoordinatedTask.States.RUNNING + " for task [" + taskName + "]"
+                                  + ". Hence not scheduling.");
+            }
         } catch (TaskCoordinationException e) {
-            // stopping since the db write failed.
-            stopExecution(taskName);
             throw new TaskException(
                     "Exception occurred while updating the state of the task : " + taskName + " to :" + " "
-                            + CoordinatedTask.States.RUNNING, TaskException.Code.DATABASE_ERROR);
+                            + CoordinatedTask.States.RUNNING, TaskException.Code.DATABASE_ERROR, e);
         }
+    }
+
+    public List<String> getLocallyRunningCoordinatedTasks() {
+        return locallyRunningCoordinatedTasks;
     }
 
     public List<String> getAllCoordinatedTasksDeployed() {
@@ -188,11 +190,10 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
      */
     public void stopExecution(String taskName) throws TaskException {
         this.pauseLocalTask(taskName);
-        stoppedTasks.add(taskName);
+        locallyRunningCoordinatedTasks.remove(taskName);
     }
 
-    @Override
-    public void scheduleTask(String taskName) throws TaskException {
+    private void scheduleTask(String taskName) throws TaskException {
         if (this.isMyTaskTypeRegistered()) {
             this.scheduleLocalTask(taskName);
         } else {
@@ -215,25 +216,29 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
                 log.error("Error while removing tasks.", ex);
             }
             deployedCoordinatedTasks.remove(taskName);
-            stoppedTasks.remove(taskName);
+            locallyRunningCoordinatedTasks.remove(taskName);
         }
         return result;
     }
 
     public void handleTaskPause(String taskName) throws TaskException {
 
-        if (isDeactivated(taskName)) {
-            log.info("Task [" + taskName + "] is already in paused state.");
-            return;
-        }
-
         if (deployedCoordinatedTasks.contains(taskName)) {
-            try {
-                taskStore.deactivateTask(taskName);
-                log.info("Deactivated task [" + taskName + "]");
-            } catch (TaskCoordinationException e) {
-                deactivationFailedTasks.add(taskName); // todo
-                log.error("Error occurred while deactivating task [" + taskName + "]", e);
+            if (locallyRunningCoordinatedTasks.contains(taskName)) {
+                try {
+                    taskStore.updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.PAUSED);
+                    stopExecution(taskName);
+                } catch (TaskCoordinationException e) {
+                    throw new TaskException("Pause failed for task : " + taskName, TaskException.Code.DATABASE_ERROR,
+                                            e);
+                }
+            } else {
+                try {
+                    taskStore.deactivateTask(taskName);
+                } catch (TaskCoordinationException e) {
+                    throw new TaskException("Pause failed for task : " + taskName, TaskException.Code.DATABASE_ERROR,
+                                            e);
+                }
             }
             return;
         }
@@ -254,16 +259,7 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
     public boolean isDeactivated(String taskName) throws TaskException {
 
         if (deployedCoordinatedTasks.contains(taskName)) {
-            boolean isDeactivated = false;
-            try {
-                CoordinatedTask.States state = taskStore.getTaskState(taskName);
-                if (Arrays.asList(CoordinatedTask.States.COMPLETED, CoordinatedTask.States.DEACTIVATED,
-                                  CoordinatedTask.States.PAUSED).contains(state)) {
-                    isDeactivated = true;
-                }
-            } catch (TaskCoordinationException e) {
-                log.error("Error retrieving task [" + taskName + "]", e);
-            }
+            boolean isDeactivated = !locallyRunningCoordinatedTasks.contains(taskName);
             if (log.isDebugEnabled()) {
                 log.debug("Task [" + taskName + "] is " + (isDeactivated ? "" : "not") + " in deactivated state.");
             }
@@ -301,20 +297,18 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
     @Override
     public void handleTaskResume(String taskName) throws TaskException {
 
-        if (deployedCoordinatedTasks.contains(taskName) && isDeactivated(taskName)) {
+        if (deployedCoordinatedTasks.contains(taskName)) {
             resumeCoordinatedTask(taskName);
             return;
         }
         resumeTask(taskName);
     }
 
-    private void resumeCoordinatedTask(String taskName) {
+    private void resumeCoordinatedTask(String taskName) throws TaskException {
         try {
             taskStore.activateTask(taskName);
-            log.info("Activated task [" + taskName + "]");
         } catch (TaskCoordinationException e) {
-            activationFailedTasks.add(taskName); // todo
-            log.error("Error while resuming task [" + taskName + "]", e);
+            throw new TaskException("Failed to resume task [" + taskName + "]", TaskException.Code.DATABASE_ERROR, e);
         }
     }
 

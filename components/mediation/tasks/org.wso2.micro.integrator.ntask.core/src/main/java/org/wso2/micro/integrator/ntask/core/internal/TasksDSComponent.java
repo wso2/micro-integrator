@@ -107,7 +107,6 @@ public class TasksDSComponent {
                 DataSource coordinationDataSource = (DataSource) coordinationDatasourceObject;
                 clusterCoordinator = new ClusterCoordinator(coordinationDataSource);
                 dataHolder.setClusterCoordinator(clusterCoordinator);
-                dataHolder.setCoordinationEnabledGlobally(true);
                 // initialize task data base.
                 taskStore = new TaskStore(coordinationDataSource);
                 // removing all tasks assigned to this node since this node hasn't even  joined the cluster yet and
@@ -133,6 +132,9 @@ public class TasksDSComponent {
             if (isCoordinationEnabled) {
                 clusterCoordinator.registerListener(new ClusterEventListener(clusterCoordinator.getThisNodeId()));
                 ScheduledTaskManager scheduledTaskManager = dataHolder.getTaskManager();
+                if (scheduledTaskManager == null) {
+                    throw new AssertionError("Task Manager is not initialized properly.");
+                }
                 clusterCoordinator.registerListener(new TaskEventListener(scheduledTaskManager, taskStore, resolver));
                 // the task scheduler should be started after registering task service.
                 coordinatedTaskScheduleManager = new CoordinatedTaskScheduleManager(scheduledTaskManager, taskStore,

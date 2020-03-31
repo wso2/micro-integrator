@@ -32,6 +32,7 @@ import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -172,21 +173,24 @@ public class CoordinatedTaskScheduler implements Runnable {
             return;
         }
         List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
-        tasksOfThisNode.forEach(taskName -> {
+        for (String taskName : tasksOfThisNode) {
             if (deployedCoordinatedTasks.contains(taskName)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Submitting retrieved task [" + taskName + "] to the task manager.");
                 }
                 try {
                     taskManager.scheduleCoordinatedTask(taskName);
-                } catch (TaskException e) {
-                    LOG.error("Exception occurred while scheduling coordinated task : " + taskName, e);
+                } catch (TaskException ex) {
+                    if (!TaskException.Code.DATABASE_ERROR.equals(ex.getCode())) {
+                        taskStore.updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.NONE);
+                    }
+                    LOG.error("Exception occurred while scheduling coordinated task : " + taskName, ex);
                 }
             } else {
                 LOG.info("The task [" + taskName + "] retrieved to be scheduled is not a deployed task "
                                  + "in this node or an invalid entry, hence ignoring it.");
             }
-        });
+        }
     }
 
     /**

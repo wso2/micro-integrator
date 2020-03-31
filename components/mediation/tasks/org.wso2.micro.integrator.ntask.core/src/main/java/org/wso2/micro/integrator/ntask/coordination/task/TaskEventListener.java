@@ -108,7 +108,7 @@ public class TaskEventListener extends MemberEventListener {
             taskScheduler.shutdown();
             dataHolder.setTaskScheduler(null);
         }
-        List<String> tasks = taskManager.getAllCoordinatedTasksDeployed();
+        List<String> tasks = taskManager.getLocallyRunningCoordinatedTasks();
         // stop all running coordinated tasks.
         tasks.forEach(task -> {
             try {
