@@ -170,6 +170,7 @@
                                 <unzip src="${project.build.directory}/${project.artifactId}-${project.version}.zip" dest="${project.build.directory}/docker" />
                                 <move file="${project.build.directory}/docker/${project.artifactId}-${project.version}" tofile="${project.build.directory}/docker/${project.artifactId}" />
                                 <chmod file="${project.build.directory}/docker/${project.artifactId}/bin/*.sh" perm="+x" />
+                                <chmod file="${project.build.directory}/docker/docker-entrypoint.sh" perm="+x" />
                             </target>
                         </configuration>
                         <goals>
@@ -196,6 +197,7 @@
                                     <filtering>true</filtering>
                                     <includes>
                                         <include>Dockerfile</include>
+                                        <include>docker-entrypoint.sh</include>
                                     </includes>
                                 </resource>
                             </resources>
@@ -221,6 +223,9 @@
                                 <imageTag>${project.version}</imageTag>
                             </imageTags>
                             <dockerDirectory>${basedir}/src/docker-distribution/static</dockerDirectory>
+                            <buildArgs>
+                                <MICROESB_VERSION>${project.version}</MICROESB_VERSION>
+                            </buildArgs>
                         </configuration>
                     </execution>
                     <!-- TODO Enable after configuring Jenkins to push docker -->
