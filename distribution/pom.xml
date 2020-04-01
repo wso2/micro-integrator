@@ -184,7 +184,7 @@
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>filter-dockerfiles</id>
+                        <id>docker-entry-file</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -193,10 +193,9 @@
                             <resources>
                                 <!-- # Filtered Resources -->
                                 <resource>
-                                    <directory>${basedir}/src/docker-distribution/filtered</directory>
+                                    <directory>${basedir}/src/docker-distribution</directory>
                                     <filtering>true</filtering>
                                     <includes>
-                                        <include>Dockerfile</include>
                                         <include>docker-entrypoint.sh</include>
                                     </includes>
                                 </resource>
@@ -211,7 +210,7 @@
                 <artifactId>docker-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>build-image</id>
+                        <id>build-image-alpine</id>
                         <phase>package</phase>
                         <goals>
                             <goal>build</goal>
@@ -222,7 +221,43 @@
                             <imageTags>
                                 <imageTag>${project.version}</imageTag>
                             </imageTags>
-                            <dockerDirectory>${basedir}/src/docker-distribution/static</dockerDirectory>
+                            <dockerDirectory>${basedir}/src/docker-distribution/alpine</dockerDirectory>
+                            <buildArgs>
+                                <MICROESB_VERSION>${project.version}</MICROESB_VERSION>
+                            </buildArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-image-centos</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <configuration>
+                            <skipDocker>${docker.skip}</skipDocker>
+                            <imageName>wso2/micro-integrator</imageName>
+                            <imageTags>
+                                <imageTag>${project.version}-centos7</imageTag>
+                            </imageTags>
+                            <dockerDirectory>${basedir}/src/docker-distribution/centos</dockerDirectory>
+                            <buildArgs>
+                                <MICROESB_VERSION>${project.version}</MICROESB_VERSION>
+                            </buildArgs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>build-image-ubuntu</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                        <configuration>
+                            <skipDocker>${docker.skip}</skipDocker>
+                            <imageName>wso2/micro-integrator</imageName>
+                            <imageTags>
+                                <imageTag>${project.version}-ubuntu18.04</imageTag>
+                            </imageTags>
+                            <dockerDirectory>${basedir}/src/docker-distribution/ubuntu</dockerDirectory>
                             <buildArgs>
                                 <MICROESB_VERSION>${project.version}</MICROESB_VERSION>
                             </buildArgs>

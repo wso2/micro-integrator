@@ -17,7 +17,7 @@
 # ---------------------------------------------------------------------------
 
 # set base Docker image to AdoptOpenJDK Alpine Docker image
-FROM adoptopenjdk/openjdk8:jre8u212-b03-alpine
+FROM adoptopenjdk/openjdk8:jdk8u222-b10-alpine
 LABEL maintainer="WSO2 Docker Maintainers <dev@wso2.org>"
 
 # set Docker image build arguments
