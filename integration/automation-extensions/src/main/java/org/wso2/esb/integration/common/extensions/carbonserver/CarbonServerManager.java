@@ -64,10 +64,8 @@ public class CarbonServerManager {
     private static final String SERVER_SHUTDOWN_MESSAGE = "Halting JVM";
     private static final long DEFAULT_START_STOP_WAIT_MS = 1000 * 60 * 5;
     private static final String CMD_ARG = "cmdArg";
-    private static int defaultHttpPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTP_PORT);
     private static int defaultHttpsPort = Integer.parseInt(FrameworkConstants.SERVER_DEFAULT_HTTPS_PORT);
     private String scriptName;
-    private static final String SERVER_STARTUP_MESSAGE = "WSO2 Micro Integrator started";
     private int managementPort;
     private int retryLimit = 3;
     private int retryAttempt = 0;
@@ -147,7 +145,7 @@ public class CarbonServerManager {
             }));
 
             managementPort = 9154 + portOffset;
-            waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, TimeUnit.SECONDS);
+            waitTill(() -> !isRemotePortInUse("localhost", managementPort), 180, "startup");
 
             if (!isRemotePortInUse("localhost", managementPort)) {
                 if (retryAttempt < retryLimit) {
@@ -208,9 +206,6 @@ public class CarbonServerManager {
         new ArchiveExtractor().extractFile(carbonServerZipFile, baseDir + File.separator + extractDir);
         carbonHome =
                 new File(baseDir).getAbsolutePath() + File.separator + extractDir + File.separator + extractedCarbonDir;
-
-        System.setProperty("miCarbonHome", carbonHome);
-
         copyResources();
         try {
             //read coverage status from automation.xml
@@ -255,7 +250,7 @@ public class CarbonServerManager {
                 for (int i = 0; i < retryCount; i++) {
                     if (isRemotePortInUse("localhost", managementPort)) {
                         startProcess(carbonHome, getStartScriptCommand("stop"));
-                        waitTill(() -> isRemotePortInUse("localhost", managementPort), 5, TimeUnit.SECONDS);
+                        waitTill(() -> isRemotePortInUse("localhost", managementPort), 5, "shutdown");
                     } else {
                         break;
                     }
@@ -303,10 +298,10 @@ public class CarbonServerManager {
         return processBuilder.start();
     }
 
-    private void waitTill(BooleanSupplier predicate, int maxWaitTime, TimeUnit timeUnit) throws InterruptedException {
-        long time = System.currentTimeMillis() + timeUnit.toMillis(maxWaitTime);
+    private void waitTill(BooleanSupplier predicate, int maxWaitTime, String task) throws InterruptedException {
+        long time = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(maxWaitTime);
         while (predicate.getAsBoolean() && System.currentTimeMillis() < time) {
-            log.info("waiting for server startup/shutdown");
+            log.info("waiting for server " + task);
             TimeUnit.SECONDS.sleep(1);
         }
     }
