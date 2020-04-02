@@ -35,14 +35,6 @@ public interface TaskManager {
     void initStartupTasks() throws TaskException;
 
     /**
-     * Starts a task with the given name.
-     *
-     * @param taskName The name of the task
-     * @throws TaskException Exception
-     */
-    void scheduleTask(String taskName) throws TaskException;
-
-    /**
      * Reschedules a task with the given name, only the trigger information will be updated in the
      * reschedule.
      *
@@ -74,6 +66,13 @@ public interface TaskManager {
      * @return List of deployed coordinated tasks.
      */
     List<String> getAllCoordinatedTasksDeployed();
+
+    /**
+     * Get all the locally running coordinated tasks.
+     *
+     * @return List of all locally running coordinated tasks.
+     */
+    List<String> getLocallyRunningCoordinatedTasks();
 
     /**
      * Handles the pause operation for the task with the given name.

@@ -172,21 +172,26 @@ public class CoordinatedTaskScheduler implements Runnable {
             return;
         }
         List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
-        tasksOfThisNode.forEach(taskName -> {
+        List<String> erroredTasks = new ArrayList<>();
+        for (String taskName : tasksOfThisNode) {
             if (deployedCoordinatedTasks.contains(taskName)) {
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("Submitting retrieved task [" + taskName + "] to the task manager.");
                 }
                 try {
                     taskManager.scheduleCoordinatedTask(taskName);
-                } catch (TaskException e) {
-                    LOG.error("Exception occurred while scheduling coordinated task : " + taskName, e);
+                } catch (TaskException ex) {
+                    if (!TaskException.Code.DATABASE_ERROR.equals(ex.getCode())) {
+                        erroredTasks.add(taskName);
+                    }
+                    LOG.error("Exception occurred while scheduling coordinated task : " + taskName, ex);
                 }
             } else {
                 LOG.info("The task [" + taskName + "] retrieved to be scheduled is not a deployed task "
                                  + "in this node or an invalid entry, hence ignoring it.");
             }
-        });
+        }
+        taskStore.updateTaskState(erroredTasks, CoordinatedTask.States.NONE);
     }
 
     /**

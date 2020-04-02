@@ -35,8 +35,10 @@ import java.util.List;
 import java.util.Map;
 import javax.sql.DataSource;
 
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.ACTIVATE_TASK;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.ADD_TASK;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.CLEAN_TASKS_OF_NODE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.UPDATE_TASK_STATUS_TO_DEACTIVATED;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DELETE_TASK;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DESTINED_NODE_ID;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.GET_ALL_ASSIGNED_INCOMPLETE_TASKS;
@@ -44,12 +46,12 @@ import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.REMOVE_TASKS_OF_NODE;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_ALL_TASKS;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_TASKS_OF_NODE;
-import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_TASK_STATE;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.RETRIEVE_UNASSIGNED_NOT_COMPLETED_TASKS;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_NAME;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.TASK_STATE;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.UPDATE_ASSIGNMENT_AND_STATE;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.UPDATE_TASK_STATE;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.UPDATE_TASK_STATE_FOR_DESTINED_NODE;
 
 /**
  * The connector class which deals with underlying coordinated task table.
@@ -182,6 +184,36 @@ public class RDMBSConnector {
     }
 
     /**
+     * Deactivates the task.
+     *
+     * @param name - Name of the task.
+     */
+    public void deactivateTask(String name) throws TaskCoordinationException {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
+                UPDATE_TASK_STATUS_TO_DEACTIVATED)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new TaskCoordinationException(ERROR_MSG, ex);
+        }
+    }
+
+    /**
+     * Activates the task.
+     *
+     * @param name - Name of the task.
+     */
+    public void activateTask(String name) throws TaskCoordinationException {
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
+                ACTIVATE_TASK)) {
+            preparedStatement.setString(1, name);
+            preparedStatement.executeUpdate();
+        } catch (SQLException ex) {
+            throw new TaskCoordinationException(ERROR_MSG, ex);
+        }
+    }
+
+    /**
      * Remove the task entry.
      *
      * @param tasks - List of tasks to be removed.
@@ -261,29 +293,6 @@ public class RDMBSConnector {
     }
 
     /**
-     * Retrieve the task state
-     *
-     * @param taskName -  Name of the task.
-     * @return - Task state
-     * @throws TaskCoordinationException Exception
-     */
-    public CoordinatedTask.States getTaskState(String taskName) throws TaskCoordinationException {
-
-        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                RETRIEVE_TASK_STATE)) {
-            preparedStatement.setString(1, taskName);
-            try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                if (resultSet.next()) {
-                    return CoordinatedTask.States.valueOf(resultSet.getString(TASK_STATE));
-                }
-                return null;
-            }
-        } catch (SQLException ex) {
-            throw new TaskCoordinationException(ERROR_MSG, ex);
-        }
-    }
-
-    /**
      * Retrieve all assigned and incomplete tasks.
      *
      * @return - List of tasks.
@@ -346,6 +355,34 @@ public class RDMBSConnector {
                 tasks.forEach((task, destinedNode) -> LOG
                         .debug("Assigned the task [" + task + "] with destined node [" + destinedNode + "]"));
             }
+        } catch (SQLException ex) {
+            throw new TaskCoordinationException(ERROR_MSG, ex);
+        }
+    }
+
+    /**
+     * Update the state of task.
+     *
+     * @param taskName     Name of the task.
+     * @param updatedState Updated state.
+     * @param destinedId   Destined Node Id.
+     * @return True if update is successful.
+     * @throws TaskCoordinationException when something goes wrong while updating.
+     */
+    public boolean updateTaskState(String taskName, CoordinatedTask.States updatedState, String destinedId)
+            throws TaskCoordinationException {
+
+        try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
+                UPDATE_TASK_STATE_FOR_DESTINED_NODE)) {
+            preparedStatement.setString(1, updatedState.name());
+            preparedStatement.setString(2, taskName);
+            preparedStatement.setString(3, destinedId);
+            int result = preparedStatement.executeUpdate();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug((result == 1 ? "Updated" : "Unable to update") + " state to [" + updatedState + "] for task ["
+                                  + "] with destined nodeId [" + destinedId + "]");
+            }
+            return result == 1;
         } catch (SQLException ex) {
             throw new TaskCoordinationException(ERROR_MSG, ex);
         }
