@@ -46,7 +46,7 @@ class TaskQueryHelper {
             "UPDATE  " + TABLE_NAME + " SET  " + DESTINED_NODE_ID + " = ? , " + TASK_STATE + " = " + TASK_STATE_CONST
                     + " WHERE " + TASK_NAME + " = ?";
 
-    static final String DEACTIVATE_TASK =
+    static final String UPDATE_TASK_STATUS_TO_DEACTIVATED =
             "UPDATE  " + TABLE_NAME + "  SET " + TASK_STATE + " = \"" + CoordinatedTask.States.DEACTIVATED + "\" "
                     + "WHERE " + TASK_NAME + " =? AND " + TASK_STATE + " !=\"" + CoordinatedTask.States.PAUSED + "\"";
 

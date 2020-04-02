@@ -38,7 +38,7 @@ import javax.sql.DataSource;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.ACTIVATE_TASK;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.ADD_TASK;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.CLEAN_TASKS_OF_NODE;
-import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DEACTIVATE_TASK;
+import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.UPDATE_TASK_STATUS_TO_DEACTIVATED;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DELETE_TASK;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.DESTINED_NODE_ID;
 import static org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper.GET_ALL_ASSIGNED_INCOMPLETE_TASKS;
@@ -190,7 +190,7 @@ public class RDMBSConnector {
      */
     public void deactivateTask(String name) throws TaskCoordinationException {
         try (Connection connection = getConnection(); PreparedStatement preparedStatement = connection.prepareStatement(
-                DEACTIVATE_TASK)) {
+                UPDATE_TASK_STATUS_TO_DEACTIVATED)) {
             preparedStatement.setString(1, name);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {

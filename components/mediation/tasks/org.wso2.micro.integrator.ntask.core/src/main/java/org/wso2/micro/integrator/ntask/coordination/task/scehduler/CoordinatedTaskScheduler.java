@@ -32,7 +32,6 @@ import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager
 import org.wso2.micro.integrator.ntask.core.internal.DataHolder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -173,6 +172,7 @@ public class CoordinatedTaskScheduler implements Runnable {
             return;
         }
         List<String> deployedCoordinatedTasks = taskManager.getAllCoordinatedTasksDeployed();
+        List<String> erroredTasks = new ArrayList<>();
         for (String taskName : tasksOfThisNode) {
             if (deployedCoordinatedTasks.contains(taskName)) {
                 if (LOG.isDebugEnabled()) {
@@ -182,7 +182,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                     taskManager.scheduleCoordinatedTask(taskName);
                 } catch (TaskException ex) {
                     if (!TaskException.Code.DATABASE_ERROR.equals(ex.getCode())) {
-                        taskStore.updateTaskState(Collections.singletonList(taskName), CoordinatedTask.States.NONE);
+                        erroredTasks.add(taskName);
                     }
                     LOG.error("Exception occurred while scheduling coordinated task : " + taskName, ex);
                 }
@@ -191,6 +191,7 @@ public class CoordinatedTaskScheduler implements Runnable {
                                  + "in this node or an invalid entry, hence ignoring it.");
             }
         }
+        taskStore.updateTaskState(erroredTasks, CoordinatedTask.States.NONE);
     }
 
     /**
