@@ -1,4 +1,4 @@
-name: Cluster tests ( ubuntu , openjdk8 & mysql_5.7 )
+name: Cluster tests ( ubuntu , openjdk8 & mysql )
 
 on: [push, pull_request]
 
@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       mysql:
-        image: mysql:5.7
+        image: mysql:latest
         env:
           MYSQL_USER: 'root'
           MYSQL_ROOT_PASSWORD: 'root'

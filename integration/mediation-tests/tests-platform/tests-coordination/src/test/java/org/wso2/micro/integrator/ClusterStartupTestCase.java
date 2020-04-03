@@ -37,6 +37,7 @@ public class ClusterStartupTestCase extends ESBIntegrationTest {
     private CarbonTestServerManager node2;
     private CarbonLogReader logReader1;
     private CarbonLogReader logReader2;
+    private static final int LOG_READ_TIMEOUT = 180;
 
     @BeforeClass
     public void initialize() throws Exception {
@@ -54,10 +55,10 @@ public class ClusterStartupTestCase extends ESBIntegrationTest {
     @Test
     public void testClusterJoin() throws Exception {
 
-        if (!logReader1.checkForLog("Successfully joined the cluster", 120)) {
+        if (!logReader1.checkForLog("Successfully joined the cluster", LOG_READ_TIMEOUT)) {
             Assert.fail("Cluster join failed for node 1.");
         }
-        if (!logReader2.checkForLog("Successfully joined the cluster", 120)) {
+        if (!logReader2.checkForLog("Successfully joined the cluster", LOG_READ_TIMEOUT)) {
             Assert.fail("Cluster join failed for node 2.");
         }
     }
@@ -75,23 +76,22 @@ public class ClusterStartupTestCase extends ESBIntegrationTest {
     @Test(dependsOnMethods = { "testClusterJoin" })
     public void testMemberAddition() throws Exception {
 
-        // Here we are starting node 1 and then node 2 , hence node 1 should detect member addition
-        if (!logReader1.checkForLog("Member added", 120)) {
-            Assert.fail("Member addition is not detected in node 1.");
+        if (!logReader1.checkForLog("Member added", LOG_READ_TIMEOUT) && !logReader2.checkForLog("Member added", 1)) {
+            Assert.fail("Member addition is not detected in both nodes 1 and 2.");
         }
         node1.stopServer();
     }
 
     @Test(dependsOnMethods = { "testMemberAddition" })
     public void testMemberRemoval() throws Exception {
-        if (!logReader2.checkForLog("Member removed", 120)) {
+        if (!logReader2.checkForLog("Member removed", LOG_READ_TIMEOUT)) {
             Assert.fail("Member removal is not detected in node 2.");
         }
     }
 
     @Test(dependsOnMethods = { "testMemberAddition" })
     public void testCoordinator() throws Exception {
-        if (!logReader2.checkForLog("Current node state changed from: MEMBER to: COORDINATOR", 120)) {
+        if (!logReader2.checkForLog("Current node state changed from: MEMBER to: COORDINATOR", LOG_READ_TIMEOUT)) {
             Assert.fail("Node 2 hasn't changed as the leader.");
         }
     }

@@ -70,7 +70,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         try {
             List<String> schema = new ArrayList<>();
             schema.add("drop database if exists " + dbName + ";");
-            schema.add("create database " + dbName + ";");
+            schema.add("create database " + dbName + " character set latin1;");
             schema.add("use " + dbName + ";");
             schema.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
             try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
