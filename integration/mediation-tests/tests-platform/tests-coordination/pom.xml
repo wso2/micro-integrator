@@ -105,6 +105,20 @@
                             <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>copy-jar-dependencies</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/src/test/resources/artifacts/ESB/server/lib
+                            </outputDirectory>
+                            <includeTypes>jar</includeTypes>
+                            <includeArtifactIds>mysql-connector-java</includeArtifactIds>
+                            <excludeTransitive>true</excludeTransitive>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

@@ -63,7 +63,8 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     @Override
     public void onExecutionStart() throws AutomationFrameworkException {
 
-        String dbUrl = "jdbc:" + dbType + "://" + host + ":" + port + "?allowMultiQueries=true";
+        String dbUrl = "jdbc:" + dbType + "://" + host + ":" + port
+                + "?allowMultiQueries=true&useSSL=false&allowPublicKeyRetrieval=true";
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
         try {
@@ -161,8 +162,8 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         }
         datasourceConfig =
                 "\n[[datasource]]\n" + "id = \"WSO2_COORDINATION_DB\"\n" + "url = \"jdbc:" + dbType + "://" + host + ":"
-                        + port + "/" + dbName + "\"\n" + "username = \"" + userName + "\"\n" + "password = \"" + pwd
-                        + "\"\n" + "driver = \"" + driver + "\"";
+                        + port + "/" + dbName + "?useSSL=false&amp;allowPublicKeyRetrieval=true\"\n" + "username = \""
+                        + userName + "\"\n" + "password" + " = \"" + pwd + "\"\n" + "driver = \"" + driver + "\"";
 
         try (FileWriter fileWriter = new FileWriter(tomlPath, true); PrintWriter printWriter = new PrintWriter(
                 fileWriter)) {

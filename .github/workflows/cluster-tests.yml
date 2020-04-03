@@ -1,0 +1,25 @@
+name: Cluster tests ( ubuntu , openjdk8 & mysql_5.7 )
+
+on: [push, pull_request]
+
+jobs:
+  others:
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:5.7
+        env:
+          MYSQL_USER: 'root'
+          MYSQL_ROOT_PASSWORD: 'root'
+          MYSQL_ROOT_HOST: '%'
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Set up JDK 1.8
+        uses: joschi/setup-jdk@v1
+        with:
+          java-version: openjdk8
+      - uses: actions/checkout@v1
+      - name: Cluster tests
+        run: mvn -B clean install --file pom.xml -P cluster-tests
