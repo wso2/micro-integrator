@@ -40,7 +40,7 @@ public class Sample381TestCase extends ESBSampleIntegrationTest {
 
         int numberOfMsgToExpect = 5;
 
-        CarbonLogReader carbonLogReader = new CarbonLogReader(true);
+        CarbonLogReader carbonLogReader = new CarbonLogReader();
         carbonLogReader.start();
 
         MDDProducer mddProducerMSTF = new MDDProducer();

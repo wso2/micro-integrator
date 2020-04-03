@@ -20,49 +20,38 @@ package org.wso2.esb.integration.common.extensions.carbonserver;
 
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import javax.xml.xpath.XPathExpressionException;
 
 public class MultipleServersManager {
 
-    private Map<String, TestServerManager> servers = new HashMap();
+    private Map<String, TestServerManager> servers = new HashMap<String, TestServerManager>();
 
     public MultipleServersManager() {
+        // nothing to do
     }
 
     public void startServers(TestServerManager... serverManagers) throws AutomationFrameworkException {
-        TestServerManager[] arr$ = serverManagers;
-        int len$ = serverManagers.length;
 
-        for (int i$ = 0; i$ < len$; ++i$) {
-            TestServerManager zip = arr$[i$];
-            String carbonHome = null;
-
+        int noOfServers = serverManagers.length;
+        for (int index = 0; index < noOfServers; ++index) {
+            TestServerManager testServerManager = serverManagers[index];
             try {
-                carbonHome = zip.startServer();
-            } catch (IOException var8) {
-                throw new AutomationFrameworkException("Server start failed", var8);
-            } catch (AutomationFrameworkException var9) {
-                throw new AutomationFrameworkException("Server start failed", var9);
-            } catch (XPathExpressionException var10) {
-                throw new AutomationFrameworkException("Server start failed", var10);
+                String carbonHome = testServerManager.startServer();
+                servers.put(carbonHome, testServerManager);
+            } catch (Exception ex) {
+                throw new AutomationFrameworkException(ex);
             }
-
-            this.servers.put(carbonHome, zip);
         }
-
     }
 
     public void stopAllServers() throws AutomationFrameworkException {
-        Iterator i$ = this.servers.values().iterator();
 
-        while (i$.hasNext()) {
-            TestServerManager serverUtils = (TestServerManager) i$.next();
+        Iterator iterator = servers.values().iterator();
+        while (iterator.hasNext()) {
+            TestServerManager serverUtils = (TestServerManager) iterator.next();
             serverUtils.stopServer();
         }
-
     }
 }

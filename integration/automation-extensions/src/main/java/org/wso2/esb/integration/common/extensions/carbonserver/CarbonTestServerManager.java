@@ -23,19 +23,14 @@ import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException
 
 import java.io.IOException;
 import java.util.HashMap;
-import javax.xml.xpath.XPathExpressionException;
 
 public class CarbonTestServerManager extends TestServerManager {
     public CarbonTestServerManager(AutomationContext autoCtx, String carbonZip,
-            HashMap<String, String> startupParameterMap) {
+                                   HashMap<String, String> startupParameterMap) {
         super(autoCtx, carbonZip, startupParameterMap);
     }
 
-    public CarbonTestServerManager(AutomationContext autoCtx, int portOffset) {
-        super(autoCtx, portOffset);
-    }
-
-    public String startServer() throws IOException, AutomationFrameworkException, XPathExpressionException {
+    public String startServer() throws IOException, AutomationFrameworkException {
         return super.startServer();
     }
 
@@ -43,6 +38,4 @@ public class CarbonTestServerManager extends TestServerManager {
         super.stopServer();
     }
 
-    protected void copyArtifacts(String carbonHome) throws IOException {
-    }
 }
