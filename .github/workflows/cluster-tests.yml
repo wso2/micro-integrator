@@ -1,9 +1,9 @@
-name: Cluster tests ( ubuntu , openjdk8 & mysql )
+name: Cluster tests ( openjdk8 & mysql )
 
 on: [push, pull_request]
 
 jobs:
-  others:
+  ubuntu:
     runs-on: ubuntu-latest
     services:
       mysql:
