@@ -160,14 +160,21 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         if (!new File(tomlPath).exists()) {
             throw new AutomationFrameworkException("Initial toml is not found in " + tomlPath);
         }
-        datasourceConfig =
-                "\n[[datasource]]\n" + "id = \"WSO2_COORDINATION_DB\"\n" + "url = \"jdbc:" + dbType + "://" + host + ":"
-                        + port + "/" + dbName + "?useSSL=false&amp;allowPublicKeyRetrieval=true\"\n" + "username = \""
-                        + userName + "\"\n" + "password" + " = \"" + pwd + "\"\n" + "driver = \"" + driver + "\"";
-
-        try (FileWriter fileWriter = new FileWriter(tomlPath, true); PrintWriter printWriter = new PrintWriter(
-                fileWriter)) {
-            printWriter.append(datasourceConfig);
+        try {
+            String tomlContent = FileUtils.readFileToString(new File(tomlPath), StandardCharsets.UTF_8);
+            if (tomlContent.contains("WSO2_COORDINATION_DB")) {
+                logger.warn("Coordination db is already defined, hence skipping updating it.");
+                return;
+            }
+            datasourceConfig =
+                    "\n[[datasource]]\n" + "id = \"WSO2_COORDINATION_DB\"\n" + "url = \"jdbc:" + dbType + "://" + host
+                            + ":" + port + "/" + dbName + "?useSSL=false&amp;allowPublicKeyRetrieval=true\"\n"
+                            + "username = \"" + userName + "\"\n" + "password" + " = \"" + pwd + "\"\n" + "driver = \""
+                            + driver + "\"";
+            try (FileWriter fileWriter = new FileWriter(tomlPath, true); PrintWriter printWriter = new PrintWriter(
+                    fileWriter)) {
+                printWriter.append(datasourceConfig);
+            }
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }

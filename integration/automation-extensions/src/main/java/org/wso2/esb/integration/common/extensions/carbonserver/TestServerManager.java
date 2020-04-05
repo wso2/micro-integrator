@@ -55,11 +55,11 @@ public class TestServerManager {
         return carbonHome;
     }
 
-    private void configureServer() throws IOException {
+    private void configureServer(String deploymentDirectory, String registryDir) throws IOException {
 
         if ("ESB".equalsIgnoreCase(System.getProperty("server.list"))) {
             //copying the files before server start. Ex: synapse artifacts, conf, etc...
-            ServerUtils.copyResources("ESB", this.getCarbonHome());
+            ServerUtils.copyResources("ESB", this.getCarbonHome(), deploymentDirectory, registryDir);
             String resourceHome =
                     FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator
                             + "ESB" + File.separator + "server";
@@ -74,12 +74,16 @@ public class TestServerManager {
                 }
             }
         } else if ("DSS".equalsIgnoreCase(System.getProperty("server.list"))) {
-            ServerUtils.copyResources("DSS", this.getCarbonHome());
+            ServerUtils.copyResources("DSS", this.getCarbonHome(), deploymentDirectory, registryDir);
         }
     }
 
     public Map<String, String> getCommands() {
         return commandMap;
+    }
+
+    public String startServer() throws AutomationFrameworkException, IOException {
+        return startServer(null, null);
     }
 
     /**
@@ -92,16 +96,10 @@ public class TestServerManager {
      * @throws IOException If an error occurs while copying the deployment artifacts into the
      *                     Carbon server
      */
-    public String startServer() throws AutomationFrameworkException, IOException {
+    public String startServer(String deploymentDirectory, String registryDir)
+            throws AutomationFrameworkException, IOException {
         if (carbonHome == null) {
-            if (carbonZip == null) {
-                carbonZip = System.getProperty(FrameworkConstants.SYSTEM_PROPERTY_CARBON_ZIP_LOCATION);
-            }
-            if (carbonZip == null) {
-                throw new IllegalArgumentException("carbon zip file cannot find in the given location");
-            }
-            carbonHome = carbonServer.setUpCarbonHome(carbonZip, commandMap.get("startupScript"));
-            configureServer();
+            setUpCarbonHome(deploymentDirectory, registryDir);
         }
         log.info("Carbon Home - " + carbonHome);
         if (commandMap.get(ExtensionConstants.SERVER_STARTUP_PORT_OFFSET_COMMAND) != null) {
@@ -111,6 +109,18 @@ public class TestServerManager {
         }
         carbonServer.startServerUsingCarbonHome(carbonHome, commandMap);
         return carbonHome;
+    }
+
+    private void setUpCarbonHome(String deploymentDirectory, String registryDir)
+            throws IOException, AutomationFrameworkException {
+        if (carbonZip == null) {
+            carbonZip = System.getProperty(FrameworkConstants.SYSTEM_PROPERTY_CARBON_ZIP_LOCATION);
+        }
+        if (carbonZip == null) {
+            throw new IllegalArgumentException("carbon zip file cannot find in the given location");
+        }
+        carbonHome = carbonServer.setUpCarbonHome(carbonZip, commandMap.get("startupScript"));
+        configureServer(deploymentDirectory, registryDir);
     }
 
     /**

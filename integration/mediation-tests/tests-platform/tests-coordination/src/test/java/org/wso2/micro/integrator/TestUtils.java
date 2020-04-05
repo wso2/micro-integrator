@@ -19,18 +19,27 @@
 package org.wso2.micro.integrator;
 
 import org.wso2.carbon.automation.engine.context.AutomationContext;
+import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonTestServerManager;
+import org.wso2.esb.integration.common.utils.Utils;
 
+import java.io.File;
 import java.util.HashMap;
 import javax.xml.xpath.XPathExpressionException;
 
-class ClusterTestUtils {
+import static org.wso2.esb.integration.common.utils.Utils.ArtifactType.TASK;
 
-    private ClusterTestUtils() {
+public class TestUtils {
+
+    public static final int LOG_READ_TIMEOUT = 180;
+    public static final int CLUSTER_DEP_TIMEOUT = 120;
+    public static final int CLUSTER_TASK_RESCHEDULE_TIMEOUT = 120;
+
+    private TestUtils() {
         //
     }
 
-    static CarbonTestServerManager getNode(int offset) throws XPathExpressionException {
+    public static CarbonTestServerManager getNode(int offset) throws XPathExpressionException {
 
         HashMap<String, String> startupParameters = new HashMap<>();
         startupParameters.put("-DportOffset", String.valueOf(offset));
@@ -39,4 +48,18 @@ class ClusterTestUtils {
         return new CarbonTestServerManager(new AutomationContext(), System.getProperty("carbon.zip"),
                                            startupParameters);
     }
+
+    public static void deployTasks(String depDir, String... tasks) throws Exception {
+
+        for (int i = 0; i < tasks.length; i++) {
+            File task = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB"
+                                         + File.separator + "tasks" + File.separator + tasks[i] + ".xml");
+            Utils.deploySynapseConfiguration(task, depDir, TASK);
+        }
+    }
+
+    public static String deploymentLog(String name) {
+        return "Task scheduled: [ESB_TASK][" + name + "]";
+    }
+
 }

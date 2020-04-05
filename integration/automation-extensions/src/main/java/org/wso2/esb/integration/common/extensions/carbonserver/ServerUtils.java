@@ -25,6 +25,8 @@ import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.util.Arrays;
 
 class ServerUtils {
 
@@ -34,17 +36,30 @@ class ServerUtils {
         //
     }
 
-    static void copyResources(String product, String destCarbonHome) throws IOException {
+    static void copyResources(String product, String destCarbonHome, String clusterDepDir, String clusterRegDir)
+            throws IOException {
 
         String carbonHome =
                 FrameworkPathUtil.getSystemResourceLocation() + File.separator + "artifacts" + File.separator + product
                         + File.separator + "server";
         copyFolders(new File(carbonHome + File.separator + "conf"), new File(destCarbonHome + File.separator + "conf"));
-        copyFolders(new File(String.join(File.separator, carbonHome, "repository", "deployment")),
-                    new File(String.join(File.separator, destCarbonHome, "repository", "deployment")));
         copyFolders(new File(carbonHome + File.separator + "lib"), new File(destCarbonHome + File.separator + "lib"));
-        copyFolders(new File(carbonHome + File.separator + "registry"),
-                    new File(destCarbonHome + File.separator + "registry"));
+
+        File destinationDeploymentDirectory = new File(
+                String.join(File.separator, destCarbonHome, "repository", "deployment"));
+        if (clusterDepDir == null) {
+            copyFolders(new File(String.join(File.separator, carbonHome, "repository", "deployment")),
+                        destinationDeploymentDirectory);
+        } else {
+            createSymlink(new File(clusterDepDir), destinationDeploymentDirectory);
+        }
+
+        File regDest = new File(destCarbonHome + File.separator + "registry");
+        if (clusterRegDir == null) {
+            copyFolders(new File(carbonHome + File.separator + "registry"), regDest);
+        } else {
+            createSymlink(new File(clusterRegDir), regDest);
+        }
 
     }
 
@@ -53,6 +68,23 @@ class ServerUtils {
             log.info("Copying " + source.getPath() + " to " + destination.getPath());
             FileUtils.copyDirectory(source, destination, true);
         }
+    }
+
+    private static void createSymlink(File source, File destination) throws IOException {
+
+        log.info("Creating sym link from : " + destination.toPath() + " to : " + source.toPath());
+        if (destination.exists() && !deleteDirectory(destination)) {
+            throw new IOException("Delete failed for : " + destination);
+        }
+        Files.createSymbolicLink(destination.toPath(), source.toPath());
+    }
+
+    private static boolean deleteDirectory(File directory) {
+        File[] allContents = directory.listFiles();
+        if (allContents != null) {
+            Arrays.stream(allContents).forEach(ServerUtils::deleteDirectory);
+        }
+        return directory.delete();
     }
 
 }

@@ -18,15 +18,21 @@
 
 package org.wso2.esb.integration.common.extensions.carbonserver;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class MultipleServersManager {
 
+    private static final Log log = LogFactory.getLog(MultipleServersManager.class);
     private Map<String, TestServerManager> servers = new HashMap<String, TestServerManager>();
+    private String deploymentDirectory = null;
+    private String registryDirectory = null;
 
     public MultipleServersManager() {
         // nothing to do
@@ -36,6 +42,8 @@ public class MultipleServersManager {
 
         int noOfServers = serverManagers.length;
         for (int index = 0; index < noOfServers; ++index) {
+            log.info("============================== Configuring server " + (index + 1)
+                             + " ==============================");
             TestServerManager testServerManager = serverManagers[index];
             try {
                 String carbonHome = testServerManager.startServer();
@@ -46,6 +54,36 @@ public class MultipleServersManager {
         }
     }
 
+    public void startServersWithDepSync(boolean mountRegistry, TestServerManager... serverManagers)
+            throws AutomationFrameworkException {
+
+        int noOfServers = serverManagers.length;
+        for (int index = 0; index < noOfServers; ++index) {
+            log.info("============================== Configuring server " + (index + 1)
+                             + " ==============================");
+            TestServerManager testServerManager = serverManagers[index];
+            try {
+                String carbonHome;
+                if (deploymentDirectory == null) {
+                    carbonHome = testServerManager.startServer();
+                    deploymentDirectory = String.join(File.separator, carbonHome, "repository", "deployment");
+                    if (mountRegistry) {
+                        registryDirectory = String.join(File.separator, carbonHome, "registry");
+                    }
+                } else {
+                    carbonHome = testServerManager.startServer(deploymentDirectory, registryDirectory);
+                }
+                servers.put(carbonHome, testServerManager);
+            } catch (Exception ex) {
+                throw new AutomationFrameworkException(ex);
+            }
+        }
+    }
+
+    public String getDeploymentDirectory() {
+        return deploymentDirectory;
+    }
+
     public void stopAllServers() throws AutomationFrameworkException {
 
         Iterator iterator = servers.values().iterator();
@@ -54,4 +92,5 @@ public class MultipleServersManager {
             serverUtils.stopServer();
         }
     }
+
 }
