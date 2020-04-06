@@ -113,4 +113,9 @@ public class MIServerConfig implements ServerConfig {
             throw new AxisFault("http/https transport listeners are required in axis2.xml");
         }
     }
+
+    @Override
+    public String getHost(String API) throws AxisFault {
+        return null;
+    }
 }
