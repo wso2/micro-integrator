@@ -21,10 +21,17 @@ package org.wso2.micro.integrator;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.frameworkutils.FrameworkPathUtil;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonTestServerManager;
+import org.wso2.esb.integration.common.extensions.coordination.CoordinationDatabase;
 import org.wso2.esb.integration.common.utils.Utils;
+import org.wso2.micro.integrator.ntask.coordination.task.store.connector.TaskQueryHelper;
 
 import java.io.File;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
 import static org.wso2.esb.integration.common.utils.Utils.ArtifactType.TASK;
@@ -41,10 +48,17 @@ public class TestUtils {
 
     public static CarbonTestServerManager getNode(int offset) throws XPathExpressionException {
 
+        return getNode(offset, new HashMap<>());
+    }
+
+    public static CarbonTestServerManager getNode(int offset, Map<String, String> additionalParams)
+            throws XPathExpressionException {
+
         HashMap<String, String> startupParameters = new HashMap<>();
         startupParameters.put("-DportOffset", String.valueOf(offset));
         startupParameters.put("-DenableManagementApi", "true");
         startupParameters.put("startupScript", "micro-integrator");
+        additionalParams.forEach(startupParameters::put);
         return new CarbonTestServerManager(new AutomationContext(), System.getProperty("carbon.zip"),
                                            startupParameters);
     }
@@ -60,6 +74,19 @@ public class TestUtils {
 
     public static String deploymentLog(String name) {
         return "Task scheduled: [ESB_TASK][" + name + "]";
+    }
+
+    public static boolean isTaskExistInStore(String taskName) throws Exception {
+
+        String query = "SELECT * FROM " + TaskQueryHelper.TABLE_NAME + " WHERE " + TaskQueryHelper.TASK_NAME + " = \""
+                + taskName + "\"";
+        try (Connection conn = DriverManager.getConnection(CoordinationDatabase.getConnectionUrl(),
+                                                           CoordinationDatabase.getUserName(),
+                                                           CoordinationDatabase.getPwd());
+                PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            return resultSet.next();
+        }
     }
 
 }

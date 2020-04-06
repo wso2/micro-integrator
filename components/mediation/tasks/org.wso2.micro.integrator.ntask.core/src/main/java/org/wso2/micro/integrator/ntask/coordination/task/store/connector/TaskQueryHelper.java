@@ -23,15 +23,15 @@ import org.wso2.micro.integrator.ntask.coordination.task.CoordinatedTask;
 /**
  * The class which contains all the data base queries for the task database.
  */
-class TaskQueryHelper {
+public class TaskQueryHelper {
 
     //task table Name
-    private static final String TABLE_NAME = "COORDINATED_TASK_TABLE";
+    public static final String TABLE_NAME = "COORDINATED_TASK_TABLE";
 
     // Task table columns
-    static final String TASK_NAME = "TASK_NAME";
-    static final String DESTINED_NODE_ID = "DESTINED_NODE_ID";
-    static final String TASK_STATE = "TASK_STATE";
+    public static final String TASK_NAME = "TASK_NAME";
+    public static final String DESTINED_NODE_ID = "DESTINED_NODE_ID";
+    public static final String TASK_STATE = "TASK_STATE";
 
     private static final String TASK_STATE_CONST =
             "( CASE " + TASK_STATE + " WHEN \"" + CoordinatedTask.States.RUNNING + "\" THEN \""

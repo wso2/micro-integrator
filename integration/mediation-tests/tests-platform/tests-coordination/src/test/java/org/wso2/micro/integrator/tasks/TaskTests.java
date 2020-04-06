@@ -29,14 +29,19 @@ import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.LogReaderManager;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import static org.wso2.micro.integrator.TestUtils.CLUSTER_DEP_TIMEOUT;
 import static org.wso2.micro.integrator.TestUtils.CLUSTER_TASK_RESCHEDULE_TIMEOUT;
+import static org.wso2.micro.integrator.TestUtils.isTaskExistInStore;
 import static org.wso2.micro.integrator.TestUtils.deployTasks;
 import static org.wso2.micro.integrator.TestUtils.deploymentLog;
 import static org.wso2.micro.integrator.TestUtils.getNode;
 
+/**
+ * Tests to verify tasks scheduling in 2 node cluster.
+ */
 public class TaskTests extends ESBIntegrationTest {
 
     private MultipleServersManager serverManager;
@@ -49,6 +54,7 @@ public class TaskTests extends ESBIntegrationTest {
     private static final String TASK_1 = "task-1";
     private static final String TASK_2 = "task-2";
     private static final String TASK_COMPLETE = "completed-task";
+    private static final String TASK_PINNED = "pinned-task";
     private static final String logCompleted = "completed-task-execution-cluster";
 
     @BeforeClass
@@ -57,22 +63,39 @@ public class TaskTests extends ESBIntegrationTest {
         context = new AutomationContext();
         serverManager = new MultipleServersManager();
         logManager = new LogReaderManager();
-        node1 = getNode(30);
+        HashMap<String, String> startupParameters = new HashMap<>();
+        startupParameters.put("-DSynapseServerName", "pinnedServerCluster");
+        node1 = getNode(30, startupParameters);
         node2 = getNode(40);
         serverManager.startServersWithDepSync(true, node1, node2);
         reader1 = new CarbonLogReader(node1.getCarbonHome());
         reader2 = new CarbonLogReader(node2.getCarbonHome());
+        logManager.start(reader1, reader2);
+        deployTasks(serverManager.getDeploymentDirectory(), TASK_1, TASK_2, TASK_COMPLETE, TASK_PINNED);
     }
 
     @Test
     void testTaskScheduling() throws Exception {
 
-        logManager.start(reader1, reader2);
-        deployTasks(serverManager.getDeploymentDirectory(), TASK_1, TASK_2, TASK_COMPLETE);
         taskScheduledInNode1 = reader1.checkForLog(deploymentLog(TASK_1), CLUSTER_DEP_TIMEOUT);
         log.info(TASK_1 + " is" + (taskScheduledInNode1 ? " " : " not ") + "scheduled in node 1.");
         if (taskScheduledInNode1 == reader2.checkForLog(deploymentLog(TASK_1), CLUSTER_DEP_TIMEOUT)) {
             Assert.fail("Deployment failed for " + TASK_1);
+        }
+    }
+
+    @Test
+    void testPinnedTaskScheduling() throws Exception {
+
+        if (!reader1.checkForLog(deploymentLog(TASK_PINNED), CLUSTER_DEP_TIMEOUT)) {
+            Assert.fail("Pinned task is not deployed in node 1");
+        }
+        if (!reader2.checkForLog("Server name not in pinned servers list. Not starting Task : " + TASK_PINNED,
+                                 CLUSTER_DEP_TIMEOUT)) {
+            Assert.fail("Pinned task is not skipped in node 2");
+        }
+        if (isTaskExistInStore(TASK_PINNED)) {
+            Assert.fail("Pinned task is not supposed to be added to task store.");
         }
     }
 
@@ -120,7 +143,7 @@ public class TaskTests extends ESBIntegrationTest {
         }
     }
 
-    @Test(dependsOnMethods = { "testTaskExecution", "testTaskExecutionCount" })
+    @Test(dependsOnMethods = { "testTaskExecution", "testTaskExecutionCount", "testPinnedTaskScheduling" })
     void testTaskReSchedulingOfCompletedTask() throws Exception {
 
         // For the task node to update completed status to task store since we are going to stop it
@@ -137,6 +160,13 @@ public class TaskTests extends ESBIntegrationTest {
             if (reader1.checkForLog(deploymentLog(TASK_COMPLETE), CLUSTER_TASK_RESCHEDULE_TIMEOUT)) {
                 Assert.fail("Completed task is rescheduled in node 1 when node 2 left the cluster");
             }
+        }
+    }
+
+    @Test(dependsOnMethods = { "testTaskReSchedulingOfCompletedTask" })
+    void testCompletedTaskExistenceUponMemberRemoval() throws Exception {
+        if (!isTaskExistInStore(TASK_COMPLETE)) {
+            Assert.fail("Completed task is removed from task store when the running node left the cluster.");
         }
     }
 

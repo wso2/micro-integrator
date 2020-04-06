@@ -183,6 +183,15 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ei</groupId>
+            <artifactId>org.wso2.micro.integrator.ntask.core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.moandjiezana.toml</groupId>
+            <artifactId>toml4j</artifactId>
+        </dependency>
     </dependencies>
 
     <profiles>

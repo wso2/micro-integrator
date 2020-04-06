@@ -39,11 +39,11 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
 
     private static final Log logger = LogFactory.getLog(CoordinationDatabase.class);
 
-    private String userName;
-    private String pwd;
     private String dbName;
     private String scriptPath;
-    private String connectionUrl;
+    private static String connectionUrl;
+    private static String pwd;
+    private static String userName;
 
     @Override
     public void initiate() throws AutomationFrameworkException {
@@ -54,7 +54,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     @Override
     public void onExecutionStart() throws AutomationFrameworkException {
 
-        String dbUrl = connectionUrl.replace("/" + dbName, "").replace("amp;", "").concat("&allowMultiQueries=true");
+        String dbUrl = connectionUrl.replace("/" + dbName, "").concat("&allowMultiQueries=true");
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
         try {
@@ -115,7 +115,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
                 throw new AutomationFrameworkException(
                         "Coordination db is not defined in toml or not added as first datasource.");
             }
-            connectionUrl = parseToml.getString("datasource[0].url");
+            connectionUrl = parseToml.getString("datasource[0].url").replaceAll("amp;", "");
             userName = parseToml.getString("datasource[0].username");
             pwd = parseToml.getString("datasource[0].password");
             URI uri = URI.create(connectionUrl.substring(5));
@@ -123,6 +123,18 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
+    }
+
+    public static String getConnectionUrl() {
+        return connectionUrl;
+    }
+
+    public static String getUserName() {
+        return userName;
+    }
+
+    public static String getPwd() {
+        return pwd;
     }
 
 }
