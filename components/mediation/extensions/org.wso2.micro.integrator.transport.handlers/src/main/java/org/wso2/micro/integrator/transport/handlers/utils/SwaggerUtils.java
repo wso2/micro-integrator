@@ -19,6 +19,7 @@
 package org.wso2.micro.integrator.transport.handlers.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.gson.JsonParser;
 import io.swagger.models.Info;
 import io.swagger.models.ModelImpl;
 import io.swagger.models.Operation;
@@ -37,6 +38,7 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.StringProperty;
 import io.swagger.util.Json;
 import io.swagger.util.Yaml;
+import net.minidev.json.JSONObject;
 import org.apache.axiom.om.OMNode;
 import org.apache.axiom.om.OMText;
 import org.apache.axis2.AxisFault;
@@ -46,14 +48,21 @@ import org.apache.axis2.description.AxisResourceMap;
 import org.apache.axis2.description.AxisResourceParameter;
 import org.apache.axis2.description.AxisResources;
 import org.apache.axis2.description.AxisService;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.apache.synapse.registry.Registry;
+import org.apache.synapse.rest.API;
+import org.apache.synapse.rest.version.DefaultStrategy;
+import org.wso2.carbon.integrator.core.json.utils.GSONUtils;
+import org.wso2.carbon.mediation.commons.rest.api.swagger.GenericApiObjectDefinition;
+import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.integrator.transport.handlers.requestprocessors.swagger.format.MIServerConfig;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,8 +83,8 @@ public final class SwaggerUtils {
      * @return Swagger definition as string
      * @throws AxisFault Error occurred while fetching the host details.
      */
-    public static String takeDataServiceSwagger(String requestURI, ConfigurationContext configurationContext,
-                                                boolean isJSON) throws AxisFault {
+    public static String getDataServiceSwagger(String requestURI, ConfigurationContext configurationContext,
+                                               boolean isJSON) throws AxisFault, SwaggerException {
         String dataServiceName = requestURI.substring(requestURI.lastIndexOf("/") + 1);
         AxisService dataService = configurationContext.getAxisConfiguration().getService(dataServiceName);
         if (dataService != null) {
@@ -85,8 +94,12 @@ public final class SwaggerUtils {
             if (dataService.getParameter(SwaggerProcessorConstants.SWAGGER_RESOURCE_PATH) != null) {
                 String swaggerLocation =
                         (String) dataService.getParameter(SwaggerProcessorConstants.SWAGGER_RESOURCE_PATH).getValue();
-                if (swaggerLocation != null && !swaggerLocation.isEmpty()) {
-                    return SwaggerUtils.fetchSwaggerFromRegistry(swaggerLocation);
+                if (StringUtils.isNotEmpty(swaggerLocation)) {
+                    String swaggerFromReg = SwaggerUtils.fetchSwaggerFromRegistry(swaggerLocation);
+                    if (StringUtils.isNotEmpty(swaggerFromReg)) {
+                        return swaggerFromReg;
+                    } else throw new SwaggerException("Could not fetch the swagger definition from registry. Registry" +
+                            " path : " + swaggerLocation);
                 }
                 return null;
             } else {
@@ -151,7 +164,8 @@ public final class SwaggerUtils {
                         throw new AxisFault("Invalid method \"" + method + "\" detected in the data-service");
                 }
             }
-            paths.put(entry.getKey(), path);
+            String contextPath = entry.getKey().startsWith("/") ? entry.getKey() : "/" + entry.getKey();
+            paths.put(contextPath, path);
         }
         swaggerDoc.setPaths(paths);
         if (isJSON) return Json.pretty(swaggerDoc);
@@ -284,9 +298,10 @@ public final class SwaggerUtils {
      * Util method to fetch a swagger resource from the registry.
      *
      * @param resourcePath registry path to the resource.
-     * @return Swagger definition as string or null if error occurred.
+     * @return null if no resource found or the swagger as string.
      */
     public static String fetchSwaggerFromRegistry(String resourcePath) {
+
         String defString = null;
         SynapseConfiguration synapseConfig =
                 SynapseConfigUtils.getSynapseConfiguration(Constants.SUPER_TENANT_DOMAIN_NAME);
@@ -295,8 +310,71 @@ public final class SwaggerUtils {
 
         if (regContent instanceof OMText) {
             defString = ((OMText) regContent).getText();
+            byte[] decodedBytes = Base64.getDecoder().decode(defString);
+            defString = new String(decodedBytes);
+        }
+        return defString;
+    }
+
+    /**
+     * Get the swagger definition for a given API.
+     * @param api   API object.
+     * @param isJSON    response needed in JSON / JAML.
+     * @return  Swagger as String.
+     * @throws AxisFault Error occurred while fetching the host name for API.
+     */
+    public static String getAPISwagger(API api, boolean isJSON) throws AxisFault {
+
+        MIServerConfig serverConfig = new MIServerConfig();
+        String responseString;
+
+        responseString = retrieveAPISwaggerFromRegistry(api);
+        org.yaml.snakeyaml.Yaml yamlDefinition = new org.yaml.snakeyaml.Yaml();
+        if (StringUtils.isNotEmpty(responseString)) {
+            if (!isJSON) {
+                JsonParser jsonParser = new JsonParser();
+                responseString =
+                        yamlDefinition.dumpAsMap(GSONUtils.gsonJsonObjectToMap(jsonParser.parse(responseString)));
+            }
+        } else {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Generating swagger definition for: " + api.getName());
+            }
+            GenericApiObjectDefinition objectDefinition = new GenericApiObjectDefinition(api, serverConfig);
+            Map<String, Object> definitionMap = objectDefinition.getDefinitionMap();
+            if (isJSON) {
+                JSONObject jsonDefinition = new JSONObject(definitionMap);
+                responseString = jsonDefinition.toString();
+            } else {
+                responseString = yamlDefinition.dumpAsMap(definitionMap);
+            }
+        }
+        return responseString;
+    }
+
+    /**
+     * Function to extract swagger definition from the registry.
+     *
+     * @param api API object.
+     * @return null if registry content unavailable or empty, otherwise relevant content.
+     */
+    private static String retrieveAPISwaggerFromRegistry(API api) {
+
+        String resourcePath = api.getSwaggerResourcePath();
+
+        if (resourcePath == null) {
+            //Create resource path in registry
+            StringBuilder resourcePathBuilder = new StringBuilder();
+            resourcePathBuilder.append(SwaggerProcessorConstants.CONFIG_REG_PREFIX)
+                    .append(SwaggerConstants.DEFAULT_SWAGGER_REGISTRY_PATH).append(api.getAPIName());
+            if (!(api.getVersionStrategy() instanceof DefaultStrategy)) {
+                resourcePathBuilder.append(":v").append(api.getVersion());
+            }
+            resourcePathBuilder.append("/swagger.json");
+            resourcePath = resourcePathBuilder.toString();
+
         }
 
-        return defString;
+        return SwaggerUtils.fetchSwaggerFromRegistry(resourcePath);
     }
 }

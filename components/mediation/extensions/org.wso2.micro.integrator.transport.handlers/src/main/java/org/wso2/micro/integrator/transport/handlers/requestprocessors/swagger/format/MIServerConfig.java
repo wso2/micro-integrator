@@ -69,8 +69,7 @@ public class MIServerConfig implements ServerConfig {
     }
 
     private String getHostNameFromTransport(String transport) throws AxisFault {
-        //Retrieve WSDLPrefix to retrieve host
-        //If transport is limited to https, https host will generate. Otherwise http will be generated
+
         TransportInDescription transportIn = axisConfiguration.getTransportIn(transport);
 
         if (transportIn != null) {
@@ -119,11 +118,6 @@ public class MIServerConfig implements ServerConfig {
         }
 
         throw new AxisFault("http/https transport listeners are required in axis2.xml");
-    }
-
-    @Override
-    public String getHost(String API) throws AxisFault {
-        return null;
     }
 }
 

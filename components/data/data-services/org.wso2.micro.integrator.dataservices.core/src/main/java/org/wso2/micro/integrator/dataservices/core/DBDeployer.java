@@ -50,6 +50,7 @@ import org.apache.axis2.i18n.Messages;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.axis2.wsdl.WSDLConstants;
 import org.apache.axis2.wsdl.WSDLUtil;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.neethi.Policy;
@@ -842,7 +843,7 @@ public class DBDeployer extends AbstractDeployer {
 			axisService.addParameter(DBConstants.DATA_SERVICE_OBJECT, dataService);
 
 			String swaggerResourcePath = dataService.getSwaggerResourcePath();
-			if (swaggerResourcePath != null && !swaggerResourcePath.isEmpty()) {
+			if (StringUtils.isNotEmpty(swaggerResourcePath)) {
 				axisService.addParameter(DBConstants.SWAGGER_RESOURCE_PATH, swaggerResourcePath);
 			}
 

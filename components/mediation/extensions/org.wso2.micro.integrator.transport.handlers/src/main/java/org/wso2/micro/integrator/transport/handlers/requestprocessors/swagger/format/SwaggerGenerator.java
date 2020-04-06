@@ -25,12 +25,10 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.protocol.HTTP;
 import org.apache.synapse.config.SynapseConfigUtils;
 import org.apache.synapse.rest.API;
-import org.apache.synapse.rest.version.DefaultStrategy;
 import org.wso2.carbon.mediation.commons.rest.api.swagger.SwaggerConstants;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.transports.CarbonHttpRequest;
 import org.wso2.micro.core.transports.CarbonHttpResponse;
-import org.wso2.micro.integrator.transport.handlers.utils.SwaggerUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.UnsupportedEncodingException;
@@ -43,7 +41,6 @@ public class SwaggerGenerator {
     /**
      * Registry path prefixes
      */
-    static final String CONFIG_REG_PREFIX = "conf:";
 
     /**
      * Update the response with provided response string.
@@ -87,32 +84,6 @@ public class SwaggerGenerator {
      */
     protected String getApiNameFromRequestUri(String requestUri) {
         return requestUri.substring(1);
-    }
-
-    /**
-     * Function to extract swagger definition from the registry
-     *
-     * @param api API object
-     * @return null if registry content unavailable or empty, otherwise relevant content
-     */
-    protected String retrieveAPISwaggerFromRegistry(API api) {
-
-        String resourcePath = api.getSwaggerResourcePath();
-
-        if (resourcePath == null) {
-            //Create resource path in registry
-            StringBuilder resourcePathBuilder = new StringBuilder();
-            resourcePathBuilder.append(CONFIG_REG_PREFIX)
-                    .append(SwaggerConstants.DEFAULT_SWAGGER_REGISTRY_PATH).append(api.getAPIName());
-            if (!(api.getVersionStrategy() instanceof DefaultStrategy)) {
-                resourcePathBuilder.append(":v").append(api.getVersion());
-            }
-            resourcePathBuilder.append("/swagger.json");
-            resourcePath = resourcePathBuilder.toString();
-
-        }
-
-        return SwaggerUtils.fetchSwaggerFromRegistry(resourcePath);
     }
 
     /**

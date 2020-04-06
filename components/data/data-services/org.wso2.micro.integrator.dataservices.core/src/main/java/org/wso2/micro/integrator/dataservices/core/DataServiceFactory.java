@@ -18,6 +18,7 @@
 package org.wso2.micro.integrator.dataservices.core;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.commons.lang.StringUtils;
 import org.wso2.micro.integrator.dataservices.common.DBConstants;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.AuthorizationProviderConfig;
 import org.wso2.micro.integrator.dataservices.common.DBConstants.BoxcarringOps;
@@ -188,7 +189,7 @@ public class DataServiceFactory {
 
             String swaggerLocation = dbsElement.getAttributeValue(new QName(DBSFields.SWAGGER_LOCATION));
 
-            if (swaggerLocation != null && !swaggerLocation.isEmpty()) {
+            if (StringUtils.isNotEmpty(swaggerLocation)) {
                 if (dataService.getResourceIds().isEmpty()) {
                     throw new DataServiceFault("Cannot expose a swagger from a data-service which does not have any " +
                             "resources defined");
