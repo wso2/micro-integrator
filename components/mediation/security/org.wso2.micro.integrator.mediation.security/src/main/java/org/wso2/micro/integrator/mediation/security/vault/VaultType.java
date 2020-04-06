@@ -24,5 +24,6 @@ package org.wso2.micro.integrator.mediation.security.vault;
 public enum VaultType {
     REG,
     FILE,
-    DOCKER
+    DOCKER,
+    ENV
 }
