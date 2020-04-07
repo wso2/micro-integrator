@@ -285,7 +285,7 @@
                                     <resources>
                                         <resource>
                                             <directory>
-                                                ${basedir}/target/tobeCopied/wso2ei-${project.version}/repository/resources/security/
+                                                ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
                                             </directory>
                                             <includes>
                                                 <include>**/*.jks</include>
@@ -306,7 +306,7 @@
                                     <resources>
                                         <resource>
                                             <directory>
-                                                ${basedir}/target/tobeCopied/wso2ei-${project.version}/repository/resources/security/
+                                                ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/resources/security/
                                             </directory>
                                             <includes>
                                                 <include>**/*.jks</include>
@@ -327,7 +327,7 @@
                                     <resources>
                                         <resource>
                                             <directory>
-                                                ${basedir}/target/tobeCopied/wso2ei-${project.version}/samples/service-bus/resources/security/
+                                                ${basedir}/target/tobeCopied/wso2mi-${project.version}/samples/service-bus/resources/security/
                                             </directory>
                                             <includes>
                                                 <include>**/*.jks</include>
@@ -348,7 +348,7 @@
                                     <resources>
                                         <resource>
                                             <directory>
-                                                ${basedir}/target/tobeCopied/wso2ei-${project.version}/repository/deployment/client/modules
+                                                ${basedir}/target/tobeCopied/wso2mi-${project.version}/repository/deployment/client/modules
                                             </directory>
                                             <includes>
                                                 <include>**/*.mar</include>
