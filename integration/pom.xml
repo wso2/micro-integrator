@@ -719,11 +719,17 @@
                 <artifactId>maven-model</artifactId>
                 <version>${maven.model.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.moandjiezana.toml</groupId>
+                <artifactId>toml4j</artifactId>
+                <version>${toml4j.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <!--All the integration test dependency versions which doesn't intercept with product build are defined here-->
     <properties>
+        <toml4j.version>0.7.2</toml4j.version>
         <commons-io.version>2.6</commons-io.version>
         <neethi.orbit.version>2.0.4.wso2v4</neethi.orbit.version>
         <andes.version>3.3.4</andes.version>

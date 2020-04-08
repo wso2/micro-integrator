@@ -19,3 +19,11 @@ algorithm = "AES"
 
 [management_api_token_handler]
 enable = false
+
+## data source for integration tests.
+[[datasource]]
+id = "WSO2_COORDINATION_DB"
+url = "jdbc:mysql://localhost:3306/clusterdbIntegrationTests?useSSL=false&amp;allowPublicKeyRetrieval=true"
+username = "root"
+password = "root"
+driver = "com.mysql.jdbc.Driver"

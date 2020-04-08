@@ -18,7 +18,7 @@
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
 
-<suite name="ESBTestSuite" parallel="false" configfailurepolicy="continue">
+<suite name="ESBTestSuite" configfailurepolicy="continue">
     <listeners>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestExecutionListener"/>
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestSuiteListener"/>
@@ -27,9 +27,10 @@
         <listener class-name="org.wso2.carbon.automation.engine.testlisteners.TestReportListener"/>
     </listeners>
 
-    <test name="Server-Startup-verification" verbose="2">
+    <test name="Cluster-tests" verbose="2" parallel="none">
         <classes>
-            <class name="org.wso2.micro.integrator.ClusterStartupTestCase"/>
+            <class name="org.wso2.micro.integrator.startup.StartupTests"/>
+            <class name="org.wso2.micro.integrator.tasks.TaskTests"/>
         </classes>
     </test>
 
