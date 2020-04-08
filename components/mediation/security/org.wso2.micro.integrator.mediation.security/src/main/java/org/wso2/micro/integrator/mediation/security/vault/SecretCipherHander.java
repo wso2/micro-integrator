@@ -31,6 +31,7 @@ class SecretCipherHander {
 	/* Root Secret Repository */
 	private RegistrySecretRepository parentRepository = new RegistrySecretRepository();
 	private FileSecretRepository fileSecretRepository = new FileSecretRepository();
+	private EnvironmentSecretRepository environmentSecretRepository =  new EnvironmentSecretRepository();
 
 	SecretCipherHander(org.apache.synapse.MessageContext synCtx) {
 		super();
@@ -56,6 +57,11 @@ class SecretCipherHander {
 				return fileSecretRepository.getSecret(resolvedAlias);
 			}
 			return fileSecretRepository.getPlainTextSecret(resolvedAlias);
+		} else if (VaultType.ENV.equals(secretSrcData.getVaultType())) {
+			if (secretSrcData.isEncrypted()) {
+				return environmentSecretRepository.getSecret(alias);
+			}
+			return environmentSecretRepository.getPlainTextSecret(alias);
 		} else if (VaultType.REG.equals(secretSrcData.getVaultType())) {
 			// For registry type we only support plain text
 			return parentRepository.getSecret(alias);
