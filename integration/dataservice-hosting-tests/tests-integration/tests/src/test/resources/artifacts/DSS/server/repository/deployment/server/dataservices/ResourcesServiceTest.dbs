@@ -48,6 +48,17 @@
       <sql>delete from Products where productCode=?</sql>
       <param name="productCode" ordinal="1" paramType="SCALAR" sqlType="STRING" type="IN"/>
    </query>
+   <query id="getProductByCodeAndName" useConfig="default">
+      <sql>select productName, productLine, quantityInStock, buyPrice from Products where productCode=? and productName=?</sql>
+      <result element="Entries" rowName="Entry">
+        <element column="productName" name="productName" xsdType="xs:string"/>
+        <element column="productLine" name="productLine" xsdType="xs:string"/>
+        <element column="quantityInStock" name="quantityInStock" xsdType="xs:string"/>
+        <element column="buyPrice" name="buyPrice" xsdType="xs:string"/>
+      </result>
+      <param name="productCode" optional="false" sqlType="STRING"/>
+      <param name="productName" optional="false" sqlType="STRING"/>
+   </query>
    <resource method="GET" path="product/{productCode}">
       <call-query href="getProductByCodeQuery">
          <with-param name="productCode" query-param="productCode"/>
@@ -78,5 +89,17 @@
    </resource>
    <resource method="GET" path="products">
       <call-query href="getProductsQuery"/>
+   </resource>
+   <resource method="GET" path="getProductWithCode/{productCode}/andName/{productName}">
+      <call-query href="getProductByCodeAndName">
+         <with-param name="productCode" query-param="productCode"/>
+         <with-param name="productName" query-param="productName"/>
+      </call-query>
+   </resource>
+   <resource method="GET" path="getProductWithCode/{productCode}/andName">
+      <call-query href="getProductByCodeAndName">
+         <with-param name="productCode" query-param="productCode"/>
+         <with-param name="productName" query-param="productName"/>
+      </call-query>
    </resource>
 </data>

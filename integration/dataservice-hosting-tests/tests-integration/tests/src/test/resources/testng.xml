@@ -74,6 +74,12 @@
         </classes>
     </test>
 
+    <test name="Swagger tests" parallel="false" verbose="2">
+        <classes>
+            <class name="org.wso2.ei.dataservice.integration.test.swagger.SwaggerGenerationTestCase"/>
+        </classes>
+    </test>
+
     <!--  TODO need to fix  <test name="SPARQL-tests" parallel="false" verbose="2">
             <packages>
                 <package name="org.wso2.ei.dataservice.integration.test.sparql"/>
