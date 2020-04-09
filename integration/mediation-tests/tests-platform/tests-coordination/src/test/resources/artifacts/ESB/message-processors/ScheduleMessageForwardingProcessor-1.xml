@@ -32,4 +32,5 @@
     <parameter name="message.processor.failMessagesStore">InMemoryStore-1</parameter>
     <parameter name="is.active">true</parameter>
     <parameter name="target.endpoint">log-endpoint</parameter>
+    <parameter name="message.processor.reply.sequence">main</parameter>
 </messageProcessor>

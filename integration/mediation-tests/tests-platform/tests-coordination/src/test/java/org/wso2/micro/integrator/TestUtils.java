@@ -41,6 +41,7 @@ public class TestUtils {
     public static final int LOG_READ_TIMEOUT = 180;
     public static final int CLUSTER_DEP_TIMEOUT = 120;
     public static final int CLUSTER_TASK_RESCHEDULE_TIMEOUT = 120;
+    public static final int MANAGEMENT_API_PORT = 9154;
 
     private TestUtils() {
         //
@@ -72,8 +73,20 @@ public class TestUtils {
         }
     }
 
+    public static String msgProcessorPauseLog(String name) {
+        return "Task paused: [ESB_TASK][" + name + "]";
+    }
+
+    public static String msgProcessorResumeLog(String name) {
+        return "Task resumed: [ESB_TASK][" + name + "]";
+    }
+
     public static String deploymentLog(String name) {
-        return "Task scheduled: [ESB_TASK][" + name + "].";
+        return deploymentLog(name, false);
+    }
+
+    public static String deploymentLog(String name, boolean isPaused) {
+        return "Task scheduled: [ESB_TASK][" + name + "]" + (isPaused ? "[Paused]" : ".");
     }
 
     public static boolean isTaskExistInStore(String taskName) throws Exception {
