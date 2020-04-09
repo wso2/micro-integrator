@@ -17,10 +17,16 @@
   ~ under the License.
   -->
 
-<task xmlns="http://ws.apache.org/ns/synapse" name="pinned-task" pinnedServers="pinnedServerCluster"
-      class="org.apache.synapse.startup.tasks.MessageInjector" group="synapse.simple.quartz">
-    <trigger interval="60"/>
-    <property name="message">
-        <test xmlns="">pinned-server-task</test>
-    </property>
-</task>
+<proxy name="storeProxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <log level="custom">
+                <property name="where" value="store proxy"/>
+            </log>
+            <store messageStore="InMemoryStore-2"/>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>

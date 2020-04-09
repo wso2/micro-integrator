@@ -28,16 +28,17 @@ import org.wso2.esb.integration.common.extensions.carbonserver.MultipleServersMa
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.LogReaderManager;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 import static org.wso2.micro.integrator.TestUtils.CLUSTER_DEP_TIMEOUT;
 import static org.wso2.micro.integrator.TestUtils.CLUSTER_TASK_RESCHEDULE_TIMEOUT;
-import static org.wso2.micro.integrator.TestUtils.isTaskExistInStore;
-import static org.wso2.micro.integrator.TestUtils.deployTasks;
+import static org.wso2.micro.integrator.TestUtils.deployArtifacts;
 import static org.wso2.micro.integrator.TestUtils.deploymentLog;
 import static org.wso2.micro.integrator.TestUtils.getNode;
+import static org.wso2.micro.integrator.TestUtils.isTaskExistInStore;
 
 /**
  * Tests to verify tasks scheduling in 2 node cluster.
@@ -71,7 +72,8 @@ public class TaskTests extends ESBIntegrationTest {
         reader1 = new CarbonLogReader(node1.getCarbonHome());
         reader2 = new CarbonLogReader(node2.getCarbonHome());
         logManager.start(reader1, reader2);
-        deployTasks(serverManager.getDeploymentDirectory(), TASK_1, TASK_2, TASK_COMPLETE, TASK_PINNED);
+        deployArtifacts(serverManager.getDeploymentDirectory(), Utils.ArtifactType.TASK, TASK_1, TASK_2, TASK_COMPLETE,
+                        TASK_PINNED);
     }
 
     @Test

@@ -17,10 +17,4 @@
   ~ under the License.
   -->
 
-<task xmlns="http://ws.apache.org/ns/synapse" name="pinned-task" pinnedServers="pinnedServerCluster"
-      class="org.apache.synapse.startup.tasks.MessageInjector" group="synapse.simple.quartz">
-    <trigger interval="60"/>
-    <property name="message">
-        <test xmlns="">pinned-server-task</test>
-    </property>
-</task>
+<messageStore xmlns="http://ws.apache.org/ns/synapse" name="InMemoryStore-1"/>

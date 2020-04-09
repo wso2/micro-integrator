@@ -16,11 +16,15 @@
   ~ specific language governing permissions and limitations
   ~ under the License.
   -->
-
-<task xmlns="http://ws.apache.org/ns/synapse" name="pinned-task" pinnedServers="pinnedServerCluster"
-      class="org.apache.synapse.startup.tasks.MessageInjector" group="synapse.simple.quartz">
-    <trigger interval="60"/>
-    <property name="message">
-        <test xmlns="">pinned-server-task</test>
-    </property>
-</task>
+<proxy name="log-proxy" startOnLoad="true" transports="http https" xmlns="http://ws.apache.org/ns/synapse">
+    <target>
+        <inSequence>
+            <log level="full">
+                <property name="where" value="log proxy"/>
+            </log>
+            <respond/>
+        </inSequence>
+        <outSequence/>
+        <faultSequence/>
+    </target>
+</proxy>

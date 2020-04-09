@@ -215,7 +215,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
             if (paused) {
                 this.getScheduler().pauseJob(job.getKey());
             }
-            log.info("Task scheduled: [" + this.getTaskType() + "][" + taskName + "]" + (paused ? " [Paused]" : ""));
+            log.info("Task scheduled: [" + this.getTaskType() + "][" + taskName + "]" + (paused ? " [Paused]." : "."));
         } catch (SchedulerException e) {
             throw new TaskException("Error in scheduling task with name: " + taskName, TaskException.Code.UNKNOWN, e);
         }
