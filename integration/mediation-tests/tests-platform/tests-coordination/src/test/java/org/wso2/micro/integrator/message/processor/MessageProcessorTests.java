@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.message.processor;
 
+import com.google.gson.JsonObject;
 import org.junit.Assert;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -37,9 +38,12 @@ import java.util.Map;
 import static org.wso2.esb.integration.common.utils.Utils.ArtifactType;
 import static org.wso2.micro.integrator.TestUtils.CLUSTER_DEP_TIMEOUT;
 import static org.wso2.micro.integrator.TestUtils.LOG_READ_TIMEOUT;
+import static org.wso2.micro.integrator.TestUtils.MANAGEMENT_API_PORT;
 import static org.wso2.micro.integrator.TestUtils.deployArtifacts;
 import static org.wso2.micro.integrator.TestUtils.deploymentLog;
 import static org.wso2.micro.integrator.TestUtils.getNode;
+import static org.wso2.micro.integrator.TestUtils.msgProcessorPauseLog;
+import static org.wso2.micro.integrator.TestUtils.msgProcessorResumeLog;
 
 /**
  * Test cases to verify message processor behavior when clustered.
@@ -51,8 +55,6 @@ public class MessageProcessorTests extends ESBIntegrationTest {
     private CarbonLogReader reader2;
     private LogReaderManager logManager;
     private boolean taskScheduledInNode1 = false;
-    private static final String MS_1 = "InMemoryStore-1";
-    private static final String MS_2 = "InMemoryStore-2";
     private static final String MP_1 = "ScheduleMessageForwardingProcessor-1";
     private static final String MP_2 = "ScheduleMessageForwardingProcessor-2";
     private static final String STORE_PROXY = "storeProxy";
@@ -76,9 +78,7 @@ public class MessageProcessorTests extends ESBIntegrationTest {
         reader1 = new CarbonLogReader(node1.getCarbonHome());
         reader2 = new CarbonLogReader(node2.getCarbonHome());
         logManager.start(reader1, reader2);
-        deployArtifacts(serverManager.getDeploymentDirectory(), ArtifactType.MESSAGE_STORES, MS_1, MS_2);
         deployArtifacts(serverManager.getDeploymentDirectory(), ArtifactType.MESSAGE_PROCESSOR, MP_1, MP_2);
-        deployArtifacts(serverManager.getDeploymentDirectory(), ArtifactType.PROXY, STORE_PROXY);
     }
 
     @Test
@@ -128,18 +128,95 @@ public class MessageProcessorTests extends ESBIntegrationTest {
             if (!reader1.checkForLog(storeProxyLog, LOG_READ_TIMEOUT)) {
                 Assert.fail("Message hasn't reached " + STORE_PROXY);
             }
-            if (!reader1.checkForLog(PAYLOAD, LOG_READ_TIMEOUT)) {
-                Assert.fail("Message Processor execution failed.");
-            }
         } else {
             sendRequest(NODE_2_OFFSET);
             if (!reader2.checkForLog(storeProxyLog, LOG_READ_TIMEOUT)) {
                 Assert.fail("Message hasn't reached " + STORE_PROXY);
             }
-            if (!reader2.checkForLog(PAYLOAD, LOG_READ_TIMEOUT)) {
-                Assert.fail("Message Processor execution failed.");
+        }
+        if (!reader1.checkForLog(PAYLOAD, LOG_READ_TIMEOUT)) {
+            Assert.fail("Message Processor execution failed.");
+        }
+    }
+
+    @Test(dependsOnMethods = { "testMpExecution" })
+    void testMpDeactivationViaRunningNode() throws Exception {
+
+        logManager.clearAll();
+        if (taskScheduledInNode1) {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET, false);
+            if (!reader1.checkForLog(msgProcessorPauseLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Deactivation of message Processor via management api failed for " + MP_1);
+            }
+        } else {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_2_OFFSET, false);
+            if (!reader2.checkForLog(msgProcessorPauseLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Deactivation of message Processor via management api failed for " + MP_1);
             }
         }
+    }
+
+    @Test(dependsOnMethods = { "testMpDeactivationViaRunningNode" })
+    void testMpActivationViaRunningNode() throws Exception {
+
+        logManager.clearAll();
+        if (taskScheduledInNode1) {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET, true);
+            if (!reader1.checkForLog(msgProcessorResumeLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Activation of message Processor via management api failed for " + MP_1);
+            }
+        } else {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_2_OFFSET, true);
+            if (!reader2.checkForLog(msgProcessorResumeLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Activation of message Processor via management api failed for " + MP_1);
+            }
+        }
+    }
+
+    @Test(dependsOnMethods = { "testMpActivationViaRunningNode" })
+    void testMpDeactivationViaPassiveNode() throws Exception {
+
+        logManager.clearAll();
+        if (taskScheduledInNode1) {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_2_OFFSET, false);
+            if (!reader1.checkForLog(msgProcessorPauseLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Deactivation of message Processor via management api failed for " + MP_1);
+            }
+        } else {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET, false);
+            if (!reader2.checkForLog(msgProcessorPauseLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Deactivation of message Processor via management api failed for " + MP_1);
+            }
+        }
+    }
+
+    @Test(dependsOnMethods = { "testMpDeactivationViaPassiveNode" })
+    void testMpActivationViaPassiveNode() throws Exception {
+
+        logManager.clearAll();
+        if (taskScheduledInNode1) {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_2_OFFSET, true);
+            if (!reader1.checkForLog(msgProcessorResumeLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Activation of message Processor via management api failed for " + MP_1);
+            }
+        } else {
+            changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET, true);
+            if (!reader2.checkForLog(msgProcessorResumeLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
+                Assert.fail("Activation of message Processor via management api failed for " + MP_1);
+            }
+        }
+    }
+
+    private void changeMpStatus(String mpName, int managementApiPort, boolean isActivate) throws Exception {
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Accept", "application/json");
+        headers.put("Content-type", "application/json");
+        JsonObject payload = new JsonObject();
+        payload.addProperty("name", mpName);
+        payload.addProperty("status", isActivate ? "active" : "inactive");
+        String url = "https://localhost:" + managementApiPort + "/management/message-processors";
+        HttpRequestUtil.doPost(new URL(url), payload.toString(), headers);
     }
 
     private void sendRequest(int offset) throws Exception {
