@@ -231,9 +231,7 @@ public class MessageProcessorTests extends ESBIntegrationTest {
         }
     }
 
-    @Test(dependsOnMethods = { "testMpActivationViaPassiveNode" },
-            // due to https://github.com/wso2/micro-integrator/issues/1071
-            enabled = false)
+    @Test(dependsOnMethods = { "testMpActivationViaPassiveNode" })
     void testMpStateUponRedeployment() throws Exception {
 
         logManager.clearAll();
