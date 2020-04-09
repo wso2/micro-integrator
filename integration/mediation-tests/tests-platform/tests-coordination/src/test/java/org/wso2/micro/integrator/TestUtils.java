@@ -34,7 +34,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.xml.xpath.XPathExpressionException;
 
-import static org.wso2.esb.integration.common.utils.Utils.ArtifactType.TASK;
+import static org.wso2.esb.integration.common.utils.Utils.ArtifactType;
 
 public class TestUtils {
 
@@ -63,17 +63,17 @@ public class TestUtils {
                                            startupParameters);
     }
 
-    public static void deployTasks(String depDir, String... tasks) throws Exception {
+    public static void deployArtifacts(String depDir, ArtifactType type, String... tasks) throws Exception {
 
         for (int i = 0; i < tasks.length; i++) {
             File task = new File(FrameworkPathUtil.getSystemResourceLocation() + "artifacts" + File.separator + "ESB"
-                                         + File.separator + "tasks" + File.separator + tasks[i] + ".xml");
-            Utils.deploySynapseConfiguration(task, depDir, TASK);
+                                         + File.separator + type.getDirName() + File.separator + tasks[i] + ".xml");
+            Utils.deploySynapseConfiguration(task, depDir, type);
         }
     }
 
     public static String deploymentLog(String name) {
-        return "Task scheduled: [ESB_TASK][" + name + "]";
+        return "Task scheduled: [ESB_TASK][" + name + "].";
     }
 
     public static boolean isTaskExistInStore(String taskName) throws Exception {

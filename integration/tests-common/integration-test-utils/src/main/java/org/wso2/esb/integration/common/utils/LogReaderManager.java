@@ -47,4 +47,8 @@ public class LogReaderManager {
         readerList.forEach(CarbonLogReader::stop);
         readerList.clear();
     }
+
+    public void clearAll() {
+        readerList.forEach(CarbonLogReader::clearLogs);
+    }
 }

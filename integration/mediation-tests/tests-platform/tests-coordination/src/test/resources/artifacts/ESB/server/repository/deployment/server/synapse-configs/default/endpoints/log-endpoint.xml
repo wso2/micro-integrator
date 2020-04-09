@@ -17,10 +17,14 @@
   ~ under the License.
   -->
 
-<task xmlns="http://ws.apache.org/ns/synapse" name="pinned-task" pinnedServers="pinnedServerCluster"
-      class="org.apache.synapse.startup.tasks.MessageInjector" group="synapse.simple.quartz">
-    <trigger interval="60"/>
-    <property name="message">
-        <test xmlns="">pinned-server-task</test>
-    </property>
-</task>
+<endpoint name="log-endpoint" xmlns="http://ws.apache.org/ns/synapse">
+    <address uri="http://localhost:8330/services/log-proxy">
+        <suspendOnFailure>
+            <initialDuration>-1</initialDuration>
+            <progressionFactor>1.0</progressionFactor>
+        </suspendOnFailure>
+        <markForSuspension>
+            <retriesBeforeSuspension>0</retriesBeforeSuspension>
+        </markForSuspension>
+    </address>
+</endpoint>
