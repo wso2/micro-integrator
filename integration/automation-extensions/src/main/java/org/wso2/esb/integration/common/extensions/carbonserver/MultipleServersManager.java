@@ -42,7 +42,7 @@ public class MultipleServersManager {
 
         int noOfServers = serverManagers.length;
         for (int index = 0; index < noOfServers; ++index) {
-            log.info("============================== Configuring server " + (index + 1)
+            log.info("============================== Configuring server " + (servers.size() + 1)
                              + " ==============================");
             TestServerManager testServerManager = serverManagers[index];
             try {
@@ -59,7 +59,7 @@ public class MultipleServersManager {
 
         int noOfServers = serverManagers.length;
         for (int index = 0; index < noOfServers; ++index) {
-            log.info("============================== Configuring server " + (index + 1)
+            log.info("============================== Configuring server " + (servers.size() + 1)
                              + " ==============================");
             TestServerManager testServerManager = serverManagers[index];
             try {

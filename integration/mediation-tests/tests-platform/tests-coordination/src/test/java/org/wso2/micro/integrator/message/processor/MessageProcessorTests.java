@@ -57,14 +57,17 @@ public class MessageProcessorTests extends ESBIntegrationTest {
     private boolean taskScheduledInNode1 = false;
     private static final String MP_1 = "ScheduleMessageForwardingProcessor-1";
     private static final String MP_2 = "ScheduleMessageForwardingProcessor-2";
+    private static final String MP_3 = "ScheduleMessageForwardingProcessor-3";
     private static final String STORE_PROXY = "storeProxy";
     private static final String MP_PREFIX = "MSMP_";
     private static final String UNDER_SCORE = "_";
     private static final String DEFAULT_SUFFIX = UNDER_SCORE + "0";
     private static final String MP_1_TASK_NAME = MP_PREFIX + MP_1 + DEFAULT_SUFFIX;
+    private static final String MP_3_TASK_NAME = MP_PREFIX + MP_3 + DEFAULT_SUFFIX;
     private static final String PAYLOAD = "{\"test_payload\":\"message_processor_cluster_tests\"}";
     private static final int NODE_1_OFFSET = 50;
     private static final int NODE_2_OFFSET = 60;
+    private static final int NODE_3_OFFSET = 70;
 
     @BeforeClass
     void initialize() throws Exception {
@@ -78,7 +81,7 @@ public class MessageProcessorTests extends ESBIntegrationTest {
         reader1 = new CarbonLogReader(node1.getCarbonHome());
         reader2 = new CarbonLogReader(node2.getCarbonHome());
         logManager.start(reader1, reader2);
-        deployArtifacts(serverManager.getDeploymentDirectory(), ArtifactType.MESSAGE_PROCESSOR, MP_1, MP_2);
+        deployArtifacts(serverManager.getDeploymentDirectory(), ArtifactType.MESSAGE_PROCESSOR, MP_1, MP_2, MP_3);
     }
 
     @Test
@@ -92,6 +95,27 @@ public class MessageProcessorTests extends ESBIntegrationTest {
     }
 
     @Test(dependsOnMethods = { "testMpScheduling" })
+    void testMpDeploymentOfInitiallyDeactivatedMp() throws Exception {
+
+        if (taskScheduledInNode1) {
+            /*
+             * In synapse level, we first deploy and deactivate immediately, hence if we have a task scheduled log
+             * we should have deactivation log as well (The task is first added to task store and then retrieved from
+             * there to schedule. If the status is updated as paused before retrieval, scheduling log won't be there.
+             */
+            if (reader1.checkForLog(deploymentLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT) && !reader1.checkForLog(
+                    msgProcessorPauseLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT)) {
+                Assert.fail("Inactive message Processor " + MP_3 + " was not paused after deployment.");
+            }
+        } else {
+            if (reader2.checkForLog(deploymentLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT) && !reader2.checkForLog(
+                    msgProcessorPauseLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT)) {
+                Assert.fail("Inactive message Processor " + MP_3 + " was not paused after deployment.");
+            }
+        }
+    }
+
+    @Test(dependsOnMethods = { "testMpScheduling", "testMpDeploymentOfInitiallyDeactivatedMp" })
     void testMpMemberCount() throws Exception {
 
         int memberCount = 5;
@@ -203,6 +227,39 @@ public class MessageProcessorTests extends ESBIntegrationTest {
             changeMpStatus(MP_1, MANAGEMENT_API_PORT + NODE_1_OFFSET, true);
             if (!reader2.checkForLog(msgProcessorResumeLog(MP_1_TASK_NAME), LOG_READ_TIMEOUT)) {
                 Assert.fail("Activation of message Processor via management api failed for " + MP_1);
+            }
+        }
+    }
+
+    @Test(dependsOnMethods = { "testMpActivationViaPassiveNode" },
+            // due to https://github.com/wso2/micro-integrator/issues/1071
+            enabled = false)
+    void testMpStateUponRedeployment() throws Exception {
+
+        logManager.clearAll();
+        /*
+         * Activate MP_3 which was deployed in in active state.
+         */
+        changeMpStatus(MP_3, MANAGEMENT_API_PORT + NODE_1_OFFSET, true);
+        if (taskScheduledInNode1) {
+            if (!reader1.checkForLog(deploymentLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT)) {
+                Assert.fail(MP_3 + " didn't get scheduled upon activation.");
+            }
+        } else {
+            if (!reader2.checkForLog(deploymentLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT)) {
+                Assert.fail(MP_3 + " didn't get scheduled upon activation.");
+            }
+        }
+        logManager.clearAll();
+        CarbonTestServerManager node3 = getNode(NODE_3_OFFSET);
+        serverManager.startServersWithDepSync(true, node3);
+        if (taskScheduledInNode1) {
+            if (reader1.checkForLog(msgProcessorPauseLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT)) {
+                Assert.fail("Running message processor got paused when a new member joined the cluster.");
+            }
+        } else {
+            if (reader2.checkForLog(msgProcessorPauseLog(MP_3_TASK_NAME), CLUSTER_DEP_TIMEOUT)) {
+                Assert.fail("Running message processor got paused when a new member joined the cluster.");
             }
         }
     }
