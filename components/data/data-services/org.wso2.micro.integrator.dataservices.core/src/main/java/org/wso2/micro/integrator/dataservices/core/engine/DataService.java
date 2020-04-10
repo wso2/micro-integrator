@@ -775,7 +775,7 @@ public class DataService implements AxisResources {
         ArrayList<AxisResourceParameter> resourceParameterList = new ArrayList<>();
 
         for (Map.Entry<String, CallQuery.WithParam> withParam : withParamMap.entrySet()) {
-            String queryParam = withParam.getValue().getParam();
+            String queryParam = withParam.getValue().getOriginalName();
 
             if (queryParam != null && !queryParam.isEmpty()) {
                 String urlParameter = "{" + queryParam + "}";
