@@ -246,23 +246,21 @@ public class QueryManager {
             this.dbTypes = DBTypes.MYSQL;
         } else if ("PostgreSQL".equals(databaseType)) {
             this.dbTypes = DBTypes.POSTGRESQL;
-        } else if ("Microsoft SQL Server".equals(databaseType)) {
-            this.dbTypes = DBTypes.MICROSOFTSQLSERVER;
         } else if ("Oracle".equals(databaseType)) {
             this.dbTypes = DBTypes.ORACLE;
         } else if (databaseType.toLowerCase(Locale.ENGLISH).contains("DB2".toLowerCase(Locale.ENGLISH))) {
             this.dbTypes = DBTypes.DB2;
+        } else {
+            this.dbTypes = DBTypes.MICROSOFTSQLSERVER;
         }
     }
     public String getQuery(DBQueries dbQueries) {
         switch (this.dbTypes) {
             case MYSQL: return mysqlQueryMap.get(dbQueries);
             case POSTGRESQL: return postgreSQLQueryMap.get(dbQueries);
-            case MICROSOFTSQLSERVER: return microsoftSQLServerQueryMap.get(dbQueries);
             case ORACLE: return oracleQueryMap.get(dbQueries);
             case DB2: return db2QueryMap.get(dbQueries);
-            default: log.error("DB type not found while retrieving query");
+            default: return microsoftSQLServerQueryMap.get(dbQueries);
         }
-        return "";
     }
 }

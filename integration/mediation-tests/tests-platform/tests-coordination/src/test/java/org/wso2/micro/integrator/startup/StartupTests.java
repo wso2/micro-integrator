@@ -39,6 +39,7 @@ public class StartupTests extends ESBIntegrationTest {
     private MultipleServersManager manager = new MultipleServersManager();
     private CarbonTestServerManager node1;
     private CarbonTestServerManager node2;
+    private CarbonTestServerManager node3;
     private CarbonLogReader logReader1;
     private CarbonLogReader logReader2;
     private LogReaderManager readerManager;
@@ -78,7 +79,7 @@ public class StartupTests extends ESBIntegrationTest {
         }
     }
 
-    @Test(dependsOnMethods = { "testClusterJoin" })
+    @Test(dependsOnMethods = { "testStartup" })
     public void testMemberAddition() throws Exception {
 
         boolean additionLog1 = logReader1.checkForLog("Member added", LOG_READ_TIMEOUT);
@@ -90,6 +91,7 @@ public class StartupTests extends ESBIntegrationTest {
             Assert.fail("Member addition log is present in both nodes. Since two node cluster, one should have "
                                 + "skipped self logging.");
         }
+        logReader2.clearLogs();
         node1.stopServer();
     }
 
@@ -98,19 +100,26 @@ public class StartupTests extends ESBIntegrationTest {
         if (!logReader2.checkForLog("Member removed", LOG_READ_TIMEOUT)) {
             Assert.fail("Member removal is not detected in node 2.");
         }
+        node3 = getNode(5);
+        node3.startServer();
     }
 
-    @Test(dependsOnMethods = { "testMemberAddition" })
+    @Test(dependsOnMethods = { "testMemberRemoval" })
     public void testCoordinator() throws Exception {
-        if (!logReader2.checkForLog("Current node state changed from: MEMBER to: COORDINATOR", LOG_READ_TIMEOUT)) {
-            Assert.fail("Node 2 hasn't changed as the leader.");
+        CarbonLogReader logReader3 = new CarbonLogReader(false, node3.getCarbonHome());
+        readerManager.start(logReader3);
+        node2.stopServer();
+        if (!logReader3.checkForLog("Current node state changed from: MEMBER to: COORDINATOR", LOG_READ_TIMEOUT)) {
+            Assert.fail("Coordinator change is not detected in node 3.");
         }
     }
 
     @AfterClass
     public void clean() throws Exception {
         readerManager.stopAll();
-        node2.stopServer();
+        if (node3 != null) {
+            node3.stopServer();
+        }
     }
 
 }

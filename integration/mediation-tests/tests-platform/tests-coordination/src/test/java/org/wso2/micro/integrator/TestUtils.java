@@ -91,8 +91,8 @@ public class TestUtils {
 
     public static boolean isTaskExistInStore(String taskName) throws Exception {
 
-        String query = "SELECT * FROM " + TaskQueryHelper.TABLE_NAME + " WHERE " + TaskQueryHelper.TASK_NAME + " = \""
-                + taskName + "\"";
+        String query = "SELECT * FROM " + TaskQueryHelper.TABLE_NAME + " WHERE " + TaskQueryHelper.TASK_NAME + " = '"
+                + taskName + "'";
         try (Connection conn = DriverManager.getConnection(CoordinationDatabase.getConnectionUrl(),
                                                            CoordinationDatabase.getUserName(),
                                                            CoordinationDatabase.getPwd());
