@@ -28,8 +28,10 @@ import org.wso2.esb.integration.common.extensions.carbonserver.MultipleServersMa
 import org.wso2.esb.integration.common.utils.CarbonLogReader;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.LogReaderManager;
+import org.wso2.esb.integration.common.utils.Utils;
 
 import static org.wso2.micro.integrator.TestUtils.LOG_READ_TIMEOUT;
+import static org.wso2.micro.integrator.TestUtils.deployArtifacts;
 import static org.wso2.micro.integrator.TestUtils.getNode;
 
 public class StartupTests extends ESBIntegrationTest {
@@ -47,11 +49,12 @@ public class StartupTests extends ESBIntegrationTest {
         context = new AutomationContext();
         node1 = getNode(10);
         node2 = getNode(20);
-        manager.startServers(node1, node2);
+        manager.startServersWithDepSync(true, node1, node2);
         logReader1 = new CarbonLogReader(false, node1.getCarbonHome());
         logReader2 = new CarbonLogReader(false, node2.getCarbonHome());
         readerManager = new LogReaderManager();
         readerManager.start(logReader1, logReader2);
+        deployArtifacts(manager.getDeploymentDirectory(), Utils.ArtifactType.TASK, "task-1");
     }
 
     @Test
@@ -67,10 +70,10 @@ public class StartupTests extends ESBIntegrationTest {
 
     @Test(dependsOnMethods = { "testClusterJoin" })
     public void testStartup() throws Exception {
-        if (logReader1.checkForLog("ERROR", 1)) {
+        if (logReader1.checkForLog("ERROR", LOG_READ_TIMEOUT)) {
             Assert.fail("Node 1 started with errors");
         }
-        if (logReader2.checkForLog("ERROR", 1)) {
+        if (logReader2.checkForLog("ERROR", LOG_READ_TIMEOUT)) {
             Assert.fail("Node 2 started with errors");
         }
     }
