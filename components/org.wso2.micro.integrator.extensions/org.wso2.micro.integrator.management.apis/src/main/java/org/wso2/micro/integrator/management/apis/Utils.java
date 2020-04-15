@@ -38,8 +38,12 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
 
@@ -143,4 +147,102 @@ public class Utils {
         }
         return value;
     }
+
+    /**
+     * This method will return the path to logs directory.
+     * @return  path as string.
+     */
+    public static String getCarbonLogsPath() {
+
+        String carbonLogsPath = System.getProperty("carbon.logs.path");
+        if (carbonLogsPath == null) {
+            carbonLogsPath = System.getenv("CARBON_LOGS");
+            if (carbonLogsPath == null) {
+                return getCarbonHome() + File.separator + "repository" + File.separator + "logs";
+            }
+        }
+        return carbonLogsPath;
+    }
+
+    /**
+     * This method will return the path to CARBON_HOME.
+     * @return  path as String.
+     */
+    public static String getCarbonHome() {
+
+        String carbonHome = System.getProperty("carbon.home");
+        if (carbonHome == null) {
+            carbonHome = System.getenv("CARBON_HOME");
+            System.setProperty("carbon.home", carbonHome);
+        }
+        return carbonHome;
+    }
+
+    /**
+     * This method will provide information on all the files in the logs directory.
+     * @return list of file info objects.
+     */
+    public static List<LogFileInfo> getLogFileInfoList() {
+
+        String folderPath = Utils.getCarbonLogsPath();
+        List<LogFileInfo> logFilesList = new ArrayList<>();
+        LogFileInfo logFileInfo;
+
+        File folder = new File(folderPath);
+        File[] listOfFiles = folder.listFiles();
+
+        if (listOfFiles == null || listOfFiles.length == 0) {
+            // folder.listFiles can return a null, in that case return a default log info
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("List of log files of the given pattern is null.");
+            }
+            return getDefaultLogInfoList();
+        }
+        for (File file : listOfFiles) {
+            String filename = file.getName();
+            if (!filename.endsWith(".lck")) {
+                // regex to match YYYY-MM-DD and DD-MM-YYYY
+                String[] dateRegex = {"\\d{4}-\\d{2}-\\d{2}", "\\d{2}-\\d{2}-\\d{4}"};
+                String date = matchDatePatters(dateRegex, filename);
+                String filePath = Utils.getCarbonLogsPath() + File.separator + filename;
+                File logfile = new File(filePath);
+                logFileInfo = new LogFileInfo(filename, date, getFileSize(logfile));
+                logFilesList.add(logFileInfo);
+            }
+        }
+        return logFilesList;
+    }
+
+    private static String matchDatePatters(String[] patterns, String filename) {
+
+        for (String datePattern : patterns) {
+            Pattern pattern = Pattern.compile(datePattern);
+            Matcher matcher = pattern.matcher(filename);
+            if (matcher.find()) {
+                return matcher.group(0);
+            }
+        }
+        // empty string if filename does not contains a date
+        return "";
+    }
+
+    private static String getFileSize(File file) {
+
+        long bytes = file.length();
+        int unit = 1024;
+        if (bytes < unit) {
+            return bytes + " B";
+        }
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        char pre = "KMGTPE".charAt(exp - 1);
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    private static List<LogFileInfo> getDefaultLogInfoList() {
+
+        List<LogFileInfo> defaultLogFileInfoList = new ArrayList<>();
+        defaultLogFileInfoList.add(new LogFileInfo("NO_LOG_FILES", "---", "---"));
+        return defaultLogFileInfoList;
+    }
+
 }
