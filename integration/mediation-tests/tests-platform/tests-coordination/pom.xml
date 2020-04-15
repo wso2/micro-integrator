@@ -115,7 +115,7 @@
                             <outputDirectory>${basedir}/src/test/resources/artifacts/ESB/server/lib
                             </outputDirectory>
                             <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>mysql-connector-java</includeArtifactIds>
+                            <includeArtifactIds>mysql-connector-java,mssql-jdbc</includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
@@ -204,6 +204,10 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>integration-test-utils</artifactId>

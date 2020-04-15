@@ -724,11 +724,17 @@
                 <artifactId>toml4j</artifactId>
                 <version>${toml4j.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>${mssql-jdbc.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <!--All the integration test dependency versions which doesn't intercept with product build are defined here-->
     <properties>
+        <mssql-jdbc.version>8.2.2.jre8</mssql-jdbc.version>
         <toml4j.version>0.7.2</toml4j.version>
         <commons-io.version>2.6</commons-io.version>
         <neethi.orbit.version>2.0.4.wso2v4</neethi.orbit.version>

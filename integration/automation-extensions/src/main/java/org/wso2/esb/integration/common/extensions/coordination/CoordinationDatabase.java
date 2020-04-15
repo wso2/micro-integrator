@@ -44,6 +44,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     private static String connectionUrl;
     private static String pwd;
     private static String userName;
+    private String dbType;
 
     @Override
     public void initiate() throws AutomationFrameworkException {
@@ -54,6 +55,10 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     @Override
     public void onExecutionStart() throws AutomationFrameworkException {
 
+        if (!"mysql".equals(dbType)) {
+            logger.info("Database will be created only for mysql..");
+            return;
+        }
         String dbUrl = connectionUrl.replace("/" + dbName, "").concat("&allowMultiQueries=true");
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
@@ -120,6 +125,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             pwd = parseToml.getString("datasource[0].password");
             URI uri = URI.create(connectionUrl.substring(5));
             dbName = uri.getPath().replace("/", "");
+            dbType = uri.getScheme();
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
