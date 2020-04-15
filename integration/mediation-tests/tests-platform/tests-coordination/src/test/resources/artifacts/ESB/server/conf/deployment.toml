@@ -27,12 +27,3 @@ url = "jdbc:mysql://localhost:3306/clusterdbIntegrationTests?useSSL=false&amp;al
 username = "root"
 password = "root"
 driver = "com.mysql.jdbc.Driver"
-
-## data source for integration tests mssql
-## tested version Microsoft SQL Server 2017 (RTM-CU11) (KB4462262) - 14.0.3038.14 (X64)
-#[[datasource]]
-#id = "WSO2_COORDINATION_DB"
-#url = "jdbc:sqlserver://localhost:1433;databaseName=TestDB;SendStringParametersAsUnicode=false"
-#username = "test"
-#password = "test"
-#driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
