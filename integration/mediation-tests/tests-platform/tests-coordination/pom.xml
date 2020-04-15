@@ -115,7 +115,8 @@
                             <outputDirectory>${basedir}/src/test/resources/artifacts/ESB/server/lib
                             </outputDirectory>
                             <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>mysql-connector-java,mssql-jdbc,postgresql,jcc</includeArtifactIds>
+                            <includeArtifactIds>mysql-connector-java,mssql-jdbc,postgresql,jcc,ojdbc8
+                            </includeArtifactIds>
                             <excludeTransitive>true</excludeTransitive>
                         </configuration>
                     </execution>
@@ -204,6 +205,10 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>com.oracle.jdbc</groupId>
+            <artifactId>ojdbc8</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.ibm.db2</groupId>
             <artifactId>jcc</artifactId>

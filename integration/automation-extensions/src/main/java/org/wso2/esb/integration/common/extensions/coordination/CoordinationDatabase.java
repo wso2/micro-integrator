@@ -124,7 +124,10 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             userName = parseToml.getString("datasource[0].username");
             pwd = parseToml.getString("datasource[0].password");
             URI uri = URI.create(connectionUrl.substring(5));
-            dbName = uri.getPath().replace("/", "");
+            String path = uri.getPath();
+            if (path != null) {
+                dbName = path.replace("/", "");
+            }
             dbType = uri.getScheme();
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
