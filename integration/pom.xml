@@ -734,11 +734,17 @@
                 <artifactId>postgresql</artifactId>
                 <version>${postgresql.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.ibm.db2</groupId>
+                <artifactId>jcc</artifactId>
+                <version>${jcc.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <!--All the integration test dependency versions which doesn't intercept with product build are defined here-->
     <properties>
+        <jcc.version>11.5.0.0</jcc.version>
         <postgresql.version>42.2.12</postgresql.version>
         <mssql-jdbc.version>8.2.2.jre8</mssql-jdbc.version>
         <toml4j.version>0.7.2</toml4j.version>
