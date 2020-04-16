@@ -36,6 +36,7 @@
                         <expiry>{{management_api.handler.token_config.expiry}}</expiry><!--Seconds /-->
                         <size>{{management_api.handler.token_config.size}}</size>
                     </TokenConfig>
+                    {% if management_api.handler.file_user_store.enable == true %}
                     <UserStore>
                         <users>
                             {% for user in management_api.handler.user_store.users %}
@@ -46,6 +47,7 @@
                             {% endfor %}
                         </users>
                     </UserStore>
+                    {% endif %}
                 </handler>
                 {% endif %}
                 {% if management_api_basic_security_handler.enable == true %}
