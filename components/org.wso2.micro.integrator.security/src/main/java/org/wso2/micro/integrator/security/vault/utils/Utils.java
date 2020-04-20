@@ -65,6 +65,13 @@ public class Utils {
                 throw new SecureVaultException(msg);
             }
         } else {
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    throw new SecureVaultException("Error while creating " + filePath);
+                }
+            }
             try (FileInputStream fileInputStream = new FileInputStream(file)) {
                 keys.load(fileInputStream);
                 if (keys.containsKey(alias)) {
