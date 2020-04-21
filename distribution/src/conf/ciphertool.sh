@@ -123,4 +123,4 @@ if $cygwin; then
 fi
 
 # ----- Execute The Requested Command -----------------------------------------
-$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -Dcarbon.config.dir.path="$CARBON_HOME"/conf -Dconfigure -Dorg.wso2.CipherTransformation="RSA/ECB/OAEPwithSHA1andMGF1Padding" -classpath "$CARBON_CLASSPATH" org.wso2.ciphertool.CipherTool $*
+$JAVA_HOME/bin/java -Dcarbon.home="$CARBON_HOME" -Dcarbon.config.dir.path="$CARBON_HOME"/conf -Dorg.wso2.CipherTransformation="RSA/ECB/OAEPwithSHA1andMGF1Padding" -classpath "$CARBON_CLASSPATH" org.wso2.ciphertool.CipherTool $*

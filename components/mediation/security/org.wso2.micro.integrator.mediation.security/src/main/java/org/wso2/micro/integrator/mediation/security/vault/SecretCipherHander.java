@@ -33,14 +33,6 @@ class SecretCipherHander {
 	private FileSecretRepository fileSecretRepository = new FileSecretRepository();
 	private EnvironmentSecretRepository environmentSecretRepository =  new EnvironmentSecretRepository();
 
-	SecretCipherHander(org.apache.synapse.MessageContext synCtx) {
-		this();
-	}
-
-	SecretCipherHander() {
-		// Should be the default constructor
-	}
-
 	/**
 	 * Returns the secret corresponding to the given alias name
 	 * 
