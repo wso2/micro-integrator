@@ -21,6 +21,8 @@ package org.wso2.micro.integrator.coordination;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.config.mapper.ConfigParser;
+import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.coordination.exception.ClusterCoordinationException;
 import org.wso2.micro.integrator.coordination.node.NodeDetail;
 import org.wso2.micro.integrator.coordination.util.MemberEventType;
@@ -35,6 +37,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import javax.sql.DataSource;
+
+import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.CLUSTER_CONFIG;
+import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.NODE_ID;
+import static org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils.NODE_ID_CONFIG_NAME;
 
 /**
  * This class controls the overall process of RDBMS coordination.
@@ -113,7 +119,7 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                                                                      .setNameFormat("RDBMSCoordinationStrategy-%d").build();
         this.threadExecutor = Executors.newSingleThreadExecutor(namedThreadFactory);
 
-        this.localNodeId = generateRandomId();
+        this.localNodeId = getNodeId();
         this.communicationBusContext = communicationBusContext;
         this.rdbmsMemberEventProcessor = new RDBMSMemberEventProcessor(localNodeId, localGroupId,
                                                                        heartbeatMaxRetryInterval, communicationBusContext);
@@ -255,6 +261,23 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         // Register listener for membership changes
         memberEventListener.setGroupId(localGroupId);
         rdbmsMemberEventProcessor.addEventListener(memberEventListener);
+    }
+
+    private String getNodeId() {
+
+        String nodeId = System.getProperty(NODE_ID);
+        if (StringUtils.isEmpty(nodeId)) {
+            nodeId = System.getenv(NODE_ID);
+            if (StringUtils.isEmpty(nodeId)) {
+                Object nodeIdObject = ConfigParser.getParsedConfigs().get(CLUSTER_CONFIG + "." + NODE_ID_CONFIG_NAME);
+                if (nodeIdObject != null) {
+                    nodeId = nodeIdObject.toString();
+                } else {
+                    nodeId = generateRandomId();
+                }
+            }
+        }
+        return nodeId;
     }
 
     private String generateRandomId() {

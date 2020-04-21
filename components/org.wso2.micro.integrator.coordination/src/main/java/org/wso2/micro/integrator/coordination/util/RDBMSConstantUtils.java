@@ -46,6 +46,9 @@ public class RDBMSConstantUtils {
     public static final String HEART_BEAT_MAX_RETRY = "heartbeatMaxRetry";
     public static final String LOCAL_GROUP_ID = "localGroupId";
     public static final String SCHEDULED_PERIOD = "scheduledPeriod";
+    public static final String NODE_ID = "nodeId";
+    public static final String CLUSTER_CONFIG = "cluster_config";
+    public static final String NODE_ID_CONFIG_NAME = "node_id";
 
     public static final int DEFAULT_HEART_BEAT_INTERVAL = 5000;
     public static final int DEFAULT_HEART_BEAT_MAX_RETRY = 3;
