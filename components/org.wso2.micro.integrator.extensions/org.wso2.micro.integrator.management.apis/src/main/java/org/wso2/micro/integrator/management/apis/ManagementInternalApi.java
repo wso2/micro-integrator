@@ -29,6 +29,7 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.wso2.micro.integrator.management.apis.Constants.PATH_PARAM_USER;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_APIS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CARBON_APPS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_CONNECTORS;
@@ -47,6 +48,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SEQUENC
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_SERVER_DATA;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
 
 public class ManagementInternalApi implements InternalAPI {
@@ -77,6 +79,8 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOCAL_ENTRIES, new LocalEntryResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_CONNECTORS, new ConnectorResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGIN, new LoginResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_USERS + PATH_PARAM_USER, new UserResource()));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_USERS, new UsersResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGOUT, new LogoutResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_SERVER_DATA, new MetaDataResource()));
         resourcesList.add(new LogFilesResource(PREFIX_LOG_FILES));

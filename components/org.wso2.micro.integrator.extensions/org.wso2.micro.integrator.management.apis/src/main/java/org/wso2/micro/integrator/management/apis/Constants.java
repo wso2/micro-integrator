@@ -29,6 +29,8 @@ public class Constants {
     public static final String PREFIX_TASKS = "/tasks";
     public static final String PREFIX_SEQUENCES = "/sequences";
     public static final String PREFIX_LOGGING = "/logging";
+    public static final String PREFIX_USERS = "/users";
+    public static final String PATH_PARAM_USER = "/" + "{userId}";
     public static final String PREFIX_DATA_SERVICES = "/data-services";
     public static final String PREFIX_TEMPLATES = "/templates";
     public static final String PREFIX_MESSAGE_STORE = "/message-stores";
@@ -73,6 +75,7 @@ public class Constants {
     public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
     public static final String HTTP_POST = "POST";
     public static final String HTTP_GET = "GET";
+    public static final String HTTP_DELETE = "DELETE";
 
     public static final String HEADER_VALUE_APPLICATION_JSON = "application/json";
     public static final String MESSAGE_JSON_ATTRIBUTE = "Message";
@@ -89,4 +92,15 @@ public class Constants {
 
     // Constant on pax logging
     public static final String PAX_LOGGING_CONFIGURATION_PID = "org.ops4j.pax.logging";
+
+    // Constants used for the users resource
+    public static final String USER_ID = "userId";
+    public static final String ROLES = "roles";
+    public static final String ROLE = "role";
+    public static final String PASSWORD = "password";
+    public static final String IS_ADMIN = "isAdmin";
+    public static final String PATTERN = "pattern";
+
+    public static final String USERNAME_PROPERTY = "USERNAME";
+
 }

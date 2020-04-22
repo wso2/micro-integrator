@@ -55,6 +55,20 @@ public class Utils {
         return null;
     }
 
+    /**
+     * Extracts the value set for the patch parameter with the given key.
+     *
+     * @param messageContext message context to extract the parameter from
+     * @param key            the key defined in the uri template
+     * @return the resolved value from the url. Returns null if not present.
+     */
+    public static String getPathParameter(MessageContext messageContext, String key){
+        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key))) {
+            return messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
+        }
+        return null;
+    }
+
     public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload) {
 
         try {
@@ -73,6 +87,45 @@ public class Utils {
         JSONArray list = new JSONArray();
         jsonBody.put(Constants.COUNT, count);
         jsonBody.put(Constants.LIST, list);
+        return jsonBody;
+    }
+
+    /**
+     * Creates a json response according to the message provided and sets the provided HTTP code.
+     *
+     * @param message             the error response to be sent to the client
+     * @param exception           the exception to be logged on the server side. The error resone will be extracted
+     *                            from the
+     *                            exception.
+     * @param axis2MessageContext message context to set the json payload to
+     * @param statusCode          the HTTP status code to be returned
+     * @return error response
+     */
+    static JSONObject createJsonError(String message, Throwable exception,
+                                      org.apache.axis2.context.MessageContext axis2MessageContext, String statusCode) {
+        LOG.error(message, exception);
+        return createResponse(message + exception.getMessage(), axis2MessageContext, statusCode);
+    }
+
+    /**
+     * Creates a json response according to the message provided and sets the provided HTTP code.
+     *
+     * @param message             the error response to be sent to the client
+     * @param axis2MessageContext message context to set the json payload to
+     * @param statusCode          the HTTP status code to be returned
+     * @return error response
+     */
+    static JSONObject createJsonError(String message, org.apache.axis2.context.MessageContext axis2MessageContext,
+                                      String statusCode) {
+        LOG.error(message);
+        return createResponse(message, axis2MessageContext, statusCode);
+    }
+
+
+    private static JSONObject createResponse(String message, org.apache.axis2.context.MessageContext axis2MessageContext,
+                                             String statusCode) {
+        JSONObject jsonBody = Utils.createJsonErrorObject(message);
+        axis2MessageContext.setProperty(Constants.HTTP_STATUS_CODE, statusCode);
         return jsonBody;
     }
 
