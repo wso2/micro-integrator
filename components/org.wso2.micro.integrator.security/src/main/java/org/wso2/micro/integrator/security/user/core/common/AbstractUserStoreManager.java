@@ -2173,32 +2173,10 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
      */
     public final void deleteUser(String userName) throws UserStoreException {
         // TODO Review whether we need to perform this operation
-        /*if (!isSecureCall.get()) {
+        if (!isSecureCall.get()) {
             Class argTypes[] = new Class[]{String.class};
             callSecure("deleteUser", new Object[]{userName}, argTypes);
             return;
-        }
-
-        String loggedInUser = CarbonContext.getThreadLocalCarbonContext().getUsername();
-        if (loggedInUser != null) {
-            loggedInUser = UserCoreUtil.addDomainToName(loggedInUser, UserCoreUtil.getDomainFromThreadLocal());
-            if ((loggedInUser.indexOf(UserCoreConstants.DOMAIN_SEPARATOR)) < 0) {
-                loggedInUser = UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME +
-                        UserCoreConstants.DOMAIN_SEPARATOR + loggedInUser;
-            }
-        }
-
-        String deletingUser = UserCoreUtil.addDomainToName(userName, getMyDomainName());
-        if ((deletingUser.indexOf(UserCoreConstants.DOMAIN_SEPARATOR)) < 0) {
-            deletingUser = UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME +
-                    UserCoreConstants.DOMAIN_SEPARATOR + deletingUser;
-        }
-
-        if (loggedInUser != null && loggedInUser.equals(deletingUser)) {
-            log.debug("User " + loggedInUser + " tried to delete him/her self");
-            handleDeleteUserFailure(ErrorMessages.ERROR_CODE_DELETE_LOGGED_IN_USER.getCode(),
-                    ErrorMessages.ERROR_CODE_DELETE_LOGGED_IN_USER.getMessage(), userName);
-            throw new UserStoreException(ErrorMessages.ERROR_CODE_DELETE_LOGGED_IN_USER.toString());
         }
 
         UserStore userStore = getUserStore(userName);
@@ -2292,7 +2270,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                     String.format(ErrorMessages.ERROR_CODE_ERROR_DURING_POST_DELETE_USER.getMessage(), ex.getMessage()),
                     userName);
             throw ex;
-        }*/
+        }
         // #################### </Listeners> #####################################################
 
     }
