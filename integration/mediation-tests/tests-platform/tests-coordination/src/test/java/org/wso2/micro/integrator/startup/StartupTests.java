@@ -114,6 +114,16 @@ public class StartupTests extends ESBIntegrationTest {
         }
     }
 
+    @Test(dependsOnMethods = { "testCoordinator" })
+    public void testReStart() throws Exception {
+        node3.stopServer();
+        node3.startServer();
+        CarbonLogReader logReader3 = new CarbonLogReader(false, node3.getCarbonHome());
+        if (logReader3.checkForLog("ERROR", 30)) {
+            Assert.fail("Node 3 re-started with errors");
+        }
+    }
+
     @AfterClass
     public void clean() throws Exception {
         readerManager.stopAll();
