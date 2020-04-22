@@ -170,8 +170,6 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
             readGroupsEnabled = true;
         }
 
-		/* Initialize user roles cache as implemented in AbstractUserStoreManager */
-        initUserRolesCache();
     }
 
     /**
@@ -306,12 +304,9 @@ public class JDBCUserStoreManager extends AbstractUserStoreManager {
                     !isInitSetupDone());
         }
 
-        initUserRolesCache();
-
         if (log.isDebugEnabled()) {
             log.debug("Ended " + System.currentTimeMillis());
         }
-        /* Initialize user roles cache as implemented in AbstractUserStoreManager */
 
     }
 
