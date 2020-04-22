@@ -23,6 +23,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
+import org.wso2.micro.integrator.management.apis.ManagementApiParser;
+import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
@@ -64,70 +66,58 @@ public class JWTConfig {
      */
     private JWTConfigDTO populateJWTConfigDTO() {
         JWTConfigDTO jwtDTO = new JWTConfigDTO();
-        File mgtApiUserConfig = new File(MicroIntegratorBaseUtils.getCarbonConfigDirPath(), "internal-apis.xml");
-        try (InputStream fileInputStream = new FileInputStream(mgtApiUserConfig)) {
-            OMElement documentElement = getOMElementFromFile(fileInputStream);
-            setSecretResolver(documentElement);
-            Iterator internalApis = documentElement.getFirstChildWithName(new QName("apis")).getChildrenWithName(new QName("api"));
-            while (internalApis.hasNext()) {
-                OMElement apiOM = (OMElement) internalApis.next();
-                String apiName = apiOM.getAttributeValue(new QName("name"));
-                if ("ManagementApi".equals(apiName)) {
-                    OMElement handlersOM = apiOM.getFirstChildWithName(new QName("handlers"));
-                    Iterator handlerOMList = handlersOM.getChildrenWithName(new QName("handler"));
-                    while (handlerOMList.hasNext()) {
-                        OMElement handlerOM = (OMElement) handlerOMList.next();
-                        if ("JWTTokenSecurityHandler".equals(handlerOM.getAttributeValue(new QName("name")))) {
-                            jwtDTO.setJwtHandlerEngaged(true);
-                            OMElement tokenStoreConfigOM = handlerOM.getFirstChildWithName(new QName("TokenStoreConfig"));
-                            if (Objects.nonNull(tokenStoreConfigOM)) {
-                                OMElement sizeElem = tokenStoreConfigOM.getFirstChildWithName(new QName("MaxSize"));
-                                if(Objects.nonNull(sizeElem)) {
-                                    jwtDTO.setTokenStoreSize(Integer.parseInt(sizeElem.getText()));
-                                }
-                                OMElement removeOldestElem = tokenStoreConfigOM.getFirstChildWithName(new QName("RemoveOldestTokenOnOverflow"));
-                                if(Objects.nonNull(removeOldestElem)) {
-                                    jwtDTO.setRemoveOldestElementOnOverflow(Boolean.parseBoolean(removeOldestElem.getText()));
-                                }
-                                OMElement cleanupIntervalElem = tokenStoreConfigOM.getFirstChildWithName(new QName("TokenCleanupTaskInterval"));
-                                if(Objects.nonNull(cleanupIntervalElem)) {
-                                    jwtDTO.setCleanupThreadInterval(Integer.parseInt(cleanupIntervalElem.getText()));
-                                }
-                            } else {
-                                LOG.fatal("Token Store config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using default values");
-                            }
-                            OMElement tokenConfigOM = handlerOM.getFirstChildWithName(new QName("TokenConfig"));
-                            if (Objects.nonNull(tokenConfigOM)) {
-                                OMElement sizeElem = tokenConfigOM.getFirstChildWithName(new QName("size"));
-                                OMElement expiryElem = tokenConfigOM.getFirstChildWithName(new QName("expiry"));
-                                if(Objects.nonNull(expiryElem)) {
-                                    jwtDTO.setExpiry(expiryElem.getText());
-                                }
-                                if(Objects.nonNull(sizeElem)){
-                                    jwtDTO.setTokenSize(sizeElem.getText());
-                                }
-                            } else {
-                                LOG.fatal("Token config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using default values");
-                            }
-                            OMElement userStoreOM = handlerOM.getFirstChildWithName(new QName("UserStore"));
-                            if (Objects.nonNull(userStoreOM)) {
-                                jwtDTO.setUsers(populateUserList(userStoreOM.getFirstChildWithName(new QName("users"))));
-                            } else {
-                                jwtDTO.setUseCarbonUserStore(true);
-                                LOG.info("User store config has not been defined in file " + mgtApiUserConfig.getAbsolutePath() + " Using carbon user store settings");
-                            }
+        try{
+            OMElement apiOM = ManagementApiParser.getManagementApiElement();
+            OMElement handlersOM = apiOM.getFirstChildWithName(new QName("handlers"));
+            Iterator<OMElement> handlerOMList = handlersOM.getChildrenWithName(new QName("handler"));
+            while (handlerOMList.hasNext()) {
+                OMElement handlerOM = handlerOMList.next();
+                if ("JWTTokenSecurityHandler".equals(handlerOM.getAttributeValue(new QName("name")))) {
+                    jwtDTO.setJwtHandlerEngaged(true);
+                    OMElement tokenStoreConfigOM = handlerOM.getFirstChildWithName(new QName("TokenStoreConfig"));
+                    if (Objects.nonNull(tokenStoreConfigOM)) {
+                        OMElement sizeElem = tokenStoreConfigOM.getFirstChildWithName(new QName("MaxSize"));
+                        if (Objects.nonNull(sizeElem)) {
+                            jwtDTO.setTokenStoreSize(Integer.parseInt(sizeElem.getText()));
                         }
+                        OMElement removeOldestElem = tokenStoreConfigOM.getFirstChildWithName(new QName(
+                                "RemoveOldestTokenOnOverflow"));
+                        if (Objects.nonNull(removeOldestElem)) {
+                            jwtDTO.setRemoveOldestElementOnOverflow(Boolean.parseBoolean(removeOldestElem.getText()));
+                        }
+                        OMElement cleanupIntervalElem = tokenStoreConfigOM.getFirstChildWithName(new QName(
+                                "TokenCleanupTaskInterval"));
+                        if (Objects.nonNull(cleanupIntervalElem)) {
+                            jwtDTO.setCleanupThreadInterval(Integer.parseInt(cleanupIntervalElem.getText()));
+                        }
+                    } else {
+                        LOG.fatal("Token Store config has not been defined in file " + ManagementApiParser.getConfigurationFilePath() + " Using default values");
+                    }
+                    OMElement tokenConfigOM = handlerOM.getFirstChildWithName(new QName("TokenConfig"));
+                    if (Objects.nonNull(tokenConfigOM)) {
+                        OMElement sizeElem = tokenConfigOM.getFirstChildWithName(new QName("size"));
+                        OMElement expiryElem = tokenConfigOM.getFirstChildWithName(new QName("expiry"));
+                        if (Objects.nonNull(expiryElem)) {
+                            jwtDTO.setExpiry(expiryElem.getText());
+                        }
+                        if (Objects.nonNull(sizeElem)) {
+                            jwtDTO.setTokenSize(sizeElem.getText());
+                        }
+                    } else {
+                        LOG.fatal("Token config has not been defined in file " + ManagementApiParser.getConfigurationFilePath() + " Using default values");
                     }
                 }
             }
         } catch (IOException exception) {
             LOG.error("internal-apis.xml file not found ", exception);
         } catch (CarbonException exception) {
-            LOG.error("Error when processing file " + mgtApiUserConfig.getAbsolutePath(), exception);
+            LOG.error("Error when processing file " + ManagementApiParser.getConfigurationFilePath(), exception);
         } catch (XMLStreamException exception) {
-            LOG.error("Error when building configuration from file " + mgtApiUserConfig.getAbsolutePath(), exception);
+            LOG.error("Error when building configuration from file " + ManagementApiParser.getConfigurationFilePath()
+                    , exception);
+        } catch (ManagementApiUndefinedException e) {
+            LOG.error("Error building the JWT configuration. ", e);
         }
-
         return jwtDTO;
     }
 
@@ -141,28 +131,6 @@ public class JWTConfig {
         InputStream inputStream = MicroIntegratorBaseUtils.replaceSystemVariablesInXml(fileInputStream);
         StAXOMBuilder builder = new StAXOMBuilder(inputStream);
         return builder.getDocumentElement();
-    }
-
-    /**
-     * Populates the userList hashMap by user store OM element
-     * @return HashMap<String, char []> Map of credential pairs
-     */
-    private HashMap<String, char []> populateUserList(OMElement users) {
-        HashMap<String, char []> userList = new HashMap<String, char []>();
-        if (users != null) {
-            Iterator usersIterator = users.getChildrenWithName(new QName("user"));
-            if (usersIterator != null) {
-                while (usersIterator.hasNext()) {
-                    OMElement userElement = (OMElement) usersIterator.next();
-                    OMElement userNameElement = userElement.getFirstChildWithName(new QName("username"));
-                    OMElement passwordElement = userElement.getFirstChildWithName(new QName("password"));
-                    if (userNameElement != null && passwordElement != null) {
-                        userList.put(userNameElement.getText(), passwordElement.getText().toCharArray());
-                    }
-                }
-            }
-        }
-        return userList;
     }
 
     /**

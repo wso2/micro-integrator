@@ -20,10 +20,14 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.Constants;
+import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 import java.util.Arrays;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
@@ -33,6 +37,10 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
     private static final Log LOG = LogFactory.getLog(AuthorizationHandler.class);
     private String name;
     private MessageContext messageContext;
+
+    public AuthorizationHandler() throws CarbonException, XMLStreamException, IOException, ManagementApiUndefinedException {
+        super();
+    }
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
@@ -57,7 +65,7 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
     protected Boolean authenticate(String authHeaderToken) {
 
         if ((messageContext.getTo().getAddress()).startsWith((Constants.REST_API_CONTEXT + Constants.PREFIX_USERS))) {
-            if (JWTConfig.getInstance().getJwtConfigDto().isUseCarbonUserStore()) {
+            if (useCarbonUserStore) {
                 //Uses carbon user store
                 try {
                     return processAuthorizationWithCarbonUserStore(authHeaderToken);
@@ -82,13 +90,11 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
      */
     private boolean processAuthorizationWithCarbonUserStore(String token) throws UserStoreException {
 
-        String username = JWTInMemoryTokenStore.getInstance().getToken(token).getUsername();
+        String username = messageContext.getProperty(USERNAME_PROPERTY).toString();
         boolean isAuthorized = authorize(username,
                                          MicroIntegratorSecurityUtils.getRealmConfiguration().getAdminRoleName());
         if (!isAuthorized) {
             LOG.error("User " + username + " cannot be authorized");
-        } else {
-            messageContext.setProperty(USERNAME_PROPERTY, username);
         }
         return isAuthorized;
     }

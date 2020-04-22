@@ -21,9 +21,14 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 import org.wso2.micro.integrator.security.user.api.UserStoreManager;
+
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 
 /**
  * This class extents SecurityHandlerAdapter to implement the authentication logic for a
@@ -33,6 +38,10 @@ public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
 
     private String name;
     private static final Log LOG = LogFactory.getLog(LDAPBasedSecurityHandler.class);
+
+    public LDAPBasedSecurityHandler() throws CarbonException, XMLStreamException, IOException, ManagementApiUndefinedException {
+        super();
+    }
 
     @Override
     public String getName() {

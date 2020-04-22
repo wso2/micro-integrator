@@ -21,19 +21,28 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
+import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.Constants;
+import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
 import java.util.Map;
 import java.util.Objects;
+
+import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
 
     private static final Log LOG = LogFactory.getLog(JWTTokenSecurityHandler.class);
     private String name;
-    private Map<String, char[]> userList = null;
     private MessageContext messageContext;
+
+    public JWTTokenSecurityHandler() throws CarbonException, XMLStreamException, IOException, ManagementApiUndefinedException {
+        super();
+    }
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
@@ -59,7 +68,7 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
 
         if ((Constants.REST_API_CONTEXT + Constants.PREFIX_LOGIN).contentEquals(messageContext.getTo().getAddress())) {
             //Login request is basic auth
-            if (JWTConfig.getInstance().getJwtConfigDto().isUseCarbonUserStore()) {
+            if (useCarbonUserStore) {
                 //Uses carbon user store
                 try {
                     return processLoginRequestWithCarbonUserStore(authHeaderToken);
@@ -75,6 +84,7 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
             JWTTokenInfoDTO jwtTokenInfoDTO = tokenStore.getToken(authHeaderToken);
             if (jwtTokenInfoDTO != null && !jwtTokenInfoDTO.isRevoked()) {
                 jwtTokenInfoDTO.setLastAccess(System.currentTimeMillis()); //Record last successful access
+                messageContext.setProperty(USERNAME_PROPERTY, jwtTokenInfoDTO.getUsername());
                 return true;
             }
         }
@@ -102,19 +112,17 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
 
         String decodedCredentials = new String(new Base64().decode(token.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
-        if (userList == null || userList.isEmpty()) {
-            populateUserList();
-        }
         if (usernamePasswordArray.length != 2) {
             return false;
         }
         String username = usernamePasswordArray[0];
         String password = usernamePasswordArray[1];
-        if (!userList.isEmpty()) {
-            for (String userNameFromStore : userList.keySet()) {
+        if (!usersList.isEmpty()) {
+            for (String userNameFromStore : usersList.keySet()) {
                 if (userNameFromStore.equals(username)) {
-                    String passwordFromStore = String.valueOf(userList.get(userNameFromStore));
+                    String passwordFromStore = String.valueOf(usersList.get(userNameFromStore));
                     if (isValid(passwordFromStore) && passwordFromStore.equals(password)) {
+                        messageContext.setProperty(USERNAME_PROPERTY, username);
                         LOG.info("User " + username + " logged in successfully");
                         return true;
                     }
@@ -143,20 +151,10 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
         boolean isAuthenticated = MicroIntegratorSecurityUtils.getUserStoreManager().authenticate(username,
                 password);
         if (isAuthenticated) {
+            messageContext.setProperty(USERNAME_PROPERTY, username);
             LOG.info("User " + username + " logged in successfully");
             return true;
         }
         return false;
-    }
-
-    /**
-     * Populates the userList hashMap with user list obtain through user store
-     */
-    private void populateUserList() {
-
-        JWTConfigDTO jwtConfig = JWTConfig.getInstance().getJwtConfigDto();
-        if (jwtConfig != null) {
-            userList = jwtConfig.getUsers();
-        }
     }
 }

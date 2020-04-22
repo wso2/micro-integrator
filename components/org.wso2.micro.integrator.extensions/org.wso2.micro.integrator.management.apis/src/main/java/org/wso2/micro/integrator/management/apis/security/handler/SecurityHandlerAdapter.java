@@ -18,12 +18,24 @@
 
 package org.wso2.micro.integrator.management.apis.security.handler;
 
+import org.apache.axiom.om.OMElement;
 import org.apache.axis2.transport.http.HTTPConstants;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.apache.synapse.rest.RESTConstants;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
+import org.wso2.micro.core.util.CarbonException;
+import org.wso2.micro.integrator.management.apis.ManagementApiParser;
+import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
+import org.wso2.micro.integrator.management.apis.UserStoreUndefinedException;
 
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamException;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 
@@ -31,6 +43,27 @@ import java.util.Objects;
  * This class provides an abstraction for all security handlers using basic authentication for management api.
  */
 public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
+
+    static HashMap<String, char[]> usersList;
+    static boolean useCarbonUserStore = false;
+    private static boolean isInitialized = false;
+
+    private static final Log LOG = LogFactory.getLog(SecurityHandlerAdapter.class);
+
+    public SecurityHandlerAdapter() throws CarbonException, XMLStreamException, IOException,
+            ManagementApiUndefinedException {
+        if (!isInitialized) {
+            ManagementApiParser mgtParser = new ManagementApiParser();
+            try {
+                usersList = mgtParser.getUserList();
+            } catch (UserStoreUndefinedException e) {
+                useCarbonUserStore = true;
+                LOG.info("User store config has not been defined in file " + ManagementApiParser.getConfigurationFilePath() + ". "
+                         + "Using carbon user store settings");
+            }
+            isInitialized = true;
+        }
+    }
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
