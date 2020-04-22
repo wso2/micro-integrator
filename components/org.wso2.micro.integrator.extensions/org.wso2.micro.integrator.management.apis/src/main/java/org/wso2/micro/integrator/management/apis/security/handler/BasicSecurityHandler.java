@@ -19,25 +19,16 @@
 package org.wso2.micro.integrator.management.apis.security.handler;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.CarbonException;
-import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -68,6 +59,9 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
     @Override
     protected Boolean authenticate(String authHeaderToken) {
 
+        if (LOG.isDebugEnabled()){
+            LOG.debug("Handling authentication");
+        }
         String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         // Avoid possible array index out of bound errors
@@ -88,15 +82,6 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
         }
 
         return false;
-    }
-
-    /**
-     * Sets the SecretResolver the document OMElement.
-     *
-     * @param rootElement Document OMElement
-     */
-    private void setSecretResolver(OMElement rootElement) {
-        this.secretResolver = SecretResolverFactory.create(rootElement, true);
     }
 
     /**

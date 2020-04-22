@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -83,13 +83,15 @@ public class UserResource implements MiApiResource {
                     break;
                 }
                 default: {
-                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET, POST, DELETE "
-                            + "methods are supported", axis2MessageContext, BAD_REQUEST);
+                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET, POST, "
+                                                     + "DELETE methods are supported",
+                                                     axis2MessageContext, BAD_REQUEST);
+                    break;
                 }
             }
         } catch (UserStoreException e) {
             response = Utils.createJsonError("Error initializing the user store. Please try again later", e,
-                            axis2MessageContext, INTERNAL_SERVER_ERROR);
+                                             axis2MessageContext, INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
             response = Utils.createJsonError("Error processing the request", e, axis2MessageContext, BAD_REQUEST);
         } catch (ResourceNotFoundException e) {
@@ -112,7 +114,8 @@ public class UserResource implements MiApiResource {
         return userObject;
     }
 
-    JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException, ResourceNotFoundException {
+    JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException,
+            ResourceNotFoundException {
         LOG.info("Handling DELETE");
         String user = getUserFromPathParam(messageContext);
         if (messageContext.getProperty(USERNAME_PROPERTY).equals(user)) {
@@ -134,7 +137,8 @@ public class UserResource implements MiApiResource {
         return MicroIntegratorSecurityUtils.getRealmConfiguration();
     }
 
-    private String getUserFromPathParam(MessageContext messageContext) throws UserStoreException, ResourceNotFoundException {
+    private String getUserFromPathParam(MessageContext messageContext) throws UserStoreException,
+            ResourceNotFoundException {
         String userId = Utils.getPathParameter(messageContext, USER_ID);
         if (Objects.isNull(userId)) {
             throw new AssertionError("Incorrect path parameter used: " + USER_ID);

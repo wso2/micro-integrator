@@ -36,7 +36,7 @@ import javax.sql.DataSource;
 
 public class DatabaseCreator {
 
-    private static Log log = LogFactory.getLog(org.wso2.micro.core.util.DatabaseCreator.class);
+    private static Log log = LogFactory.getLog(DatabaseCreator.class);
     private DataSource dataSource;
     private String delimiter = ";";
     private Connection conn = null;

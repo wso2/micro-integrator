@@ -42,9 +42,7 @@ public class ManagementApiParser {
 
     private static final Log LOG = LogFactory.getLog(ManagementApiParser.class);
     private static OMElement managementApiElement;
-
-    public ManagementApiParser() {
-    }
+    private HashMap<String, char[]> usersList;
 
     /**
      * Method to get the File object representation of the internal-apis.xml file.
@@ -69,7 +67,9 @@ public class ManagementApiParser {
         if (Objects.nonNull(managementApiElement)) {
             return managementApiElement;
         }
-        LOG.debug("Parsing " + getConfigurationFilePath() + " for the first time.");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Parsing the ManagementApi element from " + getConfigurationFilePath());
+        }
         Iterator<OMElement> internalApis = getInternalApisElement();
         while (internalApis.hasNext()) {
             OMElement apiOM = internalApis.next();
@@ -84,6 +84,12 @@ public class ManagementApiParser {
 
     public HashMap<String, char[]> getUserList() throws CarbonException, XMLStreamException, IOException,
             UserStoreUndefinedException, ManagementApiUndefinedException {
+        if (Objects.nonNull(usersList)) {
+            return usersList;
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Parsing the UsetStore element from " + getConfigurationFilePath());
+        }
         OMElement userStoreOM = getManagementApiElement().getFirstChildWithName(new QName("UserStore"));
         if (Objects.nonNull(userStoreOM)) {
             return populateUserList(userStoreOM.getFirstChildWithName(new QName("users")));

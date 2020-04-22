@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -31,12 +31,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.wso2.micro.integrator.management.apis.Constants.BAD_REQUEST;
 import static org.wso2.micro.integrator.management.apis.Constants.INTERNAL_SERVER_ERROR;
 import static org.wso2.micro.integrator.management.apis.Constants.IS_ADMIN;
+import static org.wso2.micro.integrator.management.apis.Constants.LIST;
 import static org.wso2.micro.integrator.management.apis.Constants.PASSWORD;
 import static org.wso2.micro.integrator.management.apis.Constants.PATTERN;
 import static org.wso2.micro.integrator.management.apis.Constants.ROLE;
@@ -50,19 +50,11 @@ public class UsersResource extends UserResource {
 
     private static final Log LOG = LogFactory.getLog(UsersResource.class);
 
-    // HTTP method types supported by the resource
-    Set<String> methods;
-
     public UsersResource() {
 
         methods = new HashSet<>();
         methods.add(Constants.HTTP_GET);
         methods.add(Constants.HTTP_POST);
-    }
-
-    @Override
-    public Set<String> getMethods() {
-        return methods;
     }
 
     @Override
@@ -82,13 +74,15 @@ public class UsersResource extends UserResource {
                     break;
                 }
                 default: {
-                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET, POST, DELETE "
-                            + "methods are supported", axis2MessageContext, BAD_REQUEST);
+                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET, POST, "
+                                                     + "DELETE methods are supported",
+                                                     axis2MessageContext, BAD_REQUEST);
+                    break;
                 }
             }
         } catch (UserStoreException e) {
             response = Utils.createJsonError("Error initializing the user store. Please try again later", e,
-                            axis2MessageContext, INTERNAL_SERVER_ERROR);
+                                             axis2MessageContext, INTERNAL_SERVER_ERROR);
         } catch (IOException e) {
             response = Utils.createJsonError("Error processing the request", e, axis2MessageContext, BAD_REQUEST);
         }
@@ -118,9 +112,9 @@ public class UsersResource extends UserResource {
         }
         jsonBody = Utils.createJSONList(users.size());
         for (String user : users) {
-            JSONObject apiObject = new JSONObject();
-            apiObject.put(Constants.USER_ID, user);
-            jsonBody.getJSONArray(Constants.LIST).put(apiObject);
+            JSONObject userObject = new JSONObject();
+            userObject.put(USER_ID, user);
+            jsonBody.getJSONArray(LIST).put(userObject);
 
         }
         return jsonBody;
@@ -149,7 +143,7 @@ public class UsersResource extends UserResource {
             return jsonBody;
         } else {
             throw new IOException("Missing one or more of the fields, '" + USER_ID + "', '" + PASSWORD + "' in the "
-                                          + "payload");
+                                  + "payload");
         }
     }
 

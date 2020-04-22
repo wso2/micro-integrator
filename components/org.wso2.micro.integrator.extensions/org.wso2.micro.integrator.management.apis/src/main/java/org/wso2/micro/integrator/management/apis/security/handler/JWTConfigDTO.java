@@ -17,8 +17,6 @@
  */
 package org.wso2.micro.integrator.management.apis.security.handler;
 
-import java.util.HashMap;
-
 /**
  * This class is the DTO for JWT configs in internal-apis.xml
  */

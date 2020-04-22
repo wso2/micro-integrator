@@ -18,8 +18,10 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+/**
+ * Exception to be thrown when a requested resource cannot be located.
+ */
 public class ResourceNotFoundException extends Exception {
-
 
     public ResourceNotFoundException(String message) {
         super(message);

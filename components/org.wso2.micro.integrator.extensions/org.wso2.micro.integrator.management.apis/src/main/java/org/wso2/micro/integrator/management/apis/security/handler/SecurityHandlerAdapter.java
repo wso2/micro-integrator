@@ -18,7 +18,6 @@
 
 package org.wso2.micro.integrator.management.apis.security.handler;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.axis2.transport.http.HTTPConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,11 +30,9 @@ import org.wso2.micro.integrator.management.apis.ManagementApiParser;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.management.apis.UserStoreUndefinedException;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
 

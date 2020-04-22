@@ -1,12 +1,12 @@
 /*
- * Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+ * Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
  *
  * WSO2 Inc. licenses this file to you under the Apache License,
  * Version 2.0 (the "License"); you may not use this file except
  * in compliance with the License.
  * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *   http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -68,7 +68,7 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
             if (useCarbonUserStore) {
                 //Uses carbon user store
                 try {
-                    return processAuthorizationWithCarbonUserStore(authHeaderToken);
+                    return processAuthorizationWithCarbonUserStore();
                 } catch (UserStoreException e) {
                     LOG.error("Error while authenticating with carbon user store", e);
                 }
@@ -85,10 +85,9 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
     /**
      * Processes /users request if the user is an admin
      *
-     * @param token extracted basic auth token
      * @return if successfully authorized
      */
-    private boolean processAuthorizationWithCarbonUserStore(String token) throws UserStoreException {
+    private boolean processAuthorizationWithCarbonUserStore() throws UserStoreException {
 
         String username = messageContext.getProperty(USERNAME_PROPERTY).toString();
         boolean isAuthorized = authorize(username,

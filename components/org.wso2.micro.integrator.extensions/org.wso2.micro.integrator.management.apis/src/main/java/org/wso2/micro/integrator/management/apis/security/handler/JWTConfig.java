@@ -18,21 +18,14 @@
 package org.wso2.micro.integrator.management.apis.security.handler;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.CarbonException;
-import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.management.apis.ManagementApiParser;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.securevault.SecretResolver;
-import org.wso2.securevault.SecretResolverFactory;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Objects;
 import javax.xml.namespace.QName;
@@ -119,27 +112,6 @@ public class JWTConfig {
             LOG.error("Error building the JWT configuration. ", e);
         }
         return jwtDTO;
-    }
-
-    /**
-     * Returns the document OMElement from the internal-apis.xml file.
-     *
-     * @param fileInputStream input stream of internal-apis.xml
-     * @return OMelement of internal-apis.xml
-     */
-    private OMElement getOMElementFromFile(InputStream fileInputStream) throws CarbonException, XMLStreamException {
-        InputStream inputStream = MicroIntegratorBaseUtils.replaceSystemVariablesInXml(fileInputStream);
-        StAXOMBuilder builder = new StAXOMBuilder(inputStream);
-        return builder.getDocumentElement();
-    }
-
-    /**
-     * Sets the SecretResolver the document OMElement.
-     *
-     * @param rootElement Document OMElement
-     */
-    private void setSecretResolver(OMElement rootElement) {
-        this.secretResolver = SecretResolverFactory.create(rootElement, true);
     }
 
     public JWTConfigDTO getJwtConfigDto() {
