@@ -24,6 +24,18 @@
         <api name="{{api.api_name}}" protocol="{{api.protocols}}" class="{{api.class}}"/>
         {% endfor %}
         <api name="{{management_api.name}}" protocol="{{management_api.protocols}}" class="{{management_api.class}}">
+            {% if management_api.file_user_store.enable == true %}
+            <UserStore>
+                <users>
+                    {% for user in management_api.user_store.users %}
+                        <user>
+                            <username>{{user.user.name}}</username>
+                            <password>{{user.user.password}}</password>
+                        </user>
+                    {% endfor %}
+                </users>
+            </UserStore>
+            {% endif %}
             <handlers>
                 {% if management_api_token_handler.enable == true %}
                 <handler name="{{management_api.handler.name}}" class="{{management_api.handler.class}}">
@@ -36,34 +48,17 @@
                         <expiry>{{management_api.handler.token_config.expiry}}</expiry><!--Seconds /-->
                         <size>{{management_api.handler.token_config.size}}</size>
                     </TokenConfig>
-                    {% if management_api.handler.file_user_store.enable == true %}
-                    <UserStore>
-                        <users>
-                            {% for user in management_api.handler.user_store.users %}
-                            <user>
-                                <username>{{user.user.name}}</username>
-                                <password>{{user.user.password}}</password>
-                            </user>
-                            {% endfor %}
-                        </users>
-                    </UserStore>
-                    {% endif %}
                 </handler>
                 {% endif %}
                 {% if management_api_basic_security_handler.enable == true %}
                 <handler name="{{management_api.security_handler.name}}"
                          class="{{management_api.security_handler.class}}">
-                    <UserStore>
-                        <users>
-                            {% for user in management_api.handler.user_store.users %}
-                            <user>
-                                <username>{{user.user.name}}</username>
-                                <password>{{user.user.password}}</password>
-                            </user>
-                            {% endfor %}
-                        </users>
-                    </UserStore>
                 </handler>
+                {% endif %}
+                {% if management_api_authorization_handler.enable == true %}
+                    <handler name="{{management_api.authorization_handler.name}}"
+                        class="{{management_api.authorization_handler.class}}">
+                    </handler>
                 {% endif %}
             </handlers>
             <cors>
