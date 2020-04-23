@@ -921,3 +921,8 @@ order_before="before"
 order_after="after"
 order_phase_first="phasefirst"
 order_phase_last="phaselast"
+
+########################## Synapse handlers ###################################
+[[synapse_handlers]]
+name="IntegratorSynapseHandler"
+class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"
