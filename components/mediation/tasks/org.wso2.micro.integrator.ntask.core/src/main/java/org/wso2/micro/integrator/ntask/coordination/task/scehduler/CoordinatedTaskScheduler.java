@@ -144,11 +144,9 @@ public class CoordinatedTaskScheduler implements Runnable {
             LOG.debug("Following list of tasks were found in the failed list.");
             failedTasks.forEach(LOG::debug);
         }
-        Iterator<String> iter = failedTasks.iterator();
-        while (iter.hasNext()) {
-            String task = iter.next();
+        for (String task : failedTasks) {
             taskStore.addTaskIfNotExist(task);
-            iter.remove();
+            taskManager.removeTaskFromAdditionFailedTaskList(task);
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Successfully added the failed task [" + task + "]");
             }

@@ -74,6 +74,8 @@ public interface TaskManager {
      */
     List<String> getLocallyRunningCoordinatedTasks();
 
+    void removeTaskFromLocallyRunningTaskList(String taskName);
+
     /**
      * Handles the pause operation for the task with the given name.
      *

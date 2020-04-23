@@ -100,7 +100,11 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
     }
 
     public List<String> getAdditionFailedTasks() {
-        return additionFailedTasks;
+        return new ArrayList<>(additionFailedTasks);
+    }
+
+    public void removeTaskFromAdditionFailedTaskList(String taskName) {
+        additionFailedTasks.remove(taskName);
     }
 
     /**
@@ -175,11 +179,16 @@ public class ScheduledTaskManager extends AbstractQuartzTaskManager {
     }
 
     public List<String> getLocallyRunningCoordinatedTasks() {
-        return locallyRunningCoordinatedTasks;
+        return new ArrayList<>(locallyRunningCoordinatedTasks);
+    }
+
+    @Override
+    public void removeTaskFromLocallyRunningTaskList(String taskName) {
+        locallyRunningCoordinatedTasks.remove(taskName);
     }
 
     public List<String> getAllCoordinatedTasksDeployed() {
-        return deployedCoordinatedTasks;
+        return new ArrayList<>(deployedCoordinatedTasks);
     }
 
     /**
