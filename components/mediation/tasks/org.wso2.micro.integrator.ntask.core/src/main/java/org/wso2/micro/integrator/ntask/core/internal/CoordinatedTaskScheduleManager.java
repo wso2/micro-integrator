@@ -18,6 +18,7 @@
 
 package org.wso2.micro.integrator.ntask.core.internal;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
@@ -30,6 +31,7 @@ import org.wso2.micro.integrator.ntask.core.impl.standalone.ScheduledTaskManager
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,7 +61,9 @@ public class CoordinatedTaskScheduleManager {
      */
     public void startTaskScheduler(String msg) {
 
-        ScheduledExecutorService taskSchedulerExecutor = Executors.newSingleThreadScheduledExecutor();
+        ThreadFactory namedThreadFactory = new ThreadFactoryBuilder().setNameFormat("CoordinatedTaskScheduler-%d")
+                .build();
+        ScheduledExecutorService taskSchedulerExecutor = Executors.newSingleThreadScheduledExecutor(namedThreadFactory);
         TaskStoreCleaner taskStoreCleaner = new TaskStoreCleaner(taskManager, taskStore);
         // the frequency at which task resolving need to be done per cleaning.
         int resolvingFrequency = 5;
