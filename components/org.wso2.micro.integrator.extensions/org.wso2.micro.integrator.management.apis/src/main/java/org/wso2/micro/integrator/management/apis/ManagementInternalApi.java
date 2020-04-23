@@ -39,6 +39,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOCAL_E
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGGING;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGIN;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOGOUT;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_LOG_FILES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_PROCESSORS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_MESSAGE_STORE;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_PROXY_SERVICES;
@@ -78,6 +79,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGIN, new LoginResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGOUT, new LogoutResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_SERVER_DATA, new MetaDataResource()));
+        resourcesList.add(new LogFilesResource(PREFIX_LOG_FILES));
 
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);

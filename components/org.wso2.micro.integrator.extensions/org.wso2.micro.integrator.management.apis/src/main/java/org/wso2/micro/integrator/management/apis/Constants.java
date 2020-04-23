@@ -38,6 +38,7 @@ public class Constants {
     public static final String PREFIX_LOGIN = "/login";
     public static final String PREFIX_LOGOUT = "/logout";
     public static final String PREFIX_SERVER_DATA = "/server";
+    public static final String PREFIX_LOG_FILES = "/logs";
 
     public static final String COUNT = "count";
     public static final String LIST = "list";
@@ -66,6 +67,8 @@ public class Constants {
     public static final String NOT_FOUND = "404";
     public static final String INTERNAL_SERVER_ERROR = "500";
     public static final String BAD_REQUEST = "400";
+    public static final String MESSAGE_TYPE = "messageType";
+    public static final String CONTENT_TYPE = "ContentType";
 
     public static final String HTTP_METHOD_PROPERTY = "HTTP_METHOD";
     public static final String HTTP_POST = "POST";
