@@ -230,10 +230,8 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                     }
 
                     if (isNodeExist) {
-                        log.warn("Node with ID " + localNodeId + " in group " + localGroupId +
-                                 " already exists.");
-                        stillCoordinator = communicationBusContext.
-                                   updateCoordinatorHeartbeat(localNodeId, localGroupId, System.currentTimeMillis());
+                        throw new ClusterCoordinationException(
+                                "Node with ID " + localNodeId + " in group " + localGroupId + " already exists.");
 
                     }
                     isCoordinatorTasksRunning = true;
