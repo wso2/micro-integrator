@@ -38,6 +38,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
@@ -45,8 +47,9 @@ public class Utils {
 
     private static final Log LOG = LogFactory.getLog(Utils.class);
 
-    public static String getQueryParameter(MessageContext messageContext, String key){
-        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key))){
+    public static String getQueryParameter(MessageContext messageContext, String key) {
+
+        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key))) {
             return messageContext.getProperty(RESTConstants.REST_QUERY_PARAM_PREFIX + key).toString();
         }
         return null;
@@ -65,6 +68,7 @@ public class Utils {
     }
 
     public static JSONObject createJSONList(int count) {
+
         JSONObject jsonBody = new JSONObject();
         JSONArray list = new JSONArray();
         jsonBody.put(Constants.COUNT, count);
@@ -73,12 +77,14 @@ public class Utils {
     }
 
     public static JSONObject createJsonErrorObject(String error) {
-        JSONObject errorObject =  new JSONObject();
+
+        JSONObject errorObject = new JSONObject();
         errorObject.put("Error", error);
         return errorObject;
     }
 
     public static boolean isDoingPOST(org.apache.axis2.context.MessageContext axis2MessageContext) {
+
         if (Constants.HTTP_POST.equals(axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY))) {
             return true;
         }
@@ -143,4 +149,89 @@ public class Utils {
         }
         return value;
     }
+
+    /**
+     * This method will return the path to logs directory.
+     *
+     * @return path as string.
+     */
+    public static String getCarbonLogsPath() {
+
+        String carbonLogsPath = System.getProperty("carbon.logs.path");
+        if (carbonLogsPath == null) {
+            carbonLogsPath = System.getenv("CARBON_LOGS");
+            if (carbonLogsPath == null) {
+                return getCarbonHome() + File.separator + "repository" + File.separator + "logs";
+            }
+        }
+        return carbonLogsPath;
+    }
+
+    /**
+     * This method will return the path to CARBON_HOME.
+     *
+     * @return path as String.
+     */
+    public static String getCarbonHome() {
+
+        String carbonHome = System.getProperty("carbon.home");
+        if (carbonHome == null) {
+            carbonHome = System.getenv("CARBON_HOME");
+            System.setProperty("carbon.home", carbonHome);
+        }
+        return carbonHome;
+    }
+
+    /**
+     * This method will provide information on all the files in the logs directory.
+     *
+     * @return list of file info objects.
+     */
+    public static List<LogFileInfo> getLogFileInfoList() {
+
+        String folderPath = Utils.getCarbonLogsPath();
+        List<LogFileInfo> logFilesList = new ArrayList<>();
+        LogFileInfo logFileInfo;
+
+        File folder = new File(folderPath);
+        File[] listOfFiles = folder.listFiles();
+
+        if (listOfFiles == null || listOfFiles.length == 0) {
+            // folder.listFiles can return a null, in that case return a default log info
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Could not find any log file in " + folderPath);
+            }
+            return getDefaultLogInfoList();
+        }
+        for (File file : listOfFiles) {
+            String filename = file.getName();
+            if (!filename.endsWith(".lck")) {
+                String filePath = Utils.getCarbonLogsPath() + File.separator + filename;
+                File logfile = new File(filePath);
+                logFileInfo = new LogFileInfo(filename, getFileSize(logfile));
+                logFilesList.add(logFileInfo);
+            }
+        }
+        return logFilesList;
+    }
+
+    private static String getFileSize(File file) {
+
+        long bytes = file.length();
+        int unit = 1024;
+        if (bytes < unit) {
+            return bytes + " B";
+        }
+        int exp = (int) (Math.log(bytes) / Math.log(unit));
+        char pre = "KMGTPE".charAt(exp - 1);
+        return String.format("%.1f %sB", bytes / Math.pow(unit, exp), pre);
+    }
+
+    private static List<LogFileInfo> getDefaultLogInfoList() {
+
+        List<LogFileInfo> defaultLogFileInfoList = new ArrayList<>();
+        defaultLogFileInfoList.add(new LogFileInfo("NO_LOG_FILES", "---"));
+        return defaultLogFileInfoList;
+    }
+
 }
