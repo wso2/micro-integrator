@@ -29,6 +29,7 @@ import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
@@ -37,10 +38,11 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
 
     private static final Log LOG = LogFactory.getLog(JWTTokenSecurityHandler.class);
     private String name;
-    private MessageContext messageContext;
 
-    public JWTTokenSecurityHandler() throws CarbonException, XMLStreamException, IOException, ManagementApiUndefinedException {
-        super();
+    public JWTTokenSecurityHandler(String context) throws CarbonException, XMLStreamException, IOException,
+            ManagementApiUndefinedException {
+        super(context);
+        populateDefaultResources();
     }
 
     @Override
@@ -78,7 +80,8 @@ public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
                 //Uses in memory user store
                 return processLoginRequestInMemoryUserStore(authHeaderToken);
             }
-        } else { //Other resources apart from /login should be authenticated from JWT based auth
+        } else {
+            //Other resources apart from /login should be authenticated from JWT based auth
             JWTTokenStore tokenStore = JWTInMemoryTokenStore.getInstance();
             JWTTokenInfoDTO jwtTokenInfoDTO = tokenStore.getToken(authHeaderToken);
             if (jwtTokenInfoDTO != null && !jwtTokenInfoDTO.isRevoked()) {

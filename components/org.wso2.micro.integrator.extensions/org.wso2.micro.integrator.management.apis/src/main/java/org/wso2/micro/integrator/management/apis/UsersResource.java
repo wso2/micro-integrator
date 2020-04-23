@@ -60,8 +60,10 @@ public class UsersResource extends UserResource {
     @Override
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
-        LOG.info("Handling request by users resource");
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Handling " + httpMethod + "request.");
+        }
         JSONObject response;
         try {
             switch (httpMethod) {
@@ -92,23 +94,37 @@ public class UsersResource extends UserResource {
     }
 
     JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
-        LOG.debug("Handling GET");
-
         String searchPattern = Utils.getQueryParameter(messageContext, PATTERN);
         if (Objects.isNull(searchPattern)) {
             searchPattern = "*";
         }
-
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Searching for users with the pattern: " + searchPattern);
+        }
         List<String> patternUsersList = Arrays.asList(getUserStore().listUsers(searchPattern, -1));
-
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Retrieved list of users for the pattern: ");
+            patternUsersList.forEach(LOG::debug);
+        }
         String roleFilter = Utils.getQueryParameter(messageContext, ROLE);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Searching for users with the role: " + roleFilter);
+        }
         JSONObject jsonBody;
         List<String> users;
         if (Objects.isNull(roleFilter)) {
             users = patternUsersList;
         } else {
             List<String> roleUserList = Arrays.asList(getUserStore().getUserListOfRole(roleFilter));
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Retrieved list of users for the role: ");
+                roleUserList.forEach(LOG::debug);
+            }
             users = patternUsersList.stream().filter(roleUserList::contains).collect(Collectors.toList());
+        }
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Filtered list of users: ");
+            users.forEach(LOG::debug);
         }
         jsonBody = Utils.createJSONList(users.size());
         for (String user : users) {
@@ -122,7 +138,6 @@ public class UsersResource extends UserResource {
 
     private JSONObject handlePost(
             org.apache.axis2.context.MessageContext axis2MessageContext) throws UserStoreException, IOException {
-        LOG.info("Handling POST");
         if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
             return Utils.createJsonErrorObject("JSON payload is missing");
         }
@@ -134,6 +149,9 @@ public class UsersResource extends UserResource {
                 roleList = new String[]{adminRole};
             }
             String user = payload.get(USER_ID).getAsString();
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Adding user, id: " + user + ", roleList: " + Arrays.toString(roleList));
+            }
             getUserStore().addUser(user, payload.get(PASSWORD).getAsString(),
                                    roleList, null, null);
 

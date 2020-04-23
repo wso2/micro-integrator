@@ -21,6 +21,7 @@ package org.wso2.micro.integrator.management.apis.security.handler;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.synapse.MessageContext;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.micro.integrator.security.MicroIntegratorSecurityUtils;
@@ -39,8 +40,10 @@ public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
     private String name;
     private static final Log LOG = LogFactory.getLog(LDAPBasedSecurityHandler.class);
 
-    public LDAPBasedSecurityHandler() throws CarbonException, XMLStreamException, IOException, ManagementApiUndefinedException {
-        super();
+    public LDAPBasedSecurityHandler(String context) throws CarbonException, XMLStreamException, IOException,
+            ManagementApiUndefinedException {
+        super(context);
+        populateDefaultResources();
     }
 
     @Override

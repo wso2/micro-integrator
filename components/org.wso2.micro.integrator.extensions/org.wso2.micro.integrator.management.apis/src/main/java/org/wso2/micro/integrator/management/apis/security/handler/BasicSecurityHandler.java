@@ -18,18 +18,19 @@
 
 package org.wso2.micro.integrator.management.apis.security.handler;
 
-import org.apache.axiom.om.OMElement;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
 import org.wso2.securevault.SecretResolver;
-import org.wso2.securevault.SecretResolverFactory;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
+
+import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 /**
  * This class extends the SecurityHandlerAdapter to create a basic security handler with a user store defined in
@@ -42,8 +43,10 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
     private String name;
     private SecretResolver secretResolver;
 
-    public BasicSecurityHandler() throws CarbonException, XMLStreamException, IOException, ManagementApiUndefinedException {
-        super();
+    public BasicSecurityHandler(String context) throws CarbonException, XMLStreamException, IOException,
+            ManagementApiUndefinedException {
+        super(context);
+        populateDefaultResources();
     }
 
     @Override
@@ -58,8 +61,7 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
 
     @Override
     protected Boolean authenticate(String authHeaderToken) {
-
-        if (LOG.isDebugEnabled()){
+        if (LOG.isDebugEnabled()) {
             LOG.debug("Handling authentication");
         }
         String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
@@ -75,6 +77,7 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
                 if (userNameFromStore.equals(userNameFromHeader)) {
                     String passwordFromStore = String.valueOf(usersList.get(userNameFromStore));
                     if (isValid(passwordFromStore) && passwordFromStore.equals(passwordFromHeader)) {
+                        messageContext.setProperty(USERNAME_PROPERTY, userNameFromHeader);
                         return true;
                     }
                 }

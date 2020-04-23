@@ -18,7 +18,25 @@
 
 <internalApis>
     <apis>
-        <api name="SampleAPI" protocol="http https" class="internal.http.api.SampleInternalAPI"/>
+        <api name="SampleAPI" protocol="http https" class="internal.http.api.SampleInternalAPI">
+            <handlers>
+                <handler name="SampleInternalApiHandlerWithNoResources"
+                         class="internal.http.api.SampleInternalApiHandlerWithNoResources"/>
+                <handler name="SampleInternalApiHandlerWithAllResources"
+                         class="internal.http.api.SampleInternalApiHandlerWithAllResources">
+                    <resources>
+                        <resource>/</resource>
+                    </resources>
+                </handler>
+                <handler name="SampleInternalApiHandlerWithCustomResources"
+                         class="internal.http.api.SampleInternalApiHandlerWithCustomResources">
+                    <resources>
+                        <resource>/resource1</resource>
+                        <resource>/resource2</resource>
+                    </resources>
+                </handler>
+            </handlers>
+        </api>
     </apis>
     <sslConfig>
         <parameter name="keystore">

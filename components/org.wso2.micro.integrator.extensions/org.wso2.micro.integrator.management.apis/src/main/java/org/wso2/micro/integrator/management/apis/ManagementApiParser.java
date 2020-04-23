@@ -33,7 +33,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
+
+import static org.wso2.micro.integrator.management.apis.Constants.APIS_Q;
+import static org.wso2.micro.integrator.management.apis.Constants.API_Q;
+import static org.wso2.micro.integrator.management.apis.Constants.MGT_API_NAME;
+import static org.wso2.micro.integrator.management.apis.Constants.NAME_ATTR;
+import static org.wso2.micro.integrator.management.apis.Constants.USERS_Q;
+import static org.wso2.micro.integrator.management.apis.Constants.USER_STORE_Q;
 
 /**
  * This class reads through internal-apis.xml and parses the values.
@@ -73,8 +81,8 @@ public class ManagementApiParser {
         Iterator<OMElement> internalApis = getInternalApisElement();
         while (internalApis.hasNext()) {
             OMElement apiOM = internalApis.next();
-            String apiName = apiOM.getAttributeValue(new QName("name"));
-            if ("ManagementApi".equals(apiName)) {
+            String apiName = apiOM.getAttributeValue(NAME_ATTR);
+            if (MGT_API_NAME.equals(apiName)) {
                 managementApiElement = apiOM;
                 return apiOM;
             }
@@ -82,7 +90,7 @@ public class ManagementApiParser {
         throw new ManagementApiUndefinedException("Management API not defined in " + getConfigurationFilePath());
     }
 
-    public HashMap<String, char[]> getUserList() throws CarbonException, XMLStreamException, IOException,
+    public Map<String, char[]> getUserList() throws CarbonException, XMLStreamException, IOException,
             UserStoreUndefinedException, ManagementApiUndefinedException {
         if (Objects.nonNull(usersList)) {
             return usersList;
@@ -90,9 +98,9 @@ public class ManagementApiParser {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Parsing the UsetStore element from " + getConfigurationFilePath());
         }
-        OMElement userStoreOM = getManagementApiElement().getFirstChildWithName(new QName("UserStore"));
+        OMElement userStoreOM = getManagementApiElement().getFirstChildWithName(USER_STORE_Q);
         if (Objects.nonNull(userStoreOM)) {
-            return populateUserList(userStoreOM.getFirstChildWithName(new QName("users")));
+            return populateUserList(userStoreOM.getFirstChildWithName(USERS_Q));
         } else {
             throw new UserStoreUndefinedException("UserStore tag not defined inside the Management API");
         }
@@ -104,7 +112,7 @@ public class ManagementApiParser {
             OMElement documentElement = getOMElementFromFile(fileInputStream);
             createSecretResolver(documentElement);
 
-            return documentElement.getFirstChildWithName(new QName("apis")).getChildrenWithName(new QName("api"));
+            return documentElement.getFirstChildWithName(APIS_Q).getChildrenWithName(API_Q);
         }
     }
 

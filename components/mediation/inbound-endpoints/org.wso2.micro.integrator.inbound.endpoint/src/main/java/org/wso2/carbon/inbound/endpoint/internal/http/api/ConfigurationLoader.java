@@ -22,10 +22,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Properties;
 import javax.xml.namespace.QName;
 
@@ -53,6 +56,7 @@ public class ConfigurationLoader {
     private static final QName NAME_ATT = new QName("name");
     private static final QName PROTOCOL_Q = new QName("protocol");
     private static final QName HANDLERS_Q = new QName("handlers");
+    private static final QName RESOURCES_Q = new QName("resources");
 
     private static final String APIS = "apis";
     private static final String SSL_CONFIG = "sslConfig";
@@ -184,7 +188,16 @@ public class ConfigurationLoader {
                     String handlerName = handlerElement.getAttributeValue(NAME_ATT);
                     if (handlerElement.getAttribute(CLASS_Q) != null) {
                         String handlerClass = handlerElement.getAttributeValue(CLASS_Q);
-                        InternalAPIHandler handler = createHandler(handlerClass);
+                        OMElement resourcesElement = handlerElement.getFirstChildWithName(RESOURCES_Q);
+                        List<String> resourcesList = new ArrayList<>();
+                        if (Objects.nonNull(resourcesElement)) {
+                            Iterator resources = resourcesElement.getChildElements();
+                            while (resources.hasNext()) {
+                                OMElement resource = (OMElement) resources.next();
+                                resourcesList.add(resource.getText());
+                            }
+                        }
+                        InternalAPIHandler handler = createHandler(handlerClass, api.getContext(), resourcesList);
                         handler.setName(handlerName);
                         handlerList.add(handler);
                     } else {
@@ -199,17 +212,19 @@ public class ConfigurationLoader {
         api.setHandlers(handlerList);
     }
 
-    private static InternalAPIHandler createHandler(String classFQName) {
+    private static InternalAPIHandler createHandler(String classFQName, String context, List<String> resources) {
 
         try {
-            Object obj = Class.forName(classFQName).newInstance();
+            Constructor c = Class.forName(classFQName).getConstructor(String.class);
+            Object obj = c.newInstance(context);
             if (obj instanceof InternalAPIHandler) {
+                ((InternalAPIHandler) obj).setResources(resources);
                 return (InternalAPIHandler) obj;
             } else {
                 throw new SynapseException("Error creating Internal InternalAPIHandler. "
                                                    + "The InternalAPIHandler should be of type InternalAPIHandler");
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
             throw new SynapseException("Error creating Internal InternalAPIHandler for class name : " + classFQName, e);
         }
     }

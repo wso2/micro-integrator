@@ -32,7 +32,8 @@ import org.wso2.micro.integrator.management.apis.UserStoreUndefinedException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -41,64 +42,120 @@ import java.util.Objects;
  */
 public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
 
-    static HashMap<String, char[]> usersList;
+    static Map<String, char[]> usersList;
     static boolean useCarbonUserStore = false;
     private static boolean isInitialized = false;
+    /**
+     * Resources defined in internal-apis.xml to be handled
+     */
+    protected List<String> resources;
+
+    /**
+     * default resource paths to be handled in the case where resource paths are not defined in internal-apis.xml
+     */
+    protected List<String> defaultResources;
+    protected String context;
+    protected MessageContext messageContext;
 
     private static final Log LOG = LogFactory.getLog(SecurityHandlerAdapter.class);
 
-    public SecurityHandlerAdapter() throws CarbonException, XMLStreamException, IOException,
+    public SecurityHandlerAdapter(String context) throws CarbonException, XMLStreamException, IOException,
             ManagementApiUndefinedException {
+        initializeUserStore();
+        this.context = context;
+    }
+
+    protected SecurityHandlerAdapter() {
+    }
+
+    private static void initializeUserStore() throws CarbonException, IOException, ManagementApiUndefinedException,
+            XMLStreamException {
         if (!isInitialized) {
             ManagementApiParser mgtParser = new ManagementApiParser();
             try {
                 usersList = mgtParser.getUserList();
             } catch (UserStoreUndefinedException e) {
                 useCarbonUserStore = true;
-                LOG.info("User store config has not been defined in file " + ManagementApiParser.getConfigurationFilePath() + ". "
-                         + "Using carbon user store settings");
+                LOG.info("User store config has not been defined in file "
+                         + ManagementApiParser.getConfigurationFilePath() + ". Using carbon user store settings");
             }
             isInitialized = true;
         }
     }
 
+    protected boolean needsHandling() {
+        String resourcePath = messageContext.getTo().getAddress();
+        if (!resources.isEmpty()) {
+            return isMatchingResource(resourcePath, resources);
+        } else {
+            return isMatchingResource(resourcePath, defaultResources);
+        }
+    }
+
+    private boolean isMatchingResource(String resourcePath, List<String> defaultResources) {
+        for (String resource : defaultResources) {
+            if (resourcePath.contains(context.concat(resource))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected void populateDefaultResources() {
+        defaultResources = new ArrayList<>(1);
+        defaultResources.add("");
+    }
+
+    @Override
+    public void setResources(List<String> resources) {
+        this.resources = resources;
+    }
+
+    @Override
+    public List<String> getResources() {
+        return resources;
+    }
+
     @Override
     public Boolean invoke(MessageContext messageContext) {
-
-        org.apache.axis2.context.MessageContext axis2MessageContext
-                = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        Map headers = SecurityUtils.getHeaders(axis2MessageContext);
-        if (Objects.nonNull(headers)) {
-            if (Objects.nonNull(headers.get(HTTPConstants.HEADER_AUTHORIZATION))) {
-                String authHeader = (String) headers.get(HTTPConstants.HEADER_AUTHORIZATION);
-                String authHeaderToken = authHeader;
-                if ((authHeader.startsWith(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE)) &&
-                        (authHeader.length() >=  (AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1))){
-                    authHeaderToken = authHeader.substring(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
-                } else if ((authHeader.startsWith(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE)) &&
-                        (authHeader.length() >=  (AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1))) {
-                    authHeaderToken = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
+        if (needsHandling()) {
+            org.apache.axis2.context.MessageContext axis2MessageContext
+                    = ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+            Map headers = SecurityUtils.getHeaders(axis2MessageContext);
+            if (Objects.nonNull(headers)) {
+                if (Objects.nonNull(headers.get(HTTPConstants.HEADER_AUTHORIZATION))) {
+                    String authHeader = (String) headers.get(HTTPConstants.HEADER_AUTHORIZATION);
+                    String authHeaderToken = authHeader;
+                    if ((authHeader.startsWith(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE)) &&
+                        (authHeader.length() >= (AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1))) {
+                        authHeaderToken = authHeader.substring(AuthConstants.BASIC_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
+                    } else if ((authHeader.startsWith(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE)) &&
+                               (authHeader.length() >= (AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1))) {
+                        authHeaderToken = authHeader.substring(AuthConstants.BEARER_AUTH_HEADER_TOKEN_TYPE.length() + 1).trim();
+                    } else {
+                        // Other auth header types are not supported atm
+                        clearHeaders(headers);
+                        SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
+                        return false;
+                    }
+                    if (authenticate(authHeaderToken)) {
+                        return true;
+                    } else {
+                        clearHeaders(headers);
+                        SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
+                        return false;
+                    }
                 } else {
-                    // Other auth header types are not supported atm
                     clearHeaders(headers);
-                    SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
-                    return false;
-                }
-                if (authenticate(authHeaderToken)) {
-                    return true;
-                } else {
-                    clearHeaders(headers);
+                    headers.put(AuthConstants.WWW_AUTHENTICATE, AuthConstants.WWW_AUTH_METHOD);
                     SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
                     return false;
                 }
             } else {
-                clearHeaders(headers);
-                headers.put(AuthConstants.WWW_AUTHENTICATE, AuthConstants.WWW_AUTH_METHOD);
-                SecurityUtils.setStatusCode(messageContext, AuthConstants.SC_UNAUTHORIZED);
                 return false;
             }
         } else {
-            return false;
+            return true;
         }
     }
 

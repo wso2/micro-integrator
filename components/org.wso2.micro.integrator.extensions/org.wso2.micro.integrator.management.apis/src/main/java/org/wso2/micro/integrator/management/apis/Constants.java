@@ -18,6 +18,8 @@
 
 package org.wso2.micro.integrator.management.apis;
 
+import javax.xml.namespace.QName;
+
 public class Constants {
     //Constants for the API resource prefixes
     public static final String REST_API_CONTEXT = "/management";
@@ -102,5 +104,14 @@ public class Constants {
     public static final String PATTERN = "pattern";
 
     public static final String USERNAME_PROPERTY = "USERNAME";
+
+    // Constant QNames used in the internal-apis.xml
+    public static final QName NAME_ATTR = new QName("name");
+    public static final QName USER_STORE_Q = new QName("UserStore");
+    public static final QName USERS_Q = new QName("users");
+    public static final QName APIS_Q = new QName("apis");
+    public static final QName API_Q = new QName("api");
+
+    public static final String MGT_API_NAME = "ManagementApi";
 
 }

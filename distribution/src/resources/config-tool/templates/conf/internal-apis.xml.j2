@@ -56,9 +56,9 @@
                 </handler>
                 {% endif %}
                 {% if management_api_authorization_handler.enable == true %}
-                    <handler name="{{management_api.authorization_handler.name}}"
-                        class="{{management_api.authorization_handler.class}}">
-                    </handler>
+                <handler name="{{management_api.authorization_handler.name}}"
+                    class="{{management_api.authorization_handler.class}}">
+                </handler>
                 {% endif %}
             </handlers>
             <cors>

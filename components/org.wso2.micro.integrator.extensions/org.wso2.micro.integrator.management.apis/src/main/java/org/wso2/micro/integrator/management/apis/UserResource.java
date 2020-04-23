@@ -69,8 +69,10 @@ public class UserResource implements MiApiResource {
     @Override
     public boolean invoke(MessageContext messageContext, org.apache.axis2.context.MessageContext axis2MessageContext,
                           SynapseConfiguration synapseConfiguration) {
-        LOG.info("Handling request by user resource");
         String httpMethod = axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY).toString();
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Handling " + httpMethod + "request.");
+        }
         JSONObject response;
         try {
             switch (httpMethod) {
@@ -103,8 +105,10 @@ public class UserResource implements MiApiResource {
     }
 
     JSONObject handleGet(MessageContext messageContext) throws UserStoreException, ResourceNotFoundException {
-        LOG.debug("Handling GET");
         String user = getUserFromPathParam(messageContext);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Requested details for the user: " + user);
+        }
         JSONObject userObject = new JSONObject();
         userObject.put(USER_ID, user);
         String[] roles = getUserStore().getRoleListOfUser(user);
@@ -116,8 +120,10 @@ public class UserResource implements MiApiResource {
 
     JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException,
             ResourceNotFoundException {
-        LOG.info("Handling DELETE");
         String user = getUserFromPathParam(messageContext);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Request received to delete the user: " + user);
+        }
         if (messageContext.getProperty(USERNAME_PROPERTY).equals(user)) {
             throw new IOException("Attempt to delete the logged in user. Operation not allowed. Please login "
                                   + "from another user.");
@@ -155,6 +161,13 @@ public class UserResource implements MiApiResource {
         throw new ResourceNotFoundException("User: " + userId + " cannot be found.");
     }
 
+    /**
+     * Method to assert if the admin role is contained within a list of users
+     *
+     * @param rolesList the list of roles assigned to a user
+     * @return true if the admin role is present in the list of roles provided
+     * @throws UserStoreException if any error occurs while reading the realm configuration
+     */
     private boolean isAdmin(String[] rolesList) throws UserStoreException {
         return Arrays.asList(rolesList).contains(getRealmConfiguration().getAdminRoleName());
     }

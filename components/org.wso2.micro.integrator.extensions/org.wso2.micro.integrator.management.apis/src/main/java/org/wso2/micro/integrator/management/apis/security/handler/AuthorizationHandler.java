@@ -28,6 +28,7 @@ import org.wso2.micro.integrator.security.user.api.UserStoreException;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
@@ -36,10 +37,17 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
 
     private static final Log LOG = LogFactory.getLog(AuthorizationHandler.class);
     private String name;
-    private MessageContext messageContext;
 
-    public AuthorizationHandler() throws CarbonException, XMLStreamException, IOException, ManagementApiUndefinedException {
-        super();
+    public AuthorizationHandler(String context) throws CarbonException, XMLStreamException, IOException,
+            ManagementApiUndefinedException {
+        super(context);
+        populateDefaultResources();
+    }
+
+    @Override
+    protected void populateDefaultResources() {
+        defaultResources = new ArrayList<>(1);
+        defaultResources.add(Constants.PREFIX_USERS);
     }
 
     @Override
@@ -63,23 +71,20 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
 
     @Override
     protected Boolean authenticate(String authHeaderToken) {
-
-        if ((messageContext.getTo().getAddress()).startsWith((Constants.REST_API_CONTEXT + Constants.PREFIX_USERS))) {
-            if (useCarbonUserStore) {
-                //Uses carbon user store
-                try {
-                    return processAuthorizationWithCarbonUserStore();
-                } catch (UserStoreException e) {
-                    LOG.error("Error while authenticating with carbon user store", e);
-                }
-            } else {
-                //Uses in memory user store
-                LOG.error("User management is not supported with the in memory user store. Users need to be modified "
-                          + "in the internal-apis.xml file");
-                return false;
+        if (useCarbonUserStore) {
+            //Uses carbon user store
+            try {
+                return processAuthorizationWithCarbonUserStore();
+            } catch (UserStoreException e) {
+                LOG.error("Error while authenticating with carbon user store", e);
             }
+        } else {
+            //Uses in memory user store
+            LOG.warn("Authorization is not supported with the in memory user store. The request will be authorized. "
+                     + "Please plug in a user store for the correct functionality");
+            return true;
         }
-        return true;
+        return false;
     }
 
     /**
@@ -101,6 +106,10 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
     private boolean authorize(String username, String desiredRole){
         try {
             String[] listOfRoles = MicroIntegratorSecurityUtils.getUserStoreManager().getRoleListOfUser(username);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Authorizing user: " + username + " for the role: " + desiredRole + ". Assigned roles for "
+                          + "the user: " + Arrays.toString(listOfRoles));
+            }
             return Arrays.asList(listOfRoles).contains(desiredRole);
         } catch (UserStoreException e) {
             LOG.error("Error initializing the user store", e);
