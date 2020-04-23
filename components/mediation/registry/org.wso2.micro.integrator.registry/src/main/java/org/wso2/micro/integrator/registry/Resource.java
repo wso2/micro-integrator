@@ -30,7 +30,7 @@ public class Resource {
 
     private File resourceFile;
 
-    Resource(File file) {
+    public Resource(File file) {
         resourceFile = file;
     }
 
