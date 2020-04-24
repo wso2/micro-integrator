@@ -16,3 +16,7 @@ synapse.preserve_namespace_on_xml_to_json=true
 
 [management_api_token_handler]
 enable = false
+
+[[synapse_handlers]]
+name="TestHandler"
+class="org.wso2.carbon.test.gateway.TestHandler"
