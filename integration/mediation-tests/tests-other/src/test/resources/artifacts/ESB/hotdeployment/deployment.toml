@@ -19,3 +19,7 @@ algorithm = "AES"
 
 [management_api_token_handler]
 enable = false
+
+[[synapse_handlers]]
+name="TestHandler"
+class="org.wso2.carbon.test.gateway.TestHandler"

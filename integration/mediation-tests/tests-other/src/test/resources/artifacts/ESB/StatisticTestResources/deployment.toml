@@ -20,3 +20,7 @@ stat.tracer.collect_mediation_properties = true
 
 [management_api_token_handler]
 enable = false
+
+[[synapse_handlers]]
+name="TestHandler"
+class="org.wso2.carbon.test.gateway.TestHandler"
