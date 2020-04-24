@@ -34,6 +34,7 @@ import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.ServerStartupObserver;
 import org.wso2.micro.integrator.coordination.ClusterCoordinator;
 import org.wso2.micro.integrator.coordination.ClusterEventListener;
+import org.wso2.micro.integrator.coordination.exception.ClusterCoordinationException;
 import org.wso2.micro.integrator.coordination.util.RDBMSConstantUtils;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
@@ -115,6 +116,13 @@ public class TasksDSComponent {
                 log.info("Initializing task coordination.");
                 DataSource coordinationDataSource = (DataSource) coordinationDatasourceObject;
                 clusterCoordinator = new ClusterCoordinator(coordinationDataSource);
+                if (clusterCoordinator.checkDuplicateNodeExistence()) {
+                    throw new ClusterCoordinationException(
+                            "Node with id " + clusterCoordinator.getThisNodeId() + " already "
+                                    + "exists in cluster or the previous shutdown of this node "
+                                    + "hasn't elapsed the heart beat expiry time of " + clusterCoordinator
+                                    .getHeartbeatMaxRetryInterval() + " milli seconds.");
+                }
                 dataHolder.setClusterCoordinator(clusterCoordinator);
                 // initialize task data base.
                 taskStore = new TaskStore(coordinationDataSource);

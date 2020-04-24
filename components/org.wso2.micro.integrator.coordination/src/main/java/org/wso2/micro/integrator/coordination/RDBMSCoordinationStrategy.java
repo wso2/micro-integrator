@@ -206,6 +206,28 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
         return nodeDetail.isCoordinator();
     }
 
+    /**
+     * Checks whether a node with same id already exists in cluster.
+     *
+     * @return whether this is duplicate node or not.
+     */
+    boolean isDuplicatedNode() {
+
+        boolean isNodeExist = false;
+        NodeDetail nodeDetail = communicationBusContext.getNodeData(localNodeId, localGroupId);
+        if (nodeDetail != null) {
+            /*This check is done to verify if the node details in the database are of an inactive node.
+            This check would fail if a node goes down and is restarted before the heart beat value expires.*/
+            long heartbeatAge = System.currentTimeMillis() - nodeDetail.getLastHeartbeat();
+            isNodeExist = (heartbeatAge < heartbeatMaxRetryInterval);
+        }
+        return isNodeExist;
+    }
+
+    int getHeartbeatMaxRetryInterval() {
+        return heartbeatMaxRetryInterval;
+    }
+
     @Override
     public void joinGroup() {
         boolean retryClusterJoin = false;
@@ -216,27 +238,9 @@ public class RDBMSCoordinationStrategy implements CoordinationStrategy {
                 try {
                     //clear old membership events for the node
                     communicationBusContext.clearMembershipEvents(localNodeId, localGroupId);
-                    NodeDetail nodeDetail = communicationBusContext.getNodeData(localNodeId, localGroupId);
-                    boolean isNodeExist = false;
-                    boolean stillCoordinator = false;
-                    if (nodeDetail != null) {
-                        // This check is done to verify if the node details in the database are of an inactive node.
-                        // This check would fail if a node goes down and is restarted before the heart
-                        // beat value expires.
-                        long lastHeartBeat = nodeDetail.getLastHeartbeat();
-                        long currentTimeMillis = System.currentTimeMillis();
-                        long heartbeatAge = currentTimeMillis - lastHeartBeat;
-                        isNodeExist = (heartbeatAge < heartbeatMaxRetryInterval);
-                    }
-
-                    if (isNodeExist) {
-                        throw new ClusterCoordinationException(
-                                "Node with ID " + localNodeId + " in group " + localGroupId + " already exists.");
-
-                    }
                     isCoordinatorTasksRunning = true;
                     retryClusterJoin = false;
-                    this.threadExecutor.execute(new HeartBeatExecutionTask(stillCoordinator));
+                    this.threadExecutor.execute(new HeartBeatExecutionTask(false));
                     log.info("Successfully joined the cluster with id [" + localNodeId + "]");
                 } catch (ClusterCoordinationException e) {
                     inactivityTime = System.currentTimeMillis();
