@@ -397,7 +397,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
                     String taskName = trigger.getJobKey().getName();
                     TaskUtils.setTaskFinished(getTaskRepository(), taskName, true);
                     if (getAllCoordinatedTasksDeployed().contains(taskName)) {
-                        getLocallyRunningCoordinatedTasks().remove(taskName);
+                        removeTaskFromLocallyRunningTaskList(taskName);
                         taskStore.updateTaskState(Collections.singletonList(taskName),
                                                   CoordinatedTask.States.COMPLETED);
                     }
