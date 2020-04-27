@@ -24,8 +24,10 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.inbound.InboundRequestProcessor;
 import org.apache.synapse.startup.quartz.StartUpController;
 import org.apache.synapse.task.TaskDescription;
+import org.apache.synapse.task.TaskManager;
 import org.wso2.carbon.inbound.endpoint.persistence.InboundEndpointsDataStore;
-
+import org.wso2.carbon.inbound.endpoint.protocol.rabbitmq.RabbitMQTask;
+import org.wso2.micro.integrator.mediation.ntask.NTaskTaskManager;
 
 import static org.wso2.carbon.inbound.endpoint.common.Constants.SUPER_TENANT_DOMAIN_NAME;
 
@@ -76,6 +78,14 @@ public abstract class InboundOneTimeTriggerRequestProcessor implements InboundRe
                 startUpController = new StartUpController();
                 startUpController.setTaskDescription(taskDescription);
                 startUpController.init(synapseEnvironment);
+                // registering a listener to identify task removal or deletions.
+                if (task instanceof RabbitMQTask) {
+                    TaskManager taskManagerImpl = synapseEnvironment.getTaskManager().getTaskManagerImpl();
+                    if (taskManagerImpl instanceof NTaskTaskManager) {
+                        ((NTaskTaskManager) taskManagerImpl).registerListener((RabbitMQTask) task,
+                                                                              taskDescription.getName());
+                    }
+                }
             } catch (Exception e) {
                 log.error("Error starting the inbound endpoint " + name + ". Unable to schedule the task. " + e
                         .getLocalizedMessage(), e);

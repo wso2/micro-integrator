@@ -30,6 +30,8 @@ public abstract class OneTimeTriggerInboundTask implements org.apache.synapse.ta
     private static final Log logger = LogFactory.getLog(InboundTask.class.getName());
     private boolean isOneTimeTriggered = false;
     private OneTimeTriggerAbstractCallback callback;
+    // boolean used to identify the re-trigger of the task.
+    private boolean reTrigger = false;
 
     public void execute() {
         //this check is there to synchronize task cycle round hit and connection lost reconnection
@@ -39,8 +41,9 @@ public abstract class OneTimeTriggerInboundTask implements org.apache.synapse.ta
             callback.releaseCallbackSuspension();
         }
 
-        if (!isOneTimeTriggered) {
+        if (!isOneTimeTriggered || reTrigger) {
             isOneTimeTriggered = true;
+            reTrigger = false;
             if (logger.isDebugEnabled()) {
                 logger.debug("Common One time trigger Inbound Task executing.");
             }
@@ -56,6 +59,11 @@ public abstract class OneTimeTriggerInboundTask implements org.apache.synapse.ta
 
     public OneTimeTriggerAbstractCallback getCallback() {
         return callback;
+    }
+
+    protected void setReTrigger() {
+        logger.debug("Enabling re-trigger.");
+        this.reTrigger = true;
     }
 
     protected abstract void taskExecute();
