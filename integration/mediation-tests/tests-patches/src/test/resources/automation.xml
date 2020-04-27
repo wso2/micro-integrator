@@ -288,6 +288,7 @@
                     <parameter name="-DenableManagementApi" value="true"/>
 
                     <parameter name="startupScript" value="micro-integrator"/>
+                    <parameter name="-DgracefulShutdown" value="false"></parameter>
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
                 </class>
                 <class>
