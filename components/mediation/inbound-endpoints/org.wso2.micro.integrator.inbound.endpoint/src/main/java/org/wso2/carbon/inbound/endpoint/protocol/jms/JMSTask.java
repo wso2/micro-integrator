@@ -63,13 +63,15 @@ public class JMSTask extends InboundTask implements LocalTaskActionListener {
     /**
      * {@inheritDoc}
      * <p>
-     * Destroys the JMS task upon deletion of the local task.
+     * Destroys the JMS task upon removal of the local task.
      *
      * @param taskName the name of the task that was deleted
      */
     @Override
-    public void notifyLocalTaskDeletion(String taskName) {
+    public void notifyLocalTaskRemoval(String taskName) {
         destroy();
-        logger.debug("Destroyed JMS task due to deletion of task: " + taskName);
+        if (logger.isDebugEnabled()) {
+            logger.debug("Destroyed JMS task due to deletion of task: " + taskName);
+        }
     }
 }
