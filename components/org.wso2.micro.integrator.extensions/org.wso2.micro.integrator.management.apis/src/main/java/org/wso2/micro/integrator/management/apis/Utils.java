@@ -63,8 +63,9 @@ public class Utils {
      * @return the resolved value from the url. Returns null if not present.
      */
     public static String getPathParameter(MessageContext messageContext, String key){
-        if (Objects.nonNull(messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key))) {
-            return messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
+        String pathParameter = messageContext.getProperty(RESTConstants.REST_URI_VARIABLE_PREFIX + key).toString();
+        if (Objects.nonNull(pathParameter)) {
+            return pathParameter;
         }
         return null;
     }
@@ -94,7 +95,7 @@ public class Utils {
      * Creates a json response according to the message provided and sets the provided HTTP code.
      *
      * @param message             the error response to be sent to the client
-     * @param exception           the exception to be logged on the server side. The error resone will be extracted
+     * @param exception           the exception to be logged on the server side. The error response will be extracted
      *                            from the
      *                            exception.
      * @param axis2MessageContext message context to set the json payload to
@@ -138,10 +139,7 @@ public class Utils {
 
     public static boolean isDoingPOST(org.apache.axis2.context.MessageContext axis2MessageContext) {
 
-        if (Constants.HTTP_POST.equals(axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY))) {
-            return true;
-        }
-        return false;
+        return Constants.HTTP_POST.equals(axis2MessageContext.getProperty(Constants.HTTP_METHOD_PROPERTY));
     }
 
     /**
@@ -192,7 +190,7 @@ public class Utils {
      */
     public static String getProperty(File srcFile, String key) throws IOException {
 
-        String value = null;
+        String value;
         try (FileInputStream fis = new FileInputStream(srcFile)) {
             Properties properties = new Properties();
             properties.load(fis);

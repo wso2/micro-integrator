@@ -27,7 +27,6 @@ import org.wso2.securevault.SecretResolver;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
@@ -41,12 +40,10 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
     private static final Log LOG = LogFactory.getLog(BasicSecurityHandler.class);
 
     private String name;
-    private SecretResolver secretResolver;
 
     public BasicSecurityHandler(String context) throws CarbonException, XMLStreamException, IOException,
             ManagementApiUndefinedException {
         super(context);
-        populateDefaultResources();
     }
 
     @Override
@@ -61,9 +58,7 @@ public class BasicSecurityHandler extends SecurityHandlerAdapter {
 
     @Override
     protected Boolean authenticate(String authHeaderToken) {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Handling authentication");
-        }
+        LOG.debug("Handling authentication");
         String decodedCredentials = new String(new Base64().decode(authHeaderToken.getBytes()));
         String[] usernamePasswordArray = decodedCredentials.split(":");
         // Avoid possible array index out of bound errors

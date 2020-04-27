@@ -23,15 +23,11 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.core.internal.MicroIntegratorBaseConstants;
-import org.wso2.micro.integrator.management.apis.security.handler.TestSecurityHandler;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
-import java.net.URL;
-import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
 import static org.wso2.micro.integrator.management.apis.Constants.MGT_API_NAME;
 import static org.wso2.micro.integrator.management.apis.Constants.NAME_ATTR;
 
@@ -76,6 +72,4 @@ public class ManagementApiParserTest {
         Assert.assertNotNull(userList.get("user2"));
         Assert.assertEquals("pwd2", String.valueOf(userList.get("user2")));
     }
-
-
 }

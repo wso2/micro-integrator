@@ -44,7 +44,9 @@ import static org.wso2.micro.integrator.management.apis.Constants.STATUS;
 import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
 
 /**
- * Resource for login. This obtains JWT token. This is basic auth protected.
+ * Resource for a retrieving and adding users.
+ * <p>
+ * Handles resources in the form "management/users"
  */
 public class UsersResource extends UserResource {
 
@@ -76,8 +78,8 @@ public class UsersResource extends UserResource {
                     break;
                 }
                 default: {
-                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET, POST, "
-                                                     + "DELETE methods are supported",
+                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET and "
+                                                     + "POST methods are supported",
                                                      axis2MessageContext, BAD_REQUEST);
                     break;
                 }
@@ -93,7 +95,7 @@ public class UsersResource extends UserResource {
         return true;
     }
 
-    JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
+    protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException {
         String searchPattern = Utils.getQueryParameter(messageContext, PATTERN);
         if (Objects.isNull(searchPattern)) {
             searchPattern = "*";
@@ -131,7 +133,6 @@ public class UsersResource extends UserResource {
             JSONObject userObject = new JSONObject();
             userObject.put(USER_ID, user);
             jsonBody.getJSONArray(LIST).put(userObject);
-
         }
         return jsonBody;
     }

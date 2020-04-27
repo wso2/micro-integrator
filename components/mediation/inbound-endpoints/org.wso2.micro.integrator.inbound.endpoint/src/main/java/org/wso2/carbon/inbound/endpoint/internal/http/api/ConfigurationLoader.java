@@ -218,13 +218,15 @@ public class ConfigurationLoader {
             Constructor c = Class.forName(classFQName).getConstructor(String.class);
             Object obj = c.newInstance(context);
             if (obj instanceof InternalAPIHandler) {
-                ((InternalAPIHandler) obj).setResources(resources);
-                return (InternalAPIHandler) obj;
+                InternalAPIHandler internalAPIHandler = (InternalAPIHandler) obj;
+                internalAPIHandler.setResources(resources);
+                return internalAPIHandler;
             } else {
                 throw new SynapseException("Error creating Internal InternalAPIHandler. "
                                                    + "The InternalAPIHandler should be of type InternalAPIHandler");
             }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException
+                | InvocationTargetException e) {
             throw new SynapseException("Error creating Internal InternalAPIHandler for class name : " + classFQName, e);
         }
     }

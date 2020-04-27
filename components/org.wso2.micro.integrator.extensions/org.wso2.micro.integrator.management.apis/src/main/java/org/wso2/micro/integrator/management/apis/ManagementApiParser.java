@@ -50,7 +50,7 @@ public class ManagementApiParser {
 
     private static final Log LOG = LogFactory.getLog(ManagementApiParser.class);
     private static OMElement managementApiElement;
-    private HashMap<String, char[]> usersList;
+    private Map<String, char[]> usersList;
 
     /**
      * Method to get the File object representation of the internal-apis.xml file.
@@ -96,17 +96,19 @@ public class ManagementApiParser {
             return usersList;
         }
         if (LOG.isDebugEnabled()) {
-            LOG.debug("Parsing the UsetStore element from " + getConfigurationFilePath());
+            LOG.debug("Parsing the UserStore element from " + getConfigurationFilePath());
         }
         OMElement userStoreOM = getManagementApiElement().getFirstChildWithName(USER_STORE_Q);
         if (Objects.nonNull(userStoreOM)) {
-            return populateUserList(userStoreOM.getFirstChildWithName(USERS_Q));
+            usersList = populateUserList(userStoreOM.getFirstChildWithName(USERS_Q));
+            return usersList;
         } else {
             throw new UserStoreUndefinedException("UserStore tag not defined inside the Management API");
         }
     }
 
-    private static Iterator<OMElement> getInternalApisElement() throws IOException, CarbonException, XMLStreamException {
+    private static Iterator<OMElement> getInternalApisElement() throws IOException, CarbonException,
+            XMLStreamException {
         File mgtApiUserConfig = getConfigurationFile();
         try (InputStream fileInputStream = new FileInputStream(mgtApiUserConfig)) {
             OMElement documentElement = getOMElementFromFile(fileInputStream);
@@ -122,7 +124,8 @@ public class ManagementApiParser {
      * @param fileInputStream input stream of internal-apis.xml
      * @return OMelement of internal-apis.xml
      */
-    private static OMElement getOMElementFromFile(InputStream fileInputStream) throws CarbonException, XMLStreamException {
+    private static OMElement getOMElementFromFile(InputStream fileInputStream) throws CarbonException,
+            XMLStreamException {
         InputStream inputStream = MicroIntegratorBaseUtils.replaceSystemVariablesInXml(fileInputStream);
         StAXOMBuilder builder = new StAXOMBuilder(inputStream);
         return builder.getDocumentElement();
@@ -130,10 +133,11 @@ public class ManagementApiParser {
 
     /**
      * Populates the userList hashMap by user store OM element
-     * @return HashMap<String, char []> Map of credential pairs
+     *
+     * @return HashMap<String, char [ ]> Map of credential pairs
      */
-    private HashMap<String, char []> populateUserList(OMElement users) {
-        HashMap<String, char []> userList = new HashMap<>();
+    private Map<String, char[]> populateUserList(OMElement users) throws XMLStreamException {
+        HashMap<String, char[]> userList = new HashMap<>();
         if (users != null) {
             Iterator usersIterator = users.getChildrenWithName(new QName("user"));
             if (usersIterator != null) {
@@ -142,7 +146,12 @@ public class ManagementApiParser {
                     OMElement userNameElement = userElement.getFirstChildWithName(new QName("username"));
                     OMElement passwordElement = userElement.getFirstChildWithName(new QName("password"));
                     if (userNameElement != null && passwordElement != null) {
-                        userList.put(userNameElement.getText(), passwordElement.getText().toCharArray());
+                        String userName = userNameElement.getText();
+                        if (userList.containsKey(userName)) {
+                            throw new XMLStreamException("Error parsing the file based user store. User: " + userName
+                                                         + " defined more than once. ");
+                        }
+                        userList.put(userName, passwordElement.getText().toCharArray());
                     }
                 }
             }

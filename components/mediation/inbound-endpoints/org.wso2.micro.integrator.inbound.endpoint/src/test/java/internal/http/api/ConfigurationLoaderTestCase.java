@@ -30,8 +30,6 @@ import java.util.List;
 
 public class ConfigurationLoaderTestCase {
 
-    private List<InternalAPI> apis;
-
     /**
      * Test loading of internal apis from the internal-apis.xml file.
      */
@@ -43,7 +41,7 @@ public class ConfigurationLoaderTestCase {
         Assert.assertNotNull("Configuration file not found", url);
 
         ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis.xml");
-        apis = ConfigurationLoader.getHttpInternalApis();
+        List<InternalAPI> apis = ConfigurationLoader.getHttpInternalApis();
         Assert.assertEquals("Expected number of APIs not found", 1, apis.size());
         Assert.assertEquals("Loaded API name is not correct", "SampleAPI", apis.get(0).getName());
         Assert.assertEquals("Loaded API context is not correct", "/foo", apis.get(0).getContext());

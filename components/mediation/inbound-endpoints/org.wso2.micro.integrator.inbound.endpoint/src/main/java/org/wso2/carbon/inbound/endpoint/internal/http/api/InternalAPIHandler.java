@@ -54,7 +54,7 @@ public interface InternalAPIHandler {
     void setResources(List<String> resources);
 
     /**
-     * Sets the resources for the handler to be applied to.
+     * Get the resources handled by this handler.
      */
     List<String> getResources();
 

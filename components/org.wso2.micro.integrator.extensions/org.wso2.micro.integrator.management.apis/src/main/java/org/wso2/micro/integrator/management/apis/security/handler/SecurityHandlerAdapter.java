@@ -42,8 +42,8 @@ import java.util.Objects;
  */
 public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
 
-    static Map<String, char[]> usersList;
-    static boolean useCarbonUserStore = false;
+    protected static Map<String, char[]> usersList;
+    protected static boolean useCarbonUserStore = false;
     private static boolean isInitialized = false;
     /**
      * Resources defined in internal-apis.xml to be handled
@@ -63,6 +63,7 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
             ManagementApiUndefinedException {
         initializeUserStore();
         this.context = context;
+        populateDefaultResources();
     }
 
     protected SecurityHandlerAdapter() {

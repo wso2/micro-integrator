@@ -84,7 +84,8 @@ public class JWTConfig {
                             jwtDTO.setCleanupThreadInterval(Integer.parseInt(cleanupIntervalElem.getText()));
                         }
                     } else {
-                        LOG.fatal("Token Store config has not been defined in file " + ManagementApiParser.getConfigurationFilePath() + " Using default values");
+                        LOG.fatal("Token Store config has not been defined in file "
+                                  + ManagementApiParser.getConfigurationFilePath() + " Using default values");
                     }
                     OMElement tokenConfigOM = handlerOM.getFirstChildWithName(new QName("TokenConfig"));
                     if (Objects.nonNull(tokenConfigOM)) {
@@ -97,7 +98,8 @@ public class JWTConfig {
                             jwtDTO.setTokenSize(sizeElem.getText());
                         }
                     } else {
-                        LOG.fatal("Token config has not been defined in file " + ManagementApiParser.getConfigurationFilePath() + " Using default values");
+                        LOG.fatal("Token config has not been defined in file "
+                                  + ManagementApiParser.getConfigurationFilePath() + " Using default values");
                     }
                 }
             }

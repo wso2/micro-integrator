@@ -55,7 +55,7 @@ public class TestMessageContext implements MessageContext {
 
     private SynapseEnvironment synEnv;
 
-    SOAPEnvelope envelope = null;
+    private SOAPEnvelope envelope = null;
 
     private EndpointReference to = null;
 

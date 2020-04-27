@@ -45,14 +45,16 @@ import static org.wso2.micro.integrator.management.apis.Constants.USER_ID;
 
 
 /**
- * Resource for login. This obtains JWT token. This is basic auth protected.
+ * Resource for a retrieving and deleting a single user with the userId provided.
+ * <p>
+ * Handles resources in the form "management/users/{userId}"
  */
 public class UserResource implements MiApiResource {
 
     private static final Log LOG = LogFactory.getLog(UserResource.class);
 
     // HTTP method types supported by the resource
-    Set<String> methods;
+    protected Set<String> methods;
 
     public UserResource() {
 
@@ -85,7 +87,7 @@ public class UserResource implements MiApiResource {
                     break;
                 }
                 default: {
-                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET, POST, "
+                    response = Utils.createJsonError("Unsupported HTTP method, " + httpMethod + ". Only GET and "
                                                      + "DELETE methods are supported",
                                                      axis2MessageContext, BAD_REQUEST);
                     break;
@@ -104,7 +106,7 @@ public class UserResource implements MiApiResource {
         return true;
     }
 
-    JSONObject handleGet(MessageContext messageContext) throws UserStoreException, ResourceNotFoundException {
+    protected JSONObject handleGet(MessageContext messageContext) throws UserStoreException, ResourceNotFoundException {
         String user = getUserFromPathParam(messageContext);
         if (LOG.isDebugEnabled()) {
             LOG.debug("Requested details for the user: " + user);
@@ -118,7 +120,7 @@ public class UserResource implements MiApiResource {
         return userObject;
     }
 
-    JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException,
+    protected JSONObject handleDelete(MessageContext messageContext) throws UserStoreException, IOException,
             ResourceNotFoundException {
         String user = getUserFromPathParam(messageContext);
         if (LOG.isDebugEnabled()) {
@@ -135,11 +137,11 @@ public class UserResource implements MiApiResource {
         return jsonBody;
     }
 
-    UserStoreManager getUserStore() throws UserStoreException {
+    protected UserStoreManager getUserStore() throws UserStoreException {
         return MicroIntegratorSecurityUtils.getUserStoreManager();
     }
 
-    RealmConfiguration getRealmConfiguration() throws UserStoreException {
+    protected RealmConfiguration getRealmConfiguration() throws UserStoreException {
         return MicroIntegratorSecurityUtils.getRealmConfiguration();
     }
 

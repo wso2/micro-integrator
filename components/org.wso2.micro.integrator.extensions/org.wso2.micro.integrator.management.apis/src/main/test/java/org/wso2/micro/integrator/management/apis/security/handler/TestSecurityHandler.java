@@ -19,19 +19,13 @@
 package org.wso2.micro.integrator.management.apis.security.handler;
 
 import org.apache.synapse.MessageContext;
-import org.wso2.micro.core.util.CarbonException;
-import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
-
-import javax.xml.stream.XMLStreamException;
-import java.io.IOException;
 
 public class TestSecurityHandler extends SecurityHandlerAdapter {
 
-    boolean isHandled = false;
+    private boolean isHandled = false;
 
     public TestSecurityHandler(String context) {
         this.context = context;
-        populateDefaultResources();
     }
 
     @Override

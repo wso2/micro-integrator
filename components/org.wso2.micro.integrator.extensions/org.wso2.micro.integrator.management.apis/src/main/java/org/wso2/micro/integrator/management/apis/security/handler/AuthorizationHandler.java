@@ -33,6 +33,11 @@ import java.util.Arrays;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
+/**
+ * Handler to be used for resources that required admin privileges.
+ * <p>
+ * This handler will only authorize requests with a token that belong to an admin user.
+ */
 public class AuthorizationHandler extends SecurityHandlerAdapter {
 
     private static final Log LOG = LogFactory.getLog(AuthorizationHandler.class);
@@ -41,7 +46,6 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
     public AuthorizationHandler(String context) throws CarbonException, XMLStreamException, IOException,
             ManagementApiUndefinedException {
         super(context);
-        populateDefaultResources();
     }
 
     @Override
@@ -77,18 +81,18 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
                 return processAuthorizationWithCarbonUserStore();
             } catch (UserStoreException e) {
                 LOG.error("Error while authenticating with carbon user store", e);
+                return false;
             }
         } else {
             //Uses in memory user store
-            LOG.warn("Authorization is not supported with the in memory user store. The request will be authorized. "
-                     + "Please plug in a user store for the correct functionality");
-            return true;
+            LOG.error("Authorization is not supported with the in memory user store. Please plug in a user store for "
+                      + "the correct functionality");
+            return false;
         }
-        return false;
     }
 
     /**
-     * Processes /users request if the user is an admin
+     * Processes /users request if the user is an admin.
      *
      * @return if successfully authorized
      */
