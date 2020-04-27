@@ -27,9 +27,9 @@ import org.wso2.micro.integrator.ntask.core.TaskManager;
 public interface LocalTaskActionListener {
 
     /**
-     * Method to notify when a local task is deleted.
+     * Method to notify when a local task is removed, it can be due to pause or delete.
      *
      * @param taskName
      */
-    void notifyLocalTaskDeletion(String taskName);
+    void notifyLocalTaskRemoval(String taskName);
 }

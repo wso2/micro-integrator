@@ -145,7 +145,7 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
                 //notify the listeners of the task deletion
                 LocalTaskActionListener listener = localTaskActionListeners.get(taskName);
                 if (null != listener) {
-                    listener.notifyLocalTaskDeletion(taskName);
+                    listener.notifyLocalTaskRemoval(taskName);
                 }
             }
         } catch (SchedulerException e) {
@@ -159,6 +159,11 @@ public abstract class AbstractQuartzTaskManager implements TaskManager {
         String taskGroup = this.getTenantTaskGroup();
         try {
             this.getScheduler().pauseJob(new JobKey(taskName, taskGroup));
+            //notify the listeners of the task pause
+            LocalTaskActionListener listener = localTaskActionListeners.get(taskName);
+            if (null != listener) {
+                listener.notifyLocalTaskRemoval(taskName);
+            }
             log.info("Task paused: [" + this.getTaskType() + "][" + taskName + "]");
         } catch (SchedulerException e) {
             throw new TaskException("Error in pausing task with name: " + taskName, TaskException.Code.UNKNOWN, e);
