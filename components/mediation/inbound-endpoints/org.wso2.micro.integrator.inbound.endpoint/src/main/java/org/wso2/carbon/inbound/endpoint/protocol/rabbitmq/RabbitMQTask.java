@@ -22,8 +22,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.inbound.endpoint.common.OneTimeTriggerInboundTask;
+import org.wso2.micro.integrator.ntask.core.impl.LocalTaskActionListener;
 
-public class RabbitMQTask extends OneTimeTriggerInboundTask {
+public class RabbitMQTask extends OneTimeTriggerInboundTask implements LocalTaskActionListener {
 
     private static final Log log = LogFactory.getLog(RabbitMQTask.class.getName());
 
@@ -45,5 +46,11 @@ public class RabbitMQTask extends OneTimeTriggerInboundTask {
 
     public void destroy() {
         log.debug("Destroying.");
+    }
+
+    @Override
+    public void notifyLocalTaskRemoval(String taskName) {
+        setReTrigger();
+        rabbitMQConnectionConsumer.requestShutdown();
     }
 }
