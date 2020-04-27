@@ -48,6 +48,14 @@ public class ClusterCoordinator {
         allNodeIds.forEach(id -> log.info("Connected with node [" + id + "]"));
     }
 
+    public boolean checkDuplicateNodeExistence() {
+        return rdbmsCoordinationStrategy.isDuplicatedNode();
+    }
+
+    public int getHeartbeatMaxRetryInterval() {
+        return rdbmsCoordinationStrategy.getHeartbeatMaxRetryInterval();
+    }
+
     /**
      * Registers an event listener to listen to cluster events.
      *
