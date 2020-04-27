@@ -40,16 +40,11 @@ public abstract class OneTimeTriggerInboundTask implements org.apache.synapse.ta
         if (callback != null && callback.isCallbackSuspended()) {
             callback.releaseCallbackSuspension();
         }
-
         if (!isOneTimeTriggered || reTrigger) {
             isOneTimeTriggered = true;
             reTrigger = false;
-            if (logger.isDebugEnabled()) {
-                logger.debug("Common One time trigger Inbound Task executing.");
-            }
+            logger.debug("Common One time trigger Inbound Task executing.");
             taskExecute();
-        } else {
-            return;
         }
     }
 
