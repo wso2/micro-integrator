@@ -115,10 +115,10 @@
 
   "transport.mqtt.listener.mqttConFactory.parameter.'mqtt.server.host.name'": "$ref{server.hostname}",
 
-  "transport.mail.listener.enable": true,
+  "transport.mail.listener.enable": false,
   "transport.mail.listener.name": "mailto",
 
-  "transport.blocking.mail.listener.enable": true,
+  "transport.blocking.mail.listener.enable": false,
   "transport.blocking.mail.listener.name": "mailto",
 
   "transport.modules": [
