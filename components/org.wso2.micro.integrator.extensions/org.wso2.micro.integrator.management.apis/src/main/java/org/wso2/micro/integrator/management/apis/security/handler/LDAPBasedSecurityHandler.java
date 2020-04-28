@@ -31,10 +31,10 @@ import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
 
 /**
- * This class extents SecurityHandlerAdapter to implement the authentication logic for a
+ * This class extents AuthenticationHandlerAdapter to implement the authentication logic for a
  * LDAP user store for management api
  */
-public class LDAPBasedSecurityHandler extends SecurityHandlerAdapter {
+public class LDAPBasedSecurityHandler extends AuthenticationHandlerAdapter {
 
     private String name;
     private static final Log LOG = LogFactory.getLog(LDAPBasedSecurityHandler.class);

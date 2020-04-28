@@ -33,7 +33,7 @@ import java.util.Objects;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
-public class JWTTokenSecurityHandler extends SecurityHandlerAdapter {
+public class JWTTokenSecurityHandler extends AuthenticationHandlerAdapter {
 
     private static final Log LOG = LogFactory.getLog(JWTTokenSecurityHandler.class);
     private String name;

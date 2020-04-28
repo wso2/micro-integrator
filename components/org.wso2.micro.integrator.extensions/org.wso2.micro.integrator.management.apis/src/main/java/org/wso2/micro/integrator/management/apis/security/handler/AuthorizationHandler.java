@@ -31,14 +31,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
-
 /**
  * Handler to be used for resources that required admin privileges.
  * <p>
  * This handler will only authorize requests with a token that belong to an admin user.
  */
-public class AuthorizationHandler extends SecurityHandlerAdapter {
+public class AuthorizationHandler extends AuthorizationHandlerAdapter {
 
     private static final Log LOG = LogFactory.getLog(AuthorizationHandler.class);
     private String name;
@@ -74,11 +72,11 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String authHeaderToken) {
+    protected Boolean authorize(String userName) {
         if (useCarbonUserStore) {
             //Uses carbon user store
             try {
-                return processAuthorizationWithCarbonUserStore();
+                return processAuthorizationWithCarbonUserStore(userName);
             } catch (UserStoreException e) {
                 LOG.error("Error while authenticating with carbon user store", e);
                 return false;
@@ -96,18 +94,17 @@ public class AuthorizationHandler extends SecurityHandlerAdapter {
      *
      * @return if successfully authorized
      */
-    private boolean processAuthorizationWithCarbonUserStore() throws UserStoreException {
+    private boolean processAuthorizationWithCarbonUserStore(String userName) throws UserStoreException {
 
-        String username = messageContext.getProperty(USERNAME_PROPERTY).toString();
-        boolean isAuthorized = authorize(username,
+        boolean isAuthorized = authorize(userName,
                                          MicroIntegratorSecurityUtils.getRealmConfiguration().getAdminRoleName());
         if (!isAuthorized) {
-            LOG.error("User " + username + " cannot be authorized");
+            LOG.error("User " + userName + " cannot be authorized");
         }
         return isAuthorized;
     }
 
-    private boolean authorize(String username, String desiredRole){
+    private boolean authorize(String username, String desiredRole) {
         try {
             String[] listOfRoles = MicroIntegratorSecurityUtils.getUserStoreManager().getRoleListOfUser(username);
             if (LOG.isDebugEnabled()) {

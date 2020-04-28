@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.core.util.CarbonException;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
-import org.wso2.securevault.SecretResolver;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
@@ -32,10 +31,10 @@ import java.util.Objects;
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 /**
- * This class extends the SecurityHandlerAdapter to create a basic security handler with a user store defined in
+ * This class extends the AuthenticationHandlerAdapter to create a basic security handler with a user store defined in
  * internal-apis.xml.
  */
-public class BasicSecurityHandler extends SecurityHandlerAdapter {
+public class BasicSecurityHandler extends AuthenticationHandlerAdapter {
 
     private static final Log LOG = LogFactory.getLog(BasicSecurityHandler.class);
 
