@@ -22,11 +22,12 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.MessageContext;
 import org.wso2.micro.core.util.CarbonException;
-import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.management.apis.ManagementApiUndefinedException;
+import org.wso2.micro.integrator.management.apis.Utils;
 
 import javax.xml.stream.XMLStreamException;
 import java.io.IOException;
+import java.util.Objects;
 
 import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
@@ -44,13 +45,14 @@ public abstract class AuthorizationHandlerAdapter extends SecurityHandlerAdapter
 
     @Override
     public Boolean handle(MessageContext messageContext) {
-        String userName = messageContext.getProperty(USERNAME_PROPERTY).toString();
-        if (StringUtils.isEmpty(userName)) {
-            LOG.error("The user has not been authenticated. Consider adding an AuthenticationHandler prior to "
-                      + "the AuthorizationHandler");
-            return false;
+        String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
+        if (Objects.nonNull(userName)) {
+            return authorize(userName);
+        } else {
+            LOG.error("The user has not been authenticated. Consider adding an AuthenticationHandler prior to the "
+                      + "AuthorizationHandler");
         }
-        return authorize(userName);
+        return false;
     }
 
     /**

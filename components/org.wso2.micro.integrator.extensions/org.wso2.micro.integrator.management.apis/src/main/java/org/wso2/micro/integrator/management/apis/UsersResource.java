@@ -74,7 +74,7 @@ public class UsersResource extends UserResource {
                     break;
                 }
                 case Constants.HTTP_POST: {
-                    response = handlePost(axis2MessageContext);
+                    response = handlePost(messageContext, axis2MessageContext);
                     break;
                 }
                 default: {
@@ -137,8 +137,12 @@ public class UsersResource extends UserResource {
         return jsonBody;
     }
 
-    private JSONObject handlePost(
+    private JSONObject handlePost(MessageContext messageContext,
             org.apache.axis2.context.MessageContext axis2MessageContext) throws UserStoreException, IOException {
+        if (!Utils.isUserAuthenticated(messageContext)) {
+            LOG.warn("Adding a user without authenticating/authorizing the request sender. Adding "
+                     + "authetication and authorization handlers is recommended.");
+        }
         if (!JsonUtil.hasAJsonPayload(axis2MessageContext)) {
             return Utils.createJsonErrorObject("JSON payload is missing");
         }

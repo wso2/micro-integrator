@@ -31,6 +31,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.osgi.service.cm.Configuration;
 import org.osgi.service.cm.ConfigurationAdmin;
+import org.wso2.micro.core.util.StringUtils;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.service.mgt.ServiceAdmin;
 
@@ -42,6 +43,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
+
+import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
 
 public class Utils {
 
@@ -68,6 +71,35 @@ public class Utils {
             return pathParameter;
         }
         return null;
+    }
+
+    /**
+     * Returns the string representation of a property set in the message context
+     *
+     * @param messageContext the message context to extract the property from
+     * @param key            the key of the property
+     * @return the string if a non empty value has been set. Returns null, if the property is not present or if the
+     * value is empty.
+     */
+    public static String getStringPropertyFromMessageContext(MessageContext messageContext, String key) {
+        Object propertyObject = messageContext.getProperty(key);
+        if (Objects.nonNull(propertyObject)) {
+            String propertyString = propertyObject.toString();
+            if (!StringUtils.isEmpty(propertyString)) {
+                return propertyString;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Validates if the request is authenticated.
+     *
+     * @param messageContext the message context to extract the property from
+     * @return true if the user is authenticated.
+     */
+    public static boolean isUserAuthenticated(MessageContext messageContext) {
+        return !Objects.isNull(getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY));
     }
 
     public static void setJsonPayLoad(org.apache.axis2.context.MessageContext axis2MessageContext, JSONObject payload) {

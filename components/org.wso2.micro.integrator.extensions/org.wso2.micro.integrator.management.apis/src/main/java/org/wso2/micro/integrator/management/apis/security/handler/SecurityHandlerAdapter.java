@@ -92,7 +92,7 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
 
     private boolean isMatchingResource(String resourcePath, List<String> defaultResources) {
         for (String resource : defaultResources) {
-            if (resourcePath.contains(context.concat(resource))) {
+            if (resourcePath.startsWith(context.concat(resource))) {
                 return true;
             }
         }

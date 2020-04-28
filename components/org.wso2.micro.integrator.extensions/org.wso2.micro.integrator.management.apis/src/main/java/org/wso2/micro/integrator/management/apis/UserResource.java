@@ -126,9 +126,15 @@ public class UserResource implements MiApiResource {
         if (LOG.isDebugEnabled()) {
             LOG.debug("Request received to delete the user: " + user);
         }
-        if (messageContext.getProperty(USERNAME_PROPERTY).equals(user)) {
-            throw new IOException("Attempt to delete the logged in user. Operation not allowed. Please login "
-                                  + "from another user.");
+        String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
+        if (Objects.isNull(userName)) {
+            LOG.warn("Deleting a user without authenticating/authorizing the request sender. Adding "
+                     + "authetication and authorization handlers is recommended.");
+        } else {
+            if (userName.equals(user)) {
+                throw new IOException("Attempt to delete the logged in user. Operation not allowed. Please login "
+                                      + "from another user.");
+            }
         }
         getUserStore().deleteUser(user);
         JSONObject jsonBody = new JSONObject();
