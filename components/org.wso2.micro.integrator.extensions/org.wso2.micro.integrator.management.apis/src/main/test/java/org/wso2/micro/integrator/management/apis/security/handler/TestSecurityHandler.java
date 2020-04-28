@@ -29,11 +29,6 @@ public class TestSecurityHandler extends SecurityHandlerAdapter {
     }
 
     @Override
-    protected Boolean authenticate(String authHeaderToken) {
-        return true;
-    }
-
-    @Override
     public Boolean invoke(MessageContext messageContext) {
         this.messageContext = messageContext;
         if (needsHandling()) {
@@ -41,6 +36,11 @@ public class TestSecurityHandler extends SecurityHandlerAdapter {
         } else {
             this.isHandled = false;
         }
+        return true;
+    }
+
+    @Override
+    protected Boolean handle(MessageContext messageContext) {
         return true;
     }
 
