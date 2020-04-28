@@ -38,6 +38,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
+import static org.wso2.micro.integrator.management.apis.Constants.USERNAME_PROPERTY;
+
 /**
  * Resource for login. This obtains JWT token. This is basic auth protected.
  */
@@ -78,7 +80,7 @@ public class LoginResource implements MiApiResource {
         UUID uuid = UUID.randomUUID();
         String randomUUIDString = uuid.toString();
 
-        JWTTokenInfoDTO newToken = new JWTTokenInfoDTO();
+        JWTTokenInfoDTO newToken = new JWTTokenInfoDTO(messageContext.getProperty(USERNAME_PROPERTY).toString());
         newToken.setToken(randomUUIDString);
         newToken.setScope(AuthConstants.JWT_TOKEN_DEFAULT_SCOPE);
         newToken.setIssuer((String) axis2MessageContext.getProperty(NhttpConstants.SERVICE_PREFIX));

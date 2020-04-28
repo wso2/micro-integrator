@@ -2173,32 +2173,10 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
      */
     public final void deleteUser(String userName) throws UserStoreException {
         // TODO Review whether we need to perform this operation
-        /*if (!isSecureCall.get()) {
+        if (!isSecureCall.get()) {
             Class argTypes[] = new Class[]{String.class};
             callSecure("deleteUser", new Object[]{userName}, argTypes);
             return;
-        }
-
-        String loggedInUser = CarbonContext.getThreadLocalCarbonContext().getUsername();
-        if (loggedInUser != null) {
-            loggedInUser = UserCoreUtil.addDomainToName(loggedInUser, UserCoreUtil.getDomainFromThreadLocal());
-            if ((loggedInUser.indexOf(UserCoreConstants.DOMAIN_SEPARATOR)) < 0) {
-                loggedInUser = UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME +
-                        UserCoreConstants.DOMAIN_SEPARATOR + loggedInUser;
-            }
-        }
-
-        String deletingUser = UserCoreUtil.addDomainToName(userName, getMyDomainName());
-        if ((deletingUser.indexOf(UserCoreConstants.DOMAIN_SEPARATOR)) < 0) {
-            deletingUser = UserCoreConstants.PRIMARY_DEFAULT_DOMAIN_NAME +
-                    UserCoreConstants.DOMAIN_SEPARATOR + deletingUser;
-        }
-
-        if (loggedInUser != null && loggedInUser.equals(deletingUser)) {
-            log.debug("User " + loggedInUser + " tried to delete him/her self");
-            handleDeleteUserFailure(ErrorMessages.ERROR_CODE_DELETE_LOGGED_IN_USER.getCode(),
-                    ErrorMessages.ERROR_CODE_DELETE_LOGGED_IN_USER.getMessage(), userName);
-            throw new UserStoreException(ErrorMessages.ERROR_CODE_DELETE_LOGGED_IN_USER.toString());
         }
 
         UserStore userStore = getUserStore(userName);
@@ -2274,9 +2252,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             throw e;
         }
 
-        // Needs to clear roles cache upon deletion of a user
-        clearUserRolesCache(UserCoreUtil.addDomainToName(userName, getMyDomainName()));
-
         // #################### <Listeners> #####################################################
         try {
             for (UserOperationEventListener listener : UMListenerServiceComponent.getUserOperationEventListeners()) {
@@ -2292,7 +2267,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                     String.format(ErrorMessages.ERROR_CODE_ERROR_DURING_POST_DELETE_USER.getMessage(), ex.getMessage()),
                     userName);
             throw ex;
-        }*/
+        }
         // #################### </Listeners> #####################################################
 
     }
@@ -3028,8 +3003,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             credentialObj.clear();
         }
 
-        // Clean the role cache since it contains old role informations
-        clearUserRolesCache(userName);
     }
 
     /**
@@ -3156,7 +3129,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 hybridRoleManager.updateUserListOfHybridRole(userStore.getDomainAwareName(), deletedUsers, newUsers);
                 handleDoPostUpdateUserListOfRole(roleName, deletedUsers, newUsers, true);
             }
-            clearUserRolesCacheByTenant(this.tenantId);
             return;
         }
 
@@ -3221,9 +3193,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 throw new UserStoreException(ErrorMessages.ERROR_CODE_READONLY_USER_STORE.toString());
             }
         }
-
-        // need to clear user roles cache upon roles update
-        clearUserRolesCacheByTenant(this.tenantId);
 
         // Call relevant listeners after updating user list of role.
         handleDoPostUpdateUserListOfRole(roleName, deletedUsers, newUsers, false);
@@ -3465,8 +3434,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             }
         }
 
-        clearUserRolesCache(UserCoreUtil.addDomainToName(userName, getMyDomainName()));
-
         // Call the relevant listeners after updating the role list of user.
         try {
             for (UserOperationEventListener listener : UMListenerServiceComponent.getUserOperationEventListeners()) {
@@ -3658,8 +3625,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
 
             // To make sure to maintain the back-ward compatibility, only audit log listener will be called.
             handlePostUpdateRoleName(roleName, newRoleName, false);
-            // Need to update user role cache upon update of role names
-            clearUserRolesCacheByTenant(this.tenantId);
             return;
         }
 
@@ -3703,9 +3668,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         // This is a special case. We need to pass domain aware name.
         userRealm.getAuthorizationManager().resetPermissionOnUpdateRole(
                 userStore.getDomainAwareName(), userStoreNew.getDomainAwareName());
-
-        // need to update user role cache upon update of role names
-        clearUserRolesCacheByTenant(tenantId);
 
         // #################### <Listeners> #####################################################
         handlePostUpdateRoleName(roleName, newRoleName, false);
@@ -3988,22 +3950,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
 
         String[] roles = null;
 
-        roles = getRoleListOfUserFromCache(tenantId, userName);
-        if (roles != null && roles.length > 0) {
-            if (UserCoreUtil.isContain(roleName, roles)) {
-                return true;
-            }
-        }
-
-        // TODO create new cache for this method
         String modifiedUserName = UserCoreConstants.IS_USER_IN_ROLE_CACHE_IDENTIFIER + userName;
-        roles = getRoleListOfUserFromCache(tenantId, modifiedUserName);
-        if (roles != null && roles.length > 0) {
-            if (UserCoreUtil.isContain(roleName, roles)) {
-                return true;
-            }
-        }
-
         if (UserCoreConstants.INTERNAL_DOMAIN.
                 equalsIgnoreCase(UserCoreUtil.extractDomainFromName(roleName))
                 || APPLICATION_DOMAIN.equalsIgnoreCase(UserCoreUtil.extractDomainFromName(roleName)) ||
@@ -4086,7 +4033,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             roles = new ArrayList<String>();
         }
         roles.add(roleName);
-        addToUserRolesCache(tenantId, userName, roles.toArray(new String[roles.size()]));
     }
 
 //////////////////////////////////// Shared role APIs finish //////////////////////////////////////////
@@ -4335,11 +4281,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
         }
 
         String usernameWithDomain = UserCoreUtil.addDomainToName(userName, getMyDomainName());
-        // Check whether roles exist in cache
-        roleNames = getRoleListOfUserFromCache(this.tenantId, usernameWithDomain);
-        if (roleNames != null && roleNames.length > 0) {
-            return roleNames;
-        }
 
         UserStore userStore = getUserStore(userName);
         if (userStore.isRecurssive()) {
@@ -4590,11 +4531,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             }
         }
 
-        // if existing users are added to role, need to update user role cache
-        if ((userList != null) && (userList.length > 0)) {
-            clearUserRolesCacheByTenant(tenantId);
-        }
-
         // #################### <Listeners> #####################################################
         handlePostAddRole(roleName, userList, permissions, false);
         // #################### </Listeners> #####################################################
@@ -4788,7 +4724,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 throw ex;
             }
             handleDoPostDeleteRole(roleName, false);
-            clearUserRolesCacheByTenant(tenantId);
             return;
         }
 
@@ -4825,9 +4760,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
 
         // clear role authorization
         userRealm.getAuthorizationManager().clearRoleAuthorization(roleWithDomain);
-
-        // clear cache
-        clearUserRolesCacheByTenant(tenantId);
 
         // Call relevant listeners after deleting the role.
         handleDoPostDeleteRole(roleName, false);
@@ -5061,10 +4993,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 userRealm.getAuthorizationManager().authorizeRole(
                         UserCoreUtil.addInternalDomainName(roleName), resourceId, action);
             }
-        }
-
-        if ((userList != null) && (userList.length > 0)) {
-            clearUserRolesCacheByTenant(this.tenantId);
         }
     }
 
@@ -5818,8 +5746,6 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 }
             }
         }
-        addToUserRolesCache(this.tenantId, userName, roleList);
-
         return roleList;
     }
 

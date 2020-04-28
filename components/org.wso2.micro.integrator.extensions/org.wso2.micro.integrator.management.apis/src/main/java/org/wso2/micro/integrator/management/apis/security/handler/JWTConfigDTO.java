@@ -17,8 +17,6 @@
  */
 package org.wso2.micro.integrator.management.apis.security.handler;
 
-import java.util.HashMap;
-
 /**
  * This class is the DTO for JWT configs in internal-apis.xml
  */
@@ -27,9 +25,7 @@ public class JWTConfigDTO {
     private String expiry;
     private String tokenSize;
     private int tokenStoreSize;
-    private HashMap<String, char []> usersList;
     private boolean removeOldestElementOnOverflow = true;
-    private boolean useCarbonUserStore;
     private int cleanupThreadInterval;
     private boolean jwtHandlerEngaged;
 
@@ -48,16 +44,6 @@ public class JWTConfigDTO {
     public void setTokenSize(String tokenSize) {
         this.tokenSize = tokenSize;
     }
-
-
-    public HashMap<String, char []> getUsers() {
-        return usersList;
-    }
-
-    public void setUsers(HashMap<String, char []> users) {
-        this.usersList = users;
-    }
-
 
     public int getTokenStoreSize() {
         return tokenStoreSize;
@@ -85,18 +71,6 @@ public class JWTConfigDTO {
 
         this.cleanupThreadInterval = cleanupThreadInterval;
     }
-
-
-    public boolean isUseCarbonUserStore() {
-
-        return useCarbonUserStore;
-    }
-
-    public void setUseCarbonUserStore(boolean useCarbonUserStore) {
-
-        this.useCarbonUserStore = useCarbonUserStore;
-    }
-
 
     public boolean isJwtHandlerEngaged() {
 
