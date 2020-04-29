@@ -26,16 +26,13 @@ public class TestSecurityHandler extends SecurityHandlerAdapter {
 
     public TestSecurityHandler(String context) {
         this.context = context;
+        populateDefaultResources();
     }
 
     @Override
     public Boolean invoke(MessageContext messageContext) {
         this.messageContext = messageContext;
-        if (needsHandling()) {
-            this.isHandled = true;
-        } else {
-            this.isHandled = false;
-        }
+        this.isHandled = needsHandling();
         return true;
     }
 

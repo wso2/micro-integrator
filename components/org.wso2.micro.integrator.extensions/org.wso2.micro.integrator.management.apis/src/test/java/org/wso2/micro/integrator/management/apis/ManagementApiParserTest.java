@@ -33,13 +33,6 @@ import static org.wso2.micro.integrator.management.apis.Constants.NAME_ATTR;
 
 public class ManagementApiParserTest {
 
-    @Test
-    public void getConfigurationFileTest() {
-        initializeConfDirectory();
-        Assert.assertEquals(getClass().getResource("internal-apis.xml").getPath(),
-                            ManagementApiParser.getConfigurationFilePath());
-    }
-
     private void initializeConfDirectory() {
         String filePath = getClass().getResource("").getPath();
         System.setProperty(MicroIntegratorBaseConstants.CARBON_CONFIG_DIR_PATH, filePath);
