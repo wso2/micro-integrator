@@ -864,14 +864,14 @@
                 <module>tests-common</module>
                 <module>mediation-tests/service-samples</module>
 <!--                <module>mediation-tests/tests-mediator-1</module>-->
-<!--                <module>mediation-tests/tests-mediator-2</module>-->
+                <module>mediation-tests/tests-mediator-2</module>
 <!--                <module>mediation-tests/tests-patches</module>-->
-<!--                <module>mediation-tests/tests-transport</module>-->
-<!--                <module>mediation-tests/tests-service</module>-->
-<!--                <module>mediation-tests/tests-sample</module>-->
-<!--                <module>mediation-tests/tests-other</module>-->
-<!--                <module>mediation-tests/tests-platform</module>-->
-<!--                <module>mediation-tests/coverage-report</module>-->
+                <module>mediation-tests/tests-transport</module>
+                <module>mediation-tests/tests-service</module>
+                <module>mediation-tests/tests-sample</module>
+                <module>mediation-tests/tests-other</module>
+                <module>mediation-tests/tests-platform</module>
+                <module>mediation-tests/coverage-report</module>
 <!--                <module>dataservice-hosting-tests</module>-->
             </modules>
         </profile>
