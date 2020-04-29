@@ -27,6 +27,7 @@ import org.wso2.carbon.inbound.endpoint.internal.http.api.InternalAPIHandler;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 public class ConfigurationLoaderTestCase {
 
@@ -74,6 +75,48 @@ public class ConfigurationLoaderTestCase {
         Assert.assertEquals("/resource1", handlerWithCustomResources.getResources().get(0));
         Assert.assertEquals("/resource2", handlerWithCustomResources.getResources().get(1));
 
+    }
+
+    /**
+     * Test loading of internal apis from the internal-apis.xml file.
+     */
+    @Test
+    public void testLoadUsers() {
+
+        // test configuration with users
+        URL url = getClass().getResource("internal-apis.xml");
+        Assert.assertNotNull("Configuration file not found", url);
+
+        ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis.xml");
+        Map<String, char[]> userMap = ConfigurationLoader.getUserMap();
+
+        org.junit.Assert.assertEquals(3, userMap.size());
+        //Assert admin:admin
+        org.junit.Assert.assertNotNull(userMap.get("admin"));
+        org.junit.Assert.assertEquals("admin", String.valueOf(userMap.get("admin")));
+
+        //Assert user1:pwd1
+        org.junit.Assert.assertNotNull(userMap.get("user1"));
+        org.junit.Assert.assertEquals("pwd1", String.valueOf(userMap.get("user1")));
+
+        //Assert user2:pwd2
+        org.junit.Assert.assertNotNull(userMap.get("user2"));
+        org.junit.Assert.assertEquals("pwd2", String.valueOf(userMap.get("user2")));
+    }
+
+    /**
+     * Test loading of internal apis from the internal-apis.xml file.
+     */
+    @Test
+    public void testLoadInternalApisWithNoUserStore() {
+
+        // test configuration with users
+        URL url = getClass().getResource("internal-apis-without-user-store.xml");
+        Assert.assertNotNull("Configuration file not found", url);
+
+        ConfigurationLoader.loadInternalApis("internal/http/api/internal-apis-without-user-store.xml");
+        Assert.assertNull("User store is not defined in the file but it is not null",
+                          ConfigurationLoader.getUserMap());
     }
 
     private List<InternalAPI> getApis() {

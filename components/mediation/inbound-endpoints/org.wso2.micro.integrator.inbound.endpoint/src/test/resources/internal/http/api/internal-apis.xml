@@ -38,6 +38,22 @@
             </handlers>
         </api>
     </apis>
+    <userStore>
+        <users>
+            <user>
+                <username>admin</username>
+                <password>admin</password>
+            </user>
+            <user>
+                <username>user1</username>
+                <password>pwd1</password>
+            </user>
+            <user>
+                <username>user2</username>
+                <password>pwd2</password>
+            </user>
+        </users>
+    </userStore>
     <sslConfig>
         <parameter name="keystore">
             <KeyStore>

@@ -23,14 +23,6 @@
         <api name="ReadinessProbe" protocol="http" class="org.wso2.micro.integrator.probes.ReadinessProbe"/>
         <api class="org.wso2.micro.integrator.management.apis.ManagementInternalApi" name="ManagementApi"
              protocol="https">
-            <UserStore>
-                <users>
-                    <user>
-                        <username>admin</username>
-                        <password>admin</password>
-                    </user>
-                </users>
-            </UserStore>
             <handlers>
                 <handler class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler"
                          name="JWTTokenSecurityHandler">
@@ -58,6 +50,14 @@
             </cors>
         </api>
     </apis>
+    <userStore>
+        <users>
+            <user>
+                <username>admin</username>
+                <password>admin</password>
+            </user>
+        </users>
+    </userStore>
     <sslConfig>
         <parameter name="keystore">
             <KeyStore>

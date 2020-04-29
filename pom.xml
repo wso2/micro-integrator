@@ -1201,6 +1201,18 @@
                 <artifactId>snakeyaml</artifactId>
                 <version>${snakeyaml.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-module-junit4</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.powermock</groupId>
+                <artifactId>powermock-api-mockito2</artifactId>
+                <version>${powermock.version}</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1266,6 +1278,7 @@
     <!--This include only the dependencies for product build. Please define the integration test dependencies
     in integration test parent pom if they are not needed for product build.-->
     <properties>
+        <powermock.version>2.0.7</powermock.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 

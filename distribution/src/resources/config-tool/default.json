@@ -430,8 +430,8 @@
   "management_api.handler.token_store_config.remove_oldest_token_on_overflow": "true",
   "management_api.handler.token_config.expiry": "3600",
   "management_api.handler.token_config.size": "2048",
-  "management_api.file_user_store.enable": true,
-  "management_api.user_store.users": [
+  "internal_apis.file_user_store.enable": true,
+  "internal_apis.users": [
     {
       "user.name": "admin",
       "user.password": "admin"

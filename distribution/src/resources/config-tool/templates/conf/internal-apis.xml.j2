@@ -24,18 +24,6 @@
         <api name="{{api.api_name}}" protocol="{{api.protocols}}" class="{{api.class}}"/>
         {% endfor %}
         <api name="{{management_api.name}}" protocol="{{management_api.protocols}}" class="{{management_api.class}}">
-            {% if management_api.file_user_store.enable == true %}
-            <UserStore>
-                <users>
-                    {% for user in management_api.user_store.users %}
-                        <user>
-                            <username>{{user.user.name}}</username>
-                            <password>{{user.user.password}}</password>
-                        </user>
-                    {% endfor %}
-                </users>
-            </UserStore>
-            {% endif %}
             <handlers>
                 {% if management_api_token_handler.enable == true %}
                 <handler name="{{management_api.handler.name}}" class="{{management_api.handler.class}}">
@@ -68,6 +56,18 @@
             </cors>
         </api>
     </apis>
+    {% if internal_apis.file_user_store.enable == true %}
+    <userStore>
+        <users>
+            {% for user in internal_apis.users %}
+            <user>
+                <username>{{user.user.name}}</username>
+                <password>{{user.user.password}}</password>
+            </user>
+            {% endfor %}
+        </users>
+    </userStore>
+    {% endif %}
     <sslConfig>
         {% for parameter_key,parameter_value in internal_api_ssl_config.parameter.items() %}
         <parameter name="{{parameter_key}}">{{parameter_value}}</parameter>
