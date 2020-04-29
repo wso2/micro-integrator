@@ -73,5 +73,4 @@ public class ForEachMediatorTestCase extends ESBIntegrationTest {
                 Collectors.joining("", "<payload>", "</payload>"));
         HttpRequestUtil.doPost(new URL(getProxyServiceURLHttp("foreachLargeMessageTestProxy")), payload, headers);
     }
-
 }
