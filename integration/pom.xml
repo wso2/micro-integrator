@@ -872,7 +872,7 @@
                 <module>mediation-tests/tests-other</module>
                 <module>mediation-tests/tests-platform</module>
                 <module>mediation-tests/coverage-report</module>
-<!--                <module>dataservice-hosting-tests</module>-->
+                <module>dataservice-hosting-tests</module>
             </modules>
         </profile>
     </profiles>
