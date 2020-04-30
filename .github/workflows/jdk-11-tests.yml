@@ -1,4 +1,4 @@
-name: JDK 11 Tests
+name: All Tests in Java 11
 
 on: [push, pull_request]
 

@@ -107,11 +107,11 @@ public class TaskTests extends ESBIntegrationTest {
     void testTaskNode() throws Exception {
 
         if (taskScheduledInNode1) {
-            if (!reader1.checkForLog(deploymentLog(TASK_2), 1)) {
+            if (!reader1.checkForLog(deploymentLog(TASK_2), DEFAULT_TIMEOUT)) {
                 Assert.fail("Task 2 is not scheduled in node 1 though task 1 is scheduled in it.");
             }
         } else {
-            if (!reader2.checkForLog(deploymentLog(TASK_2), 1)) {
+            if (!reader2.checkForLog(deploymentLog(TASK_2), DEFAULT_TIMEOUT)) {
                 Assert.fail("Task 2 is not scheduled in node 2 though task 1 is scheduled in it.");
             }
         }
@@ -131,16 +131,18 @@ public class TaskTests extends ESBIntegrationTest {
         }
     }
 
-    @Test(dependsOnMethods = { "testTaskNode" })
+    @Test(dependsOnMethods = { "testTaskExecution" })
     void testTaskExecutionCount() {
 
         if (taskScheduledInNode1) {
-            if (1 != reader1.getNumberOfOccurencesForLog(logCompleted)) {
-                Assert.fail(TASK_COMPLETE + " has ran more than specified time in node 1");
+            int count = reader1.getNumberOfOccurencesForLog(logCompleted);
+            if (count != 1) {
+                Assert.fail(TASK_COMPLETE + " has ran " + count + " no of times.");
             }
         } else {
-            if (1 != reader2.getNumberOfOccurencesForLog(logCompleted)) {
-                Assert.fail(TASK_COMPLETE + " has ran more than specified time in node 2");
+            int count = reader2.getNumberOfOccurencesForLog(logCompleted);
+            if (count != 1) {
+                Assert.fail(TASK_COMPLETE + " has ran " + count + " no of times.");
             }
         }
     }
