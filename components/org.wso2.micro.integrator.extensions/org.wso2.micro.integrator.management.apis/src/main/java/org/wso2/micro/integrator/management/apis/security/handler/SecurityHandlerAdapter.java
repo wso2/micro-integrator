@@ -71,7 +71,7 @@ public abstract class SecurityHandlerAdapter implements InternalAPIHandler {
         if (!isInitialized) {
             ManagementApiParser mgtParser = new ManagementApiParser();
             try {
-                usersList = mgtParser.getUserList();
+                usersList = mgtParser.getUserMap();
             } catch (UserStoreUndefinedException e) {
                 useCarbonUserStore = true;
                 LOG.info("User store config has not been defined in file "

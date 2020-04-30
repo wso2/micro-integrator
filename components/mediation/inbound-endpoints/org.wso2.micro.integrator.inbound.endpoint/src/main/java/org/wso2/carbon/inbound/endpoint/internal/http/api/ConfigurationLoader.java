@@ -26,8 +26,10 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import javax.xml.namespace.QName;
@@ -57,6 +59,11 @@ public class ConfigurationLoader {
     private static final QName PROTOCOL_Q = new QName("protocol");
     private static final QName HANDLERS_Q = new QName("handlers");
     private static final QName RESOURCES_Q = new QName("resources");
+    private static final QName USER_STORE_Q = new QName("userStore");
+    private static final QName USERS_Q = new QName("users");
+    private static final QName USER_Q = new QName("user");
+    private static final QName USERNAME_Q = new QName("username");
+    private static final QName PASSWORD_Q = new QName("password");
 
     private static final String APIS = "apis";
     private static final String SSL_CONFIG = "sslConfig";
@@ -71,6 +78,7 @@ public class ConfigurationLoader {
 
     private static SSLConfiguration sslConfiguration;
     private static boolean sslConfiguredSuccessfully;
+    private static Map<String, char[]> userMap;
 
     private static List<InternalAPI> internalHttpApiList = new ArrayList<>();
     private static List<InternalAPI> internalHttpsApiList = new ArrayList<>();
@@ -89,6 +97,8 @@ public class ConfigurationLoader {
             if (!ROOT_Q.equals(apiConfig.getQName())) {
                 handleException("Invalid internal api configuration file");
             }
+
+            populateUserStore(apiConfig);
 
             Iterator apiIterator = apiConfig.getChildrenWithLocalName(APIS);
 
@@ -175,6 +185,48 @@ public class ConfigurationLoader {
         }
     }
 
+    /**
+     * Populates the userList hashMap by userStore OM element
+     */
+    private static void populateUserStore(OMElement apiConfig) {
+        OMElement userStoreOM = apiConfig.getFirstChildWithName(USER_STORE_Q);
+        if (Objects.nonNull(userStoreOM)) {
+            userMap = populateUsers(userStoreOM.getFirstChildWithName(USERS_Q));
+        } else {
+            userMap = null;
+        }
+    }
+
+    /**
+     * Populates individual users.
+     *
+     * @param users the parent element of users
+     * @return map of users against credentials
+     */
+    private static Map<String, char[]> populateUsers(OMElement users) {
+        HashMap<String, char[]> userMap = new HashMap<>();
+        if (users != null) {
+            @SuppressWarnings("unchecked")
+            Iterator<OMElement> usersIterator = users.getChildrenWithName(USER_Q);
+            if (usersIterator != null) {
+                while (usersIterator.hasNext()) {
+                    OMElement userElement = usersIterator.next();
+                    OMElement userNameElement = userElement.getFirstChildWithName(USERNAME_Q);
+                    OMElement passwordElement = userElement.getFirstChildWithName(PASSWORD_Q);
+                    if (userNameElement != null && passwordElement != null) {
+                        String userName = userNameElement.getText();
+                        if (userMap.containsKey(userName)) {
+                            handleException("Error parsing the file based user store. User: " + userName + " defined "
+                                            + "more than once. ");
+                        }
+                        userMap.put(userName, passwordElement.getText().toCharArray());
+                    }
+                }
+            }
+        }
+        return userMap;
+    }
+
     private static void populateHandlers(OMElement apiElement, InternalAPI api) {
 
         List<InternalAPIHandler> handlerList = new ArrayList<>();
@@ -259,6 +311,10 @@ public class ConfigurationLoader {
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
             throw new SynapseException("Error creating Internal InternalAPI for class name : " + classFQName, e);
         }
+    }
+
+    public static Map<String, char[]> getUserMap() {
+        return userMap;
     }
 
     public static int getInternalInboundHttpPort() {
