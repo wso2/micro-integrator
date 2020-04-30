@@ -16,7 +16,8 @@
   ~ under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2.ei</groupId>
@@ -61,18 +62,17 @@
                             <name>usedefaultlisteners</name>
                             <value>false</value>
                         </property>
-
                         <carbon.zip>
                             ${basedir}/../../../../distribution/target/wso2mi-${project.version}.zip
                         </carbon.zip>
-
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
-                        <!--<emma.home>${basedir}/target/emma</emma.home>-->
                         <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
                         <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
-                        <!--<emma.output>${basedir}/target/emma</emma.output>-->
+                        <java.util.logging.manager>org.apache.logging.log4j.jul.LogManager</java.util.logging.manager>
                     </systemProperties>
-
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExclude>org.ops4j.pax.logging:pax-logging-api</classpathDependencyExclude>
+                    </classpathDependencyExcludes>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>
