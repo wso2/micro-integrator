@@ -23,27 +23,22 @@ import org.apache.axiom.om.util.AXIOMUtil;
 import org.apache.commons.io.FileUtils;
 import org.awaitility.Awaitility;
 import org.testng.Assert;
-import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
 import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.carbon.automation.test.utils.http.client.HttpRequestUtil;
 import org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension;
 import org.wso2.esb.integration.common.utils.ESBIntegrationTest;
 import org.wso2.esb.integration.common.utils.Utils;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
-
-import static org.testng.Assert.assertTrue;
 
 /**
  * This test class in skipped when user mode is tenant because of this release not support vfs transport for tenants
@@ -66,15 +61,15 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         File failureFolder = new File(pathToVfsDir + "test" + File.separator + "failure" + File.separator);
 
         FileUtils.deleteDirectory(rootFolder);
-        assertTrue(rootFolder.mkdirs(), "file folder not created");
-        assertTrue(outFolder.mkdirs(), "file folder not created");
-        assertTrue(inFolder.mkdirs(), "file folder not created");
-        assertTrue(originalFolder.mkdirs(), "file folder not created");
-        assertTrue(failureFolder.mkdirs(), "file folder not created");
-        assertTrue(outFolder.exists(), "File folder doesn't exists");
-        assertTrue(inFolder.exists(), "File folder doesn't exists");
-        assertTrue(originalFolder.exists(), "File folder doesn't exists");
-        assertTrue(failureFolder.exists(), "File folder doesn't exists");
+        Assert.assertTrue(rootFolder.mkdirs(), "file folder not created");
+        Assert.assertTrue(outFolder.mkdirs(), "file folder not created");
+        Assert.assertTrue(inFolder.mkdirs(), "file folder not created");
+        Assert.assertTrue(originalFolder.mkdirs(), "file folder not created");
+        Assert.assertTrue(failureFolder.mkdirs(), "file folder not created");
+        Assert.assertTrue(outFolder.exists(), "File folder doesn't exists");
+        Assert.assertTrue(inFolder.exists(), "File folder doesn't exists");
+        Assert.assertTrue(originalFolder.exists(), "File folder doesn't exists");
+        Assert.assertTrue(failureFolder.exists(), "File folder doesn't exists");
 
         addVFSProxyWriteFile();
         addVFSProxy1();
@@ -104,15 +99,6 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         CarbonServerExtension.restartServer();
     }
 
-    @AfterClass(alwaysRun = true)
-    public void restoreServerConfiguration() throws Exception {
-        /*for (Map.Entry<String, File> entry : proxyVFSRoots.entrySet()) {
-            removeProxy(entry.getKey());
-        }
-
-        CarbonServerExtension.restartServer();*/
-    }
-
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
     @Test(groups = { "wso2.esb" }, description = "Writing to a file the content of a xml with content in text element")
     public void testVFSProxyPlainXMLWriter() throws Exception {
@@ -120,39 +106,16 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         File outfile = new File(proxyVFSRoots.get("salesforce_DAMAS_writeFile") + File.separator +
                 "out" + File.separator + "out_reply.xml");
 
-        String request = " <ns:text xmlns:ns=\"http://ws.apache.org/commons/ns/payload\">\n"
-                + "         <test>request_value</test>\n" + "      </ns:text>";
-        sendRequest(getProxyServiceURLHttp("salesforce_DAMAS_writeFile"), request, "text/xml");
+        String request =
+                " <ns:text xmlns:ns=\"http://ws.apache.org/commons/ns/payload\"><test>request_value</test></ns:text>";
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Content-type", "text/xml;charset=UTF-8");
+        headers.put("Accept-Charset", "UTF-8");
+        HttpRequestUtil.doPost(new URL(getProxyServiceURLHttp("salesforce_DAMAS_writeFile")), request, headers);
 
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("request_value"), "Sent request body not found");
-
-    }
-
-    protected void sendRequest(String addUrl, String request, String contentType) throws IOException {
-        String charset = "UTF-8";
-        URLConnection connection = new URL(addUrl).openConnection();
-        connection.setDoOutput(true);
-        connection.setReadTimeout(1000);
-        connection.setRequestProperty("Accept-Charset", charset);
-        connection.setRequestProperty("Content-Type", contentType + ";charset=" + charset);
-        OutputStream output = null;
-        try {
-            output = connection.getOutputStream();
-            output.write(request.getBytes(charset));
-        } finally {
-            if (output != null) {
-                output.close();
-            }
-        }
-
-        InputStream response = null;
-        try {
-            response = connection.getInputStream();
-        } catch (Exception e) {
-        }
+        Assert.assertTrue(doesFileContain(outfile, "request_value"), "Sent request body not found");
     }
 
     private void addVFSProxyWriteFile() throws Exception {
@@ -164,6 +127,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                         + "       statistics=\"disable\"\n" + "       trace=\"enable\"\n"
                         + "       startOnLoad=\"true\">\n" + "   <target>\n" + "      <inSequence>\n"
                         + "         <property name=\"OUT_ONLY\" value=\"true\" scope=\"default\" type=\"STRING\"/>\n"
+                        + "         <property name=\"FORCE_SC_ACCEPTED\" value=\"true\" scope=\"axis2\"/>\n"
                         + "         <property name=\"transport.vfs.ReplyFileName\"\n"
                         + "                   value=\"out_reply.xml\"\n" + "                   scope=\"transport\"\n"
                         + "                   type=\"STRING\"/>\n"
@@ -197,8 +161,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         FileUtils.copyFile(sourceFile, targetFile);
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
+        Assert.assertTrue(doesFileContain(outfile, "WSO2 Company"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -216,9 +179,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
-
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -236,8 +197,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile,"andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -254,8 +214,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         FileUtils.copyFile(sourceFile, targetFile);
         Awaitility.await().
                 pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
-        Assert.assertTrue(!outfile.exists());
-
+        Assert.assertFalse(outfile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -273,8 +232,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -292,13 +250,12 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
 
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileNotExist(outfile));
-        Assert.assertTrue(!outfile.exists());
+        Assert.assertFalse(outfile.exists());
 
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -322,12 +279,10 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
 
         Assert.assertTrue(originalFile.exists());
-        String vfsOriginal = FileUtils.readFileToString(originalFile);
-        Assert.assertTrue(vfsOriginal.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(originalFile, "andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -347,11 +302,10 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
 
-        Assert.assertTrue(!originalFile.exists());
-        Assert.assertTrue(!targetFile.exists());
+        Assert.assertFalse(originalFile.exists());
+        Assert.assertFalse(targetFile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -371,8 +325,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -393,8 +346,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -414,8 +366,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(outfile, "andun@wso2.com"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -437,11 +388,10 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileNotExist(outfile));
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(originalFile));
-        Assert.assertTrue(!outfile.exists());
+        Assert.assertFalse(outfile.exists());
 
         Assert.assertTrue(originalFile.exists());
-        String vfsOut = FileUtils.readFileToString(originalFile);
-        Assert.assertTrue(vfsOut.contains("andun@wso2.com"));
+        Assert.assertTrue(doesFileContain(originalFile, "andun@wso2.com"));
         Assert.assertFalse(
                 new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
                 "lock file exists even after moving the failed file");
@@ -465,7 +415,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileNotExist(targetFile));
         Awaitility.await().pollDelay(2, TimeUnit.SECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileNotExist(outfile));
-        Assert.assertTrue(!originalFile.exists());
+        Assert.assertFalse(originalFile.exists());
         Assert.assertFalse(
                 new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
                 "lock file exists even after moving the failed file");
@@ -488,8 +438,8 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileNotExist(targetFile));
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileNotExist(outfile));
-        Assert.assertTrue(!outfile.exists());
-        Assert.assertTrue(!originalFile.exists());
+        Assert.assertFalse(outfile.exists());
+        Assert.assertFalse(originalFile.exists());
         Assert.assertFalse(
                 new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
                 "lock file exists even after moving the failed file");
@@ -499,7 +449,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
     @Test(groups = { "wso2.esb" }, description = "Sending a file through VFS Transport : "
             + "transport.vfs.FileURI = Invalid, " + "transport.vfs.ContentType = text/xml, "
             + "transport.vfs.FileNamePattern = - *\\.xml")
-    public void testVFSProxyFileURI_Invalid() throws Exception {
+    public void testVFSProxyFileURIInvalid() {
 
         String proxyName = "VFSProxy15";
         File outfile = new File(proxyVFSRoots.get(proxyName) + File.separator + "out" + File.separator + "out.xml");
@@ -523,8 +473,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileExist(outfile));
 
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
+        Assert.assertTrue(doesFileContain(outfile, "WSO2 Company"));
     }
 
     //https://wso2.org/jira/browse/ESBJAVA-2273
@@ -543,7 +492,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS).
                 atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
 
-        Assert.assertTrue(!outfile.exists());
+        Assert.assertFalse(outfile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -564,11 +513,9 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS)
                 .atMost(60, TimeUnit.SECONDS).until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
-
-        Assert.assertTrue(!originalFile.exists());
-        Assert.assertTrue(!targetFile.exists());
+        Assert.assertTrue(doesFileContain(outfile, "WSO2 Company"));
+        Assert.assertFalse(originalFile.exists());
+        Assert.assertFalse(targetFile.exists());
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -589,9 +536,9 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileNotExist(targetFile));
         Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(outfile));
         Awaitility.await().pollDelay(2, TimeUnit.SECONDS).until(isFileNotExist(originalFile));
-        Assert.assertTrue(!outfile.exists());
-        Assert.assertTrue(!originalFile.exists());
-        Assert.assertTrue(!targetFile.exists());
+        Assert.assertFalse(outfile.exists());
+        Assert.assertFalse(originalFile.exists());
+        Assert.assertFalse(targetFile.exists());
         Assert.assertFalse(
                 new File(proxyVFSRoots.get(proxyName) + File.separator + "in" + File.separator + "fail.xml.lock").exists(),
                 "lock file exists even after moving the failed file");
@@ -644,11 +591,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileExist(outfile));
 
         Assert.assertTrue(outfile.exists(), "out put file not found");
-        Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS)
-                  .atMost(60, TimeUnit.SECONDS)
-                  .until(doesFileContain(outfile, "WSO2 Company"));
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("WSO2 Company"), "Invalid Response message. >" + vfsOut);
+        Assert.assertTrue(doesFileContain(outfile, "WSO2 Company"), "Invalid Response message.");
         //input file should be moved to processed directory after processing the input file
         Assert.assertTrue(originalFileAfterProcessed.exists(), "Input file is not moved after processing the file");
         Assert.assertFalse(targetFile.exists(), "Input file is exist after processing the input file");
@@ -682,8 +625,6 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Assert.assertTrue(originalFile.exists(),
                 "Input file not moved even if failure happens while building message");
         Assert.assertFalse(targetFile.exists(), "input file not found even if it is invalid file");
-        //reason to bellow assert- https://wso2.org/jira/browse/ESBJAVA-1838
-        //            Assert.assertTrue(lockFile.exists(), "lock file doesn't exists"); commented since  it is fixed now
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -705,8 +646,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(60, TimeUnit.SECONDS)
                 .until(isFileExist(outfile));
         Assert.assertTrue(outfile.exists());
-        String vfsOut = FileUtils.readFileToString(outfile);
-        Assert.assertTrue(vfsOut.contains("WSO2 Company"));
+        Assert.assertTrue(doesFileContain(outfile, "WSO2 Company"));
     }
 
     @SetEnvironment(executionEnvironments = { ExecutionEnvironment.STANDALONE })
@@ -726,7 +666,7 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
                 .until(isFileNotExist(targetFile));
         Awaitility.await().pollDelay(2, TimeUnit.SECONDS).pollInterval(50, TimeUnit.MILLISECONDS)
                 .atMost(60, TimeUnit.SECONDS).until(isFileNotExist(outfile));
-        Assert.assertTrue(!outfile.exists());
+        Assert.assertFalse(outfile.exists());
     }
 
     private void addVFSProxy1() throws Exception {
@@ -1259,11 +1199,6 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         addProxy(proxy, proxyName);
     }
 
-    private void removeProxy(String proxyName) throws Exception {
-        deleteProxyVfsRootDir(proxyName);
-        Utils.undeploySynapseConfiguration(proxyName, Utils.ArtifactType.PROXY, false);
-    }
-
     private void addProxy(OMElement proxy, String proxyName) throws IOException {
         createProxyVfsRootDir(proxyName);
         Utils.deploySynapseConfiguration(proxy, proxyName, Utils.ArtifactType.PROXY, false);
@@ -1278,51 +1213,36 @@ public class VFSTransportTestCase extends ESBIntegrationTest {
         File originalDir = new File(rootFolder.getPath() + File.separator + proxyName + File.separator + "original");
         File processedDir = new File(rootFolder.getPath() + File.separator + proxyName + File.separator + "processed");
 
-        assertTrue(proxyRoot.mkdirs(), "Test VFS Root Directory creation failed for proxy : " + proxyName);
-        assertTrue(inDir.mkdir(), "Test VFS In Directory creation failed for proxy : " + proxyName);
-        assertTrue(outDir.mkdir(), "Test VFS Out Directory creation failed for proxy : " + proxyName);
-        assertTrue(failureDir.mkdir(), "Test VFS Failure Directory creation failed for proxy : " + proxyName);
-        assertTrue(originalDir.mkdir(), "Test VFS Original Directory creation failed for proxy : " + proxyName);
-        assertTrue(processedDir.mkdir(), "Test VFS Processed Directory creation failed for proxy : " + proxyName);
-
+        Assert.assertTrue(proxyRoot.mkdirs(), "Test VFS Root Directory creation failed for proxy : " + proxyName);
+        Assert.assertTrue(inDir.mkdir(), "Test VFS In Directory creation failed for proxy : " + proxyName);
+        Assert.assertTrue(outDir.mkdir(), "Test VFS Out Directory creation failed for proxy : " + proxyName);
+        Assert.assertTrue(failureDir.mkdir(), "Test VFS Failure Directory creation failed for proxy : " + proxyName);
+        Assert.assertTrue(originalDir.mkdir(), "Test VFS Original Directory creation failed for proxy : " + proxyName);
+        Assert.assertTrue(processedDir.mkdir(),
+                          "Test VFS Processed Directory creation failed for proxy : " + proxyName);
         proxyVFSRoots.put(proxyName, proxyRoot);
     }
 
-    private boolean deleteProxyVfsRootDir(String proxyName) {
-        // Delete folder structure
-        File proxyRoot = new File(rootFolder.getPath() + File.separator + proxyName);
-        return proxyRoot.exists() && proxyRoot.delete();
-    }
-
-    private boolean deleteFile(File file) throws IOException {
+    private boolean deleteFile(File file) {
         return file.exists() && file.delete();
     }
 
     private Callable<Boolean> isFileExist(final File file) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return file.exists();
-            }
-        };
+        return file::exists;
     }
 
     private Callable<Boolean> isFileNotExist(final File file) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return !file.exists();
-            }
-        };
+        return () -> !file.exists();
     }
 
-    private Callable<Boolean> doesFileContain(final File file, String message) {
-        return new Callable<Boolean>() {
-            @Override
-            public Boolean call() throws Exception {
-                return FileUtils.readFileToString(file).contains(message);
+    private boolean doesFileContain(File file, String message) throws InterruptedException, IOException {
+        for (int i = 0; i < 60; i++) {
+            if (FileUtils.readFileToString(file).contains(message)) {
+                return true;
             }
-        };
+            TimeUnit.SECONDS.sleep(1);
+        }
+        return false;
     }
 }
 
