@@ -52,13 +52,13 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
     public void testSingleForEachProperties() throws Exception {
         carbonLogReader.clearLogs();
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
-                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
-                        + "            <m0:group>Group1</m0:group>\n"
-                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
-                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
-                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
-                        + "    </soap:Body>\n" + "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
+                        + "<soap:Header/><soap:Body><m0:getQuote>"
+                        + "<m0:group>Group1</m0:group>"
+                        + "<m0:request><m0:code>IBM</m0:code></m0:request>"
+                        + "<m0:request><m0:code>WSO2</m0:code></m0:request>"
+                        + "<m0:request><m0:code>MSFT</m0:code></m0:request></m0:getQuote>"
+                        + "</soap:Body></soap:Envelope>";
 
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachSinglePropertyTestProxy"),
@@ -81,11 +81,11 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 int end = matcher.end();
                 String quote = payload.substring(start, end);
 
-                assertTrue(carbonLogReader.getLogs().contains("<m0:getQuote>" + "            <m0:group>Group1</m0:group>"
-                                + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
-                                + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
-                                + "            <m0:request><m0:code>MSFT</m0:code></m0:request>" + "        </m0:getQuote>"),
-                        "original payload is incorrect");
+                assertTrue(carbonLogReader.getLogs().contains(
+                        "<m0:getQuote><m0:group>Group1</m0:group>" + "<m0:request><m0:code>IBM</m0:code></m0:request>"
+                                + "<m0:request><m0:code>WSO2</m0:code></m0:request>"
+                                + "<m0:request><m0:code>MSFT</m0:code></m0:request></m0:getQuote>"),
+                           "original payload is incorrect");
             }
         }
 
@@ -128,13 +128,12 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
     public void testMultipleForEachPropertiesWithoutID() throws Exception {
         carbonLogReader.clearLogs();
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
-                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
-                        + "            <m0:group>Group1</m0:group>\n"
-                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
-                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
-                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
-                        + "    </soap:Body>\n" + "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
+                        + "<soap:Header/><soap:Body><m0:getQuote>" + "<m0:group>Group1</m0:group>"
+                        + "<m0:request><m0:code>IBM</m0:code></m0:request>"
+                        + "<m0:request><m0:code>WSO2</m0:code></m0:request>"
+                        + "<m0:request><m0:code>MSFT</m0:code></m0:request></m0:getQuote>"
+                        + "</soap:Body></soap:Envelope>";
 
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachMultiplePropertyWithoutIDTestProxy"), headers,
@@ -157,11 +156,11 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 int end = matcher.end();
                 String quote = payload.substring(start, end);
 
-                assertTrue(quote.contains("<m0:getQuote>" + "            <m0:group>Group1</m0:group>"
-                                + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
-                                + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
-                                + "            <m0:request><m0:code>MSFT</m0:code></m0:request>" + "        </m0:getQuote>"),
-                        "original payload is incorrect");
+                assertTrue(quote.contains(
+                        "<m0:getQuote><m0:group>Group1</m0:group>" + "<m0:request><m0:code>IBM</m0:code></m0:request>"
+                                + "<m0:request><m0:code>WSO2</m0:code></m0:request>"
+                                + "<m0:request><m0:code>MSFT</m0:code></m0:request></m0:getQuote>"),
+                           "original payload is incorrect");
             }
         }
 
@@ -214,13 +213,12 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
     public void testMultipleForEachPropertiesWithID() throws Exception {
         carbonLogReader.clearLogs();
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
-                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
-                        + "            <m0:group>Group1</m0:group>\n"
-                        + "            <m0:request><m0:code>IBM</m0:code></m0:request>\n"
-                        + "            <m0:request><m0:code>WSO2</m0:code></m0:request>\n"
-                        + "            <m0:request><m0:code>MSFT</m0:code></m0:request>\n" + "        </m0:getQuote>\n"
-                        + "    </soap:Body>\n" + "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
+                        + "<soap:Header/><soap:Body><m0:getQuote>" + "<m0:group>Group1</m0:group>"
+                        + "<m0:request><m0:code>IBM</m0:code></m0:request>"
+                        + "<m0:request><m0:code>WSO2</m0:code></m0:request>"
+                        + "<m0:request><m0:code>MSFT</m0:code></m0:request></m0:getQuote>"
+                        + "</soap:Body></soap:Envelope>";
 
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachMultiplePropertyWithIDTestProxy"), headers,
@@ -244,11 +242,11 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
                 int end = matcher.end();
                 String quote = payload.substring(start, end);
 
-                assertTrue(quote.contains("<m0:getQuote>" + "            <m0:group>Group1</m0:group>"
-                                + "            <m0:request><m0:code>IBM</m0:code></m0:request>"
-                                + "            <m0:request><m0:code>WSO2</m0:code></m0:request>"
-                                + "            <m0:request><m0:code>MSFT</m0:code></m0:request>" + "        </m0:getQuote>"),
-                        "original payload is incorrect");
+                assertTrue(quote.contains(
+                        "<m0:getQuote><m0:group>Group1</m0:group>" + "<m0:request><m0:code>IBM</m0:code></m0:request>"
+                                + "<m0:request><m0:code>WSO2</m0:code></m0:request>"
+                                + "<m0:request><m0:code>MSFT</m0:code></m0:request></m0:getQuote>"),
+                           "original payload is incorrect");
             }
         }
 
