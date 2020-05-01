@@ -57,12 +57,10 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
     public void testNestedForEach() throws Exception {
         carbonLogReader.clearLogs();
         String request =
-                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">\n"
-                        + "    <soap:Header/>\n" + "    <soap:Body>\n" + "        <m0:getQuote>\n"
-                        + "            <m0:request><m0:symbol>IBM</m0:symbol></m0:request>\n"
-                        + "            <m0:request><m0:symbol>WSO2</m0:symbol></m0:request>\n"
-                        + "            <m0:request><m0:symbol>MSFT</m0:symbol></m0:request>\n"
-                        + "        </m0:getQuote>\n" + "    </soap:Body>\n" + "</soap:Envelope>\n";
+                "<soap:Envelope xmlns:soap=\"http://www.w3.org/2003/05/soap-envelope\" xmlns:m0=\"http://services.samples\" xmlns:xsd=\"http://services.samples/xsd\">"
+                        + "<soap:Header/><soap:Body><m0:getQuote><m0:request><m0:symbol>IBM</m0:symbol></m0:request>"
+                        + "<m0:request><m0:symbol>WSO2</m0:symbol></m0:request><m0:request><m0:symbol>MSFT</m0:symbol></m0:request>"
+                        + "</m0:getQuote></soap:Body></soap:Envelope>";
         simpleHttpClient = new SimpleHttpClient();
         simpleHttpClient.doPost(getProxyServiceURLHttp("foreachNestedTestProxy"),
                 headers, request, "application/xml;charset=UTF-8");
