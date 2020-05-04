@@ -12,7 +12,7 @@
                     </args>
                 </payloadFactory>
                 <log level="full">
-                    <property name="foreach" value="in"/>
+                    <property name="foreachSequentialExecutionTestProxy" value="in"/>
                 </log>
             </sequence>
         </foreach>

@@ -49,17 +49,16 @@ public class ForEachWithIterateTestCase extends ESBIntegrationTest {
     @Test(groups = "wso2.esb", description = "Test foreach inline sequence to transform payload, passed to endpoint using iterate and aggregate mediators")
     public void testForEachInlineSequenceWithIterateEndpoint() throws Exception {
         carbonLogReader.clearLogs();
-        String response = client
-                .getMultipleCustomResponse(getProxyServiceURLHttp("foreachSequentialExecutionTestProxy"), "IBM", 2);
+        String response = client.getMultipleCustomResponse(getProxyServiceURLHttp("foreachWithIteration"), "IBM", 2);
         Assert.assertNotNull(response);
 
-        if (carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT)) {
+        if (carbonLogReader.checkForLog("foreachWithIteration = in", DEFAULT_TIMEOUT)) {
             if (!carbonLogReader.getLogs().contains("IBM")) {
                 Assert.fail("Incorrect message entered ForEach scope");
             }
         }
-        Assert.assertTrue(carbonLogReader.checkForLog("foreach = in", DEFAULT_TIMEOUT, 2),
-                "Count of messages entered ForEach scope is incorrect");
+        Assert.assertTrue(carbonLogReader.checkForLog("foreachWithIteration = in", DEFAULT_TIMEOUT, 2),
+                          "Count of messages entered ForEach scope is incorrect");
         OMElement envelope = client.toOMElement(response);
         OMElement soapBody = envelope.getFirstElement();
         Iterator iterator = soapBody.getChildrenWithName(new QName("http://services.samples", "getQuoteResponse"));

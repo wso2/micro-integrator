@@ -41,8 +41,10 @@ import java.util.concurrent.TimeUnit;
 public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_and_202_TestCase
         extends ESBIntegrationTest {
     private static final String PROXY_SERVICE_NAME = "NonRetrySCProxy";
-    private static final String EXPECTED_ERROR_MESSAGE = "Message forwarding failed";
-    private static final String EXPECTED_MP_DEACTIVATION_MSG = "Successfully deactivated the message processor [Processor1]";
+    private static final String EXPECTED_ERROR_MESSAGE =
+            "Message processor [Processor1] received a response with HTTP_SC: 500 from backend EP. Message forwarding failed.";
+    private static final String EXPECTED_MP_DEACTIVATION_MSG =
+            "Successfully deactivated the message processor [Processor1]";
     private static final int RETRY_COUNT = 4;
 
     @BeforeClass(alwaysRun = true)
@@ -65,10 +67,11 @@ public class ESBJAVA4279_MPRetryUponResponseSC_500_withNonRetryStatusCodes_200_a
         Awaitility.await().pollInterval(50, TimeUnit.MILLISECONDS).atMost(20, TimeUnit.SECONDS).
                 until(isMPDeactivationMessageExists(carbonLogReader));
         boolean isRetriedUpon_500_response = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT);
+        Assert.assertTrue(isRetriedUpon_500_response, "Message processor didn't retry upon failure");
         boolean isRetryCompleted = carbonLogReader.checkForLog(EXPECTED_ERROR_MESSAGE, DEFAULT_TIMEOUT, RETRY_COUNT);
+        Assert.assertTrue(isRetryCompleted, "Message processor didn't retry " + RETRY_COUNT + " times upon failure");
         boolean isMpDeactivated = carbonLogReader.checkForLog(EXPECTED_MP_DEACTIVATION_MSG, DEFAULT_TIMEOUT);
-        Assert.assertTrue(isRetriedUpon_500_response && isRetryCompleted && isMpDeactivated,
-                "MP does not retry sending the request upon receiving HTTP SC 500 response");
+        Assert.assertTrue(isMpDeactivated, "Message processor hasn't been deactivated upon retries.");
         carbonLogReader.stop();
     }
 
