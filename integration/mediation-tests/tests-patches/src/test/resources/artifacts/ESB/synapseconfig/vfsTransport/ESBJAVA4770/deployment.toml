@@ -20,5 +20,5 @@ listener.keystore.key_password = "qazwsx"
 listener.keystore.alias = "vfs"
 sender.enable = true
 
-[management_api_token_handler]
+[management_api.jwt_token_security_handler]
 enable = false
