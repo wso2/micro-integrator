@@ -5,6 +5,18 @@
   "server.identity_server_username": "axis2_transport.parameter.identityServerUserName",
   "server.identity_server_password": "axis2_transport.parameter.identityServerPw",
 
+  "user_store.read_only":"user_store.properties.ReadOnly",
+  "user_store.write_groups":"user_store.properties.WriteGroups",
+  "user_store.username_javascript_regex":"user_store.properties.UsernameJavaScriptRegEx",
+  "user_store.username_java_regex_violation_error_msg":"user_store.properties.UsernameJavaRegExViolationErrorMsg",
+  "user_store.password_javascript_regex":"user_store.properties.PasswordJavaScriptRegEx",
+  "user_store.password_java_regex_violation_error_msg":"user_store.properties.PasswordJavaRegExViolationErrorMsg",
+  "user_store.rolename_javascript_regex":"user_store.properties.RolenameJavaScriptRegEx",
+  "user_store.case_insensitive_username":"user_store.properties.CaseInsensitiveUsername",
+  "user_store.is_bulk_import_supported":"user_store.properties.IsBulkImportSupported",
+  "user_store.password_digest":"user_store.properties.PasswordDigest",
+  "user_store.store_salted_password":"user_store.properties.StoreSaltedPassword",
+
   "user_store.connection_url":"user_store.properties.ConnectionURL",
   "user_store.connection_name":"user_store.properties.ConnectionName",
   "user_store.connection_password":"user_store.properties.ConnectionPassword",
