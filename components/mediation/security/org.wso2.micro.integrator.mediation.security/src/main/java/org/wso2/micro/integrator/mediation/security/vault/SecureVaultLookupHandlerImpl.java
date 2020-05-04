@@ -74,13 +74,13 @@ public class SecureVaultLookupHandlerImpl implements SecureVaultLookupHandler {
 					return cacheContext.getDecryptedValue();
 				} else {
 					decryptedCacheMap.remove(aliasPasword);
-					return vaultLookup(aliasPasword, secretSrcData, synCtx, decryptedCacheMap);
+					return vaultLookup(aliasPasword, secretSrcData, decryptedCacheMap);
 				}
 			} else {
-				return vaultLookup(aliasPasword, secretSrcData, synCtx, decryptedCacheMap);
+				return vaultLookup(aliasPasword, secretSrcData, decryptedCacheMap);
 			}
 		} else {
-			return vaultLookup(aliasPasword, secretSrcData, synCtx, decryptedCacheMap);
+			return vaultLookup(aliasPasword, secretSrcData, decryptedCacheMap);
 		}
 	}
 
@@ -96,9 +96,9 @@ public class SecureVaultLookupHandlerImpl implements SecureVaultLookupHandler {
 	 * @param synCtx synapse message context
 	 * @param decryptedCacheMap decrypted cache map from the message context
 	 * */
-	private String vaultLookup(String aliasPasword, SecretSrcData secretSrcData, MessageContext synCtx, Map<String, Object> decryptedCacheMap) {
+	private String vaultLookup(String aliasPasword, SecretSrcData secretSrcData, Map<String, Object> decryptedCacheMap) {
 		synchronized (decryptlockObj) {
-			SecretCipherHander secretManager = new SecretCipherHander(synCtx);
+			SecretCipherHander secretManager = new SecretCipherHander();
 			String decryptedValue = secretManager.getSecret(aliasPasword, secretSrcData);
 			if (decryptedCacheMap == null) {
 				return null;

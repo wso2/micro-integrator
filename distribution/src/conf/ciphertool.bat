@@ -82,6 +82,6 @@ echo Using CARBON_HOME:   %CARBON_HOME%
 echo Using JAVA_HOME:    %JAVA_HOME%
 set _RUNJAVA="%JAVA_HOME%\bin\java"
 
-%_RUNJAVA% %JAVA_OPTS% -Dcarbon.home="%CARBON_HOME%" -Dcarbon.config.dir.path="%CARBON_HOME%\conf" -cp "%CARBON_CLASSPATH%" org.wso2.ciphertool.CipherTool %*
+%_RUNJAVA% %JAVA_OPTS% -Dcarbon.home="%CARBON_HOME%" -Dcarbon.config.dir.path="%CARBON_HOME%\conf" -Dorg.wso2.CipherTransformation="RSA/ECB/OAEPwithSHA1andMGF1Padding" -cp "%CARBON_CLASSPATH%" org.wso2.ciphertool.CipherTool %*
 endlocal
 :end

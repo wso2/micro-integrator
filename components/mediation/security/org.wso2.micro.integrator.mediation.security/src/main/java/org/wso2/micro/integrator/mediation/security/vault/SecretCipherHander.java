@@ -29,14 +29,9 @@ class SecretCipherHander {
 	private static Log log = LogFactory.getLog(SecretCipherHander.class);
 
 	/* Root Secret Repository */
-	private RegistrySecretRepository parentRepository = new RegistrySecretRepository();
+	private CiphertextRepository parentRepository = CiphertextRepository.getInstance();
 	private FileSecretRepository fileSecretRepository = new FileSecretRepository();
 	private EnvironmentSecretRepository environmentSecretRepository =  new EnvironmentSecretRepository();
-
-	SecretCipherHander(org.apache.synapse.MessageContext synCtx) {
-		super();
-		parentRepository.setSynCtx(synCtx);
-	}
 
 	/**
 	 * Returns the secret corresponding to the given alias name
