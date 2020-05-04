@@ -406,30 +406,24 @@
   "system.parameter.'org.wso2.CipherTransformation'": "RSA/ECB/OAEPwithSHA1andMGF1Padding",
   "system.parameter.'org.wso2.SecureVaultPasswordRegEx'": "^[\\\\S]{5,30}$",
 
-  "internal_api": [
-    {
-      "api_name": "PrometheusApi",
-      "protocols": "http",
-      "class": "org.wso2.micro.integrator.prometheus.publisher.service.MetricAPI"
-    },
-    {
-      "api_name": "ReadinessProbe",
-      "protocols": "http",
-      "class": "org.wso2.micro.integrator.probes.ReadinessProbe"
-    }
-  ],
+  "prometheus_api.protocols": "http",
+  "prometheus_api.basic_security_handler.enable": false,
+  "prometheus_api.authorization_handler.enable": false,
 
-  "management_api.name": "ManagementApi",
   "management_api.protocols": "https",
-  "management_api.class": "org.wso2.micro.integrator.management.apis.ManagementInternalApi",
-  "management_api_token_handler.enable": "true",
-  "management_api.handler.name": "JWTTokenSecurityHandler",
-  "management_api.handler.class": "org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler",
-  "management_api.handler.token_store_config.max_size": "200",
-  "management_api.handler.token_store_config.clean_up_interval": "600",
-  "management_api.handler.token_store_config.remove_oldest_token_on_overflow": "true",
-  "management_api.handler.token_config.expiry": "3600",
-  "management_api.handler.token_config.size": "2048",
+  "management_api.jwt_token_security_handler.enable": "true",
+  "management_api.jwt_token_security_handler.token_store_config.max_size": "200",
+  "management_api.jwt_token_security_handler.token_store_config.clean_up_interval": "600",
+  "management_api.jwt_token_security_handler.token_store_config.remove_oldest_token_on_overflow": "true",
+  "management_api.jwt_token_security_handler.token_config.expiry": "3600",
+  "management_api.jwt_token_security_handler.token_config.size": "2048",
+
+  "management_api.cors.enable": "true",
+  "management_api.cors.allowed_origins": "*",
+  "management_api.cors.allowed_headers": "Authorization",
+  "management_api.basic_security_handler.enable": "false",
+  "management_api.authorization_handler.enable": "true",
+
   "internal_apis.file_user_store.enable": true,
   "internal_apis.users": [
     {
@@ -437,16 +431,6 @@
       "user.password": "admin"
     }
   ],
-
-  "management_api.cors.enabled": "true",
-  "management_api.cors.allowed_origins": "*",
-  "management_api.cors.allowed_headers": "Authorization, content-type",
-  "management_api_basic_security_handler.enable": "false",
-  "management_api.security_handler.name": "BasicSecurityHandler",
-  "management_api.security_handler.class": "org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler",
-  "management_api_authorization_handler.enable": "true",
-  "management_api.authorization_handler.name": "AuthorizationHandler",
-  "management_api.authorization_handler.class": "org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler",
 
   "internal_api_ssl_config.parameter.sslVerifyClient": "false",
   "internal_api_ssl_config.parameter.httpsProtocols": "TLSv1,TLSv1.1,TLSv1.2",

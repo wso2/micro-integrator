@@ -926,3 +926,70 @@ order_phase_last="phaselast"
 [[synapse_handlers]]
 name="IntegratorSynapseHandler"
 class="org.wso2.micro.integrator.dataservices.odata.endpoint.ODataPassThroughHandler"
+
+########################## Internal Apis ###################################
+
+[prometheus_api]
+protocols = "http"
+
+[prometheus_api.basic_security_handler]
+enable = true
+
+[prometheus_api.authorization_handler]
+enable = true
+
+[[prometheus_api.authorization_handler.resources]]
+path = "/metric"
+
+[[prometheus_api.custom_handlers]]
+name = "CustomHandler"
+class = "CustomImpl"
+
+[[prometheus_api.custom_handlers.resources]]
+path = "/resource1"
+
+[management_api]
+protocols = "http"
+
+[management_api.cors]
+enabled = true
+allowedOrigins = "host1.com"
+allowedHeaders = "SomeHeader"
+
+[management_api.basic_security_handler]
+enabled = true
+
+[management_api.jwt_token_security_handler]
+token_store_config.max_size= "200"
+token_store_config.clean_up_interval= "600"
+token_store_config.remove_oldest_token_on_overflow= "true"
+token_config.expiry= "3600"
+token_config.size= "2048"
+
+[management_api.authorization_handler]
+enabled = false
+
+[[management_api.authorization_handler.resources]]
+path = "/user"
+
+[[management_api.authorization_handler.resources]]
+path = "/apis"
+
+[[management_api.custom_handlers]]
+name = "CustomHandler"
+class = "CustomerImpl"
+
+[[management_api.custom_handlers.resources]]
+path = "/"
+
+[[management_api.custom_handlers]]
+name = "CustomHandler2"
+class = "CustomerImpl2"
+
+[[management_api.custom_handlers.resources]]
+path = "/endpoints"
+
+[[management_api.custom_handlers.resources]]
+path = "/apis"
+
+
