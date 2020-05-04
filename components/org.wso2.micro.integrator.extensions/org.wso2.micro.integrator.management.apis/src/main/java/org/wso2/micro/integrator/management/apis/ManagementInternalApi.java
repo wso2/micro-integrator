@@ -65,7 +65,7 @@ public class ManagementInternalApi implements InternalAPI {
 
         ArrayList<APIResource> resourcesList = new ArrayList<>();
         resourcesList.add(new ApiResource(PREFIX_APIS));
-        resourcesList.add(new EndpointResource(PREFIX_ENDPOINTS));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_ENDPOINTS, new EndpointResource()));
         resourcesList.add(new InboundEndpointResource(PREFIX_INBOUND_ENDPOINTS));
         resourcesList.add(new ProxyServiceResource(PREFIX_PROXY_SERVICES));
         resourcesList.add(new CarbonAppResource(PREFIX_CARBON_APPS));

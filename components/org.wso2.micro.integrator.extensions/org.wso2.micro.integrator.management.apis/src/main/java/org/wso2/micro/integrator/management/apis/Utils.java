@@ -112,6 +112,7 @@ public class Utils {
         }
         axis2MessageContext.setProperty("messageType", Constants.HEADER_VALUE_APPLICATION_JSON);
         axis2MessageContext.setProperty("ContentType", Constants.HEADER_VALUE_APPLICATION_JSON);
+        axis2MessageContext.removeProperty(Constants.NO_ENTITY_BODY);
     }
 
     public static JSONObject createJSONList(int count) {

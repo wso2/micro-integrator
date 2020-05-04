@@ -440,7 +440,7 @@
 
   "management_api.cors.enabled": "true",
   "management_api.cors.allowed_origins": "*",
-  "management_api.cors.allowed_headers": "Authorization",
+  "management_api.cors.allowed_headers": "Authorization, content-type",
   "management_api_basic_security_handler.enable": "false",
   "management_api.security_handler.name": "BasicSecurityHandler",
   "management_api.security_handler.class": "org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler",

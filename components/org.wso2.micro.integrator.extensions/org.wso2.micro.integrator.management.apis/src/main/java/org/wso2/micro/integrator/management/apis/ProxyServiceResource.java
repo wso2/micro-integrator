@@ -169,7 +169,6 @@ public class ProxyServiceResource extends APIResource {
         }
 
         JSONObject proxyObject = new JSONObject();
-
         proxyObject.put(Constants.NAME, proxyService.getName());
 
         try {
@@ -193,6 +192,7 @@ public class ProxyServiceResource extends APIResource {
         OMElement proxyConfiguration = ProxyServiceSerializer.serializeProxy(null, proxyService);
         proxyObject.put(SYNAPSE_CONFIGURATION, proxyConfiguration.toString());
         proxyObject.put("eprs", proxyService.getAxisService().getEPRs());
+        proxyObject.put("isRunning", proxyService.isRunning());
         return proxyObject;
     }
 
