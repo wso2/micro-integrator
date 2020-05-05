@@ -101,28 +101,21 @@ public class ForEachPropertiesTestCase extends ESBIntegrationTest {
             assertTrue(carbonLogReader.getLogs().contains("in_count = " + 3),
                     "Final counter mismatch, expected 3 found = " + carbonLogReader.getLogs());
         }
+        //final payload in insequence
+        String payload = carbonLogReader.getLogs();
+        String search = "<m0:getQuote>(.*)</m0:getQuote>";
+        Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(payload);
+        boolean matchFound = matcher.find();
 
-        if (carbonLogReader.checkForLog("in_payload", DEFAULT_TIMEOUT)) {
-            //final payload in insequence
-            String payload = carbonLogReader.getLogs();
-            String search = "<m0:getQuote>(.*)</m0:getQuote>";
-            Pattern pattern = Pattern.compile(search, Pattern.DOTALL);
-            Matcher matcher = pattern.matcher(payload);
-            boolean matchFound = matcher.find();
-
-            assertTrue(matchFound, "getQuote element not found");
-            if (matchFound) {
-                int start = matcher.start();
-                int end = matcher.end();
-                String quote = payload.substring(start, end);
-                assertTrue(quote.contains("<m0:group>Group1</m0:group>"), "Group Element not found in : " + quote);
-                assertTrue(quote.contains("<m0:symbol>Group1_IBM</m0:symbol>"), "IBM Element not found in : " + quote);
-                assertTrue(quote.contains("<m0:symbol>Group1_WSO2</m0:symbol>"),
-                           "WSO2 Element not found in : " + quote);
-                assertTrue(quote.contains("<m0:symbol>Group1_MSFT</m0:symbol>"),
-                           "MSTF Element not found in : " + quote);
-            }
-        }
+        assertTrue(matchFound, "getQuote element not found");
+        int start = matcher.start();
+        int end = matcher.end();
+        String quote = payload.substring(start, end);
+        assertTrue(quote.contains("<m0:group>Group1</m0:group>"), "Group Element not found in : " + quote);
+        assertTrue(quote.contains("<m0:symbol>Group1_IBM</m0:symbol>"), "IBM Element not found in : " + quote);
+        assertTrue(quote.contains("<m0:symbol>Group1_WSO2</m0:symbol>"), "WSO2 Element not found in : " + quote);
+        assertTrue(quote.contains("<m0:symbol>Group1_MSFT</m0:symbol>"), "MSTF Element not found in : " + quote);
     }
 
     @Test(groups = "wso2.esb", description = "Test foreach properties in a multiple foreach constructs without id specified")

@@ -39,6 +39,7 @@
                 <property name="in_group"
                           expression="get-property('FOREACH_ORIGINAL_MESSAGE')//m0:group" xmlns:m0="http://services.samples" />
             </log>
+            <log level="full"/>
         </inSequence>
         <outSequence/>
 
