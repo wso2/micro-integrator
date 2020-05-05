@@ -991,5 +991,3 @@ path = "/endpoints"
 
 [[management_api.custom_handlers.resources]]
 path = "/apis"
-
-

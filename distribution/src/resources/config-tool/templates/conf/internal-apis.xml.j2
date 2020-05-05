@@ -25,10 +25,10 @@
                 or prometheus_api.authorization_handler.enable == true or prometheus_api.custom_handlers is defined %}
             <handlers>
                 {% if prometheus_api.basic_security_handler.enable == true %}
-                <handler class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler" name="BasicSecurityHandler"/>
+                <handler name="BasicSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"/>
                 {% endif %}
                 {% if prometheus_api.authorization_handler.enable == true %}
-                <handler class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler" name="AuthorizationHandler">
+                <handler name="AuthorizationHandler" class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler">
                     {% if prometheus_api.authorization_handler.resources is defined %}
                     <resources>
                         {% for resource in prometheus_api.authorization_handler.resources %}
@@ -55,13 +55,13 @@
             {% endif %}
         </api>
         <api name="ReadinessProbe" protocol="http" class="org.wso2.micro.integrator.probes.ReadinessProbe"/>
-        <api class="org.wso2.micro.integrator.management.apis.ManagementInternalApi" name="ManagementApi" protocol="{{management_api.protocols}}">
+        <api name="ManagementApi" protocol="{{management_api.protocols}}" class="org.wso2.micro.integrator.management.apis.ManagementInternalApi">
             <handlers>
                 {% if management_api.basic_security_handler.enable == true %}
-                <handler class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler" name="BasicSecurityHandler"/>
+                <handler name="BasicSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.BasicSecurityHandler"/>
                 {% endif %}
                 {% if management_api.jwt_token_security_handler.enable == true %}
-                <handler class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler" name="JWTTokenSecurityHandler">
+                <handler name="JWTTokenSecurityHandler" class="org.wso2.micro.integrator.management.apis.security.handler.JWTTokenSecurityHandler">
                     <TokenStoreConfig>
                         <MaxSize>{{management_api.jwt_token_security_handler.token_store_config.max_size}}</MaxSize>
                         <TokenCleanupTaskInterval>{{management_api.jwt_token_security_handler.token_store_config.clean_up_interval}}</TokenCleanupTaskInterval><!--Seconds /-->
@@ -74,7 +74,7 @@
                 </handler>
                 {% endif %}
                 {% if management_api.authorization_handler.enable == true %}
-                <handler class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler" name="AuthorizationHandler">
+                <handler name="AuthorizationHandler" class="org.wso2.micro.integrator.management.apis.security.handler.AuthorizationHandler">
                     {% if management_api.authorization_handler.resources is defined %}
                     <resources>
                         {% for resource in management_api.authorization_handler.resources %}

@@ -420,7 +420,7 @@
 
   "management_api.cors.enable": "true",
   "management_api.cors.allowed_origins": "*",
-  "management_api.cors.allowed_headers": "Authorization",
+  "management_api.cors.allowed_headers": "Authorization, Content-Type",
   "management_api.basic_security_handler.enable": "false",
   "management_api.authorization_handler.enable": "true",
 
