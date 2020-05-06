@@ -25,6 +25,7 @@ import org.apache.synapse.commons.json.JsonUtil;
 import org.apache.synapse.config.SynapseConfiguration;
 import org.json.JSONObject;
 import org.wso2.micro.integrator.security.user.api.UserStoreException;
+import org.wso2.micro.integrator.security.user.core.multiplecredentials.UserAlreadyExistsException;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -157,16 +158,19 @@ public class UsersResource extends UserResource {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("Adding user, id: " + user + ", roleList: " + Arrays.toString(roleList));
             }
-            getUserStore().addUser(user, payload.get(PASSWORD).getAsString(),
-                                   roleList, null, null);
-
+            try {
+                getUserStore().addUser(user, payload.get(PASSWORD).getAsString(),
+                                       roleList, null, null);
+            } catch (UserAlreadyExistsException e) {
+                throw new IOException("User: " + user + " already exists.", e);
+            }
             JSONObject jsonBody = new JSONObject();
             jsonBody.put(USER_ID, user);
             jsonBody.put(STATUS, "Added");
             return jsonBody;
         } else {
             throw new IOException("Missing one or more of the fields, '" + USER_ID + "', '" + PASSWORD + "' in the "
-                                  + "payload");
+                                  + "payload.");
         }
     }
 
