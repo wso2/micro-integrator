@@ -14,5 +14,5 @@ type = "database"
 enable_message_size_validation = true
 max_message_size_bytes=185
 
-[management_api_token_handler]
+[management_api.jwt_token_security_handler]
 enable = false

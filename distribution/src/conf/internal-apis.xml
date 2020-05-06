@@ -46,7 +46,7 @@
                 <enabled>true</enabled>
                 <allowedOrigins>*</allowedOrigins>
                 <!-- comma separated values-->
-                <allowedHeaders>Authorization</allowedHeaders>
+                <allowedHeaders>Authorization, Content-Type</allowedHeaders>
             </cors>
         </api>
     </apis>
