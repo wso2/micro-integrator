@@ -149,7 +149,7 @@ public class UsersResource extends UserResource {
         JsonObject payload = Utils.getJsonPayload(axis2MessageContext);
         if (payload.has(USER_ID) && payload.has(PASSWORD)) {
             String[] roleList = null;
-            if (payload.has(IS_ADMIN)) {
+            if (payload.has(IS_ADMIN) && payload.get(IS_ADMIN).getAsBoolean()) {
                 String adminRole = getRealmConfiguration().getAdminRoleName();
                 roleList = new String[]{adminRole};
             }
