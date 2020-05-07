@@ -56,6 +56,7 @@ import org.wso2.micro.integrator.security.user.core.model.OperationalCondition;
 import org.wso2.micro.integrator.security.user.core.model.OperationalOperation;
 import org.wso2.micro.integrator.security.user.core.model.UserClaimSearchEntry;
 import org.wso2.micro.integrator.security.user.core.model.UserMgtContext;
+import org.wso2.micro.integrator.security.user.core.multiplecredentials.UserAlreadyExistsException;
 import org.wso2.micro.integrator.security.user.core.profile.ProfileConfigurationManager;
 import org.wso2.micro.integrator.security.user.core.service.RealmService;
 import org.wso2.micro.integrator.security.user.core.system.SystemUserRoleManager;
@@ -177,8 +178,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
             if (e.getCause() != null && e.getCause().getCause() != null && e.getCause().getCause() instanceof
                     UserStoreException) {
                 // Actual UserStoreException get wrapped with two exceptions
-                throw new UserStoreException(e.getCause().getCause().getMessage(), e);
-
+                throw (UserStoreException) e.getCause().getCause();
             } else {
                 String msg;
                 if (objects != null && argTypes != null) {
@@ -2888,7 +2888,7 @@ public abstract class AbstractUserStoreManager implements UserStoreManager, Pagi
                 String message = String.format(ErrorMessages.ERROR_CODE_USER_ALREADY_EXISTS.getMessage(), userName);
                 String errorCode = ErrorMessages.ERROR_CODE_USER_ALREADY_EXISTS.getCode();
                 handleAddUserFailure(errorCode, message, userName, credential, roleList, claims, profileName);
-                throw new UserStoreException(errorCode + " - " + message);
+                throw new UserAlreadyExistsException(errorCode + " - " + message);
             }
 
             List<String> internalRoles = new ArrayList<String>();
