@@ -24,6 +24,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.config.mapper.ConfigParser;
 import org.wso2.micro.core.util.StringUtils;
+import org.wso2.micro.integrator.initializer.handler.transaction.security.CryptoUtil;
 import org.wso2.micro.integrator.initializer.handler.transaction.store.TransactionStore;
 import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 import org.wso2.micro.integrator.ndatasource.core.CarbonDataSource;
@@ -33,6 +34,7 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
 /**
@@ -48,20 +50,21 @@ public class TransactionHandlerComponent {
     private static final String TRANSACTION_CONFIG_SECTION = "transaction";
     private static final String TRANSACTION_CONFIG_NAME = "data_source";
 
-    public void start(DataSourceService dataSourceService) {
+    private ScheduledExecutorService trnCountWriterTaskScheduler;
+
+    public void start(DataSourceService dataSourceService) throws TransactionException, DataSourceException {
         String nodeId = generateRandomId();
-        try {
-            DataSource dataSource = getTransactionDataSource(dataSourceService);
 
-            // initialize Transaction store.
-            TransactionStore transactionStore = new TransactionStore(dataSource, nodeId);
+        // initialize cipher for encryption needs.
+        Cipher cipher = CryptoUtil.initializeCipher();
 
-            // start and schedule transaction writer task.
-            scheduleTransactionWriterTask(transactionStore);
+        DataSource dataSource = getTransactionDataSource(dataSourceService);
 
-        } catch (DataSourceException | TransactionException e) {
-            LOG.error("Error in initializing Transaction Service component: " + e.getMessage(), e);
-        }
+        // initialize Transaction store.
+        TransactionStore transactionStore = new TransactionStore(dataSource, nodeId, cipher);
+
+        // start and schedule transaction writer task.
+        scheduleTransactionWriterTask(transactionStore);
     }
 
     /**
@@ -73,11 +76,11 @@ public class TransactionHandlerComponent {
         String scheduledPeriodStr = System.getProperty(SCHEDULED_PERIOD);
         if (StringUtils.isEmpty(scheduledPeriodStr)) {
             scheduledPeriodStr = System.getenv(SCHEDULED_PERIOD);
-        }
-        if (StringUtils.isEmpty(scheduledPeriodStr)) {
-            Object scheduledPeriodObject = ConfigParser.getParsedConfigs().get("" + "." + "");
-            if (null != scheduledPeriodObject) {
-                scheduledPeriodStr = scheduledPeriodObject.toString();
+            if (StringUtils.isEmpty(scheduledPeriodStr)) {
+                Object scheduledPeriodObject = ConfigParser.getParsedConfigs().get("" + "." + "");
+                if (null != scheduledPeriodObject) {
+                    scheduledPeriodStr = scheduledPeriodObject.toString();
+                }
             }
         }
         try {
@@ -93,7 +96,7 @@ public class TransactionHandlerComponent {
      * @param transactionStore - transactionStore instance.
      */
     private void scheduleTransactionWriterTask(TransactionStore transactionStore) {
-        ScheduledExecutorService trnCountWriterTaskScheduler = Executors.newSingleThreadScheduledExecutor();
+        trnCountWriterTaskScheduler = Executors.newSingleThreadScheduledExecutor();
         int scheduledPeriod = getTransactionCountScheduledPeriod();
 
         trnCountWriterTaskScheduler.scheduleAtFixedRate(() -> {
@@ -103,6 +106,15 @@ public class TransactionHandlerComponent {
                 LOG.warn("Could not persist the transaction count: ", e);
             }
         }, scheduledPeriod, scheduledPeriod, TimeUnit.SECONDS);
+    }
+
+    /**
+     * Stop the transactionWriterTask immediately.
+     */
+    private void stopTransactionWriterTask() {
+        if (trnCountWriterTaskScheduler != null) {
+            trnCountWriterTaskScheduler.shutdownNow();
+        }
     }
 
     private String generateRandomId() {
@@ -117,7 +129,7 @@ public class TransactionHandlerComponent {
      * @throws DataSourceException  - when DataSource is not an RDBMS data source.
      * @throws TransactionException - when no DataSource is available for transaction counting utility.
      */
-    public DataSource getTransactionDataSource(DataSourceService dataSourceService)
+    private DataSource getTransactionDataSource(DataSourceService dataSourceService)
             throws DataSourceException, TransactionException {
 
         String dataSourceId = getTransactionDatasourceId();
@@ -148,7 +160,7 @@ public class TransactionHandlerComponent {
                 if (dataSourceIdObject != null) {
                     dataSourceId = dataSourceIdObject.toString();
                 } else {
-                    LOG.warn("DataSource is not configured. <add message> ");
+                    LOG.warn("DataSource is not configured.");
                     throw new TransactionException(
                             "DataSource " + dataSourceId + " is not configured for transaction.");
                 }
@@ -157,11 +169,21 @@ public class TransactionHandlerComponent {
         return dataSourceId;
     }
 
+    /**
+     * Check whether the transaction property is enabled or not.
+     * Default value is true.
+     *
+     * @return - true if transaction property is enabled, otherwise false.
+     */
     public static boolean isTransactionPropertyEnabled() {
         String scheduledPeriodStr = System.getProperty(BaseConstants.TRANSACTION);
         if (StringUtils.isEmpty(scheduledPeriodStr)) {
             scheduledPeriodStr = System.getenv(BaseConstants.TRANSACTION);
         }
         return JavaUtils.isTrue(scheduledPeriodStr, true);
+    }
+
+    public void cleanup() {
+        stopTransactionWriterTask();
     }
 }

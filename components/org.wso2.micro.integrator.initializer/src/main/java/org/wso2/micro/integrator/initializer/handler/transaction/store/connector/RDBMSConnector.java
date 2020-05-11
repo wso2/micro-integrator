@@ -30,6 +30,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
 /**
@@ -40,6 +41,7 @@ public class RDBMSConnector {
     private static final Log LOG = LogFactory.getLog(RDBMSConnector.class);
     private DataSource dataSource;
     private String nodeId;
+    private Cipher cipher;
 
     /**
      * Constructor.
@@ -47,8 +49,9 @@ public class RDBMSConnector {
      * @param dataSource - The datasource config to initiate the connection.
      * @throws TransactionException - when something goes wrong while initializing RDBMS connection.
      */
-    public RDBMSConnector(DataSource dataSource, String nodeId) throws TransactionException {
+    public RDBMSConnector(DataSource dataSource, String nodeId, Cipher cipher) throws TransactionException {
         this.nodeId = nodeId;
+        this.cipher = cipher;
         this.dataSource = dataSource;
         try (Connection connection = getConnection()) {
             DatabaseMetaData metaData = connection.getMetaData();

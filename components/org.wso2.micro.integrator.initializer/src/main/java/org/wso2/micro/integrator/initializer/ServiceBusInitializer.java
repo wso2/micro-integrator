@@ -53,6 +53,7 @@ import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionException;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionHandler;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionHandlerComponent;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
@@ -64,6 +65,7 @@ import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServic
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServiceImpl;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
+import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
@@ -73,6 +75,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Paths;
+import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -100,6 +103,8 @@ public class ServiceBusInitializer {
     private TaskService taskService;
 
     private static DataSourceService dataSourceService;
+
+    private TransactionHandlerComponent transactionHandlerComponent;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -174,8 +179,15 @@ public class ServiceBusInitializer {
                 // Register internal transaction synapse handler
                 boolean transactionPropertyEnabled = TransactionHandlerComponent.isTransactionPropertyEnabled();
                 if (transactionPropertyEnabled) {
-                    synapseEnvironment.registerSynapseHandler(new TransactionHandler());
-                    new TransactionHandlerComponent().start(dataSourceService);
+                    TransactionHandler transactionHandler = new TransactionHandler();
+                    synapseEnvironment.registerSynapseHandler(transactionHandler);
+                    try {
+                        transactionHandlerComponent = new TransactionHandlerComponent();
+                        transactionHandlerComponent.start(dataSourceService);
+                    } catch (DataSourceException | TransactionException e) {
+                        log.warn("Error in initializing Transaction Service component: " + e.getMessage(), e);
+                        synapseEnvironment.getSynapseHandlers().remove(transactionHandler);
+                    }
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseEnvironmentService Registered");
@@ -206,7 +218,9 @@ public class ServiceBusInitializer {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-
+        if (Objects.nonNull(transactionHandlerComponent)) {
+            transactionHandlerComponent.cleanup();
+        }
         serverManager.stop();
         serverManager.shutdown();
     }

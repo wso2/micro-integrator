@@ -21,6 +21,7 @@ package org.wso2.micro.integrator.initializer.handler.transaction.store;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionException;
 import org.wso2.micro.integrator.initializer.handler.transaction.store.connector.RDBMSConnector;
 
+import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
 /**
@@ -39,8 +40,8 @@ public class TransactionStore {
      * @param dataSource - The datasource config to initiate the connection.
      * @throws TransactionException - when something goes wrong while initializing RDBMS connection
      */
-    public TransactionStore(DataSource dataSource, String nodeId) throws TransactionException {
-        this.rdbmsConnector = new RDBMSConnector(dataSource, nodeId);
+    public TransactionStore(DataSource dataSource, String nodeId, Cipher cipher) throws TransactionException {
+        this.rdbmsConnector = new RDBMSConnector(dataSource, nodeId, cipher);
     }
 
     /**
@@ -51,5 +52,4 @@ public class TransactionStore {
     public void addTransaction() throws TransactionException {
         this.rdbmsConnector.addTransaction();
     }
-
 }

@@ -18,13 +18,16 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction;
 
-public class TransactionException extends Exception {
+public class TransactionConstants {
 
-    TransactionException(String msg) {
-        super(msg);
-    }
+    public static final String CARBON_HOME = "carbon.home";
+    public static final String REPOSITORY_DIR = "repository";
+    public static final String RESOURCES_DIR = "resources";
+    public static final String SECURITY_DIR = "security";
+    public static final String KEYSTORE_FILE = "wso2carbon.jks";
 
-    public TransactionException(String msg, Exception e) {
-        super(msg, e);
-    }
+    public static final String KEY_TYPE = "JKS";
+    public static final String KEY_ALIAS = "wso2carbon";
+    public static final String KEYSTORE_PASSWORD = "wso2carbon";
+    public static final String ENCRYPTION_ALGORITHM = "RSA";
 }
