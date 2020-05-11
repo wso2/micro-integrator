@@ -1,5 +1,5 @@
 /*
-Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 *
 * WSO2 Inc. licenses this file to you under the Apache License,
 * Version 2.0 (the "License"); you may not use this file except
@@ -16,10 +16,12 @@ Copyright (c) 2019, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 * under the License.
 */
 
-package org.wso2.micro.integrator.handlers;
+package org.wso2.micro.integrator.initializer.handler.transaction;
 
+import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.synapse.AbstractSynapseHandler;
 import org.apache.synapse.MessageContext;
+import org.apache.synapse.core.axis2.Axis2MessageContext;
 
 public class TransactionHandler extends AbstractSynapseHandler {
 
@@ -27,7 +29,13 @@ public class TransactionHandler extends AbstractSynapseHandler {
 
     @Override
     public boolean handleRequestInFlow(MessageContext messageContext) {
-        transactionCount += 1;
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        Object transactionProperty = axis2MessageContext.getProperty(BaseConstants.TRANSACTION);
+        if (!BaseConstants.TRANSACTION_COUNTED.equals(transactionProperty)) {
+            axis2MessageContext.setProperty(BaseConstants.TRANSACTION, BaseConstants.TRANSACTION_COUNTED);
+            transactionCount += 1;
+        }
         return true;
     }
 

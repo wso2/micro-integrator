@@ -19,6 +19,7 @@ package org.wso2.carbon.inbound.endpoint.protocol.jms;
 
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -317,6 +318,7 @@ public class JMSUtils {
                     map.put(headerName, headerValue);
                 }
             }
+            map.remove(BaseConstants.TRANSACTION);
 
         } catch (JMSException e) {
             log.error("Error while reading the Transport Headers from JMS Message", e);

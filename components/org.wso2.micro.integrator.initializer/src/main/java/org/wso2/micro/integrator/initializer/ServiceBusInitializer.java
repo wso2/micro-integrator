@@ -53,6 +53,8 @@ import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
 import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionHandler;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionHandlerComponent;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationServiceImpl;
@@ -62,6 +64,7 @@ import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServic
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServiceImpl;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
+import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
 
@@ -95,6 +98,8 @@ public class ServiceBusInitializer {
     private ServerManager serverManager;
 
     private TaskService taskService;
+
+    private static DataSourceService dataSourceService;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -165,6 +170,13 @@ public class ServiceBusInitializer {
 
                 synapseEnvironment.registerSynapseHandler(new SynapseExternalPropertyConfigurator());
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
+
+                // Register internal transaction synapse handler
+                boolean transactionPropertyEnabled = TransactionHandlerComponent.isTransactionPropertyEnabled();
+                if (transactionPropertyEnabled) {
+                    synapseEnvironment.registerSynapseHandler(new TransactionHandler());
+                    new TransactionHandlerComponent().start(dataSourceService);
+                }
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseEnvironmentService Registered");
                 }
@@ -521,5 +533,18 @@ public class ServiceBusInitializer {
 
     public void unsetConfigAdminService(ConfigurationAdmin configAdminService) {
         log.debug("Unsetting ConfigurationAdmin Service");
+    }
+
+    @Reference(name = "org.wso2.carbon.ndatasource",
+               service = DataSourceService.class,
+               cardinality = ReferenceCardinality.MANDATORY,
+               policy = ReferencePolicy.DYNAMIC,
+               unbind = "unsetDatasourceHandlerService")
+    protected void setDatasourceHandlerService(DataSourceService dataSourceService) {
+        ServiceBusInitializer.dataSourceService = dataSourceService;
+    }
+
+    protected void unsetDatasourceHandlerService(DataSourceService dataSourceService) {
+        ServiceBusInitializer.dataSourceService = null;
     }
 }

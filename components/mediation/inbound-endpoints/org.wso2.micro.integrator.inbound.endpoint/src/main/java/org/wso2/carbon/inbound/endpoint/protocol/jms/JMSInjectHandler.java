@@ -28,6 +28,7 @@ import org.apache.axis2.builder.SOAPBuilder;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.format.DataSourceMessageBuilder;
 import org.apache.axis2.transport.TransportUtils;
+import org.apache.axis2.transport.base.BaseConstants;
 import org.apache.commons.io.input.AutoCloseInputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -120,6 +121,8 @@ public class JMSInjectHandler {
             //setting transport headers
             axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS,
                                     JMSUtils.getTransportHeaders(msg, axis2MsgCtx));
+            // set transaction property
+            axis2MsgCtx.setProperty(BaseConstants.TRANSACTION, msg.getStringProperty(BaseConstants.TRANSACTION));
             // set the JMS Message ID as the Message ID of the MessageContext
             try {
                 msgCtx.setMessageID(msg.getJMSMessageID());
