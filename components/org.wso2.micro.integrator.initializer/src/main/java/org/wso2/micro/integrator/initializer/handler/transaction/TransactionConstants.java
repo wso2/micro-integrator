@@ -24,7 +24,7 @@ public class TransactionConstants {
     public static final String REPOSITORY_DIR = "repository";
     public static final String RESOURCES_DIR = "resources";
     public static final String SECURITY_DIR = "security";
-    public static final String KEYSTORE_FILE = "wso2carbon.jks";
+    public static final String TRUSTSTORE_FILE = "wso2carbon.jks";
 
     public static final String KEY_TYPE = "JKS";
     public static final String KEY_ALIAS = "wso2carbon";

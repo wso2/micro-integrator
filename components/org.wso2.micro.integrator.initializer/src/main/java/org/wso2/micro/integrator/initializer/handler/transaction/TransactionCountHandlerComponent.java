@@ -40,25 +40,24 @@ import javax.sql.DataSource;
 /**
  * This class represents the internal transaction count handler component.
  */
-public class TransactionHandlerComponent {
+public class TransactionCountHandlerComponent {
 
-    private static final Log LOG = LogFactory.getLog(TransactionHandlerComponent.class);
+    private static final Log LOG = LogFactory.getLog(TransactionCountHandlerComponent.class);
     private static final int DEFAULT_SCHEDULED_PERIOD_INTERVAL = 60;
-    private static final String SCHEDULED_PERIOD = "transactionCountScheduledPeriod";
 
-    private static final String TRANSACTION_DATA_SOURCE = "transactionDataSource";
-    private static final String TRANSACTION_CONFIG_SECTION = "transaction";
-    private static final String TRANSACTION_CONFIG_NAME = "data_source";
+    private static final String TRANSACTION_CONFIG_SECTION = "transaction_tracker";
+    private static final String TRANSACTION_CONFIG_DATA_SOURCE = "datasource";
+    private static final String TRANSACTION_CONFIG_SCHEDULED_PERIOD = "update_interval";
 
-    private ScheduledExecutorService trnCountWriterTaskScheduler;
+    private ScheduledExecutorService txCountWriterTaskScheduler;
 
-    public void start(DataSourceService dataSourceService) throws TransactionException, DataSourceException {
-        String nodeId = generateRandomId();
+    public void start(DataSourceService dataSourceService) throws TransactionCounterException, DataSourceException {
+        DataSource dataSource = getTransactionDataSource(dataSourceService);
 
         // initialize cipher for encryption needs.
         Cipher cipher = CryptoUtil.initializeCipher();
 
-        DataSource dataSource = getTransactionDataSource(dataSourceService);
+        String nodeId = generateRandomId();
 
         // initialize Transaction store.
         TransactionStore transactionStore = new TransactionStore(dataSource, nodeId, cipher);
@@ -68,24 +67,26 @@ public class TransactionHandlerComponent {
     }
 
     /**
-     * Get the time rate for running the transaction writer scheduled task.
+     * Get the transaction count update period for running the transaction writer scheduled task.
      *
-     * @return - scheduled period.
+     * @return - transaction count update period.
      */
     private int getTransactionCountScheduledPeriod() {
-        String scheduledPeriodStr = System.getProperty(SCHEDULED_PERIOD);
-        if (StringUtils.isEmpty(scheduledPeriodStr)) {
-            scheduledPeriodStr = System.getenv(SCHEDULED_PERIOD);
-            if (StringUtils.isEmpty(scheduledPeriodStr)) {
-                Object scheduledPeriodObject = ConfigParser.getParsedConfigs().get("" + "." + "");
-                if (null != scheduledPeriodObject) {
-                    scheduledPeriodStr = scheduledPeriodObject.toString();
-                }
+        Object scheduledPeriodObject = ConfigParser.getParsedConfigs().get(
+                TRANSACTION_CONFIG_SECTION + "." + TRANSACTION_CONFIG_SCHEDULED_PERIOD);
+        if (null != scheduledPeriodObject) {
+            String scheduledPeriodStr = scheduledPeriodObject.toString();
+            try {
+                return Integer.parseInt(scheduledPeriodStr);
+            } catch (NumberFormatException e) {
+                LOG.warn("Cannot parse the provided transaction count update period " + scheduledPeriodStr
+                                 + " as an Integer. Hence, proceeding with default value ("
+                                 + DEFAULT_SCHEDULED_PERIOD_INTERVAL + "s)");
+                return DEFAULT_SCHEDULED_PERIOD_INTERVAL;
             }
-        }
-        try {
-            return Integer.parseInt(scheduledPeriodStr);
-        } catch (NumberFormatException e) {
+        } else {
+            LOG.debug("Transaction count update period is set to default value (" + DEFAULT_SCHEDULED_PERIOD_INTERVAL
+                              + "s).");
             return DEFAULT_SCHEDULED_PERIOD_INTERVAL;
         }
     }
@@ -96,14 +97,14 @@ public class TransactionHandlerComponent {
      * @param transactionStore - transactionStore instance.
      */
     private void scheduleTransactionWriterTask(TransactionStore transactionStore) {
-        trnCountWriterTaskScheduler = Executors.newSingleThreadScheduledExecutor();
+        txCountWriterTaskScheduler = Executors.newSingleThreadScheduledExecutor();
         int scheduledPeriod = getTransactionCountScheduledPeriod();
 
-        trnCountWriterTaskScheduler.scheduleAtFixedRate(() -> {
+        txCountWriterTaskScheduler.scheduleAtFixedRate(() -> {
             try {
                 transactionStore.addTransaction();
-            } catch (TransactionException e) {
-                LOG.warn("Could not persist the transaction count: ", e);
+            } catch (TransactionCounterException e) {
+                LOG.debug("Could not persist the transaction count: ", e);
             }
         }, scheduledPeriod, scheduledPeriod, TimeUnit.SECONDS);
     }
@@ -112,8 +113,8 @@ public class TransactionHandlerComponent {
      * Stop the transactionWriterTask immediately.
      */
     private void stopTransactionWriterTask() {
-        if (trnCountWriterTaskScheduler != null) {
-            trnCountWriterTaskScheduler.shutdownNow();
+        if (txCountWriterTaskScheduler != null) {
+            txCountWriterTaskScheduler.shutdownNow();
         }
     }
 
@@ -126,16 +127,17 @@ public class TransactionHandlerComponent {
      *
      * @param dataSourceService dataSourceService instance.
      * @return - true if datasource defined.
-     * @throws DataSourceException  - when DataSource is not an RDBMS data source.
-     * @throws TransactionException - when no DataSource is available for transaction counting utility.
+     * @throws DataSourceException         - when DataSource is not an RDBMS data source.
+     * @throws TransactionCounterException - when no DataSource is available for transaction counting utility.
      */
     private DataSource getTransactionDataSource(DataSourceService dataSourceService)
-            throws DataSourceException, TransactionException {
+            throws DataSourceException, TransactionCounterException {
 
         String dataSourceId = getTransactionDatasourceId();
         CarbonDataSource dataSource = dataSourceService.getDataSource(dataSourceId);
         if (dataSource == null) {
-            throw new TransactionException("DataSource " + dataSourceId + " is not available for transaction.");
+            throw new DataSourceException(
+                    "DataSource " + dataSourceId + " is not configured properly.");
         }
         Object transactionDataSourceObject = dataSource.getDSObject();
         if (!(transactionDataSourceObject instanceof DataSource)) {
@@ -148,37 +150,28 @@ public class TransactionHandlerComponent {
      * Get the dataSource configured for transaction counting utility.
      *
      * @return - datasource id.
-     * @throws TransactionException - when a dataSource is not configured for transaction counting utility.
+     * @throws TransactionCounterException - when a dataSource is not configured for transaction counting utility.
      */
-    private String getTransactionDatasourceId() throws TransactionException {
-        String dataSourceId = System.getProperty(TRANSACTION_DATA_SOURCE);
-        if (StringUtils.isEmpty(dataSourceId)) {
-            dataSourceId = System.getenv(TRANSACTION_DATA_SOURCE);
-            if (StringUtils.isEmpty(dataSourceId)) {
-                Object dataSourceIdObject = ConfigParser.getParsedConfigs().get(
-                        TRANSACTION_CONFIG_SECTION + "." + TRANSACTION_CONFIG_NAME);
-                if (dataSourceIdObject != null) {
-                    dataSourceId = dataSourceIdObject.toString();
-                } else {
-                    LOG.warn("DataSource is not configured.");
-                    throw new TransactionException(
-                            "DataSource " + dataSourceId + " is not configured for transaction.");
-                }
-            }
+    private String getTransactionDatasourceId() throws TransactionCounterException {
+        Object dataSourceIdObject = ConfigParser.getParsedConfigs().get(
+                TRANSACTION_CONFIG_SECTION + "." + TRANSACTION_CONFIG_DATA_SOURCE);
+        if (dataSourceIdObject != null) {
+            return dataSourceIdObject.toString();
+        } else {
+            LOG.error("DataSource is not configured for transaction component.");
+            throw new TransactionCounterException("DataSource is not configured for transaction component.");
         }
-        return dataSourceId;
     }
 
     /**
-     * Check whether the transaction property is enabled or not.
-     * Default value is true.
+     * Check whether the transaction property is enabled or not. Default value is true.
      *
      * @return - true if transaction property is enabled, otherwise false.
      */
     public static boolean isTransactionPropertyEnabled() {
-        String scheduledPeriodStr = System.getProperty(BaseConstants.TRANSACTION);
+        String scheduledPeriodStr = System.getProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED);
         if (StringUtils.isEmpty(scheduledPeriodStr)) {
-            scheduledPeriodStr = System.getenv(BaseConstants.TRANSACTION);
+            scheduledPeriodStr = System.getenv(BaseConstants.INTERNAL_TRANSACTION_COUNTED);
         }
         return JavaUtils.isTrue(scheduledPeriodStr, true);
     }

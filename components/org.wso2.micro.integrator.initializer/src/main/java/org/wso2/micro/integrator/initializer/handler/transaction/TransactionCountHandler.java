@@ -23,7 +23,7 @@ import org.apache.synapse.AbstractSynapseHandler;
 import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 
-public class TransactionHandler extends AbstractSynapseHandler {
+public class TransactionCountHandler extends AbstractSynapseHandler {
 
     private static long transactionCount = 0;
 
@@ -31,9 +31,11 @@ public class TransactionHandler extends AbstractSynapseHandler {
     public boolean handleRequestInFlow(MessageContext messageContext) {
         org.apache.axis2.context.MessageContext axis2MessageContext =
                 ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        Object transactionProperty = axis2MessageContext.getProperty(BaseConstants.TRANSACTION);
-        if (!BaseConstants.TRANSACTION_COUNTED.equals(transactionProperty)) {
-            axis2MessageContext.setProperty(BaseConstants.TRANSACTION, BaseConstants.TRANSACTION_COUNTED);
+        Object transactionProperty = axis2MessageContext.getProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED);
+        // increment the transaction count by 1 if the INTERNAL_TRANSACTION_COUNTED message property has not been set
+        // or if the value of the property is set to false.
+        if (!(transactionProperty instanceof Boolean && (Boolean) transactionProperty)) {
+            axis2MessageContext.setProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED, true);
             transactionCount += 1;
         }
         return true;

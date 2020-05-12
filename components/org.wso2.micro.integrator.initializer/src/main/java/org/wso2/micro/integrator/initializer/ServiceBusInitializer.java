@@ -30,7 +30,6 @@ import org.apache.synapse.ServerConfigurationInformationFactory;
 import org.apache.synapse.ServerContextInformation;
 import org.apache.synapse.ServerManager;
 import org.apache.synapse.SynapseConstants;
-import org.apache.synapse.commons.util.FilePropertyLoader;
 import org.apache.synapse.core.SynapseEnvironment;
 import org.apache.synapse.debug.SynapseDebugInterface;
 import org.apache.synapse.debug.SynapseDebugManager;
@@ -44,18 +43,18 @@ import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.component.annotations.ReferenceCardinality;
 import org.osgi.service.component.annotations.ReferencePolicy;
+import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.carbon.securevault.SecretCallbackHandlerService;
 import org.wso2.micro.core.Constants;
 import org.wso2.micro.core.ServerShutdownHandler;
 import org.wso2.micro.integrator.core.services.Axis2ConfigurationContextService;
 import org.wso2.micro.integrator.core.services.CarbonServerConfigurationService;
 import org.wso2.micro.integrator.core.util.MicroIntegratorBaseUtils;
-import org.wso2.carbon.inbound.endpoint.EndpointListenerLoader;
 import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionException;
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionHandler;
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionHandlerComponent;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandler;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandlerComponent;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCounterException;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationServiceImpl;
@@ -65,7 +64,6 @@ import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServic
 import org.wso2.micro.integrator.initializer.services.SynapseRegistrationsServiceImpl;
 import org.wso2.micro.integrator.initializer.utils.ConfigurationHolder;
 import org.wso2.micro.integrator.initializer.utils.SynapseArtifactInitUtils;
-import org.wso2.micro.integrator.ndatasource.common.DataSourceException;
 import org.wso2.micro.integrator.ndatasource.core.DataSourceService;
 import org.wso2.micro.integrator.ntask.core.service.TaskService;
 import org.wso2.securevault.SecurityConstants;
@@ -102,9 +100,9 @@ public class ServiceBusInitializer {
 
     private TaskService taskService;
 
-    private static DataSourceService dataSourceService;
+    private DataSourceService dataSourceService;
 
-    private TransactionHandlerComponent transactionHandlerComponent;
+    private TransactionCountHandlerComponent transactionCountHandlerComponent;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -177,16 +175,20 @@ public class ServiceBusInitializer {
                 synapseEnvironment.registerSynapseHandler(new ProxyLogHandler());
 
                 // Register internal transaction synapse handler
-                boolean transactionPropertyEnabled = TransactionHandlerComponent.isTransactionPropertyEnabled();
+                boolean transactionPropertyEnabled = TransactionCountHandlerComponent.isTransactionPropertyEnabled();
                 if (transactionPropertyEnabled) {
-                    TransactionHandler transactionHandler = new TransactionHandler();
-                    synapseEnvironment.registerSynapseHandler(transactionHandler);
+                    TransactionCountHandler transactionCountHandler = new TransactionCountHandler();
+                    synapseEnvironment.registerSynapseHandler(transactionCountHandler);
                     try {
-                        transactionHandlerComponent = new TransactionHandlerComponent();
-                        transactionHandlerComponent.start(dataSourceService);
-                    } catch (DataSourceException | TransactionException e) {
-                        log.warn("Error in initializing Transaction Service component: " + e.getMessage(), e);
-                        synapseEnvironment.getSynapseHandlers().remove(transactionHandler);
+                        transactionCountHandlerComponent = new TransactionCountHandlerComponent();
+                        transactionCountHandlerComponent.start(dataSourceService);
+                    } catch (TransactionCounterException e) {
+                        log.error(
+                                "Error in initializing the Transaction Count Handler component. The number of "
+                                        + "transactions will not be recorded. You can ignore this error if you do not "
+                                        + "want the server to keep track of the number of transactions processed",
+                                e);
+                        synapseEnvironment.getSynapseHandlers().remove(transactionCountHandler);
                     }
                 }
                 if (log.isDebugEnabled()) {
@@ -218,8 +220,8 @@ public class ServiceBusInitializer {
 
     @Deactivate
     protected void deactivate(ComponentContext ctxt) {
-        if (Objects.nonNull(transactionHandlerComponent)) {
-            transactionHandlerComponent.cleanup();
+        if (Objects.nonNull(transactionCountHandlerComponent)) {
+            transactionCountHandlerComponent.cleanup();
         }
         serverManager.stop();
         serverManager.shutdown();
@@ -555,10 +557,10 @@ public class ServiceBusInitializer {
                policy = ReferencePolicy.DYNAMIC,
                unbind = "unsetDatasourceHandlerService")
     protected void setDatasourceHandlerService(DataSourceService dataSourceService) {
-        ServiceBusInitializer.dataSourceService = dataSourceService;
+        this.dataSourceService = dataSourceService;
     }
 
     protected void unsetDatasourceHandlerService(DataSourceService dataSourceService) {
-        ServiceBusInitializer.dataSourceService = null;
+        this.dataSourceService = null;
     }
 }

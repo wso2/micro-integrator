@@ -18,7 +18,7 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction.store;
 
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionException;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCounterException;
 import org.wso2.micro.integrator.initializer.handler.transaction.store.connector.RDBMSConnector;
 
 import javax.crypto.Cipher;
@@ -38,18 +38,18 @@ public class TransactionStore {
      * Constructor.
      *
      * @param dataSource - The datasource config to initiate the connection.
-     * @throws TransactionException - when something goes wrong while initializing RDBMS connection
+     * @throws TransactionCounterException - when something goes wrong while initializing RDBMS connection
      */
-    public TransactionStore(DataSource dataSource, String nodeId, Cipher cipher) throws TransactionException {
+    public TransactionStore(DataSource dataSource, String nodeId, Cipher cipher) throws TransactionCounterException {
         this.rdbmsConnector = new RDBMSConnector(dataSource, nodeId, cipher);
     }
 
     /**
      * Add transaction.
      *
-     * @throws TransactionException -
+     * @throws TransactionCounterException -
      */
-    public void addTransaction() throws TransactionException {
+    public void addTransaction() throws TransactionCounterException {
         this.rdbmsConnector.addTransaction();
     }
 }

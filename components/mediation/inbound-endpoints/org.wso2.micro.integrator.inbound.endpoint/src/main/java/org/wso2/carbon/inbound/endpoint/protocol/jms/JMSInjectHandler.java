@@ -122,7 +122,8 @@ public class JMSInjectHandler {
             axis2MsgCtx.setProperty(org.apache.axis2.context.MessageContext.TRANSPORT_HEADERS,
                                     JMSUtils.getTransportHeaders(msg, axis2MsgCtx));
             // set transaction property
-            axis2MsgCtx.setProperty(BaseConstants.TRANSACTION, msg.getStringProperty(BaseConstants.TRANSACTION));
+            axis2MsgCtx.setProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED,
+                                    msg.getBooleanProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED));
             // set the JMS Message ID as the Message ID of the MessageContext
             try {
                 msgCtx.setMessageID(msg.getJMSMessageID());

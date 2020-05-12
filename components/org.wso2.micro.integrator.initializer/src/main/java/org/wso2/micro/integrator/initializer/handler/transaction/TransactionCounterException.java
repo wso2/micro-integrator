@@ -18,13 +18,13 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction;
 
-public class TransactionException extends Exception {
+public class TransactionCounterException extends Exception {
 
-    TransactionException(String msg) {
+    TransactionCounterException(String msg) {
         super(msg);
     }
 
-    public TransactionException(String msg, Exception e) {
+    public TransactionCounterException(String msg, Exception e) {
         super(msg, e);
     }
 }
