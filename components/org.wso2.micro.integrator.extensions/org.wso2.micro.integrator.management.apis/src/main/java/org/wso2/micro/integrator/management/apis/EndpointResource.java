@@ -190,10 +190,10 @@ public class EndpointResource implements MiApiResource {
             JSONObject jsonResponse = new JSONObject();
             if (INACTIVE_STATUS.equalsIgnoreCase(status)) {
                 ep.getContext().switchOff();
-                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " : is switched Off");
+                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " is switched Off");
             } else if (ACTIVE_STATUS.equalsIgnoreCase(status)) {
                 ep.getContext().switchOn();
-                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " : is switched On");
+                jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, endpointName + " is switched On");
             } else {
                 LOG.warn("Specified Status: " + status + " is not valid");
                 jsonResponse.put(Constants.MESSAGE_JSON_ATTRIBUTE, "Provided state is not valid");
