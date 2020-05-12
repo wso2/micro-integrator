@@ -129,7 +129,7 @@ public class UserResource implements MiApiResource {
         String userName = Utils.getStringPropertyFromMessageContext(messageContext, USERNAME_PROPERTY);
         if (Objects.isNull(userName)) {
             LOG.warn("Deleting a user without authenticating/authorizing the request sender. Adding "
-                     + "authetication and authorization handlers is recommended.");
+                     + "authentication and authorization handlers is recommended.");
         } else {
             if (userName.equals(user)) {
                 throw new IOException("Attempt to delete the logged in user. Operation not allowed. Please login "
