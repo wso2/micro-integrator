@@ -34,6 +34,7 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class CoordinationDatabase extends ExecutionListenerExtension {
 
@@ -45,6 +46,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     private static String pwd;
     private static String userName;
     private String dbType;
+    private String dataSource;
 
     @Override
     public void initiate() throws AutomationFrameworkException {
@@ -100,6 +102,9 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             case "script-path":
                 scriptPath = value;
                 break;
+            case "data-source":
+                dataSource = value;
+                break;
             default:
                 logger.error("Unknown property : " + key);
                 break;
@@ -116,9 +121,9 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         try {
             Toml parseToml = new Toml().read(toml);
             String datasourceId = parseToml.getString("datasource[0].id");
-            if (!"WSO2_COORDINATION_DB".equals(datasourceId)) {
+            if (Objects.nonNull(dataSource) && !dataSource.equals(datasourceId)) {
                 throw new AutomationFrameworkException(
-                        "Coordination db is not defined in toml or not added as first datasource.");
+                        "Data source " + dataSource + " is not defined in toml or not added as first datasource.");
             }
             connectionUrl = parseToml.getString("datasource[0].url").replaceAll("amp;", "");
             userName = parseToml.getString("datasource[0].username");
