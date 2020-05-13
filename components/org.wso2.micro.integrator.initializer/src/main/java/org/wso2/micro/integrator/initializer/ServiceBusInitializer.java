@@ -54,7 +54,6 @@ import org.wso2.micro.integrator.initializer.handler.ProxyLogHandler;
 import org.wso2.micro.integrator.initializer.handler.SynapseExternalPropertyConfigurator;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandler;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandlerComponent;
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCounterException;
 import org.wso2.micro.integrator.initializer.persistence.MediationPersistenceManager;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationService;
 import org.wso2.micro.integrator.initializer.services.SynapseConfigurationServiceImpl;
@@ -177,19 +176,9 @@ public class ServiceBusInitializer {
                 // Register internal transaction synapse handler
                 boolean transactionPropertyEnabled = TransactionCountHandlerComponent.isTransactionPropertyEnabled();
                 if (transactionPropertyEnabled) {
-                    TransactionCountHandler transactionCountHandler = new TransactionCountHandler();
-                    synapseEnvironment.registerSynapseHandler(transactionCountHandler);
-                    try {
-                        transactionCountHandlerComponent = new TransactionCountHandlerComponent();
-                        transactionCountHandlerComponent.start(dataSourceService);
-                    } catch (TransactionCounterException e) {
-                        log.error(
-                                "Error in initializing the Transaction Count Handler component. The number of "
-                                        + "transactions will not be recorded. You can ignore this error if you do not "
-                                        + "want the server to keep track of the number of transactions processed",
-                                e);
-                        synapseEnvironment.getSynapseHandlers().remove(transactionCountHandler);
-                    }
+                    transactionCountHandlerComponent = new TransactionCountHandlerComponent();
+                    transactionCountHandlerComponent.start(dataSourceService);
+                    synapseEnvironment.registerSynapseHandler(new TransactionCountHandler());
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseEnvironmentService Registered");

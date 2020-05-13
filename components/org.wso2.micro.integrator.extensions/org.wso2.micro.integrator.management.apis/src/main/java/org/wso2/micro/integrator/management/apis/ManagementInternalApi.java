@@ -50,6 +50,7 @@ import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TASKS;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_TEMPLATES;
 import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_USERS;
 import static org.wso2.micro.integrator.management.apis.Constants.REST_API_CONTEXT;
+import static org.wso2.micro.integrator.management.apis.Constants.PREFIX_REQ_COUNT;
 
 public class ManagementInternalApi implements InternalAPI {
 
@@ -84,6 +85,7 @@ public class ManagementInternalApi implements InternalAPI {
         resourcesList.add(new ApiResourceAdapter(PREFIX_LOGOUT, new LogoutResource()));
         resourcesList.add(new ApiResourceAdapter(PREFIX_SERVER_DATA, new MetaDataResource()));
         resourcesList.add(new LogFilesResource(PREFIX_LOG_FILES));
+        resourcesList.add(new ApiResourceAdapter(PREFIX_REQ_COUNT, new RequestCountResource()));
 
         resources = new APIResource[resourcesList.size()];
         resources = resourcesList.toArray(resources);

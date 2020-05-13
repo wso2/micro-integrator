@@ -22,4 +22,13 @@ package org.wso2.micro.integrator.initializer.handler.transaction.store.connecto
  * This class contains all the data base queries related to transaction counting.
  */
 public class TransactionQueryHelper {
+
+    public final static String INSERT_RAW = "INSERT INTO CURRENT_STATS (TIME_STAMP, NODE_ID, TRANSACTION_COUNT," +
+            "TRANSACTION_COUNT_ENCRYPTED) VALUES (?,?,?,?)";
+    public final static String GET_TRAN_COUNT = "SELECT TRANSACTION_COUNT FROM CURRENT_STATS WHERE TIME_STAMP=?" +
+            " AND NODE_ID=?";
+    public final static String UPDATE_TRAN_COUNT = "UPDATE CURRENT_STATS SET TRANSACTION_COUNT=?, " +
+            "TRANSACTION_COUNT_ENCRYPTED=? WHERE NODE_ID=? AND TIME_STAMP=?";
+    public final static String TRAN_COUNT_OF_MONTH =
+            "SELECT SUM(TRANSACTION_COUNT) FROM CURRENT_STATS WHERE TIME_STAMP =?";
 }

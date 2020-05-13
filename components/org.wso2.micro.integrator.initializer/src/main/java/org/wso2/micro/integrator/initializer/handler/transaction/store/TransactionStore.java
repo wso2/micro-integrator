@@ -18,9 +18,12 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction.store;
 
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCounterException;
+import org.wso2.micro.integrator.initializer.handler.transaction.exception.TransactionCounterException;
+import org.wso2.micro.integrator.initializer.handler.transaction.exception.TransactionCounterInitializationException;
 import org.wso2.micro.integrator.initializer.handler.transaction.store.connector.RDBMSConnector;
 
+import java.sql.SQLException;
+import java.util.UUID;
 import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
@@ -38,9 +41,11 @@ public class TransactionStore {
      * Constructor.
      *
      * @param dataSource - The datasource config to initiate the connection.
-     * @throws TransactionCounterException - when something goes wrong while initializing RDBMS connection
+     * @throws TransactionCounterInitializationException - when something goes wrong while initializing RDBMS
+     *                                                   connection
      */
-    public TransactionStore(DataSource dataSource, String nodeId, Cipher cipher) throws TransactionCounterException {
+    public TransactionStore(DataSource dataSource, String nodeId, Cipher cipher)
+            throws TransactionCounterInitializationException {
         this.rdbmsConnector = new RDBMSConnector(dataSource, nodeId, cipher);
     }
 
@@ -50,6 +55,27 @@ public class TransactionStore {
      * @throws TransactionCounterException -
      */
     public void addTransaction() throws TransactionCounterException {
-        this.rdbmsConnector.addTransaction();
+        try {
+            this.rdbmsConnector.addTransaction();
+        } catch (SQLException e) {
+            throw new TransactionCounterException(
+                    "Error occurred while adding transaction count to the database", e);
+        }
+    }
+
+    public long getTransactionCountOfMonth(int year, int monthNumber) throws TransactionCounterException {
+        try {
+            return this.rdbmsConnector.getTransactionCountOfMonth(year, monthNumber);
+        } catch (SQLException e) {
+            throw new TransactionCounterException(
+                    "Error occurred while getting the transaction count from the database", e);
+        }
+    }
+
+    /**
+     * Set a new node id to the server.
+     */
+    public void setNewNodeId() {
+        this.rdbmsConnector.setNewNodeId(UUID.randomUUID().toString());
     }
 }

@@ -18,12 +18,14 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction;
 
+import org.wso2.carbon.utils.ServerConstants;
+
+import java.io.File;
+
 public class TransactionConstants {
 
-    public static final String CARBON_HOME = "carbon.home";
-    public static final String REPOSITORY_DIR = "repository";
-    public static final String RESOURCES_DIR = "resources";
-    public static final String SECURITY_DIR = "security";
+    public static final String DEFAULT_SECURITY_RESOURCE_DIR_PATH = System.getProperty(ServerConstants.CARBON_HOME)
+            + File.separator + "repository" + File.separator + "resources" + File.separator + "security";
     public static final String TRUSTSTORE_FILE = "wso2carbon.jks";
 
     public static final String KEY_TYPE = "JKS";

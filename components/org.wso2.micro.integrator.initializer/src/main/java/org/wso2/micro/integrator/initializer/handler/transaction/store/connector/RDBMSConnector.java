@@ -20,16 +20,19 @@ package org.wso2.micro.integrator.initializer.handler.transaction.store.connecto
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCounterException;
+import org.wso2.micro.integrator.initializer.handler.transaction.TransactionCountHandler;
+import org.wso2.micro.integrator.initializer.handler.transaction.exception.TransactionCounterException;
+import org.wso2.micro.integrator.initializer.handler.transaction.exception.TransactionCounterInitializationException;
+import org.wso2.micro.integrator.initializer.handler.transaction.security.CryptoUtil;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import javax.crypto.Cipher;
 import javax.sql.DataSource;
 
@@ -47,9 +50,11 @@ public class RDBMSConnector {
      * Constructor.
      *
      * @param dataSource - The datasource config to initiate the connection.
-     * @throws TransactionCounterException - when something goes wrong while initializing RDBMS connection.
+     * @throws TransactionCounterInitializationException - when something goes wrong while initializing RDBMS
+     *                                                   connection.
      */
-    public RDBMSConnector(DataSource dataSource, String nodeId, Cipher cipher) throws TransactionCounterException {
+    public RDBMSConnector(DataSource dataSource, String nodeId, Cipher cipher)
+            throws TransactionCounterInitializationException {
         this.nodeId = nodeId;
         this.cipher = cipher;
         this.dataSource = dataSource;
@@ -60,7 +65,7 @@ public class RDBMSConnector {
                 LOG.debug("Successfully connected to : " + databaseType);
             }
         } catch (SQLException ex) {
-            throw new TransactionCounterException("Error while initializing RDBMS connection.", ex);
+            throw new TransactionCounterInitializationException("Error while initializing RDBMS connection.", ex);
         }
     }
 
@@ -78,35 +83,112 @@ public class RDBMSConnector {
     }
 
     /**
-     * Add transaction.
-     *
-     * @throws TransactionCounterException -
+     * Add transaction count to the database.
      */
-    public void addTransaction() throws TransactionCounterException {
-
+    public void addTransaction() throws SQLException {
+        // if raw exists - update else and a new raw.
+        if (checkDataExists()) {
+            updateStats();
+        } else {
+            addNewRow();
+        }
     }
 
-    public int readTransactionCount() {
-        return 0;
+    /**
+     * Get transaction count of a given year and month.
+     *
+     * @param year        Year.
+     * @param monthNumber Month.
+     * @return Aggregated transaction count if exists. Else (-1)
+     * @throws SQLException Error occurred while fetching data from the database.
+     */
+    public long getTransactionCountOfMonth(int year, int monthNumber) throws SQLException {
+
+        String dateString = year + "-" + monthNumber + "-01";
+        try (Connection dbConnection = getConnection();
+             PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.TRAN_COUNT_OF_MONTH)) {
+            prepStmt.setString(1, dateString);
+            try (ResultSet rs = prepStmt.executeQuery()) {
+                if (rs.next()) {
+                    Object count = rs.getObject(1);
+                    if (count != null) {
+                        return Long.parseLong(count.toString());
+                    } else {
+                        return -1L;
+                    }
+                }
+            }
+        }
+        return -1L;
     }
 
-    public long getCurrentTransactionCount() {
-        // year
-        // month
-        // nodeId
-        // decrypt if exists
-        // return 0 otherwise
-        return 0;
+    // Add new entry to the transaction stat table
+    private void addNewRow() throws SQLException {
+        long transactionCount = TransactionCountHandler.getTransactionCount();
+        String encryptedCount;
+        try {
+            encryptedCount = CryptoUtil.doEncryption(cipher, Long.toString(transactionCount));
+        } catch (TransactionCounterException e) {
+            // not adding to the database when encryption error occurs.
+            LOG.error("Error occurred while encrypting the transaction count", e);
+            return;
+        }
+
+        try (Connection dbConnection = getConnection();
+             PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.INSERT_RAW)) {
+            prepStmt.setString(1, getCurrentMonthAndYear());
+            prepStmt.setString(2, nodeId);
+            prepStmt.setLong(3, transactionCount);
+            prepStmt.setString(4, encryptedCount);
+            prepStmt.executeUpdate();
+        }
     }
 
-    private Map<String, Integer> getMonthAndYear() {
+    // check a raw exists in the table for this node, for this month.
+    private boolean checkDataExists() throws SQLException {
+        try (Connection dbConnection = getConnection();
+             PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.GET_TRAN_COUNT)) {
+            prepStmt.setString(1, getCurrentMonthAndYear());
+            prepStmt.setString(2, nodeId);
+            try (ResultSet rs = prepStmt.executeQuery()) {
+                return rs.next();
+            }
+        }
+    }
+
+    // update the transaction count of this node for this month.
+    private void updateStats() throws SQLException {
+
+        long transactionCount = TransactionCountHandler.getTransactionCount();
+        String encryptedCount;
+        try {
+            encryptedCount = CryptoUtil.doEncryption(cipher, Long.toString(transactionCount));
+        } catch (TransactionCounterException e) {
+            // not adding to the database when encryption error occurs.
+            LOG.error("Error occurred while encrypting the transaction count", e);
+            return;
+        }
+        try (Connection dbConnection = getConnection();
+             PreparedStatement prepStmt = dbConnection.prepareStatement(TransactionQueryHelper.UPDATE_TRAN_COUNT)) {
+            prepStmt.setString(4, getCurrentMonthAndYear());
+            prepStmt.setString(3, nodeId);
+            prepStmt.setLong(1, transactionCount);
+            prepStmt.setString(2, encryptedCount);
+            prepStmt.executeUpdate();
+        }
+    }
+
+    // get current month and year in the format yyyy-mm-01
+    private String getCurrentMonthAndYear() {
         Date date = new Date();
         LocalDate localDate = date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        return localDate.getYear() + "-" + localDate.getMonthValue() + "-01";
+    }
 
-        Map<String, Integer> monthAndYear = new HashMap<>();
-        monthAndYear.put("month", localDate.getMonthValue());
-        monthAndYear.put("year", localDate.getYear());
-
-        return monthAndYear;
+    /**
+     * Set a new node id to the server.
+     */
+    public void setNewNodeId(String newNodeId) {
+        this.nodeId = newNodeId;
     }
 }
