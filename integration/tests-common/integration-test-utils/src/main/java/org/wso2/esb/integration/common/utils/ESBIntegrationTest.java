@@ -106,9 +106,9 @@ public abstract class ESBIntegrationTest {
     private List<String> priorityExecutorList = null;
     private List<String[]> scheduledTaskList = null;
     private List<String> inboundEndpointList = null;
-    private static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
-    private String hostName = null;
-    private int portOffset;
+    protected static final int DEFAULT_INTERNAL_API_HTTPS_PORT = 9154;
+    protected String hostName = null;
+    protected int portOffset;
     protected final int DEFAULT_TIMEOUT = 60;
     protected boolean isManagementApiAvailable = false;
 
@@ -137,6 +137,12 @@ public abstract class ESBIntegrationTest {
         contextUrls = context.getContextUrls();
         esbUtils = new ESBTestCaseUtils();
         hostName = UrlGenerationUtil.getManagerHost(context.getInstance());
+        portOffset = Integer.parseInt(System.getProperty("port.offset"));
+        isManagementApiAvailable = false;
+    }
+
+    protected void initLight() {
+        hostName = "localhost";
         portOffset = Integer.parseInt(System.getProperty("port.offset"));
         isManagementApiAvailable = false;
     }
