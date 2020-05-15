@@ -1213,6 +1213,17 @@
                 <version>${powermock.version}</version>
                 <scope>test</scope>
             </dependency>
+            <!--Prometheus Dependencies-->
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient</artifactId>
+                <version>${prometheus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.prometheus</groupId>
+                <artifactId>simpleclient_common</artifactId>
+                <version>${prometheus.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -1621,6 +1632,8 @@
         <jackson.dataformat.yaml.version>2.9.9</jackson.dataformat.yaml.version>
         <javax.validation.version>1.1.0.Final</javax.validation.version>
         <snakeyaml.version>1.25</snakeyaml.version>
+        <!-- Prometheus Library versions-->
+        <prometheus.version>0.8.1</prometheus.version>
     </properties>
 
     <repositories>

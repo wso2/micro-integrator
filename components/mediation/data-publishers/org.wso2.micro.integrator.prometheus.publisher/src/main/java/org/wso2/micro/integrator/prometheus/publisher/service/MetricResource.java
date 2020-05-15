@@ -17,6 +17,7 @@
  */
 package org.wso2.micro.integrator.prometheus.publisher.service;
 
+import io.prometheus.client.CollectorRegistry;
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axis2.Constants;
@@ -27,7 +28,10 @@ import org.apache.synapse.MessageContext;
 import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.carbon.inbound.endpoint.internal.http.api.APIResource;
 import org.wso2.micro.integrator.prometheus.publisher.publisher.MetricPublisher;
+import org.wso2.micro.integrator.prometheus.publisher.util.MetricFormatter;
 
+import java.io.IOException;
+import java.net.URLDecoder;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -39,12 +43,15 @@ public class MetricResource extends APIResource {
 
     private static Log log = LogFactory.getLog(MetricResource.class);
     private MetricPublisher metricPublisher;
+    private MetricFormatter metricFormatter;
     public static final String NO_ENTITY_BODY = "NO_ENTITY_BODY";
+    private CollectorRegistry registry = CollectorRegistry.defaultRegistry;
 
     public MetricResource(String urlTemplate) {
 
         super(urlTemplate);
         metricPublisher = new MetricPublisher();
+        metricFormatter = new MetricFormatter();
     }
 
     @Override
@@ -60,6 +67,7 @@ public class MetricResource extends APIResource {
 
         buildMessage(synCtx);
         synCtx.setProperty("Success", true);
+        String query = ((Axis2MessageContext) synCtx).getAxis2MessageContext().getOptions().getTo().getAddress();
 
         OMElement textRootElem = OMAbstractFactory.getOMFactory().createOMElement(BaseConstants.DEFAULT_TEXT_WRAPPER);
 
@@ -69,7 +77,13 @@ public class MetricResource extends APIResource {
 
         if (metrics != null && !metrics.isEmpty()) {
             log.debug("Retrieving metric data successful");
-            textRootElem.setText(String.join("", metrics));
+            try {
+                StringBuilder sbr = metricFormatter.formatMetrics(registry.
+                                                                     filteredMetricFamilySamples(parseQuery(query)));
+                textRootElem.setText(sbr.toString());
+            } catch (IOException e) {
+                log.error("Error in parsing metrics.", e);
+            }
         } else {
             textRootElem.setText("");
             log.info("No metrics retrieved to be published to Prometheus");
@@ -85,4 +99,18 @@ public class MetricResource extends APIResource {
         return true;
     }
 
+    private Set<String> parseQuery(String query) throws IOException {
+
+        Set<String> names = new HashSet<>();
+        if (query != null) {
+            String[] pairs = query.split("&");
+            for (String pair : pairs) {
+                int idx = pair.indexOf("=");
+                if (idx != -1 && URLDecoder.decode(pair.substring(0, idx), "UTF-8").equals("name[]")) {
+                    names.add(URLDecoder.decode(pair.substring(idx + 1), "UTF-8"));
+                }
+            }
+        }
+        return names;
+    }
 }
