@@ -127,6 +127,9 @@
                                 <featureArtifactDef>
                                     org.wso2.ei:org.wso2.micro.integrator.prometheus.publisher.feature:${project.version}
                                 </featureArtifactDef>
+                                <featureArtifactDef>
+                                    org.wso2.ei:org.wso2.micro.integrator.prometheus.observability.feature:${project.version}
+                                </featureArtifactDef>
 
                                 <!--2 Carbon-Kernel-->
                                 <featureArtifactDef>
