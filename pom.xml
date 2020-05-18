@@ -1394,6 +1394,7 @@
         <joda-time.version>2.9.4.wso2v1</joda-time.version>
         <libthrift.version>0.8.0.wso2v1</libthrift.version>
         <slf4j.wso2.version>1.5.10.wso2v1</slf4j.wso2.version>
+        <axis2.mar.maven.plugin>1.5.2</axis2.mar.maven.plugin>
 
         <!--PAX Logging related dependency versions-->
         <pax.logging.api.version>1.11.0</pax.logging.api.version>
@@ -1822,6 +1823,11 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-dependency-plugin</artifactId>
                     <version>${maven.dependency.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-mar-maven-plugin</artifactId>
+                    <version>${axis2.mar.maven.plugin}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
