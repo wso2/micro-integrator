@@ -29,12 +29,12 @@ import java.util.Enumeration;
  */
 public class MetricFormatter {
 
-  /**
+    /**
      * Return the type of metric
      *
      * @param type Metric Prometheus type
-   */
- private String typeString(Type type) {
+     */
+    private String typeString(Type type) {
 
         switch (type) {
             case GAUGE:
@@ -46,7 +46,7 @@ public class MetricFormatter {
             case HISTOGRAM:
                 return "histogram";
             default:
-                return "undefined";
+                return "untyped";
         }
     }
 

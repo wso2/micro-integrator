@@ -100,9 +100,13 @@ public class MetricResource extends APIResource {
     }
 
     /**
-     * We get the endpoint to be scraped split the quer params and the add them to a Set
+     * Allows you to add "?name[]=metric_name_to_filter_by" to the end of the /metrics URL,
+     * in case you don't want the client library to return all metric names.
+     * (This is the implementation of the parseQuery() method of the Prometheus HTTP Server
+     * https://github.com/prometheus/client_java/blob/master/simpleclient_httpserver/src/main/java/io/prometheus/
+     * client/exporter/HTTPServer .java#L110).
      *
-     * @param parameter the list of Endpoints to be queried
+     * @param parameter the list of Endpoint URL to be queried
      */
     private Set<String> parseQuery(String parameter) throws IOException {
 
