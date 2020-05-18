@@ -20,6 +20,8 @@ package org.wso2.esb.integration.common.utils;
 
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.awaitility.Awaitility;
 
 import java.io.File;
@@ -30,6 +32,8 @@ import java.util.concurrent.TimeUnit;
  * The class which facilitates tailing the logs from wso2carbon.log file.
  */
 public class CarbonLogReader {
+
+    private static final Log LOG = LogFactory.getLog(CarbonLogReader.class);
 
     private CarbonLogTailer carbonLogTailer;
     private Tailer tailer;
@@ -178,6 +182,8 @@ public class CarbonLogReader {
             }
             TimeUnit.SECONDS.sleep(1);
         }
+        LOG.warn("Found " + this.getNumberOfOccurencesForLog(expected) + " occurrences while expecting " + numberofOccurrences
+                + "\n Current carbon log starts here == \n" + this.getLogs() + "\n Current carbon log ends here ==");
         return false;
     }
 

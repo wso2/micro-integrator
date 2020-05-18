@@ -93,7 +93,6 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
 
     @Test(groups = "wso2.esb", description = "Transforming a Message Using a Nested ForEach Construct with Iterate/Aggregate Sending Payload to backend")
     public void testNestedForEachMediatorWithIterate() throws Exception {
-        carbonLogReader.clearLogs();
         String response = client.send(getProxyServiceURLHttp("nested_foreach_iterate"), createMultipleSymbolPayLoad(10), "urn:getQuote");
         Assert.assertNotNull(response);
 
@@ -111,9 +110,11 @@ public class NestedForEachTestCase extends ESBIntegrationTest {
             }
         }
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = outer", DEFAULT_TIMEOUT, 10),
-                "Count of messages entered outer ForEach scope is incorrect");
+                "Count of messages entered outer ForEach scope is incorrect. " +
+                        "Found " + carbonLogReader.getNumberOfOccurencesForLog("foreach = outer") + " occurrences");
         Assert.assertTrue(carbonLogReader.checkForLog("foreach = inner", DEFAULT_TIMEOUT, 10),
-                "Count of messages entered inner ForEach scope is incorrect");
+                "Count of messages entered inner ForEach scope is incorrect. " +
+                        "Found " + carbonLogReader.getNumberOfOccurencesForLog("foreach = inner") + " occurrences");
     }
 
     @AfterClass(alwaysRun = true)
