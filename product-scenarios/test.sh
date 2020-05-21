@@ -32,7 +32,7 @@ function usage()
 function runTestProfile()
 {
     mvn clean install -Dmaven.repo.local="${INPUT_DIR}/m2" -Dinvocation.uuid="$UUID" -Ddata.bucket.location="${INPUT_DIR}" \
-    -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=info -fae -B -f ./pom.xml \
+    -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -fae -B -f ./pom.xml \
      -P $1
 }
 
@@ -102,7 +102,7 @@ do
   if [ "$key" = "ProductVersion" ]; then
     productVersion=${tokens[1]}
     case ${productVersion} in
-        ESB-5.0.0|EI-6.0.0|EI-6.1.0|EI-6.1.1|EI-6.2.0|EI-6.3.0|EI-6.4.0|EI-6.5.0|EI-6.6.0|MI-1.2.0)
+        MI-1.2.0)
             echo "Executing tests for the product version: $productVersion"
             runTestProfile profile_general ;;
         *)
