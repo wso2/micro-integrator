@@ -72,7 +72,7 @@ public class CarbonLogReader {
      */
     public void start() {
 
-        tailer = new Tailer(carbonLogFile, carbonLogTailer, 1, startReadingFromEndOfFile);
+        tailer = new Tailer(carbonLogFile, carbonLogTailer, 1000, startReadingFromEndOfFile);
         Thread thread = new Thread(tailer);
         thread.setDaemon(true);
         thread.start();
