@@ -319,6 +319,11 @@
             <outputDirectory>wso2mi-${pom.version}/bin</outputDirectory>
             <fileMode>744</fileMode>
         </fileSet>
+        <fileSet>
+            <directory>src/resources/security</directory>
+            <outputDirectory>wso2mi-${pom.version}/repository/resources/security</outputDirectory>
+            <fileMode>444</fileMode>
+        </fileSet>
     </fileSets>
 
     <files>

@@ -18,23 +18,23 @@ Copyright (c) 2020, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
 
 package org.wso2.micro.integrator.initializer.handler.transaction.security;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.wso2.micro.integrator.initializer.handler.transaction.TransactionConstants;
 import org.wso2.micro.integrator.initializer.handler.transaction.exception.TransactionCounterException;
 import org.wso2.micro.integrator.initializer.handler.transaction.exception.TransactionCounterInitializationException;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
+import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
+import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
+import java.security.PublicKey;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.X509EncodedKeySpec;
+import java.util.Base64;
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -59,41 +59,18 @@ public class CryptoUtil {
      */
     public static Cipher initializeCipher() throws TransactionCounterInitializationException {
         Cipher cipher;
-        KeyStore primaryKeyStore = getKeyStore(getAbsolutePathToKeyStoreLocation(),
-                                               TransactionConstants.KEYSTORE_PASSWORD,
-                                               TransactionConstants.KEY_TYPE);
         try {
-            Certificate certs = primaryKeyStore.getCertificate(TransactionConstants.KEY_ALIAS);
+            PublicKey publicKey = loadPublicKey();
             cipher = Cipher.getInstance(TransactionConstants.ENCRYPTION_ALGORITHM);
-            cipher.init(Cipher.ENCRYPT_MODE, certs);
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey);
             LOG.debug(
                     "Successfully initialized the Cipher to be used in the transaction count encryption process in "
                             + "the Transaction Count Handler component.");
-        } catch (KeyStoreException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException e) {
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidKeySpecException
+                | IOException e) {
             throw new TransactionCounterInitializationException("Error initializing Cipher ", e);
         }
         return cipher;
-    }
-
-    /**
-     * Get the keyStore located in the given location.
-     *
-     * @param location      location of the keyStore.
-     * @param storePassword password of the keyStore.
-     * @param storeType     type of the KeyStore.
-     * @return - KeyStore.
-     * @throws TransactionCounterInitializationException - when something goes wrong while loading the KeyStore for the
-     *                                                   given location.
-     */
-    private static KeyStore getKeyStore(String location, String storePassword, String storeType)
-            throws TransactionCounterInitializationException {
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(location));) {
-            KeyStore keyStore = KeyStore.getInstance(storeType);
-            keyStore.load(bufferedInputStream, storePassword.toCharArray());
-            return keyStore;
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException e) {
-            throw new TransactionCounterInitializationException("Error loading keyStore from ' " + location + " ' ", e);
-        }
     }
 
     /**
@@ -107,7 +84,7 @@ public class CryptoUtil {
     public static String doEncryption(Cipher cipher, String plainTextValue) throws TransactionCounterException {
         String encodedValue;
         try {
-            byte[] encryptedPassword = cipher.doFinal(plainTextValue.getBytes());
+            byte[] encryptedPassword = cipher.doFinal(plainTextValue.getBytes(StandardCharsets.UTF_8));
             encodedValue = DatatypeConverter.printBase64Binary(encryptedPassword);
         } catch (BadPaddingException | IllegalBlockSizeException e) {
             throw new TransactionCounterException("Error encrypting transaction count ", e);
@@ -115,9 +92,20 @@ public class CryptoUtil {
         return encodedValue;
     }
 
-    private static String getAbsolutePathToKeyStoreLocation() {
-        Path keyStoreLocation = Paths.get(TransactionConstants.DEFAULT_SECURITY_RESOURCE_DIR_PATH,
-                                          TransactionConstants.TRUSTSTORE_FILE);
-        return keyStoreLocation.toString();
+    private static PublicKey loadPublicKey() throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+
+        String publicKeyPEM = FileUtils.readFileToString(new File(TransactionConstants.PUBLIC_KEY),
+                                                         StandardCharsets.UTF_8);
+        // strip of header, footer, newlines, whitespaces.
+        publicKeyPEM = publicKeyPEM
+                .replace("-----BEGIN PUBLIC KEY-----", "")
+                .replace("-----END PUBLIC KEY-----", "")
+                .replaceAll("\\s", "");
+
+        // decode to get the binary DER representation.
+        byte[] publicKeyDER = Base64.getDecoder().decode(publicKeyPEM);
+
+        KeyFactory keyFactory = KeyFactory.getInstance(TransactionConstants.ENCRYPTION_ALGORITHM);
+        return keyFactory.generatePublic(new X509EncodedKeySpec(publicKeyDER));
     }
 }
