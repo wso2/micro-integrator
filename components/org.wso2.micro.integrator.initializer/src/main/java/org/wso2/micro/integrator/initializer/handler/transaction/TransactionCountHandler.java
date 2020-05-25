@@ -27,24 +27,27 @@ import org.apache.synapse.core.axis2.Axis2MessageContext;
 import org.wso2.micro.integrator.initializer.handler.DataHolder;
 import org.wso2.micro.integrator.initializer.handler.transaction.store.TransactionStore;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.RejectedExecutionException;
+
 public class TransactionCountHandler extends AbstractSynapseHandler {
 
     private static final Log LOG = LogFactory.getLog(TransactionCountHandler.class);
-    private static int transactionCount = 0;
+    private static final double MAX_TRANSACTION_COUNT = Integer.MAX_VALUE * 0.9;
+    private static volatile int transactionCount = 0;
+    private ExecutorService transactionCountExecutor;
+    private final Object lock = new Object();
+
+    public TransactionCountHandler(ExecutorService executor) {
+        this.transactionCountExecutor = executor;
+    }
 
     @Override
     public boolean handleRequestInFlow(MessageContext messageContext) {
-        org.apache.axis2.context.MessageContext axis2MessageContext =
-                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
-        Object transactionProperty = axis2MessageContext.getProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED);
-        // increment the transaction count by 1 if the INTERNAL_TRANSACTION_COUNTED message property has not been set
-        // or if the value of the property is set to false.
-        if (!(transactionProperty instanceof Boolean && (Boolean) transactionProperty)) {
-            axis2MessageContext.setProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED, true);
-            // commit the current transaction count to database and set the transaction count to zero if it has
-            // reached to Interger.MAX_VALUE
-            commitAndResetTransactionCountIfReachedToMaxIntegerValue();
-            transactionCount += 1;
+        try {
+            transactionCountExecutor.execute(() -> handleTransactionCount(messageContext));
+        } catch (RejectedExecutionException e) {
+            LOG.error("Transaction could not be counted.", e);
         }
         return true;
     }
@@ -69,28 +72,56 @@ public class TransactionCountHandler extends AbstractSynapseHandler {
     }
 
     /**
-     * If the current transaction count has reached the Max Integer value, commit the current transaction to the
-     * database and reset the transaction count to zero.
+     * Increment the transaction count by 1 if the INTERNAL_TRANSACTION_COUNTED message property is not set to true.
+     * Commit the current transaction count to database and set the transaction count to zero if it has exceeded the
+     * Integer.MAX_VALUE
+     */
+    private void handleTransactionCount(MessageContext messageContext) {
+        org.apache.axis2.context.MessageContext axis2MessageContext =
+                ((Axis2MessageContext) messageContext).getAxis2MessageContext();
+        Object transactionProperty = axis2MessageContext.getProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED);
+        // increment the transaction count by 1 if the INTERNAL_TRANSACTION_COUNTED message property has not been set
+        // or if the value of the property is set to false.
+        if (!(transactionProperty instanceof Boolean && (Boolean) transactionProperty)) {
+            axis2MessageContext.setProperty(BaseConstants.INTERNAL_TRANSACTION_COUNTED, true);
+            // commit the current transaction count to database and set the transaction count to zero if it has
+            // reached to Integer.MAX_VALUE
+            synchronized (lock) {
+                commitAndResetTransactionCountIfReachedToMaxIntegerValue();
+                transactionCount += 1;
+            }
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Transaction " + axis2MessageContext.getLogCorrelationID() + " is counted.");
+            }
+        } else {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("Skipped counting the transaction " + axis2MessageContext.getLogCorrelationID()
+                                  + " since it has been counted before.");
+            }
+        }
+    }
+
+    /**
+     * If the current transaction count has reached or exceeded the Max_Integer_value * 0.9, commit the current
+     * transaction to the database, set a new node id, and reset the transaction count to zero.
      */
     private void commitAndResetTransactionCountIfReachedToMaxIntegerValue() {
-        if (transactionCount == Integer.MAX_VALUE) {
+        if (transactionCount >= MAX_TRANSACTION_COUNT) {
             DataHolder dataHolder = DataHolder.getInstance();
             TransactionStore transactionStore = dataHolder.getTransactionStore();
             try {
                 transactionStore.addTransaction();
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(
-                            "Transaction count reached to max Integer value. Hence, adding the current transaction "
-                                    + "count: "
-                                    + transactionCount + " to the database.");
+                    LOG.debug("Transaction count reached to max Integer value. Hence, adding the current transaction "
+                                      + "count: " + transactionCount + " to the database.");
                 }
+                // set new node id to the server and make the tx count zero. This should happen in this order.
+                transactionStore.setNewNodeId();
+                transactionCount = 0;
             } catch (Throwable e) {
-                LOG.error("Could not persist the transaction count for the last period of " + DataHolder.getInstance()
+                LOG.fatal("Could not persist the transaction count for the last period of " + DataHolder.getInstance()
                         .getTransactionUpdateInterval() + "min.", e);
             }
-            // set new node id to the server
-            transactionStore.setNewNodeId();
-            transactionCount = 0;
         }
     }
 }
