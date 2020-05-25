@@ -28,7 +28,7 @@ function runTestProfile()
      -P $1
 
      find -iname '*-synapseConfigCompositeApplication_1.0.0.car' -exec cp {} ${CAPP_DIR} \;
-     rm -f ${CAPP_DIR}/capps/1_6_10-synapseConfigCompositeApplication_1.0.0.car
+     rm -f ${CAPP_DIR}/1_6_10-synapseConfigCompositeApplication_1.0.0.car
 }
 
 echo "working Directory : ${HOME}"
