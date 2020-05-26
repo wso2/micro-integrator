@@ -33,20 +33,23 @@ public class NatsMessageConsumer {
     private Properties natsProperties;
     private NatsMessageListener natsMessageListener;
     private String subject;
-    private String injectingSequenceName;
+    private String inboundEndpointName;
 
-    public NatsMessageConsumer(Properties natsProperties, String injectingSequenceName) {
+    public NatsMessageConsumer(Properties natsProperties, String inboundEndpointName) {
         this.natsProperties = natsProperties;
-        this.injectingSequenceName = injectingSequenceName;
+        this.inboundEndpointName = inboundEndpointName;
         this.subject = natsProperties.getProperty(NatsConstants.SUBJECT);
-        if (subject == null) throw new SynapseException("NATS subject cannot be null.");
+        if (subject == null)
+            throw new SynapseException("NATS subject cannot be null.");
     }
 
     /**
      * Initialize the message listener to use (Core NATS or NATS Streaming).
      */
     public void initializeMessageListener() {
-        printDebugLog("Create the NATS message listener.");
+        if (log.isDebugEnabled()) {
+            log.debug("Create the NATS message listener.");
+        }
         if (Boolean.parseBoolean(natsProperties.getProperty(NatsConstants.NATS_STREAMING))) {
             natsMessageListener = new StreamingListener(subject, injectHandler, natsProperties);
             return;
@@ -57,39 +60,23 @@ public class NatsMessageConsumer {
     /**
      * Create the NATS connection and poll messages.
      */
-    public void consumeMessage() throws IOException, InterruptedException, TimeoutException {
-        if (natsMessageListener.createConnection() && injectHandler != null) {
-            natsMessageListener.consumeMessage(injectingSequenceName);
-        }
+    public void initializeConsumer() throws IOException, InterruptedException, TimeoutException {
+        natsMessageListener.initializeConsumer(inboundEndpointName);
     }
 
     public void closeConnection() {
-        printDebugLog("Closing NATS connection");
+        if (log.isDebugEnabled()) {
+            log.debug("Closing NATS connection");
+        }
         natsMessageListener.closeConnection();
     }
 
     /**
-     *
      * Register a handler to implement injection of the retrieved message.
      *
      * @param injectHandler the injectHandler
      */
     public void registerHandler(NatsInjectHandler injectHandler) {
         this.injectHandler = injectHandler;
-    }
-
-    public Properties getInboundProperties() {
-        return natsProperties;
-    }
-
-    /**
-     * Check if debug is enabled for logging.
-     *
-     * @param text log text
-     */
-    private void printDebugLog(String text) {
-        if (log.isDebugEnabled()) {
-            log.debug(text);
-        }
     }
 }

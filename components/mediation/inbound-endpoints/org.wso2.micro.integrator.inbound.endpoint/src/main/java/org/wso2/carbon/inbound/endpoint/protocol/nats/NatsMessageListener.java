@@ -23,6 +23,6 @@ import java.util.concurrent.TimeoutException;
  */
 public interface NatsMessageListener {
     boolean createConnection() throws IOException, InterruptedException;
-    void consumeMessage(String sequenceName) throws InterruptedException, IOException, TimeoutException;
+    void initializeConsumer(String sequenceName) throws InterruptedException, IOException, TimeoutException;
     void closeConnection();
 }

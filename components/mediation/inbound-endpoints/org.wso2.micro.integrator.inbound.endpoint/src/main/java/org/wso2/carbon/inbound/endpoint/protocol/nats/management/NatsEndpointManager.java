@@ -15,11 +15,9 @@
  */
 package org.wso2.carbon.inbound.endpoint.protocol.nats.management;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.apache.commons.lang.StringUtils;
 import org.apache.synapse.SynapseException;
 import org.apache.synapse.inbound.InboundProcessorParams;
-
 import org.wso2.carbon.inbound.endpoint.common.AbstractInboundEndpointManager;
 import org.wso2.carbon.inbound.endpoint.protocol.PollingConstants;
 import org.wso2.carbon.inbound.endpoint.protocol.nats.NatsConstants;
@@ -35,7 +33,6 @@ import java.util.Properties;
  */
 public class NatsEndpointManager extends AbstractInboundEndpointManager {
 
-    private static final Log log = LogFactory.getLog(NatsEndpointManager.class);
     private static NatsEndpointManager instance = null;
     private NatsMessageConsumer messageConsumer = null;
 
@@ -53,18 +50,13 @@ public class NatsEndpointManager extends AbstractInboundEndpointManager {
      */
     @Override public boolean startListener(int port, String name, InboundProcessorParams inboundParameters) {
         try {
-            messageConsumer.consumeMessage();
+            messageConsumer.initializeConsumer();
         } catch (IOException | InterruptedException e) {
-            log.error("An error occurred while connecting to NATS server or consuming messages. " + e);
             messageConsumer.closeConnection();
-            return true;
-        } catch (SynapseException e) {
-            log.error("Error while retrieving or injecting NATS message. " + e.getMessage(), e);
-            return true;
+            throw new SynapseException("An error occurred while connecting to NATS server or consuming messages. ", e);
         } catch (Exception e) {
-            log.error("Error while retrieving or injecting NATS message. " + e.getMessage(), e);
             messageConsumer.closeConnection();
-            return true;
+            throw new SynapseException("Error while retrieving or injecting NATS message. ", e);
         }
         return true;
     }
@@ -76,6 +68,9 @@ public class NatsEndpointManager extends AbstractInboundEndpointManager {
      * @param params inbound endpoint params
      */
     @Override public boolean startEndpoint(int port, String name, InboundProcessorParams params) {
+        if (StringUtils.isEmpty(params.getInjectingSeq())) {
+            throw new SynapseException("Sequence name not specified. Sequence : " + params.getInjectingSeq());
+        }
         Properties natsProperties = params.getProperties();
         messageConsumer = new NatsMessageConsumer(natsProperties, name);
         boolean sequential = true;

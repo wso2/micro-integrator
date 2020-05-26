@@ -16,10 +16,9 @@
 package org.wso2.carbon.inbound.endpoint.protocol.nats;
 
 import io.nats.client.Connection;
-import io.nats.client.Options;
-import io.nats.client.Nats;
 import io.nats.client.Dispatcher;
-
+import io.nats.client.Nats;
+import io.nats.client.Options;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,12 +30,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.UnrecoverableKeyException;
-import java.security.KeyManagementException;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.util.Properties;
 
@@ -126,24 +120,29 @@ public class CoreListener implements NatsMessageListener {
      *
      * @param sequenceName the sequence to inject the message to.
      */
-    @Override public void consumeMessage(String sequenceName) {
-        Dispatcher dispatcher;
-        dispatcher = connection.createDispatcher(natsMessage -> {
-            if (natsMessage != null) {
-                String message = new String(natsMessage.getData(), StandardCharsets.UTF_8);
-                log.info("Message Received to NATS Inbound EP: " + message);
-                printDebugLog("Message Received to NATS Inbound EP: " + message);
-                injectHandler.invoke(message.getBytes(), sequenceName, natsMessage.getReplyTo(), connection);
-            } else {
-                printDebugLog("Message is null.");
-            }
-        });
+    @Override public void initializeConsumer(String sequenceName) throws IOException, InterruptedException {
+        if (createConnection()) {
+            Dispatcher dispatcher;
+            dispatcher = connection.createDispatcher(natsMessage -> {
+                if (natsMessage != null) {
+                    String message = new String(natsMessage.getData(), StandardCharsets.UTF_8);
+                    if (log.isDebugEnabled()) {
+                        log.debug("Message Received to NATS Inbound EP: " + message);
+                    }
+                    injectHandler.invoke(message.getBytes(), sequenceName, natsMessage.getReplyTo(), connection);
+                } else {
+                    if (log.isDebugEnabled()) {
+                        log.debug("Message is null.");
+                    }
+                }
+            });
 
-        String queueGroup = natsProperties.getProperty(NatsConstants.QUEUE_GROUP);
-        if (StringUtils.isNotEmpty(queueGroup)) {
-            dispatcher.subscribe(subject, queueGroup);
-        } else {
-            dispatcher.subscribe(subject);
+            String queueGroup = natsProperties.getProperty(NatsConstants.QUEUE_GROUP);
+            if (StringUtils.isNotEmpty(queueGroup)) {
+                dispatcher.subscribe(subject, queueGroup);
+            } else {
+                dispatcher.subscribe(subject);
+            }
         }
     }
 
@@ -224,17 +223,6 @@ public class CoreListener implements NatsMessageListener {
             store.load(in, trustStorePassword.toCharArray());
         }
         return store;
-    }
-
-    /**
-     * Check if debug is enabled for logging.
-     *
-     * @param text log text
-     */
-    private void printDebugLog(String text) {
-        if (log.isDebugEnabled()) {
-            log.debug(text);
-        }
     }
 }
 

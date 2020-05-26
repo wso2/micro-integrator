@@ -15,13 +15,7 @@
  */
 package org.wso2.carbon.inbound.endpoint.protocol.nats;
 
-import io.nats.streaming.StreamingConnection;
-import io.nats.streaming.Subscription;
-import io.nats.streaming.Options;
-import io.nats.streaming.StreamingConnectionFactory;
-import io.nats.streaming.SubscriptionOptions;
-import io.nats.streaming.Message;
-
+import io.nats.streaming.*;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -74,10 +68,12 @@ public class StreamingListener implements NatsMessageListener {
                             natsStreamingClusterId).connectionLostHandler((streamingConnection, e) -> {
                         NatsMessageConsumer messageConsumer = NatsEndpointManager.getInstance().getMessageConsumer();
                         try {
-                            if (connection != null) connection.close();
+                            if (connection != null) {
+                                connection.close();
+                            }
                             connection = null;
                             subscription = null;
-                            messageConsumer.consumeMessage();
+                            messageConsumer.initializeConsumer();
                         } catch (IOException | InterruptedException ex) {
                             log.error("An error occurred while connecting to NATS server, consuming messages or while closing the connection. " + ex);
                             messageConsumer.closeConnection();
@@ -124,51 +120,54 @@ public class StreamingListener implements NatsMessageListener {
      *
      * @param sequenceName the sequence to inject the message to.
      */
-    @Override public void consumeMessage(String sequenceName)
+    @Override public void initializeConsumer(String sequenceName)
             throws InterruptedException, IOException, TimeoutException {
-        SubscriptionOptions.Builder subscriptionOptions = new SubscriptionOptions.Builder();
+        if (createConnection()) {
+            SubscriptionOptions.Builder subscriptionOptions = new SubscriptionOptions.Builder();
 
-        String durableName = natsProperties.getProperty(NatsConstants.NATS_STREAMING_DURABLE_NAME);
-        String queueGroup = natsProperties.getProperty(NatsConstants.NATS_STREAMING_QUEUE_GROUP);
-        boolean isManualAck = Boolean.parseBoolean(natsProperties.getProperty(NatsConstants.NATS_STREAMING_MANUAL_ACK));
-        String ackWait = natsProperties.getProperty(NatsConstants.NATS_STREAMING_ACK_WAIT);
-        String maxInFlight = natsProperties.getProperty(NatsConstants.NATS_STREAMING_MAX_IN_FLIGHT);
-        String subscriptionTimeout = natsProperties.getProperty(NatsConstants.NATS_STREAMING_SUBSCRIPTION_TIMEOUT);
-        String dispatcher = natsProperties.getProperty(NatsConstants.NATS_STREAMING_DISPATCHER);
+            String durableName = natsProperties.getProperty(NatsConstants.NATS_STREAMING_DURABLE_NAME);
+            String queueGroup = natsProperties.getProperty(NatsConstants.NATS_STREAMING_QUEUE_GROUP);
+            boolean isManualAck = Boolean.parseBoolean(natsProperties.getProperty(NatsConstants.NATS_STREAMING_MANUAL_ACK));
+            String ackWait = natsProperties.getProperty(NatsConstants.NATS_STREAMING_ACK_WAIT);
+            String maxInFlight = natsProperties.getProperty(NatsConstants.NATS_STREAMING_MAX_IN_FLIGHT);
+            String subscriptionTimeout = natsProperties.getProperty(NatsConstants.NATS_STREAMING_SUBSCRIPTION_TIMEOUT);
+            String dispatcher = natsProperties.getProperty(NatsConstants.NATS_STREAMING_DISPATCHER);
 
-        if (StringUtils.isNotEmpty(durableName)) {
-            subscriptionOptions.durableName(durableName);
+            if (StringUtils.isNotEmpty(durableName)) {
+                subscriptionOptions.durableName(durableName);
+            }
+
+            if (isManualAck) {
+                subscriptionOptions.manualAcks(); // if subscriptionOptions.manualAcks() is not set, it will auto ack
+            }
+
+            if (StringUtils.isNotEmpty(ackWait)) {
+                subscriptionOptions.ackWait(Duration.ofSeconds(Integer.parseInt(ackWait)));
+            }
+
+            if (StringUtils.isNotEmpty(maxInFlight)) {
+                subscriptionOptions.maxInFlight(Integer.parseInt(maxInFlight));
+            }
+
+            if (StringUtils.isNotEmpty(subscriptionTimeout)) {
+                subscriptionOptions.subscriptionTimeout(Duration.ofSeconds(Integer.parseInt(subscriptionTimeout)));
+            }
+
+            if (StringUtils.isNotEmpty(dispatcher)) {
+                subscriptionOptions.dispatcher(dispatcher);
+            }
+
+            subscription = connection.subscribe(subject, queueGroup, natsMessage -> {
+                String message = new String(natsMessage.getData());
+                if (log.isDebugEnabled()) {
+                    log.debug("Message Received to NATS Inbound EP: " + message);
+                }
+                boolean isInjected = injectHandler.invoke(message.getBytes(), sequenceName, null, null);
+                // message is acknowledged only if the message is successfully injected to sequence (only for manual acks)
+                if (isInjected)
+                    acknowledge(isManualAck, natsMessage);
+            }, subscriptionOptions.build());
         }
-
-        if (isManualAck) {
-            subscriptionOptions.manualAcks(); // if subscriptionOptions.manualAcks() is not set, it will auto ack
-        }
-
-        if (StringUtils.isNotEmpty(ackWait)) {
-            subscriptionOptions.ackWait(Duration.ofSeconds(Integer.parseInt(ackWait)));
-        }
-
-        if (StringUtils.isNotEmpty(maxInFlight)) {
-            subscriptionOptions.maxInFlight(Integer.parseInt(maxInFlight));
-        }
-
-        if (StringUtils.isNotEmpty(subscriptionTimeout)) {
-            subscriptionOptions.subscriptionTimeout(Duration.ofSeconds(Integer.parseInt(subscriptionTimeout)));
-        }
-
-        if (StringUtils.isNotEmpty(dispatcher)) {
-            subscriptionOptions.dispatcher(dispatcher);
-        }
-
-        subscription = connection.subscribe(subject, queueGroup, natsMessage -> {
-            String message = new String(natsMessage.getData());
-            printDebugLog("Message Received to NATS Inbound EP: " + message);
-            log.info("Message Received to NATS Inbound EP: " + message);
-            boolean isInjected = injectHandler.invoke(message.getBytes(), sequenceName, null, null);
-            // message is acknowledged only if the message is successfully injected to sequence (only for manual acks)
-            if (isInjected)
-                acknowledge(isManualAck, natsMessage);
-        }, subscriptionOptions.build());
     }
 
     /**
@@ -193,23 +192,16 @@ public class StreamingListener implements NatsMessageListener {
      */
     @Override public void closeConnection() {
         try {
-            if (subscription != null) subscription.close();
-            if (connection != null) connection.close();
-        } catch (Exception e) {
+            if (subscription != null) {
+                subscription.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (InterruptedException | IOException | TimeoutException e) {
             log.error("An error occurred while closing the connection. ", e);
         }
         connection = null;
         subscription = null;
-    }
-
-    /**
-     * Check if debug is enabled for logging.
-     *
-     * @param text log text
-     */
-    private void printDebugLog(String text) {
-        if (log.isDebugEnabled()) {
-            log.debug(text);
-        }
     }
 }

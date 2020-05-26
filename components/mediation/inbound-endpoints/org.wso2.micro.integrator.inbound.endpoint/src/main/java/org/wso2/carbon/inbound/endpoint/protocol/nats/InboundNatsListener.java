@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 package org.wso2.carbon.inbound.endpoint.protocol.nats;
-import org.wso2.carbon.inbound.endpoint.protocol.nats.management.NatsEndpointManager;
 
 import org.apache.synapse.inbound.InboundProcessorParams;
 import org.apache.synapse.inbound.InboundRequestProcessor;
+import org.wso2.carbon.inbound.endpoint.protocol.nats.management.NatsEndpointManager;
 
 /**
  * Listener class for NATS Inbound Endpoint which is triggered by inbound core

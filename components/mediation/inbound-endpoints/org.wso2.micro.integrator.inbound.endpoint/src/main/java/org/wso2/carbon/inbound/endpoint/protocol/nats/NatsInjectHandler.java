@@ -18,13 +18,13 @@ package org.wso2.carbon.inbound.endpoint.protocol.nats;
 import io.nats.client.Connection;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.util.UIDGenerator;
+import org.apache.axis2.AxisFault;
 import org.apache.axis2.builder.Builder;
 import org.apache.axis2.builder.BuilderUtil;
 import org.apache.axis2.builder.SOAPBuilder;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.transport.TransportUtils;
 import org.apache.commons.io.input.AutoCloseInputStream;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.synapse.SynapseConstants;
@@ -51,6 +51,7 @@ public class NatsInjectHandler {
     private boolean sequential;
     private SynapseEnvironment synapseEnvironment;
     private String contentType;
+    private SequenceMediator seq;
 
     public NatsInjectHandler(String injectingSeq, String onErrorSeq, boolean sequential,
             SynapseEnvironment synapseEnvironment, String contentType) {
@@ -59,6 +60,7 @@ public class NatsInjectHandler {
         this.sequential = sequential;
         this.synapseEnvironment = synapseEnvironment;
         this.contentType = contentType;
+        this.seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration().getSequence(injectingSeq);
     }
 
     /**
@@ -81,31 +83,15 @@ public class NatsInjectHandler {
             }
 
             // Determine the message builder to use
-            Builder builder;
-            if (contentType == null) {
-                printDebugLog("No content type specified. Using SOAP builder.");
-                builder = new SOAPBuilder();
-            } else {
-                int index = contentType.indexOf(';');
-                String type = index > 0 ? contentType.substring(0, index) : contentType;
-                builder = BuilderUtil.getBuilderFromSelector(type, axis2MsgCtx);
-                if (builder == null) {
-                    log.warn("No message builder found for type '" + type + "'. Falling back to SOAP.");
-                    builder = new SOAPBuilder();
-                }
-            }
+            Builder builder = getMessageBuilder(axis2MsgCtx);
             // set the message payload to the message context
             InputStream in = new AutoCloseInputStream(new ByteArrayInputStream((byte[]) object));
             OMElement documentElement = builder.processDocument(in, contentType, axis2MsgCtx);
             msgCtx.setEnvelope(TransportUtils.createSOAPEnvelope(documentElement));
-            // Inject the message to the sequence.
-            if (StringUtils.isEmpty(injectingSeq)) {
-                log.error("Sequence name not specified. Sequence : " + injectingSeq);
-                return false;
-            }
-            SequenceMediator seq = (SequenceMediator) synapseEnvironment.getSynapseConfiguration().getSequence(injectingSeq);
             if (seq != null) {
-                printDebugLog("Injecting message to sequence : " + injectingSeq);
+                if (log.isDebugEnabled()) {
+                    log.debug("Injecting message to sequence : " + injectingSeq);
+                }
                 if (!seq.isInitialized()) {
                     seq.init(synapseEnvironment);
                 }
@@ -114,13 +100,32 @@ public class NatsInjectHandler {
             } else {
                 log.error("Sequence: " + injectingSeq + " not found");
             }
-        } catch (SynapseException se) {
-            throw se;
-        } catch (Exception e) {
+        } catch (AxisFault e) {
             throw new SynapseException("Error while processing the NATS Message", e);
         }
-        printDebugLog("Processed NATS Message: " + new String((byte[])object));
+        if (log.isDebugEnabled()) {
+            log.debug("Processed NATS Message: " + new String((byte[])object));
+        }
         return true;
+    }
+
+    private Builder getMessageBuilder(MessageContext axis2MsgCtx) throws AxisFault {
+        Builder builder;
+        if (contentType == null) {
+            if (log.isDebugEnabled()) {
+                log.debug("No content type specified. Using SOAP builder.");
+            }
+            builder = new SOAPBuilder();
+        } else {
+            int index = contentType.indexOf(';');
+            String type = index > 0 ? contentType.substring(0, index) : contentType;
+            builder = BuilderUtil.getBuilderFromSelector(type, axis2MsgCtx);
+            if (builder == null) {
+                log.warn("No message builder found for type '" + type + "'. Falling back to SOAP.");
+                builder = new SOAPBuilder();
+            }
+        }
+        return builder;
     }
 
     /**
@@ -136,16 +141,5 @@ public class NatsInjectHandler {
         axis2MsgCtx.setProperty(MultitenantConstants.TENANT_DOMAIN, carbonContext.getTenantDomain());
         msgCtx.setProperty(MessageContext.CLIENT_API_NON_BLOCKING, true);
         return msgCtx;
-    }
-
-    /**
-     * Check if debug is enabled for logging.
-     *
-     * @param text log text
-     */
-    private void printDebugLog(String text) {
-        if (log.isDebugEnabled()) {
-            log.debug(text);
-        }
     }
 }
