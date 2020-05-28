@@ -611,6 +611,11 @@
                 ( needs javax.jms.JMSException )
                 -->
                 <include>javax.jms:javax.jms-api:jar</include>
+                <!--
+                javax jaxb-api need to be in class path for ciphertool
+                to run in jdk 11
+                -->
+                <include>javax.xml.bind:jaxb-api:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
