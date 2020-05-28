@@ -504,13 +504,6 @@
                 <version>${google.guava.version}</version>
             </dependency>
 
-            <!--For PublishEvent Mediator-->
-            <dependency>
-                <groupId>commons-pool.wso2</groupId>
-                <artifactId>commons-pool</artifactId>
-                <version>${orbit.version.commons.pool}</version>
-            </dependency>
-
             <!--Inbound Endpoint Depedencies-->
             <dependency>
                 <groupId>ca.uhn.hapi.wso2</groupId>
@@ -604,11 +597,6 @@
             <dependency>
                 <groupId>org.wso2.ei</groupId>
                 <artifactId>org.wso2.micro.integrator.event.sink</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ei</groupId>
-                <artifactId>org.wso2.micro.integrator.mediator.publishevent</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -1614,8 +1602,6 @@
         <saxon.wso2.version>9.5.1-8</saxon.wso2.version>
         <version.xercesImpl>2.8.1.wso2v2</version.xercesImpl>
         <commons-logging.version>1.2</commons-logging.version>
-        <!-- publishEvent mediator versions -->
-        <javax.xml.namespace.version>0.0.0</javax.xml.namespace.version>
         <mockito.version>2.23.4</mockito.version>
         <wrapper.version>3.2.3</wrapper.version>
         <nimbus-jose.orbit.version>5.8.0.wso2v1</nimbus-jose.orbit.version>

@@ -37,7 +37,6 @@
         <module>transport-features</module>
         <module>data-publisher-features</module>
         <module>entitlement-mediator-feature/org.wso2.micro.integrator.identity.xacml.mediator</module>
-        <module>publishEvent-feature</module>
     </modules>
 
 </project>
