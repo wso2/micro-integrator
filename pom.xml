@@ -991,6 +991,11 @@
                 <version>${org.wso2.orbit.javax.xml.bind.version}</version>
             </dependency>
             <dependency>
+                <groupId>javax.xml.bind</groupId>
+                <artifactId>jaxb-api</artifactId>
+                <version>${version.jaxb.api}</version>
+            </dependency>
+            <dependency>
                 <groupId>au.com.bytecode.opencsv.wso2</groupId>
                 <artifactId>opencsv</artifactId>
                 <version>${opencsv.orbit.version}</version>
@@ -1299,6 +1304,7 @@
         <!-- Carbon kernel version-->
         <carbon.kernel.version>4.5.3</carbon.kernel.version>
         <carbon.kernel.imp.pkg.version>[4.5.0,5.0.0)</carbon.kernel.imp.pkg.version>
+        <version.jaxb.api>2.4.0-b180830.0359</version.jaxb.api>
 
         <synapse.version>2.1.7-wso2v164</synapse.version>
         <carbon.mediation.version>4.7.45</carbon.mediation.version>
