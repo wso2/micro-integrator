@@ -57,6 +57,10 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.ei</groupId>
             <artifactId>org.wso2.micro.integrator.inbound.endpoint.persistence</artifactId>
         </dependency>

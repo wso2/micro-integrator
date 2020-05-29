@@ -24,20 +24,23 @@ import org.apache.synapse.core.SynapseEnvironment;
 import org.wso2.carbon.inbound.endpoint.common.OneTimeTriggerInboundTask;
 import org.wso2.micro.integrator.ntask.core.impl.LocalTaskActionListener;
 
+/**
+ * The task implementation to trigger the RabbitMQ consumer.
+ */
 public class RabbitMQTask extends OneTimeTriggerInboundTask implements LocalTaskActionListener {
 
     private static final Log log = LogFactory.getLog(RabbitMQTask.class.getName());
 
-    private RabbitMQConnectionConsumer rabbitMQConnectionConsumer;
+    private RabbitMQConsumer rabbitMQConsumer;
 
-    public RabbitMQTask(RabbitMQConnectionConsumer rabbitMQConnectionConsumer) {
+    public RabbitMQTask(RabbitMQConsumer rabbitMQConsumer) {
         log.debug("RabbitMQ Task initialize.");
-        this.rabbitMQConnectionConsumer = rabbitMQConnectionConsumer;
+        this.rabbitMQConsumer = rabbitMQConsumer;
     }
 
     protected void taskExecute() {
         log.debug("Executing RabbitMQ Task Execution.");
-        rabbitMQConnectionConsumer.execute();
+        rabbitMQConsumer.execute();
     }
 
     public void init(SynapseEnvironment synapseEnvironment) {
@@ -51,6 +54,6 @@ public class RabbitMQTask extends OneTimeTriggerInboundTask implements LocalTask
     @Override
     public void notifyLocalTaskRemoval(String taskName) {
         setReTrigger();
-        rabbitMQConnectionConsumer.requestShutdown();
+        rabbitMQConsumer.requestShutdown();
     }
 }
