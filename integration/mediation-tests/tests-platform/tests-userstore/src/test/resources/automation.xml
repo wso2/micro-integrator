@@ -105,7 +105,7 @@
                     <parameter name="toml-path"
                                value="./../src/test/resources/artifacts/ESB/server/conf/deployment.toml"/>
                     <parameter name="script-path"
-                               value="./../../../../../distribution/src/dbscripts/mysql_user.sql"/>
+                               value="./../../../../../distribution/src/dbscripts/mysql/mysql_user.sql"/>
                 </class>
                 <class>
                     <name>org.wso2.esb.integration.common.extensions.carbonserver.CarbonServerExtension</name>
