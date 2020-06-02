@@ -24,12 +24,9 @@ import java.io.File;
 
 public class TransactionConstants {
 
-    public static final String DEFAULT_SECURITY_RESOURCE_DIR_PATH = System.getProperty(ServerConstants.CARBON_HOME)
-            + File.separator + "repository" + File.separator + "resources" + File.separator + "security";
-    public static final String TRUSTSTORE_FILE = "wso2carbon.jks";
+    public static final String PUBLIC_KEY = System.getProperty(ServerConstants.CARBON_HOME) + File.separator
+            + "repository" + File.separator + "resources" + File.separator + "security" + File.separator
+            + "publickey.pem";
 
-    public static final String KEY_TYPE = "JKS";
-    public static final String KEY_ALIAS = "wso2carbon";
-    public static final String KEYSTORE_PASSWORD = "wso2carbon";
     public static final String ENCRYPTION_ALGORITHM = "RSA";
 }
