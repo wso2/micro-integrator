@@ -85,7 +85,7 @@ public class RDBMSConnector {
     /**
      * Add transaction count to the database.
      */
-    public void addTransaction() throws SQLException {
+    public synchronized void addTransaction() throws SQLException {
         // if raw exists - update else and a new raw.
         if (checkDataExists()) {
             updateStats();

@@ -74,6 +74,8 @@ import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.Objects;
 import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -102,6 +104,8 @@ public class ServiceBusInitializer {
     private DataSourceService dataSourceService;
 
     private TransactionCountHandlerComponent transactionCountHandlerComponent;
+
+    private ExecutorService transactionCountExecutor;
 
     @Activate
     protected void activate(ComponentContext ctxt) {
@@ -178,7 +182,8 @@ public class ServiceBusInitializer {
                 if (transactionPropertyEnabled) {
                     transactionCountHandlerComponent = new TransactionCountHandlerComponent();
                     transactionCountHandlerComponent.start(dataSourceService);
-                    synapseEnvironment.registerSynapseHandler(new TransactionCountHandler());
+                    transactionCountExecutor = Executors.newFixedThreadPool(100);
+                    synapseEnvironment.registerSynapseHandler(new TransactionCountHandler(transactionCountExecutor));
                 }
                 if (log.isDebugEnabled()) {
                     log.debug("SynapseEnvironmentService Registered");
@@ -211,6 +216,9 @@ public class ServiceBusInitializer {
     protected void deactivate(ComponentContext ctxt) {
         if (Objects.nonNull(transactionCountHandlerComponent)) {
             transactionCountHandlerComponent.cleanup();
+        }
+        if (Objects.nonNull(transactionCountExecutor)) {
+            transactionCountExecutor.shutdownNow();
         }
         serverManager.stop();
         serverManager.shutdown();
