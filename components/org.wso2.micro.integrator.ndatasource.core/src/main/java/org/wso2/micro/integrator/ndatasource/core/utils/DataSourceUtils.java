@@ -17,13 +17,19 @@ package org.wso2.micro.integrator.ndatasource.core.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Iterator;
+
 import javax.xml.bind.Marshaller;
+import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.axiom.om.OMAttribute;
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.xerces.impl.Constants;
@@ -42,6 +48,7 @@ import org.wso2.micro.integrator.ndatasource.core.DataSourceMetaInfo;
 import org.wso2.micro.integrator.ndatasource.core.internal.DataSourceServiceComponent;
 import org.wso2.securevault.SecretResolver;
 import org.wso2.securevault.SecretResolverFactory;
+import org.wso2.securevault.commons.MiscellaneousUtil;
 
 /**
  * Data Sources utility class.
@@ -243,6 +250,43 @@ public class DataSourceUtils {
 			}
 		}
     }
+
+	public static void secureResolveOMElement(OMElement doc)
+			throws DataSourceException {
+		if (doc != null) {
+			secretResolver = SecretResolverFactory.create(doc, true);
+			secureLoadOMElement(doc);
+		}
+	}
+
+	private static void secureLoadOMElement(OMElement element) {
+		String alias = MiscellaneousUtil.getProtectedToken(element.getText());
+		if (alias != null && !alias.isEmpty()) {
+			element.setText(loadFromSecureVault(alias));
+		} else {
+			OMAttribute secureAttr = element.getAttribute(new QName(DataSourceConstants.SECURE_VAULT_NS,
+					DataSourceConstants.SECRET_ALIAS_ATTR_NAME));
+			if (secureAttr != null) {
+				element.setText(loadFromSecureVault(secureAttr.getAttributeValue()));
+				element.removeAttribute(secureAttr);
+			}
+		}
+		Iterator<OMElement> childNodes = element.getChildElements();
+		while (childNodes.hasNext()) {
+			OMElement tmpNode = childNodes.next();
+			secureLoadOMElement(tmpNode);
+		}
+	}
+
+	public static OMElement convertToOMElement(File file) throws DataSourceException {
+		try {
+			OMElement documentElement = new StAXOMBuilder(new FileInputStream(file)).getDocumentElement();
+			return documentElement;
+		} catch (Exception e) {
+			throw new DataSourceException("Error in creating an XML document from file: " +
+					e.getMessage(), e);
+		}
+	}
 
     public static Document convertToDocument(File file) throws DataSourceException {
         try {
