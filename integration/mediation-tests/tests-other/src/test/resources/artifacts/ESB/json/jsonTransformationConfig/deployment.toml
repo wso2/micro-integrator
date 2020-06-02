@@ -1,5 +1,6 @@
 [server]
 hostname = "localhost"
+hot_deployment = true
 
 [transport.passthru.http.listener]
 port=8280

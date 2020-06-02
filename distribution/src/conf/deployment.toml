@@ -1,5 +1,6 @@
 [server]
 hostname = "localhost"
+hot_deployment = true
 
 [user_store]
 type = "read_only_ldap"

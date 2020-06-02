@@ -570,6 +570,13 @@
             <fileMode>644</fileMode>
         </file>
         <file>
+            <source>src/conf/deployment.toml.container</source>
+            <outputDirectory>wso2mi-${pom.version}/conf</outputDirectory>
+            <destName>deployment.toml.container</destName>
+            <filtered>true</filtered>
+            <fileMode>644</fileMode>
+        </file>
+        <file>
             <source>src/resources/config-tool/templates/conf/carbon.xml.j2</source>
             <outputDirectory>wso2mi-${pom.version}/repository/resources/conf/templates/conf</outputDirectory>
             <destName>carbon.xml.j2</destName>
