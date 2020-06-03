@@ -23,7 +23,7 @@ enable = false
 ## Microsoft SQL Server 2017 (RTM-CU11) (KB4462262) - 14.0.3038.14 (X64)
 [[datasource]]
 id = "WSO2_COORDINATION_DB"
-url = "jdbc:sqlserver://localhost:1433;databaseName=TestDB;SendStringParametersAsUnicode=false"
+url = "jdbc:sqlserver://localhost:1433;databaseName=clusterDB;SendStringParametersAsUnicode=false"
 username = "SA"
 password = "Root1111"
 driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver"
