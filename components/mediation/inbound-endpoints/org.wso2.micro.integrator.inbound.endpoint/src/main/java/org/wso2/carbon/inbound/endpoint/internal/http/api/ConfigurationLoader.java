@@ -74,7 +74,6 @@ public class ConfigurationLoader {
     private static final String HTTPS_PROTOCOLS_ATT = "httpsProtocols";
     private static final String CERTIFICATE_REVOCATION_VERIFIER_ATT = "certificateRevocationVerifier";
     private static final String PREFERRED_CIPHERS_ATT = "preferredCiphers";
-    private static final String READINESS_PROBE = "ReadinessProbe";
 
     private static SSLConfiguration sslConfiguration;
     private static boolean sslConfiguredSuccessfully;
@@ -126,13 +125,6 @@ public class ConfigurationLoader {
                             if (!Boolean.parseBoolean(
                                     System.getProperty(Constants.PREFIX_TO_ENABLE_INTERNAL_APIS + name))) {
                                 continue;
-                            }
-                            if (READINESS_PROBE.equals(name) && MicroIntegratorBaseUtils.getCarbonAxisConfigurator()
-                                    .isHotDeploymentEnabled()) {
-                                log.warn("Hot Deployment and Readiness Probe configurations are both enabled "
-                                                 + "in your server! Note that the readiness probe will not "
-                                                 + "identify faulty artifacts that are hot deployed. Be sure to "
-                                                 + "disable hot deployment if the readiness probe is enabled.");
                             }
                         } else {
                             handleException("Name not defined in one or more handlers");
