@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class CoordinationDatabase extends ExecutionListenerExtension {
 
@@ -71,11 +72,18 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         if ("oracle".equals(dbType)) {
             setUpOracle();
         }
+        if ("db2".equals(dbType)) {
+            setUpDB2();
+        }
+    }
+
+    private void setUpDB2() throws AutomationFrameworkException {
+        executeScript(scriptbaseDir + "/db2/db2_" + scriptSuffix);
     }
 
     private void setUpOracle() throws AutomationFrameworkException {
 
-        executeOracleUpdate(scriptbaseDir + "/oracle/oracle_" + scriptSuffix);
+        executeScript(scriptbaseDir + "/oracle/oracle_" + scriptSuffix);
     }
 
     private void setUpPostgres() throws AutomationFrameworkException {
@@ -160,11 +168,14 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             }
         }
         if ("oracle".equals(dbType)) {
-            executeOracleUpdate(scriptbaseDir + "/unset/oracle/oracle_" + scriptSuffix);
+            executeScript(scriptbaseDir + "/unset/oracle/oracle_" + scriptSuffix);
+        }
+        if ("db2".equals(dbType)) {
+            executeScript(scriptbaseDir + "/unset/db2/db2_" + scriptSuffix);
         }
     }
 
-    private void executeOracleUpdate(String scriptFilePath) throws AutomationFrameworkException {
+    private void executeScript(String scriptFilePath) throws AutomationFrameworkException {
         File file = new File(getSystemDependentPath(scriptFilePath));
         try {
             String[] queries = FileUtils.readFileToString(file, StandardCharsets.UTF_8).split(";");
@@ -233,7 +244,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             dbType = uri.getScheme();
             String path = uri.getPath();
             if (path != null) {
-                if ("mysql".equals(dbType) || "db2".equals(dbType) || "postgresql".equals(dbType)) {
+                if (Stream.of("mysql", "db2", "postgresql").anyMatch(s -> s.equals(dbType))) {
                     dbName = path.replace("/", "");
                 } else if ("sqlserver".equals(dbType)) {
                     String[] splits = connectionUrl.split("databaseName=");
