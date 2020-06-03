@@ -237,6 +237,9 @@
         <fileSet>
             <directory>src/dbscripts</directory>
             <outputDirectory>wso2mi-${pom.version}/dbscripts</outputDirectory>
+            <excludes>
+                <exclude>**/unset/**</exclude>
+            </excludes>
         </fileSet>
 
         <fileSet>
