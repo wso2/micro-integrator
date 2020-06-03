@@ -47,6 +47,8 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     private static String userName;
     private String dbType;
     private String dataSource;
+    private String scriptbaseDir;
+    private String scriptSuffix;
 
     @Override
     public void initiate() throws AutomationFrameworkException {
@@ -57,10 +59,43 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     @Override
     public void onExecutionStart() throws AutomationFrameworkException {
 
-        if (!"mysql".equals(dbType)) {
-            logger.info("Database will be created only for mysql..");
-            return;
+        if ("mysql".equals(dbType)) {
+            setUpMysql();
         }
+        if ("sqlserver".equals(dbType)) {
+            setUpMssql();
+        }
+    }
+
+    private void setUpMssql() throws AutomationFrameworkException {
+
+        scriptPath = scriptbaseDir + "/mssql/mssql_" + scriptSuffix;
+        // create db
+        String dbUrl = connectionUrl.concat(";allowMultiQueries=true").replace(";databaseName=" + dbName, "");
+        try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
+                PreparedStatement preparedStatement = conn.prepareStatement("CREATE DATABASE " + dbName + ";")) {
+            preparedStatement.executeUpdate();
+        } catch (Exception ex) {
+            throw new AutomationFrameworkException(ex);
+        }
+
+        // create tables
+        dbUrl = connectionUrl.concat(";allowMultiQueries=true");
+        scriptPath = getSystemDependentPath(scriptPath);
+        File file = new File(scriptPath);
+        try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
+                PreparedStatement preparedStatement = conn.prepareStatement(
+                        FileUtils.readFileToString(file, StandardCharsets.UTF_8))) {
+            preparedStatement.executeUpdate();
+        } catch (Exception ex) {
+            throw new AutomationFrameworkException(ex);
+        }
+
+    }
+
+    private void setUpMysql() throws AutomationFrameworkException {
+
+        scriptPath = scriptbaseDir + "/mysql/mysql_" + scriptSuffix;
         String dbUrl = connectionUrl.replace("/" + dbName, "").concat("&allowMultiQueries=true");
         scriptPath = getSystemDependentPath(scriptPath);
         File file = new File(scriptPath);
@@ -81,8 +116,17 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
     }
 
     @Override
-    public void onExecutionFinish() {
-        // do nothing.
+    public void onExecutionFinish() throws AutomationFrameworkException {
+        if ("sqlserver".equals(dbType)) {
+            // drop db
+            String dbUrl = connectionUrl.concat(";allowMultiQueries=true").replace(";databaseName=" + dbName, "");
+            try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
+                    PreparedStatement preparedStatement = conn.prepareStatement("DROP DATABASE " + dbName + ";")) {
+                preparedStatement.executeUpdate();
+            } catch (Exception ex) {
+                throw new AutomationFrameworkException(ex);
+            }
+        }
     }
 
     private static String getSystemDependentPath(String path) {
@@ -99,8 +143,11 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             case "toml-path":
                 parseToml(value);
                 break;
-            case "script-path":
-                scriptPath = value;
+            case "script-basedir":
+                scriptbaseDir = value;
+                break;
+            case "script-suffix":
+                scriptSuffix = value;
                 break;
             case "data-source":
                 dataSource = value;
@@ -129,11 +176,16 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             userName = parseToml.getString("datasource[0].username");
             pwd = parseToml.getString("datasource[0].password");
             URI uri = URI.create(connectionUrl.substring(5));
+            dbType = uri.getScheme();
             String path = uri.getPath();
             if (path != null) {
-                dbName = path.replace("/", "");
+                if ("mysql".equals(dbType)) {
+                    dbName = path.replace("/", "");
+                } else if ("sqlserver".equals(dbType)) {
+                    String[] splits = connectionUrl.split("databaseName=");
+                    dbName = splits[1].substring(0, splits[1].indexOf(';'));
+                }
             }
-            dbType = uri.getScheme();
         } catch (Exception ex) {
             throw new AutomationFrameworkException(ex);
         }
