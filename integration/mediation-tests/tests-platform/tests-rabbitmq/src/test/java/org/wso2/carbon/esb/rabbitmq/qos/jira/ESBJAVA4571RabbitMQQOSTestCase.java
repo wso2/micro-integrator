@@ -37,7 +37,6 @@ import java.util.List;
 public class ESBJAVA4571RabbitMQQOSTestCase extends ESBIntegrationTest {
 
     private RabbitMQProducerClient sender;
-    private ProxyServiceAdminClient proxyServiceAdminClient;
 
     @BeforeClass(alwaysRun = true)
     public void init() throws Exception {
@@ -46,13 +45,11 @@ public class ESBJAVA4571RabbitMQQOSTestCase extends ESBIntegrationTest {
         loadESBConfigurationFromClasspath(
                 File.separator + "artifacts" + File.separator + "ESB" + File.separator + "qos" + File.separator
                         + "rabbitMQ" + File.separator + "RabbitMQQOSProxy.xml");
-        proxyServiceAdminClient = new ProxyServiceAdminClient(contextUrls.getBackEndUrl(), getSessionCookie());
     }
 
     @Test(groups = { "wso2.esb" }, description = "Test ESB as a RabbitMQ consumer QOS applied")
     public void testRabbitMQQOSConsumer() throws Exception {
 
-        proxyServiceAdminClient.stopProxyService("RabbitMQQOSProxy");
         RabbitMQConsumerClient consumer = RabbitMQServerInstance
                 .createConsumerWithDeclaration("qosExchange", "qosQueue");
 
@@ -70,8 +67,6 @@ public class ESBJAVA4571RabbitMQQOSTestCase extends ESBIntegrationTest {
         } finally {
             sender.disconnect();
         }
-
-        proxyServiceAdminClient.startProxyService("RabbitMQQOSProxy");
 
         long beforeGettingMessages = System.currentTimeMillis();
 
