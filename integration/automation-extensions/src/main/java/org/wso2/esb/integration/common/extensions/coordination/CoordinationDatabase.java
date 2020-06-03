@@ -68,7 +68,14 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         if ("postgresql".equals(dbType)) {
             setUpPostgres();
         }
+        if ("oracle".equals(dbType)) {
+            setUpOracle();
+        }
+    }
 
+    private void setUpOracle() throws AutomationFrameworkException {
+
+        executeOracleUpdate(scriptbaseDir + "/oracle/oracle_" + scriptSuffix);
     }
 
     private void setUpPostgres() throws AutomationFrameworkException {
@@ -151,6 +158,28 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             } catch (Exception ex) {
                 throw new AutomationFrameworkException(ex);
             }
+        }
+        if ("oracle".equals(dbType)) {
+            executeOracleUpdate(scriptbaseDir + "/unset/oracle/oracle_" + scriptSuffix);
+        }
+    }
+
+    private void executeOracleUpdate(String scriptFilePath) throws AutomationFrameworkException {
+        File file = new File(getSystemDependentPath(scriptFilePath));
+        try {
+            String[] queries = FileUtils.readFileToString(file, StandardCharsets.UTF_8).split(";");
+            for (String query : queries) {
+                query = query.trim();
+                if (!query.isEmpty()) {
+                    logger.info("Executing query : " + query);
+                    try (Connection conn = DriverManager.getConnection(connectionUrl, userName, pwd);
+                            PreparedStatement preparedStatement = conn.prepareStatement(query)) {
+                        preparedStatement.executeUpdate();
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            throw new AutomationFrameworkException(ex);
         }
     }
 
