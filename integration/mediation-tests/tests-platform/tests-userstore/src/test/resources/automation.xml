@@ -101,7 +101,7 @@
         <platformExecutionManager>
             <extentionClasses>
                 <class>
-                    <name>org.wso2.esb.integration.common.extensions.coordination.CoordinationDatabase</name>
+                    <name>org.wso2.esb.integration.common.extensions.db.manager.DatabaseManager</name>
                     <parameter name="toml-path"
                                value="./../src/test/resources/artifacts/ESB/server/conf/deployment.toml"/>
                     <parameter name="script-basedir"
