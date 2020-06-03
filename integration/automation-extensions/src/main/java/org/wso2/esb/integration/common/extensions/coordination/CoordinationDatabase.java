@@ -65,6 +65,31 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
         if ("sqlserver".equals(dbType)) {
             setUpMssql();
         }
+        if ("postgresql".equals(dbType)) {
+            setUpPostgres();
+        }
+
+    }
+
+    private void setUpPostgres() throws AutomationFrameworkException {
+
+        String dbUrl = connectionUrl.concat("?allowMultiQueries=true");
+        scriptPath = scriptbaseDir + "/postgres/postgresql_" + scriptSuffix;
+        scriptPath = getSystemDependentPath(scriptPath);
+        File file = new File(scriptPath);
+        try {
+            List<String> schema = new ArrayList<>();
+            schema.add("DROP SCHEMA public CASCADE;");
+            schema.add("CREATE SCHEMA public;");
+            schema.add(FileUtils.readFileToString(file, StandardCharsets.UTF_8));
+            try (Connection conn = DriverManager.getConnection(dbUrl, userName, pwd);
+                    PreparedStatement preparedStatement = conn.prepareStatement(String.join("", schema))) {
+                preparedStatement.executeUpdate();
+            }
+            logger.info("Coordination database configured successfully.");
+        } catch (Exception ex) {
+            throw new AutomationFrameworkException(ex);
+        }
     }
 
     private void setUpMssql() throws AutomationFrameworkException {
@@ -179,7 +204,7 @@ public class CoordinationDatabase extends ExecutionListenerExtension {
             dbType = uri.getScheme();
             String path = uri.getPath();
             if (path != null) {
-                if ("mysql".equals(dbType)) {
+                if ("mysql".equals(dbType) || "db2".equals(dbType) || "postgresql".equals(dbType)) {
                     dbName = path.replace("/", "");
                 } else if ("sqlserver".equals(dbType)) {
                     String[] splits = connectionUrl.split("databaseName=");
