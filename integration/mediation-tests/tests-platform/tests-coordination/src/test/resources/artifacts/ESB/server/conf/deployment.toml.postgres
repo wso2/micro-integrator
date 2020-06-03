@@ -24,6 +24,6 @@ enable = false
 [[datasource]]
 id = "WSO2_COORDINATION_DB"
 url = "jdbc:postgresql://localhost:5432/postgres"
-username = "test"
-password = "test1234"
+username = "Root"
+password = "Root1234"
 driver = "org.postgresql.Driver"
