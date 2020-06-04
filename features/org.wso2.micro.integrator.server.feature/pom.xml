@@ -261,13 +261,13 @@
                                     org.wso2.ei:org.wso2.micro.integrator.probes:${project.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-core:${fasterxml.jackson.version}
+                                    com.fasterxml.jackson.core:jackson-core:${fasterxml.jackson.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-databind:${fasterxml.jackson.version}
+                                    com.fasterxml.jackson.core:jackson-databind:${fasterxml.jackson.version}
                                 </bundleDef>
                                 <bundleDef>
-                                    org.wso2.orbit.com.fasterxml.jackson.core:jackson-annotations:${fasterxml.jackson.version}
+                                    com.fasterxml.jackson.core:jackson-annotations:${fasterxml.jackson.version}
                                 </bundleDef>
                                 <bundleDef>org.atomikos.wso2:atomikos:${atomikos.version}</bundleDef>
                                 <bundleDef>org.eclipse.platform:org.eclipse.equinox.cm:${version.eclipse.equinox.cm}</bundleDef>
